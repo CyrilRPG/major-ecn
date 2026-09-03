@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-08-10T13:34:00.158Z",
+  "totals": {
+    "courses": 1,
+    "ok": 0,
+    "repair": 1,
+    "missing": 0
+  },
+  "rows": [
+    {
+      "orderIndex": 31,
+      "title": "Chirurgie des traumatismes de la ceinture scapulaire",
+      "pages": 20,
+      "textCharacters": 17901,
+      "mechanicalFiche": false,
+      "parts": 6,
+      "ficheTables": 12,
+      "tableErrors": 0,
+      "partHeaderErrors": 0,
+      "bareDetails": 0,
+      "paragraphDetails": 0,
+      "listlessDetails": 0,
+      "figures": 9,
+      "synthesis": 1,
+      "eclair": 1,
+      "mechanicalQuestions": 0,
+      "cardPromptQuestions": 0,
+      "genericQuestionCount": 0,
+      "repeatedQuestionStems": 4,
+      "dpClinicalFailures": 8,
+      "mechanicalCards": 0,
+      "genericSeries": 0,
+      "defects": [
+        "dp-clinical"
+      ],
+      "status": "repair"
+    }
+  ]
+}

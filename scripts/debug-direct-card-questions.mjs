@@ -1,0 +1,14 @@
+import { config as dotenv } from 'dotenv';
+import { createClient } from '@supabase/supabase-js';
+dotenv({ path: '.env.local' });
+const [coursId] = process.argv.slice(2);
+const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
+const normalize = (v) => String(v ?? '').replace(/<[^>]+>/g, ' ').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+const { data: cards, error: cardError } = await db.from('flashcards').select('recto').eq('cours_id', coursId);
+if (cardError) throw cardError;
+const { data: series, error: seriesError } = await db.from('qcm_series').select('id,label').eq('cours_id', coursId);
+if (seriesError) throw seriesError;
+const { data: questions, error: questionError } = await db.from('qcm_questions').select('enonce,serie_id,order_index').in('serie_id', series.map((s) => s.id));
+if (questionError) throw questionError;
+const fronts = new Set(cards.map((card) => normalize(card.recto)));
+console.log(JSON.stringify(questions.filter((question) => fronts.has(normalize(question.enonce))).map((question) => ({ label: series.find((serie) => serie.id === question.serie_id)?.label, order: question.order_index, enonce: question.enonce })), null, 2));

@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-08-10T13:28:20.493Z",
+  "totals": {
+    "courses": 1,
+    "ok": 0,
+    "repair": 1,
+    "missing": 0
+  },
+  "rows": [
+    {
+      "orderIndex": 21,
+      "title": "Butées de hanche",
+      "pages": 24,
+      "textCharacters": 19949,
+      "mechanicalFiche": false,
+      "parts": 5,
+      "ficheTables": 13,
+      "tableErrors": 0,
+      "partHeaderErrors": 0,
+      "bareDetails": 0,
+      "paragraphDetails": 0,
+      "listlessDetails": 0,
+      "figures": 12,
+      "synthesis": 1,
+      "eclair": 1,
+      "mechanicalQuestions": 0,
+      "cardPromptQuestions": 0,
+      "genericQuestionCount": 0,
+      "repeatedQuestionStems": 4,
+      "dpClinicalFailures": 6,
+      "mechanicalCards": 0,
+      "genericSeries": 0,
+      "defects": [
+        "dp-clinical"
+      ],
+      "status": "repair"
+    }
+  ]
+}

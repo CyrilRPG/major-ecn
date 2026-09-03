@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-08-10T14:10:32.843Z",
+  "totals": {
+    "courses": 1,
+    "ok": 0,
+    "repair": 1,
+    "missing": 0
+  },
+  "rows": [
+    {
+      "orderIndex": 99,
+      "title": "Techniques chirurgicales de l'enclouage centromédullaire des os longs",
+      "pages": 14,
+      "textCharacters": 8118,
+      "mechanicalFiche": false,
+      "parts": 4,
+      "ficheTables": 8,
+      "tableErrors": 0,
+      "partHeaderErrors": 0,
+      "bareDetails": 0,
+      "paragraphDetails": 0,
+      "listlessDetails": 0,
+      "figures": 7,
+      "synthesis": 1,
+      "eclair": 1,
+      "mechanicalQuestions": 48,
+      "cardPromptQuestions": 48,
+      "genericQuestionCount": 0,
+      "repeatedQuestionStems": 0,
+      "dpClinicalFailures": 0,
+      "mechanicalCards": 0,
+      "genericSeries": 0,
+      "defects": [
+        "mechanical-content"
+      ],
+      "status": "repair"
+    }
+  ]
+}

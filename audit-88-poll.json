@@ -1,0 +1,43 @@
+{
+  "generatedAt": "2026-08-10T23:19:04.161Z",
+  "totals": {
+    "courses": 1,
+    "ok": 1,
+    "repair": 0,
+    "missing": 0
+  },
+  "rows": [
+    {
+      "coursId": "fa84180f-c558-4e32-a12b-cbfe6ad51613",
+      "orderIndex": 88,
+      "title": "Resurfaçage de hanche",
+      "pages": 14,
+      "textCharacters": 13272,
+      "mechanicalFiche": false,
+      "parts": 4,
+      "ficheTables": 8,
+      "tableErrors": 0,
+      "partHeaderErrors": 0,
+      "bareDetails": 0,
+      "paragraphDetails": 0,
+      "listlessDetails": 0,
+      "figures": 8,
+      "brokenFigureImages": 0,
+      "nestedLists": 25,
+      "synthesis": 1,
+      "eclair": 1,
+      "mechanicalQuestions": 0,
+      "cardPromptQuestions": 0,
+      "genericQuestionCount": 0,
+      "repeatedQuestionStems": 39,
+      "dpClinicalFailures": 0,
+      "mechanicalCards": 0,
+      "genericSeries": 0,
+      "studentScaffolding": 0,
+      "unsupportedAnnales": false,
+      "mojibake": false,
+      "defects": [],
+      "status": "ok"
+    }
+  ]
+}

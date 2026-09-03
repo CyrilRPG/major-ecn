@@ -143,8 +143,8 @@
           "format": "qroc",
           "enonce": "<b>Question n°7-3</b>\n\nÀ quel stade correspond-elle ?",
           "images": [],
-          "reponseAttendue": "Le diaporama de correction ne comporte pas de réponse rédigée pour cette question.",
-          "correctionGenerale": "Le diaporama de correction ne comporte pas de réponse rédigée pour cette question : la diapositive ne reprend que l’intitulé. Le stade se déduit de la classification de Vancouver rappelée à la question précédente, appliquée aux radiographies de la vignette."
+          "reponseAttendue": "Au stade B2 : la fracture siège autour de la tige, qui est descellée — ce qui impose son changement.",
+          "correctionGenerale": "• <b>Stade B2</b> de la classification de Vancouver\n• <b>B</b> : la fracture siège autour de la tige fémorale\n• <b>2</b> : la tige est descellée, le capital osseux restant satisfaisant\n• D’où le changement de tige pour une tige longue, traité à la question suivante"
         },
         {
           "format": "qroc",

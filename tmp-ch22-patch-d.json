@@ -1,0 +1,67 @@
+{
+  "Q76B": { "juste": false, "enonce": "Programmation systématique en mode asynchrone dès la consultation.", "justification": "Ce réglage se décide selon la dépendance et le risque d’interférence, pas par principe." },
+  "Q76C": { "juste": false, "enonce": "Certitude qu’un aimant suffit dans tous les cas.", "justification": "La réponse magnétique varie selon le modèle et doit être connue avant d’y recourir." },
+  "Q76D": { "juste": false, "enonce": "Arrêt préventif des traitements antiarythmiques une semaine avant.", "justification": "L’amiodarone se poursuit jusqu’au matin du geste en raison de sa longue demi-vie." },
+  "Q76E": { "juste": true, "enonce": "Indication de l’implantation et dépendance au dispositif.", "justification": "Le rythme d’échappement et le motif de pose déterminent la stratégie de sécurité." },
+
+  "Q77D": { "juste": true, "enonce": "L’application d’un aimant peut imposer un mode asynchrone.", "justification": "Ce mode fixe rend l’appareil insensible au bruit électrique du bistouri." },
+  "Q77E": { "juste": true, "enonce": "Une surveillance mécanique du pouls doit compléter le tracé.", "justification": "Le signal électrique peut persister alors que la contraction efficace a disparu." },
+
+  "Q78D": { "juste": true, "enonce": "Contrôler le stimulateur après tout usage du bistouri électrique.", "justification": "Une vérification systématique dépiste une reprogrammation ou une altération de sonde." },
+  "Q78E": { "juste": true, "enonce": "Préparer un dispositif de stimulation externe avant l’incision.", "justification": "Une pause chez un patient dépendant doit pouvoir être relayée immédiatement." },
+
+  "Q79B": { "juste": false, "enonce": "Mesure de température centrale pour détecter une inhibition du stimulateur.", "justification": "Cette variable thermique renseigne mal sur l’activité électrique ou mécanique du cœur." },
+  "Q79E": { "juste": true, "enonce": "Onde de pléthysmographie affichée en permanence.", "justification": "Elle confirme qu’une contraction efficace suit chaque impulsion du boîtier." },
+
+  "Q81B": { "juste": false, "enonce": "Passer en coagulation monopolaire continue pour gagner du temps.", "justification": "Une activation prolongée augmente précisément la durée d’inhibition du stimulateur." },
+  "Q81D": { "juste": true, "enonce": "Éloigner la plaque de retour du trajet des sondes.", "justification": "Un courant qui contourne le boîtier réduit le couplage électrique parasite." },
+
+  "Q82D": { "juste": true, "enonce": "Vérifier les seuils de stimulation et l’impédance des sondes.", "justification": "Une altération de sonde se traduit par des valeurs différentes de la référence." },
+  "Q82E": { "juste": true, "enonce": "Consigner l’exposition et son résultat dans le dossier du patient.", "justification": "La traçabilité oriente les équipes de rythmologie lors du suivi ultérieur." },
+
+  "Q83D": { "juste": true, "enonce": "Enregistrement des événements rythmiques survenus.", "justification": "La mémoire du boîtier documente les épisodes et les thérapies délivrées." },
+  "Q83E": { "juste": true, "enonce": "Stimulation antitachycardique par salves rapides.", "justification": "Des salves de stimulation peuvent interrompre une arythmie rapide avant tout choc." },
+
+  "Q85A": { "juste": false, "enonce": "Il augmente l’énergie du prochain choc délivré.", "justification": "L’énergie programmée reste inchangée, l’aimant agissant uniquement sur la détection." },
+  "Q85B": { "juste": false, "enonce": "Il désactive la fonction de stimulation antibradycardique.", "justification": "La composante stimulateur poursuit son fonctionnement pendant l’application." },
+  "Q85D": { "juste": false, "enonce": "Il reprogramme définitivement le boîtier en mode de secours.", "justification": "L’effet cesse dès le retrait, sans modification durable des paramètres enregistrés." },
+  "Q85E": { "juste": true, "enonce": "Il suspend habituellement la détection des tachyarythmies.", "justification": "Les thérapies antitachycardiques sont neutralisées tant que l’aimant reste en place." },
+
+  "Q86B": { "juste": false, "enonce": "Report de l’analyse du rythme à la fin de l’intervention.", "justification": "Le retard de diagnostic laisserait une arythmie maligne évoluer sous électrocoagulation." },
+  "Q86C": { "juste": false, "enonce": "Confiance dans les thérapies internes malgré l’aimant en place.", "justification": "Le dispositif reste neutralisé et délivrera aucun choc pendant cette période." },
+  "Q86E": { "juste": true, "enonce": "Personnel identifié pour retirer l’aimant sans délai.", "justification": "La protection interne doit pouvoir être restaurée dès la fin du geste." },
+
+  "Q87D": { "juste": true, "enonce": "Débuter une réanimation si le rythme devient non perfusant.", "justification": "L’arrêt circulatoire impose massage et choc externe sans attendre le dispositif." },
+  "Q87E": { "juste": true, "enonce": "Corriger un trouble ionique ou une hypoxémie déclenchante.", "justification": "Une cause réversible entretiendrait l’arythmie malgré les traitements électriques." },
+
+  "Q88E": { "juste": true, "enonce": "Documenter l’énergie délivrée et la réponse obtenue.", "justification": "Le compte rendu transmet ces éléments au rythmologue chargé du suivi." },
+
+  "Q89A": { "juste": false, "enonce": "Retirer les électrodes de défibrillation externe avant le transport.", "justification": "Une récidive précoce demanderait un choc immédiat pendant le trajet vers l’unité." },
+  "Q89D": { "juste": true, "enonce": "Vérifier que l’aimant a été retiré du boîtier.", "justification": "Sans ce retrait, les thérapies internes resteraient neutralisées après le départ du bloc." },
+  "Q89E": { "juste": true, "enonce": "Confirmer la restauration du mode de fonctionnement habituel.", "justification": "Une programmation temporaire doit céder la place au réglage chronique avant les soins continus." },
+
+  "Q90A": { "juste": false, "enonce": "Hypercholestérolémie traitée par statine.", "justification": "Ce facteur de risque vasculaire figure hors des cinq items du score de Lee." },
+  "Q90B": { "juste": false, "enonce": "Indice de masse corporelle élevé.", "justification": "L’obésité reste absente de la stratification clinique du risque cardiaque périopératoire." },
+
+  "Q91A": { "juste": false, "enonce": "Coronarographie de contrôle avant la sortie.", "justification": "Cet examen invasif se discute sur un tableau clinique, pas comme surveillance de routine." },
+  "Q91D": { "juste": true, "enonce": "Reprise précoce des traitements antiangineux habituels.", "justification": "Le maintien de la cardioprotection médicamenteuse prolonge la protection myocardique postopératoire." },
+  "Q91E": { "juste": true, "enonce": "Contrôle de l’hémoglobine et de l’oxygénation.", "justification": "Anémie et hypoxémie entretiennent un déséquilibre entre apport et consommation myocardiques." },
+
+  "Q92D": { "juste": true, "enonce": "Une stratégie préétablie doit encadrer ce résultat.", "justification": "La prise en charge pluridisciplinaire est définie avant même le premier dosage." },
+  "Q92E": { "juste": true, "enonce": "L’épisode s’inscrit dans les trente jours postopératoires.", "justification": "Cette fenêtre temporelle fait partie de la définition du dommage myocardique." },
+
+  "Q93D": { "juste": true, "enonce": "Dosage répété de la troponine à quelques heures d’intervalle.", "justification": "La courbe d’évolution sépare une atteinte aiguë d’une élévation chronique." },
+
+  "Q94A": { "juste": false, "enonce": "La reprise précoce du traitement antiangineux.", "justification": "Ce traitement protège la balance énergétique du myocarde et doit être repris tôt." },
+  "Q94B": { "juste": false, "enonce": "L’analgésie postopératoire efficace.", "justification": "Une douleur contrôlée limite la tachycardie et l’hypertension qui favorisent l’ischémie." },
+  "Q94E": { "juste": true, "enonce": "Le saignement peropératoire mal compensé.", "justification": "La perte sanguine abaisse le transport artériel d’oxygène vers le myocarde." },
+
+  "Q95A": { "juste": false, "enonce": "Majorer la sédation pour supprimer toute perception douloureuse.", "justification": "Une sédation profonde entretient la vasoplégie sans traiter la cause du dommage." },
+  "Q95B": { "juste": false, "enonce": "Programmer une épreuve d’effort avant la sortie d’hospitalisation.", "justification": "Une exploration d’effort reste inadaptée à un dommage myocardique aigu en cours." },
+  "Q95D": { "juste": true, "enonce": "Restaurer la pression artérielle pour rétablir la perfusion coronarienne.", "justification": "Les modifications de ST apparaissent pendant l’hypotension et imposent de la corriger." },
+
+  "Q96A": { "juste": false, "enonce": "Interrompre le bêtabloquant puisque la troponine décroît.", "justification": "L’amélioration biologique reste insuffisante pour arrêter un traitement cardioprotecteur chronique." },
+  "Q96B": { "juste": false, "enonce": "Retenir un infarctus de type 1 sans exploration supplémentaire.", "justification": "Le mécanisme par déséquilibre offre-demande reste le plus probable dans ce contexte." },
+  "Q96C": { "juste": false, "enonce": "Limiter le compte rendu à la mention d’une anomalie biologique isolée.", "justification": "Le dommage myocardique documenté engage un suivi que le compte rendu doit préciser." },
+  "Q96E": { "juste": true, "enonce": "Poursuivre la surveillance cardiovasculaire dans les trente jours.", "justification": "Le surrisque de morbimortalité s’étend sur cette période postopératoire entière." }
+}

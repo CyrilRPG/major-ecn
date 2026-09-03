@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-08-10T13:26:13.035Z",
+  "totals": {
+    "courses": 1,
+    "ok": 0,
+    "repair": 1,
+    "missing": 0
+  },
+  "rows": [
+    {
+      "orderIndex": 17,
+      "title": "Arthroscopie du coude",
+      "pages": 25,
+      "textCharacters": 19991,
+      "mechanicalFiche": false,
+      "parts": 6,
+      "ficheTables": 14,
+      "tableErrors": 0,
+      "partHeaderErrors": 0,
+      "bareDetails": 0,
+      "paragraphDetails": 0,
+      "listlessDetails": 0,
+      "figures": 14,
+      "synthesis": 1,
+      "eclair": 1,
+      "mechanicalQuestions": 3,
+      "cardPromptQuestions": 3,
+      "genericQuestionCount": 0,
+      "repeatedQuestionStems": 0,
+      "dpClinicalFailures": 8,
+      "mechanicalCards": 0,
+      "genericSeries": 0,
+      "defects": [
+        "mechanical-content",
+        "dp-clinical"
+      ],
+      "status": "repair"
+    }
+  ]
+}

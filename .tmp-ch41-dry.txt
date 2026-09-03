@@ -1,0 +1,49 @@
+file:///C:/Users/Admin/Desktop/Major-ecn-projects/major-ecn/scripts/lib/college-content-package.mjs:219
+  if (validation.errors.length) throw new Error(`Paquet pédagogique invalide :\n- ${validation.errors.join('\n- ')}`);
+                                      ^
+
+Error: Paquet pédagogique invalide :
+- QCM 2 · Reconnaissance et compressions, Q3B : justification spécifique insuffisante.
+- QCM 4 · Corps étranger, Q2E : justification spécifique insuffisante.
+- QCM 4 · Corps étranger, Q3B : justification spécifique insuffisante.
+- QCM 6 · Défibrillation, Q2E : justification spécifique insuffisante.
+- QCM 7 · Médicaments, Q1B : justification spécifique insuffisante.
+- QCM 7 · Médicaments, Q1C : justification spécifique insuffisante.
+- QCM 8 · Post-arrêt et décision, Q1B : justification spécifique insuffisante.
+- QCM 8 · Post-arrêt et décision, Q3A : justification spécifique insuffisante.
+- DP QCM 1 · Nourrisson retrouvé hypotonique, Q1D : proposition vide ou recopiée dans une autre question.
+- DP QCM 1 · Nourrisson retrouvé hypotonique, Q7B : proposition vide ou recopiée dans une autre question.
+- DP QCM 2 · Obstruction alimentaire, Q1C : justification spécifique insuffisante.
+- DP QCM 2 · Obstruction alimentaire, Q1E : justification spécifique insuffisante.
+- DP QCM 3 · FV au bloc opératoire, Q2A : justification spécifique insuffisante.
+- DP QCM 3 · FV au bloc opératoire, Q4A : justification spécifique insuffisante.
+- DP QCM 3 · FV au bloc opératoire, Q6B : proposition vide ou recopiée dans une autre question.
+- DP QCM 3 · FV au bloc opératoire, Q7E : justification spécifique insuffisante.
+- DP QCM 4 · AESP après hémorragie, Q7C : proposition vide ou recopiée dans une autre question.
+- DP QCM 5 · Tachycardie supraventriculaire, Q7D : justification spécifique insuffisante.
+- DP QCM 6 · Bradycardie post-intubation, Q2A : justification spécifique insuffisante.
+- DP QCM 6 · Bradycardie post-intubation, Q2E : proposition vide ou recopiée dans une autre question.
+- DP QCM 6 · Bradycardie post-intubation, Q5E : justification spécifique insuffisante.
+- DP QCM 7 · IO et syndrome de loge, Q5B : justification vide ou recopiée dans une autre question.
+- DP QCM 7 · IO et syndrome de loge, Q5D : justification spécifique insuffisante.
+- DP QCM 8 · Décision prolongée après noyade, Q3C : justification spécifique insuffisante.
+- DP QCM 8 · Décision prolongée après noyade, Q4C : justification spécifique insuffisante.
+- DP QCM 8 · Décision prolongée après noyade, Q5A : proposition vide ou recopiée dans une autre question.
+- DP QCM 8 · Décision prolongée après noyade, Q7C : justification spécifique insuffisante.
+- QROC 7 · Médicaments, Q2 : correction générale explicative insuffisante.
+- QROC 7 · Médicaments, Q3 : correction générale explicative insuffisante.
+- QROC 7 · Médicaments, Q4 : correction générale explicative insuffisante.
+- DP QROC 4 · Accès intraosseux en choc, Q4 : correction générale explicative insuffisante.
+- DP QROC 5 · TSV instable : progression insuffisamment diversifiée dans les sources mobilisées.
+- DP QROC 6 · RCR et hyperkaliémie, Q2 : correction générale explicative insuffisante.
+- DP QROC 6 · RCR et hyperkaliémie, Q3 : correction générale explicative insuffisante.
+- DP QROC 6 · RCR et hyperkaliémie : progression insuffisamment diversifiée dans les sources mobilisées.
+- DP QROC 7 · Complications après massage : progression insuffisamment diversifiée dans les sources mobilisées.
+- DP QROC 8 · Arrêt prolongé et famille : progression insuffisamment diversifiée dans les sources mobilisées.
+- Banques : 12 question(s) recopiée(s) depuis les flashcards.
+    at emitCollegePackage (file:///C:/Users/Admin/Desktop/Major-ecn-projects/major-ecn/scripts/lib/college-content-package.mjs:219:39)
+    at buildChapter (file:///C:/Users/Admin/Desktop/Major-ecn-projects/major-ecn/scripts/produce-anesthesie-reanimation.mjs:159:18)
+    at async main (file:///C:/Users/Admin/Desktop/Major-ecn-projects/major-ecn/scripts/produce-anesthesie-reanimation.mjs:172:19)
+    at async file:///C:/Users/Admin/Desktop/Major-ecn-projects/major-ecn/scripts/produce-anesthesie-reanimation.mjs:180:1
+
+Node.js v24.18.0

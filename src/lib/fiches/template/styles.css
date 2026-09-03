@@ -565,6 +565,19 @@ thead { display: table-header-group; }
 }
 .ft-figure--large img { max-height: 95mm; }
 
+/* Les images textuelles sont placées dans une ligne colspan=2 dédiée. */
+.fiche-table .ft-image-row {
+  background: #fff;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.fiche-table .ft-image-row > td { padding: 2mm 3mm 4mm; border-top: 0; }
+.fiche-table .ft-image-row .ft-figure--large { width: 100%; margin: 0; }
+.fiche-table .ft-image-row .ft-figure--large img {
+  max-width: 100% !important;
+  max-height: 150mm !important;
+}
+
 /* ════════════════════════════════════════════════════════════════════════════
    4. SYNTHÈSE & CHIFFRES-CLÉS
    ════════════════════════════════════════════════════════════════════════════ */

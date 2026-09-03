@@ -1,0 +1,10 @@
+{
+  "summary": {
+    "generatedAt": "2026-08-20T23:14:50.607Z",
+    "courses": 43,
+    "passed": 38,
+    "failed": 5,
+    "totalErrors": 7014
+  },
+  "report": "C:\\Users\\Admin\\Desktop\\Major-ecn-projects\\major-ecn\\.corpus-anesthesie-reanimation\\editorial-quality-audit.json"
+}

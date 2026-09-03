@@ -1,0 +1,65 @@
+{
+  "Q55B": { "juste": false, "enonce": "Élévation marquée de la postcharge.", "justification": "Une résistance d’éjection plus forte s’oppose au gradient et réduit l’obstruction dynamique." },
+  "Q55E": { "juste": true, "enonce": "Manœuvre de Valsalva ou pression intrathoracique élevée.", "justification": "La réduction du retour veineux diminue le volume cavitaire et accentue le gradient." },
+
+  "Q56A": { "juste": false, "enonce": "Prescrire un dérivé nitré la veille pour prévenir l’angor.", "justification": "La vasodilatation nitrée abaisse la précharge et aggrave l’obstruction dynamique." },
+  "Q56B": { "juste": false, "enonce": "Imposer un jeûne hydrique de douze heures avant l’intervention.", "justification": "Un jeûne prolongé réduit la volémie dont dépend le remplissage de ce ventricule." },
+
+  "Q57D": { "juste": true, "enonce": "Disposer d’un vasoconstricteur pur prêt à l’emploi.", "justification": "Restaurer la postcharge par un agent sans effet inotrope réduit le gradient." },
+  "Q57E": { "juste": true, "enonce": "Titrer l’induction pour éviter une chute brutale de pression.", "justification": "Une injection lente permet de corriger la vasoplégie avant qu’elle s’installe." },
+
+  "Q58B": { "juste": false, "enonce": "Le tableau traduit une dysfonction systolique du ventricule gauche.", "justification": "Un ventricule hyperkinétique de petite taille écarte ce mécanisme contractile." },
+  "Q58C": { "juste": true, "enonce": "Le pneumopéritoine a pu réduire le retour veineux.", "justification": "L’insufflation abdominale gêne le retour du sang vers le cœur droit." },
+  "Q58E": { "juste": true, "enonce": "La vasodilatation anesthésique a pu déclencher le mécanisme.", "justification": "Une postcharge effondrée accélère l’éjection et démasque le bourrelet sous-aortique." },
+
+  "Q59A": { "juste": false, "enonce": "Perfuser un dérivé nitré pour soulager le ventricule.", "justification": "La baisse de précharge et de postcharge accentue l’obstruction dynamique sous-aortique." },
+  "Q59B": { "juste": false, "enonce": "Accélérer la fréquence par un agent chronotrope positif.", "justification": "Une diastole raccourcie diminue encore le volume ventriculaire et majore le gradient." },
+  "Q59E": { "juste": true, "enonce": "Restaurer les résistances systémiques par un agent alpha-adrénergique.", "justification": "Une postcharge relevée s’oppose au gradient et améliore l’éjection antérograde." },
+
+  "Q60A": { "juste": false, "enonce": "Attribuer l’hypotension à la seule perte du rythme sinusal.", "justification": "La fréquence rapide raccourcit aussi la diastole et participe pleinement à la chute de débit." },
+  "Q60B": { "juste": false, "enonce": "Prescrire un remplissage massif comme unique traitement de l’arythmie.", "justification": "Le volume ne rétablit pas le rythme et peut surcharger un ventricule peu compliant." },
+
+  "Q61B": { "juste": false, "enonce": "Introduire un vasodilatateur artériel pour abaisser la postcharge.", "justification": "Cette baisse de résistance ravive le gradient sous-aortique de la cardiomyopathie." },
+  "Q61C": { "juste": false, "enonce": "Accepter une fréquence de repos supérieure à 110 par minute.", "justification": "Une diastole écourtée compromet le remplissage du ventricule hypertrophié." },
+
+  "Q62D": { "juste": true, "enonce": "Le poids et l’âge de la patiente.", "justification": "Ces paramètres conditionnent la posologie prescrite et l’élimination attendue du produit." },
+
+  "Q64A": { "juste": false, "enonce": "L’apixaban doit être arrêté quinze jours avant une chirurgie programmée.", "justification": "Sa demi-vie courte rend un tel délai excessif et expose inutilement au risque embolique." },
+  "Q64B": { "juste": false, "enonce": "Une héparine non fractionnée intraveineuse doit être poursuivie jusqu’au bloc.", "justification": "Toute anticoagulation active à l’incision majore directement le saignement opératoire." },
+  "Q64E": { "juste": true, "enonce": "Le relais garde sa place chez les porteurs de valve mécanique.", "justification": "Cette indication à très haut risque embolique fait exception à la règle générale." },
+
+  "Q65C": { "juste": false, "enonce": "Doser systématiquement l’activité anti-Xa avant tout geste programmé.", "justification": "Ce dosage spécialisé reste inutile lorsque le délai d’arrêt recommandé a été respecté." },
+  "Q65E": { "juste": true, "enonce": "S’assurer de la disponibilité des moyens de réversion en cas d’hémorragie.", "justification": "Un antidote ou un concentré de facteurs doit être identifié avant l’incision." },
+
+  "Q66A": { "juste": false, "enonce": "Transfuser du plasma frais congelé pour antagoniser l’apixaban.", "justification": "Le plasma reste inefficace sur l’inhibiteur du facteur Xa, qui dispose d’un antidote spécifique." },
+  "Q66B": { "juste": false, "enonce": "Interrompre la surveillance de l’hémoglobine tant que la pression se maintient.", "justification": "Une déglobulisation peut précéder nettement la baisse de pression artérielle." },
+
+  "Q67A": { "juste": false, "enonce": "Reprendre l’apixaban en salle de réveil quel que soit l’état du drain.", "justification": "Un drainage encore productif traduit une hémostase incomplète et interdit cette reprise immédiate." },
+  "Q67D": { "juste": true, "enonce": "Tenir compte du risque hémorragique propre au site opératoire.", "justification": "Un saignement dans un espace clos impose une reprise plus tardive qu’ailleurs." },
+  "Q67E": { "juste": true, "enonce": "Peser le risque thromboembolique lié à la fibrillation atriale.", "justification": "Une fenêtre sans anticoagulation prolongée expose à un accident embolique cérébral." },
+
+  "Q68B": { "juste": false, "enonce": "La recommandation de prendre un anti-inflammatoire en cas de douleur.", "justification": "Cette association majore le risque digestif hémorragique sous anticoagulant." },
+  "Q68C": { "juste": false, "enonce": "L’indication d’arrêter l’apixaban dès la cicatrisation cutanée.", "justification": "La durée du traitement dépend de l’indication rythmique, pas de la plaie opératoire." },
+
+  "Q69A": { "juste": false, "enonce": "Souffle systolique connu et inchangé.", "justification": "Un signe valvulaire stable témoigne du terrain, pas d’une décompensation en cours." },
+  "Q69C": { "juste": false, "enonce": "Fraction d’éjection mesurée six mois plus tôt.", "justification": "Une valeur ancienne renseigne le terrain mais pas l’état hémodynamique actuel." },
+  "Q69E": { "juste": true, "enonce": "Turgescence jugulaire et reflux hépatojugulaire.", "justification": "Ces signes traduisent une élévation des pressions de remplissage droites." },
+
+  "Q70A": { "juste": false, "enonce": "La marche de trente minutes prouve une fraction d’éjection normale.", "justification": "Une bonne tolérance à l’effort coexiste souvent avec une fonction systolique altérée." },
+  "Q70B": { "juste": false, "enonce": "Le sommeil à plat autorise à sortir le patient du groupe à risque cardiaque.", "justification": "Le score de Lee et le risque chirurgical continuent de classer ce patient parmi les vulnérables." },
+
+  "Q71A": { "juste": false, "enonce": "Introduire un traitement inotrope oral avant l’intervention.", "justification": "Aucun soutien contractile oral n’est indiqué en préparation d’une chirurgie programmée." },
+  "Q71C": { "juste": false, "enonce": "Poursuivre l’inhibiteur du SRAA sans jamais discuter sa suspension.", "justification": "Ce blocage majore l’hypotension d’induction et mérite une décision individuelle." },
+
+  "Q72C": { "juste": true, "enonce": "Vérifier la profondeur d’anesthésie et la dose des agents.", "justification": "Une concentration excessive d’hypnotique abaisse à la fois résistances et inotropisme." },
+  "Q72E": { "juste": true, "enonce": "Mesurer le lactate pour apprécier le retentissement tissulaire.", "justification": "Une élévation traduit une dette d’oxygène malgré des chiffres tensionnels rassurants." },
+
+  "Q73B": { "juste": false, "enonce": "Administrer un inotrope puissant en première intention.", "justification": "L’échographie montre une contractilité inchangée, sans défaillance nouvelle justifiant ce soutien." },
+  "Q73E": { "juste": true, "enonce": "Maintenir la pression dans une marge proche des valeurs habituelles du patient.", "justification": "Un écart de plus de 20 % expose les organes à une hypoperfusion." },
+
+  "Q74A": { "juste": false, "enonce": "Diurèse horaire abondante depuis le retour en chambre.", "justification": "Une élimination urinaire soutenue plaide contre une rétention hydrosodée croissante." },
+  "Q74E": { "juste": true, "enonce": "Orthopnée apparue dans la nuit.", "justification": "La gêne en décubitus accompagne l’élévation des pressions de remplissage gauches." },
+
+  "Q75B": { "juste": false, "enonce": "Perfuser un bolus de cristalloïde pour améliorer la diurèse.", "justification": "Un apport supplémentaire majorerait la congestion pulmonaire déjà installée." },
+  "Q75E": { "juste": true, "enonce": "Suivre créatinine et ionogramme pendant la déplétion.", "justification": "La tolérance rénale du traitement conditionne sa poursuite et son intensité." }
+}

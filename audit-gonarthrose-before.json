@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-08-10T13:30:47.802Z",
+  "totals": {
+    "courses": 1,
+    "ok": 0,
+    "repair": 1,
+    "missing": 0
+  },
+  "rows": [
+    {
+      "orderIndex": 25,
+      "title": "Chirurgie de la gonarthrose",
+      "pages": 22,
+      "textCharacters": 20893,
+      "mechanicalFiche": false,
+      "parts": 7,
+      "ficheTables": 16,
+      "tableErrors": 0,
+      "partHeaderErrors": 0,
+      "bareDetails": 0,
+      "paragraphDetails": 0,
+      "listlessDetails": 0,
+      "figures": 8,
+      "synthesis": 1,
+      "eclair": 1,
+      "mechanicalQuestions": 1,
+      "cardPromptQuestions": 1,
+      "genericQuestionCount": 0,
+      "repeatedQuestionStems": 0,
+      "dpClinicalFailures": 8,
+      "mechanicalCards": 0,
+      "genericSeries": 0,
+      "defects": [
+        "mechanical-content",
+        "dp-clinical"
+      ],
+      "status": "repair"
+    }
+  ]
+}

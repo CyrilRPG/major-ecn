@@ -53,3 +53,10 @@ scripts/mg-fiches-data/**/.build-*.html
 
 # Supabase CLI : cache local de liaison au projet (pas du contenu de repo)
 supabase/.temp/
+
+# Corpus de production (images et extractions, ~40 Mo)
+/.corpus-*/
+
+# Maquettes et photos de banque (230 Mo) et brouillons de session (tmp/, 83 Mo) : hors dépôt
+/templates/
+/tmp/

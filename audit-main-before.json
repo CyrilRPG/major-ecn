@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-08-10T13:26:52.423Z",
+  "totals": {
+    "courses": 1,
+    "ok": 0,
+    "repair": 1,
+    "missing": 0
+  },
+  "rows": [
+    {
+      "orderIndex": 18,
+      "title": "BILAN ARTICULAIRE main",
+      "pages": 11,
+      "textCharacters": 8474,
+      "mechanicalFiche": false,
+      "parts": 4,
+      "ficheTables": 8,
+      "tableErrors": 0,
+      "partHeaderErrors": 0,
+      "bareDetails": 0,
+      "paragraphDetails": 0,
+      "listlessDetails": 0,
+      "figures": 0,
+      "synthesis": 1,
+      "eclair": 1,
+      "mechanicalQuestions": 8,
+      "cardPromptQuestions": 8,
+      "genericQuestionCount": 0,
+      "repeatedQuestionStems": 0,
+      "dpClinicalFailures": 0,
+      "mechanicalCards": 0,
+      "genericSeries": 0,
+      "defects": [
+        "mechanical-content"
+      ],
+      "status": "repair"
+    }
+  ]
+}

@@ -32,6 +32,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nQuelle classification permet d’en évaluer la sévérité ?",
           "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-002-008.jpg",
             "annales-orthopedie/evcp-2020-correction/figures/recadre/img-006-025.png",
             "annales-orthopedie/evcp-2020-correction/figures/img-006-026.jpg"
           ],
@@ -41,7 +42,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nQuel diagnostic posez-vous ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-002-008.jpg"
+          ],
           "reponseAttendue": "Une dysplasie trochléenne de type C/D.",
           "correctionGenerale": "Dysplasie trochléenne type C/D."
         },
@@ -49,6 +52,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nComment évaluez-vous la hauteur rotulienne ? Citez 2 index différents en précisant comment les mesurer.",
           "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-002-008.jpg",
             "annales-orthopedie/evcp-2020-correction/figures/recadre/img-010-045.png",
             "annales-orthopedie/evcp-2020-correction/figures/img-010-046.jpg",
             "annales-orthopedie/evcp-2020-correction/figures/img-010-047.jpg"
@@ -60,6 +64,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°5</b>\n\nVous demandez un bilan TDM complémentaire. Quelles sont les 2 mesures que vous allez évaluer grâce à cet examen afin d’affiner votre analyse de la pathologie ?",
           "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-002-008.jpg",
             "annales-orthopedie/evcp-2020-correction/figures/img-012-056.jpg",
             "annales-orthopedie/evcp-2020-correction/figures/img-012-057.jpg"
           ],
@@ -69,14 +74,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°6</b>\n\nÀ partir de combien d’épisodes de luxation de rotule peut-on proposer une prise en charge chirurgicale ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-002-008.jpg"
+          ],
           "reponseAttendue": "À partir du 2ᵉ épisode, en cas d’échec du traitement médical.",
           "correctionGenerale": "À partir du 2ᵉ épisode, si échec du traitement médical."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°7</b>\n\nCitez 3 gestes chirurgicaux qui peuvent être proposés, selon les cas, de façon isolée et/ou combinée pour une instabilité rotulienne récidivante.",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-002-008.jpg"
+          ],
           "reponseAttendue": "Reconstruction du MPFL, abaissement/médialisation de la TTA, trochléoplastie.",
           "correctionGenerale": "• MPFL\n• Abaissement / médialisation de la TTA\n• Trochléoplastie"
         }
@@ -238,7 +247,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nQuel traitement proposez-vous ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-053-232.jpg"
+          ],
           "reponseAttendue": "Un traitement conservateur en urgence (< 6 h) : ostéosynthèse par triple vissage ou DHS.",
           "correctionGenerale": "• En urgence (< 6 h)\n• Traitement conservateur : ostéosynthèse par triple vissage ou DHS"
         },
@@ -246,6 +257,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nDeux ans après la prise en charge initiale, le patient présente de nouveau des douleurs de la hanche droite. Une IRM a été réalisée (ci-jointe). Quel est votre diagnostic ?",
           "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-053-232.jpg",
             "annales-orthopedie/evcp-2020-correction/figures/img-058-253.jpg"
           ],
           "reponseAttendue": "Une ostéonécrose de hanche droite, post-traumatique, de stade IIc de l’ARCO.",
@@ -254,7 +266,10 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nQuel traitement proposez-vous ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-058-253.jpg",
+            "annales-orthopedie/evcp-2020-correction/figures/img-053-232.jpg"
+          ],
           "reponseAttendue": "Un traitement radical : prothèse totale de hanche.",
           "correctionGenerale": "Traitement radical : prothèse totale de hanche."
         }
@@ -281,6 +296,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nLe TDM est fait 24 h après, une chirurgie est programmée ; toujours pas de signe d’atteinte sciatique. Quelles sont vos constatations ?",
           "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-064-280.png",
             "annales-orthopedie/evcp-2020-correction/figures/img-067-294.png"
           ],
           "reponseAttendue": "Une luxation itérative de hanche droite avec fracture associée de la paroi postérieure : fracture transverse + paroi postérieure.",
@@ -289,21 +305,27 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nJustifiez l’indication chirurgicale.",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-064-280.png"
+          ],
           "reponseAttendue": "Fracture articulaire déplacée avec diastasis, luxation de la tête avec instabilité, chez un patient jeune sans contre-indication chirurgicale : risque majeur d’arthrose et d’ostéonécrose.",
           "correctionGenerale": "• Fracture articulaire déplacée, diastasis\n• Luxation de la tête avec instabilité\n• Patient jeune sans contre-indication chirurgicale\n→ risque d’arthrose ++ et d’ostéonécrose ++"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nNous sommes à J7. En préopératoire, le bilan échographique montre une thrombose veineuse proximale. Quelles sont les options ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-064-280.png"
+          ],
           "reponseAttendue": "Anticoagulation curative (HBPM ou HNF), contention veineuse élastique et mobilisation précoce ; en seconde intention : thrombolyse, thrombectomie, filtre cave…",
           "correctionGenerale": "• Anticoagulation curative (HBPM ou HNF)\n• Contention veineuse élastique\n• Mobilisation précoce\n• 2ᵉ intention : thrombolyse, thrombectomie, filtre cave…"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°5</b>\n\nQuels sont les risques majeurs à la suite de la chirurgie ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-064-280.png"
+          ],
           "reponseAttendue": "Risque vasculaire (lésion de l’artère glutéale supérieure), neurologique (lésion du nerf glutéal supérieur responsable d’une boiterie de Trendelenburg, lésion du nerf sciatique), infection et ossifications hétérotopiques.",
           "correctionGenerale": "• <b>Vasculaire</b> : lésion de l’artère glutéale supérieure\n• <b>Neurologique</b> : lésion du nerf glutéal supérieur (boiterie de Trendelenburg par paralysie du moyen fessier), lésion du nerf sciatique\n• Infection\n• Ossifications hétérotopiques"
         }
@@ -329,14 +351,18 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nQuels examens complémentaires demandez-vous ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-077-338.jpg"
+          ],
           "reponseAttendue": "Radiographie du fémur entier, IRM, TDM thoraco-abdomino-pelvien, scintigraphie osseuse, et bilan étiologique (PSA, EPP).",
           "correctionGenerale": "• Radiographie du fémur entier\n• IRM\n• TDM thoraco-abdomino-pelvien\n• Scintigraphie osseuse\n• Bilan étiologique : PSA, EPP"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nQuelle stratégie proposez-vous ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-077-338.jpg"
+          ],
           "reponseAttendue": "Dossier présenté en RCP, biopsie chirurgicale ou microbiopsie scanno-guidée pour examen anatomopathologique, décharge partielle selon les douleurs, puis selon le bilan : chirurgie de résection carcinologique si métastase unique, ou prise en charge palliative avec enclouage centromédullaire préventif.",
           "correctionGenerale": "• Dossier présenté en RCP\n• Biopsie chirurgicale ou microbiopsie scanno-guidée pour examen anatomopathologique\n• Décharge partielle selon les douleurs\n• En fonction du bilan : chirurgie de résection carcinologique si métastase unique, ou prise en charge palliative avec enclouage centromédullaire préventif"
         }
@@ -410,49 +436,63 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nQuel est votre diagnostic ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-101-446.png"
+          ],
           "reponseAttendue": "Une luxation rétro-lunaire du carpe, associée à une fracture marginale de la styloïde radiale.",
           "correctionGenerale": "• Luxation rétro-lunaire du carpe\n• Fracture marginale de la styloïde radiale"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nSelon la classification de Herzberg, quel est le stade de degré de déplacement du lunatum ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-101-446.png"
+          ],
           "reponseAttendue": "Stade II C.",
           "correctionGenerale": "Stade II C."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nQuel nerf donne souvent des symptômes de type paresthésies dans ce type de traumatisme ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-101-446.png"
+          ],
           "reponseAttendue": "Le nerf médian.",
           "correctionGenerale": "Nerf médian."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°5</b>\n\nEn peropératoire, vous découvrez au testing dynamique en scopie que l’articulation radio-ulnaire distale est instable et se luxe aussi bien en pronation qu’en supination : comment réparez-vous la RUD ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-101-446.png"
+          ],
           "reponseAttendue": "Par réinsertion du TFCC sur ancre ; en cas d’instabilité persistante, un brochage, mais enraidissant.",
           "correctionGenerale": "• Réinsertion du TFCC sur ancre\n• Si instabilité persistante : brochage, mais enraidissant"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°6</b>\n\nUne réduction par manœuvre externe et des broches mises en percutané vous semblent-elles suffisantes comme traitement, et pourquoi ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-101-446.png"
+          ],
           "reponseAttendue": "Non : la réduction est complexe sans abord, il n’y a pas de possibilité de réparation du ligament scapho-lunaire, la fracture articulaire du radius impose un contrôle de la réduction, et le TFCC doit être réparé.",
           "correctionGenerale": "<b>NON</b>\n• Réduction complexe sans abord\n• Pas de possibilité de réparation du ligament scapho-lunaire\n• Fracture articulaire du radius : nécessité d’un contrôle de la réduction\n• Réparation du TFCC"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°7</b>\n\nComment se fait classiquement la réparation des ligaments intracarpiens ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-101-446.png"
+          ],
           "reponseAttendue": "Par abord dorsal, réduction, brochage, puis réinsertion sur ancre et capsulodèse.",
           "correctionGenerale": "• Abord dorsal\n• Réduction\n• Brochage\n• Réinsertion sur ancre + capsulodèse"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°8</b>\n\nQuelle est la principale complication à moyen terme à surveiller sur le lunatum ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-101-446.png"
+          ],
           "reponseAttendue": "L’ostéonécrose.",
           "correctionGenerale": "Ostéonécrose."
         }
@@ -480,14 +520,22 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nProposez un traitement et décrivez les différentes options chirurgicales.",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-119-520.jpg",
+            "annales-orthopedie/evcp-2020-correction/figures/img-119-521.png",
+            "annales-orthopedie/evcp-2020-correction/figures/img-122-535.jpg"
+          ],
           "reponseAttendue": "Hospitalisation, bilan préopératoire et reprise chirurgicale unipolaire (en vérifiant la compatibilité des implants et en récupérant le compte rendu opératoire), par voie d’abord postéro-externe de Moore, en prévoyant un anneau de soutien type croix de Kerboull +/− greffe ; autres options : cotyle de reconstruction vissé, jumbo, cup-cage, augments.",
           "correctionGenerale": "• Hospitalisation\n• Bilan préopératoire\n• Reprise chirurgicale unipolaire (attention à la compatibilité des implants, récupérer le compte rendu opératoire)\n• Voie d’abord postéro-externe de Moore\n• Prévoir un anneau de soutien type croix de Kerboull +/− greffe\n• Autres : cotyle de reconstruction vissé, jumbo, cup-cage, augments"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nComment gérez-vous le traitement par AOD ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-119-520.jpg",
+            "annales-orthopedie/evcp-2020-correction/figures/img-119-521.png",
+            "annales-orthopedie/evcp-2020-correction/figures/img-122-535.jpg"
+          ],
           "reponseAttendue": "Consultation d’anesthésie, arrêt de l’Eliquis et relais par héparinothérapie, avec dosage de l’activité anti-Xa : un taux résiduel inférieur à 30 ng/mL permet d’envisager l’intervention sans augmentation du risque hémorragique.",
           "correctionGenerale": "• Consultation d’anesthésie, arrêt de l’Eliquis, relais par héparinothérapie\n• Dosage de l’activité anti-Xa : un taux résiduel inférieur à 30 ng/mL permet d’envisager une intervention sans aucune augmentation du risque hémorragique"
         }

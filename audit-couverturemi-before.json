@@ -1,0 +1,37 @@
+{
+  "generatedAt": "2026-08-10T13:48:35.073Z",
+  "totals": {
+    "courses": 1,
+    "ok": 1,
+    "repair": 0,
+    "missing": 0
+  },
+  "rows": [
+    {
+      "orderIndex": 42,
+      "title": "Couverture et pertes de substances post-traumatiques du membre inférieur",
+      "pages": 16,
+      "textCharacters": 18336,
+      "mechanicalFiche": false,
+      "parts": 5,
+      "ficheTables": 6,
+      "tableErrors": 0,
+      "partHeaderErrors": 0,
+      "bareDetails": 0,
+      "paragraphDetails": 0,
+      "listlessDetails": 0,
+      "figures": 0,
+      "synthesis": 1,
+      "eclair": 1,
+      "mechanicalQuestions": 0,
+      "cardPromptQuestions": 0,
+      "genericQuestionCount": 0,
+      "repeatedQuestionStems": 0,
+      "dpClinicalFailures": 0,
+      "mechanicalCards": 0,
+      "genericSeries": 0,
+      "defects": [],
+      "status": "ok"
+    }
+  ]
+}

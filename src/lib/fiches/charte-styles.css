@@ -70,15 +70,15 @@
 
 /* ── Variables de charte ──────────────────────────────────────────────────── */
 :root {
-  --navy: #1C2E49;        /* Bleu nuit — bannières, en-têtes, structure */
-  --navy-deep: #131F33;   /* Bleu nuit profond — bande de couverture */
-  --burgundy: #8C2F39;    /* Bordeaux feutré — mots-clés, piège, marqueur ⚠ */
-  --gold: #B5934A;        /* Ocre doux — liseré fin, marqueur ★ */
-  --mist: #EEF0F3;        /* Gris clair froid — surfaces */
-  --line: #D3D9E2;        /* Gris très clair — filets discrets */
-  --anthracite: #1F2A38;  /* Encre — corps de texte */
-  --pearl: #8E99A8;       /* Gris perle — texte secondaire */
-  --paper: #FFFFFF;       /* Blanc — fond de page */
+  --navy: #1c2e49; /* Bleu nuit — bannières, en-têtes, structure */
+  --navy-deep: #131f33; /* Bleu nuit profond — bande de couverture */
+  --burgundy: #8c2f39; /* Bordeaux feutré — mots-clés, piège, marqueur ⚠ */
+  --gold: #b5934a; /* Ocre doux — liseré fin, marqueur ★ */
+  --mist: #eef0f3; /* Gris clair froid — surfaces */
+  --line: #d3d9e2; /* Gris très clair — filets discrets */
+  --anthracite: #1f2a38; /* Encre — corps de texte */
+  --pearl: #8e99a8; /* Gris perle — texte secondaire */
+  --paper: #ffffff; /* Blanc — fond de page */
   --serif: "Playfair Display", "Times New Roman", serif;
   --serif-soft: "Cormorant Garamond", "Times New Roman", serif;
   --sans: "Inter", "Helvetica", "Arial", sans-serif;
@@ -137,16 +137,29 @@
 @page :first {
   margin: 0;
   border: none;
-  @top-left { content: none; }
-  @top-right { content: none; }
-  @bottom-center { content: none; }
-  @bottom-right { content: none; }
+  @top-left {
+    content: none;
+  }
+  @top-right {
+    content: none;
+  }
+  @bottom-center {
+    content: none;
+  }
+  @bottom-right {
+    content: none;
+  }
 }
 
 /* ── Réinitialisation & base ──────────────────────────────────────────────── */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-html, body {
+html,
+body {
   font-family: var(--sans);
   font-size: 10.4pt;
   line-height: 1.5;
@@ -161,31 +174,54 @@ html, body {
   font-size: 1pt;
   color: transparent;
 }
-.string-source--cours { string-set: course-name content(); }
-.string-source--footer { string-set: footer-text content(); }
+.string-source--cours {
+  string-set: course-name content();
+}
+.string-source--footer {
+  string-set: footer-text content();
+}
 /* Section courante affichée dans l'en-tête de page. */
-.partie-banner-title, .eclair-title {
+.partie-banner-title,
+.eclair-title {
   string-set: section-courante content();
 }
 
-.page { break-before: page; }
+.page {
+  break-before: page;
+}
 
 /* Aucun bloc (ligne de tableau, encadré-réflexe, figure…) ne se coupe entre
    deux pages : il est déplacé entier sur la page suivante si besoin. */
-tr { break-inside: avoid; }
+tr {
+  break-inside: avoid;
+}
 
 /* Le corps s'écoule en continu : une bannière a toujours du contenu autour
    d'elle (jamais de page réduite à un seul en-tête). Seule la 1re grande
    partie ouvre une nouvelle page, après la page de garde. */
-.partie-page { margin-top: 9mm; }
-.partie-page--first { break-before: page; margin-top: 0; }
+.partie-page {
+  margin-top: -15mm;
+  padding-top: 24mm;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.partie-page--first {
+  break-before: page;
+  margin-top: -24mm;
+}
 
 /* Signets PDF (plan de navigation). */
-.partie-banner-title { bookmark-level: 1; }
-.ft-subtitle-text { bookmark-level: 2; }
+.partie-banner-title {
+  bookmark-level: 1;
+}
+.ft-subtitle-text {
+  bookmark-level: 2;
+}
 /* Les en-têtes de tableau sont répétés à chaque page : un seul signet par
    partie / sous-partie (le 1er), pas un par occurrence répétée. */
-.partie-banner-title--repeat { bookmark-level: none; }
+.partie-banner-title--repeat {
+  bookmark-level: none;
+}
 
 /* Filigrane : logo gris très clair (transparence intégrée à l'image),
    répété au centre de chaque page. En position fixe, il se répète sur
@@ -226,20 +262,26 @@ tr { break-inside: avoid; }
   position: absolute;
   top: 0;
   left: 13mm;
-  right: 0;
+  right: 8mm;
   bottom: 0;
   padding: 30mm 24mm 24mm 26mm;
 }
 
 /* ── Identité du cours ── */
 .cover-head {
+  position: relative;
   padding-bottom: 9mm;
   border-bottom: 0.8pt solid var(--line);
 }
 .cover-logo {
-  float: right;
+  /* Le logo reste dans sa propre zone, à droite du titre. L'ancien float
+     fragmentait le premier mot de certains h1 ; l'absolu évite ce défaut. */
+  position: absolute;
+  top: 8mm;
+  right: 10mm;
   width: 43mm;
-  margin: 1mm -2mm 6mm 12mm;
+  height: auto;
+  margin: 0;
 }
 .cover-matiere {
   font-family: var(--sans);
@@ -256,6 +298,21 @@ tr { break-inside: avoid; }
   line-height: 1.08;
   color: var(--navy);
   margin-top: 6mm;
+  max-width: 83mm;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
+}
+.cover-title--long {
+  /* Les titres de plus de 35 caractères doivent rester dans la colonne à
+     gauche du logo sans césure artificielle des mots médicaux. */
+  font-size: 31pt;
+  max-width: 83mm;
+}
+.cover-title--long-word {
+  /* Un mot médical très long doit rester dans la colonne du titre sans
+     empiéter sur la zone réservée au logo. */
+  font-size: 21pt;
 }
 .cover-year {
   font-family: var(--serif-soft);
@@ -292,7 +349,9 @@ tr { break-inside: avoid; }
   list-style: none;
   margin-top: 4mm;
 }
-.cover-plan-item { break-inside: avoid; }
+.cover-plan-item {
+  break-inside: avoid;
+}
 .cover-plan-link {
   display: block;
   text-decoration: none;
@@ -324,16 +383,26 @@ tr { break-inside: avoid; }
   padding-top: 6mm;
   border-top: 0.8pt solid var(--line);
 }
-.cover-legend-items { margin-top: 3mm; }
-.cover-legend-item { margin-right: 9mm; }
+.cover-legend-items {
+  margin-top: 3mm;
+}
+.cover-legend-item {
+  margin-right: 9mm;
+}
 .cover-legend-sym {
   font-weight: 700;
   font-size: 11pt;
   margin-right: 1.6mm;
 }
-.cover-legend-sym--1 { color: var(--gold); }
-.cover-legend-sym--2 { color: var(--navy); }
-.cover-legend-sym--3 { color: var(--burgundy); }
+.cover-legend-sym--1 {
+  color: var(--gold);
+}
+.cover-legend-sym--2 {
+  color: var(--navy);
+}
+.cover-legend-sym--3 {
+  color: var(--burgundy);
+}
 .cover-legend-text {
   font-family: var(--sans);
   font-size: 9pt;
@@ -366,7 +435,9 @@ tr { break-inside: avoid; }
   font-weight: 700;
   font-size: 17pt;
 }
-.partie-banner--plain .partie-banner-title { padding-left: 1mm; }
+.partie-banner--plain .partie-banner-title {
+  padding-left: 1mm;
+}
 
 /* ── Tableaux de fiche : concept (gauche) + détail exhaustif (droite) ─────── */
 .fiche-table {
@@ -376,10 +447,16 @@ tr { break-inside: avoid; }
   margin: 5mm 0;
   font-size: 9.7pt;
 }
-.ft-col-concept { width: 27%; }
-.ft-col-detail { width: 73%; }
+.ft-col-concept {
+  width: 27%;
+}
+.ft-col-detail {
+  width: 73%;
+}
 
-.fiche-table th { break-inside: avoid; }
+.fiche-table th {
+  break-inside: avoid;
+}
 
 /* Bannière de grande partie : 1re ligne du 1er tableau (jamais isolée). */
 .ft-banner-row td {
@@ -403,7 +480,7 @@ tr { break-inside: avoid; }
   border: 0.5pt solid var(--navy);
 }
 .ft-subtitle {
-  background: #E7EBF1;
+  background: #e7ebf1;
   color: var(--navy);
   font-family: var(--serif);
   font-weight: 700;
@@ -432,12 +509,39 @@ tr { break-inside: avoid; }
   padding: 2.4mm 4mm;
   border: 0.5pt solid var(--pearl);
 }
-.ft-detail.content { margin: 0; }
-.ft-detail > :first-child { margin-top: 0; }
-.ft-detail > :last-child { margin-bottom: 0; }
-.ft-detail ul, .ft-detail ol { margin: 1mm 0 1mm 2mm; padding-left: 3mm; }
-.ft-detail li { margin: 0.8mm 0; }
-.ft-detail table { margin: 2.4mm 0; font-size: 9pt; }
+.ft-detail.content {
+  margin: 0;
+}
+.ft-detail > :first-child {
+  margin-top: 0;
+}
+.ft-detail > :last-child {
+  margin-bottom: 0;
+}
+.ft-detail ul,
+.ft-detail ol {
+  margin: 1.2mm 0 1.2mm 5.5mm;
+  padding-left: 3.8mm;
+}
+.ft-detail li {
+  margin: 0.9mm 0;
+  padding-left: 0.8mm;
+}
+.ft-detail .ft-list > li > ul,
+.ft-detail .ft-list > li > ol {
+  margin: 1mm 0 1mm 6mm;
+  padding-left: 4mm;
+  list-style-type: circle;
+}
+.ft-detail .ft-list > li > ul > li > ul,
+.ft-detail .ft-list > li > ol > li > ol {
+  margin-left: 6mm;
+  list-style-type: circle;
+}
+.ft-detail table {
+  margin: 2.4mm 0;
+  font-size: 9pt;
+}
 
 /* Lignes-réflexe (à retenir / piège / mnémo), pleine largeur. */
 .ft-reflexe td {
@@ -446,9 +550,18 @@ tr { break-inside: avoid; }
   padding: 2.6mm 4mm;
   vertical-align: top;
 }
-.ft-reflexe--a_retenir td { border-left-color: var(--navy); background: var(--mist); }
-.ft-reflexe--piege td { border-left-color: var(--burgundy); background: #F5E9EA; }
-.ft-reflexe--mnemo td { border-left-color: var(--gold); background: #F6F1E4; }
+.ft-reflexe--a_retenir td {
+  border-left-color: var(--navy);
+  background: var(--mist);
+}
+.ft-reflexe--piege td {
+  border-left-color: var(--burgundy);
+  background: #f5e9ea;
+}
+.ft-reflexe--mnemo td {
+  border-left-color: var(--gold);
+  background: #f6f1e4;
+}
 .ft-reflexe-label {
   display: block;
   margin-bottom: 1mm;
@@ -458,47 +571,112 @@ tr { break-inside: avoid; }
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.ft-reflexe--a_retenir .ft-reflexe-label { color: var(--navy); }
-.ft-reflexe--piege .ft-reflexe-label { color: var(--burgundy); }
-.ft-reflexe--mnemo .ft-reflexe-label { color: #8A6D2E; }
-.ft-reflexe-body { display: block; }
-.ft-reflexe-body > :first-child { margin-top: 0; }
-.ft-reflexe-body > :last-child { margin-bottom: 0; }
-.ft-reflexe-body ul { margin: 0.5mm 0 0.5mm 2mm; padding-left: 3mm; }
+.ft-reflexe--a_retenir .ft-reflexe-label {
+  color: var(--navy);
+}
+.ft-reflexe--piege .ft-reflexe-label {
+  color: var(--burgundy);
+}
+.ft-reflexe--mnemo .ft-reflexe-label {
+  color: #8a6d2e;
+}
+.ft-reflexe-body {
+  display: block;
+}
+.ft-reflexe-body > :first-child {
+  margin-top: 0;
+}
+.ft-reflexe-body > :last-child {
+  margin-bottom: 0;
+}
+.ft-reflexe-body ul {
+  margin: 0.5mm 0 0.5mm 2mm;
+  padding-left: 3mm;
+}
 
 /* Marqueurs de légende insérés dans le contenu. */
-.fmark { font-weight: 700; }
-.fmark.m-ecn { color: var(--gold); }
-.fmark.m-yield { color: var(--navy); }
-.fmark.m-trap { color: var(--burgundy); }
+.fmark {
+  font-weight: 700;
+}
+.fmark.m-ecn {
+  color: var(--gold);
+}
+.fmark.m-yield {
+  color: var(--navy);
+}
+.fmark.m-trap {
+  color: var(--burgundy);
+}
 
 /* ── Typographie du contenu ──────────────────────────────────────────────── */
-.content { margin: 3mm 0; }
-.content p { margin: 2mm 0; }
-.content strong { color: var(--burgundy); font-weight: 700; }
-.content em { color: var(--anthracite); }
-.content h1, .content h2, .content h3, .content h4 {
+.content {
+  margin: 3mm 0;
+}
+.content p {
+  margin: 2mm 0;
+}
+.content strong {
+  color: var(--burgundy);
+  font-weight: 700;
+}
+.content em {
+  color: var(--anthracite);
+}
+.content h1,
+.content h2,
+.content h3,
+.content h4 {
   font-family: var(--serif-soft);
   font-weight: 600;
   color: var(--anthracite);
   margin: 4mm 0 2mm 0;
 }
-.content h4 { font-size: 11.5pt; }
+.content h4 {
+  font-size: 11.5pt;
+}
 
-.content ul, .content ol {
+.content ul,
+.content ol {
   margin: 2mm 0 2mm 5mm;
   padding-left: 3mm;
 }
-.content li { margin: 1.3mm 0; }
+.content li {
+  margin: 1.3mm 0;
+}
 /* Puces par défaut : niveau 1 = disque plein, niveau 2+ = cercle creux
    (contour, intérieur blanc). Jamais de carré (on force « circle » au-delà
    du niveau 2). Marqueur en bleu nuit ≈ noir. */
-.content ul { list-style-type: disc; }
-.content ul ul { list-style-type: circle; }
-.content ul ul ul { list-style-type: circle; }
-.content li::marker { color: var(--navy); }
+.content ul {
+  list-style-type: disc;
+}
+.content ul ul,
+.content ul ol,
+.content ol ul,
+.content ol ol {
+  list-style-type: circle;
+  margin-left: 6mm;
+  padding-left: 4mm;
+  margin-top: 0.8mm;
+  margin-bottom: 0.8mm;
+}
+.content ul ul ul {
+  list-style-type: circle;
+  margin-left: 6mm;
+}
+.content li::marker {
+  color: var(--navy);
+}
+.content ul ul li::marker {
+  color: #000;
+}
+.content ul ul ul li::marker {
+  color: #000;
+}
 
-.content a { color: var(--navy); text-decoration: none; }
+.content a {
+  color: var(--navy);
+  text-decoration: none;
+}
 .content code {
   font-family: var(--mono);
   font-size: 9pt;
@@ -515,7 +693,8 @@ table {
   font-size: 9.4pt;
   break-inside: avoid;
 }
-th, td {
+th,
+td {
   border: 0.5pt solid var(--pearl);
   padding: 2mm 2.8mm;
   text-align: left;
@@ -527,9 +706,28 @@ th {
   font-weight: 700;
   color: var(--anthracite);
 }
-tbody tr:nth-child(even) { background: #F5F6F8; }
-td:first-child strong { color: var(--navy); }
-thead { display: table-header-group; }
+tbody tr:nth-child(even) {
+  background: #f5f6f8;
+}
+td:first-child strong {
+  color: var(--navy);
+}
+thead {
+  display: table-header-group;
+}
+/* Les longues sous-parties peuvent être découpées explicitement en tableaux
+   physiques autonomes. Leur en-tête est alors répété par le générateur et ne
+   doit pas être répété une seconde fois par Chromium. */
+.fiche-table--manual-pages {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.fiche-table--manual-pages thead {
+  display: table-row-group;
+}
+.ft-subtitle-text--repeat {
+  bookmark-level: none;
+}
 
 /* ════════════════════════════════════════════════════════════════════════════
    3. FIGURES & IMAGES (intégrées dans la cellule d'une ligne de tableau)
@@ -547,22 +745,37 @@ thead { display: table-header-group; }
   background: #fff;
 }
 
-/* Petites figures (max(w, h) < 900 px) : flottent à droite (3ᵉ colonne),
-   le texte de la cellule s'écoule à leur gauche et remplit l'espace. */
+/* Petites figures : colonne dédiée à côté du texte. */
 .ft-figure--small {
-  float: right;
+  float: none;
   width: 50mm;
-  margin: 0.5mm 0 2.5mm 5mm;
+  max-width: 50mm;
+  margin: 0;
+  text-align: center;
 }
-.ft-figure--small img { max-height: 58mm; }
+.ft-figure--small img {
+  max-width: 100%;
+  max-height: 55mm;
+  height: auto;
+  width: auto;
+}
 
 /* Grandes figures : pleine largeur, sous le texte (jamais flottées). */
 .ft-figure--large {
+  display: block;
   clear: both;
   width: 100%;
-  margin: 3.5mm 0 1mm 0;
+  margin: 6mm 0 4mm 0;
+  text-align: center;
 }
-.ft-figure--large img { max-height: 95mm; }
+.ft-figure--large img {
+  max-height: 115mm !important;
+  display: block !important;
+  margin: 0 auto !important;
+  max-width: 100% !important;
+  height: auto;
+  width: auto;
+}
 
 /* Légende de figure.
    La charte n'en portait aucune règle : les premières fiches illustrées
@@ -583,7 +796,51 @@ thead { display: table-header-group; }
   page-break-before: avoid;
 }
 /* Sous une petite figure flottante, la légende reste dans la largeur du flotté. */
-.ft-figure--small figcaption { font-size: 7.2pt; }
+.ft-figure--small figcaption {
+  font-size: 7.2pt;
+}
+
+/* Ne jamais laisser une petite image flotter sous les puces : les deux blocs
+   forment un binôme stable. Les schémas annotés utilisent .ft-figure--large,
+   placé sous le texte sur toute la largeur de la cellule. */
+.ft-detail:has(> .ft-figure--small) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 50mm;
+  column-gap: 4mm;
+  align-items: start;
+}
+.ft-detail:has(> .ft-figure--small) > .ft-list {
+  grid-column: 1;
+  grid-row: 1;
+}
+.ft-detail:has(> .ft-figure--small) > .ft-figure--small {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+}
+.ft-detail:has(> .ft-figure--small) > .ft-figure--small img {
+  width: 100%;
+}
+
+/* Tableaux, scores et autres images textuelles : ligne autonome située après
+   l'explication, sur toute la largeur utile. Jamais en troisième colonne. */
+.fiche-table .ft-image-row {
+  background: #fff;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.fiche-table .ft-image-row > td {
+  padding: 2mm 3mm 4mm;
+  border-top: 0;
+}
+.fiche-table .ft-image-row .ft-figure--large {
+  width: 100%;
+  margin: 0;
+}
+.fiche-table .ft-image-row .ft-figure--large img {
+  max-width: 100% !important;
+  max-height: 150mm !important;
+}
 
 /* ════════════════════════════════════════════════════════════════════════════
    4. SYNTHÈSE & CHIFFRES-CLÉS
@@ -592,27 +849,89 @@ thead { display: table-header-group; }
   margin: 6mm 0;
   break-inside: avoid;
 }
+.synthese-page {
+  margin-top: -24mm;
+  padding-top: 24mm;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.synthese-page--compact .synthese-bloc {
+  margin: 3.5mm 0;
+}
+.synthese-page--compact .content {
+  margin: 1.8mm 0;
+}
+.synthese-page--compact .table-synthese table {
+  margin: 2.2mm 0;
+  font-size: 9pt;
+}
+.synthese-page--compact .table-synthese th,
+.synthese-page--compact .table-synthese td {
+  padding: 1.55mm 2.5mm;
+}
+.synthese-page--compact .synthese-titre {
+  font-size: 12.4pt;
+  margin: 2mm 0 1.1mm;
+}
+.synthese-header {
+  margin: 0 0 6mm 0;
+  padding-bottom: 3mm;
+  border-bottom: 1.2pt solid var(--gold);
+}
+.synthese-kicker {
+  font-family: var(--sans);
+  font-size: 8pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.synthese-main-title {
+  margin: 1.2mm 0 0;
+  font-family: var(--serif);
+  font-size: 22pt;
+  line-height: 1.05;
+  color: var(--navy);
+}
+.synthese-points {
+  background: var(--mist);
+  border-left: 2.2pt solid var(--gold);
+  padding: 3mm 5mm;
+}
 .synthese-titre {
   font-family: var(--serif-soft);
   font-weight: 600;
   font-size: 13pt;
   color: var(--navy);
   margin-bottom: 1.6mm;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+.synthese-titre + .table-synthese {
+  page-break-before: avoid;
+  break-before: avoid;
 }
 .table-synthese th {
   background: var(--navy);
   color: #fff;
   border-color: var(--navy);
 }
-.table-synthese tbody tr:nth-child(odd) { background: #fff; }
-.table-synthese tbody tr:nth-child(even) { background: var(--mist); }
+.table-synthese tbody tr:nth-child(odd) {
+  background: #fff;
+}
+.table-synthese tbody tr:nth-child(even) {
+  background: var(--mist);
+}
 
 .table-chiffres th {
-  background: #8A6D2E;
-  border-color: #8A6D2E;
+  background: #8a6d2e;
+  border-color: #8a6d2e;
 }
-.table-chiffres td:first-child { font-weight: 700; }
-.table-chiffres td:first-child strong { color: var(--anthracite); }
+.table-chiffres td:first-child {
+  font-weight: 700;
+}
+.table-chiffres td:first-child strong {
+  color: var(--anthracite);
+}
 
 /* ════════════════════════════════════════════════════════════════════════════
    5. FICHE ÉCLAIR
@@ -623,6 +942,16 @@ thead { display: table-header-group; }
   border-top: 2.2pt solid var(--navy);
   padding: 6mm 11mm 7mm 11mm;
   margin-top: 2mm;
+  break-inside: avoid;
+}
+.fiche-eclair-page {
+  display: flex;
+  align-items: center;
+  min-height: 248mm;
+}
+.fiche-eclair-page .eclair-card {
+  width: 100%;
+  margin: 0;
 }
 .eclair-eyebrow {
   text-align: center;
@@ -654,12 +983,26 @@ thead { display: table-header-group; }
   background: var(--gold);
   margin: 3.4mm auto 4mm auto;
 }
-.eclair-body { font-size: 9.3pt; line-height: 1.4; }
-.eclair-body p { margin: 1.6mm 0; }
-.eclair-body strong { color: var(--burgundy); }
-.eclair-body ul { margin: 1mm 0 1mm 4mm; padding-left: 3mm; }
-.eclair-body li { margin: 0.6mm 0; }
-.eclair-body li::marker { color: var(--navy); }
+.eclair-body {
+  font-size: 9.3pt;
+  line-height: 1.4;
+}
+.eclair-body p {
+  margin: 1.6mm 0;
+}
+.eclair-body strong {
+  color: var(--burgundy);
+}
+.eclair-body ul {
+  margin: 1mm 0 1mm 4mm;
+  padding-left: 3mm;
+}
+.eclair-body li {
+  margin: 0.6mm 0;
+}
+.eclair-body li::marker {
+  color: var(--navy);
+}
 .eclair-points-titre {
   font-family: var(--serif-soft);
   font-weight: 700;
@@ -669,15 +1012,21 @@ thead { display: table-header-group; }
   padding-bottom: 0.8mm;
   border-bottom: 0.6pt solid var(--gold);
 }
-.eclair-points { padding-left: 5.5mm; }
+.eclair-points {
+  padding-left: 5.5mm;
+}
 .eclair-points li {
   margin: 1.3mm 0;
   padding-left: 1.4mm;
   font-size: 9.3pt;
   line-height: 1.38;
 }
-.eclair-points li::marker { color: var(--navy); }
-.eclair-points strong { color: var(--burgundy); }
+.eclair-points li::marker {
+  color: var(--navy);
+}
+.eclair-points strong {
+  color: var(--burgundy);
+}
 .eclair-footer {
   margin-top: 4.5mm;
   text-align: center;

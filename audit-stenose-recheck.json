@@ -1,0 +1,45 @@
+{
+  "generatedAt": "2026-08-10T22:42:59.116Z",
+  "totals": {
+    "courses": 1,
+    "ok": 0,
+    "repair": 1,
+    "missing": 0
+  },
+  "rows": [
+    {
+      "coursId": "09e9b59a-ba5a-45b2-b343-bbc734dafaf9",
+      "orderIndex": 6,
+      "title": "Traitement chirurgical des sténoses du canal lombaire",
+      "pages": 31,
+      "textCharacters": 24687,
+      "mechanicalFiche": false,
+      "parts": 6,
+      "ficheTables": 21,
+      "tableErrors": 0,
+      "partHeaderErrors": 0,
+      "bareDetails": 0,
+      "paragraphDetails": 0,
+      "listlessDetails": 0,
+      "figures": 8,
+      "brokenFigureImages": 0,
+      "nestedLists": 21,
+      "synthesis": 1,
+      "eclair": 1,
+      "mechanicalQuestions": 0,
+      "cardPromptQuestions": 0,
+      "genericQuestionCount": 0,
+      "repeatedQuestionStems": 2,
+      "dpClinicalFailures": 1,
+      "mechanicalCards": 0,
+      "genericSeries": 0,
+      "studentScaffolding": 0,
+      "unsupportedAnnales": false,
+      "mojibake": false,
+      "defects": [
+        "dp-clinical"
+      ],
+      "status": "repair"
+    }
+  ]
+}

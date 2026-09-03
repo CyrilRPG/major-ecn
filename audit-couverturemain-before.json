@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-08-10T13:48:46.603Z",
+  "totals": {
+    "courses": 1,
+    "ok": 0,
+    "repair": 1,
+    "missing": 0
+  },
+  "rows": [
+    {
+      "orderIndex": 41,
+      "title": "Couverture cutanée de la main et des doigts",
+      "pages": 13,
+      "textCharacters": 8986,
+      "mechanicalFiche": false,
+      "parts": 4,
+      "ficheTables": 8,
+      "tableErrors": 0,
+      "partHeaderErrors": 0,
+      "bareDetails": 0,
+      "paragraphDetails": 0,
+      "listlessDetails": 0,
+      "figures": 8,
+      "synthesis": 1,
+      "eclair": 1,
+      "mechanicalQuestions": 0,
+      "cardPromptQuestions": 0,
+      "genericQuestionCount": 0,
+      "repeatedQuestionStems": 0,
+      "dpClinicalFailures": 8,
+      "mechanicalCards": 0,
+      "genericSeries": 0,
+      "defects": [
+        "dp-clinical"
+      ],
+      "status": "repair"
+    }
+  ]
+}

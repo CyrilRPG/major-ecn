@@ -56,35 +56,35 @@
       "questions": [
         {
           "format": "qroc",
-          "enonce": "<b>Question 1</b> <i>(25 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur l’analyse sémiologique du tableau clinique.</i>",
+          "enonce": "<b>Question 1</b> <i>(25 points)</i>\n\nAnalysez ce tableau clinique sur le plan sémiologique.",
           "images": [],
           "reponseAttendue": "Présentation étrange, émoussement affectif, alogie, propos délirant, thème de mysticisme, mécanisme d’hallucination intrapsychique, automatisme mental, délire non systématisé, participation affective faible, rationalisme morbide, antécédent d’acte hétéro-agressif, pas d’idée suicidaire, isolement social, anosognosie.",
           "correctionGenerale": "<b>Mots-clés attendus (barème sur 25 points)</b>\n• Présentation étrange <i>(1)</i>\n• Émoussement affectif <i>(2)</i>\n• Alogie <i>(1)</i>\n• Propos délirant <i>(3)</i>\n• Thème de mysticisme <i>(2)</i>\n• Mécanisme : hallucination intrapsychique <i>(2)</i>\n• Automatisme mental <i>(3)</i>\n• Délire non systématisé <i>(1)</i>\n• Participation affective faible <i>(1)</i>\n• Rationalisme morbide <i>(2)</i>\n• Antécédent d’acte hétéro-agressif <i>(2)</i>\n• Pas d’idée suicidaire <i>(1)</i>\n• Isolement social <i>(2)</i>\n• Anosognosie <i>(2)</i>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question 2</b> <i>(15 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur les autres signes cliniques à rechercher.</i>",
+          "enonce": "<b>Question 2</b> <i>(15 points)</i>\n\nQuels autres signes cliniques recherchez-vous à l’interrogatoire et à l’examen ?",
           "images": [],
           "reponseAttendue": "Tristesse de l’humeur, trouble du sommeil, trouble de l’appétit, idée actuelle hétéro-agressive (PMZ), hallucination acoustico-verbale.",
           "correctionGenerale": "<b>Mots-clés attendus (barème sur 15 points)</b>\n• Tristesse de l’humeur <i>(3)</i>\n• Trouble du sommeil <i>(3)</i>\n• Trouble de l’appétit <i>(3)</i>\n• <b>Idée actuelle hétéro-agressive</b> <i>(3, PMZ)</i>\n• Hallucination acoustico-verbale <i>(3)</i>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question 3</b>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur le diagnostic et ses arguments.</i>",
+          "enonce": "<b>Question 3</b>\n\nQuel diagnostic retenez-vous ? Justifiez votre réponse.",
           "images": [],
           "reponseAttendue": "Décompensation délirante d’une schizophrénie : désorganisation intellectuelle et comportementale, idées délirantes, hallucinations, phase aiguë de plus de 1 mois, symptômes négatifs, durée totale supérieure à 6 mois.",
           "correctionGenerale": "<b>Mots-clés attendus</b>\n• Décompensation délirante <i>(2)</i>\n• <b>Schizophrénie</b> <i>(5)</i>\n• Désorganisation intellectuelle et comportementale <i>(1)</i>\n• Idées délirantes <i>(1)</i>\n• Hallucinations <i>(1)</i>\n• Phase aiguë de plus de 1 mois <i>(2)</i>\n• Symptômes négatifs <i>(1)</i>\n• Durée totale > 6 mois <i>(2)</i>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question 4</b> <i>(25 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur la prise en charge initiale.</i>",
+          "enonce": "<b>Question 4</b> <i>(25 points)</i>\n\nQuelle est votre prise en charge initiale ?",
           "images": [],
           "reponseAttendue": "Hospitalisation, libre si possible, sinon sous contrainte en SPDRE devant le trouble grave à l’ordre public ; prévention du risque de fugue ; élimination d’une cause secondaire par IRM cérébrale et recherche de toxiques urinaires ; bilan pré-thérapeutique avec ECG ; chimiothérapie par antipsychotique atypique (citer une molécule) ; benzodiazépine si agitation.",
           "correctionGenerale": "<b>Mots-clés attendus (barème sur 25 points)</b>\n• Hospitalisation <i>(2)</i>\n• Libre si possible <i>(1)</i>\n• Sinon sous contrainte : <b>SPDRE</b> <i>(1)</i>\n• Trouble grave à l’ordre public <i>(1)</i>\n• Prévention du risque de fugue <i>(1)</i>\n• Élimination d’une cause secondaire <i>(1)</i>\n• IRM cérébrale <i>(2)</i>\n• Toxiques urinaires <i>(2)</i>\n• <b>Bilan pré-thérapeutique</b> <i>(2, PMZ)</i>\n• ECG <i>(2)</i>\n• <b>Chimiothérapie</b> <i>(2, PMZ)</i>\n• Antipsychotique atypique <i>(1)</i>\n• Exemple de molécule <i>(5)</i>\n• Benzodiazépine si agitation <i>(1)</i>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question 5</b> <i>(20 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur l’instauration et la surveillance d’un traitement par clozapine.</i>",
+          "enonce": "<b>Question 5</b> <i>(20 points)</i>\n\nDevant la résistance au traitement, vous instaurez une clozapine. Quelles en sont les modalités d’instauration et de surveillance ?",
           "images": [],
           "reponseAttendue": "Hospitalisation, instauration de la clozapine avec titration progressive, carnet de clozapine, NFS hebdomadaire pendant 18 semaines puis mensuelle, surveillance du risque d’agranulocytose et de myocardite.",
           "correctionGenerale": "<b>Mots-clés attendus (barème sur 20 points)</b>\n• Hospitalisation <i>(2)</i>\n• <b>Instauration de clozapine</b> <i>(5)</i>\n• Titration progressive <i>(4)</i>\n• <b>Carnet de clozapine</b> <i>(2, PMZ)</i>\n• NFS hebdomadaire pendant 18 semaines <i>(2)</i>\n• Puis 1 NFS mensuelle <i>(1)</i>\n• Surveillance de l’agranulocytose <i>(2)</i>\n• Surveillance de la myocardite <i>(2)</i>"
@@ -307,49 +307,49 @@
       "questions": [
         {
           "format": "qroc",
-          "enonce": "<b>Question 1</b> <i>(10 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur le diagnostic de l’épisode.</i>",
+          "enonce": "<b>Question 1</b> <i>(10 points)</i>\n\nQuel diagnostic retenez-vous pour cet épisode ? Soyez complet.",
           "images": [],
           "reponseAttendue": "Un épisode dépressif caractérisé, avec symptômes psychotiques, à caractéristiques mélancoliques, avec idées suicidaires.",
           "correctionGenerale": "<b>Mots-clés attendus (barème sur 10 points)</b>\n• Épisode dépressif caractérisé <i>(4)</i>\n• Symptômes psychotiques <i>(2)</i>\n• Caractéristiques mélancoliques <i>(2)</i>\n• Avec idées suicidaires <i>(2)</i>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question 2</b> <i>(15 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur l’analyse sémiologique du tableau.</i>",
+          "enonce": "<b>Question 2</b> <i>(15 points)</i>\n\nAnalysez ce tableau clinique sur le plan sémiologique.",
           "images": [],
           "reponseAttendue": "Anhédonie, asthénie, perte de poids, insomnie, humeur aréactive, délire polymorphe, mécanisme intuitif, thème de persécution, mécanismes multiples, mécanisme hallucinatoire avec hallucinations acoustico-verbales, délire non systématisé, anhédonie généralisée ou athymhormie, culpabilité, perte de poids importante.",
           "correctionGenerale": "<b>Mots-clés attendus (barème sur 15 points, 1 point par item)</b>\n• Anhédonie\n• Asthénie\n• Perte de poids\n• Insomnie\n• Humeur aréactive\n• Délire polymorphe\n• Intuitif\n• Persécution\n• Mécanismes multiples\n• Hallucinatoire / HAV\n• Non systématisé\n• Anhédonie généralisée / athymhormie\n• Culpabilité\n• Perte de poids importante"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question 3</b> <i>(12 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur la complication à redouter.</i>",
+          "enonce": "<b>Question 3</b> <i>(12 points)</i>\n\nQuelle complication redoutez-vous en priorité ? Justifiez votre réponse.",
           "images": [],
           "reponseAttendue": "La tentative de suicide, du fait d’un épisode dépressif caractérisé sévère, mélancolique et psychotique.",
           "correctionGenerale": "<b>Mots-clés attendus (barème sur 12 points)</b>\n• <b>Tentative de suicide</b> <i>(6)</i>\n• Car EDC sévère <i>(2)</i>\n• Mélancolique <i>(2)</i>\n• Psychotique <i>(2)</i>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question 4</b> <i>(18 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur les diagnostics différentiels et les évolutions possibles.</i>",
+          "enonce": "<b>Question 4</b> <i>(18 points)</i>\n\nQuels diagnostics différentiels évoquez-vous ? Quelles sont les évolutions possibles ?",
           "images": [],
           "reponseAttendue": "Pathologie neurologique, pathologie endocrinienne, épisode dépressif caractérisé, manie, épisode psychotique bref, tentative de suicide ; évolutions vers un EDC, une schizophrénie, un trouble bipolaire, une tentative de suicide ou un suicide.",
           "correctionGenerale": "<b>Mots-clés attendus (barème sur 18 points)</b>\n• Pathologie neurologique <i>(1)</i>\n• Pathologie endocrinienne <i>(1)</i>\n• EDC <i>(2)</i>\n• Manie <i>(2)</i>\n• Épisode psychotique bref <i>(1)</i>\n• <b>Tentative de suicide</b> <i>(3)</i>\n• EDC <i>(1)</i>\n• Schizophrénie <i>(1)</i>\n• Trouble bipolaire <i>(1)</i>\n• TS <i>(2)</i>\n• Suicide <i>(3)</i>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question 5</b> <i>(8 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur les modalités d’hospitalisation.</i>",
+          "enonce": "<b>Question 5</b> <i>(8 points)</i>\n\nQuelles modalités d’hospitalisation retenez-vous ?",
           "images": [],
           "reponseAttendue": "Une hospitalisation en urgence, sous contrainte en secteur fermé, en soins à la demande d’un tiers, avec traitement sédatif.",
           "correctionGenerale": "<b>Mots-clés attendus (barème sur 8 points)</b>\n• Hospitalisation en urgence <i>(2)</i>\n• Sous contrainte / secteur fermé <i>(2)</i>\n• <b>SDT</b> <i>(2)</i>\n• Traitement sédatif <i>(2)</i>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question 6</b> <i>(22 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur le traitement médicamenteux.</i>",
+          "enonce": "<b>Question 6</b> <i>(22 points)</i>\n\nQuel traitement médicamenteux instaurez-vous ?",
           "images": [],
           "reponseAttendue": "Un antidépresseur de type IRSNa ou tricyclique (citer une molécule), un antipsychotique atypique (citer une molécule), un traitement sédatif et un traitement hypnotique.",
           "correctionGenerale": "<b>Mots-clés attendus (barème sur 22 points)</b>\n• <b>Antidépresseur</b> <i>(5)</i>\n• IRSNa ou tricyclique <i>(3)</i>\n• Exemple de molécule <i>(2)</i>\n• <b>Antipsychotique atypique</b> <i>(5)</i>\n• Exemple de molécule <i>(2)</i>\n• Traitement sédatif <i>(2)</i>\n• Traitement hypnotique <i>(3)</i>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question 7</b> <i>(15 points)</i>\n\n<i>Intitulé officiel non disponible. D’après la grille, la question porte sur l’indication d’une électroconvulsivothérapie.</i>",
+          "enonce": "<b>Question 7</b> <i>(15 points)</i>\n\nLe pronostic vital est engagé et les traitements médicamenteux ont échoué. Quelle thérapeutique proposez-vous ? Que faites-vous au préalable ?",
           "images": [],
           "reponseAttendue": "L’électroconvulsivothérapie, après bilan pré-thérapeutique, en raison du pronostic vital engagé et de l’échec des traitements médicamenteux.",
           "correctionGenerale": "<b>Mots-clés attendus (barème sur 15 points)</b>\n• <b>ECT</b> <i>(8)</i>\n• Après bilan pré-thérapeutique <i>(3)</i>\n• Pronostic vital engagé <i>(2)</i>\n• Échec des traitements médicamenteux <i>(2)</i>"

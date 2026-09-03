@@ -70,6 +70,22 @@ function trouverDansCentral(buf, nomCherche) {
   return null;
 }
 
+/**
+ * Retire les sous-arbres de dessin d'un paragraphe. Leur contenu textuel n'est
+ * pas du texte d'auteur mais des paramètres de placement — `<wp:align>center`
+ * et `<wp:posOffset>635` — qui se collaient en tête de chaque légende sous la
+ * forme « center635 Coupe sagittale du pharynx ».
+ *
+ * Les `r:embed` sont relevés AVANT l'appel : rien de la relation image ne se
+ * perd ici, seul le bruit de mise en page disparaît.
+ */
+function retirerDessins(xmlParagraphe) {
+  return xmlParagraphe
+    .replace(/<w:drawing\b[\s\S]*?<\/w:drawing>/g, '')
+    .replace(/<w:pict\b[\s\S]*?<\/w:pict>/g, '')
+    .replace(/<mc:AlternateContent\b[\s\S]*?<\/mc:AlternateContent>/g, '');
+}
+
 const decoderEntites = (s) => s
   .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
   .replace(/&quot;/g, '"').replace(/&apos;/g, "'")
@@ -116,6 +132,42 @@ function estLegende(texte) {
   return RE_LEGENDE.test(texte) && texte.trim().length > 4;
 }
 
+const RE_CHAPITRE = /^\s*chapitre\s+\d+\b/i;
+const RE_TITRE_NUMEROTE = /^\s*((?:\d{1,2}\.){1,3}\d*|\d{1,2})[.):]?\s+(.+)$/;
+// Le fonds ORL numérote ses titres avec un DEUX-POINTS — « I: Rappels »,
+// « A: Anatomie du larynx », « 1: Loge parotidienne ». Sans ce cas, les
+// 19 chapitres ressortaient avec `titres: 0` et toute la hiérarchie était perdue.
+const RE_TITRE_ROMAIN = /^\s*([IVX]{1,6}|[A-H])[.):]\s+(.+)$/;
+
+/**
+ * Les DOCX Anesthésie-Réanimation n'emploient pas les styles Word Heading/Titre.
+ * La hiérarchie est donc reconstruite uniquement quand la forme est assez
+ * contraignante pour ne pas transformer une phrase médicale numérotée en titre.
+ */
+function classifierParagraphe(texte, styles, xmlParagraphe) {
+  if (estLegende(texte)) return { type: 'legende', niveau: null };
+  if (styles.length > 0) {
+    const style = styles[0] || '';
+    const niveau = Number(style.match(/(\d+)$/)?.[1] || 1);
+    return { type: 'titre', niveau: Math.min(4, Math.max(1, niveau)) };
+  }
+  const court = texte.length <= 180 && (texte.match(/\S+/g) || []).length <= 22;
+  if (court && RE_CHAPITRE.test(texte)) return { type: 'titre', niveau: 1 };
+  const numerote = court ? texte.match(RE_TITRE_NUMEROTE) : null;
+  const ressembleQuestion = /^(?:avez|êtes|est|existe|quel(?:le|les|s)?|comment|pourquoi|quand|où)\b/i.test(numerote?.[2] || '');
+  if (numerote && !ressembleQuestion && !/[!?;:]\s*$/.test(numerote[2])) {
+    const numeroNormalise = numerote[1].replace(/\.$/, '');
+    const profondeur = (numeroNormalise.match(/\./g) || []).length + 2;
+    return { type: 'titre', niveau: Math.min(4, profondeur) };
+  }
+  const romain = court ? texte.match(RE_TITRE_ROMAIN) : null;
+  if (romain && !/[.!?;:]\s*$/.test(romain[2])) {
+    return { type: 'titre', niveau: /^[IVX]/.test(romain[1]) ? 1 : 2 };
+  }
+  if (/<w:numPr\b/.test(xmlParagraphe)) return { type: 'liste', niveau: null };
+  return { type: 'paragraphe', niveau: null };
+}
+
 /**
  * Word colle parfois DEUX légendes dans le même paragraphe
  * (« Figure 7. … Figure 8. … »). Attribuer les deux à une seule image
@@ -126,6 +178,82 @@ function premiereLegende(texte) {
   return (m ? m[1] : texte).trim();
 }
 
+/**
+ * Un paragraphe réduit au NUMÉRO d'une figure : « FIG. 12.1 », « Tableau 11.3 ».
+ * Le fonds ORL les place systématiquement deux paragraphes avant l'image. Ce
+ * numéro est éditorial : il ne se publie jamais et ne fait pas une légende.
+ */
+const RE_NUMERO_SEUL = /^\s*(fig\.?|figure|tableau|tabl\.?|photo|encadré|schéma)\s*\d+(?:[.\-–]\d+)*\s*[.:]?\s*$/i;
+const estNumeroDeFigure = (texte) => RE_NUMERO_SEUL.test(texte);
+
+/**
+ * Découpe le document en paragraphes, quel que soit le format de l'archive.
+ *
+ * POURQUOI. Le fonds ORL contient un fichier qui porte l'extension `.docx` mais
+ * qui est en réalité un ODT (« Chapitre 16 » : `mimetype`, `content.xml`,
+ * `Pictures/`, aucun `word/document.xml`). Les deux formats décrivent la même
+ * chose — une suite de paragraphes dont certains ancrent une image — donc on
+ * les ramène à une structure commune ici plutôt que de convertir le fichier :
+ * une conversion déplacerait les ancrages et donc les légendes.
+ *
+ * Renvoie { format, paragraphes: [{ xml, medias: [chemin dans l'archive] }] },
+ * dans l'ordre de lecture du document.
+ */
+function decouperDocument(zip) {
+  const docXml = zip.get('word/document.xml');
+  if (docXml) {
+    // Relations rId → cible média.
+    const rels = new Map();
+    const relsXml = zip.get('word/_rels/document.xml.rels');
+    if (relsXml) {
+      for (const m of relsXml.toString('utf8').matchAll(/Id="([^"]+)"[^>]*Target="([^"]+)"/g)) {
+        rels.set(m[1], m[2].replace(/^\.\//, ''));
+      }
+    }
+    const paragraphes = docXml.toString('utf8').split(/<w:p[ >]/).slice(1).map((brut) => ({
+      xml: retirerDessins(brut),
+      medias: [...brut.matchAll(/r:embed="([^"]+)"/g)]
+        .map((m) => rels.get(m[1]))
+        .filter(Boolean)
+        .map((cible) => `word/${cible}`),
+    }));
+    return { format: 'ooxml', paragraphes };
+  }
+
+  const contentXml = zip.get('content.xml');
+  if (!contentXml) {
+    throw new Error('ni word/document.xml ni content.xml — archive non reconnue');
+  }
+
+  // Le cadre de dessin ODT porte le lien vers l'image et peut contenir des
+  // paragraphes imbriqués. On l'aplatit en un jeton simple AVANT le découpage :
+  // sinon un `<text:p>` interne couperait le paragraphe en deux et séparerait la
+  // légende de son image.
+  let xml = contentXml.toString('utf8').replace(
+    /<draw:frame\b[\s\S]*?<\/draw:frame>/g,
+    (cadre) => {
+      const href = cadre.match(/xlink:href="([^"]+)"/)?.[1];
+      return href ? `<odtmedia href="${href}"/>` : '';
+    },
+  );
+  // Espaces explicites de l'ODT : sans eux, le retrait des balises collerait les
+  // mots entre eux.
+  xml = xml
+    .replace(/<text:s\b[^>]*\/>/g, ' ')
+    .replace(/<text:tab\b[^>]*\/>/g, ' ')
+    .replace(/<text:line-break\b[^>]*\/>/g, ' ');
+
+  // La balise ouvrante est consommée ENTIÈREMENT (attributs compris) : découper
+  // sur le seul nom laisserait `text:style-name="Standard">` en tête de chaque
+  // fragment, qui ressortait ensuite comme du texte d'auteur. Le garde `(?=[\s/>])`
+  // évite d'attraper `<text:page-number>` et consorts.
+  const paragraphes = xml.split(/<text:(?:p|h)(?=[\s/>])[^>]*>/).slice(1).map((frag) => ({
+    xml: frag,
+    medias: [...frag.matchAll(/<odtmedia href="([^"]+)"\/>/g)].map((m) => m[1]),
+  }));
+  return { format: 'odt', paragraphes };
+}
+
 function main() {
   const [fichier, outDir] = process.argv.slice(2);
   if (!fichier || !outDir) {
@@ -134,81 +262,87 @@ function main() {
   }
 
   const zip = lireZip(fs.readFileSync(fichier));
-  const docXml = zip.get('word/document.xml');
-  if (!docXml) throw new Error('word/document.xml introuvable — fichier .docx invalide');
-
-  // Relations rId → cible média.
-  const rels = new Map();
-  const relsXml = zip.get('word/_rels/document.xml.rels');
-  if (relsXml) {
-    for (const m of relsXml.toString('utf8').matchAll(/Id="([^"]+)"[^>]*Target="([^"]+)"/g)) {
-      rels.set(m[1], m[2].replace(/^\.\//, ''));
-    }
-  }
+  const { format, paragraphes } = decouperDocument(zip);
 
   fs.mkdirSync(path.join(outDir, 'img'), { recursive: true });
-
-  const xml = docXml.toString('utf8');
-  // Découpe en paragraphes : c'est l'unité qui porte à la fois le texte et les
-  // ancrages d'image, donc l'ordre de lecture réel du document.
-  const paragraphes = xml.split(/<w:p[ >]/).slice(1);
 
   const blocs = [];
   const images = [];
   let compteur = 0;
   let accentsRepares = 0;
 
-  for (const p of paragraphes) {
+  for (const { xml: p, medias } of paragraphes) {
     const brut = normaliserLigatures(decoderEntites(p.replace(/<[^>]+>/g, '')))
       .replace(/\s+/g, ' ').trim();
     accentsRepares += (brut.match(/[cC]¸/g) ?? []).length;
     const texte = recomposerAccents(brut);
-    const styles = [...p.matchAll(/w:val="([^"]*(?:Heading|Titre)[^"]*)"/g)].map((m) => m[1]);
-    const embeds = [...p.matchAll(/r:embed="([^"]+)"/g)].map((m) => m[1]);
+    const styles = [...p.matchAll(/<w:pStyle[^>]*w:val="([^"]*(?:Heading|Titre)[^"]*)"/g)].map((m) => m[1]);
 
-    for (const rid of embeds) {
-      const cible = rels.get(rid);
-      if (!cible) continue;
-      const donnees = zip.get(`word/${cible}`);
+    // Le fonds ORL écrit la légende DANS le paragraphe qui ancre l'image, et
+    // place deux paragraphes plus haut un paragraphe ne portant que le numéro
+    // (« FIG. 12.1 »). C'est donc ce texte-ci qui est la légende — le numéro,
+    // lui, ne se publie jamais.
+    const legendeDuParagraphe = texte && !estNumeroDeFigure(texte)
+      ? premiereLegende(texte)
+      : null;
+    let imagesEcrites = 0;
+
+    for (const chemin of medias) {
+      const donnees = zip.get(chemin);
       if (!donnees || donnees.length < 4096) continue; // écarte les puces et filets
       compteur += 1;
-      const ext = path.extname(cible) || '.png';
+      imagesEcrites += 1;
+      const ext = path.extname(chemin) || '.png';
       const nomFichier = `img_${String(compteur).padStart(3, '0')}${ext}`;
       fs.writeFileSync(path.join(outDir, 'img', nomFichier), donnees);
-      const img = {
+      images.push({
         index: compteur,
         fichier: `img/${nomFichier}`,
         octets: donnees.length,
         blocIndex: blocs.length,
-        // Une légende présente dans le MÊME paragraphe que l'ancrage.
-        legende: estLegende(texte) ? premiereLegende(texte) : null,
-      };
-      images.push(img);
+        legende: legendeDuParagraphe,
+      });
       blocs.push({ type: 'image', index: compteur });
     }
 
     if (!texte) continue;
+    // Un paragraphe qui a ancré une image porte sa légende, pas de la prose :
+    // le typer autrement la ferait figurer deux fois dans la fiche.
+    const classification = imagesEcrites > 0
+      ? { type: 'legende', niveau: null }
+      : classifierParagraphe(texte, styles, p);
     blocs.push({
-      type: styles.length > 0 ? 'titre' : estLegende(texte) ? 'legende' : 'paragraphe',
+      id: `b${String(blocs.length + 1).padStart(5, '0')}`,
+      type: classification.type,
       texte,
       style: styles[0] ?? null,
+      niveau: classification.niveau,
     });
   }
 
-  // Rattachement des légendes voisines : le paragraphe qui SUIT immédiatement
-  // une image, s'il est de forme « Figure N — … », la légende. C'est la
-  // convention Word ; on ne remonte pas plus loin pour ne rien inventer.
+  // Rattachement des légendes voisines : suivant d'abord, précédent ensuite.
+  // Les deux placements sont employés dans le corpus ; aucune autre proximité
+  // n'est acceptée afin de ne pas fabriquer une légende.
+  const legendeUtilisable = (bloc) => bloc?.type === 'legende'
+    && bloc.texte
+    && !estNumeroDeFigure(bloc.texte);
+
   for (const img of images) {
     if (img.legende) continue;
     const suivant = blocs[img.blocIndex + 1];
-    if (suivant?.type === 'legende') img.legende = premiereLegende(suivant.texte);
+    if (legendeUtilisable(suivant)) img.legende = premiereLegende(suivant.texte);
+    if (img.legende) continue;
+    const precedent = blocs[img.blocIndex - 1];
+    if (legendeUtilisable(precedent)) img.legende = premiereLegende(precedent.texte);
   }
 
   const rapport = {
     source: path.basename(fichier),
+    format,
     caracteres: blocs.filter((b) => b.texte).reduce((n, b) => n + b.texte.length, 0),
     blocs: blocs.length,
     titres: blocs.filter((b) => b.type === 'titre').length,
+    listes: blocs.filter((b) => b.type === 'liste').length,
     images: images.length,
     imagesLegendees: images.filter((i) => i.legende).length,
     // > 0 signale une conversion défectueuse : ce chapitre a de fortes chances

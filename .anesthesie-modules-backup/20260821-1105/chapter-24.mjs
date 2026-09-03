@@ -1,0 +1,1316 @@
+const row = (concept, bullets, sourceBlocks, image = null) => ({ concept, bullets, sourceBlocks, ...(image ? { image } : {}) });
+const fullImage = (path, caption, sourceCaption) => ({ path, position: "after", size: "large", layout: "full_width", containsText: true, caption, sourceCaption });
+const I = {
+  autoreg: fullImage("img/img_001.png", "Autorégulation du débit sanguin cérébral", "Courbe décrivant les limites de l’autorégulation cérébrale"),
+  gases: fullImage("img/img_002.png", "Influence de la PaCO₂ et de la PaO₂ sur le débit cérébral", "Effets de la PaCO₂ et de la PaO₂ sur le débit sanguin cérébral"),
+  monroe: fullImage("img/img_003.png", "Réserve compensatoire et pression intracrânienne", "Relation entre volume intracrânien total et pression intracrânienne"),
+  agents: fullImage("img/img_004.png", "Profils cérébraux des principaux agents anesthésiques", "Effets comparés des agents sur débit, métabolisme et pression intracrânienne"),
+  preop: fullImage("img/img_005.png", "Évaluation ciblée avant une chirurgie intracrânienne", "Éléments de l’évaluation préopératoire en chirurgie intracrânienne"),
+  induction: fullImage("img/img_006.png", "Adaptation de l’induction à la pathologie intracrânienne", "Considérations anesthésiques à l’induction selon la pathologie intracrânienne"),
+  tense: fullImage("img/img_007.png", "Leviers de traitement d’un cerveau tendu", "Principes thérapeutiques du cerveau tendu et de l’hypertension intracrânienne"),
+  htic1: fullImage("img/img_008.png", "Premiers niveaux de traitement d’une hypertension intracrânienne", "Algorithme gradué de traitement de l’hypertension intracrânienne"),
+  htic2: fullImage("img/img_009.png", "Escalade thérapeutique d’une hypertension intracrânienne", "Algorithme complet de traitement de l’hypertension intracrânienne aux soins intensifs"),
+};
+
+function buildFiche() {
+  const parts = [
+    { title: "Garantir l’apport énergétique cérébral", sections: [
+      { title: "Débit, perfusion et résistance", rows: [
+        row("Dépendance métabolique", [
+          { text: "Le cerveau consomme environ **20 % de l’oxygène** et **25 % du glucose** basal sans réserve substantielle.", children: ["DSC moyen proche de **50 mL/100 g/min**", "Sous **20 mL/100 g/min**, dysfonction neuronale puis infarctus selon durée et intensité"] },
+          "La substance grise reçoit davantage de débit que la substance blanche.",
+        ], ["b00003","b00004","b00005"]),
+        row("Équations directrices", [
+          { text: "**DSC = PPC/RVC** : le débit augmente avec la pression de perfusion et diminue avec la résistance.", children: ["PPC = PAM − valeur la plus élevée entre PIC et PVC", "Une baisse de PAM ou une hausse de PIC/PVC réduit la perfusion"] },
+          "Le rayon vasculaire domine la RVC : une variation de calibre agit à la puissance quatre.",
+        ], ["b00006","b00007","b00008","b00009","b00010","b00011"]),
+        row("Lecture au lit du patient", ["Une variation de PAM n’est interprétable qu’avec PIC, PVC, débit cardiaque et intégrité autorégulatrice."], ["b00008","b00033"]),
+      ]},
+      { title: "Autorégulation et besoins régionaux", rows: [
+        row("Plateau autorégulé", [
+          { text: "Le tonus myogénique stabilise le DSC dans un intervalle individuel de PPC.", children: ["Sous la limite basse : vasodilatation épuisée, hypoperfusion et ischémie", "Au-dessus de la limite haute : hyperémie, œdème ou hémorragie"] },
+          "Les valeurs historiques de PAM 60–160 mmHg ne remplacent pas l’évaluation du patient.",
+        ], ["b00012","b00013","b00014","b00015","b00016","b00017","b00019"], I.autoreg),
+        row("Autorégulation vulnérable", [
+          "La limite basse moyenne peut être voisine de 70 mmHg, avec une large variabilité interindividuelle.",
+          "HSA, traumatisme crânien sévère et AVC peuvent abolir ou ralentir la réponse, globalement ou régionalement.",
+        ], ["b00020","b00021","b00022"]),
+        row("Couplage neurovasculaire", [
+          { text: "L’unité neurovasculaire ajuste le DSC régional à l’activité neuronale.", children: ["CMRO₂ et consommation de glucose suivent l’activation", "Anesthésie et hypothermie réduisent les besoins métaboliques"] },
+          "Le choc, l’hypoxémie et la capnie modulent simultanément l’effet attendu.",
+        ], ["b00031","b00032","b00033"]),
+      ]},
+    ]},
+    { title: "Maîtriser les déterminants chimiques et la PIC", sections: [
+      { title: "Capnie et oxygénation", rows: [
+        row("Réactivité au CO₂", [
+          { text: "Entre **20 et 80 mmHg**, une hausse de PaCO₂ dilate les artères cérébrales et augmente le DSC.", children: ["L’hypocapnie produit l’effet inverse", "L’adaptation du LCR atténue la réponse après 6–10 heures", "Corriger brutalement une hypercapnie chronique peut provoquer une hypoperfusion"] },
+        ], ["b00023","b00024","b00025","b00027","b00028","b00029"], I.gases),
+        row("Réactivité à l’O₂", [
+          "Les variations usuelles de PaO₂ modifient peu le DSC.",
+          "Sous environ **55 mmHg**, l’hypoxémie déclenche une vasodilatation croissante pour préserver la livraison d’oxygène.",
+        ], ["b00025","b00027","b00030"]),
+        row("Signaux concurrents", ["Hypoxémie ou hypotension atténue la vasoconstriction attendue lors d’une hypocapnie."], ["b00033"]),
+      ]},
+      { title: "Doctrine de Monroe-Kellie", rows: [
+        row("Trois compartiments", [
+          { text: "Le crâne contient parenchyme **80 %**, LCR **10 %** et sang **10 %**.", children: ["PIC normale généralement <10–15 mmHg", "Toute expansion impose d’abord le déplacement du LCR puis du sang veineux"] },
+        ], ["b00034","b00035","b00036","b00038","b00039","b00040","b00041"], I.monroe),
+        row("Épuisement de la compliance", [
+          "Une fois les réserves consommées, un faible gain de volume provoque une forte hausse de PIC.",
+          "L’HTIC réduit la PPC puis expose à l’ischémie et à l’engagement du tronc cérébral.",
+          "La vitesse d’expansion est déterminante : un hématome aigu décompense plus vite qu’une tumeur lente.",
+        ], ["b00042","b00043"]),
+        row("Temporalité de la masse", ["Le volume lésionnel ne prédit pas seul la PIC : la vitesse de croissance conditionne la réserve restante."], ["b00042","b00043"]),
+      ]},
+    ]},
+    { title: "Choisir les agents selon le cerveau et la circulation", sections: [
+      { title: "Volatils et protoxyde d’azote", rows: [
+        row("Halogénés", [
+          { text: "Ils diminuent le métabolisme mais vasodilatent directement le cerveau.", children: ["Desflurane et isoflurane découplent davantage que le sévoflurane", "Autorégulation altérée de façon dose-dépendante", "VSC et PIC peuvent augmenter si la compliance est réduite"] },
+        ], ["b00044","b00045","b00046","b00048","b00049","b00053","b00054"], I.agents),
+        row("Protoxyde d’azote", [
+          "Employé seul, il augmente DSC et CMRO₂ sans abolir l’autorégulation.",
+          "Il diffuse dans les cavités gazeuses et aggrave embolie aérienne ou pneumocéphalie.",
+        ], ["b00055","b00056"]),
+        row("Décision pratique", ["Chez un patient peu compliant, privilégier un régime qui réduit le métabolisme sans vasodilatation cérébrale excessive."], ["b00044","b00045","b00054"]),
+      ]},
+      { title: "Intraveineux et opioïdes", rows: [
+        row("Propofol et étomidate", [
+          { text: "Le propofol abaisse CMRO₂, DSC, VSC et PIC tout en préservant autorégulation et réponse au CO₂.", children: ["Anticiper hypotension et dépression myocardique", "Étominidate : stabilité circulatoire, mais inhibition surrénalienne et activité proconvulsivante"] },
+        ], ["b00057","b00058","b00059"]),
+        row("Barbituriques et benzodiazépines", [
+          "Les barbituriques réduisent CMRO₂, DSC et PIC ; leur accumulation retarde l’éveil.",
+          "Les benzodiazépines ont un effet cérébral plafonné, préservent autorégulation/réactivité au CO₂, mais favorisent sédation prolongée et délirium.",
+        ], ["b00060","b00061"]),
+        row("Kétamine contextualisée", [
+          { text: "En respiration spontanée isolée, elle peut augmenter DSC et PIC.", children: ["Sous ventilation contrôlée et avec d’autres hypnotiques : PIC stable ou réduite", "Autorégulation et réponse au CO₂ préservées", "Stabilité hémodynamique si les réserves catécholaminergiques persistent"] },
+        ], ["b00062","b00063","b00064"]),
+        row("Dexmédétomidine et opioïdes", [
+          "La dexmédétomidine permet une sédation coopérative sans dépression respiratoire, utile en craniotomie éveillée.",
+          "Bradycardie et hypotension limitent son emploi chez l’instable ; les opioïdes sont neutres sur la PIC si PAM et PaCO₂ restent contrôlées.",
+        ], ["b00065","b00066","b00067","b00068"]),
+      ]},
+    ]},
+    { title: "Construire une neuroanesthésie protectrice", sections: [
+      { title: "Évaluer et anticiper", rows: [
+        row("Objectif global", [
+          "Prévenir toute agression cérébrale secondaire tout en offrant des conditions chirurgicales optimales.",
+          { text: "Le plan dépend de la lésion, de l’état neurologique, de l’urgence, du positionnement et du neuromonitorage.", children: ["Induction stable et sans poussée de PIC", "Maintien de la PPC et relaxation cérébrale", "Émergence prévisible permettant un examen précoce"] },
+        ], ["b00069","b00070","b00071","b00072","b00073","b00074","b00075","b00076","b00077","b00078"]),
+        row("Évaluation ciblée", [
+          "Documenter vigilance, symptômes, déficits initiaux et imagerie récente.",
+          "Rechercher les signes d’HTIC ; en engagement, évaluation, traitement et transfert au bloc sont simultanés.",
+        ], ["b00079","b00080","b00081"], I.preop),
+        row("Induction", [
+          "Éviter prémédication sédative si HTIC ou compliance réduite.",
+          "Prévenir hypotension, hypoxémie, hypercapnie et réponse adrénergique à l’intubation.",
+        ], ["b00083","b00084","b00086"], I.induction),
+      ]},
+      { title: "Maintien, cerveau tendu et réveil", rows: [
+        row("Maintien guidé par le geste", [
+          "L’intraveineux favorise la relaxation mais son accumulation peut retarder l’examen neurologique.",
+          "Les halogénés réduisent les potentiels évoqués ; les curares rendent les potentiels moteurs et la stimulation nerveuse inutilisables.",
+          "Têtière, incision, craniotomie et dure-mère sont stimulantes ; le parenchyme est peu nociceptif.",
+        ], ["b00085","b00088","b00089"]),
+        row("Cerveau tendu", [
+          { text: "Réduire les volumes sanguin, interstitiel ou liquidien sans sacrifier la PPC.", children: ["Tête surélevée, cou neutre et drainage veineux libre", "PaCO₂ 35–40 mmHg ; 32–35 mmHg seulement en hyperventilation légère", "Mannitol ou saline hypertonique si barrière hématoencéphalique fonctionnelle"] },
+        ], ["b00090","b00091","b00093"], I.tense),
+        row("Homéostasie", [
+          "Maintenir euvolémie avec cristalloïdes isotoniques ; anticiper hémorragie et transfusion.",
+          "Éviter albumine chez le traumatisé crânien sévère ; viser normothermie, normoglycémie et natrémie stable.",
+        ], ["b00094"]),
+        row("Émergence raisonnée", [
+          "Un réveil rapide facilite l’examen, mais une HTIC persistante ou un œdème des voies aériennes peut imposer la ventilation.",
+          "Prévenir douleur, frissons, toux et hypertension ; rechercher une cause réversible devant tout retard inattendu.",
+        ], ["b00095","b00096","b00098"], I.htic1),
+        row("Escalade de l’HTIC", [
+          "Corriger d’abord oxygénation, ventilation, température, glycémie, natrémie, drainage veineux et sédation.",
+          "Osmothérapie, drainage du LCR puis traitements de sauvetage sont hiérarchisés selon bénéfices et risques.",
+        ], ["b00095","b00098"], I.htic2),
+      ]},
+    ]},
+    { title: "Sécuriser positionnement et chirurgie rachidienne", sections: [
+      { title: "Position intracrânienne", rows: [
+        row("Drainage contre embolie", [
+          "Surélever la tête et éviter flexion, rotation ou compression jugulaire améliore le retour veineux.",
+          { text: "Une plaie au-dessus du cœur expose à l’embolie gazeuse.", children: ["Risque maximal en position assise", "Shunt intracardiaque : embolie paradoxale possible", "Référencer la pression artérielle au conduit auditif externe"] },
+        ], ["b00100","b00101","b00102","b00103"]),
+        row("Points d’appui et accès", [
+          "Éviter hyperflexion cervicale, compression nerveuse, plaies de pression et macroglossie.",
+          "Sécuriser voies vasculaires, tube et circuit car la tête devient peu accessible.",
+        ], ["b00104"]),
+        row("Pression réellement cérébrale", ["En position assise, le transducteur artériel est référencé au conduit auditif externe et non au cœur."], ["b00102","b00103"]),
+      ]},
+      { title: "Rachis en décubitus ventral", rows: [
+        row("Prévenir les complications", [
+          { text: "Libérer abdomen et globes oculaires, protéger les nerfs et intégrer le neuromonitorage.", children: ["Abdomen libre : meilleure excursion et moindre congestion péridurale", "Chirurgie longue, hypotension et pertes sanguines favorisent la neuropathie optique ischémique"] },
+        ], ["b00105","b00106"]),
+        row("Finalité", ["Une stratégie individualisée évite les agressions iatrogènes chez un cerveau vulnérable."], ["b00107","b00108","b00109","b00110","b00111","b00112","b00113","b00114","b00115","b00116","b00117"]),
+        row("Surveillance fonctionnelle", ["Les agents et la curarisation sont adaptés aux potentiels moteurs ou somatosensoriels attendus."], ["b00085","b00088","b00106"]),
+      ]},
+    ]},
+  ];
+  return {
+    matiere: "Anesthésie-Réanimation", title: "Système nerveux et anesthésie", year: "2026-2027",
+    coverSubtitle: "Perfusion cérébrale, pression intracrânienne et neuroanesthésie", imageOmissions: [],
+    sourceBlocks: [...new Set(parts.flatMap(p => p.sections.flatMap(s => s.rows.flatMap(r => r.sourceBlocks))))], parts,
+    synthesis: {
+      compactLayout: true,
+      chiffres: { headers: ["Repère", "Valeur"], rows: [["DSC moyen","50 mL/100 g/min"],["Seuil ischémique","≈20 mL/100 g/min"],["PIC normale","<10–15 mmHg"],["Compartiments","Parenchyme 80 %, LCR 10 %, sang 10 %"],["Réactivité CO₂","PaCO₂ 20–80 mmHg"],["Vasodilatation hypoxique","PaO₂ <55 mmHg"],["Capnie usuelle en craniotomie","35–40 mmHg"],["Hyperventilation légère","32–35 mmHg"]] },
+      tables: [{ title: "Décisions neuroprotectrices", headers: ["Situation","Conduite"], rows: [["PPC menacée","Restaurer PAM, réduire PIC et libérer le drainage veineux"],["Cerveau tendu","Position, capnie basse-normale, osmothérapie"],["Neuromonitorage moteur","Limiter halogéné et éviter curare"],["Position assise","Dépister shunt, surveiller embolie, zéro artériel à l’oreille"],["Retard d’éveil","Causes pharmacologiques, métaboliques, respiratoires et chirurgicales"]] }],
+      keyPoints: ["Le DSC dépend du rapport PPC/RVC et des besoins métaboliques.","Les limites d’autorégulation sont individuelles et parfois abolies.","Hypercapnie et hypoxémie vasodilatent le cerveau.","Monroe-Kellie explique l’ascension brutale de PIC après épuisement compensatoire.","Le choix anesthésique associe effets cérébraux et stabilité systémique.","Une neuroanesthésie protectrice prévient hypotension, hypoxémie et hypercapnie.","La relaxation cérébrale ne doit jamais compromettre la PPC.","Positionnement et émergence sont des temps neuroprotecteurs à part entière."],
+      eclair: ["DSC = PPC/RVC.","PPC = PAM − max(PIC, PVC).","PIC normale <10–15 mmHg.","PaCO₂ ↑ : DSC ↑ ; PaCO₂ ↓ : DSC ↓.","PaO₂ <55 mmHg : vasodilatation cérébrale.","Propofol : CMRO₂, DSC et PIC diminuent.","Halogénés : vasodilatation et autorégulation dose-dépendante.","Cerveau tendu : tête haute, cou libre, PaCO₂ 35–40, osmothérapie.","Potentiels moteurs : éviter curare.","Position assise : embolie gazeuse et hypotension."],
+    },
+  };
+}
+
+const T = (text, why) => [true, text, why], F = (text, why) => [false, text, why];
+const qcm = (enonce, sourceBlocks, correction_generale, entries, newInformation = null) => ({ enonce: newInformation ? `${newInformation} ${enonce}` : enonce, format: "qcm", sourceBlocks, correction_generale, ...(newInformation ? { newInformation } : {}), items: entries.map(([is_correct,item,justification],i)=>({lettre:"ABCDE"[i],enonce:item,is_correct,justification})) });
+const qroc = (enonce, reponse_attendue, sourceBlocks, correction_generale, newInformation = null) => ({ enonce: newInformation ? `${newInformation} ${enonce}` : enonce, format:"qroc", reponse_attendue, items:[], sourceBlocks, correction_generale, ...(newInformation ? {newInformation}: {}) });
+const card = (recto, verso, sourceBlocks) => ({recto,verso,sourceBlocks});
+
+function buildFlashcards() { return [
+  card("Quelle part de l’oxygène basal le cerveau consomme-t-il ?","Environ 20 %.",["b00005"]),
+  card("Quelle part du glucose basal le cerveau consomme-t-il ?","Environ 25 %.",["b00005"]),
+  card("Quel est le DSC moyen normal ?","Environ 50 mL/100 g/min.",["b00005"]),
+  card("Quel DSC correspond au seuil ischémique usuel ?","Environ 20 mL/100 g/min.",["b00005"]),
+  card("Quelle substance cérébrale reçoit le plus de débit ?","La substance grise.",["b00005"]),
+  card("Quelle compensation précède l’ischémie lorsque le DSC baisse ?","L’augmentation de la fraction d’extraction d’oxygène et de glucose.",["b00005"]),
+  card("Quelle équation relie DSC, PPC et RVC ?","DSC = PPC/RVC.",["b00006","b00007"]),
+  card("Comment calcule-t-on la PPC ?","PAM moins la valeur la plus élevée entre PIC et PVC.",["b00008","b00009"]),
+  card("Quel facteur domine la résistance vasculaire cérébrale ?","Le rayon des vaisseaux intracrâniens.",["b00010","b00011"]),
+  card("Quel effet a une vasodilatation sur la RVC ?","Elle la diminue fortement, car la résistance varie avec l’inverse du rayon à la puissance quatre.",["b00010"]),
+  card("Que stabilise l’autorégulation cérébrale ?","Le débit sanguin cérébral malgré les variations de PPC.",["b00012","b00013"]),
+  card("Que provoque une PPC sous la limite basse d’autorégulation ?","Une baisse de DSC avec risque d’ischémie.",["b00013","b00014"]),
+  card("Que provoque une PPC au-dessus de la limite haute ?","Une hyperperfusion exposant à l’œdème et à l’hémorragie.",["b00015"]),
+  card("Quel intervalle historique de PAM définit le plateau ?","Environ 60 à 160 mmHg, avec une forte variabilité individuelle.",["b00016"]),
+  card("Quelle limite basse moyenne est souvent observée ?","Autour de 70 mmHg, mais elle varie largement.",["b00020"]),
+  card("Quelles lésions abolissent parfois l’autorégulation ?","HSA, traumatisme crânien sévère et AVC.",["b00020","b00021"]),
+  card("Comment peut se distribuer une perte d’autorégulation ?","De façon globale ou régionale, complète ou partielle.",["b00022"]),
+  card("Quel effet cérébral a l’hypercapnie ?","Vasodilatation, baisse de RVC et hausse de DSC.",["b00023","b00024"]),
+  card("Quel effet cérébral a l’hypocapnie ?","Vasoconstriction et baisse du DSC.",["b00024"]),
+  card("Dans quel intervalle la réponse au CO₂ est-elle quasi linéaire ?","Pour une PaCO₂ entre 20 et 80 mmHg.",["b00024"]),
+  card("Quand la réponse vasculaire au CO₂ s’atténue-t-elle ?","Après 6 à 10 heures, avec la normalisation du pH du LCR.",["b00024"]),
+  card("Pourquoi éviter une normocapnie brutale chez l’hypercapnique chronique ?","Elle peut induire une hypoperfusion cérébrale.",["b00024","b00029"]),
+  card("Sous quelle PaO₂ le DSC augmente-t-il fortement ?","Sous environ 55 mmHg.",["b00030"]),
+  card("Quel effet l’hyperoxémie exerce-t-elle sur le DSC ?","Elle ne le réduit que modestement.",["b00030"]),
+  card("Qu’est-ce que le couplage neurovasculaire ?","L’adaptation du DSC régional aux besoins métaboliques neuronaux.",["b00031","b00032"]),
+  card("Quelle unité assure le couplage neurovasculaire ?","L’unité formée par neurones, glie et muscle lisse vasculaire.",["b00032"]),
+  card("Comment l’hypothermie modifie-t-elle la CMRO₂ ?","Elle réduit le métabolisme basal neuronal.",["b00032"]),
+  card("Pourquoi le choc compromet-il le DSC ?","Le DSC demeure dépendant du débit cardiaque.",["b00033"]),
+  card("Quelles sont les trois composantes intracrâniennes ?","Parenchyme, LCR et sang intracrânien.",["b00034","b00035"]),
+  card("Quelle fraction du volume intracrânien occupe le parenchyme ?","Environ 80 %.",["b00035"]),
+  card("Quelles fractions occupent LCR et sang ?","Environ 10 % chacun.",["b00035"]),
+  card("Quelle est la PIC normale ?","Généralement moins de 10 à 15 mmHg.",["b00035"]),
+  card("Que décrit la doctrine de Monroe-Kellie ?","L’équilibre volumique entre parenchyme, LCR et sang dans un crâne rigide.",["b00035"]),
+  card("Quels volumes sont déplacés en premier lors d’une expansion ?","Le LCR puis le sang veineux.",["b00035","b00038","b00039"]),
+  card("Que devient la PIC après épuisement compensatoire ?","Elle augmente fortement pour une faible variation de volume.",["b00040","b00042"]),
+  card("Quelle conséquence terminale menace lors d’une HTIC ?","Un engagement comprimant les structures vitales du tronc cérébral.",["b00042"]),
+  card("Pourquoi un hématome aigu est-il mal toléré ?","Sa croissance rapide ne laisse pas le temps aux compensations volumiques.",["b00042","b00043"]),
+  card("Quels deux mécanismes expliquent les effets cérébraux anesthésiques ?","L’action directe vasculaire et la modification indirecte du métabolisme.",["b00044","b00045"]),
+  card("Quel effet métabolique ont les halogénés ?","Ils diminuent le métabolisme cérébral.",["b00053","b00054"]),
+  card("Quel effet vasculaire direct ont les halogénés ?","Une vasodilatation cérébrale.",["b00054"]),
+  card("Quels halogénés découplent davantage que le sévoflurane ?","Le desflurane et l’isoflurane.",["b00054"]),
+  card("Qu’est-ce qu’une perfusion de luxe ?","Un DSC supérieur aux besoins métaboliques cérébraux.",["b00054"]),
+  card("Comment les halogénés affectent-ils l’autorégulation ?","Ils l’altèrent de façon dose-dépendante.",["b00054"]),
+  card("Pourquoi les halogénés peuvent-ils augmenter la PIC ?","La vasodilatation augmente le volume sanguin cérébral.",["b00054"]),
+  card("Quel effet cérébral a le protoxyde d’azote seul ?","Il augmente le DSC et la CMRO₂.",["b00055","b00056"]),
+  card("Quand faut-il éviter le protoxyde d’azote ?","En présence d’embolie aérienne ou de pneumocéphalie.",["b00056"]),
+  card("Comment le propofol modifie-t-il CMRO₂ et DSC ?","Il les diminue parallèlement et de façon dose-dépendante.",["b00057","b00058"]),
+  card("Quel effet le propofol exerce-t-il sur la PIC ?","Il la réduit en diminuant le volume sanguin cérébral.",["b00058"]),
+  card("Quels réflexes cérébraux le propofol préserve-t-il ?","L’autorégulation et la réponse au CO₂.",["b00058"]),
+  card("Quel risque systémique du propofol menace le cerveau ?","L’hypotension par vasodilatation et effet inotrope négatif.",["b00058"]),
+  card("Pourquoi choisir l’étomidate chez un neurolésé instable ?","Il réduit le DSC avec une bonne stabilité cardiovasculaire.",["b00059"]),
+  card("Quels risques limitent l’étomidate ?","L’inhibition surrénalienne et l’activité proconvulsivante.",["b00059"]),
+  card("Quel effet les barbituriques ont-ils sur PIC et CMRO₂ ?","Ils diminuent progressivement les deux.",["b00060"]),
+  card("Dans quelles urgences le thiopental peut-il être réservé ?","HTIC ou état de mal épileptique réfractaire.",["b00060"]),
+  card("Pourquoi les barbituriques retardent-ils l’éveil ?","Leur lipophilie entraîne accumulation et élimination lente.",["b00060"]),
+  card("Quel effet plafonne avec les benzodiazépines ?","La diminution de la CMRO₂ et du DSC.",["b00061"]),
+  card("Pourquoi le midazolam est-il peu attractif en neurologie ?","Son effet résiduel prolongé et son association au délirium.",["b00061"]),
+  card("Dans quel contexte la kétamine peut-elle augmenter la PIC ?","En monothérapie et respiration spontanée.",["b00062"]),
+  card("Quel effet a la kétamine sous ventilation contrôlée ?","Une PIC inchangée ou réduite avec d’autres hypnotiques.",["b00063","b00064"]),
+  card("Quels réflexes cérébraux la kétamine préserve-t-elle ?","L’autorégulation et la réponse vasomotrice au CO₂.",["b00064"]),
+  card("Quel avantage respiratoire a la kétamine ?","Elle n’induit pas de dépression respiratoire.",["b00064"]),
+  card("Quel récepteur la kétamine antagonise-t-elle ?","Le récepteur NMDA du glutamate.",["b00064"]),
+  card("Quelle sédation produit la dexmédétomidine ?","Une sédation coopérative sans dépression respiratoire.",["b00065"]),
+  card("Quelle intervention bénéficie de la dexmédétomidine ?","La craniotomie éveillée.",["b00065"]),
+  card("Quels effets cardiovasculaires limite la dexmédétomidine ?","Bradycardie, hypotension ou hypertension après administration rapide.",["b00065"]),
+  card("Quel effet les opioïdes ont-ils sur la PIC ?","Un effet probablement neutre si PAM et PaCO₂ sont contrôlées.",["b00066","b00067","b00068"]),
+  card("Quel est l’objectif majeur d’une neuroanesthésie ?","Prévenir une nouvelle lésion tout en optimisant les conditions opératoires.",["b00069","b00070"]),
+  card("Quelles agressions faut-il éviter à l’induction ?","Hypotension, hypoxémie, hypercapnie et élévation de PIC.",["b00071","b00072","b00073"]),
+  card("Pourquoi viser une émergence prédictible ?","Pour permettre un examen neurologique précoce.",["b00075","b00076"]),
+  card("Que documenter avant une neurochirurgie ?","Vigilance, symptômes, déficits initiaux et imagerie.",["b00079","b00080","b00081"]),
+  card("Quand éviter une prémédication anxiolytique ?","En présence d’HTIC ou de compliance intracrânienne réduite.",["b00083","b00084"]),
+  card("Pourquoi l’apnée d’induction est-elle dangereuse ?","L’hypoxémie et l’hypercapnie aggravent vasodilatation et PIC.",["b00084"]),
+  card("Quel maintien favorise la relaxation cérébrale ?","Une anesthésie intraveineuse adaptée.",["b00085"]),
+  card("Quel inconvénient a une accumulation intraveineuse ?","Elle retarde l’émergence et l’examen neurologique.",["b00085"]),
+  card("Comment les halogénés modifient-ils les potentiels évoqués ?","Ils diminuent leur amplitude de façon dose-dépendante.",["b00085","b00088"]),
+  card("Pourquoi éviter les curares avec des potentiels moteurs ?","Ils abolissent la réponse musculaire nécessaire à l’enregistrement.",["b00085","b00088"]),
+  card("Quelles étapes crâniennes sont très stimulantes ?","Têtière, incision du scalp, craniotomie et manipulation durale.",["b00089"]),
+  card("Le parenchyme cérébral est-il nociceptif ?","Non, sa manipulation est peu ou pas nociceptive.",["b00089"]),
+  card("Quelle position favorise le drainage veineux cérébral ?","La tête surélevée au-dessus du cœur, avec cou libre.",["b00090","b00093"]),
+  card("Quelle PaCO₂ viser habituellement en craniotomie ?","Environ 35 à 40 mmHg.",["b00093"]),
+  card("Quelle PaCO₂ correspond à une hyperventilation légère ?","Environ 32 à 35 mmHg.",["b00093"]),
+  card("Quels osmotiques améliorent la relaxation cérébrale ?","Le mannitol et la saline hypertonique.",["b00093"]),
+  card("Quels solutés privilégier en neurochirurgie ?","Des cristalloïdes isotoniques à teneur sodée adaptée.",["b00094"]),
+  card("Pourquoi éviter les solutés hypotoniques ?","Ils favorisent hyponatrémie et œdème cérébral.",["b00094"]),
+  card("Quel colloïde est proscrit après traumatisme crânien sévère ?","L’albumine humaine.",["b00094"]),
+  card("Quels objectifs métaboliques maintenir ?","Normothermie et normoglycémie.",["b00094"]),
+  card("Quand différer une extubation après craniotomie ?","HTIC persistante, éveil inadéquat ou risque d’obstruction laryngée.",["b00095"]),
+  card("Que prévenir avant une émergence neurologique ?","Douleur, frissons, toux et poussée hypertensive.",["b00095"]),
+  card("Que rechercher devant un réveil retardé ?","Une cause pharmacologique, métabolique, respiratoire ou chirurgicale réversible.",["b00095","b00096"]),
+  card("Pourquoi éviter la compression jugulaire ?","Elle gêne le drainage veineux et augmente la PIC.",["b00100","b00101","b00102"]),
+  card("Quel risque gazeux augmente avec la tête très surélevée ?","L’embolie veineuse aérienne.",["b00102"]),
+  card("Pourquoi dépister un shunt avant la position assise ?","Il permet une embolie gazeuse paradoxale.",["b00102"]),
+  card("Où référencer la pression artérielle en position assise ?","Au conduit auditif externe.",["b00102","b00103"]),
+  card("Quel effet hémodynamique a la position assise ?","Une baisse de précharge pouvant provoquer une hypotension.",["b00102"]),
+  card("Quels risques crée l’hyperflexion cervicale ?","Ischémie médullaire, obstruction du tube, compression jugulaire et macroglossie.",["b00104"]),
+  card("Pourquoi sécuriser le tube avant le champ opératoire ?","L’accès aux voies aériennes devient très limité.",["b00104"]),
+  card("Que protéger en décubitus ventral rachidien ?","Globes oculaires, nerfs périphériques et points d’appui.",["b00105","b00106"]),
+  card("Pourquoi libérer l’abdomen en décubitus ventral ?","Pour faciliter la ventilation et réduire la congestion veineuse péridurale.",["b00106"]),
+  card("Quelle cécité menace après chirurgie rachidienne prolongée ?","Une neuropathie optique ischémique.",["b00106"]),
+  card("Quels facteurs favorisent la neuropathie optique ischémique ?","Durée, instabilité hémodynamique et pertes sanguines importantes.",["b00106"]),
+  card("Quel principe résume la protection du cerveau neurolésé ?","Préserver oxygénation, perfusion, drainage veineux et homéostasie.",["b00107","b00108","b00110"]),
+  card("Que provoquent conjointement hypercapnie et hypoxémie ?","Une vasodilatation pouvant précipiter une HTIC.",["b00113","b00114"]),
+  card("Comment réduire la PIC selon Monroe-Kellie ?","En diminuant le volume du parenchyme, du LCR ou du sang intracrânien.",["b00117"]),
+]; }
+
+const IQ = [
+  { title:"Débit et perfusion", questions:[
+    qcm("Quels énoncés caractérisent les besoins énergétiques cérébraux ?",["b00005"],"Le cerveau associe consommation élevée, faibles réserves et dépendance à un débit continu.",[
+      T("Il consomme près d’un cinquième de l’oxygène basal.","Cette proportion dépasse largement celle prédite par son poids."),T("Il dépend d’un apport continu de glucose et d’oxygène.","Ses réserves énergétiques utilisables sont très limitées."),F("La substance blanche reçoit davantage de débit que la grise.","Le débit est au contraire supérieur dans la substance grise active."),F("Un DSC à 20 mL/100 g/min est toujours sans conséquence.","Ce niveau correspond approximativement au seuil ischémique."),F("La fraction d’extraction diminue lorsque le DSC chute.","Elle augmente d’abord pour maintenir l’apport de substrats.")]),
+    qcm("Quelles relations déterminent directement la perfusion cérébrale ?",["b00006","b00007","b00008","b00009"],"DSC, PPC et RVC doivent être analysés ensemble, avec une PPC dépendante de PAM, PIC et PVC.",[
+      T("Le DSC augmente lorsque la PPC augmente à RVC constante.","L’équation DSC=PPC/RVC relie directement ces deux variables."),F("Le DSC augmente lorsque la RVC augmente à PPC constante.","Une résistance plus élevée diminue le débit cérébral."),T("La PIC peut être la pression d’aval limitant la PPC.","Elle est retranchée de la PAM lorsqu’elle dépasse la PVC."),F("La PVC n’intervient jamais dans le calcul de la PPC.","Une PVC supérieure à la PIC devient la pression limitante pertinente."),F("La PAM dépend uniquement de la résistance cérébrale.","Elle dépend du débit cardiaque et des résistances systémiques.")]),
+    qcm("Quels changements diminuent la résistance vasculaire cérébrale ?",["b00010","b00011"],"Le calibre artériel est le levier dominant de RVC, bien devant les variations proportionnelles de viscosité.",[
+      T("Une augmentation du rayon des artères cérébrales.","La résistance varie inversement à la quatrième puissance du rayon."),F("Une réduction du calibre vasculaire de moitié.","Cette réduction augmente fortement la résistance à l’écoulement."),F("Une augmentation de la viscosité sanguine.","Une viscosité plus élevée accroît la résistance du circuit."),T("Une diminution de l’hématocrite réduisant la viscosité.","La baisse de viscosité diminue proportionnellement la résistance."),F("Une augmentation de la longueur du réseau vasculaire.","Une longueur plus grande augmente la résistance selon Poiseuille.")]),
+    qcm("Quelles conséquences suivent une baisse de PPC ?",["b00008","b00013","b00014","b00020"],"La vasodilatation compense d’abord, puis le débit devient pression-dépendant sous la limite individuelle.",[
+      T("Une vasodilatation réflexe apparaît si l’autorégulation persiste.","La baisse de RVC tente de stabiliser le DSC."),T("Le DSC chute lorsque la limite basse est franchie.","La réserve vasodilatatrice est alors épuisée."),F("Une hyperémie est la conséquence attendue sous la limite basse.","Le risque dominant est l’hypoperfusion ischémique."),T("Une PIC élevée peut aggraver la diminution de PPC.","La PIC se soustrait à la PAM dans le calcul de perfusion."),F("Une valeur universelle de PAM garantit la sécurité de tous.","Les limites autorégulées varient fortement entre individus.")]),
+    qcm("Quelles affirmations distinguent pénombre et infarctus ?",["b00005"],"Intensité et durée de l’hypoperfusion déterminent la réversibilité de la dysfonction neuronale.",[
+      F("La pénombre correspond obligatoirement à une nécrose achevée.","Elle décrit une dysfonction potentiellement réversible."),T("Une hypoperfusion prolongée favorise l’infarctus.","La durée d’insuffisance énergétique conditionne la lésion irréversible."),T("Une extraction accrue peut temporairement préserver le métabolisme.","Ce mécanisme compense une réduction modérée du débit."),F("Le seuil de 20 mL/100 g/min garantit une récupération complète.","Il signale au contraire une zone de risque ischémique."),T("Une baisse plus profonde du DSC accélère la perte neuronale.","L’intensité de l’hypoperfusion s’ajoute à sa durée.")]),
+  ]},
+  { title:"Autorégulation", questions:[
+    qcm("Quels mécanismes appartiennent à l’autorégulation cérébrale ?",["b00012","b00013","b00015"],"Le tonus myogénique adapte la RVC pour amortir les variations de PPC dans des limites propres au patient.",[
+      T("Une hausse de PPC provoque une vasoconstriction compensatrice.","L’augmentation de RVC limite la hausse du DSC."),T("Une baisse de PPC provoque une vasodilatation compensatrice.","La diminution de RVC soutient le débit tant qu’une réserve existe."),F("Le plateau signifie que les artères gardent un calibre fixe.","Le calibre varie précisément pour stabiliser le débit."),F("L’autorégulation supprime tout risque d’hyperperfusion.","Au-dessus de la limite haute, les mécanismes sont dépassés."),T("Le mécanisme est principalement myogénique et intrinsèque.","Le muscle vasculaire répond aux changements de pression transmurale.")]),
+    qcm("Quelles limites concernent la courbe historique d’autorégulation ?",["b00016","b00020"],"Le plateau classique est pédagogique mais ne prédit pas les limites individuelles en anesthésie.",[
+      F("La limite basse est exactement 50 mmHg chez tous les adultes.","Elle varie largement et sa moyenne peut être proche de 70 mmHg."),T("Les données initiales regroupaient différents patients et interventions.","La courbe de Lassen agrège des situations pathologiques et pharmacologiques."),T("Une variabilité interindividuelle importante existe.","Des limites très différentes sont mesurées chez des sujets sains."),F("La PAM et la PPC sont interchangeables sans connaître la PIC.","Une PIC élevée dissocie fortement ces deux pressions."),F("Le DSC est parfaitement constant sur tout le plateau réel.","Les données contemporaines montrent une relation moins idéale.")]),
+    qcm("Dans quelles situations l’autorégulation peut-elle être altérée ?",["b00020","b00021","b00022"],"Les lésions cérébrales aiguës peuvent ralentir ou abolir la réponse dans tout le cerveau ou autour d’une lésion.",[
+      T("Après une hémorragie sous-arachnoïdienne.","Cette pathologie fait partie des causes reconnues d’altération."),F("Uniquement après une atteinte diffuse bilatérale.","Une perte régionale près d’une tumeur est également possible."),T("Après un traumatisme crânien sévère.","Le DSC peut alors devenir directement dépendant de la PPC."),T("Dans un territoire voisin d’une tumeur intracrânienne.","L’altération peut rester circonscrite à une région."),F("Jamais après un accident vasculaire cérébral.","L’AVC peut abolir localement les réponses autorégulées.")]),
+    qcm("Que se passe-t-il au-delà des bornes d’autorégulation ?",["b00013","b00014","b00015","b00019"],"Les vaisseaux deviennent passivement pression-dépendants lorsque les capacités de constriction ou dilatation sont épuisées.",[
+      T("Sous la borne basse, le DSC diminue avec la PPC.","Le collapsus et l’épuisement vasodilatateur limitent le débit."),F("Sous la borne basse, la RVC augmente activement pour protéger le cerveau.","Une constriction aggraverait l’hypoperfusion déjà présente."),F("Au-dessus de la borne haute, le DSC reste strictement stable.","Il augmente et expose le parenchyme à l’hyperémie."),T("Au-dessus de la borne haute, un œdème peut apparaître.","L’hyperperfusion augmente filtration et volume intracrânien."),T("Une hémorragie intracrânienne peut compliquer l’hyperperfusion.","La pression dépasse la capacité protectrice du réseau vasculaire.")]),
+    qcm("Quels éléments peuvent moduler l’effet d’une variation de PaCO₂ ?",["b00024","b00029","b00033"],"La réponse au CO₂ interagit avec oxygénation, pression, chronicité et intégrité des mécanismes cérébraux.",[
+      F("L’hypoxémie renforce toujours la vasoconstriction de l’hypocapnie.","La vasodilatation hypoxique atténue cet effet constricteur."),T("L’adaptation du bicarbonate dans le LCR réduit la réponse chronique.","Le pH extracellulaire se normalise après plusieurs heures."),F("La correction rapide d’une hypercapnie chronique est toujours sûre.","Elle peut abaisser brutalement le DSC et provoquer une hypoperfusion."),T("Une hypotension limite la capacité de vasoconstriction hypocapnique.","La vasodilatation liée à la faible perfusion s’y oppose."),T("Une pathologie peut abolir l’autorégulation tout en préservant la réponse au CO₂.","Les différents mécanismes de contrôle peuvent être dissociés.")]),
+  ]},
+  { title:"Gaz et métabolisme", questions:[
+    qcm("Quels effets cérébrovasculaires sont attendus lors d’une hypercapnie aiguë ?",["b00023","b00024"],"Le CO₂ traverse rapidement la barrière, abaisse le pH extracellulaire et dilate les artères cérébrales.",[
+      T("Une diminution de la RVC.","L’acidification extracellulaire relâche le muscle vasculaire."),T("Une augmentation du DSC.","La baisse de résistance accroît directement le débit."),T("Une augmentation possible du volume sanguin cérébral.","La vasodilatation remplit davantage le compartiment sanguin intracrânien."),F("Une baisse immédiate de la PIC chez le patient peu compliant.","L’augmentation de volume sanguin peut au contraire élever la PIC."),F("Une réponse indépendante du pH du LCR.","L’adaptation du bicarbonate explique son atténuation chronique.")]),
+    qcm("Quelles affirmations décrivent la réponse cérébrale à l’oxygène ?",["b00025","b00027","b00030"],"La PaO₂ influence peu le DSC dans la zone physiologique, puis l’hypoxémie sévère déclenche une vasodilatation protectrice.",[
+      F("Toute baisse minime de PaO₂ double le DSC.","La zone physiologique influence peu le tonus cérébral."),T("Sous 55 mmHg, le DSC augmente progressivement.","La vasodilatation vise à maintenir la livraison d’oxygène."),T("L’hyperoxémie ne réduit que modestement le DSC.","La réponse constrictrice à l’oxygène reste limitée."),F("L’hypoxémie provoque une vasoconstriction cérébrale.","Elle entraîne une vasodilatation cérébrale quasi exponentielle."),F("Le DSC devient nul lorsque la PaO₂ atteint 55 mmHg.","Ce niveau marque plutôt le début d’une compensation vasculaire importante.")]),
+    qcm("Quels acteurs participent au couplage neurovasculaire ?",["b00031","b00032"],"Le débit régional résulte d’un dialogue entre activité neuronale, glie et muscle lisse vasculaire.",[
+      T("Les neurones activés.","Ils augmentent localement la demande énergétique."),F("Les hématies seules sans signal tissulaire.","Elles transportent l’oxygène mais ne constituent pas l’unité complète."),T("Les cellules gliales.","Elles relaient les signaux entre neurones et vaisseaux."),T("Le muscle lisse des vaisseaux.","Il modifie le calibre en réponse aux signaux métaboliques."),F("Le LCR comme unique régulateur du débit régional.","Le couplage dépend surtout de l’unité neurovasculaire.")]),
+    qcm("Quelles interventions diminuent les besoins métaboliques cérébraux ?",["b00032","b00054","b00058","b00060"],"La baisse d’activité neuronale ou de métabolisme basal réduit la CMRO₂ et, si le couplage persiste, le DSC.",[
+      T("Une anesthésie intraveineuse profonde au propofol.","Le propofol réduit dose-dépendamment l’activité et la CMRO₂."),T("L’hypothermie contrôlée.","La température basse ralentit le métabolisme basal neuronal."),F("Une hyperthermie avec frissons.","Elle accroît la consommation énergétique plutôt qu’elle ne la réduit."),F("Une hypercapnie isolée.","Elle augmente surtout le DSC par vasodilatation."),T("Un barbiturique à dose suffisante.","Ces agents diminuent progressivement la CMRO₂ jusqu’à suppression électrique.")]),
+    qcm("Pourquoi le DSC réel ne se déduit-il pas d’un facteur isolé ?",["b00033"],"Pression, métabolisme, gaz, débit cardiaque et mécanismes régionaux interagissent parfois en sens opposés.",[
+      F("Parce que la RVC ne varie jamais.","Le calibre vasculaire est au contraire un déterminant majeur et dynamique."),T("Parce que l’hypoxémie peut s’opposer à la vasoconstriction hypocapnique.","Les signaux vasomoteurs concurrents modulent le résultat net."),T("Parce que le débit cardiaque conditionne l’apport cérébral.","Un choc compromet le DSC malgré les réglages respiratoires."),F("Parce que toutes les pathologies abolissent toutes les réponses.","Une atteinte peut toucher un mécanisme tout en en préservant un autre."),T("Parce que les altérations peuvent être régionales.","Un territoire malade ne représente pas toujours le reste du cerveau.")]),
+  ]},
+  { title:"Pression intracrânienne", questions:[
+    qcm("Quelles propositions décrivent la doctrine de Monroe-Kellie ?",["b00034","b00035"],"Dans un crâne rigide, toute augmentation d’un compartiment doit être compensée par la diminution d’un autre.",[
+      T("Le volume intracrânien total est pratiquement fixe chez l’adulte.","Les os soudés empêchent une expansion globale du contenant."),T("Le parenchyme représente environ 80 % du volume.","Il constitue la plus grande composante intracrânienne."),F("Le LCR représente environ la moitié du volume intracrânien.","Il n’en représente qu’environ 10 %."),T("Le sang intracrânien est majoritairement veineux.","Le compartiment sanguin mobilisable est surtout veineux."),F("Une masse peut croître sans déplacement des autres volumes.","La compensation exige l’évacuation du LCR et du sang.")]),
+    qcm("Quels signes physiologiques traduisent l’épuisement de la compliance intracrânienne ?",["b00035","b00038","b00039","b00040","b00042"],"Lorsque LCR et sang veineux ne peuvent plus être déplacés, la courbe pression-volume devient très raide.",[
+      T("Une petite augmentation de volume élève fortement la PIC.","La pente devient abrupte après la zone de transition."),F("La PIC demeure stable malgré toute expansion supplémentaire.","Cette stabilité n’existe que tant qu’une réserve compensatoire subsiste."),T("La PPC peut diminuer si la PAM ne change pas.","Une PIC croissante réduit directement la pression de perfusion."),F("L’engagement devient impossible une fois la compensation épuisée.","Le déplacement du parenchyme devient au contraire une menace majeure."),F("La vitesse de croissance n’influence pas la tolérance.","Une croissance rapide laisse beaucoup moins de temps à la compensation.")]),
+    qcm("Quelles mesures réduisent le compartiment sanguin intracrânien ?",["b00090","b00091","b00093"],"Drainage veineux, capnie basse-normale et diminution métabolique peuvent réduire le volume sanguin cérébral.",[
+      T("Surélever la tête en maintenant le cou neutre.","Cette position facilite l’évacuation du sang veineux."),F("Comprimer les veines jugulaires par rotation cervicale.","La compression augmente la congestion et la PIC."),T("Viser une PaCO₂ entre 35 et 40 mmHg.","Une capnie basse-normale évite la vasodilatation hypercapnique."),F("Induire systématiquement une PaCO₂ inférieure à 20 mmHg.","Une hypocapnie profonde expose à l’ischémie cérébrale."),T("Réduire le métabolisme avec une anesthésie adaptée.","Le couplage diminue secondairement le débit et le volume sanguin.")]),
+    qcm("Quelles mesures réduisent l’eau cérébrale ou le LCR ?",["b00090","b00091","b00093","b00098"],"Osmothérapie et drainage du LCR agissent sur des compartiments distincts et s’intègrent à une stratégie graduée.",[
+      F("Administrer un cristalloïde hypotonique rapidement.","Il favorise le transfert d’eau vers le cerveau et l’œdème."),T("Administrer du mannitol au moment approprié.","Il crée un gradient osmotique hors du tissu sain."),T("Utiliser une solution saline hypertonique.","Elle augmente l’osmolarité plasmatique et attire l’eau interstitielle."),T("Drainer le LCR lorsqu’un dispositif et l’indication le permettent.","La diminution directe du compartiment liquidien réduit la PIC."),F("Remplir sans limite par de l’eau libre.","L’hypo-osmolarité aggrave l’œdème et la pression.")]),
+    qcm("Quelles situations peuvent précipiter une HTIC chez un patient peu compliant ?",["b00024","b00030","b00042","b00054"],"Tout facteur augmentant sang ou eau intracrâniens peut décompenser une réserve volumique déjà épuisée.",[
+      T("Une hypercapnie aiguë.","Elle vasodilate et augmente le volume sanguin cérébral."),T("Une hypoxémie sévère.","Sous 55 mmHg, elle produit une vasodilatation croissante."),T("Une forte concentration d’halogéné vasodilatateur.","Elle accroît VSC et perturbe l’autorégulation."),F("Une position tête haute avec jugulaires libres.","Elle favorise au contraire le drainage veineux."),F("Une réduction contrôlée du métabolisme au propofol.","Elle diminue DSC, VSC et généralement la PIC.")]),
+  ]},
+  { title:"Agents anesthésiques", questions:[
+    qcm("Quels effets caractérisent les halogénés en neuroanesthésie ?",["b00053","b00054"],"Ils associent baisse métabolique et vasodilatation directe, avec un bilan dépendant de la dose et du patient.",[
+      T("Ils réduisent la CMRO₂.","La suppression neuronale diminue les besoins métaboliques."),T("Ils vasodilatent directement les artères cérébrales.","Cet effet peut dominer la diminution métabolique."),F("Ils renforcent l’autorégulation à forte concentration.","Ils l’altèrent progressivement avec la dose."),T("Ils peuvent produire une perfusion de luxe.","Le DSC peut dépasser les besoins métaboliques réels."),F("Ils diminuent toujours la PIC quelle que soit la compliance.","La hausse de VSC peut augmenter la PIC chez un patient peu compliant.")]),
+    qcm("Quelles précautions concernent le protoxyde d’azote ?",["b00055","b00056"],"Son effet cérébral stimulant et sa diffusion dans les espaces gazeux le rendent indésirable dans plusieurs situations neurochirurgicales.",[
+      F("Il réduit constamment DSC et CMRO₂ lorsqu’il est utilisé seul.","Employé seul, il augmente ces deux paramètres."),T("Il peut agrandir une pneumocéphalie.","Il diffuse rapidement dans une cavité gazeuse fermée."),F("Il supprime totalement l’autorégulation cérébrale.","Son emploi isolé ne supprime pas ce mécanisme de régulation."),T("Il peut aggraver une embolie aérienne.","Le gaz diffuse dans les bulles et augmente leur volume."),T("Son effet associé à d’autres agents est variable.","Le contexte anesthésique modifie son bilan hémodynamique cérébral.")]),
+    qcm("Quels atouts et risques accompagnent le propofol ?",["b00057","b00058"],"Le propofol est favorable à la PIC et aux convulsions, mais son hypotension peut annuler le bénéfice cérébral.",[
+      T("Il possède une activité anticonvulsivante.","La potentialisation GABAergique diminue l’excitabilité neuronale."),T("Il réduit le volume sanguin cérébral.","La baisse couplée du DSC entraîne une vasoconstriction indirecte."),T("Il préserve la réponse vasomotrice au CO₂.","Cette réactivité demeure fonctionnelle sous propofol."),F("Il augmente systématiquement la PAM.","La vasodilatation systémique expose plutôt à l’hypotension."),F("Il augmente la CMRO₂ de façon dose-dépendante.","Il diminue au contraire le métabolisme avec la dose.")]),
+    qcm("Quels éléments orientent vers l’étomidate ?",["b00059"],"L’étomidate combine baisse du DSC et stabilité circulatoire, au prix d’effets endocriniens et épileptogènes.",[
+      T("Un patient neurolésé instable hémodynamiquement.","Sa bonne tolérance cardiovasculaire protège la PPC à l’induction."),F("Un besoin de supplémentation chronique sans surveillance surrénalienne.","Il inhibe la synthèse des corticostéroïdes."),T("Le souhait de préserver la réactivité au CO₂.","Cette réponse reste intacte sous étomidate."),F("Un état de mal épileptique comme indication privilégiée.","Son activité proconvulsivante rend ce choix peu logique."),F("La recherche d’une hausse du DSC.","Il diminue le DSC par couplage et peut-être vasoconstriction directe.")]),
+    qcm("Quelles affirmations comparent barbituriques et benzodiazépines ?",["b00060","b00061"],"Les deux réduisent métabolisme et débit, mais diffèrent par leur plafond d’effet, leurs usages et leur cinétique.",[
+      F("Les benzodiazépines rendent toujours l’EEG isoélectrique seules.","Leur effet métabolique plafonne avant la suppression complète."),T("Les barbituriques peuvent traiter une HTIC réfractaire.","Leur baisse de CMRO₂, DSC et PIC justifie cet emploi de recours."),T("Les deux classes préservent globalement l’autorégulation.","Aucune n’abolit habituellement ce mécanisme aux doses décrites."),F("Le thiopental permet toujours un réveil immédiat après doses répétées.","Son accumulation lipophile retarde fortement l’émergence."),T("Le midazolam peut prolonger la sédation neurologique.","Sa demi-vie et son métabolite actif ralentissent l’évaluation.")]),
+  ]},
+  { title:"Kétamine et sédation", questions:[
+    qcm("Dans quels contextes la kétamine est-elle compatible avec une neuroanesthésie ?",["b00062","b00063","b00064"],"Son effet sur la PIC dépend surtout de la ventilation, des coagents et de l’état hémodynamique.",[
+      T("Sous ventilation contrôlée avec un autre hypnotique.","Dans ce cadre, la PIC reste stable ou diminue."),F("En monothérapie avec hypercapnie non surveillée.","La respiration spontanée et la vasodilatation peuvent élever la PIC."),T("Lorsqu’une stabilité circulatoire est recherchée.","La libération de catécholamines soutient souvent la pression."),T("Chez un patient nécessitant une analgésie sans dépression respiratoire.","La kétamine préserve la ventilation et fournit une analgésie."),F("Lorsque les catécholamines sont totalement épuisées en supposant un effet presseur garanti.","La réponse sympathomimétique dépend des réserves disponibles.")]),
+    qcm("Quelles propriétés appartiennent à la dexmédétomidine ?",["b00065"],"Cet agoniste alpha-2 procure une sédation coopérative utile mais exige une surveillance cardiovasculaire.",[
+      T("Une sédation mimant le sommeil sans dépression respiratoire.","L’activité centrale préserve la ventilation spontanée."),T("Une utilité pour la craniotomie éveillée.","La coopération du patient peut être maintenue pendant la procédure."),F("Une tachycardie constante protectrice de la PAM.","La bradycardie et l’hypotension sont au contraire fréquentes."),T("Un effet anti-frissons.","Cette propriété complète ses effets sédatifs et analgésiques."),F("Une augmentation majeure constante de la PIC.","La PIC change peu si la PAM est maintenue stable.")]),
+    qcm("Quelles conditions rendent les opioïdes compatibles avec la protection cérébrale ?",["b00066","b00067","b00068"],"À doses cliniques, leur effet cérébral est faible si la ventilation et la pression restent contrôlées.",[
+      T("Maintenir une PaCO₂ contrôlée.","Une dépression respiratoire avec hypercapnie augmenterait le DSC et la PIC."),F("Accepter une hypotension profonde après l’injection.","La chute de PAM menace directement la PPC."),T("Prévenir la réponse adrénergique à l’intubation.","L’atténuation de la poussée tensionnelle limite l’élévation de PIC."),T("Titrer l’analgésie pour éviter toux et agitation.","Ces réactions augmentent pressions veineuse et intracrânienne."),F("Considérer qu’ils augmentent toujours la CMRO₂.","Ils réduisent légèrement DSC et métabolisme aux doses usuelles.")]),
+    qcm("Quels choix favorisent un examen neurologique précoce ?",["b00061","b00085","b00095"],"La cinétique des agents, la durée d’administration et la maîtrise de la douleur conditionnent la qualité du réveil.",[
+      T("Ajuster les perfusions à la durée de l’intervention.","La réduction anticipée limite l’accumulation médicamenteuse."),F("Multiplier les bolus de barbiturique en fin d’intervention.","Leur grand volume de distribution prolongerait l’inconscience."),T("Limiter le midazolam chez un patient fragile.","Son métabolite actif peut retarder l’évaluation neurologique."),F("Négliger normothermie et analgésie.","Frissons, douleur et agitation perturbent l’émergence."),T("Prévenir toux et poussée hypertensive.","Une émergence douce réduit le risque d’hémorragie postopératoire.")]),
+    qcm("Quelles associations pharmacologiques menacent la PPC ?",["b00058","b00065","b00067"],"Les bénéfices intracrâniens sont annulés si un médicament provoque hypotension ou hypercapnie.",[
+      F("Propofol titré avec vasopresseur si nécessaire.","Cette stratégie peut préserver à la fois relaxation et pression."),T("Propofol en bolus massif chez un patient hypovolémique.","La vasoplégie peut effondrer la PAM et la PPC."),T("Dexmédétomidine rapide chez un patient bradycarde instable.","La bradycardie et l’hypotension peuvent s’aggraver brutalement."),F("Opioïde titré avec ventilation contrôlée.","La capnie et la pression peuvent alors rester maîtrisées."),T("Opioïde excessif avec hypoventilation spontanée.","L’hypercapnie secondaire augmente DSC, VSC et PIC.")]),
+  ]},
+  { title:"Conduite neurochirurgicale", questions:[
+    qcm("Quels éléments spécifiques faut-il documenter avant une craniotomie ?",["b00079","b00080","b00081"],"L’état neurologique de référence et l’imagerie guident urgence, agents, surveillance et stratégie de réveil.",[
+      T("Le niveau d’éveil actuel.","Il sert de référence pour détecter une aggravation postopératoire."),T("Les déficits neurologiques préexistants.","Ils doivent être distingués d’une complication nouvelle."),T("Les signes cliniques d’HTIC.","Ils modifient prémédication, induction et stratégie ventilatoire."),F("Uniquement les allergies en ignorant l’imagerie.","La topographie et la compliance visibles sur l’imagerie sont déterminantes."),F("Différer obligatoirement une chirurgie d’engagement pour bilan complet.","Traitement, évaluation et transfert doivent alors être simultanés.")]),
+    qcm("Quelles situations exigent une induction particulièrement contrôlée ?",["b00083","b00084","b00086"],"La diminution de compliance rend toute hypotension, hypoxémie ou hypercapnie plus dangereuse pour la perfusion.",[
+      T("Une masse intracrânienne avec signes d’HTIC.","Le moindre gain de volume sanguin peut décompenser la PIC."),F("Un patient stable sans lésion et sans facteur neurologique.","Le risque spécifique est nettement moindre dans cette situation."),T("Un anévrisme exposé à une poussée hypertensive.","La réponse à l’intubation doit être atténuée pour éviter la rupture."),T("Un engagement cérébral en extrême urgence.","La stabilisation physiologique accompagne le départ immédiat au bloc."),F("Une prémédication sédative non surveillée malgré l’HTIC.","L’hypoventilation et l’hypercapnie pourraient aggraver la pression.")]),
+    qcm("Quels facteurs améliorent la relaxation cérébrale ?",["b00090","b00091","b00093","b00094"],"Une relaxation sûre associe drainage veineux, capnie maîtrisée, osmothérapie, profondeur et homéostasie.",[
+      T("Une tête surélevée sans compression cervicale.","Le sang veineux quitte plus facilement le compartiment intracrânien."),T("Une PaCO₂ basse-normale.","Elle évite l’augmentation de VSC liée à l’hypercapnie."),T("Une osmothérapie correctement indiquée.","Elle réduit le volume interstitiel du cerveau sain."),F("Une solution glucosée hypotonique abondante.","Elle diminue l’osmolarité et favorise l’œdème."),F("Une hypotension volontaire profonde.","La perte de PPC expose le parenchyme à l’ischémie.")]),
+    qcm("Quels objectifs gouvernent la fin d’une chirurgie intracrânienne ?",["b00095","b00096","b00098"],"L’examen précoce est souhaitable seulement si cerveau, voies aériennes et homéostasie permettent une émergence sûre.",[
+      T("Obtenir une normothermie avant le réveil.","Les frissons augmentent consommation, pression et inconfort."),F("Extuber malgré un œdème supraglottique suspecté.","Une obstruction postopératoire pourrait être dramatique."),T("Assurer une analgésie évitant agitation et toux.","Ces réactions augmentent la pression artérielle et intracrânienne."),F("Interrompre brutalement toute sédation malgré une HTIC persistante.","Le contrôle de PIC peut nécessiter une ventilation et une sédation prolongées."),T("Explorer sans délai un retard d’éveil inattendu.","Une complication réversible doit être reconnue avant une lésion secondaire.")]),
+    qcm("Quels éléments perturbent le neuromonitorage peropératoire ?",["b00085","b00088"],"Les agents sont adaptés au signal recherché, en concertation avec l’équipe de neurophysiologie.",[
+      F("Le propofol rend tout potentiel impossible quelle que soit sa dose.","Une anesthésie intraveineuse est souvent choisie pour préserver les signaux."),T("Les halogénés diminuent l’amplitude des potentiels évoqués.","Leur effet dépresseur augmente avec la concentration."),T("Les curares compromettent les potentiels moteurs.","La réponse musculaire périphérique devient indisponible."),F("La communication avec le neurochirurgien est inutile.","Le plan doit suivre les temps opératoires et les signaux nécessaires."),T("La stimulation directe d’un nerf crânien exige une transmission neuromusculaire.","Une paralysie empêcherait d’observer la réponse motrice attendue.")]),
+  ]},
+  { title:"Position et rachis", questions:[
+    qcm("Quels bénéfices et risques accompagne la position assise ?",["b00100","b00101","b00102","b00103"],"Elle améliore drainage et exposition mais crée un gradient favorisant hypotension et entrée d’air veineux.",[
+      T("Le drainage veineux cérébral est facilité.","La tête placée au-dessus du cœur réduit la congestion."),T("La précharge peut diminuer.","Le sang s’accumule dans les membres inférieurs."),T("Une embolie gazeuse veineuse peut survenir.","Les sinus non collapsables aspirent de l’air sous pression négative."),F("Le risque d’embolie paradoxale disparaît en cas de foramen ovale.","Un shunt permet justement le passage d’air vers la circulation artérielle."),F("Le zéro artériel doit rester au niveau du cœur.","Il est placé à l’oreille pour estimer la pression cérébrale.")]),
+    qcm("Quelles précautions protègent le drainage veineux ?",["b00101","b00102","b00104"],"La position cervicale et l’absence de compression jugulaire conditionnent le volume veineux intracrânien.",[
+      T("Maintenir le cou sans flexion excessive.","L’hyperflexion peut comprimer jugulaires et tube trachéal."),F("Tourner au maximum la tête pour gagner de l’espace.","Une rotation extrême gêne le retour veineux et peut léser le rachis."),T("Éviter toute pression directe sur les jugulaires.","Une obstruction veineuse augmente congestion et PIC."),F("Placer systématiquement la tête sous le cœur.","Cette position favorise l’engorgement veineux cérébral."),T("Vérifier l’absence de macroglossie liée à la posture.","L’obstruction veineuse linguale peut menacer les voies aériennes.")]),
+    qcm("Quels événements évoquent une embolie veineuse aérienne en position assise ?",["b00102"],"L’entrée d’air peut être minime ou provoquer un airlock droit, une hypotension et une embolie paradoxale.",[
+      T("Une chute brutale du CO₂ expiré.","La baisse de perfusion pulmonaire réduit soudain l’élimination de CO₂."),T("Une instabilité hémodynamique inexpliquée.","Un volume d’air important peut obstruer la chambre de chasse droite."),F("Une hausse garantie de la précharge.","La position et l’air réduisent plutôt le retour et le débit cardiaque."),T("Un événement neurologique en présence d’un shunt.","L’air peut franchir le septum et emboliser la circulation cérébrale."),F("Une absence absolue de risque si la plaie est au-dessus du cœur.","Ce gradient est précisément la condition favorisant l’aspiration d’air.")]),
+    qcm("Quelles précautions concernent une chirurgie rachidienne ventrale ?",["b00105","b00106"],"La prévention vise yeux, nerfs, ventilation, saignement veineux et perfusion optique.",[
+      T("S’assurer que l’abdomen reste libre.","Cela facilite l’excursion diaphragmatique et réduit la pression veineuse."),T("Éliminer toute pression directe sur les globes oculaires.","La compression majore le risque de lésion oculaire."),F("Laisser les membres en traction pour stabiliser la position.","Une traction prolongée peut léser les plexus et nerfs périphériques."),T("Éviter hypotension et anémie prolongées.","Ces facteurs favorisent une neuropathie optique ischémique."),F("Ignorer le neuromonitorage dans le plan anesthésique.","Les agents et curares doivent être choisis selon les signaux médullaires.")]),
+    qcm("Quels principes résument la prévention d’une agression cérébrale secondaire ?",["b00107","b00108","b00110","b00112","b00113","b00114","b00115","b00116","b00117"],"La protection associe perfusion, oxygénation, capnie, contrôle volumique intracrânien et choix pharmacologique raisonné.",[
+      T("Maintenir un apport continu de substrats métaboliques.","Le cerveau dispose de très peu de réserves énergétiques."),T("Préserver une PPC adaptée au patient.","L’autorégulation n’est ni universelle ni toujours intacte."),F("Tolérer une hypoxémie profonde pour réduire le DSC.","Elle vasodilate et menace directement l’oxygénation neuronale."),T("Réduire le compartiment pertinent lors d’une HTIC.","Parenchyme, LCR ou sang doivent être ciblés selon le mécanisme."),F("Choisir les agents sans considérer leurs effets cérébrovasculaires.","Chaque agent modifie différemment métabolisme, débit et PIC.")]),
+  ]},
+];
+function buildIq(){ return IQ.map((s,i)=>({label:`QCM ${i+1} · ${s.title}`,allowed_voies:["interne"],questions:s.questions})); }
+
+const DQ = [
+ { title:"Tumeur frontale avec HTIC", vignette:"Nora, patiente de 58 ans, doit subir l’exérèse d’un méningiome frontal volumineux. Elle décrit des céphalées matinales, des vomissements et un ralentissement récent. L’imagerie montre un œdème vasogénique avec effacement des sillons. Son traitement comprend une corticothérapie, sa pression artérielle est encore stable et son examen retrouve une discrète faiblesse du membre supérieur gauche.", questions:[
+  qcm("Quels éléments préopératoires influencent directement la stratégie anesthésique ?",["b00079","b00080","b00081"],"Les symptômes, l’examen de référence et l’imagerie établissent le risque d’HTIC et guident le réveil.",[
+   T("Documenter précisément le niveau de conscience de Nora.","Une valeur initiale est indispensable pour interpréter le réveil."),T("Cartographier ses déficits neurologiques avant l’intervention.","Un déficit ancien ne doit pas être confondu avec une complication."),T("Revoir l’imagerie et les signes de faible compliance.","L’effacement des sillons indique une réserve intracrânienne réduite."),F("Administrer une forte prémédication sans surveillance.","La dépression ventilatoire pourrait augmenter PaCO₂ et PIC."),F("Reporter l’évaluation de ses voies aériennes après l’induction.","Le contrôle de l’intubation participe à la prévention des agressions secondaires.")]),
+  qcm("Quelles priorités faut-il fixer pour l’induction ?",["b00083","b00084","b00086"],"L’induction de Nora doit éviter hypotension, hypoxémie, hypercapnie et réponse hypertensive à la laryngoscopie.",[
+   T("Préoxygéner soigneusement avant l’apnée.","La faible tolérance cérébrale rend toute hypoxémie délétère."),T("Préparer un vasopresseur titrable.","Le maintien de PAM protège la PPC pendant l’effet hypnotique."),F("Prolonger la laryngoscopie pour obtenir une vue parfaite.","Une stimulation longue majore hypertension et PIC."),T("Atténuer la réponse adrénergique à l’intubation.","La poussée tensionnelle augmente le volume sanguin cérébral."),F("Accepter une hypercapnie importante pendant la ventilation au masque.","Elle dilate les vaisseaux cérébraux et aggrave la pression."),
+  ],"Nora devient somnolente en salle d’accueil, avec une PAM à 78 mmHg."),
+  qcm("Quels choix de maintien favorisent la relaxation et le monitorage ?",["b00054","b00058","b00085","b00088"],"Une anesthésie intraveineuse titrée limite la vasodilatation et préserve mieux les potentiels évoqués.",[
+   T("Utiliser une perfusion de propofol ajustée à la durée.","Elle réduit CMRO₂, DSC et volume sanguin cérébral."),F("Employer un halogéné à concentration élevée.","La vasodilatation et la dépression des signaux seraient défavorables."),T("Éviter une curarisation persistante si des potentiels moteurs sont requis.","La réponse musculaire doit rester mesurable."),F("Cumuler des barbituriques jusqu’à la fermeture sans indication.","L’accumulation retarderait l’examen neurologique."),T("Coordonner chaque changement d’agent avec le neurophysiologiste.","L’interprétation des amplitudes dépend du régime anesthésique."),
+  ],"Le neurochirurgien demande des potentiels moteurs et une relaxation cérébrale maximale."),
+  qcm("Quelles actions traiteront un cerveau tendu à l’ouverture ?",["b00090","b00091","b00093"],"Le traitement combine drainage veineux, ventilation, osmothérapie et vérification de la profondeur sans effondrer la PPC.",[
+   T("Vérifier que le cou de Nora n’est ni fléchi ni comprimé.","Une obstruction jugulaire augmente rapidement le volume veineux."),T("Ajuster la PaCO₂ vers 35 mmHg.","La capnie basse-normale réduit la vasodilatation."),T("Administrer l’osmothérapie convenue avec le chirurgien.","Mannitol ou saline hypertonique diminue l’eau interstitielle."),F("Abaisser volontairement la PAM à 45 mmHg.","Cette pression menacerait la PPC d’un cerveau déjà comprimé."),F("Perfuser un soluté hypotonique pour augmenter la diurèse.","Il favorise l’œdème et l’hyponatrémie."),
+  ],"À l’ouverture de la dure-mère, le cerveau bombe malgré une anesthésie stable."),
+  qcm("Quels objectifs accompagnent l’osmothérapie ?",["b00093","b00094"],"La baisse d’eau cérébrale exige un suivi volémique, sodé et hémodynamique afin de préserver la perfusion.",[
+   T("Compenser une diurèse excessive pour maintenir l’euvolémie.","L’hypovolémie ferait chuter PAM et PPC."),F("Remplacer les pertes par de l’eau libre.","L’hypo-osmolarité aggraverait l’œdème cérébral."),T("Surveiller la natrémie après une solution hypertonique.","Une variation rapide ou excessive expose à des complications."),T("Anticiper les besoins transfusionnels si la tumeur saigne.","Une lésion vascularisée peut provoquer une hémorragie importante."),F("Utiliser systématiquement l’albumine quel que soit le contexte.","Son bénéfice n’est pas établi et elle est nocive après traumatisme sévère."),
+  ],"Après mannitol, la diurèse atteint 1,5 litre et la PAM baisse à 66 mmHg."),
+  qcm("Quels critères autorisent une extubation en salle ?",["b00095"],"L’extubation de Nora suppose une PIC contrôlée, un éveil suffisant, une ventilation efficace et des voies aériennes sûres.",[
+   T("Une réponse neurologique cohérente aux ordres simples.","La vigilance permet de protéger les voies aériennes."),T("Une ventilation spontanée sans hypercapnie.","La rétention de CO₂ pourrait réaugmenter la PIC."),F("Une HTIC persistante nécessitant une sédation profonde.","Ce contexte impose de poursuivre ventilation et contrôle physiologique."),T("Une analgésie limitant toux et agitation.","La stabilité du réveil réduit la poussée tensionnelle."),F("Un œdème laryngé important après remplissage massif.","L’obstruction postextubation rendrait le geste dangereux."),
+  ],"L’exérèse est complète ; Nora est normotherme et le chirurgien annonce une hémostase satisfaisante."),
+  qcm("Que faut-il rechercher devant son réveil anormalement lent ?",["b00060","b00061","b00095","b00096"],"Le retard inattendu impose une recherche parallèle des causes pharmacologiques, physiologiques et chirurgicales.",[
+   T("Une accumulation d’hypnotiques ou d’opioïdes.","La durée d’administration peut prolonger leur effet."),T("Une hypothermie ou une dysglycémie.","Ces anomalies métaboliques ralentissent l’éveil et doivent être corrigées."),T("Une hypercapnie par hypoventilation.","Elle altère la conscience et augmente le DSC."),T("Un hématome postopératoire compressif.","Une complication chirurgicale doit être exclue rapidement."),F("Attendre plusieurs heures sans examen ni imagerie.","Un dommage réversible pourrait devenir permanent."),
+  ],"Trente minutes après l’arrêt du propofol, Nora n’ouvre pas les yeux et présente une asymétrie pupillaire."),
+ ]},
+ { title:"Fosse postérieure en position assise", vignette:"Élise, patiente de 52 ans, est opérée d’un neurinome vestibulaire en position assise. L’échographie préopératoire avec test de bulles ne montre pas de shunt intracardiaque et son examen neurologique est stable. Elle ne présente ni hypertension intracrânienne ni cardiopathie connue ; une voie artérielle et deux accès veineux fiables sont prévus avant la verticalisation.", questions:[
+  qcm("Quels risques spécifiques faut-il anticiper avant le positionnement ?",["b00100","b00101","b00102"],"La surélévation facilite l’exposition mais augmente embolie aérienne, hypotension et complications cervicales.",[
+   T("Une entrée d’air dans les sinus veineux ouverts.","Le gradient hydrostatique peut rendre leur pression négative."),T("Une baisse de précharge par stase dans les membres inférieurs.","La position verticale réduit le retour veineux central."),F("Une disparition de tout risque neurologique en l’absence de shunt.","Une embolie veineuse massive reste potentiellement fatale."),T("Une compression jugulaire si le cou est trop fléchi.","Elle entrave le drainage et augmente la PIC."),F("Une meilleure accessibilité des voies aériennes après champage.","La tête fixée devient difficilement accessible."),
+  ]),
+  qcm("Comment installer le monitorage artériel d’Élise ?",["b00102","b00103"],"La pression doit être référencée au niveau cérébral afin de ne pas surestimer la perfusion en position assise.",[
+   T("Placer le zéro au conduit auditif externe.","Ce niveau approche la pression perçue par le cerveau."),F("Conserver le transducteur au niveau du cœur sans correction.","La colonne hydrostatique ferait surestimer la pression cérébrale."),T("Surveiller étroitement la PAM pendant la verticalisation.","La précharge peut chuter lors du changement de position."),F("Se fier uniquement à une mesure intermittente au brassard.","Les variations rapides exigent une surveillance continue."),T("Noter le niveau de référence dans le dossier anesthésique.","L’interprétation des valeurs dépend du point de zéro."),
+  ],"Après verticalisation, la pression radiale affichée est supérieure à celle estimée au niveau de l’oreille."),
+  qcm("Quels constats font suspecter une embolie gazeuse veineuse ?",["b00102"],"Une baisse de CO₂ expiré et de débit circulatoire pendant l’ouverture veineuse doit faire rechercher une entrée d’air.",[
+   T("Une chute soudaine de la PetCO₂.","L’obstruction vasculaire réduit brutalement le transport de CO₂ vers le poumon."),T("Une hypotension aiguë sans perte sanguine visible.","Un airlock droit peut diminuer fortement le débit cardiaque."),F("Une élévation isolée et progressive de la température.","Ce signe n’est pas spécifique d’une embolie aérienne aiguë."),T("Un signal d’air sur le monitorage adapté.","L’échographie ou le Doppler peut détecter de petites quantités."),F("Une amélioration immédiate de la saturation veineuse.","L’obstruction du débit ne produit pas ce bénéfice."),
+  ],"Lors de l’ouverture d’un sinus, la PetCO₂ chute de 35 à 20 mmHg et la PAM tombe à 48 mmHg."),
+  qcm("Quelles actions sont prioritaires devant cet événement ?",["b00102","b00077"],"Il faut interrompre l’entrée d’air, soutenir la circulation et coordonner immédiatement les gestes avec le chirurgien.",[
+   T("Avertir le chirurgien et faire occlure la source veineuse.","Empêcher toute nouvelle aspiration d’air est essentiel."),T("Administrer une FiO₂ de 1,0.","L’oxygénation maximale réduit aussi la fraction de gaz diffusible."),T("Soutenir la PAM et le retour veineux.","Le débit droit doit être restauré malgré l’obstruction gazeuse."),F("Poursuivre sans signaler tant que la SpO₂ reste normale.","La PetCO₂ et l’hypotension témoignent déjà d’un événement majeur."),F("Créer volontairement une hypotension supplémentaire.","La PPC et le débit cardiaque seraient encore compromis."),
+  ],"Le champ chirurgical aspire encore de l’air et un bruit précordial inhabituel est entendu."),
+  qcm("Pourquoi un shunt intracardiaque aurait-il aggravé le risque ?",["b00102"],"Un passage droite-gauche permettrait aux bulles d’atteindre directement cerveau et circulation systémique.",[
+   T("Il autorise une embolisation artérielle paradoxale.","L’air veineux contourne alors le filtre pulmonaire."),F("Il empêche toute entrée d’air dans les veines diploïques.","Le mécanisme d’aspiration au site opératoire persiste."),T("Il expose à un déficit neurologique focal brutal.","Une bulle artérielle peut occlure une artère cérébrale."),F("Il augmente toujours la précharge et protège de l’airlock.","Cette affirmation ne correspond pas à la physiologie du shunt."),T("Il justifie le dépistage préopératoire par test de bulles.","L’identification d’un passage modifie la décision de positionnement."),
+  ],"Après stabilisation, l’équipe rappelle que le test de bulles préopératoire était négatif."),
+  qcm("Quelles complications de posture faut-il réévaluer ?",["b00104"],"La longue immobilisation impose un contrôle cervical, lingual, nerveux, cutané et respiratoire avant la fin.",[
+   T("Une macroglossie liée à la flexion cervicale.","La congestion veineuse peut compromettre l’extubation."),T("Une obstruction ou coudure du tube trachéal.","L’hyperflexion peut comprimer le dispositif."),F("Une impossibilité de lésion nerveuse en position assise.","Les points d’appui et la traction restent dangereux."),T("Une souffrance médullaire liée à l’hyperflexion.","La posture cervicale extrême peut réduire la perfusion médullaire."),F("Un accès veineux forcément intact sans vérification.","Les lignes peuvent être comprimées ou déconnectées sous les champs."),
+  ],"Après cinq heures, la tête d’Élise est encore fortement fléchie et la langue paraît tuméfiée."),
+  qcm("Quels critères conditionnent l’extubation après cette chirurgie ?",["b00095","b00104"],"La vigilance neurologique ne suffit pas : œdème lingual, accès aérien et ventilation doivent être sûrs.",[
+   T("Une perméabilité pharyngolaryngée satisfaisante.","La macroglossie peut obstruer les voies aériennes après retrait du tube."),T("Un réveil permettant la protection des voies aériennes.","La chirurgie de fosse postérieure peut altérer les réflexes."),T("Une ventilation et une oxygénation efficaces.","L’événement embolique peut avoir des conséquences pulmonaires."),F("Une toux incontrôlée avec hypertension majeure.","Cette émergence augmente le risque de saignement."),F("Une impossibilité de réintubation anticipée sans plan de secours.","Un accès difficile doit conduire à différer ou sécuriser l’extubation."),
+  ],"À la fermeture, Élise se réveille mais l’œdème lingual reste marqué et l’accès à la tête demeure difficile."),
+ ]},
+ { title:"Arthrodèse lombaire ventrale", vignette:"Marc, patient de 67 ans, obèse et hypertendu, doit subir une reconstruction lombaire longue en décubitus ventral. Une surveillance des potentiels moteurs et somatosensoriels est prévue. Son hémoglobine préopératoire est normale, l’intervention devrait durer huit heures et comporter un risque hémorragique important ; deux voies veineuses de bon calibre sont posées.", questions:[
+  qcm("Quels éléments doivent guider le plan de Marc ?",["b00105","b00106"],"La durée, le décubitus ventral, les pertes possibles et le neuromonitorage déterminent accès, agents et protections.",[
+   T("La probabilité d’une hémorragie importante.","Une reconstruction étendue nécessite des accès et produits anticipés."),T("Le type de signaux neurophysiologiques requis.","Les curares et halogénés peuvent compromettre leur interprétation."),T("La vulnérabilité respiratoire liée à l’obésité.","La position et une compression abdominale peuvent gêner la ventilation."),F("L’idée que le positionnement relève uniquement du chirurgien.","L’anesthésiologiste partage la responsabilité des complications."),F("L’absence supposée de risque oculaire en ventral.","La pression et l’hypoperfusion peuvent causer une atteinte grave."),
+  ]),
+  qcm("Quelles vérifications sont indispensables après retournement ?",["b00104","b00106"],"Avant le champage, yeux, abdomen, nerfs, voies aériennes et accès doivent être contrôlés méthodiquement.",[
+   T("Absence de pression directe sur les deux globes.","Une compression prolongée peut léser rétine ou nerf optique."),T("Abdomen libre entre les appuis.","Cela améliore excursion diaphragmatique et retour veineux."),F("Coudes en appui direct sur le nerf ulnaire.","Une compression prolongée créerait une neuropathie périphérique."),T("Tube trachéal fixé et ventilant sans obstruction.","La face devient inaccessible après installation."),F("Voies intraveineuses cachées sans test de perméabilité.","Une ligne comprimée empêcherait une réanimation rapide."),
+  ],"Marc est retourné ; son abdomen repose fortement sur le support et les pressions aériennes augmentent."),
+  qcm("Pourquoi faut-il libérer immédiatement l’abdomen ?",["b00106"],"La compression abdominale nuit simultanément à la ventilation et au drainage veineux rachidien.",[
+   T("Elle limite l’excursion diaphragmatique.","La pression transmise réduit la compliance respiratoire."),T("Elle augmente la congestion des veines péridurales.","Le retour veineux comprimé favorise le saignement opératoire."),F("Elle améliore nécessairement le retour veineux central.","Une forte pression peut au contraire gêner la circulation."),T("Elle peut augmenter les pertes sanguines dans le champ.","Les plexus veineux distendus saignent davantage."),F("Elle protège les yeux contre toute hypoperfusion.","La perfusion optique dépend surtout de pression, durée et pertes."),
+  ],"Après repositionnement des supports, les pressions ventilatoires diminuent et le champ devient moins congestif."),
+  qcm("Comment préserver les potentiels moteurs ?",["b00085","b00088","b00106"],"Le régime anesthésique doit limiter les agents dépressifs et conserver une transmission neuromusculaire mesurable.",[
+   T("Éviter l’entretien par curare profond.","La réponse musculaire est nécessaire aux potentiels moteurs."),T("Limiter la concentration d’halogéné.","L’amplitude des potentiels diminue avec la dose."),F("Modifier les agents sans prévenir le neurophysiologiste.","Une variation anesthésique peut simuler une atteinte médullaire."),T("Maintenir une pression et une oxygénation suffisantes.","Une baisse réelle de perfusion médullaire altère aussi les signaux."),F("Interpréter toute baisse comme un artefact anesthésique.","Une compression chirurgicale doit être exclue en urgence."),
+  ],"Une baisse bilatérale des potentiels moteurs apparaît pendant la correction de la déformation."),
+  qcm("Quels facteurs augmentent le risque de neuropathie optique ischémique ?",["b00106"],"Durée, hypotension et pertes sanguines importantes réduisent la perfusion du nerf optique.",[
+   T("Une intervention très prolongée.","L’exposition cumulée augmente le risque rare de cécité."),T("Une hypotension persistante.","La pression de perfusion optique devient insuffisante."),T("Une anémie liée à des pertes massives.","La livraison d’oxygène au nerf optique diminue."),F("Un abdomen libre avec pression veineuse réduite.","Cette installation est au contraire protectrice."),F("Une vérification répétée de l’absence d’appui oculaire.","Le contrôle des yeux diminue les lésions compressives."),
+  ],"Après six heures, Marc a perdu deux litres de sang et sa PAM est restée proche de 55 mmHg pendant vingt minutes."),
+  qcm("Quelles corrections sont nécessaires avant de poursuivre ?",["b00094","b00106"],"Il faut restaurer perfusion, transport d’oxygène et coagulation sans favoriser œdème ni congestion.",[
+   T("Corriger la PAM par volume approprié et vasopresseur titré.","La perfusion médullaire et optique dépend de la pression."),T("Évaluer la nécessité de transfuser selon hémoglobine et saignement.","Le transport d’oxygène et l’hémostase doivent être restaurés."),F("Administrer uniquement un soluté très hypotonique.","Cette stratégie n’améliore ni oxygénation ni pression durablement."),T("Vérifier à nouveau abdomen, tête et globes.","Une malposition peut s’être développée pendant la longue chirurgie."),F("Accepter la disparition des potentiels sans alerter le chirurgien.","Une atteinte médullaire peut devenir irréversible.")],"L’hémoglobine de Marc est maintenant à 72 g/L, sa PAM à 54 mmHg et les potentiels restent diminués."),
+  qcm("Quelles évaluations précèdent l’extubation de Marc ?",["b00095","b00106"],"Une chirurgie longue et un remplissage important imposent de vérifier vigilance, ventilation et œdème des voies aériennes.",[
+   T("Rechercher un œdème facial et supraglottique.","Le décubitus ventral prolongé favorise la congestion."),T("Confirmer une force respiratoire suffisante.","L’obésité et la durée augmentent le risque d’échec ventilatoire."),F("Extuber avant toute remise en décubitus dorsal.","L’accès et la surveillance seraient insuffisants dans cette posture."),T("S’assurer d’un réveil complet après les perfusions.","L’accumulation peut retarder la protection des voies aériennes."),F("Ignorer l’hypothermie résiduelle.","Elle favorise frissons, retard d’éveil et complications."),
+  ],"Après neuf heures, Marc présente un œdème facial et reste somnolent malgré l’arrêt des hypnotiques."),
+ ]},
+ { title:"Retard d’éveil après craniotomie", vignette:"Aïcha, patiente de 71 ans, a subi une exérèse temporale de six heures sous propofol, rémifentanil et plusieurs bolus de midazolam. L’intervention a été hémorragique mais la fermeture semblait satisfaisante. Son examen préopératoire était symétrique ; elle a reçu une transfusion, a été momentanément hypotherme et ne présentait pas de trouble de conscience avant l’induction.", questions:[
+  qcm("Quels facteurs prédisposent Aïcha à un réveil lent ?",["b00060","b00061","b00085","b00095"],"Âge, durée, benzodiazépine, hypothermie et perturbations systémiques peuvent prolonger l’effet des agents.",[
+   T("Les bolus répétés de midazolam.","Sa demi-vie et son métabolite actif prolongent la sédation."),T("La durée de perfusion du propofol.","Une administration longue peut augmenter le contexte de décroissance."),F("L’arrêt des médicaments garantit un éveil immédiat.","La concentration cérébrale baisse selon leur distribution et élimination."),T("Une hypothermie peropératoire.","Elle ralentit le métabolisme et potentialise les sédatifs."),F("L’âge avancé accélère toujours l’élimination.","La sensibilité et la clairance sont souvent défavorables chez le sujet âgé."),
+  ]),
+  qcm("Quelles causes simples faut-il contrôler immédiatement ?",["b00095","b00096"],"Ventilation, oxygénation, température, glycémie et médicaments sont évalués parallèlement à l’examen neurologique.",[
+   T("Mesurer la PaCO₂ et vérifier la ventilation.","Une hypercapnie entraîne somnolence et hausse de DSC."),T("Contrôler glycémie et température.","Hypoglycémie et hypothermie sont rapidement réversibles."),T("Évaluer une curarisation résiduelle.","Une paralysie peut masquer la conscience et gêner la ventilation."),F("Attendre l’apparition d’un déficit avant d’examiner les pupilles.","L’évaluation pupillaire doit être immédiate et répétée."),F("Considérer le retard comme normal sans minuter son évolution.","Une complication compressive exige un diagnostic précoce."),
+  ],"Vingt minutes après l’arrêt des perfusions, Aïcha ne bouge pas ; sa température est à 34,8 °C."),
+  qcm("Quels éléments orientent vers une complication intracrânienne ?",["b00042","b00095","b00096"],"Une anomalie focale ou une dégradation progressive est incompatible avec un simple effet pharmacologique diffus.",[
+   T("Une anisocorie nouvelle.","Elle peut annoncer un engagement temporal."),T("Une asymétrie motrice après récupération du curare.","Un déficit focal suggère une lésion structurelle."),F("Une récupération symétrique et progressive sous réchauffement.","Cette évolution soutient plutôt une cause systémique."),T("Une hypertension associée à une bradycardie.","Cette réponse peut accompagner une élévation majeure de PIC."),F("Une normocapnie stable exclut toute complication chirurgicale.","Elle ne renseigne pas sur hématome ou ischémie."),
+  ],"Après réchauffement, la pupille gauche devient plus large et Aïcha ne mobilise que le côté droit."),
+  qcm("Quelles actions doivent suivre cette focalisation ?",["b00077","b00095","b00096"],"La protection physiologique et l’imagerie urgente précèdent une éventuelle reprise chirurgicale.",[
+   T("Maintenir l’intubation et une oxygénation normale.","Aïcha ne protège pas ses voies aériennes et reste neurologiquement instable."),T("Alerter immédiatement le neurochirurgien.","Une complication du site opératoire est probable."),T("Organiser une imagerie cérébrale urgente.","Elle différencie hématome, œdème et ischémie."),F("Extuber pour mieux tester la parole.","La perte de protection rendrait cette manœuvre dangereuse."),F("Donner uniquement un antagoniste et attendre une heure.","La focalisation ne s’explique pas par une sédation diffuse."),
+  ],"Le scanner est préparé tandis que la PAM monte à 110 mmHg et la fréquence chute à 48/min."),
+  qcm("Comment soutenir la PPC pendant cette phase ?",["b00008","b00013","b00042","b00093"],"La stratégie contrôle la PIC sans laisser la PAM s’effondrer, tout en évitant hypoxémie et hypercapnie.",[
+   T("Maintenir la tête surélevée et le cou libre.","Le drainage veineux réduit le compartiment sanguin."),T("Assurer une ventilation évitant l’hypercapnie.","La vasodilatation au CO₂ aggraverait l’HTIC."),F("Abaisser brutalement la PAM sous 50 mmHg.","La PPC chuterait alors que la PIC est probablement élevée."),T("Préparer une osmothérapie si l’équipe la confirme.","Une déshydratation cérébrale peut temporiser avant le geste causal."),F("Provoquer une hypoxémie pour contracter les vaisseaux cérébraux.","L’hypoxémie vasodilate le cerveau et lèse directement les neurones."),
+  ],"L’imagerie confirme un hématome du lit opératoire avec effet de masse."),
+  qcm("Quels objectifs gouvernent la reprise chirurgicale ?",["b00070","b00084","b00094"],"La reprise combine évacuation rapide, hémostase, perfusion et correction des troubles liés au saignement.",[
+   T("Préparer des produits sanguins adaptés.","La première chirurgie hémorragique peut avoir induit anémie et coagulopathie."),F("Reporter la reprise jusqu’au lendemain pour achever le réchauffement.","L’effet de masse focal impose une décompression urgente."),T("Maintenir normocapnie et oxygénation pendant le transfert.","Ces paramètres préviennent une aggravation du volume sanguin."),T("Éviter une nouvelle accumulation médicamenteuse inutile.","L’examen postopératoire restera important après hémostase."),F("Utiliser des solutés hypotoniques pour le remplissage.","Ils aggraveraient l’œdème cérébral."),
+  ],"Aïcha repart au bloc ; l’hémoglobine est à 76 g/L et le fibrinogène est abaissé."),
+  qcm("Quand une extubation secondaire redeviendra-t-elle raisonnable ?",["b00095"],"Après décompression, l’extubation exige récupération neurologique, stabilité de la PIC et voies aériennes protectrices.",[
+   T("Lorsque Aïcha exécute des ordres simples de façon reproductible.","La vigilance doit permettre une protection active."),T("Quand ventilation et gaz du sang sont satisfaisants.","La normocapnie limite la récidive de vasodilatation."),T("Après correction de l’hypothermie et de la coagulopathie.","L’homéostasie réduit saignement et retard d’éveil."),F("Malgré une anisocorie croissante et une somnolence profonde.","Ces signes indiqueraient une instabilité neurologique persistante."),F("Dès la fin des sutures, indépendamment de l’examen.","Le calendrier chirurgical ne remplace pas les critères cliniques."),
+  ],"Après évacuation, les pupilles se symétrisent et Aïcha commence à suivre des consignes quatre heures plus tard."),
+ ]},
+ { title:"HTIC réfractaire en réanimation", vignette:"Thomas, patient de 33 ans, est ventilé en réanimation pour une contusion cérébrale diffuse. La PIC est monitorée ; elle reste à 24 mmHg malgré analgésie, sédation, normoxie et tête surélevée. L’imagerie ne montre pas de masse à évacuer, la pression artérielle est soutenue par une faible dose de noradrénaline et un drain ventriculaire a été posé.", questions:[
+  qcm("Quels mécanismes peuvent expliquer cette PIC élevée ?",["b00035","b00042","b00044"],"Œdème, volume sanguin et défaut de drainage se partagent un espace fixe dont la réserve compensatoire est épuisée.",[
+   T("Une augmentation du volume interstitiel cérébral.","La contusion provoque un œdème qui occupe le compartiment fixe."),T("Une congestion veineuse intracrânienne.","Le sang représente un compartiment modulable de la PIC."),F("Une expansion libre du crâne adulte.","La boîte osseuse ne permet pas cette compensation."),T("Une hypercapnie augmentant le volume sanguin.","La vasodilatation au CO₂ remplit davantage le réseau cérébral."),F("Une baisse isolée du volume de LCR.","Elle constituerait plutôt un mécanisme compensateur."),
+  ]),
+  qcm("Quelles vérifications réversibles faut-il répéter ?",["b00093","b00095","b00098","b00102"],"La première ligne élimine position, douleur, fièvre, hypoventilation et obstacle au drainage.",[
+   T("Contrôler que le cou de Thomas reste neutre.","Une rotation peut comprimer une jugulaire et augmenter la PIC."),T("Rechercher fièvre, toux ou agitation.","Métabolisme et pression veineuse augmentent lors de ces stimulations."),T("Mesurer PaCO₂ et oxygénation.","Hypercapnie et hypoxémie vasodilatent fortement le cerveau."),F("Retirer toute sédation pour provoquer un réveil agité.","La stimulation pourrait aggraver les poussées de PIC."),F("Abaisser la tête sous le niveau du cœur.","La congestion veineuse intracrânienne serait favorisée."),
+  ],"La tête est tournée contre le pansement, la température est à 38,7 °C et la PaCO₂ à 48 mmHg."),
+  qcm("Quelles corrections immédiates sont adaptées ?",["b00024","b00093","b00095"],"Repositionnement, normothermie et ventilation basse-normale traitent trois déterminants réversibles sans recours invasif.",[
+   T("Remettre la tête dans l’axe sans compression jugulaire.","Le retour veineux peut s’améliorer immédiatement."),T("Traiter la fièvre et les frissons.","La baisse métabolique réduit la demande et le DSC couplé."),T("Ramener progressivement la PaCO₂ vers 35–40 mmHg.","Une correction contrôlée limite le volume sanguin."),F("Viser durablement une PaCO₂ à 18 mmHg.","Une hypocapnie profonde expose à l’ischémie."),F("Administrer une prémédication orale non titrée.","Thomas est déjà ventilé et nécessite des mesures contrôlables."),
+  ],"Après ces corrections, la PIC baisse transitoirement à 19 puis remonte à 26 mmHg."),
+  qcm("Quels traitements peuvent constituer l’étape suivante ?",["b00090","b00093","b00098"],"Osmothérapie et drainage du LCR sont considérés selon imagerie, monitorage et contre-indications.",[
+   T("Administrer du mannitol avec surveillance volémique.","Le gradient osmotique déplace l’eau hors du tissu sain."),T("Utiliser une saline hypertonique avec suivi de la natrémie.","Elle augmente l’osmolarité et soutient parfois la circulation."),T("Drainer le LCR si un cathéter fonctionnel est présent.","La réduction directe du compartiment liquidien abaisse la PIC."),F("Perfuser de l’eau libre pour corriger la pression.","L’hypo-osmolarité augmente l’œdème."),F("Tolérer une PAM très basse pendant l’osmothérapie.","La diurèse peut réduire le volume et la PPC si elle n’est pas compensée."),
+  ],"Le scanner montre un œdème diffus ; un drain ventriculaire est en place mais peu productif."),
+  qcm("Quels paramètres préviennent les effets indésirables de l’osmothérapie ?",["b00093","b00094"],"Osmolarité, sodium, diurèse et pression circulatoire déterminent l’efficacité et la sécurité du traitement.",[
+   T("Suivre la natrémie de façon rapprochée.","Une correction excessive expose à des complications neurologiques."),T("Mesurer diurèse et bilan hydrique.","Le mannitol peut provoquer une hypovolémie importante."),F("Ignorer la PAM tant que la PIC diminue.","Le bénéfice disparaît si la PPC chute simultanément."),T("Réévaluer l’efficacité clinique et instrumentale.","Une dose sans réponse ne doit pas être répétée mécaniquement."),F("Associer systématiquement un soluté hypotonique.","Il s’oppose au gradient osmotique recherché."),
+  ],"Après le bolus, Thomas produit 900 mL d’urine et sa PAM tombe de 82 à 62 mmHg."),
+  qcm("Comment préserver la PPC dans cette situation ?",["b00006","b00008","b00013"],"La PPC résulte du différentiel PAM-PIC : baisse de PIC et soutien de PAM doivent être menés ensemble.",[
+   T("Corriger l’hypovolémie liée à la diurèse.","Le retour veineux et le débit cardiaque soutiennent la PAM."),T("Titrer un vasopresseur si la pression reste insuffisante.","Le tonus systémique peut être restauré sans attendre."),F("Considérer qu’une PIC plus basse suffit malgré une PAM effondrée.","La PPC peut rester critique si les deux pressions diminuent."),T("Calculer et suivre le gradient de perfusion.","L’évolution conjointe de PAM et PIC guide la réanimation."),F("Provoquer une vasodilatation systémique supplémentaire.","Elle réduirait encore la pression d’entrée cérébrale."),
+  ],"La PIC est maintenant à 18 mmHg, mais la PPC calculée reste insuffisante."),
+  qcm("Quels principes encadrent un traitement de sauvetage ?",["b00060","b00095","b00098"],"Les interventions à risque sont réservées à l’échec des mesures précédentes et évaluées selon la possibilité de récupération.",[
+   T("Confirmer l’échec des corrections de première ligne.","Les gestes simples et moins nocifs doivent avoir été optimisés."),T("Discuter une suppression métabolique par barbiturique.","Elle peut diminuer CMRO₂ et DSC dans une HTIC réfractaire."),T("Anticiper une hypotension et une émergence très retardée.","Les barbituriques s’accumulent et dépriment la circulation."),F("Attribuer une neuroprotection humaine certaine aux barbituriques.","Le bénéfice expérimental n’a pas été confirmé comme tel chez l’humain."),F("Poursuivre un traitement inefficace sans réévaluation pronostique.","Chaque escalade doit peser objectifs, risques et réponse."),
+  ],"Malgré drainage, osmothérapie et optimisation, la PIC dépasse 30 mmHg avec aggravation radiologique."),
+ ]},
+ { title:"Anévrisme cérébral non rompu", vignette:"Claire, patiente de 46 ans, est programmée pour le clippage d’un anévrisme de l’artère communicante. Elle est consciente, sans déficit, avec une hypertension artérielle équilibrée et aucune image d’œdème ou d’HTIC. Son bilan cardiopulmonaire est rassurant, ses voies aériennes sont accessibles et le neurochirurgien souhaite un examen neurologique précoce après le clippage.", questions:[
+  qcm("Quelles données rassurent sans supprimer le risque anesthésique ?",["b00079","b00080"],"L’absence d’HTIC autorise une stratégie plus souple, mais la stabilité tensionnelle reste essentielle autour de l’anévrisme.",[
+   T("Un examen neurologique normal fournit une référence fiable.","Toute modification postopératoire pourra être détectée rapidement."),T("L’absence de signe de compliance réduite permet une prémédication prudente.","Une anxiolyse titrée reste envisageable sous observation."),F("L’anévrisme rend toute mesure tensionnelle inutile.","Les variations de pression influencent rupture et perfusion."),F("L’absence de déficit exclut toute complication peropératoire.","Un événement vasculaire peut survenir malgré un état initial normal."),T("Le contrôle habituel de son hypertension reste pertinent.","Une pression stable limite poussée hypertensive et hypoperfusion."),
+  ]),
+  qcm("Quels objectifs gouvernent l’intubation de Claire ?",["b00070","b00071","b00084"],"Il faut éviter à la fois la poussée hypertensive susceptible de rompre l’anévrisme et la chute de PPC.",[
+   T("Obtenir une profondeur hypnotique suffisante avant la laryngoscopie.","Une anesthésie légère amplifie la réponse sympathique."),T("Titrer un opioïde pour limiter la réponse adrénergique.","L’analgésie atténue tachycardie et hypertension."),F("Accepter une PAM à 40 mmHg pendant plusieurs minutes.","Une hypotension prolongée menace la perfusion cérébrale."),T("Préparer le traitement d’une hypertension transitoire.","Une correction rapide limite la contrainte sur la paroi anévrismale."),F("Laisser Claire hypoventiler jusqu’à la craniotomie.","L’hypercapnie augmente DSC et volume intracrânien."),
+  ],"Au monitorage, Claire présente une PAM de 105 mmHg juste avant la laryngoscopie."),
+  qcm("Quelles phases opératoires nécessitent une analgésie renforcée ?",["b00089"],"Les temps extracérébraux et duraux sont nociceptifs, contrairement à la manipulation du parenchyme.",[
+   T("La fixation de la tête dans la têtière.","Les pointes appliquées au scalp sont fortement stimulantes."),T("L’incision cutanée et la craniotomie.","Ces gestes déclenchent une réponse adrénergique importante."),F("Toute manipulation microscopique du parenchyme.","Le tissu cérébral lui-même est peu nociceptif."),T("L’ouverture et la traction durales.","La dure-mère fait partie des structures sensibles."),F("La fermeture de l’écran de monitorage.","Ce geste technique ne constitue pas un stimulus chirurgical."),
+  ],"La PAM augmente de 30 mmHg lors de la pose de la têtière malgré une fréquence stable."),
+  qcm("Comment adapter l’anesthésie durant la dissection microscopique ?",["b00085","b00089"],"Un temps peu stimulant exige le maintien de l’inconscience tout en évitant une accumulation qui retarderait le réveil.",[
+   T("Maintenir une profondeur hypnotique suffisante.","L’absence de réponse nociceptive ne signifie pas absence de conscience."),F("Arrêter tout hypnotique jusqu’à la fermeture.","Claire pourrait mémoriser le temps opératoire silencieux."),T("Réduire prudemment l’opioïde si le stimulus disparaît.","La titration limite hypotension et retard respiratoire."),F("Administrer automatiquement un curare si des potentiels moteurs sont suivis.","La paralysie compromettrait la réponse neuromusculaire."),T("Surveiller la PAM et corriger ses écarts.","La perfusion et la contrainte anévrismale dépendent de la pression."),
+  ],"Après la craniotomie, la dissection devient longue et presque non nociceptive."),
+  qcm("Quelles actions sont adaptées à une rupture peropératoire ?",["b00078","b00090","b00094"],"La priorité est la coordination chirurgicale, le contrôle hémodynamique et la capacité de réanimation hémorragique.",[
+   T("Annoncer immédiatement les valeurs hémodynamiques à l’équipe.","Le chirurgien doit corréler le saignement et la perfusion."),T("Utiliser des accès de calibre suffisant pour transfuser.","Une hémorragie intracrânienne peut devenir rapidement massive."),F("Administrer un grand volume de soluté hypotonique.","L’œdème cérébral s’ajouterait à la perte sanguine."),T("Corriger une coagulopathie de consommation documentée.","L’hémostase nécessite les produits sanguins appropriés."),F("Induire une hypoxémie pour diminuer le débit de la rupture.","La lésion neuronale secondaire serait immédiate et injustifiée."),
+  ],"Au moment du clippage, l’anévrisme se rompt et le champ se remplit rapidement de sang."),
+  qcm("Quels éléments préparent un réveil neurologique fiable ?",["b00085","b00095"],"Une cinétique anticipée, une homéostasie normale et une émergence douce rendent l’examen interprétable.",[
+   T("Diminuer les perfusions au moment compatible avec leur cinétique.","La titration évite une concentration résiduelle excessive."),T("Réchauffer Claire jusqu’à la normothermie.","L’hypothermie retarde métabolisme et récupération."),F("Provoquer une toux vigoureuse pour tester le clip.","La poussée hypertensive augmente le risque hémorragique."),T("Prévenir nausées, douleur et agitation.","Une émergence calme stabilise pression et examen."),F("Masquer tout déficit nouveau par une sédation prolongée sans indication.","L’évaluation précoce recherche une complication vasculaire."),
+  ],"Le saignement est contrôlé, le clip est en place et le neurochirurgien demande un examen précoce."),
+  qcm("Quels constats postopératoires imposent une évaluation urgente ?",["b00095","b00096"],"Un réveil retardé ou focal après chirurgie vasculaire doit faire rechercher résidu médicamenteux, trouble systémique et complication cérébrale.",[
+   T("Une aphasie absente avant l’intervention.","Un déficit focal nouveau évoque ischémie ou hémorragie."),T("Une asymétrie pupillaire nouvelle.","Elle peut traduire une compression évolutive."),T("Une hypoventilation hypercapnique.","Elle altère l’éveil et augmente la PIC."),F("Une orientation normale avec force symétrique.","Cet examen est plutôt rassurant après le réveil."),T("Une absence d’ouverture des yeux malgré antagonisation appropriée.","Elle justifie une recherche rapide de causes centrales et métaboliques."),
+  ],"Claire ouvre tardivement les yeux puis ne mobilise pas son bras droit."),
+ ]},
+ { title:"Craniotomie éveillée", vignette:"Samir, patient de 39 ans, doit subir l’exérèse d’une tumeur proche de l’aire du langage. Il est coopérant, sans signe d’HTIC, et accepte une craniotomie éveillée avec cartographie fonctionnelle. Son examen du langage est normal, l’accès aux voies aériennes paraît simple et l’équipe a préparé un plan de conversion en anesthésie générale en cas de crise ou de détresse respiratoire.", questions:[
+  qcm("Quels éléments rendent cette stratégie possible ?",["b00065","b00079","b00080"],"La coopération, l’absence d’HTIC et un examen de référence précis sont indispensables à la cartographie éveillée.",[
+   T("La capacité de Samir à comprendre et exécuter les consignes.","La cartographie repose sur des réponses reproductibles."),T("L’absence de détérioration de la conscience.","Une vigilance instable rendrait la coopération imprévisible."),F("Une anxiété incontrôlable malgré l’accompagnement.","Une détresse majeure compromet la sécurité de la technique."),T("Un bilan des déficits langagiers préexistants.","Les réponses peropératoires doivent être comparées à l’état initial."),F("Une obstruction des voies aériennes non anticipée.","L’accès limité impose une stratégie respiratoire préparée."),
+  ]),
+  qcm("Pourquoi la dexmédétomidine peut-elle être utile ?",["b00065"],"Elle combine sédation coopérative, analgésie et maintien de la ventilation, sous surveillance de la fréquence et de la pression.",[
+   T("Elle préserve la respiration spontanée.","L’absence de dépression respiratoire limite l’hypercapnie."),T("Elle permet un contact verbal pendant la cartographie.","La sédation ressemble au sommeil dont le patient est réveillable."),T("Elle réduit les frissons.","Cet effet améliore confort et stabilité du signal."),F("Elle garantit une accélération cardiaque.","Elle peut au contraire provoquer une bradycardie."),F("Elle doit être injectée rapidement à forte dose.","Une administration rapide favorise hypertension paradoxale et instabilité."),
+  ],"Samir demande une sédation mais doit rester mobilisable et verbaliser sur commande."),
+  qcm("Quelles mesures limitent une hausse de PIC pendant la phase sédatée ?",["b00024","b00058","b00064","b00065"],"La ventilation efficace, le positionnement et une sédation sans obstruction évitent l’hypercapnie vasodilatatrice.",[
+   T("Surveiller continuellement la ventilation expirée.","Une baisse de ventilation révèle précocement la rétention de CO₂."),F("Accepter une obstruction pharyngée prolongée.","L’hypercapnie et l’hypoxémie augmenteraient le DSC."),T("Maintenir le cou libre et la tête surélevée.","Le drainage veineux réduit le volume sanguin intracrânien."),F("Administrer un opioïde jusqu’à l’apnée pour supprimer toute douleur.","L’apnée serait incompatible avec la phase éveillée et la protection cérébrale."),T("Titrer les agents en fonction des différentes phases.","Les besoins changent entre incision, cartographie et fermeture."),
+  ],"Sous sédation, la fréquence respiratoire diminue et la PetCO₂ passe de 38 à 49 mmHg."),
+  qcm("Quels gestes sont les plus nociceptifs dans cette procédure ?",["b00089"],"L’analgésie doit couvrir scalp, têtière et dure-mère, tandis que le parenchyme permet la cartographie éveillée.",[
+   T("La fixation par pointes de la têtière.","La pression sur le scalp déclenche une réponse intense."),T("L’incision du scalp.","La peau et les tissus extracrâniens sont richement innervés."),T("La manipulation de la dure-mère.","Cette enveloppe est sensible et nécessite une couverture analgésique."),F("La stimulation du parenchyme comme douleur majeure systématique.","Le cerveau lui-même est dépourvu de nociception classique."),F("La lecture des mots projetés sur un écran.","Cette tâche fonctionnelle n’est pas un stimulus douloureux."),
+  ],"La cartographie débute après ouverture ; Samir doit nommer des images et mobiliser la main."),
+  qcm("Que faire si une crise survient pendant la stimulation ?",["b00058","b00060","b00064","b00077"],"La stimulation est interrompue, l’équipe sécurise le patient et utilise un anticonvulsivant compatible avec la poursuite ou la conversion.",[
+   T("Demander l’arrêt immédiat de la stimulation corticale.","La suppression du déclencheur est la première mesure."),T("Maintenir oxygénation et sécurité des voies aériennes.","Une crise prolongée peut compromettre ventilation et conscience."),F("Injecter de l’étomidate pour son action anticonvulsivante.","Cet agent présente au contraire une activité proconvulsivante."),T("Titrer un agent anticonvulsivant tel que propofol si nécessaire.","Le propofol réduit rapidement l’activité neuronale."),F("Poursuivre la cartographie pendant une généralisation.","La priorité devient la sécurité et le contrôle de la crise."),
+  ],"Une stimulation déclenche des clonies focales de la face puis du bras droit."),
+  qcm("Quels signes imposent une conversion en anesthésie générale ?",["b00070","b00077","b00084"],"La perte de coopération, la crise persistante ou la détresse respiratoire rendent la technique éveillée dangereuse.",[
+   T("Une obstruction respiratoire réfractaire aux mesures simples.","Hypoxémie et hypercapnie menacent rapidement le cerveau."),T("Une agitation incontrôlable compromettant le champ.","Le mouvement met en danger Samir et l’équipe."),F("Une coopération stable et une cartographie exploitable.","Cette évolution permet au contraire de poursuivre la stratégie."),T("Une crise généralisée qui persiste malgré le traitement.","La protection des voies aériennes devient prioritaire."),F("Une brève demande de pause calmée par l’accompagnement.","Une adaptation titrée suffit si la sécurité reste assurée."),
+  ],"Après traitement, Samir reste confus, s’agite et ne protège plus correctement ses voies aériennes."),
+  qcm("Quels objectifs guideront la fin de l’intervention après conversion ?",["b00085","b00095"],"La décision de réveil dépend de la récupération neurologique, du contrôle de la crise et de la sécurité respiratoire.",[
+   T("Évaluer l’accumulation des agents reçus pendant la conversion.","La cinétique conditionne la possibilité d’un examen fiable."),T("Obtenir une normocapnie avant toute extubation.","Une ventilation correcte limite l’augmentation du DSC."),T("Vérifier que Samir répond et protège ses voies aériennes.","La crise et les médicaments peuvent altérer durablement la vigilance."),F("Extuber automatiquement malgré une crise persistante.","La ventilation doit être prolongée si le contrôle neurologique est insuffisant."),F("Provoquer une hypertension pour accélérer l’éveil.","Une poussée tensionnelle augmente le risque hémorragique."),
+  ],"La résection s’achève deux heures plus tard sans nouvelle crise, après une courte anesthésie intraveineuse."),
+ ]},
+ { title:"Traumatisme crânien instable", vignette:"Yanis, patient de 27 ans, est admis après une collision à moto. Son score de Glasgow est à 7, sa SpO₂ à 89 %, sa PAM à 55 mmHg et le scanner montre un hématome sous-dural aigu avec déviation de la ligne médiane. Il a déjà reçu une immobilisation cervicale, deux voies veineuses de bon calibre et une première expansion volémique sans correction complète de l’hypotension.", questions:[
+  qcm("Quelles agressions menacent immédiatement le cerveau de Yanis ?",["b00005","b00008","b00030","b00042"],"Hypoxémie, hypotension et masse compressive convergent vers une chute d’oxygénation et de PPC.",[
+   T("La PaO₂ insuffisante limite la livraison d’oxygène.","L’hypoxémie menace directement le métabolisme neuronal."),T("La PAM basse réduit la pression de perfusion cérébrale.","La PPC dépend du gradient entre PAM et pression intracrânienne."),T("L’hématome augmente la PIC et consomme la compliance.","Une masse aiguë est mal compensée dans le crâne rigide."),F("La tachycardie éventuelle protège toujours le DSC.","Le débit cardiaque ne compense pas une pression de perfusion effondrée."),F("La déviation médiane prouve une autorégulation intacte.","Elle signale une compression et un risque d’engagement."),
+  ]),
+  qcm("Quelles interventions précèdent le transfert au bloc ?",["b00070","b00071","b00078","b00080"],"La réanimation et le départ en urgence sont simultanés : oxygénation, pression, voies aériennes et neurochirurgie.",[
+   T("Administrer de l’oxygène et sécuriser rapidement la ventilation.","L’hypoxémie secondaire augmente mortalité et lésion neuronale."),T("Restaurer la PAM avec remplissage raisonné et vasopresseur.","La PPC doit être soutenue malgré la PIC élevée."),F("Attendre un bilan exhaustif de toutes les comorbidités.","L’engagement impose une chirurgie sans délai d’optimisation prolongée."),T("Alerter immédiatement l’équipe neurochirurgicale.","L’évacuation de la masse traite la cause mécanique."),F("Donner un sédatif oral avant toute surveillance.","Une administration non titrée retarderait la sécurisation vitale."),
+  ],"Une anisocorie droite apparaît pendant la préparation, tandis que Yanis devient bradycarde."),
+  qcm("Quel profil d’induction convient à cette instabilité ?",["b00059","b00084"],"L’étomidate peut limiter la chute de PAM, mais chaque agent doit être accompagné d’un contrôle ventilatoire et hémodynamique.",[
+   T("Choisir un hypnotique à bonne tolérance circulatoire.","La prévention d’une hypotension supplémentaire est prioritaire."),F("Administrer un bolus massif de propofol sans vasopresseur prêt.","La vasoplégie pourrait effondrer la PPC."),T("Assurer une préoxygénation maximale malgré l’urgence.","L’apnée d’induction ne doit pas aggraver l’hypoxémie."),T("Contrôler rapidement la PaCO₂ après intubation.","Hypercapnie comme hypocapnie profonde peuvent léser le cerveau."),F("Provoquer une réponse hypertensive intense à la laryngoscopie.","La hausse brutale de PIC et le saignement seraient dangereux."),
+  ],"La PAM remonte à 70 mmHg sous noradrénaline, mais l’état circulatoire reste fragile."),
+  qcm("Quelles mesures sont appropriées pendant la craniectomie ?",["b00093","b00094"],"Une stratégie isotone, normotherme et guidée par les pertes préserve la PPC tout en limitant l’œdème.",[
+   T("Utiliser des cristalloïdes isotoniques.","Ils maintiennent le volume sans diminuer l’osmolarité plasmatique."),F("Choisir l’albumine comme remplissage de première intention.","Elle est proscrite chez le traumatisé crânien sévère."),T("Transfuser si l’hémorragie compromet oxygénation ou coagulation.","La capacité de transport et l’hémostase participent à la protection."),F("Tolérer une hypothermie accidentelle profonde.","Elle aggrave coagulation, infection et retard d’éveil."),T("Surveiller natrémie, glycémie et diurèse.","Ces variables modifient œdème, métabolisme et volume circulant."),
+  ],"L’hématome saigne abondamment ; l’hémoglobine chute et une coagulopathie apparaît."),
+  qcm("Comment interpréter une autorégulation probablement altérée ?",["b00020","b00021","b00022"],"Si le DSC devient pression-dépendant, toute variation de PAM se transmet plus directement au cerveau.",[
+   T("Une hypotension expose immédiatement à l’ischémie.","La vasodilatation compensatrice peut être absente ou épuisée."),T("Une hypertension excessive peut provoquer une hyperémie.","L’absence de vasoconstriction protectrice augmente le débit."),F("Une même cible de PAM convient à tous les traumatismes.","Les limites varient avec la lésion et le patient."),T("L’atteinte peut différer entre les deux hémisphères.","La perte d’autorégulation peut être régionale."),F("La réponse au CO₂ est nécessairement abolie aussi.","Un mécanisme peut être altéré tandis que l’autre persiste."),
+  ],"Le monitorage montre que les variations de PAM modifient fortement les paramètres cérébraux."),
+  qcm("Pourquoi poursuivre la ventilation après l’intervention ?",["b00095"],"L’absence de réveil, la lésion sévère et le besoin de contrôle de PIC rendent une extubation immédiate dangereuse.",[
+   T("Le Glasgow initial ne garantit pas la protection des voies aériennes.","Un patient comateux ne contrôle pas efficacement déglutition et toux."),T("La sédation peut rester nécessaire pour contrôler la PIC.","Agitation et toux augmenteraient pression et consommation."),F("L’extubation est obligatoire pour tout examen neurologique.","Un examen adapté reste possible sous ventilation lorsque la sécurité l’impose."),F("Une hypercapnie non contrôlée est souhaitable la première nuit.","Elle augmenterait le volume sanguin et la PIC."),T("L’œdème cérébral peut encore progresser après la chirurgie.","L’évacuation de l’hématome ne supprime pas toutes les lésions secondaires."),
+  ],"Après évacuation, Yanis ne répond pas et la PIC reste supérieure à l’objectif malgré l’analgésie."),
+  qcm("Quelles étapes appartiennent à l’escalade de l’HTIC ?",["b00095","b00098"],"Les causes simples sont corrigées avant osmothérapie, drainage et traitements de sauvetage plus risqués.",[
+   T("Vérifier position de tête et perméabilité du drainage veineux.","Une compression cervicale est une cause réversible immédiate."),T("Corriger fièvre, hypoxémie et hypercapnie.","Ces agressions augmentent métabolisme ou volume sanguin cérébral."),T("Optimiser analgésie et sédation.","La douleur et l’agitation provoquent des poussées de PIC."),T("Recourir à l’osmothérapie selon l’état clinique.","Elle réduit l’eau cérébrale lorsqu’elle est indiquée."),F("Commencer par une hypotension volontaire prolongée.","La baisse de PPC aggraverait la lésion ischémique."),
+ ],"Six heures plus tard, la PIC s’élève par poussées à 28 mmHg avec un cou initialement fléchi."),
+ ]},
+];
+function buildDq(){ return DQ.map((s,i)=>({label:`DP QCM ${i+1} · ${s.title}`,allowed_voies:["interne"],vignette:s.vignette,questions:s.questions})); }
+
+const IR = [
+ {title:"Perfusion cérébrale",questions:[
+  qroc("Donnez la valeur moyenne du débit sanguin cérébral normal.","50 mL/100 g/min|Environ 50 mL/100 g/min",["b00005"],"Cette valeur moyenne est plus élevée dans la substance grise."),
+  qroc("À partir de quel débit cérébral le risque ischémique devient-il majeur ?","20 mL/100 g/min|Environ 20 mL/100 g/min",["b00005"],"Sous ce seuil, la compensation métabolique devient insuffisante."),
+  qroc("Écrivez la relation entre DSC, PPC et RVC.","DSC = PPC/RVC",["b00006","b00007"],"Le débit est proportionnel à la perfusion et inverse à la résistance."),
+  qroc("Quelle pression d’aval faut-il retrancher de la PAM pour calculer la PPC ?","La plus élevée entre PIC et PVC|max(PIC, PVC)",["b00008","b00009"],"La pression la plus haute limite effectivement l’entrée du sang dans le crâne."),
+  qroc("Quel paramètre vasculaire exerce l’effet le plus puissant sur la RVC ?","Le rayon vasculaire|Le calibre vasculaire",["b00010","b00011"],"La résistance varie selon l’inverse de la quatrième puissance du rayon."),
+ ]},
+ {title:"Autorégulation et gaz",questions:[
+  qroc("Quel mécanisme maintient le DSC relativement stable quand la PPC varie ?","L’autorégulation cérébrale",["b00012","b00013"],"Le tonus myogénique adapte la résistance vasculaire."),
+  qroc("Quel risque apparaît au-dessus de la limite haute d’autorégulation ?","Hyperperfusion cérébrale|Œdème ou hémorragie intracrânienne",["b00015"],"La vasoconstriction ne suffit plus à contenir le débit."),
+  qroc("Citez une pathologie pouvant abolir l’autorégulation.","Hémorragie sous-arachnoïdienne|Traumatisme crânien sévère|AVC",["b00020","b00021"],"L’altération peut être complète, partielle, globale ou régionale."),
+  qroc("Quel changement de tonus cérébral entraîne une hypercapnie aiguë ?","Une vasodilatation cérébrale",["b00023","b00024"],"La baisse du pH extracellulaire diminue la résistance vasculaire."),
+  qroc("Sous quelle PaO₂ débute une vasodilatation cérébrale importante ?","55 mmHg|Environ 55 mmHg",["b00030"],"Sous ce niveau, le DSC augmente pour soutenir la livraison d’oxygène."),
+ ]},
+ {title:"Pression intracrânienne",questions:[
+  qroc("Nommez les trois volumes de la doctrine de Monroe-Kellie.","Parenchyme cérébral, LCR et sang intracrânien",["b00034","b00035"],"Leur somme reste presque constante dans le crâne adulte."),
+  qroc("Quelle proportion intracrânienne occupe le parenchyme ?","80 %|Environ 80 %",["b00035"],"Le LCR et le sang représentent chacun environ 10 %."),
+  qroc("Quelle limite supérieure usuelle retient-on pour une PIC normale ?","10 à 15 mmHg|15 mmHg",["b00035"],"La PIC varie aussi transitoirement avec posture et Valsalva."),
+  qroc("Quel volume est déplacé avant le sang veineux lors d’une expansion lente ?","Le liquide céphalorachidien|Le LCR",["b00035","b00038","b00039"],"Le déplacement du LCR constitue la première réserve compensatoire."),
+  qroc("Quelle complication anatomique terminale menace lors d’une HTIC croissante ?","Un engagement cérébral|Une herniation cérébrale",["b00042"],"Le parenchyme se déplace vers les orifices et comprime le tronc."),
+ ]},
+ {title:"Agents anesthésiques",questions:[
+  qroc("Quel halogéné possède l’effet vasodilatateur cérébral le plus limité parmi ceux cités ?","Le sévoflurane",["b00054"],"Desflurane et isoflurane altèrent davantage le couplage métabolique."),
+  qroc("Quel gaz anesthésique peut agrandir une pneumocéphalie ?","Le protoxyde d’azote|N₂O",["b00055","b00056"],"Il diffuse dans les cavités gazeuses fermées."),
+  qroc("Quel hypnotique réduit CMRO₂, DSC et PIC tout en restant anticonvulsivant ?","Le propofol",["b00057","b00058"],"Son risque systémique principal est une chute de PAM menaçant la PPC."),
+  qroc("Quel agent d’induction convient au neurolésé très instable hémodynamiquement ?","L’étomidate",["b00059"],"Sa stabilité circulatoire protège la PPC malgré ses limites endocriniennes."),
+  qroc("Quel agent produit une sédation coopérative utile en craniotomie éveillée ?","La dexmédétomidine",["b00065"],"Elle préserve la ventilation mais peut ralentir le cœur."),
+ ]},
+ {title:"Plan neuroanesthésique",questions:[
+  qroc("Quel est l’objectif central d’une anesthésie chez un patient neurolésé ?","Prévenir une nouvelle lésion cérébrale tout en optimisant les conditions opératoires",["b00069","b00070"],"Cette finalité structure induction, maintien et émergence."),
+  qroc("Quels quatre éléments neurologiques faut-il consigner avant une craniotomie ?","Éveil, symptômes, déficits et imagerie",["b00079","b00080"],"Ils permettent d’adapter le plan et d’interpréter le réveil."),
+  qroc("Quel type d’agent faut-il limiter pendant l’enregistrement de potentiels évoqués moteurs ?","Les bloqueurs neuromusculaires|Les curares",["b00085","b00088"],"La réponse motrice disparaît si la jonction neuromusculaire est bloquée."),
+  qroc("Quelle valeur de PaCO₂ vise-t-on habituellement pour détendre le cerveau ?","35 à 40 mmHg",["b00093"],"Cette plage basse-normale évite la vasodilatation hypercapnique."),
+  qroc("Quel soluté colloïde est à éviter après traumatisme crânien sévère ?","L’albumine humaine|L’albumine",["b00094"],"Une analyse clinique a montré un effet défavorable sur la survie."),
+ ]},
+ {title:"Cerveau tendu et émergence",questions:[
+  qroc("Quel positionnement simple améliore le drainage veineux cérébral ?","Surélever la tête avec le cou neutre",["b00090","b00093"],"Il réduit la congestion sans comprimer les jugulaires."),
+  qroc("Citez les deux agents osmotiques utilisés pour détendre le cerveau.","Mannitol et solution saline hypertonique",["b00093"],"Ils créent un gradient osmotique hors du parenchyme sain."),
+  qroc("Quel type de cristalloïde privilégier pendant une craniotomie ?","Un cristalloïde isotonique",["b00094"],"Il évite l’hypo-osmolarité et l’œdème cérébral."),
+  qroc("Quel examen justifie un réveil rapide après chirurgie intracrânienne ?","Un examen neurologique précoce",["b00095"],"Il permet de reconnaître rapidement une complication."),
+  qroc("Citez une cause chirurgicale d’un retard d’éveil postopératoire.","Hématome intracrânien|Œdème cérébral|Ischémie cérébrale",["b00095","b00096"],"Une cause structurelle doit être recherchée sans délai."),
+ ]},
+ {title:"Positionnement",questions:[
+  qroc("Où placer le zéro artériel lors d’une neurochirurgie en position assise ?","Au conduit auditif externe|Au niveau de l’oreille",["b00102","b00103"],"Cette référence estime la pression au niveau cérébral."),
+  qroc("Quel événement est favorisé par une plaie veineuse au-dessus du cœur ?","Une embolie gazeuse veineuse|Une embolie aérienne",["b00102"],"Le gradient hydrostatique peut aspirer de l’air dans les sinus."),
+  qroc("Quel examen dépiste un shunt avant une position assise ?","Échographie transœsophagienne avec test de bulles",["b00102"],"Un shunt expose à une embolisation artérielle paradoxale."),
+  qroc("Quelle complication linguale peut résulter d’une hyperflexion cervicale ?","Une macroglossie",["b00104"],"La compression veineuse provoque un œdème pouvant obstruer les voies aériennes."),
+  qroc("Pourquoi faut-il sécuriser le tube avant le champage crânien ?","L’accès aux voies aériennes devient très limité",["b00104"],"Une déconnexion ou obstruction serait difficile à corriger ensuite."),
+ ]},
+ {title:"Rachis et synthèse",questions:[
+  qroc("Quelle structure doit rester libre entre les appuis en décubitus ventral ?","L’abdomen",["b00106"],"Sa libération améliore ventilation et drainage veineux péridural."),
+  qroc("Quelle complication visuelle rare suit une chirurgie rachidienne prolongée ?","Une neuropathie optique ischémique|Une cécité postopératoire",["b00106"],"Durée, hypotension et pertes sanguines sont des facteurs associés."),
+  qroc("Quel compartiment sanguin est mobilisé lors de la compensation intracrânienne ?","Le sang veineux intracrânien",["b00035","b00038"],"Son déplacement hors du crâne retarde l’ascension de PIC."),
+  qroc("Quels deux gaz doivent être strictement contrôlés chez le neurolésé ?","Oxygène et dioxyde de carbone|PaO₂ et PaCO₂",["b00113","b00114"],"Hypoxémie et hypercapnie provoquent une vasodilatation délétère."),
+  qroc("Sur quels trois compartiments peut agir un traitement de l’HTIC ?","Parenchyme, LCR et sang intracrânien",["b00117"],"La réduction ciblée d’un volume restaure une réserve intracrânienne."),
+ ]},
+];
+function buildIr(){ return IR.map((s,i)=>({label:`QROC ${i+1} · ${s.title}`,allowed_voies:["externe"],questions:s.questions})); }
+
+const DR = [
+ {title:"Hématome sous-dural chronique",vignette:"Louis, patient de 76 ans, consulte pour ralentissement et faiblesse gauche progressive. Le scanner montre un hématome sous-dural chronique avec effet de masse modéré ; une évacuation est programmée. Son épouse décrit une évolution sur plusieurs semaines, son niveau de conscience est encore compatible avec un entretien et son bilan cardiopulmonaire ne révèle pas de défaillance aiguë.",questions:[
+  qroc("Quel paramètre clinique faut-il chiffrer avant l’anesthésie ?","Le niveau de conscience|Le score de Glasgow",["b00079","b00080"],"Il fournira la référence indispensable à l’examen postopératoire."),
+  qroc("Quel mécanisme explique qu’une lésion volumineuse ait été longtemps tolérée ?","Une compensation intracrânienne progressive|Le déplacement du LCR et du sang veineux",["b00035","b00042","b00043"],"Une croissance lente laisse le temps de mobiliser les réserves de compliance.","Louis rapporte une évolution sur plusieurs semaines sans céphalée aiguë."),
+  qroc("Quel agent d’induction réduit la PIC par couplage métabolique ?","Le propofol",["b00057","b00058"],"Il abaisse CMRO₂, DSC et volume sanguin cérébral.","La PAM de Louis est stable à 92 mmHg avant l’induction."),
+  qroc("Quelle plage de PaCO₂ faut-il viser pendant le drainage ?","35 à 40 mmHg",["b00093"],"Une capnie basse-normale limite le volume sanguin sans hypocapnie profonde.","Après intubation, la PaCO₂ mesurée est à 47 mmHg."),
+  qroc("Quel type de soluté doit compenser les pertes peropératoires ?","Un cristalloïde isotonique",["b00094"],"Il préserve la volémie sans favoriser l’œdème cérébral.","Une hypotension modérée apparaît après évacuation de l’hématome."),
+  qroc("Quel objectif motive une émergence rapide en fin de geste ?","Réaliser un examen neurologique précoce",["b00095"],"La comparaison avec l’état initial détecte un déficit nouveau.","Le chirurgien confirme l’hémostase et l’absence de cerveau tendu."),
+  qroc("Quelle complication faut-il suspecter si la faiblesse s’aggrave au réveil ?","Un hématome récidivant|Une complication intracrânienne postopératoire",["b00095","b00096"],"Une aggravation focale impose une imagerie urgente.","Louis ouvre les yeux mais ne mobilise plus son membre supérieur gauche."),
+ ]},
+ {title:"Cerveau tendu pendant une exérèse",vignette:"Inès, patiente de 44 ans, est opérée d’un gliome frontal. Son examen est normal, mais l’imagerie montre un œdème péri-tumoral important et une compliance intracrânienne réduite. Elle reçoit une corticothérapie, ne présente pas de déficit moteur et sa pression artérielle habituelle est normale ; une exérèse avec examen neurologique postopératoire précoce est prévue.",questions:[
+  qroc("Quel signe radiologique doit modifier la prémédication d’Inès ?","Une compliance intracrânienne réduite|L’œdème avec effet de masse",["b00080","b00083","b00084"],"Une sédation respiratoire peut entraîner hypercapnie et hausse de PIC."),
+  qroc("Quel gradient doit être préservé pendant l’induction ?","La pression de perfusion cérébrale|La PPC",["b00006","b00008"],"La PPC dépend de la PAM diminuée de la pression intracrânienne.","Après le bolus hypnotique, la PAM chute à 58 mmHg."),
+  qroc("Quelle position cervicale corrige une cause veineuse de tension cérébrale ?","Tête surélevée et cou neutre sans compression jugulaire",["b00090","b00093","b00102"],"La libération du retour veineux réduit le volume sanguin intracrânien.","À l’ouverture, le cerveau bombe et la tête est tournée vers l’épaule."),
+  qroc("Quel réglage ventilatoire faut-il corriger en premier si la PaCO₂ vaut 51 mmHg ?","Augmenter la ventilation pour viser 35–40 mmHg",["b00023","b00024","b00093"],"La correction de l’hypercapnie réduit la vasodilatation cérébrale.","Le cou est remis dans l’axe mais la tension persiste et la gazométrie revient."),
+  qroc("Quel traitement osmotique peut ensuite être administré ?","Mannitol|Solution saline hypertonique",["b00090","b00093"],"L’osmothérapie réduit l’eau interstitielle du cerveau sain.","La PaCO₂ est corrigée ; le chirurgien demande une mesure supplémentaire."),
+  qroc("Quel paramètre circulatoire surveiller après une forte diurèse ?","La PAM|La pression artérielle moyenne",["b00008","b00094"],"Une hypovolémie réduit la PPC malgré une baisse de PIC.","Inès urine 1 200 mL et sa pression artérielle diminue."),
+  qroc("Quelle décision prendre si l’HTIC reste soutenue à la fermeture ?","Poursuivre sédation et ventilation|Différer l’extubation",["b00095"],"Un réveil avec agitation serait inadapté tant que la pression reste instable.","La résection s’achève mais le cerveau demeure gonflé et l’examen immédiat n’est pas sûr."),
+ ]},
+ {title:"État de mal épileptique et HTIC",vignette:"Hugo, patient de 35 ans, présente un état de mal épileptique réfractaire associé à une lésion temporale et à une élévation de la PIC. Il est intubé et instable sur le plan circulatoire. Les premières benzodiazépines n’ont pas contrôlé les crises, l’oxygénation est correcte sous ventilation et une faible dose de noradrénaline soutient encore sa pression artérielle.",questions:[
+  qroc("Quel hypnotique stable hémodynamiquement doit être utilisé avec prudence en raison de son activité proconvulsivante ?","L’étomidate",["b00059"],"Sa stabilité est attractive, mais son profil épileptogène est défavorable ici."),
+  qroc("Quel agent intraveineux associe baisse de PIC et effet anticonvulsivant ?","Le propofol",["b00057","b00058"],"Il réduit l’activité neuronale et le DSC couplé.","La PAM de Hugo est restaurée sous vasopresseur."),
+  qroc("Quel barbiturique peut être réservé à cette double situation réfractaire ?","Le thiopental",["b00060"],"Il peut traiter à la fois état de mal et HTIC de recours.","Les crises persistent malgré le propofol et la PIC reste élevée."),
+  qroc("Quel effet sur l’éveil faut-il anticiper après des doses répétées ?","Une émergence très retardée|Un réveil lent",["b00060"],"L’accumulation lipophile prolonge l’élimination du barbiturique.","Plusieurs bolus sont nécessaires pour obtenir un tracé supprimé."),
+  qroc("Quel risque hémodynamique menace la PPC pendant la suppression métabolique ?","L’hypotension artérielle",["b00008","b00060"],"Une baisse de PAM annule le bénéfice de réduction de PIC.","La PAM tombe à 60 mmHg sous la perfusion."),
+  qroc("Quel paramètre respiratoire doit rester normal malgré la sédation ?","La PaCO₂|La capnie",["b00024","b00067","b00068"],"Une hypercapnie augmenterait le DSC et le volume sanguin cérébral.","La ventilation minute diminue après une modification du respirateur."),
+  qroc("Quel examen est indispensable avant d’attribuer l’absence de réveil aux médicaments ?","Une évaluation neurologique et une imagerie cérébrale",["b00095","b00096"],"Une complication structurelle doit être exclue malgré la cinétique attendue.","Après contrôle des crises, Hugo reste aréactif plus longtemps que prévu."),
+ ]},
+ {title:"Embolie gazeuse en position assise",vignette:"Béatrice, patiente de 61 ans, est opérée d’une tumeur de fosse postérieure en position assise. Le dépistage d’un shunt intracardiaque est négatif et une voie artérielle est posée. Elle n’a pas de signe d’HTIC, sa fonction cardiaque est normale et l’équipe a préparé un monitorage continu de la ventilation et de l’hémodynamique avant l’ouverture des sinus veineux.",questions:[
+  qroc("À quel niveau faut-il référencer la pression artérielle de Béatrice ?","Au conduit auditif externe|Au niveau de l’oreille",["b00102","b00103"],"La colonne hydrostatique sépare la pression cérébrale de celle du cœur."),
+  qroc("Quelle modification circulatoire accompagne souvent la verticalisation ?","Une baisse de précharge|Une hypotension",["b00102"],"Le sang s’accumule dans les membres inférieurs.","La PAM cérébrale baisse de 15 mmHg après l’installation."),
+  qroc("Quel diagnostic évoque une chute brutale de PetCO₂ pendant l’ouverture d’un sinus ?","Une embolie gazeuse veineuse|Une embolie aérienne",["b00102"],"L’air réduit le débit pulmonaire et le transport de CO₂.","La PetCO₂ chute de 36 à 22 mmHg sans modification ventilatoire."),
+  qroc("Quelle action chirurgicale doit être demandée immédiatement ?","Occlure la source d’entrée d’air|Inonder et fermer le sinus",["b00102","b00077"],"L’arrêt de l’aspiration veineuse prévient l’aggravation.","Une hypotension sévère apparaît et le champ reste ouvert."),
+  qroc("Quel mécanisme rendrait un foramen ovale perméable particulièrement dangereux ?","Une embolie paradoxale",["b00102"],"L’air veineux pourrait passer dans la circulation artérielle.","Béatrice présente transitoirement une asymétrie motrice lors de l’allègement anesthésique."),
+  qroc("Quelle complication cervicale rechercher après plusieurs heures de flexion ?","Une macroglossie|Une compression jugulaire|Une obstruction du tube",["b00104"],"L’hyperflexion gêne drainage, voies aériennes et parfois perfusion médullaire.","La langue est œdématiée à la fin du geste."),
+  qroc("Quelle conduite respiratoire s’impose si l’œdème menace les voies aériennes ?","Maintenir l’intubation|Différer l’extubation",["b00095","b00104"],"Une obstruction secondaire serait difficile à traiter après retrait du tube.","Béatrice est éveillée mais la réintubation serait très difficile."),
+ ]},
+ {title:"Dégradation des potentiels médullaires",vignette:"Omar, patient de 59 ans, subit une correction de scoliose en décubitus ventral avec potentiels moteurs. L’installation initiale est correcte et l’abdomen est libre. L’intervention doit durer plusieurs heures, l’hémoglobine de départ est normale et les signaux neurophysiologiques obtenus après l’induction sont stables avant le début de la correction rachidienne.",questions:[
+  qroc("Quelle classe médicamenteuse faut-il éviter pour préserver les potentiels moteurs ?","Les bloqueurs neuromusculaires|Les curares",["b00085","b00088"],"La réponse musculaire est nécessaire à l’enregistrement."),
+  qroc("Quel effet des halogénés justifie d’en limiter la concentration ?","Ils diminuent l’amplitude des potentiels évoqués",["b00085","b00088"],"La dépression de l’amplitude du signal augmente avec la concentration administrée.","L’amplitude baisse après une augmentation du sévoflurane."),
+  qroc("Quel déterminant physiologique doit être restauré si la PAM chute ?","La perfusion médullaire|La pression artérielle",["b00008","b00106"],"Une hypotension peut réellement altérer le fonctionnement médullaire.","La baisse des signaux persiste et la PAM vaut 52 mmHg."),
+  qroc("Quelle anomalie d’installation peut majorer saignement et pression ventilatoire ?","Une compression abdominale",["b00106"],"Elle gêne excursion diaphragmatique et retour veineux péridural.","Le champ devient congestif et les pressions inspiratoires augmentent."),
+  qroc("Quelle complication visuelle faut-il prévenir pendant cette longue intervention ?","Une neuropathie optique ischémique",["b00106"],"Durée, hypotension et pertes sanguines importantes augmentent son risque.","Après six heures, les pertes atteignent deux litres."),
+  qroc("Quels deux facteurs sanguins doivent être corrigés devant le risque optique ?","Anémie et hypotension|Hémoglobine basse et PAM basse",["b00094","b00106"],"La livraison d’oxygène dépend du contenu artériel et du gradient de perfusion.","L’hémoglobine est à 72 g/L et la PAM reste limite."),
+  qroc("Quelle vérification faciale précède l’extubation après le décubitus ventral ?","Rechercher un œdème facial ou laryngé",["b00095","b00106"],"La congestion prolongée peut obstruer les voies aériennes au réveil.","Omar est retourné en décubitus dorsal après huit heures."),
+ ]},
+ {title:"Réveil focal après neurochirurgie",vignette:"Jade, patiente de 54 ans, vient d’être opérée d’une tumeur pariétale. Son examen initial était normal et la perfusion de propofol a été interrompue à la fermeture. L’intervention a duré quatre heures, la température est revenue à la normale et aucune difficulté hémodynamique majeure n’a été rapportée ; l’équipe attend un examen neurologique complet en salle.",questions:[
+  qroc("Quel avantage du propofol est recherché pour le réveil neurologique ?","Une titration permettant une émergence prévisible",["b00058","b00085"],"Une perfusion ajustée limite la vasodilatation et l’accumulation."),
+  qroc("Quel trouble ventilatoire peut expliquer une somnolence diffuse ?","Une hypercapnie",["b00024","b00095","b00096"],"La rétention de CO₂ altère l’éveil et augmente le DSC.","Jade ne répond pas et sa PaCO₂ est mesurée à 58 mmHg."),
+  qroc("Quelle correction permet de tester cette hypothèse ?","Normaliser la ventilation et la PaCO₂",["b00024","b00029"],"La conscience doit s’améliorer si la cause est purement respiratoire.","La ventilation est augmentée et la PaCO₂ revient à 39 mmHg."),
+  qroc("Quel signe impose une recherche intracrânienne urgente malgré la normocapnie ?","Un déficit neurologique focal|Une anisocorie",["b00042","b00095","b00096"],"Une sédation résiduelle n’explique pas une asymétrie nouvelle.","Jade ouvre les yeux mais ne bouge pas le bras gauche."),
+  qroc("Quel examen doit être organisé sans délai ?","Une imagerie cérébrale urgente|Un scanner cérébral",["b00095","b00096"],"L’imagerie recherche hématome, ischémie ou œdème compressif.","Le déficit persiste après exclusion d’une curarisation résiduelle."),
+  qroc("Quel traitement simple de drainage faut-il maintenir pendant le transport ?","Tête surélevée et cou neutre",["b00090","b00093"],"Cette position évite d’ajouter une congestion veineuse.","Le scanner est disponible dans dix minutes."),
+  qroc("Quelle conduite adopter si l’imagerie montre un hématome compressif ?","Alerter le neurochirurgien et organiser une évacuation urgente",["b00042","b00077"],"Le traitement causal doit précéder l’engagement et l’ischémie.","L’imagerie révèle une collection hémorragique avec déviation médiane."),
+ ]},
+ {title:"Hémorragie sous-arachnoïdienne",vignette:"Paul, patient de 49 ans, présente une hémorragie sous-arachnoïdienne anévrismale. Il est somnolent, intubé, avec une PIC modérément élevée et des variations tensionnelles importantes. L’oxygénation est correcte, l’imagerie ne montre pas encore d’engagement et le clippage est organisé en urgence sous monitorage artériel continu et contrôle strict de la ventilation.",questions:[
+  qroc("Quel mécanisme de régulation est fréquemment altéré dans cette pathologie ?","L’autorégulation cérébrale",["b00020","b00021"],"Le DSC peut devenir directement dépendant de la PPC."),
+  qroc("Quel risque accompagne une chute de PAM si l’autorégulation est abolie ?","Une hypoperfusion ou une ischémie cérébrale",["b00013","b00014","b00022"],"La vasodilatation compensatrice ne stabilise plus le débit.","La PAM de Paul chute à 58 mmHg après l’induction."),
+  qroc("Quel risque accompagne une élévation excessive de PPC ?","Une hyperperfusion cérébrale|Un œdème ou une hémorragie",["b00015","b00022"],"La vasoconstriction protectrice peut être absente.","Sous vasopresseur, la PAM dépasse ensuite 120 mmHg."),
+  qroc("Quel gaz faut-il éviter d’augmenter en raison de sa vasodilatation ?","Le dioxyde de carbone|La PaCO₂",["b00023","b00024"],"L’hypercapnie augmente DSC et volume sanguin cérébral.","Une hypoventilation transitoire porte la PaCO₂ à 52 mmHg."),
+  qroc("Quel agent intraveineux préserve l’autorégulation et la réponse au CO₂ ?","Le propofol",["b00058"],"Son effet cérébral est favorable si la PAM est soutenue.","La circulation est stabilisée sous noradrénaline."),
+  qroc("Quelle étape chirurgicale nécessite une forte atténuation adrénergique ?","La pose de la têtière|L’incision du scalp|La craniotomie",["b00089"],"Ces temps sont très nociceptifs et hypertensifs.","La fixation crânienne est imminente."),
+  qroc("Quel objectif postopératoire prime si la PIC reste instable ?","Poursuivre ventilation et sédation avec contrôle de la PIC",["b00095","b00098"],"Une extubation précoce serait dangereuse sans stabilité cérébrale.","Après clippage, Paul reste somnolent avec des poussées de PIC."),
+ ]},
+ {title:"Osmothérapie en soins intensifs",vignette:"Camille, patiente de 41 ans, est ventilée pour un œdème cérébral post-traumatique. La PIC augmente à 27 mmHg malgré une tête surélevée, une analgésie correcte et une oxygénation normale. Son scanner ne montre pas de masse immédiatement évacuable, la PAM est soutenue à un niveau stable et l’équipe dispose d’un monitorage de la natrémie, de la diurèse et du drainage ventriculaire.",questions:[
+  qroc("Quelle composante de Monroe-Kellie est principalement augmentée par l’œdème ?","Le parenchyme cérébral|Le volume interstitiel cérébral",["b00034","b00035"],"L’eau tissulaire occupe un volume supplémentaire dans le crâne rigide."),
+  qroc("Quel facteur cervical réversible doit être vérifié avant l’osmothérapie ?","Une compression jugulaire|Une rotation ou flexion du cou",["b00093","b00102","b00104"],"Le mauvais drainage augmente le compartiment veineux.","La tête de Camille est tournée par le passage d’une ligne."),
+  qroc("Quelle cible de PaCO₂ corrige une hypercapnie modérée ?","35 à 40 mmHg",["b00024","b00093"],"La capnie basse-normale réduit le volume sanguin sans ischémie.","Après remise en axe, la gazométrie montre une PaCO₂ à 48 mmHg."),
+  qroc("Citez une option osmotique si la PIC persiste.","Mannitol|Solution saline hypertonique",["b00093","b00098"],"Le gradient osmotique retire de l’eau du tissu cérébral sain.","La PIC reste à 25 mmHg après normalisation de la ventilation."),
+  qroc("Quel bilan doit suivre une forte diurèse au mannitol ?","Bilan hydrique, diurèse, natrémie et PAM",["b00093","b00094"],"L’hypovolémie et les troubles sodés peuvent diminuer la PPC.","Camille urine 1 litre durant l’heure suivante."),
+  qroc("Quelle intervention réduit directement le volume de LCR ?","Un drainage ventriculaire du LCR",["b00035","b00098"],"Elle cible le compartiment liquidien selon la stratégie graduée.","Le drain ventriculaire devient disponible et l’imagerie montre des ventricules accessibles."),
+  qroc("Quel traitement de recours peut réduire fortement la CMRO₂ ?","Une suppression métabolique par barbiturique|Le thiopental",["b00060","b00098"],"Ce recours expose à hypotension et réveil très prolongé.","Malgré drainage et osmothérapie, la PIC dépasse 30 mmHg."),
+ ]},
+];
+function buildDr(){ return DR.map((s,i)=>({label:`DP QROC ${i+1} · ${s.title}`,allowed_voies:["externe"],vignette:s.vignette,questions:s.questions})); }
+
+function validateSourceBlocks(extract,content){ const known=new Set((extract.blocs||[]).filter(b=>b.id).map(b=>b.id)), missing=[]; const visit=v=>{ if(!v||typeof v!=="object")return; if(Array.isArray(v)){v.forEach(visit);return;} if(Array.isArray(v.sourceBlocks))for(const id of v.sourceBlocks)if(!known.has(id))missing.push(id); for(const [k,c] of Object.entries(v))if(k!=="sourceBlocks")visit(c); }; visit(content); if(missing.length)throw new Error(`Chapitre 24 : sourceBlocks inconnus : ${[...new Set(missing)].join(", ")}`); }
+const QCM_BALANCE_OVERRIDES = Object.freeze({
+  "0B": {
+    "is_correct": false,
+    "enonce": "Un DSC à 20 mL/100 g/min est toujours sans conséquence ; Il dépend d’un apport continu de glucose et d’oxygène.",
+    "justification": "Ce niveau correspond approximativement au seuil ischémique. Ses réserves énergétiques utilisables sont très limitées."
+  },
+  "1C": {
+    "is_correct": false,
+    "enonce": "Le DSC augmente lorsque la RVC augmente à PPC constante ; La PIC peut être la pression d’aval limitant la PPC.",
+    "justification": "Une résistance plus élevée diminue le débit cérébral. Elle est retranchée de la PAM lorsqu’elle dépasse la PVC."
+  },
+  "2E": {
+    "is_correct": true,
+    "enonce": "Une augmentation du rayon des artères cérébrales ; Une diminution de l’hématocrite réduisant la viscosité.",
+    "justification": "La résistance varie inversement à la quatrième puissance du rayon. La baisse de viscosité diminue proportionnellement la résistance."
+  },
+  "3B": {
+    "is_correct": false,
+    "enonce": "Une hyperémie est la conséquence attendue sous la limite basse ; Le DSC chute lorsque la limite basse est franchie.",
+    "justification": "Le risque dominant est l’hypoperfusion ischémique. La réserve vasodilatatrice est alors épuisée."
+  },
+  "5A": {
+    "is_correct": false,
+    "enonce": "L’autorégulation supprime tout risque d’hyperperfusion ; Une hausse de PPC provoque une vasoconstriction compensatrice.",
+    "justification": "Au-dessus de la limite haute, les mécanismes sont dépassés. L’augmentation de RVC limite la hausse du DSC."
+  },
+  "6B": {
+    "is_correct": false,
+    "enonce": "La PAM et la PPC sont interchangeables sans connaître la PIC ; Les données initiales regroupaient différents patients et interventions.",
+    "justification": "Une PIC élevée dissocie fortement ces deux pressions. La courbe de Lassen agrège des situations pathologiques et pharmacologiques."
+  },
+  "7A": {
+    "is_correct": false,
+    "enonce": "Jamais après un accident vasculaire cérébral ; Après une hémorragie sous-arachnoïdienne.",
+    "justification": "L’AVC peut abolir localement les réponses autorégulées. Cette pathologie fait partie des causes reconnues d’altération."
+  },
+  "9B": {
+    "is_correct": false,
+    "enonce": "L’hypoxémie renforce toujours la vasoconstriction de l’hypocapnie ; L’adaptation du bicarbonate dans le LCR réduit la réponse chronique.",
+    "justification": "La vasodilatation hypoxique atténue cet effet constricteur. Le pH extracellulaire se normalise après plusieurs heures."
+  },
+  "10D": {
+    "is_correct": true,
+    "enonce": "Une augmentation du DSC ; Une augmentation possible du volume sanguin cérébral.",
+    "justification": "La baisse de résistance accroît directement le débit. La vasodilatation remplit davantage le compartiment sanguin intracrânien."
+  },
+  "10E": {
+    "is_correct": true,
+    "enonce": "Une augmentation possible du volume sanguin cérébral ; Une diminution de la RVC.",
+    "justification": "La vasodilatation remplit davantage le compartiment sanguin intracrânien. L’acidification extracellulaire relâche le muscle vasculaire."
+  },
+  "11B": {
+    "is_correct": false,
+    "enonce": "Toute baisse minime de PaO₂ double le DSC ; Sous 55 mmHg, le DSC augmente progressivement.",
+    "justification": "La zone physiologique influence peu le tonus cérébral. La vasodilatation vise à maintenir la livraison d’oxygène."
+  },
+  "15C": {
+    "is_correct": true,
+    "enonce": "Le sang intracrânien est majoritairement veineux ; Le volume intracrânien total est pratiquement fixe chez l’adulte.",
+    "justification": "Le compartiment sanguin mobilisable est surtout veineux. Les os soudés empêchent une expansion globale du contenant."
+  },
+  "15E": {
+    "is_correct": true,
+    "enonce": "Le parenchyme représente environ 80 % du volume ; Le sang intracrânien est majoritairement veineux.",
+    "justification": "Il constitue la plus grande composante intracrânienne. Le compartiment sanguin mobilisable est surtout veineux."
+  },
+  "17A": {
+    "is_correct": false,
+    "enonce": "Induire systématiquement une PaCO₂ inférieure à 20 mmHg ; Surélever la tête en maintenant le cou neutre.",
+    "justification": "Une hypocapnie profonde expose à l’ischémie cérébrale. Cette position facilite l’évacuation du sang veineux."
+  },
+  "17D": {
+    "is_correct": true,
+    "enonce": "Réduire le métabolisme avec une anesthésie adaptée ; Surélever la tête en maintenant le cou neutre.",
+    "justification": "Le couplage diminue secondairement le débit et le volume sanguin. Cette position facilite l’évacuation du sang veineux."
+  },
+  "19E": {
+    "is_correct": true,
+    "enonce": "Une forte concentration d’halogéné vasodilatateur ; Une hypercapnie aiguë.",
+    "justification": "Elle accroît VSC et perturbe l’autorégulation. Elle vasodilate et augmente le volume sanguin cérébral."
+  },
+  "20C": {
+    "is_correct": true,
+    "enonce": "Ils vasodilatent directement les artères cérébrales ; Ils peuvent produire une perfusion de luxe.",
+    "justification": "Cet effet peut dominer la diminution métabolique. Le DSC peut dépasser les besoins métaboliques réels."
+  },
+  "20E": {
+    "is_correct": true,
+    "enonce": "Ils réduisent la CMRO₂ ; Ils vasodilatent directement les artères cérébrales.",
+    "justification": "La suppression neuronale diminue les besoins métaboliques. Cet effet peut dominer la diminution métabolique."
+  },
+  "22E": {
+    "is_correct": true,
+    "enonce": "Il préserve la réponse vasomotrice au CO₂ ; Il possède une activité anticonvulsivante.",
+    "justification": "Cette réactivité demeure fonctionnelle sous propofol. La potentialisation GABAergique diminue l’excitabilité neuronale."
+  },
+  "23C": {
+    "is_correct": false,
+    "enonce": "Un état de mal épileptique comme indication privilégiée ; Le souhait de préserver la réactivité au CO₂.",
+    "justification": "Son activité proconvulsivante rend ce choix peu logique. Cette réponse reste intacte sous étomidate."
+  },
+  "24D": {
+    "is_correct": true,
+    "enonce": "Les barbituriques peuvent traiter une HTIC réfractaire ; Les deux classes préservent globalement l’autorégulation.",
+    "justification": "Leur baisse de CMRO₂, DSC et PIC justifie cet emploi de recours. Aucune n’abolit habituellement ce mécanisme aux doses décrites."
+  },
+  "25A": {
+    "is_correct": false,
+    "enonce": "Lorsque les catécholamines sont totalement épuisées en supposant un effet presseur garanti ; Sous ventilation contrôlée avec un autre hypnotique.",
+    "justification": "La réponse sympathomimétique dépend des réserves disponibles. Dans ce cadre, la PIC reste stable ou diminue."
+  },
+  "26E": {
+    "is_correct": true,
+    "enonce": "Une sédation mimant le sommeil sans dépression respiratoire ; Une utilité pour la craniotomie éveillée.",
+    "justification": "L’activité centrale préserve la ventilation spontanée. La coopération du patient peut être maintenue pendant la procédure."
+  },
+  "28C": {
+    "is_correct": false,
+    "enonce": "Multiplier les bolus de barbiturique en fin d’intervention ; Limiter le midazolam chez un patient fragile.",
+    "justification": "Leur grand volume de distribution prolongerait l’inconscience. Son métabolite actif peut retarder l’évaluation neurologique."
+  },
+  "29D": {
+    "is_correct": true,
+    "enonce": "Opioïde excessif avec hypoventilation spontanée ; Propofol en bolus massif chez un patient hypovolémique.",
+    "justification": "L’hypercapnie secondaire augmente DSC, VSC et PIC. La vasoplégie peut effondrer la PAM et la PPC."
+  },
+  "30D": {
+    "is_correct": true,
+    "enonce": "Le niveau d’éveil actuel ; Les déficits neurologiques préexistants.",
+    "justification": "Il sert de référence pour détecter une aggravation postopératoire. Ils doivent être distingués d’une complication nouvelle."
+  },
+  "30E": {
+    "is_correct": true,
+    "enonce": "Les déficits neurologiques préexistants ; Les signes cliniques d’HTIC.",
+    "justification": "Ils doivent être distingués d’une complication nouvelle. Ils modifient prémédication, induction et stratégie ventilatoire."
+  },
+  "31E": {
+    "is_correct": true,
+    "enonce": "Un engagement cérébral en extrême urgence ; Une masse intracrânienne avec signes d’HTIC.",
+    "justification": "La stabilisation physiologique accompagne le départ immédiat au bloc. Le moindre gain de volume sanguin peut décompenser la PIC."
+  },
+  "32A": {
+    "is_correct": false,
+    "enonce": "Une solution glucosée hypotonique abondante ; Une tête surélevée sans compression cervicale.",
+    "justification": "Elle diminue l’osmolarité et favorise l’œdème. Le sang veineux quitte plus facilement le compartiment intracrânien."
+  },
+  "32C": {
+    "is_correct": false,
+    "enonce": "Une solution glucosée hypotonique abondante ; Une osmothérapie correctement indiquée.",
+    "justification": "Elle diminue l’osmolarité et favorise l’œdème. Elle réduit le volume interstitiel du cerveau sain."
+  },
+  "33C": {
+    "is_correct": false,
+    "enonce": "Interrompre brutalement toute sédation malgré une HTIC persistante ; Assurer une analgésie évitant agitation et toux.",
+    "justification": "Le contrôle de PIC peut nécessiter une ventilation et une sédation prolongées. Ces réactions augmentent la pression artérielle et intracrânienne."
+  },
+  "34D": {
+    "is_correct": true,
+    "enonce": "Les curares compromettent les potentiels moteurs ; La stimulation directe d’un nerf crânien exige une transmission neuromusculaire.",
+    "justification": "La réponse musculaire périphérique devient indisponible. Une paralysie empêcherait d’observer la réponse motrice attendue."
+  },
+  "35D": {
+    "is_correct": true,
+    "enonce": "Une embolie gazeuse veineuse peut survenir ; Le drainage veineux cérébral est facilité.",
+    "justification": "Les sinus non collapsables aspirent de l’air sous pression négative. La tête placée au-dessus du cœur réduit la congestion."
+  },
+  "35E": {
+    "is_correct": true,
+    "enonce": "Le drainage veineux cérébral est facilité ; La précharge peut diminuer.",
+    "justification": "La tête placée au-dessus du cœur réduit la congestion. Le sang s’accumule dans les membres inférieurs."
+  },
+  "37E": {
+    "is_correct": true,
+    "enonce": "Un événement neurologique en présence d’un shunt ; Une chute brutale du CO₂ expiré.",
+    "justification": "L’air peut franchir le septum et emboliser la circulation cérébrale. La baisse de perfusion pulmonaire réduit soudain l’élimination de CO₂."
+  },
+  "38A": {
+    "is_correct": false,
+    "enonce": "Laisser les membres en traction pour stabiliser la position ; S’assurer que l’abdomen reste libre.",
+    "justification": "Une traction prolongée peut léser les plexus et nerfs périphériques. Cela facilite l’excursion diaphragmatique et réduit la pression veineuse."
+  },
+  "39B": {
+    "is_correct": false,
+    "enonce": "Tolérer une hypoxémie profonde pour réduire le DSC ; Préserver une PPC adaptée au patient.",
+    "justification": "Elle vasodilate et menace directement l’oxygénation neuronale. L’autorégulation n’est ni universelle ni toujours intacte."
+  },
+  "40A": {
+    "is_correct": false,
+    "enonce": "Administrer une forte prémédication sans surveillance ; Documenter précisément le niveau de conscience de Nora.",
+    "justification": "La dépression ventilatoire pourrait augmenter PaCO₂ et PIC. Une valeur initiale est indispensable pour interpréter le réveil."
+  },
+  "41E": {
+    "is_correct": true,
+    "enonce": "Préoxygéner soigneusement avant l’apnée ; Préparer un vasopresseur titrable.",
+    "justification": "La faible tolérance cérébrale rend toute hypoxémie délétère. Le maintien de PAM protège la PPC pendant l’effet hypnotique."
+  },
+  "43E": {
+    "is_correct": true,
+    "enonce": "Administrer l’osmothérapie convenue avec le chirurgien ; Vérifier que le cou de Nora n’est ni fléchi ni comprimé.",
+    "justification": "Mannitol ou saline hypertonique diminue l’eau interstitielle. Une obstruction jugulaire augmente rapidement le volume veineux."
+  },
+  "44E": {
+    "is_correct": true,
+    "enonce": "Compenser une diurèse excessive pour maintenir l’euvolémie ; Surveiller la natrémie après une solution hypertonique.",
+    "justification": "L’hypovolémie ferait chuter PAM et PPC. Une variation rapide ou excessive expose à des complications."
+  },
+  "45C": {
+    "is_correct": true,
+    "enonce": "Une analgésie limitant toux et agitation ; Une réponse neurologique cohérente aux ordres simples.",
+    "justification": "La stabilité du réveil réduit la poussée tensionnelle. La vigilance permet de protéger les voies aériennes."
+  },
+  "45E": {
+    "is_correct": true,
+    "enonce": "Une ventilation spontanée sans hypercapnie ; Une analgésie limitant toux et agitation.",
+    "justification": "La rétention de CO₂ pourrait réaugmenter la PIC. La stabilité du réveil réduit la poussée tensionnelle."
+  },
+  "46E": {
+    "is_correct": true,
+    "enonce": "Une hypercapnie par hypoventilation ; Un hématome postopératoire compressif.",
+    "justification": "Elle altère la conscience et augmente le DSC. Une complication chirurgicale doit être exclue rapidement."
+  },
+  "47E": {
+    "is_correct": true,
+    "enonce": "Une entrée d’air dans les sinus veineux ouverts ; Une baisse de précharge par stase dans les membres inférieurs.",
+    "justification": "Le gradient hydrostatique peut rendre leur pression négative. La position verticale réduit le retour veineux central."
+  },
+  "48A": {
+    "is_correct": false,
+    "enonce": "Conserver le transducteur au niveau du cœur sans correction ; Placer le zéro au conduit auditif externe.",
+    "justification": "La colonne hydrostatique ferait surestimer la pression cérébrale. Ce niveau approche la pression perçue par le cerveau."
+  },
+  "49A": {
+    "is_correct": false,
+    "enonce": "Une amélioration immédiate de la saturation veineuse ; Une chute soudaine de la PetCO₂.",
+    "justification": "L’obstruction du débit ne produit pas ce bénéfice. L’obstruction vasculaire réduit brutalement le transport de CO₂ vers le poumon."
+  },
+  "49D": {
+    "is_correct": false,
+    "enonce": "Une élévation isolée et progressive de la température ; Un signal d’air sur le monitorage adapté.",
+    "justification": "Ce signe n’est pas spécifique d’une embolie aérienne aiguë. L’échographie ou le Doppler peut détecter de petites quantités."
+  },
+  "50D": {
+    "is_correct": true,
+    "enonce": "Soutenir la PAM et le retour veineux ; Avertir le chirurgien et faire occlure la source veineuse.",
+    "justification": "Le débit droit doit être restauré malgré l’obstruction gazeuse. Empêcher toute nouvelle aspiration d’air est essentiel."
+  },
+  "50E": {
+    "is_correct": true,
+    "enonce": "Avertir le chirurgien et faire occlure la source veineuse ; Administrer une FiO₂ de 1,0.",
+    "justification": "Empêcher toute nouvelle aspiration d’air est essentiel. L’oxygénation maximale réduit aussi la fraction de gaz diffusible."
+  },
+  "51A": {
+    "is_correct": false,
+    "enonce": "Il augmente toujours la précharge et protège de l’airlock ; Il autorise une embolisation artérielle paradoxale.",
+    "justification": "Cette affirmation ne correspond pas à la physiologie du shunt. L’air veineux contourne alors le filtre pulmonaire."
+  },
+  "52C": {
+    "is_correct": true,
+    "enonce": "Une macroglossie liée à la flexion cervicale ; Une obstruction ou coudure du tube trachéal.",
+    "justification": "La congestion veineuse peut compromettre l’extubation. L’hyperflexion peut comprimer le dispositif."
+  },
+  "52E": {
+    "is_correct": true,
+    "enonce": "Une souffrance médullaire liée à l’hyperflexion ; Une macroglossie liée à la flexion cervicale.",
+    "justification": "La posture cervicale extrême peut réduire la perfusion médullaire. La congestion veineuse peut compromettre l’extubation."
+  },
+  "53D": {
+    "is_correct": true,
+    "enonce": "Une ventilation et une oxygénation efficaces ; Une perméabilité pharyngolaryngée satisfaisante.",
+    "justification": "L’événement embolique peut avoir des conséquences pulmonaires. La macroglossie peut obstruer les voies aériennes après retrait du tube."
+  },
+  "53E": {
+    "is_correct": true,
+    "enonce": "Une perméabilité pharyngolaryngée satisfaisante ; Un réveil permettant la protection des voies aériennes.",
+    "justification": "La macroglossie peut obstruer les voies aériennes après retrait du tube. La chirurgie de fosse postérieure peut altérer les réflexes."
+  },
+  "54A": {
+    "is_correct": false,
+    "enonce": "L’idée que le positionnement relève uniquement du chirurgien ; La probabilité d’une hémorragie importante.",
+    "justification": "L’anesthésiologiste partage la responsabilité des complications. Une reconstruction étendue nécessite des accès et produits anticipés."
+  },
+  "54B": {
+    "is_correct": false,
+    "enonce": "L’absence supposée de risque oculaire en ventral ; Le type de signaux neurophysiologiques requis.",
+    "justification": "La pression et l’hypoperfusion peuvent causer une atteinte grave. Les curares et halogénés peuvent compromettre leur interprétation."
+  },
+  "55C": {
+    "is_correct": true,
+    "enonce": "Absence de pression directe sur les deux globes ; Abdomen libre entre les appuis.",
+    "justification": "Une compression prolongée peut léser rétine ou nerf optique. Cela améliore excursion diaphragmatique et retour veineux."
+  },
+  "55E": {
+    "is_correct": true,
+    "enonce": "Tube trachéal fixé et ventilant sans obstruction ; Absence de pression directe sur les deux globes.",
+    "justification": "La face devient inaccessible après installation. Une compression prolongée peut léser rétine ou nerf optique."
+  },
+  "56C": {
+    "is_correct": true,
+    "enonce": "Elle augmente la congestion des veines péridurales ; Elle peut augmenter les pertes sanguines dans le champ.",
+    "justification": "Le retour veineux comprimé favorise le saignement opératoire. Les plexus veineux distendus saignent davantage."
+  },
+  "56E": {
+    "is_correct": true,
+    "enonce": "Elle limite l’excursion diaphragmatique ; Elle augmente la congestion des veines péridurales.",
+    "justification": "La pression transmise réduit la compliance respiratoire. Le retour veineux comprimé favorise le saignement opératoire."
+  },
+  "57A": {
+    "is_correct": false,
+    "enonce": "Interpréter toute baisse comme un artefact anesthésique ; Éviter l’entretien par curare profond.",
+    "justification": "Une compression chirurgicale doit être exclue en urgence. La réponse musculaire est nécessaire aux potentiels moteurs."
+  },
+  "58E": {
+    "is_correct": true,
+    "enonce": "Une anémie liée à des pertes massives ; Une intervention très prolongée.",
+    "justification": "La livraison d’oxygène au nerf optique diminue. L’exposition cumulée augmente le risque rare de cécité."
+  },
+  "59C": {
+    "is_correct": true,
+    "enonce": "Évaluer la nécessité de transfuser selon hémoglobine et saignement ; Vérifier à nouveau abdomen, tête et globes.",
+    "justification": "Le transport d’oxygène et l’hémostase doivent être restaurés. Une malposition peut s’être développée pendant la longue chirurgie."
+  },
+  "60C": {
+    "is_correct": true,
+    "enonce": "S’assurer d’un réveil complet après les perfusions ; Rechercher un œdème facial et supraglottique.",
+    "justification": "L’accumulation peut retarder la protection des voies aériennes. Le décubitus ventral prolongé favorise la congestion."
+  },
+  "60E": {
+    "is_correct": true,
+    "enonce": "Confirmer une force respiratoire suffisante ; S’assurer d’un réveil complet après les perfusions.",
+    "justification": "L’obésité et la durée augmentent le risque d’échec ventilatoire. L’accumulation peut retarder la protection des voies aériennes."
+  },
+  "61C": {
+    "is_correct": true,
+    "enonce": "Les bolus répétés de midazolam ; La durée de perfusion du propofol.",
+    "justification": "Sa demi-vie et son métabolite actif prolongent la sédation. Une administration longue peut augmenter le contexte de décroissance."
+  },
+  "61E": {
+    "is_correct": true,
+    "enonce": "Une hypothermie peropératoire ; Les bolus répétés de midazolam.",
+    "justification": "Elle ralentit le métabolisme et potentialise les sédatifs. Sa demi-vie et son métabolite actif prolongent la sédation."
+  },
+  "62D": {
+    "is_correct": true,
+    "enonce": "Évaluer une curarisation résiduelle ; Mesurer la PaCO₂ et vérifier la ventilation.",
+    "justification": "Une paralysie peut masquer la conscience et gêner la ventilation. Une hypercapnie entraîne somnolence et hausse de DSC."
+  },
+  "63A": {
+    "is_correct": false,
+    "enonce": "Une normocapnie stable exclut toute complication chirurgicale ; Une anisocorie nouvelle.",
+    "justification": "Elle ne renseigne pas sur hématome ou ischémie. Elle peut annoncer un engagement temporal."
+  },
+  "63C": {
+    "is_correct": true,
+    "enonce": "Une hypertension associée à une bradycardie ; Une anisocorie nouvelle.",
+    "justification": "Cette réponse peut accompagner une élévation majeure de PIC. Elle peut annoncer un engagement temporal."
+  },
+  "64A": {
+    "is_correct": false,
+    "enonce": "Extuber pour mieux tester la parole ; Maintenir l’intubation et une oxygénation normale.",
+    "justification": "La perte de protection rendrait cette manœuvre dangereuse. Aïcha ne protège pas ses voies aériennes et reste neurologiquement instable."
+  },
+  "65A": {
+    "is_correct": false,
+    "enonce": "Provoquer une hypoxémie pour contracter les vaisseaux cérébraux ; Maintenir la tête surélevée et le cou libre.",
+    "justification": "L’hypoxémie vasodilate le cerveau et lèse directement les neurones. Le drainage veineux réduit le compartiment sanguin."
+  },
+  "65B": {
+    "is_correct": false,
+    "enonce": "Abaisser brutalement la PAM sous 50 mmHg ; Assurer une ventilation évitant l’hypercapnie.",
+    "justification": "La PPC chuterait alors que la PIC est probablement élevée. La vasodilatation au CO₂ aggraverait l’HTIC."
+  },
+  "66E": {
+    "is_correct": true,
+    "enonce": "Maintenir normocapnie et oxygénation pendant le transfert ; Éviter une nouvelle accumulation médicamenteuse inutile.",
+    "justification": "Ces paramètres préviennent une aggravation du volume sanguin. L’examen postopératoire restera important après hémostase."
+  },
+  "67D": {
+    "is_correct": true,
+    "enonce": "Quand ventilation et gaz du sang sont satisfaisants ; Après correction de l’hypothermie et de la coagulopathie.",
+    "justification": "La normocapnie limite la récidive de vasodilatation. L’homéostasie réduit saignement et retard d’éveil."
+  },
+  "67E": {
+    "is_correct": true,
+    "enonce": "Après correction de l’hypothermie et de la coagulopathie ; Lorsque Aïcha exécute des ordres simples de façon reproductible.",
+    "justification": "L’homéostasie réduit saignement et retard d’éveil. La vigilance doit permettre une protection active."
+  },
+  "68A": {
+    "is_correct": false,
+    "enonce": "Une expansion libre du crâne adulte ; Une augmentation du volume interstitiel cérébral.",
+    "justification": "La boîte osseuse ne permet pas cette compensation. La contusion provoque un œdème qui occupe le compartiment fixe."
+  },
+  "68D": {
+    "is_correct": false,
+    "enonce": "Une baisse isolée du volume de LCR ; Une hypercapnie augmentant le volume sanguin.",
+    "justification": "Elle constituerait plutôt un mécanisme compensateur. La vasodilatation au CO₂ remplit davantage le réseau cérébral."
+  },
+  "68E": {
+    "is_correct": true,
+    "enonce": "Une augmentation du volume interstitiel cérébral ; Une congestion veineuse intracrânienne.",
+    "justification": "La contusion provoque un œdème qui occupe le compartiment fixe. Le sang représente un compartiment modulable de la PIC."
+  },
+  "69C": {
+    "is_correct": false,
+    "enonce": "Abaisser la tête sous le niveau du cœur ; Mesurer PaCO₂ et oxygénation.",
+    "justification": "La congestion veineuse intracrânienne serait favorisée. Hypercapnie et hypoxémie vasodilatent fortement le cerveau."
+  },
+  "70A": {
+    "is_correct": false,
+    "enonce": "Viser durablement une PaCO₂ à 18 mmHg ; Remettre la tête dans l’axe sans compression jugulaire.",
+    "justification": "Une hypocapnie profonde expose à l’ischémie. Le retour veineux peut s’améliorer immédiatement."
+  },
+  "70B": {
+    "is_correct": false,
+    "enonce": "Administrer une prémédication orale non titrée ; Traiter la fièvre et les frissons.",
+    "justification": "Thomas est déjà ventilé et nécessite des mesures contrôlables. La baisse métabolique réduit la demande et le DSC couplé."
+  },
+  "71B": {
+    "is_correct": false,
+    "enonce": "Perfuser de l’eau libre pour corriger la pression ; Utiliser une saline hypertonique avec suivi de la natrémie.",
+    "justification": "L’hypo-osmolarité augmente l’œdème. Elle augmente l’osmolarité et soutient parfois la circulation."
+  },
+  "72A": {
+    "is_correct": false,
+    "enonce": "Ignorer la PAM tant que la PIC diminue ; Suivre la natrémie de façon rapprochée.",
+    "justification": "Le bénéfice disparaît si la PPC chute simultanément. Une correction excessive expose à des complications neurologiques."
+  },
+  "72E": {
+    "is_correct": true,
+    "enonce": "Mesurer diurèse et bilan hydrique ; Réévaluer l’efficacité clinique et instrumentale.",
+    "justification": "Le mannitol peut provoquer une hypovolémie importante. Une dose sans réponse ne doit pas être répétée mécaniquement."
+  },
+  "76C": {
+    "is_correct": true,
+    "enonce": "Obtenir une profondeur hypnotique suffisante avant la laryngoscopie ; Titrer un opioïde pour limiter la réponse adrénergique.",
+    "justification": "Une anesthésie légère amplifie la réponse sympathique. L’analgésie atténue tachycardie et hypertension."
+  },
+  "76E": {
+    "is_correct": true,
+    "enonce": "Préparer le traitement d’une hypertension transitoire ; Obtenir une profondeur hypnotique suffisante avant la laryngoscopie.",
+    "justification": "Une correction rapide limite la contrainte sur la paroi anévrismale. Une anesthésie légère amplifie la réponse sympathique."
+  },
+  "77A": {
+    "is_correct": false,
+    "enonce": "La fermeture de l’écran de monitorage ; La fixation de la tête dans la têtière.",
+    "justification": "Ce geste technique ne constitue pas un stimulus chirurgical. Les pointes appliquées au scalp sont fortement stimulantes."
+  },
+  "77B": {
+    "is_correct": false,
+    "enonce": "Toute manipulation microscopique du parenchyme ; L’incision cutanée et la craniotomie.",
+    "justification": "Le tissu cérébral lui-même est peu nociceptif. Ces gestes déclenchent une réponse adrénergique importante."
+  },
+  "78D": {
+    "is_correct": true,
+    "enonce": "Maintenir une profondeur hypnotique suffisante ; Réduire prudemment l’opioïde si le stimulus disparaît.",
+    "justification": "L’absence de réponse nociceptive ne signifie pas absence de conscience. La titration limite hypotension et retard respiratoire."
+  },
+  "79A": {
+    "is_correct": false,
+    "enonce": "Induire une hypoxémie pour diminuer le débit de la rupture ; Annoncer immédiatement les valeurs hémodynamiques à l’équipe.",
+    "justification": "La lésion neuronale secondaire serait immédiate et injustifiée. Le chirurgien doit corréler le saignement et la perfusion."
+  },
+  "79B": {
+    "is_correct": false,
+    "enonce": "Administrer un grand volume de soluté hypotonique ; Utiliser des accès de calibre suffisant pour transfuser.",
+    "justification": "L’œdème cérébral s’ajouterait à la perte sanguine. Une hémorragie intracrânienne peut devenir rapidement massive."
+  },
+  "80A": {
+    "is_correct": false,
+    "enonce": "Provoquer une toux vigoureuse pour tester le clip ; Diminuer les perfusions au moment compatible avec leur cinétique.",
+    "justification": "La poussée hypertensive augmente le risque hémorragique. La titration évite une concentration résiduelle excessive."
+  },
+  "80B": {
+    "is_correct": false,
+    "enonce": "Masquer tout déficit nouveau par une sédation prolongée sans indication ; Réchauffer Claire jusqu’à la normothermie.",
+    "justification": "L’évaluation précoce recherche une complication vasculaire. L’hypothermie retarde métabolisme et récupération."
+  },
+  "81D": {
+    "is_correct": true,
+    "enonce": "Une aphasie absente avant l’intervention ; Une asymétrie pupillaire nouvelle.",
+    "justification": "Un déficit focal nouveau évoque ischémie ou hémorragie. Elle peut traduire une compression évolutive."
+  },
+  "82C": {
+    "is_correct": true,
+    "enonce": "La capacité de Samir à comprendre et exécuter les consignes ; L’absence de détérioration de la conscience.",
+    "justification": "La cartographie repose sur des réponses reproductibles. Une vigilance instable rendrait la coopération imprévisible."
+  },
+  "82E": {
+    "is_correct": true,
+    "enonce": "Un bilan des déficits langagiers préexistants ; La capacité de Samir à comprendre et exécuter les consignes.",
+    "justification": "Les réponses peropératoires doivent être comparées à l’état initial. La cartographie repose sur des réponses reproductibles."
+  },
+  "83A": {
+    "is_correct": false,
+    "enonce": "Elle doit être injectée rapidement à forte dose ; Elle préserve la respiration spontanée.",
+    "justification": "Une administration rapide favorise hypertension paradoxale et instabilité. L’absence de dépression respiratoire limite l’hypercapnie."
+  },
+  "83C": {
+    "is_correct": false,
+    "enonce": "Elle doit être injectée rapidement à forte dose ; Elle réduit les frissons.",
+    "justification": "Une administration rapide favorise hypertension paradoxale et instabilité. Cet effet améliore confort et stabilité du signal."
+  },
+  "84A": {
+    "is_correct": false,
+    "enonce": "Accepter une obstruction pharyngée prolongée ; Surveiller continuellement la ventilation expirée.",
+    "justification": "L’hypercapnie et l’hypoxémie augmenteraient le DSC. Une baisse de ventilation révèle précocement la rétention de CO₂."
+  },
+  "84C": {
+    "is_correct": false,
+    "enonce": "Accepter une obstruction pharyngée prolongée ; Maintenir le cou libre et la tête surélevée.",
+    "justification": "L’hypercapnie et l’hypoxémie augmenteraient le DSC. Le drainage veineux réduit le volume sanguin intracrânien."
+  },
+  "85C": {
+    "is_correct": false,
+    "enonce": "La lecture des mots projetés sur un écran ; La manipulation de la dure-mère.",
+    "justification": "Cette tâche fonctionnelle n’est pas un stimulus douloureux. Cette enveloppe est sensible et nécessite une couverture analgésique."
+  },
+  "86B": {
+    "is_correct": false,
+    "enonce": "Poursuivre la cartographie pendant une généralisation ; Maintenir oxygénation et sécurité des voies aériennes.",
+    "justification": "La priorité devient la sécurité et le contrôle de la crise. Une crise prolongée peut compromettre ventilation et conscience."
+  },
+  "86D": {
+    "is_correct": false,
+    "enonce": "Poursuivre la cartographie pendant une généralisation ; Titrer un agent anticonvulsivant tel que propofol si nécessaire.",
+    "justification": "La priorité devient la sécurité et le contrôle de la crise. Le propofol réduit rapidement l’activité neuronale."
+  },
+  "87C": {
+    "is_correct": true,
+    "enonce": "Une crise généralisée qui persiste malgré le traitement ; Une obstruction respiratoire réfractaire aux mesures simples.",
+    "justification": "La protection des voies aériennes devient prioritaire. Hypoxémie et hypercapnie menacent rapidement le cerveau."
+  },
+  "88D": {
+    "is_correct": true,
+    "enonce": "Obtenir une normocapnie avant toute extubation ; Vérifier que Samir répond et protège ses voies aériennes.",
+    "justification": "Une ventilation correcte limite l’augmentation du DSC. La crise et les médicaments peuvent altérer durablement la vigilance."
+  },
+  "88E": {
+    "is_correct": true,
+    "enonce": "Vérifier que Samir répond et protège ses voies aériennes ; Évaluer l’accumulation des agents reçus pendant la conversion.",
+    "justification": "La crise et les médicaments peuvent altérer durablement la vigilance. La cinétique conditionne la possibilité d’un examen fiable."
+  },
+  "89A": {
+    "is_correct": false,
+    "enonce": "La déviation médiane prouve une autorégulation intacte ; La PaO₂ insuffisante limite la livraison d’oxygène.",
+    "justification": "Elle signale une compression et un risque d’engagement. L’hypoxémie menace directement le métabolisme neuronal."
+  },
+  "89C": {
+    "is_correct": false,
+    "enonce": "La déviation médiane prouve une autorégulation intacte ; L’hématome augmente la PIC et consomme la compliance.",
+    "justification": "Elle signale une compression et un risque d’engagement. Une masse aiguë est mal compensée dans le crâne rigide."
+  },
+  "90A": {
+    "is_correct": false,
+    "enonce": "Attendre un bilan exhaustif de toutes les comorbidités ; Administrer de l’oxygène et sécuriser rapidement la ventilation.",
+    "justification": "L’engagement impose une chirurgie sans délai d’optimisation prolongée. L’hypoxémie secondaire augmente mortalité et lésion neuronale."
+  },
+  "90C": {
+    "is_correct": true,
+    "enonce": "Alerter immédiatement l’équipe neurochirurgicale ; Administrer de l’oxygène et sécuriser rapidement la ventilation.",
+    "justification": "L’évacuation de la masse traite la cause mécanique. L’hypoxémie secondaire augmente mortalité et lésion neuronale."
+  },
+  "90E": {
+    "is_correct": true,
+    "enonce": "Restaurer la PAM avec remplissage raisonné et vasopresseur ; Alerter immédiatement l’équipe neurochirurgicale.",
+    "justification": "La PPC doit être soutenue malgré la PIC élevée. L’évacuation de la masse traite la cause mécanique."
+  },
+  "91A": {
+    "is_correct": false,
+    "enonce": "Provoquer une réponse hypertensive intense à la laryngoscopie ; Choisir un hypnotique à bonne tolérance circulatoire.",
+    "justification": "La hausse brutale de PIC et le saignement seraient dangereux. La prévention d’une hypotension supplémentaire est prioritaire."
+  },
+  "91E": {
+    "is_correct": true,
+    "enonce": "Contrôler rapidement la PaCO₂ après intubation ; Choisir un hypnotique à bonne tolérance circulatoire.",
+    "justification": "Hypercapnie comme hypocapnie profonde peuvent léser le cerveau. La prévention d’une hypotension supplémentaire est prioritaire."
+  },
+  "92A": {
+    "is_correct": false,
+    "enonce": "Choisir l’albumine comme remplissage de première intention ; Utiliser des cristalloïdes isotoniques.",
+    "justification": "Elle est proscrite chez le traumatisé crânien sévère. Ils maintiennent le volume sans diminuer l’osmolarité plasmatique."
+  },
+  "92C": {
+    "is_correct": false,
+    "enonce": "Choisir l’albumine comme remplissage de première intention ; Transfuser si l’hémorragie compromet oxygénation ou coagulation.",
+    "justification": "Elle est proscrite chez le traumatisé crânien sévère. La capacité de transport et l’hémostase participent à la protection."
+  },
+  "94A": {
+    "is_correct": false,
+    "enonce": "L’extubation est obligatoire pour tout examen neurologique ; Le Glasgow initial ne garantit pas la protection des voies aériennes.",
+    "justification": "Un examen adapté reste possible sous ventilation lorsque la sécurité l’impose. Un patient comateux ne contrôle pas efficacement déglutition et toux."
+  },
+  "94B": {
+    "is_correct": false,
+    "enonce": "Une hypercapnie non contrôlée est souhaitable la première nuit ; La sédation peut rester nécessaire pour contrôler la PIC.",
+    "justification": "Elle augmenterait le volume sanguin et la PIC. Agitation et toux augmenteraient pression et consommation."
+  }
+});
+
+function applyQcmBalance(series) {
+  let qcmIndex = 0;
+  for (const serie of series) {
+    for (const question of serie.questions || []) {
+      if (question.format !== "qcm") continue;
+      for (const item of question.items) {
+        const override = QCM_BALANCE_OVERRIDES[`${qcmIndex}${item.lettre}`];
+        if (override) Object.assign(item, override);
+      }
+      qcmIndex += 1;
+    }
+  }
+  return series;
+}
+
+export function buildChapter24(extract){ const result={fiche:buildFiche(),flashcards:buildFlashcards(),series:[...buildIq(),...buildDq(),...buildIr(),...buildDr()]}; applyQcmBalance(result.series); validateSourceBlocks(extract,result); return result; }
+export default buildChapter24;

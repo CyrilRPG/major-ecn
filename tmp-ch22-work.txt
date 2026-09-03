@@ -1,0 +1,800 @@
+### Q1 (S1)  ABE -> ABCDE
+E: Quels facteurs diminuent l’apport myocardique en oxygène ?
+CG: Hypotension, anémie et hypoxémie réduisent l’apport, tandis que tachycardie et hypertension augmentent surtout la demande.
+  A [V] : Hypotension artérielle. || La baisse de pression diastolique diminue la perfusion coronaire.
+  B [V] : Anémie aiguë. || La diminution d’hémoglobine réduit le contenu artériel en oxygène.
+  C [F] >>> faux->juste : Tachycardie isolée. || Elle augmente la consommation et raccourcit surtout le temps diastolique.
+  D [F] >>> faux->juste : Hypertension transitoire. || Elle accroît principalement le travail et la demande myocardiques.
+  E [V] : Hypoxémie. || Une saturation basse diminue directement l’oxygène délivré au myocarde.
+
+### Q4 (S1)  ABDE -> BDE
+E: Quelles affirmations décrivent le MINS ?
+CG: Le MINS est un dommage myocardique ischémique postopératoire défini par la troponine, souvent silencieux mais pronostique.
+  A [V] >>> juste->faux : Il peut être asymptomatique. || L’analgésie et les formes silencieuses peuvent masquer toute douleur.
+  B [V] : Il repose sur une élévation ischémique de troponine. || Le biomarqueur traduit une souffrance myocardique avec ou sans nécrose.
+  C [F] : Il exige toujours un sus-décalage de ST. || La plupart des dommages ne présentent pas ce profil électrique.
+  D [V] : Il survient après chirurgie non cardiaque. || Cette définition distingue le contexte périopératoire concerné.
+  E [V] : Il augmente la mortalité à 30 jours. || Son association pronostique est indépendante des autres facteurs.
+
+### Q5 (S1)  BDE -> E
+E: Quels éléments caractérisent l’HTAP périopératoire ?
+CG: L’HTAP est un risque indépendant qui impose d’évaluer pressions droites et fonction du ventricule droit.
+  A [F] : Une hypoxémie est sans conséquence. || L’hypoxie augmente les résistances pulmonaires et menace le ventricule droit.
+  B [V] >>> juste->faux : Elle augmente morbidité et mortalité. || La circulation pulmonaire fragile peut décompenser sous anesthésie.
+  C [F] : Elle ne concerne que la chirurgie cardiaque. || Le risque existe aussi lors de chirurgie non cardiaque.
+  D [V] >>> juste->faux : Une échocardiographie est indiquée si elle est suspectée. || L’examen estime pressions et retentissement sur le cœur droit.
+  E [V] : La fonction ventriculaire droite doit être appréciée. || Le pronostic dépend beaucoup de la réserve du ventricule droit.
+
+### Q6 (S2)  ABCE -> ABCDE
+E: Quels facteurs appartiennent au score clinique de Lee ?
+CG: Le score associe coronaropathie, insuffisance cardiaque, accident vasculaire, diabète insuliné et insuffisance rénale.
+  A [V] : Antécédent de coronaropathie. || IDM, angor, onde Q ou test positif constituent le facteur coronaire.
+  B [V] : Insuffisance cardiaque congestive. || Un antécédent ou des signes compatibles valent un point.
+  C [V] : Diabète sous insulinothérapie. || Le traitement insulinique identifie le facteur diabétique.
+  D [F] >>> faux->juste : Hypertension artérielle isolée. || Elle n’est pas l’un des cinq items du score.
+  E [V] : Créatinine supérieure à 177 µmol/L. || Ce seuil rénal correspond à 2 mg/dL et vaut un point.
+
+### Q7 (S2)  ABCE -> ABCDE
+E: Quelles activités correspondent à une capacité d’au moins 4 METS ?
+CG: Marche normale, activité domestique ou escaliers traduisent une réserve au moins modérée.
+  A [V] : Marcher dans la rue. || Cette activité correspond à une réserve fonctionnelle modérée.
+  B [V] : Réaliser des activités ménagères. || Le ménage se situe dans la tranche de 4 à 7 METS.
+  C [V] : Monter plus de deux étages. || Cet effort correspond approximativement à 7 à 10 METS.
+  D [F] >>> faux->juste : Rester alité sans symptôme. || L’absence d’effort ne démontre pas une réserve suffisante.
+  E [V] : Pratiquer la natation soutenue. || Une activité sportive importante dépasse habituellement 10 METS.
+
+### Q9 (S2)  ABD -> B
+E: Quelle conduite adopter devant une cardiopathie instable ?
+CG: Hors urgence, l’intervention est différée pour bilan et stabilisation ; l’urgence impose adaptation et surveillance.
+  A [V] >>> juste->faux : Reporter une chirurgie programmée. || Le délai permet de traiter l’état cardiovasculaire avant le stress.
+  B [V] : Demander une évaluation cardiologique. || La gravité et la stratégie spécifique doivent être précisées.
+  C [F] : Annuler toute chirurgie urgente. || L’urgence peut imposer d’opérer avec optimisation maximale.
+  D [V] >>> juste->faux : Planifier un monitorage renforcé si le geste ne peut attendre. || La décompensation doit être reconnue et traitée sans délai.
+  E [F] : Se fier au seul score de Lee. || Une instabilité clinique prime sur un score prédictif global.
+
+### Q10 (S2)  ABC -> A
+E: Quels principes gouvernent une faible capacité fonctionnelle ?
+CG: Sous 4 METS, la discussion d’un test dépend du risque du geste et de sa capacité à modifier la conduite.
+  A [V] : Elle correspond à moins de 4 METS. || Ce seuil distingue une réserve fonctionnelle faible.
+  B [V] >>> juste->faux : Elle doit être croisée avec le risque chirurgical. || Le risque diffère entre cataracte et chirurgie aortique.
+  C [V] >>> juste->faux : Un test n’est utile que s’il modifie la stratégie. || Une exploration sans conséquence décisionnelle retarde le parcours.
+  D [F] : Elle impose toujours une coronarographie. || L’examen invasif n’est pas un dépistage systématique.
+  E [F] : Elle contre-indique toute chirurgie. || L’optimisation permet de nombreux gestes nécessaires.
+
+### Q11 (S3)  ABD -> ABCDE
+E: Quels gestes appartiennent au groupe de risque cardiaque élevé ?
+CG: Le risque élevé concerne surtout les interventions vasculaires majeures ou prolongées avec fortes variations hémodynamiques.
+  A [V] : Chirurgie aortique ouverte. || Le clampage et les variations volémiques exposent à un risque cardiaque majeur.
+  B [V] : Revascularisation artérielle périphérique. || Le terrain athéromateux et l'agression vasculaire majorent le risque d'événement.
+  C [F] >>> faux->juste : Chirurgie de la cataracte. || Ce geste superficiel bref appartient au groupe de faible risque.
+  D [V] : Intervention prolongée avec pertes liquidiennes importantes. || Les transferts volémiques et la durée augmentent la contrainte myocardique.
+  E [F] >>> faux->juste : Endoscopie diagnostique simple. || Une procédure endoscopique mineure expose habituellement à un faible risque.
+
+### Q12 (S3)  ABC -> ABCE
+E: Quelles interventions sont habituellement à faible risque cardiaque ?
+CG: Les gestes superficiels, ophtalmologiques, endoscopiques ou mammaires sont généralement associés à un risque inférieur à 1 %.
+  A [V] : Cataracte sous anesthésie locale. || Le caractère superficiel et peu invasif place ce geste dans le faible risque.
+  B [V] : Endoscopie digestive diagnostique. || La contrainte hémodynamique est limitée pour cette procédure mineure.
+  C [V] : Chirurgie mammaire programmée. || Cette chirurgie non vasculaire figure parmi les gestes à faible risque.
+  D [F] : Réparation ouverte d'un anévrisme aortique. || Cette chirurgie vasculaire majeure appartient au niveau de risque élevé.
+  E [F] >>> faux->juste : Pontage artériel périphérique. || Le geste vasculaire et le terrain athéromateux augmentent nettement le risque.
+
+### Q13 (S3)  ABD -> ABDE
+E: Dans quelles situations un ECG préopératoire est-il pertinent ?
+CG: L'ECG est guidé par l'âge, les facteurs de risque, la cardiopathie et l'importance de la chirurgie, non par une prescription universelle.
+  A [V] : Cardiopathie connue avant chirurgie à risque. || Un tracé de référence peut détecter rythme, conduction ou ischémie.
+  B [V] : Symptômes cardiovasculaires récents. || Une plainte nouvelle justifie une exploration ciblée avant l'anesthésie.
+  C [F] : Tout adulte sain avant un geste superficiel. || Le rendement d'un ECG systématique est faible dans cette situation.
+  D [V] : Facteurs de risque multiples avec chirurgie intermédiaire. || Le contexte cumulé rend le tracé utile à l'évaluation globale.
+  E [F] >>> faux->juste : Uniquement après l'induction anesthésique. || L'intérêt préopératoire suppose un résultat disponible avant la décision.
+
+### Q14 (S3)  ABD -> BD
+E: Quels principes encadrent les explorations cardiaques préopératoires ?
+CG: Une exploration est justifiée lorsqu'elle répond à une question clinique et peut modifier le calendrier, le traitement ou la surveillance.
+  A [V] >>> juste->faux : Demander un examen susceptible de changer la conduite. || Son résultat doit avoir une conséquence pratique sur la prise en charge.
+  B [V] : Appliquer les indications usuelles hors contexte chirurgical. || Une chirurgie prochaine ne transforme pas un examen inutile en examen nécessaire.
+  C [F] : Multiplier les tests pour rassurer l'équipe. || L'accumulation sans question clinique expose aux faux positifs et aux retards.
+  D [V] : Tenir compte de l'urgence du geste. || Un bilan prolongé ne doit pas compromettre une intervention indispensable.
+  E [F] : Faire une échographie à tout patient hypertendu. || L'hypertension isolée ne suffit pas à imposer une imagerie cardiaque.
+
+### Q15 (S3)  ABC -> A
+E: Quand une échocardiographie est-elle particulièrement informative ?
+CG: L'échographie répond aux suspicions de dysfonction ventriculaire, valvulopathie ou hypertension pulmonaire et aide à fixer les objectifs.
+  A [V] : Dyspnée inexpliquée avec suspicion d'insuffisance cardiaque. || L'examen apprécie fonction systolique, pressions de remplissage et causes alternatives.
+  B [V] >>> juste->faux : Souffle évocateur d'une valvulopathie sévère. || La surface, les gradients et le retentissement orientent le risque.
+  C [V] >>> juste->faux : Suspicion d'hypertension pulmonaire. || L'estimation des pressions et du ventricule droit prépare la stratégie.
+  D [F] : Bilan automatique annuel chez tout patient asymptomatique. || Une répétition sans changement clinique n'apporte pas d'information utile.
+  E [F] : Remplacement de l'examen clinique cardiovasculaire. || L'imagerie complète une hypothèse issue de l'interrogatoire et de l'examen.
+
+### Q16 (S4)  ACE -> CE
+E: Comment gérer un traitement bétabloquant chronique ?
+CG: Un bétabloquant prescrit au long cours est poursuivi, tandis qu'une initiation tardive et agressive expose à l'hypotension et à la bradycardie.
+  A [V] >>> juste->faux : Poursuivre le traitement habituel. || L'arrêt brutal peut provoquer tachycardie et rebond ischémique.
+  B [F] : L'interrompre systématiquement sept jours avant. || Cette interruption favorise un sevrage adrénergique dangereux.
+  C [V] : Surveiller fréquence et pression artérielle. || Bradycardie et hypotension peuvent imposer une adaptation individuelle.
+  D [F] : Commencer une forte dose le matin de l'intervention. || Une introduction non titrée juste avant le geste augmente les complications.
+  E [V] : Introduire précocement et titrer si une indication nouvelle existe. || Un délai permet d'évaluer tolérance et efficacité avant l'agression.
+
+### Q17 (S4)  ABD -> ABCDE
+E: Quels principes concernent les inhibiteurs du SRAA ?
+CG: IEC et ARA2 peuvent favoriser l'hypotension à l'induction ; la décision dépend de leur indication et du risque de décompensation.
+  A [V] : Anticiper une hypotension plus marquée à l'induction. || La vasoplégie anesthésique est moins bien compensée sous blocage du SRAA.
+  B [V] : Discuter une suspension lorsqu'ils traitent seulement l'hypertension. || L'absence de prise peut limiter l'hypotension sans grand risque de rebond.
+  C [F] >>> faux->juste : Les poursuivre sans réflexion chez tous les patients. || L'indication cardiaque et le risque hémodynamique doivent être mis en balance.
+  D [V] : Individualiser en cas d'insuffisance cardiaque. || Un arrêt peut déstabiliser certains patients à fonction ventriculaire altérée.
+  E [F] >>> faux->juste : Les remplacer par une double dose de diurétique. || Cette substitution favorise l'hypovolémie et n'est pas une stratégie standard.
+
+### Q18 (S4)  ABD -> BDE
+E: Quels principes guident les antiagrégants plaquettaires ?
+CG: La décision confronte le risque hémorragique du geste au risque thrombotique, particulièrement après implantation d'un stent.
+  A [V] >>> juste->faux : Identifier le type et la date du stent. || La vulnérabilité thrombotique dépend du dispositif et du délai depuis la pose.
+  B [V] : Associer chirurgien, anesthésiste et cardiologue dans les cas complexes. || La balance bénéfice-risque engage à la fois saignement et thrombose coronaire.
+  C [F] : Arrêter toujours l'aspirine devant toute incision. || Certains gestes autorisent sa poursuite lorsque le risque thrombotique domine.
+  D [V] : Différer un geste électif si la double inhibition est indispensable. || Le report évite une interruption précoce dangereuse après stent.
+  E [F] >>> faux->juste : Relayer systématiquement par une héparine. || L'anticoagulation ne reproduit pas l'effet antiplaquettaire contre la thrombose de stent.
+
+### Q19 (S4)  ABD -> ABDE
+E: Comment gérer une statine en périopératoire ?
+CG: Une statine chronique est poursuivie ; son bénéfice vasculaire est particulièrement pertinent chez les patients de chirurgie vasculaire.
+  A [V] : Poursuivre une statine déjà prescrite. || L'interruption prive temporairement le patient d'un traitement vasculoprotecteur.
+  B [V] : Vérifier la reprise postopératoire. || Un oubli prolongé après le geste annule la continuité thérapeutique.
+  C [F] : L'arrêter pour prévenir toute hypotension. || La statine n'est pas responsable d'une vasoplégie anesthésique aiguë.
+  D [V] : Envisager son introduction avant chirurgie vasculaire si indiquée. || Le terrain athéromateux justifie souvent ce traitement de fond.
+  E [F] >>> faux->juste : Doubler obligatoirement la dose le jour du geste. || Aucune majoration automatique n'est nécessaire pour l'anesthésie.
+
+### Q20 (S4)  ABC -> C
+E: Quels éléments organisent l'arrêt d'un anticoagulant ?
+CG: Molécule, fonction rénale, risque hémorragique et indication thrombotique déterminent le délai d'interruption et l'éventuel relais.
+  A [V] >>> juste->faux : Préciser la molécule et sa dernière prise. || Le délai résiduel diffère entre AVK et anticoagulants directs.
+  B [V] >>> juste->faux : Estimer la fonction rénale pour un anticoagulant direct. || Une élimination ralentie prolonge l'effet anticoagulant de certaines molécules.
+  C [V] : Classer le risque hémorragique de l'intervention. || Un geste majeur requiert une marge d'arrêt plus importante qu'un geste mineur.
+  D [F] : Relayer tous les patients par héparine. || Le relais augmente le saignement et n'est réservé qu'à certains hauts risques.
+  E [F] : Utiliser le même délai quelle que soit la fonction rénale. || L'accumulation impose parfois une interruption plus longue.
+
+### Q21 (S5)  ABC -> B
+E: Quelles relations décrivent la pression artérielle moyenne ?
+CG: La PAM résulte principalement du produit entre débit cardiaque et résistances vasculaires systémiques.
+  A [V] >>> juste->faux : PAM approximativement égale à DC multiplié par RVS. || Cette relation relie la pompe cardiaque au tonus vasculaire systémique.
+  B [V] : Une baisse de débit peut abaisser la PAM. || Si les résistances ne compensent pas, la pression chute avec le débit.
+  C [V] >>> juste->faux : Une vasodilatation peut réduire la PAM. || La diminution des résistances systémiques abaisse la pression à débit constant.
+  D [F] : La PAM dépend uniquement de la volémie. || Le tonus vasculaire et la performance cardiaque participent aussi au niveau de pression.
+  E [F] : Une PAM normale garantit toujours un débit normal. || Des résistances élevées peuvent maintenir la pression malgré un faible débit.
+
+### Q22 (S5)  ABCD -> ABCDE
+E: Quels déterminants composent le débit cardiaque ?
+CG: Le débit cardiaque est le produit de la fréquence par le volume d'éjection, lui-même dépendant de précharge, postcharge et contractilité.
+  A [V] : Fréquence cardiaque. || Elle multiplie le volume éjecté à chaque battement pour former le débit minute.
+  B [V] : Volume d'éjection systolique. || Il représente la quantité de sang propulsée à chaque systole.
+  C [V] : Précharge ventriculaire. || Le remplissage initial influence la longueur des fibres et l'éjection.
+  D [V] : Contractilité myocardique. || La force intrinsèque de contraction modifie le volume expulsé.
+  E [F] >>> faux->juste : Concentration plasmatique de sodium isolée. || Elle ne constitue pas un terme direct de l'équation du débit.
+
+### Q23 (S5)  ABD -> ACD
+E: Quels principes concernent la précharge ?
+CG: La précharge reflète le remplissage en fin de diastole mais une pression isolée prédit mal la réponse à un remplissage.
+  A [V] : Elle est influencée par le retour veineux. || La quantité de sang ramenée au cœur conditionne le remplissage ventriculaire.
+  B [V] >>> juste->faux : La ventilation en pression positive peut la diminuer. || L'augmentation de pression intrathoracique réduit le retour veineux.
+  C [F] >>> faux->juste : Une pression veineuse centrale élevée prouve une hypervolémie. || Compliance, pression thoracique et fonction droite modifient cette pression.
+  D [V] : L'effet d'un remplissage doit être réévalué. || Une variation du volume d'éjection renseigne mieux qu'une charge aveugle.
+  E [F] : Toute hypotension impose automatiquement un litre de cristalloïde. || Vasoplégie ou défaillance de pompe peuvent ne pas répondre au volume.
+
+### Q24 (S5)  ABC -> BC
+E: Quels objectifs sont adaptés à une insuffisance mitrale ?
+CG: Une fuite mitrale tolère mieux une fréquence normale-haute et une postcharge limitée qu'une bradycardie avec hypertension.
+  A [V] >>> juste->faux : Éviter une bradycardie marquée. || Une systole prolongée augmente le volume régurgité vers l'oreillette.
+  B [V] : Limiter une augmentation excessive de postcharge. || Une résistance d'éjection élevée favorise la fuite rétrograde.
+  C [V] : Maintenir un débit antérograde suffisant. || La perfusion systémique dépend de la fraction effectivement éjectée dans l'aorte.
+  D [F] : Rechercher une hypertension artérielle importante. || Une postcharge élevée augmente la régurgitation mitrale.
+  E [F] : Imposer une fréquence de 40 par minute. || La bradycardie allonge le temps disponible pour la fuite valvulaire.
+
+### Q25 (S5)  ABCD -> BCD
+E: Quels objectifs protègent un patient coronarien ?
+CG: La prévention ischémique recherche un équilibre offre-demande par contrôle de fréquence, pression, oxygénation et hémoglobine.
+  A [V] >>> juste->faux : Éviter la tachycardie prolongée. || Elle augmente la consommation et raccourcit le temps de perfusion coronaire diastolique.
+  B [V] : Corriger une hypotension significative. || Une faible pression diastolique réduit le gradient de perfusion coronaire.
+  C [V] : Maintenir une oxygénation satisfaisante. || Une hypoxémie diminue le contenu artériel disponible pour le myocarde.
+  D [V] : Traiter une anémie majeure selon le contexte. || La baisse d'hémoglobine limite le transport d'oxygène vers le cœur.
+  E [F] : Stimuler systématiquement la fréquence au-dessus de 120. || Cette tachycardie aggrave le déséquilibre entre demande et apport.
+
+### Q26 (S6)  ABC -> C
+E: Quels principes guident le choix du monitorage ?
+CG: Le monitorage est proportionné au patient, au geste et aux conséquences attendues ; il n'est utile que s'il conduit à une action.
+  A [V] >>> juste->faux : Adapter les outils au risque individuel. || Une cardiopathie sévère peut justifier une surveillance plus invasive.
+  B [V] >>> juste->faux : Intégrer l'ampleur et la durée de la chirurgie. || Pertes sanguines et variations rapides changent le besoin de mesure.
+  C [V] : Choisir une mesure interprétable et actionnable. || Une valeur sans conséquence thérapeutique ajoute du bruit plutôt que de la sécurité.
+  D [F] : Poser un cathéter artériel à tout patient. || Le risque du dispositif doit être justifié par un bénéfice clinique.
+  E [F] : Remplacer l'observation clinique par les moniteurs. || Les signaux doivent être confrontés à l'examen et au contexte.
+
+### Q27 (S6)  ABD -> D
+E: Que permet l'ECG peropératoire ?
+CG: L'ECG surveille rythme, fréquence, conduction et modifications de ST, avec des dérivations choisies selon le territoire recherché.
+  A [V] >>> juste->faux : Détecter une tachyarythmie nouvelle. || Le tracé montre rapidement une modification du rythme et de la fréquence.
+  B [V] >>> juste->faux : Repérer certaines modifications ischémiques de ST. || Une analyse adaptée des dérivations peut alerter sur un déséquilibre myocardique.
+  C [F] : Mesurer directement le débit cardiaque. || Le signal électrique ne quantifie pas le volume sanguin éjecté.
+  D [V] : Surveiller la conduction chez un patient à risque. || Un allongement ou un bloc peut être reconnu sur le tracé continu.
+  E [F] : Exclure toute ischémie lorsque le tracé reste normal. || Une souffrance myocardique peut être silencieuse ou non visible dans les dérivations utilisées.
+
+### Q28 (S6)  ABCD -> BCD
+E: Quels apports offre l'échographie périopératoire ?
+CG: L'échographie fournit une lecture dynamique de la fonction biventriculaire, des valves, du remplissage et de certaines causes de choc.
+  A [V] >>> juste->faux : Apprécier la fonction ventriculaire gauche. || La cinétique globale et segmentaire oriente le diagnostic de défaillance.
+  B [V] : Évaluer le ventricule droit. || Taille, contraction et surcharge aident devant hypoxémie ou hypotension.
+  C [V] : Identifier une valvulopathie importante. || Morphologie, gradients et jets précisent le mécanisme hémodynamique.
+  D [V] : Réévaluer l'effet d'un traitement. || Une nouvelle image peut objectiver la réponse au volume ou au vasopresseur.
+  E [F] : Garantir à elle seule une mesure exacte de la volémie. || Le statut volumique reste une interprétation multimodale et dynamique.
+
+### Q29 (S6)  ABC -> ACE
+E: Quand une pression artérielle invasive est-elle utile ?
+CG: Le cathéter artériel donne une pression battement par battement et facilite les prélèvements lors de variations rapides ou d'un risque élevé.
+  A [V] : Chirurgie avec variations hémodynamiques rapides attendues. || La mesure continue détecte sans délai une chute ou une poussée de pression.
+  B [V] >>> juste->faux : Cardiopathie sévère exigeant une cible étroite. || Une mesure rapprochée aide à maintenir la perfusion dans la zone tolérée.
+  C [V] : Besoin répété de gaz du sang. || Le dispositif évite des ponctions artérielles successives.
+  D [F] : Pour mesurer directement la pression atriale gauche. || La ligne radiale ou fémorale renseigne la pression artérielle systémique.
+  E [F] >>> faux->juste : Parce qu'elle est dépourvue de complication. || Thrombose, hématome, infection ou ischémie restent possibles.
+
+### Q30 (S6)  ABD -> AD
+E: Quelles limites ont les pressions de remplissage statiques ?
+CG: PVC et pressions isolées reflètent de multiples interactions et prédisent imparfaitement l'augmentation de débit après volume.
+  A [V] : Elles dépendent de la compliance cardiaque. || Une même quantité de sang produit des pressions différentes selon la rigidité.
+  B [V] >>> juste->faux : La ventilation mécanique modifie leur valeur. || La pression intrathoracique est transmise aux cavités et aux vaisseaux.
+  C [F] : Une valeur basse prouve toujours une hypovolémie. || Vasoplégie, pression thoracique ou morphologie peuvent modifier la mesure.
+  D [V] : Une épreuve dynamique peut être plus informative. || La variation du débit après une manœuvre teste la réserve de précharge.
+  E [F] : Elles remplacent l'évaluation de la perfusion tissulaire. || Lactate, diurèse, conscience et peau restent des données complémentaires.
+
+### Q31 (S7)  ABCE -> ABCDE
+E: Que faut-il identifier avant une chirurgie chez un porteur de dispositif ?
+CG: La prise en charge exige le type de dispositif, l'indication, la dépendance, le dernier contrôle et le risque d'interférence du geste.
+  A [V] : Distinguer stimulateur et défibrillateur implantable. || Le défibrillateur comporte des thérapies antitachycardiques à gérer spécifiquement.
+  B [V] : Évaluer la dépendance à la stimulation. || Une inhibition par interférence est plus grave sans rythme d'échappement fiable.
+  C [V] : Connaître la date du dernier contrôle. || Une interrogation récente précise batterie, sondes et programmation.
+  D [F] >>> faux->juste : Se fier seulement à la cicatrice thoracique. || Elle ne renseigne ni le modèle ni la fonction active de l'appareil.
+  E [V] : Localiser le champ opératoire par rapport au boîtier. || La proximité influence le risque d'interférence électromagnétique.
+
+### Q32 (S7)  ABC -> ABCDE
+E: Quels effets peut produire un bistouri monopolaire ?
+CG: Le courant monopolaire peut être perçu comme une activité cardiaque, inhiber une stimulation ou déclencher une détection inappropriée.
+  A [V] : Inhibition transitoire d'un stimulateur. || Le dispositif peut interpréter l'interférence comme des complexes spontanés.
+  B [V] : Thérapie inappropriée d'un défibrillateur. || Un bruit électrique peut être classé à tort comme tachyarythmie.
+  C [V] : Artefacts sur le monitorage ECG. || Les impulsions électriques saturent temporairement le signal de surface.
+  D [F] >>> faux->juste : Amélioration automatique de la batterie. || L'interférence n'a aucun effet rechargeant sur le générateur.
+  E [F] >>> faux->juste : Absence totale de risque sous le diaphragme. || Le risque diminue avec la distance mais dépend aussi du trajet du courant.
+
+### Q33 (S7)  ABC -> ABCE
+E: Comment réduire les interférences électrochirurgicales ?
+CG: Des salves brèves, une plaque bien placée et l'usage bipolaire lorsque possible limitent le passage du courant près du dispositif.
+  A [V] : Préférer le mode bipolaire lorsqu'il convient. || Le courant circule localement entre les deux mors plutôt qu'à travers le corps.
+  B [V] : Utiliser des activations brèves et espacées. || La réduction du temps d'exposition limite les inhibitions prolongées.
+  C [V] : Placer la plaque pour éloigner le trajet du boîtier. || Le courant de retour doit contourner autant que possible le dispositif et ses sondes.
+  D [F] : Poser systématiquement la plaque sur le boîtier. || Cette proximité concentre au contraire le courant près du générateur.
+  E [F] >>> faux->juste : Désactiver tout monitorage du pouls. || Une surveillance mécanique reste indispensable lorsque l'ECG est parasité.
+
+### Q34 (S7)  ABD -> AD
+E: Quels principes concernent l'aimant sur un dispositif cardiaque ?
+CG: La réponse à l'aimant varie selon le type et le fabricant ; elle doit être connue et ne remplace pas une stratégie préparée.
+  A [V] : Vérifier la réponse attendue avant utilisation. || Un aimant n'a pas le même effet sur un stimulateur et un défibrillateur.
+  B [V] >>> juste->faux : Maintenir une défibrillation externe disponible si les thérapies sont suspendues. || Une arythmie ventriculaire doit pouvoir être traitée pendant la désactivation.
+  C [F] : Considérer que l'aimant éteint toujours la stimulation. || Sur de nombreux stimulateurs il provoque au contraire un mode asynchrone.
+  D [V] : Tracer le retrait de l'aimant en fin de geste. || La restauration des fonctions et de la surveillance doit être certaine.
+  E [F] : Appliquer un aimant sans connaître le modèle. || Une réponse inconnue peut laisser le patient sans protection adaptée.
+
+### Q35 (S7)  ABC -> B
+E: Que faut-il vérifier après une intervention à risque d'interférence ?
+CG: La fonction du dispositif et la restauration des thérapies doivent être confirmées lorsque l'exposition ou la reprogrammation a pu les modifier.
+  A [V] >>> juste->faux : Réactiver les thérapies d'un défibrillateur. || Une suspension oubliée laisserait une tachyarythmie ventriculaire sans traitement interne.
+  B [V] : Contrôler le dispositif si un incident est survenu. || Une interrogation recherche modification de programmation, sonde ou événement enregistré.
+  C [V] >>> juste->faux : Maintenir le monitorage jusqu'à restauration confirmée. || La surveillance externe couvre la période où les fonctions internes sont incertaines.
+  D [F] : Autoriser la sortie avant toute réactivation. || Le patient ne doit pas quitter la zone monitorée avec des thérapies suspendues.
+  E [F] : Supposer qu'aucune salve brève n'a pu interférer. || Même une exposition courte peut produire une détection ou une inhibition.
+
+### Q37 (S8)  ABD -> ABDE
+E: Chez quels patients une surveillance de troponine est-elle pertinente ?
+CG: La troponine postopératoire cible les patients à risque cardiovasculaire significatif afin de détecter les dommages silencieux.
+  A [V] : Patient à haut risque clinique après chirurgie majeure. || Le rendement du biomarqueur augmente lorsque terrain et geste cumulent les risques.
+  B [V] : Patient avec symptômes ou instabilité inexpliquée. || Une douleur, dyspnée ou hypotension doit faire rechercher un dommage cardiaque.
+  C [F] : Tout enfant sain après une chirurgie mineure. || La probabilité préalable est trop faible pour un dosage systématique.
+  D [V] : Coronarien soumis à une chirurgie vasculaire. || La maladie athéromateuse et la contrainte opératoire justifient une surveillance ciblée.
+  E [F] >>> faux->juste : Uniquement si un sus-décalage est déjà visible. || Le dosage est précisément utile pour détecter des formes silencieuses ou non STEMI.
+
+### Q38 (S8)  ABC -> ABE
+E: Comment interpréter une troponine postopératoire élevée ?
+CG: L'élévation signale une lésion myocardique mais son mécanisme exige clinique, cinétique, ECG et recherche de causes ischémiques ou non ischémiques.
+  A [V] : Contrôler la cinétique du biomarqueur. || Une variation aide à distinguer un épisode aigu d'une élévation chronique.
+  B [V] : Réaliser un ECG et rechercher des symptômes. || Ces données orientent vers syndrome coronaire et niveau d'urgence.
+  C [V] >>> juste->faux : Rechercher hypoxémie, anémie ou hypotension. || Ces agressions peuvent provoquer un déséquilibre entre apport et demande.
+  D [F] : Conclure automatiquement à une thrombose coronaire. || Sepsis, embolie pulmonaire, tachyarythmie ou insuffisance rénale sont des diagnostics différentiels.
+  E [F] >>> faux->juste : Ignorer le résultat en l'absence de douleur. || Une atteinte silencieuse conserve une valeur pronostique et nécessite une évaluation.
+
+### Q39 (S8)  ABD -> BD
+E: Quelles caractéristiques distinguent STEMI et NSTEMI ?
+CG: Le STEMI comporte une occlusion aiguë avec sus-décalage justifiant une reperfusion urgente ; le NSTEMI impose aussi une stratégie rapide sans ce signe persistant.
+  A [V] >>> juste->faux : Un STEMI impose une filière de reperfusion urgente. || Le délai jusqu'à la revascularisation conditionne la quantité de myocarde sauvée.
+  B [V] : Un NSTEMI peut présenter une troponine élevée. || La nécrose myocardique existe sans sus-décalage persistant obligatoire.
+  C [F] : Un NSTEMI est toujours bénin. || Le risque d'événement et de mortalité peut être élevé selon le terrain.
+  D [V] : L'ECG doit être interprété avec la clinique. || Des anomalies peuvent être transitoires, atypiques ou masquées par un bloc.
+  E [F] : Le contexte opératoire interdit toute coronarographie. || Une stratégie invasive peut être nécessaire malgré la balance hémorragique.
+
+### Q40 (S8)  ABC -> AB
+E: Quels principes organisent la prise en charge d'un MINS ?
+CG: La prise en charge corrige les déclencheurs, recherche un syndrome coronaire aigu et renforce la prévention secondaire en tenant compte du risque de saignement.
+  A [V] : Corriger hypoxémie, hypotension et anémie significatives. || Ces facteurs entretiennent le déséquilibre entre apport et consommation myocardiques.
+  B [V] : Demander un avis cardiologique selon la gravité. || La cinétique, l'ECG et le terrain peuvent justifier une stratégie spécialisée.
+  C [V] >>> juste->faux : Réévaluer les traitements de prévention secondaire. || Statine, pression, tabac et autres facteurs doivent être optimisés après l'épisode.
+  D [F] : Administrer automatiquement une double antiagrégation à tous. || Le mécanisme et le risque hémorragique postopératoire doivent être précisés.
+  E [F] : Considérer l'anomalie comme purement biologique. || Sa valeur pronostique impose une analyse clinique et une organisation du suivi.
+
+### Q41 (S9)  ABD -> ADE
+E: Quels éléments initiaux participent à son risque cardiaque ?
+CG: L'antécédent coronaire et le caractère intrapéritonéal du geste imposent une stratification structurée.
+  A [V] : L'infarctus ancien documente une coronaropathie. || Cet antécédent constitue un facteur clinique du score de Lee.
+  B [V] >>> juste->faux : La colectomie est une chirurgie intrapéritonéale. || Le type d'intervention entre dans la composante chirurgicale du score.
+  C [F] : L'absence d'angor annule tout risque périopératoire. || Une maladie coronaire peut se compliquer malgré une stabilité clinique.
+  D [V] : L'âge augmente la probabilité de comorbidité vasculaire. || Il participe à l'appréciation globale même s'il n'est pas un item du Lee.
+  E [F] >>> faux->juste : La prise d'une statine constitue un facteur aggravant. || Ce traitement traduit une prévention secondaire et doit être poursuivi.
+
+### Q42 (S9)  ABD -> D
+E: L'interrogatoire précise finalement qu'il monte deux étages sans s'arrêter ni ressentir de douleur. Quelles conclusions tirer de cette capacité fonctionnelle ?
+CG: Une capacité supérieure ou égale à 4 METS sans symptôme est rassurante et limite l'intérêt d'examens supplémentaires.
+  A [V] >>> juste->faux : Elle atteint au moins 4 METS. || Monter deux étages sans pause correspond à une réserve fonctionnelle correcte.
+  B [V] >>> juste->faux : Elle diminue la probabilité d'une limitation cardiaque majeure. || L'effort quotidien sans symptôme témoigne d'une réserve utilisable.
+  C [F] : Elle prouve l'absence de toute coronaropathie. || Une bonne capacité n'efface pas l'antécédent d'infarctus.
+  D [V] : Elle peut permettre d'éviter un test d'ischémie inutile. || Un examen n'est indiqué que si son résultat modifie la prise en charge.
+  E [F] : Elle impose de reporter la colectomie. || Aucun signe d'instabilité ne justifie un délai sur ce seul élément.
+
+### Q43 (S9)  ACE -> BCE
+E: Le matin du geste, sa pression est à 132/74 mmHg et sa fréquence à 64 par minute sous bisoprolol chronique. Comment gérer le bisoprolol ?
+CG: Le bétabloquant chronique est maintenu avec surveillance, car son arrêt brutal expose à une tachycardie de rebond.
+  A [V] >>> juste->faux : Administrer la dose habituelle si la tolérance le permet. || La continuité prévient une activation adrénergique brutale.
+  B [F] >>> faux->juste : L'arrêter pour augmenter systématiquement la fréquence. || Une tachycardie accroît la consommation myocardique d'oxygène.
+  C [V] : Contrôler pression et fréquence avant l'induction. || Une bradycardie ou une hypotension inhabituelle conduirait à individualiser.
+  D [F] : Doubler la dose pour obtenir 45 battements par minute. || Une majoration aiguë expose à bradycardie et hypotension.
+  E [V] : Tracer sa reprise après l'intervention. || L'interruption postopératoire involontaire peut provoquer un rebond.
+
+### Q44 (S9)  ABD -> BE
+E: Après l'induction, une tachycardie à 105 par minute accompagne une chute transitoire de pression. Quels objectifs protègent son myocarde pendant l'anesthésie ?
+CG: Le maintien de l'équilibre entre apport et demande impose d'éviter tachycardie, hypotension, hypoxémie et anémie majeure.
+  A [V] >>> juste->faux : Limiter la durée de la tachycardie. || Elle augmente la demande tout en raccourcissant la perfusion diastolique.
+  B [V] : Corriger rapidement une hypotension significative. || La pression diastolique soutient le gradient de perfusion coronaire.
+  C [F] : Tolérer une saturation à 85 % pendant l'incision. || L'hypoxémie diminue le contenu artériel en oxygène.
+  D [V] >>> juste->faux : Anticiper les pertes sanguines de la colectomie. || Une anémie importante peut réduire l'apport myocardique.
+  E [F] >>> faux->juste : Rechercher une hypertension systolique supérieure à 200 mmHg. || L'augmentation de postcharge élève le travail cardiaque.
+
+### Q45 (S9)  ABD -> AB
+E: La fréquence revient à 70 par minute, mais la PAM reste à 55 mmHg avec un champ opératoire sec. Comment analyser cette hypotension ?
+CG: La pression dépend du débit et des résistances ; le contexte suggère d'abord une vasodilatation, à confirmer par la réponse clinique.
+  A [V] : Une baisse des résistances systémiques est plausible. || Les agents d'induction provoquent fréquemment une vasodilatation rapide.
+  B [V] : Le débit cardiaque doit aussi être considéré. || Une pression basse peut associer vasoplégie et diminution du volume d'éjection.
+  C [F] : Une hypotension prouve toujours un manque de deux litres. || La pression seule ne permet pas d'affirmer une hypovolémie.
+  D [V] >>> juste->faux : Un vasopresseur peut être adapté si la vasoplégie domine. || Restaurer les résistances soutient la PAM sans remplissage excessif.
+  E [F] : Il faut ignorer la valeur si le patient est anesthésié. || Une hypotension même silencieuse menace la perfusion coronaire et rénale.
+
+### Q46 (S9)  ABC -> ABCDE
+E: En SSPI, le patient ne souffre pas mais la troponine de surveillance est au-dessus du 99e percentile. Quels examens demander devant cette anomalie postopératoire ?
+CG: Une élévation de troponine chez un coronarien nécessite cinétique, ECG, examen et recherche des agressions favorisantes.
+  A [V] : Répéter la troponine pour apprécier sa cinétique. || Une variation confirme le caractère aigu du dommage myocardique.
+  B [V] : Réaliser rapidement un ECG douze dérivations. || Le tracé recherche ischémie, trouble du rythme ou conduction.
+  C [V] : Contrôler hémoglobine et oxygénation. || Anémie et hypoxémie peuvent expliquer un déséquilibre myocardique.
+  D [F] >>> faux->juste : Attendre une douleur avant toute exploration. || Les MINS postopératoires sont fréquemment asymptomatiques.
+  E [F] >>> faux->juste : Conclure d'emblée à une erreur de laboratoire. || Le terrain et l'hypotension rendent le résultat cliniquement plausible.
+
+### Q47 (S9)  ABC -> AC
+E: La cinétique confirme un MINS sans sus-décalage, avec hémoglobine et saturation corrigées. Quelles mesures sont appropriées avant son retour à domicile ?
+CG: Un MINS impose correction des facteurs déclenchants, avis adapté et optimisation durable de la prévention cardiovasculaire.
+  A [V] : Documenter le dommage myocardique dans le compte rendu. || La traçabilité conditionne la surveillance et le suivi après hospitalisation.
+  B [V] >>> juste->faux : Vérifier la poursuite de la statine. || La prévention secondaire ne doit pas être perdue lors de la transition.
+  C [V] : Organiser une évaluation cardiologique selon les résultats. || L'importance du dommage et l'ECG orientent la stratégie ultérieure.
+  D [F] : Banaliser l'épisode puisqu'il était indolore. || Le MINS silencieux reste associé à un excès de mortalité.
+  E [F] : Prescrire sans analyse une double antiagrégation. || Le mécanisme et le risque hémorragique digestif doivent être pesés.
+
+### Q48 (S10)  ABC -> ABCE
+E: Quels éléments font suspecter une sténose aortique sévère ?
+CG: Dyspnée, syncope d'effort et souffle aortique chez une patiente âgée constituent une alerte valvulaire majeure.
+  A [V] : Le malaise survenant à l'effort. || Une syncope d'effort est un symptôme classique de sténose serrée.
+  B [V] : La dyspnée récemment progressive. || Elle peut traduire une élévation des pressions de remplissage.
+  C [V] : Le souffle systolique au foyer aortique. || Ce signe oriente vers un obstacle à l'éjection ventriculaire gauche.
+  D [F] : L'absence de douleur thoracique exclut la valvulopathie. || La triade symptomatique n'est pas toujours complète.
+  E [F] >>> faux->juste : L'âge rend tout souffle physiologique. || Un souffle associé à des symptômes exige une exploration.
+
+### Q49 (S10)  ABC -> CE
+E: L'intervention est élective et peut être différée de plusieurs semaines sans perte de chance orthopédique. Quelle conduite adopter avant l'arthroplastie ?
+CG: Une valvulopathie sévère symptomatique est une cardiopathie instable : le geste électif doit attendre une évaluation spécialisée.
+  A [V] >>> juste->faux : Reporter l'intervention programmée. || Le délai permet de préciser et traiter le risque valvulaire.
+  B [V] >>> juste->faux : Demander une échocardiographie transthoracique. || L'imagerie mesure surface, gradient et retentissement ventriculaire.
+  C [V] : Obtenir un avis cardiologique ou d'équipe valvulaire. || La stratégie sur la valve précède la chirurgie non urgente.
+  D [F] : Procéder sans bilan sous anesthésie générale standard. || Une induction non préparée peut provoquer une hypotension catastrophique.
+  E [F] >>> faux->juste : Se fier uniquement au score de Lee. || L'instabilité valvulaire prime sur un score de risque global.
+
+### Q50 (S10)  ABC -> AC
+E: L'échographie retrouve une surface à 0,7 cm², un gradient moyen élevé et une fraction d'éjection conservée. Quels résultats confirment la gravité hémodynamique ?
+CG: La petite surface et le gradient élevé confirment un obstacle serré, dont les symptômes renforcent l'indication de prise en charge.
+  A [V] : Une surface valvulaire aortique très réduite. || L'orifice à 0,7 cm² correspond à une sténose sévère.
+  B [V] >>> juste->faux : Un gradient moyen élevé. || La différence de pression importante témoigne de l'obstacle fixe.
+  C [V] : Une hypertrophie ventriculaire gauche. || Le ventricule s'adapte chroniquement à la surcharge de pression.
+  D [F] : Une fraction d'éjection normale rend la sténose bénigne. || La fonction systolique peut rester longtemps préservée malgré une lésion serrée.
+  E [F] : L'échographie exclut tout risque puisqu'il n'existe pas de fuite. || La sténose elle-même suffit à créer le risque périopératoire.
+
+### Q51 (S10)  ABC -> ABCDE
+E: Avant le traitement valvulaire prévu, une fracture abdominale urgente hypothétique imposerait une anesthésie sans délai. Quels objectifs seraient essentiels si une chirurgie devenait urgente ?
+CG: Le débit fixe de la sténose serrée impose maintien de précharge, rythme sinusal, pression diastolique et absence de tachycardie.
+  A [V] : Maintenir une précharge stable. || Le ventricule hypertrophié dépend d'un remplissage suffisant.
+  B [V] : Préserver la pression artérielle diastolique. || Elle soutient la perfusion coronaire du myocarde hypertrophié.
+  C [V] : Éviter tachycardie et bradycardie extrêmes. || Les deux situations altèrent soit le remplissage soit le débit minute.
+  D [F] >>> faux->juste : Provoquer une chute brutale des résistances artérielles. || Une diminution aiguë de postcharge ne peut être compensée par le débit fixe.
+  E [F] >>> faux->juste : Considérer la systole atriale comme inutile au remplissage. || Le ventricule hypertrophié dépend au contraire de la contraction atriale.
+
+### Q52 (S10)  ABC -> BC
+E: L'équipe dispose d'une ligne artérielle, d'échographie et de vasopresseurs immédiatement disponibles. Quel monitorage serait cohérent pour une telle urgence ?
+CG: Une cardiopathie à tolérance étroite justifie une pression invasive et un accès immédiat aux traitements vasoactifs.
+  A [V] >>> juste->faux : Pression artérielle invasive avant l'induction si possible. || La mesure battement par battement détecte immédiatement une hypotension.
+  B [V] : ECG continu avec analyse du segment ST. || Le ventricule hypertrophié est vulnérable à l'ischémie.
+  C [V] : Vasopresseur prêt à l'emploi. || La correction rapide d'une vasodilatation protège la perfusion coronaire.
+  D [F] : Aucun monitorage puisque le geste est urgent. || L'urgence renforce le besoin d'une préparation hémodynamique ciblée.
+  E [F] : Mesure de pression toutes les trente minutes seulement. || Une dégradation peut devenir irréversible en quelques minutes.
+
+### Q53 (S10)  ABD -> ABDE
+E: Malgré une induction titrée, la PAM chute brutalement à 42 mmHg avec une fréquence à 82 par minute. Comment traiter cette chute de pression à l'induction ?
+CG: La restauration rapide des résistances et l'évaluation du remplissage corrigent la perfusion sans provoquer de tachycardie inutile.
+  A [V] : Administrer rapidement un vasopresseur adapté. || Une remontée des résistances restaure la pression de perfusion.
+  B [V] : Rechercher une hypovolémie associée. || Le ventricule à débit fixe tolère mal une baisse de précharge.
+  C [F] : Attendre spontanément cinq minutes sous PAM à 42. || La perfusion coronaire peut s'effondrer pendant cette attente.
+  D [V] : Éviter un agent provoquant une forte tachycardie. || Une fréquence excessive diminue le remplissage et la perfusion diastolique.
+  E [F] >>> faux->juste : Injecter un vasodilatateur artériel pur. || La baisse supplémentaire de postcharge aggraverait l'hypotension.
+
+### Q54 (S10)  ABC -> ABCD
+E: La chirurgie urgente se termine après un épisode de vasoplégie corrigé, sans douleur thoracique exprimée au réveil. Quels éléments justifient la surveillance postopératoire renforcée ?
+CG: La sténose symptomatique, l'hypotension et une chirurgie urgente exposent à insuffisance cardiaque et dommage myocardique silencieux.
+  A [V] : Le terrain valvulaire sévère. || La faible réserve rend possible une décompensation retardée.
+  B [V] : L'épisode hypotensif peropératoire. || Une faible perfusion coronaire peut provoquer un dommage myocardique.
+  C [V] : Le risque d'œdème pulmonaire postopératoire. || Les transferts volémiques et la rigidité ventriculaire favorisent la congestion.
+  D [F] >>> faux->juste : L'absence de douleur suffit à autoriser une sortie rapide. || L'analgésie peut masquer une ischémie et le risque persiste.
+  E [F] : La fraction d'éjection conservée supprime toute surveillance. || Elle n'annule ni l'obstacle valvulaire ni la dysfonction diastolique.
+
+### Q55 (S11)  ABCD -> ACDE
+E: Quels facteurs peuvent majorer son obstruction dynamique ?
+CG: L'obstruction augmente lorsque le ventricule est vide, tachycarde, hypercontractile ou confronté à une faible postcharge.
+  A [V] : Hypovolémie. || La diminution de taille cavitaire rapproche les structures responsables de l'obstruction.
+  B [V] >>> juste->faux : Tachycardie. || Le remplissage diastolique raccourci réduit encore le volume ventriculaire.
+  C [V] : Vasodilatation systémique. || La baisse de postcharge favorise l'éjection rapide et le gradient dynamique.
+  D [V] : Stimulation inotrope importante. || Une contraction vigoureuse augmente la vitesse sous-aortique et le gradient.
+  E [F] >>> faux->juste : Maintien du rythme sinusal. || La contraction atriale aide au remplissage d'un ventricule peu compliant.
+
+### Q56 (S11)  ABD -> D
+E: La consultation retrouve une pression à 128/72 mmHg et confirme une bonne tolérance du bétabloquant quotidien. Quels traitements habituels sont cohérents avant l'intervention ?
+CG: La poursuite du bétabloquant et l'évitement du jeûne déshydratant limitent tachycardie et baisse de précharge.
+  A [V] >>> juste->faux : Maintenir le bétabloquant chronique. || Son effet chronotrope négatif limite le gradient d'obstruction.
+  B [V] >>> juste->faux : Prévenir une déshydratation excessive. || La précharge doit rester suffisante dans cette cardiomyopathie.
+  C [F] : Donner un inotrope positif préventif. || L'augmentation de contractilité peut aggraver le gradient sous-aortique.
+  D [V] : Traiter l'anxiété pour limiter la stimulation sympathique. || Une poussée adrénergique augmente fréquence et contractilité.
+  E [F] : Arrêter le bétabloquant pour éviter toute bradycardie. || Le sevrage expose précisément à une tachycardie dangereuse.
+
+### Q57 (S11)  ABC -> ABCDE
+E: L'échographie récente montre un gradient obstructif majoré lors d'une manœuvre diminuant le retour veineux. Quels objectifs fixer à l'induction ?
+CG: L'induction doit conserver précharge, postcharge, rythme sinusal et fréquence contrôlée tout en évitant l'hypercontractilité.
+  A [V] : Limiter la baisse des résistances systémiques. || Une vasodilatation marquée augmente l'obstruction dynamique.
+  B [V] : Préserver le retour veineux. || Le maintien du remplissage conserve une cavité ventriculaire moins obstructive.
+  C [V] : Éviter une réponse tachycarde à la laryngoscopie. || La tachycardie raccourcit le remplissage et accroît la demande.
+  D [F] >>> faux->juste : Rechercher une contractilité maximale. || Un inotropisme élevé accentue le mouvement obstructif.
+  E [F] >>> faux->juste : Accepter une fibrillation atriale rapide. || La perte de systole atriale et la fréquence rapide sont mal tolérées.
+
+### Q58 (S11)  ABD -> ACDE
+E: Après pneumopéritoine, la PAM tombe à 50 mmHg ; l'échographie montre un petit ventricule hyperkinétique et un gradient accru. Comment interpréter cette hypotension ?
+CG: Une hypotension avec ventricule hyperkinétique peu rempli et gradient accru signe une obstruction dynamique plutôt qu'une simple vasoplégie isolée.
+  A [V] : La faible surface cavitaire suggère une précharge insuffisante. || Un ventricule presque vide favorise le contact systolique obstructif.
+  B [V] >>> juste->faux : Le gradient accru explique la baisse du débit antérograde. || L'obstacle dynamique limite le volume effectivement éjecté dans l'aorte.
+  C [F] >>> faux->juste : L'hyperkinésie impose d'ajouter un inotrope. || Une stimulation supplémentaire aggraverait le mécanisme.
+  D [V] : L'échographie apporte un diagnostic mécanistique immédiat. || Elle distingue obstruction, hypovolémie et dysfonction contractile.
+  E [F] >>> faux->juste : Une pression basse signifie nécessairement une insuffisance systolique. || Le ventricule est ici hypercontractile mais le débit reste entravé.
+
+### Q59 (S11)  ABD -> DE
+E: Le chirurgien peut temporairement diminuer la pression du pneumopéritoine pendant la correction hémodynamique. Quelles mesures corrigent ce mécanisme ?
+CG: Le traitement associe restauration prudente de précharge, augmentation de postcharge et réduction de la stimulation adrénergique.
+  A [V] >>> juste->faux : Administrer un vasopresseur sans effet inotrope majeur. || Une postcharge restaurée diminue le gradient et remonte la pression.
+  B [V] >>> juste->faux : Réaliser un remplissage titré si la précharge est basse. || L'augmentation de volume cavitaire réduit l'obstruction dynamique.
+  C [F] : Choisir un puissant bêta-agoniste comme première intention. || L'inotropisme et la tachycardie aggraveraient le gradient.
+  D [V] : Réduire si possible la contrainte qui diminue le retour veineux. || Une pression abdominale moindre peut améliorer la précharge.
+  E [F] >>> faux->juste : Provoquer une vasodilatation artérielle supplémentaire. || La baisse de postcharge augmente la vitesse d'éjection et l'obstruction.
+
+### Q60 (S11)  ABC -> C
+E: En fin de geste, une fibrillation atriale à 160 par minute survient avec hypotension et dyspnée au réveil. Comment gérer cette arythmie ?
+CG: La fibrillation atriale rapide est mal tolérée car elle supprime la contraction atriale et raccourcit le remplissage ; une correction rapide s'impose.
+  A [V] >>> juste->faux : Considérer la mauvaise tolérance comme une urgence. || L'hypotension indique un débit insuffisant sous l'effet de l'arythmie.
+  B [V] >>> juste->faux : Restaurer rapidement un rythme ou une fréquence compatible. || Le ventricule hypertrophié dépend d'une diastole suffisamment longue.
+  C [V] : Rechercher un facteur déclenchant réversible. || Douleur, hypovolémie ou troubles ioniques peuvent entretenir l'arythmie.
+  D [F] : Tolérer 160 par minute si la saturation est normale. || L'oxygénation ne garantit pas un remplissage ni un débit suffisants.
+  E [F] : Augmenter l'inotropisme avant toute autre mesure. || La stimulation contractile aggrave potentiellement l'obstruction.
+
+### Q61 (S11)  ABC -> A
+E: Le rythme sinusal et la pression sont restaurés, mais le patient doit rester hospitalisé pour surveillance rapprochée. Quels objectifs conserver en surveillance postopératoire ?
+CG: La surveillance prévient hypovolémie, douleur, tachycardie et perte de traitement, tous capables de relancer l'obstruction.
+  A [V] : Assurer une analgésie limitant la réponse adrénergique. || La douleur favorise tachycardie et augmentation de contractilité.
+  B [V] >>> juste->faux : Reprendre le bétabloquant sans oubli prolongé. || La continuité du contrôle chronotrope protège le remplissage.
+  C [V] >>> juste->faux : Surveiller les pertes et l'état d'hydratation. || Une baisse de précharge peut réactiver le gradient obstructif.
+  D [F] : Induire une diurèse maximale malgré l'hypovolémie. || Un déplétion excessive diminue la taille de la cavité.
+  E [F] : Supprimer le monitorage après un épisode instable. || Une récidive rythmique ou hémodynamique reste possible.
+
+### Q62 (S12)  ABCE -> ABCDE
+E: Quelles données faut-il recueillir pour planifier l'arrêt ?
+CG: L'interruption d'un anticoagulant direct repose sur la molécule, la fonction rénale, l'heure de la dernière prise et le risque du geste.
+  A [V] : La clairance rénale estimée. || L'élimination de certains anticoagulants se prolonge lorsqu'elle baisse.
+  B [V] : L'heure exacte de la dernière dose. || Le temps écoulé conditionne l'activité résiduelle au bloc.
+  C [V] : Le niveau de risque hémorragique chirurgical. || Une intervention majeure exige une marge plus longue qu'un geste mineur.
+  D [F] >>> faux->juste : La couleur du comprimé seulement. || Elle ne remplace pas l'identification du nom, de la dose et du rythme.
+  E [V] : L'indication thromboembolique du traitement. || Le risque lié à l'interruption doit être mis en balance avec le saignement.
+
+### Q64 (S12)  ABD -> DE
+E: Le score thromboembolique est modéré, sans valve mécanique ni embolie au cours des trois derniers mois. Un relais héparinique systématique est-il indiqué ?
+CG: Le relais d'un anticoagulant direct n'est pas automatique et expose à un sur-risque hémorragique sans bénéfice chez la plupart des patients.
+  A [V] >>> juste->faux : L'absence d'accident récent réduit l'argument pour un relais. || Aucun événement thromboembolique très récent ne signale un risque extrême.
+  B [V] >>> juste->faux : Une interruption courte planifiée peut se faire sans héparine. || La demi-vie relativement brève autorise une fenêtre contrôlée.
+  C [F] : Toute fibrillation atriale impose une héparine curative. || Le relais doit être réservé à des situations thromboemboliques particulières.
+  D [V] : Le risque de saignement du relais doit être considéré. || Une héparinisation périopératoire peut augmenter les hématomes.
+  E [F] >>> faux->juste : L'apixaban et l'héparine doivent se chevaucher jusqu'à l'incision. || Ce chevauchement provoquerait une anticoagulation excessive au bloc.
+
+### Q65 (S12)  ABC -> ABE
+E: La patiente apporte son ordonnance et affirme que la dernière prise a eu lieu exactement au moment planifié par le protocole. Quelles vérifications faire le matin de l'intervention ?
+CG: La sécurité repose sur la confirmation de l'arrêt, l'absence de prise accidentelle et une fonction hémostatique compatible avec le geste.
+  A [V] : Confirmer verbalement l'heure de la dernière prise. || Une erreur de calendrier peut laisser persister un effet anticoagulant.
+  B [V] : Rechercher un saignement clinique ou une dégradation rénale. || Ces éléments peuvent modifier le risque au-delà du plan initial.
+  C [V] >>> juste->faux : Vérifier que la consigne écrite a été comprise. || Les omissions et doubles prises surviennent lorsque le schéma est ambigu.
+  D [F] : Se fier uniquement à un INR normal. || L'INR n'exclut pas une activité résiduelle d'apixaban.
+  E [F] >>> faux->juste : Administrer une dose compensatoire avant l'incision. || Une dose supplémentaire augmenterait directement le risque hémorragique.
+
+### Q66 (S12)  ABC -> C
+E: La dissection provoque un saignement diffus supérieur aux prévisions, alors que la pression commence à diminuer. Comment raisonner devant ce saignement ?
+CG: Le saignement impose simultanément contrôle chirurgical, bilan hémodynamique, correction des facteurs et recherche d'un effet anticoagulant résiduel.
+  A [V] >>> juste->faux : Demander d'abord un contrôle chirurgical de la source. || Un saignement mécanique ne se corrige pas par une mesure pharmacologique seule.
+  B [V] >>> juste->faux : Évaluer pression, perfusion et pertes cumulées. || La tolérance détermine l'urgence du remplissage et de la transfusion.
+  C [V] : Rechercher une prise non signalée ou une accumulation. || Un effet résiduel reste possible malgré un plan théorique correct.
+  D [F] : Conclure automatiquement à l'apixaban comme cause unique. || La technique chirurgicale et les autres anomalies de coagulation doivent être analysées.
+  E [F] : Attendre l'hypotension profonde avant d'agir. || L'anticipation limite le choc et le déséquilibre myocardique.
+
+### Q67 (S12)  ABC -> BCDE
+E: L'hémostase est finalement obtenue, mais un drain pelvien reste productif pendant les premières heures. Quand reprendre l'anticoagulant ?
+CG: La reprise dépend de l'hémostase obtenue, du risque du site et du risque thromboembolique, avec une heure clairement prescrite.
+  A [V] >>> juste->faux : Attendre une hémostase chirurgicale jugée stable. || Une reprise trop précoce peut provoquer un hématome ou une reprise opératoire.
+  B [V] : Définir une date et une heure explicites. || Une consigne précise évite oubli prolongé ou reprise prématurée.
+  C [V] : Réévaluer la fonction rénale postopératoire. || Une insuffisance aiguë peut prolonger l'exposition après la reprise.
+  D [F] >>> faux->juste : Reprendre une double dose pour compenser l'interruption. || Une dose de rattrapage augmente le saignement sans effacer la fenêtre passée.
+  E [F] >>> faux->juste : Reporter indéfiniment sans réévaluation. || Une interruption excessive augmente le risque embolique de la fibrillation atriale.
+
+### Q68 (S12)  ABC -> A
+E: La patiente reprend le traitement après stabilisation du drainage et sort avec une fonction rénale inchangée. Quelles informations doivent apparaître à la sortie ?
+CG: La transition sûre comporte schéma de reprise, dose, surveillance, signes d'alerte et coordination avec les soignants habituels.
+  A [V] : La dose et l'horaire exacts de l'apixaban. || Une ordonnance non ambiguë limite les doubles prises et omissions.
+  B [V] >>> juste->faux : Les signes hémorragiques imposant une consultation. || Méléna, hématurie ou malaise doivent conduire à une évaluation.
+  C [V] >>> juste->faux : La fonction rénale ayant guidé la prescription. || Son évolution peut nécessiter une nouvelle adaptation.
+  D [F] : La consigne d'arrêter seule le traitement à chaque douleur. || Toute interruption future doit être discutée avec un professionnel.
+  E [F] : L'autorisation de doubler la prochaine dose oubliée. || Le rattrapage non encadré expose à une anticoagulation excessive.
+
+### Q69 (S13)  ABC -> BE
+E: Quels signes rechercheraient une décompensation active ?
+CG: Orthopnée, congestion, prise de poids et limitation récente signaleraient une insuffisance cardiaque instable à traiter avant un geste électif.
+  A [V] >>> juste->faux : Orthopnée nouvelle. || La dyspnée en décubitus suggère une congestion pulmonaire.
+  B [V] : Prise de poids rapide avec œdèmes. || La rétention hydrosodée traduit une augmentation du secteur congestif.
+  C [V] >>> juste->faux : Crépitants pulmonaires à l'auscultation. || Ils peuvent refléter un œdème interstitiel ou alvéolaire.
+  D [F] : Poids stable et absence de symptôme au repos. || Ces éléments sont plutôt compatibles avec une stabilité clinique.
+  E [F] >>> faux->juste : Statine prise régulièrement. || Ce traitement n'est pas un marqueur de décompensation aiguë.
+
+### Q70 (S13)  ABD -> D
+E: Il dort à plat, son poids est stable, il ne présente pas d'œdème et marche trente minutes sans aggravation récente. Quelles conclusions tirer de son état clinique actuel ?
+CG: L'absence de congestion et une capacité fonctionnelle stable permettent de poursuivre l'évaluation sans classer le patient en instabilité cardiaque.
+  A [V] >>> juste->faux : Il n'existe pas de signe manifeste de congestion. || L'examen et le poids ne suggèrent pas une surcharge aiguë.
+  B [V] >>> juste->faux : La stabilité sur plusieurs semaines est rassurante. || Une dégradation récente aurait modifié le calendrier.
+  C [F] : L'insuffisance cardiaque est guérie. || La maladie chronique persiste malgré l'absence de décompensation.
+  D [V] : Un plan hémodynamique spécifique reste nécessaire. || La réserve contractile réduite expose aux variations de charge.
+  E [F] : Tout monitorage cardiovasculaire devient inutile. || Le niveau de surveillance dépend du geste et de la fonction ventriculaire.
+
+### Q71 (S13)  ABC -> B
+E: La pression est à 110/68 mmHg, la fréquence à 62 par minute et la fonction rénale est stable. Comment gérer ses traitements cardiovasculaires ?
+CG: Le bétabloquant et la statine sont poursuivis ; l'inhibiteur du SRAA et le diurétique nécessitent une décision individualisée.
+  A [V] >>> juste->faux : Maintenir le bétabloquant chronique si la tolérance est bonne. || Un arrêt brutal favorise tachycardie et décompensation.
+  B [V] : Poursuivre la statine. || La continuité du traitement vasculaire est souhaitable.
+  C [V] >>> juste->faux : Discuter le SRAA selon l'insuffisance cardiaque et le risque d'hypotension. || Son bénéfice cardiaque doit être confronté à la vasoplégie d'induction.
+  D [F] : Doubler le diurétique sans examiner la volémie. || Une déplétion excessive peut provoquer insuffisance rénale et hypotension.
+  E [F] : Arrêter tous les traitements une semaine avant. || Cette interruption globale expose à un rebond et à une décompensation.
+
+### Q72 (S13)  ABD -> ABCDE
+E: Après induction, la PAM est à 58 mmHg ; le poumon reste sec et l'échographie ne montre pas de nouvelle défaillance majeure. Comment analyser l'hypotension observée ?
+CG: Une fraction d'éjection altérée n'implique pas toujours un choc cardiogénique ; l'échographie et les signes de congestion orientent le mécanisme.
+  A [V] : Rechercher simultanément vasoplégie et baisse de débit. || La PAM peut chuter par diminution des résistances ou du volume d'éjection.
+  B [V] : Utiliser l'échographie pour apprécier la fonction et le remplissage. || L'imagerie rapide distingue plusieurs profils hémodynamiques traitables.
+  C [F] >>> faux->juste : Perfuser aveuglément plusieurs litres. || Une surcharge peut provoquer un œdème pulmonaire sur ventricule fragile.
+  D [V] : Examiner les signes périphériques de perfusion. || Température cutanée, diurèse et conscience complètent la pression.
+  E [F] >>> faux->juste : Conclure que toute hypotension est due au diurétique. || L'anesthésie, le saignement et la fonction de pompe doivent aussi être considérés.
+
+### Q73 (S13)  ABD -> ADE
+E: Une faible dose de vasopresseur remonte la PAM, tandis qu'un test de remplissage augmente modérément le volume d'éjection. Quelle stratégie est la plus cohérente ?
+CG: Le profil sans congestion ni défaillance nouvelle justifie une correction titrée de vasoplégie et une épreuve prudente de précharge si indiquée.
+  A [V] : Titrer un vasopresseur pour restaurer les résistances. || La vasodilatation anesthésique semble participer à la baisse de PAM.
+  B [V] >>> juste->faux : Tester prudemment la réponse à un petit apport liquidien. || Une variation du volume d'éjection évite le remplissage aveugle.
+  C [F] : Imposer une surcharge jusqu'à apparition de crépitants. || La congestion n'est jamais un objectif de remplissage.
+  D [V] : Réévaluer pression et débit après chaque intervention. || La réponse distingue le mécanisme dominant et prévient le surtraitement.
+  E [F] >>> faux->juste : Accepter durablement une PAM à 45 mmHg. || Une hypotension prolongée menace rein, cerveau et myocarde.
+
+### Q74 (S13)  ABC -> BCE
+E: Le lendemain, il devient dyspnéique, gagne 2,5 kg, présente des crépitants et requiert davantage d'oxygène. Quels signes suggèrent une congestion postopératoire ?
+CG: Dyspnée, crépitants, hypoxémie et gain pondéral après apports importants suggèrent une décompensation gauche.
+  A [V] >>> juste->faux : Crépitants bilatéraux nouveaux. || Ils sont compatibles avec une accumulation de liquide pulmonaire.
+  B [V] : Besoin croissant d'oxygène. || L'œdème interstitiel altère les échanges gazeux.
+  C [V] : Prise de poids rapide après bilan positif. || Elle objective une rétention hydrosodée postopératoire.
+  D [F] : Poumons secs avec saturation habituelle. || Ces données ne soutiennent pas une congestion aiguë.
+  E [F] >>> faux->juste : Fréquence stable isolée à 65 par minute. || La fréquence seule ne diagnostique pas une surcharge.
+
+### Q75 (S13)  ABC -> ACE
+E: L'échographie confirme une congestion sans nouvelle valvulopathie et la fonction rénale reste encore préservée. Quelles mesures sont appropriées dans cette décompensation ?
+CG: La prise en charge confirme le diagnostic, traite la congestion, recherche le déclencheur et maintient une surveillance de perfusion et de fonction rénale.
+  A [V] : Réaliser une évaluation clinique et échographique ciblée. || Elle précise fonction ventriculaire, congestion et diagnostics alternatifs.
+  B [V] >>> juste->faux : Adapter le traitement diurétique sous surveillance. || La déplétion contrôlée réduit les pressions de remplissage.
+  C [V] : Rechercher ischémie, arythmie ou surcharge iatrogène. || Identifier le facteur déclenchant limite la récidive.
+  D [F] : Poursuivre les apports abondants malgré les crépitants. || Un bilan encore positif aggraverait l'œdème pulmonaire.
+  E [F] >>> faux->juste : Arrêter toute surveillance rénale pendant la diurèse. || Créatinine et ions guident la tolérance du traitement.
+
+### Q76 (S14)  ABCD -> AE
+E: Quelles informations préopératoires sont indispensables ?
+CG: Le type, l'indication, la dépendance, le dernier contrôle et la réponse à l'aimant structurent le plan périopératoire.
+  A [V] : Modèle et fabricant du stimulateur. || La programmation et la réponse magnétique diffèrent selon les appareils.
+  B [V] >>> juste->faux : Dépendance du patient à la stimulation. || Une inhibition est critique en l'absence de rythme spontané fiable.
+  C [V] >>> juste->faux : Date et résultat de la dernière interrogation. || Ils documentent batterie, sondes et paramètres actuels.
+  D [V] >>> juste->faux : Emplacement du champ et trajet probable du courant. || La proximité du thorax accroît le risque d'interférence.
+  E [F] >>> faux->juste : Couleur de la cicatrice du boîtier. || Cet aspect ne renseigne pas la fonction électronique du système.
+
+### Q77 (S14)  ABC -> ABCDE
+E: L'interrogation montre l'absence de rythme d'échappement fiable lorsque la stimulation est temporairement ralentie. Quelles conséquences a sa dépendance ?
+CG: Chez un patient dépendant, une inhibition par bruit électrique peut entraîner une pause grave et exige une stratégie de stimulation sûre.
+  A [V] : Une inhibition du stimulateur peut supprimer le débit cardiaque. || Sans rythme d'échappement, l'activité mécanique disparaît rapidement.
+  B [V] : Une programmation adaptée doit être discutée avant le geste. || Un mode asynchrone peut être choisi lorsque le risque d'interférence est important.
+  C [V] : Une solution de stimulation de secours doit être disponible. || Des palettes ou un dispositif externe couvrent une défaillance inattendue.
+  D [F] >>> faux->juste : La dépendance rend toute chirurgie impossible. || Une préparation appropriée permet la plupart des interventions nécessaires.
+  E [F] >>> faux->juste : Le pouls doit être surveillé uniquement par l'ECG. || L'ECG peut être parasité ; une mesure mécanique complémentaire est requise.
+
+### Q78 (S14)  ABC -> ABCDE
+E: Le chirurgien confirme que plusieurs temps peuvent être réalisés en bipolaire, mais qu'une brève utilisation monopolaire restera nécessaire. Comment diminuer le risque lié au bistouri ?
+CG: Le courant bipolaire, les salves courtes et une plaque de retour éloignant le trajet du boîtier réduisent les interférences.
+  A [V] : Préférer un instrument bipolaire pour les temps possibles. || Le courant reste alors localisé entre les deux électrodes.
+  B [V] : Employer des salves monopolaire brèves et espacées. || Une interruption entre activations limite une inhibition prolongée.
+  C [V] : Placer la plaque de retour loin du générateur. || Le trajet électrique doit contourner le boîtier et les sondes.
+  D [F] >>> faux->juste : Positionner la plaque juste sur la poche du stimulateur. || Cette configuration concentre le courant à proximité de l'appareil.
+  E [F] >>> faux->juste : Désactiver la saturométrie pendant l'électrochirurgie. || La courbe de pouls aide à vérifier l'activité mécanique lorsque l'ECG est brouillé.
+
+### Q79 (S14)  ABCD -> ACDE
+E: Le boîtier a été programmé selon le plan, et des palettes externes sont posées avant l'installation stérile. Quels monitorages et secours prévoir ?
+CG: Le monitorage doit distinguer signal électrique et pouls mécanique, avec moyens immédiats de stimulation et de défibrillation.
+  A [V] : ECG continu. || Le tracé surveille rythme et spikes malgré les périodes d'artefacts.
+  B [V] >>> juste->faux : Courbe de pléthysmographie ou pression artérielle. || Une onde pulsatile confirme que chaque stimulation produit une contraction.
+  C [V] : Matériel de stimulation externe accessible. || Une pause prolongée doit pouvoir être traitée sans délai.
+  D [V] : Défibrillateur externe disponible. || Une arythmie ventriculaire reste possible pendant l'intervention.
+  E [F] >>> faux->juste : Aucun professionnel connaissant le dispositif sur place. || Une compétence d'interrogation ou un plan validé doit être accessible.
+
+### Q81 (S14)  ABC -> ACD
+E: La stimulation revient dès l'arrêt du bistouri et l'équipe interrompt le geste pour revoir l'installation. Quelles corrections permettent de poursuivre l'intervention ?
+CG: Après restauration du rythme, le plan est renforcé par salves plus courtes, repositionnement du courant et programmation validée.
+  A [V] : Raccourcir strictement les activations monopolaires. || Une durée minimale réduit le temps possible d'inhibition.
+  B [V] >>> juste->faux : Réévaluer la position de la plaque de retour. || Un trajet moins proche des sondes diminue le couplage électrique.
+  C [V] : Confirmer la programmation ou l'effet de l'aimant choisi. || La réponse attendue doit être vérifiée avant de reprendre.
+  D [F] >>> faux->juste : Retirer tout moyen de stimulation externe. || Le secours doit rester disponible jusqu'à la fin de l'exposition.
+  E [F] : Cesser de surveiller le pouls puisque le rythme est revenu. || Une nouvelle interférence pourrait se reproduire aux activations suivantes.
+
+### Q82 (S14)  ABC -> ABCDE
+E: La chirurgie se termine sans nouvel épisode, mais le stimulateur a été reprogrammé et exposé à une interférence documentée. Que faut-il faire après la fermeture ?
+CG: La restauration de la programmation habituelle et un contrôle du dispositif sont confirmés avant de quitter une zone monitorée.
+  A [V] : Interroger le stimulateur après l'incident. || Le contrôle recherche événement enregistré, sonde ou paramètre modifié.
+  B [V] : Restaurer explicitement le mode chronique. || Une programmation temporaire ne doit pas persister à l'étage.
+  C [V] : Maintenir la surveillance jusqu'à confirmation. || Le patient dépendant reste vulnérable tant que la fonction n'est pas validée.
+  D [F] >>> faux->juste : Autoriser une sortie directe sans contrôle. || L'interférence observée justifie une vérification formelle.
+  E [F] >>> faux->juste : Jeter la carte du dispositif devenue inutile. || Les informations du boîtier restent essentielles pour les soins futurs.
+
+### Q83 (S15)  ABC -> ABCDE
+E: Quelles fonctions de son dispositif faut-il distinguer ?
+CG: Un défibrillateur peut assurer stimulation antibradycardique, détection des tachyarythmies et thérapies antitachycardiques ou chocs.
+  A [V] : Stimulation antibradycardique éventuelle. || De nombreux DAI comportent aussi une fonction de stimulateur.
+  B [V] : Détection des rythmes ventriculaires rapides. || L'algorithme analyse la fréquence avant de délivrer une thérapie.
+  C [V] : Choc interne de défibrillation. || Le générateur traite certaines tachycardies ou fibrillations ventriculaires.
+  D [F] >>> faux->juste : Mesure continue de la pression artérielle radiale. || Le boîtier ne remplace pas un cathéter ou brassard de pression.
+  E [F] >>> faux->juste : Administration automatique d'un vasopresseur. || Aucun traitement médicamenteux n'est délivré par le DAI.
+
+### Q85 (S15)  ABD -> E
+E: L'équipe choisit d'utiliser un aimant dont la réponse a été confirmée lors de l'interrogation préopératoire. Que provoque habituellement un aimant sur un DAI ?
+CG: Sur un DAI, l'aimant suspend généralement la détection et les thérapies antitachycardiques sans garantir une modification de stimulation.
+  A [V] >>> juste->faux : Il peut suspendre les chocs inappropriés liés au bistouri. || Le bruit n'entraîne plus de thérapie lorsque la détection est neutralisée.
+  B [V] >>> juste->faux : Son effet doit être vérifié pour ce modèle. || Les fabricants et programmations peuvent modifier la réponse attendue.
+  C [F] : Il transforme toujours la stimulation en mode asynchrone. || Cet effet n'est pas garanti pour la composante stimulateur d'un DAI.
+  D [V] >>> juste->faux : Un défibrillateur externe doit rester disponible. || La protection interne contre une arythmie est temporairement suspendue.
+  E [F] >>> faux->juste : Il recharge instantanément la batterie. || L'aimant modifie des fonctions de détection sans apporter d'énergie.
+
+### Q86 (S15)  ABC -> AE
+E: Les thérapies internes sont suspendues juste avant l'incision, tandis que deux palettes externes sont déjà posées. Quels moyens doivent compenser la suspension des thérapies ?
+CG: Lorsque les chocs internes sont suspendus, rythme et pouls restent surveillés et la défibrillation externe doit être immédiatement opérationnelle.
+  A [V] : ECG continu pendant toute la suspension. || Une tachyarythmie ventriculaire doit être reconnue sans attendre.
+  B [V] >>> juste->faux : Palettes externes placées hors du champ. || Elles permettent un choc rapide si une arythmie maligne survient.
+  C [V] >>> juste->faux : Surveillance d'une onde de pouls mécanique. || Elle différencie les artefacts de bistouri d'un rythme perfusant.
+  D [F] : Retrait du chariot d'urgence de la salle. || Les moyens de réanimation doivent au contraire être directement accessibles.
+  E [F] >>> faux->juste : Absence de personnel formé à retirer l'aimant. || La restauration des thérapies doit pouvoir être immédiate.
+
+### Q87 (S15)  ABC -> ABCDE
+E: Une tachycardie ventriculaire authentique apparaît avec hypotension alors que l'aimant maintient les thérapies internes suspendues. Comment réagir à cette tachycardie ?
+CG: Une tachycardie ventriculaire soutenue avec hypotension est une urgence : arrêt du bistouri, traitement externe et restauration de la protection interne selon le plan.
+  A [V] : Faire cesser l'électrochirurgie pour analyser un tracé propre. || Les artefacts disparaissent et le rythme réel peut être confirmé.
+  B [V] : Délivrer une thérapie externe si l'instabilité persiste. || Les chocs internes étant suspendus, la défibrillation externe est requise.
+  C [V] : Retirer l'aimant si cela restaure les thérapies connues. || La détection interne peut redevenir active une fois l'interférence arrêtée.
+  D [F] >>> faux->juste : Attendre que le DAI choque malgré la suspension confirmée. || Les thérapies neutralisées ne traiteront pas l'arythmie.
+  E [F] >>> faux->juste : Poursuivre le bistouri pour terminer rapidement. || Le courant complique le diagnostic et peut entretenir des interférences.
+
+### Q88 (S15)  ABC -> ABCE
+E: Un choc externe restaure le rythme sinusal ; l'intervention est interrompue pour permettre une évaluation complète. Quelles recherches compléter après retour du rythme ?
+CG: Après une arythmie ventriculaire, il faut documenter l'épisode, rechercher ischémie et causes réversibles, puis contrôler le dispositif.
+  A [V] : Contrôler potassium, magnésium et oxygénation. || Un trouble ionique ou une hypoxie peut faciliter une récidive.
+  B [V] : Rechercher une ischémie myocardique. || Une souffrance coronaire peut déclencher une tachycardie ventriculaire.
+  C [V] : Interroger le DAI et consulter les événements enregistrés. || Le journal confirme le rythme et vérifie le fonctionnement du dispositif.
+  D [F] : Considérer tout épisode comme un artefact sans contrôle. || L'hypotension et la réponse au choc confirment une arythmie perfusante anormale.
+  E [F] >>> faux->juste : Supprimer la surveillance dès le premier complexe sinusal. || Une récidive précoce reste possible tant que la cause n'est pas corrigée.
+
+### Q89 (S15)  ABC -> BCDE
+E: L'interrogation ne montre pas de dommage de sonde et la patiente doit être transférée en unité de soins continus. Quelles conditions précèdent le transfert hors du bloc ?
+CG: Le DAI doit être contrôlé, ses thérapies réactivées et le patient maintenu sous surveillance après l'arythmie.
+  A [V] >>> juste->faux : Confirmer la réactivation des thérapies antitachycardiques. || Le patient doit retrouver sa protection interne avant de quitter le monitorage continu.
+  B [V] : Tracer l'arythmie et le choc externe dans le dossier. || Ces données sont indispensables au suivi rythmologique.
+  C [V] : Organiser une surveillance postopératoire renforcée. || Une tachycardie ventriculaire instable expose à une récidive.
+  D [F] >>> faux->juste : Quitter la salle avec l'aimant encore fixé. || La suspension prolongée laisserait le patient sans traitement interne.
+  E [F] >>> faux->juste : Considérer le DAI comme inutile après un choc externe efficace. || Le dispositif reste essentiel à la prévention de nouvelles arythmies.
+
+### Q90 (S16)  ABCD -> CD
+E: Quels facteurs augmentent fortement son risque cardiaque ?
+CG: Le cumul diabète insuliné, atteinte rénale, antécédent cérébrovasculaire et chirurgie vasculaire produit un profil élevé.
+  A [V] >>> juste->faux : Diabète traité par insuline. || Ce traitement constitue un facteur du score clinique de Lee.
+  B [V] >>> juste->faux : Insuffisance rénale significative. || La créatinine élevée est associée au risque de complication.
+  C [V] : Antécédent cérébrovasculaire. || AIT ou AVC antérieur entre dans la stratification clinique.
+  D [V] : Chirurgie artérielle périphérique. || Le geste vasculaire appartient à une catégorie de risque important.
+  E [F] : Absence actuelle d'angor. || Elle ne neutralise pas les multiples facteurs et le type d'intervention.
+
+### Q91 (S16)  ABC -> BCDE
+E: L'intervention se termine sans douleur exprimée ; l'équipe applique un protocole de surveillance aux patients vasculaires à haut risque. Quelles surveillances postopératoires sont justifiées ?
+CG: Ce profil élevé justifie une surveillance clinique, ECG selon l'évolution et dosages de troponine pour détecter un dommage silencieux.
+  A [V] >>> juste->faux : Dosage programmé de troponine. || Le biomarqueur détecte une atteinte souvent sans douleur.
+  B [V] : Surveillance rapprochée de pression et fréquence. || Hypotension et tachycardie favorisent le déséquilibre myocardique.
+  C [V] : Recherche régulière de dyspnée ou douleur atypique. || Les symptômes postopératoires peuvent être discrets ou masqués.
+  D [F] >>> faux->juste : Sortie directe sans surveillance cardiaque. || Le risque cumulé est incompatible avec une observation minimale.
+  E [F] >>> faux->juste : Troponine uniquement si un STEMI est déjà visible. || Le dosage sert justement à identifier les lésions sans sus-décalage.
+
+### Q92 (S16)  ABC -> ABCDE
+E: Six heures après le geste, la troponine dépasse le 99e percentile alors que le patient reste indolore et stable. Comment interpréter ce premier résultat ?
+CG: Une troponine élevée sans symptôme peut constituer un MINS, mais une cinétique et les diagnostics différentiels doivent être recherchés.
+  A [V] : Le silence clinique n'exclut pas une lésion myocardique. || L'analgésie et les formes asymptomatiques sont fréquentes.
+  B [V] : Un second dosage doit préciser la variation. || La cinétique aide à confirmer un processus aigu.
+  C [V] : La fonction rénale doit être prise en compte. || Une élévation chronique peut accompagner l'insuffisance rénale.
+  D [F] >>> faux->juste : Le résultat doit être ignoré sans douleur thoracique. || Sa valeur pronostique persiste même en l'absence de symptôme.
+  E [F] >>> faux->juste : Il prouve à lui seul une thrombose de stent. || Le mécanisme ne peut être affirmé sur un biomarqueur isolé.
+
+### Q93 (S16)  ABC -> ABCD
+E: La seconde troponine augmente nettement ; l'hémoglobine est à 8,1 g/dL après un saignement et la saturation à 91 %. Quels examens complètent l'évaluation immédiate ?
+CG: ECG, examen, cinétique de troponine et bilan des agressions systémiques permettent de distinguer STEMI, NSTEMI, MINS et causes non coronaires.
+  A [V] : ECG douze dérivations comparé à un tracé antérieur. || Une modification de ST ou de conduction peut orienter l'urgence.
+  B [V] : Numération sanguine et mesure de l'oxygénation. || Anémie et hypoxémie sont des déclencheurs corrigeables.
+  C [V] : Échographie si instabilité ou doute mécanique. || Une anomalie segmentaire ou une autre cause de choc peut être recherchée.
+  D [F] >>> faux->juste : Coronarographie systématique avant tout ECG. || La stratégie invasive dépend du tableau clinique et électrique.
+  E [F] : Aucun nouveau dosage puisque le premier est positif. || La variation est importante pour qualifier le caractère aigu.
+
+### Q94 (S16)  ABCD -> CDE
+E: La feuille d'anesthésie montre aussi vingt minutes de PAM basse et une fréquence supérieure à 105 par minute. Quels facteurs ont pu provoquer ce dommage myocardique ?
+CG: Anémie, hypoxémie, tachycardie et hypotension peuvent créer un infarctus de type 2 par déséquilibre offre-demande.
+  A [V] >>> juste->faux : L'anémie postopératoire. || La baisse d'hémoglobine réduit le contenu artériel en oxygène.
+  B [V] >>> juste->faux : L'hypoxémie. || Une saturation basse diminue davantage l'apport au myocarde.
+  C [V] : Une tachycardie associée. || La consommation augmente alors que la diastole se raccourcit.
+  D [V] : Une hypotension prolongée. || La baisse de pression diastolique compromet la perfusion coronaire.
+  E [F] >>> faux->juste : La poursuite de la statine. || Ce traitement n'explique pas un déséquilibre aigu d'apport.
+
+### Q95 (S16)  ABC -> CD
+E: L'ECG ne montre pas de sus-décalage persistant, mais des modifications de ST apparaissent pendant une nouvelle hypotension. Quelles actions sont prioritaires ?
+CG: Il faut corriger les déclencheurs, rechercher un syndrome coronaire aigu et adapter les traitements à la balance thrombotique-hémorragique.
+  A [V] >>> juste->faux : Corriger l'hypoxémie et optimiser la ventilation. || L'augmentation du contenu artériel restaure une partie de l'apport myocardique.
+  B [V] >>> juste->faux : Contrôler le saignement et traiter l'anémie selon la tolérance. || Le transport d'oxygène doit être restauré sans ignorer l'hémostase.
+  C [V] : Demander un avis cardiologique rapide. || La cinétique et le terrain élevé nécessitent une stratégie coordonnée.
+  D [F] >>> faux->juste : Administrer aveuglément une double antiagrégation malgré le saignement. || Le risque hémorragique et le mécanisme doivent être clarifiés.
+  E [F] : Attendre la sortie pour corriger les facteurs. || Le dommage actif et ses déclencheurs exigent une intervention immédiate.
+
+### Q96 (S16)  ABC -> E
+E: Après correction du saignement et de l'oxygénation, la troponine décroît et le patient reste en unité monitorée. Quels éléments doivent structurer le suivi ultérieur ?
+CG: Après stabilisation, le diagnostic doit être tracé, la prévention secondaire optimisée et le suivi cardiovasculaire organisé.
+  A [V] >>> juste->faux : Documenter le MINS et sa cinétique. || Le compte rendu transmet l'importance de l'événement aux soignants.
+  B [V] >>> juste->faux : Réévaluer statine et facteurs de risque vasculaire. || La prévention secondaire réduit le risque d'événements futurs.
+  C [V] >>> juste->faux : Programmer un suivi cardiologique. || Une évaluation différée précise la maladie coronaire et les traitements.
+  D [F] : Effacer le résultat car l'ECG s'est normalisé. || Une anomalie transitoire n'annule pas le dommage biologique documenté.
+  E [F] >>> faux->juste : Considérer que le risque disparaît à la fermeture cutanée. || Les complications cardiovasculaires surviennent fréquemment dans les jours suivants.

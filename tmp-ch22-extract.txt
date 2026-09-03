@@ -1,0 +1,133 @@
+b00001 [titre] CHAPITRE 22
+b00002 [paragraphe] Système cardiovasculaire et anesthésie ETIENNE J. COUTURE, ANAÏS SCHWAB ET JEAN-LuUC FELLAHI
+b00003 [paragraphe] Favorisé par la haute prévalence des facteurs de risque cardiovasculaire, le vieillissement de la population et des chirurgies de plus en plus lourdes, le risque cardiovasculaire est important en anesthésie. On estime que de 1,4 à 3,9% des procédures chirurgicales se compliquent d’un événement cardiaque majeur. Ces événements sont responsables d’une morbimortalité périopératoire non négligeable. L
+b00004 [titre] 1. Le risque cardiaque
+b00005 [paragraphe] Un patient est à risque cardiaque lorsqu'il a une forte probabilité de présenter un dommage myocardique postopératoire, soit du fait d’une fragilité cardiaque antérieure à la chirurgie, soit secondairement au stress myocardique induit par la chirurgie.
+b00006 [titre] 1.1 Selon la pathologie
+b00007 [paragraphe] Le patient porteur d’une cardiopathie stable devant subir une chirurgie non cardiaque programmée est sujet à un risque cardiaque spécifique. Chaque cardiopathie présente une vulnérabilité myocardique de sensibilité différente aux conditions hémodynamiques et un risque de décompensation.
+b00008 [titre] 1.1.1 Cardiomyopathie ischémique
+b00009 [paragraphe] La survenue d’un épisode ischémique peropératoire est le plus souvent la conséquence d’une inadéquation entre les apports et la consommation en oxygène du myocarde. C’est pourquoi l'objectif anesthésique est de maintenir cet équilibre en traitant de façon adaptée les facteurs de risque principaux que sont la tachycardie, l’hypotension artérielle, l’hypoxie et l’anémie. Le traitement antiangineux e
+b00010 [paragraphe] survenue de ces événements.
+b00011 [titre] 1.1.2 Insuffisance cardiaque ventriculaire gauche
+b00012 [paragraphe] La prise en charge anesthésique du patient souffrant d’insuffisance ventriculaire gauche implique un monitorage strict permettant une approche basée sur la réponse hémodynamique. L'objectif de prise en charge est l’allègement du travail ventriculaire afin d'éviter toute dysfonction. La ventilation mécanique, par la diminution de la postcharge, permet une diminution du travail ventriculaire gauche.
+b00013 [titre] 1.1.3 Cardiomyopathie hypertrophique
+b00014 [paragraphe] La cardiomyopathie hypertrophique est une atteinte cardiaque d’origine génétique dont la prévalence de l'expression phénotypique dans la population adulte est de 0,2%. La pré-sence d’une hypertrophie entraîne des difficultés d'adaptation lors de certaines situations hémodynamiques rencontrées en anesthésie. Un bourrelet sous-aortique peut provoquer une obstruction dynamique à l’éjection du ventric
+b00015 [titre] 1.1.4 Valvulopathies par insuffisance
+b00016 [paragraphe] Les patients souffrant de valvulopathies régurgitantes gauches (insuffisance mitrale et/ou aortique) sont sujets à une surcharge volémique chronique, entraînant une dilatation ventriculaire gauche et une dysfonction systolique. La fraction d’éjection du ventricule gauche est souvent surestimée en échographie car la mesure ne tient pas compte de la proportion de la fuite. En présence d’une insuffis
+b00017 [titre] 1.1.5 Valvulopathies sténosantes
+b00018 [paragraphe] Les pathologies sténosantes mitrales ou aortiques présentent des similitudes dans leur prise en charge anesthésique. En situation de sténose aortique, une hypertrophie ventriculaire gauche secondaire à la surcharge de pression chronique est souvent présente. Les principes de prise en charge évoqués précédemment sont alors applicables. La prise en charge des patients souffrant de sténose mitrale vi
+b00019 [titre] 1.1.6 Hypertension artérielle pulmonaire
+b00020 [paragraphe] L’ hypertension artérielle pulmonaire (HTAP) constitue un facteur de risque indépendant de morbidité et de mortalité périopératoire. Devant toute suspicion d’HTAP, une échocardiographie doit être réalisée afin d’évaluer les pressions du cœur droit ainsi que le retentissement sur le ventricule droit. La prise en charge peropératoire du patient souffrant d’HTAP est axée sur la prévention de la dysfo
+b00021 [titre] 1.2 Le dommage myocardique
+b00022 [paragraphe] Le dommage myocardique en postopératoire de chirurgie non cardiaque (MINS = myocardial injury after noncardiac surgery) est la traduction d’une souffrance du myocarde secondaire à une ischémie périopératoire aboutissant ou non à la nécrose myocardique et survenant dans les 30 jours postopératoires de chirurgie non cardiaque [3). À la différence de l’infarctus du myocarde (IDM) de type 1, secondair
+b00023 [titre] 2. Optimisation préopératoire
+b00024 [paragraphe] La préparation préopératoire du patient à risque cardiaque commence par une évaluation précise de sa pathologie dont l’objectif est double. Il s’agit tout d’abord de déterminer le risque opératoire personnalisé et de le mettre en balance avec le bénéfice attendu de la chirurgie. Enfin, la consultation préopératoire permet de préparer le patient en optimisant le traitement cardioprotecteur.
+b00025 [titre] 2.1 Le risque opératoire
+b00026 [paragraphe] Le risque opératoire est déterminé par l’intégration de trois facteurs cliniques: les antécédents du patient, la sévérité de la cardiopathie et le risque lié à la chirurgie. La prévalence des complications cardiovasculaires dépend de l’interaction entre le risque lié au patient et le risque chirurgical.
+b00027 [titre] 2.1.1 Le risque lié au patient
+b00028 [paragraphe] Deux paramètres permettent d'évaluer le risque opératoire lié au patient: le score de Lee et la réserve fonctionnelle. Le score de Lee clinique (Tableau 22.1) est un score validé depuis longtemps en chirurgie non cardiaque. À partir de cinq items facilement recueillis en consultation, il permet de quantifier le risque opératoire lié aux antécédents du patient. Les patients ayant au moins deux des 
+b00029 [titre] 2.1.2 Le risque associé à la cardiopathie
+b00030 [paragraphe] Au cours de la consultation, il convient d’évaluer la stabilité de la cardiopathie sous-jacente. En cas de cardiopathie instable (Tableau 22,3), il faudra discuter le report de l'intervention chirurgicale (sauf urgence) et organiser une prise en charge cardiologique.
+b00031 [titre] 2.1.3 Le risque chirurgical
+b00032 [paragraphe] Le risque lié à l'opération varie en fonction du type de chirurgie, de sa durée et des variations hémodynamiques qu'elle implique. Les interventions chirurgicales les plus fréquentes
+b00033 [legende] TABLEAU 22.1 Score de Lee clinique à cinq items
+undefined [image] 
+b00035 [paragraphe] ECG: électrocardiogramme:IDM:infarctus du myocarde.
+b00036 [legende] TABLEAU 22.2 Évaluation de la réserve fonctionnelle cardiaque
+undefined [image] 
+b00038 [legende] TABLEAU 22.3 Liste des cardiopathies instables à rechercher au cours de l'évaluation préopératoire
+undefined [image] 
+b00040 [paragraphe] NYHA: New York Heart Association.
+b00041 [paragraphe] ont été classées en fonction de la prévalence des complications cardiaques graves postopératoires en risque faible (< 1%), risque intermédiaire (1 à 5%) ou risque élevé (> 5%) (Tableau 22.4).
+b00042 [legende] TABLEAU 22.4 Risque chirurgical en fonction du type de chirurgie
+undefined [image] 
+b00044 [paragraphe] Les principaux examens complémentaires susceptibles d’être prescrits pour le dépistage d’une cardiopathie sont l’électrocardiogramme (Tableau 22.5), l’échocardiographie, le test d'effort, la scintigraphie myocardique et la coronarographie. Les éléments à rechercher et à prendre en considération pour la prise en charge anesthésique sont l’altération de la fraction d’éjection ventriculaire, une isch
+b00045 [legende] TABLEAU 22.5 Indications de l’électrocardiogramme en période préopératoire
+undefined [image] 
+b00047 [titre] 2.3 Gestion des traitements cardiotropes
+b00048 [paragraphe] Depuis peu, la priorité est donnée à la cardioprotection médicamenteuse par l'optimisation du traitement cardiologique plus qu'aux investigations préopératoires.
+b00049 [titre] 2.3.1 Bêta-bloquants
+b00050 [paragraphe] Les bêta-bloquants améliorent l’oxygénation myocardique périopératoire mais exposent les patients à un risque d’hypotension artérielle et de bradycardie plus important. Il est recommandé de maintenir le traitement à la posologie habituelle en périopératoire. L'introduction en préopératoire d’un traitement par bêta-bloquants n’est pas recommandée de façon systématique. Elle peut être discutée pour 
+b00051 [titre] 2.3.2 Inhibiteurs du système rénine angiotensine
+b00052 [paragraphe] Les inhibiteurs du système rénine angiotensine améliorent le pronostic des patients lorsqu'ils sont utilisés en traitement de fond de l’hypertension artérielle et/ou de l’insuffisance cardiaque. En revanche, dans le contexte périopératoire, ils exposent les patients à un risque majoré d’hypotension artérielle. Ce risque diminue lorsque le traitement est interrompu au moins 12 heures avant l’interv
+b00053 [titre] 2.3.3 Agents antiplaquettaires
+b00054 [paragraphe] Les agents antiplaquettaires sont un élément majeur du traitement de fond de la maladie vasculaire, principalement la coronaropathie (voir Chapitre 28). Leur gestion périopératoire repose sur la balance entre le risque hémorragique chirurgical et le risque thrombotique en cas d’arrêt. Ce dernier dépend de la stabilité de la lésion, de la présence d’une endoprothèse (stent nu ou pharmacoactif) et d
+b00055 [titre] 2.3.4 Statines
+b00056 [paragraphe] Les statines ont démontré leur efficacité dans la prévention primaire et secondaire d’événements cardiovasculaires grâce à leurs effets pléijotropes sur la fonction endothéliale. Un bénéfice à l’utilisation des statines chez les patients coronariens devant subir une chirurgie vasculaire ayant été démontré, leur maintien périopératoire est recommandé. Lorsqu'il est indiqué, un traitement par statin
+b00057 [paragraphe] vasculaire, au minimum une semaine avant.
+b00058 [titre] 2.3.5 Traitements anticoagulants curatifs
+b00059 [paragraphe] Le traitement anticoagulant à visée curative n’est pas un traitement cardioprotecteur, néanmoins, il est fréquemment indiqué chez les patients cardiopathes (troubles du rythme supraventriculaires, antécédents de remplacement valvulaire, etc.) et la connaissance de sa gestion périopératoire est essentielle. Il existe une augmentation du risque hémorragique chez les patients sous traitement anticoag
+b00060 [legende] TABLEAU 22.6 Durée d'arrêt des différents traitements anticoagulants avant une chirurgie programmée non cardiaque
+undefined [image] 
+b00062 [paragraphe] Les inhibiteurs calciques peuvent être prescrits jusqu’à l’intervention chirurgicale avec une reprise précoce. Les antiarythmiques de classe 1 seront interrompus 24 heures avant une intervention chirurgicale programmée s'ils sont prescrits en prévention primaire de la fibrillation atriale. En raison de sa longue demi-vie d’élimination, l’amiodarone est poursuivie sans interruption jusqu'au matin d
+b00063 [titre] 2.4 Revascularisation myocardique
+b00064 [paragraphe] La revascularisation myocardique préalable à une chirurgie non cardiaque est une situation exceptionnelle qui se limite aux situations coronaires considérées à très haut risque et pour des chirurgies à risque intermédiaire ou élevé. La définition du très haut risque d’ischémie myocardique se conçoit au terme de l'évaluation globale du patient en préopératoire, en présence d’une symptomatologie cor
+b00065 [titre] 2.5 Gestion des valvulopathies
+b00066 [paragraphe] En cas de découverte d’une valvulopathie dans le bilan préopératoire d’une chirurgie non cardiaque, il paraît raisonnable d'en faire le bilan et de définir un projet thérapeutique avant l’intervention. Outre l’introduction d’un traitement à visée cardiologique adapté, se pose la question d’un remplacement valvulaire. Chaque décision doit être personnalisée et être le résultat d’une discussion entr
+b00067 [titre] 2.6 Algorithme de prise en charge préopératoire du patient à risque cardiaque
+b00068 [paragraphe] En résumé, voici l’algorithme de prise en charge en période préopératoire des patients à risque cardiovasculaire proposé par les recommandations formalisées d'experts conjointes de la Société française d’anesthésie et de réanimation et de la Société française de cardiologie (Figure 22.1).
+b00069 [titre] 3. Conduite peropératoire
+b00070 [titre] 3.1 Principes d'hémodynamie
+b00071 [paragraphe] La période peropératoire est associée à plusieurs facteurs susceptibles de modifier la balance demande/apport en oxygène du myocarde. Le défi de l’anesthésie du patient à risque cardiaque est la prévention de l’ischémie myocardique par déséquilibre de cette balance. La baisse des résistances vasculaires systémiques et la baisse de l’inotropie, couramment associées à l’anesthésie générale, peuvent 
+b00072 [legende] FIGURE 22.1 Algorithme de prise en charge des patients à risque cardiaque
+undefined [image] 
+b00074 [paragraphe] une dysfonction des organes cibles. C’est ce retentissement hémodynamique qu’il convient de maîtriser lors de la prise en charge anesthésique du cardiopathe. La plupart des agents d’induction peuvent être utilisés moyennant un monitorage strict et une titration progressive. L'étomidate représente un choix sécuritaire chez ces patients. L'association avec la titration d’un agent agoniste a- et B-ad
+b00075 [paragraphe] De manière générale, l’anesthésie locorégionale est une solution de rechange intéressante à l’anesthésie générale balancée puisqu'elle minimise les modifications hémodynamiques. La rachianesthésie par bolus unique n’est pas recommandée à cause du bloc sympathique dense et rapide qu'elle induit. L’anesthésie péridurale, par titration progressive, combinée avec un monitorage invasif de la pression a
+b00076 [titre] 3.2 Physiologie coronarienne et pression de perfusion coronarienne
+b00077 [paragraphe] La pression de perfusion coronarienne (PPC) du ventricule gauche est la différence entre la pression d'entrée dans la coronaire, soit la pression artérielle systémique en diastole (PAd), et la pression de sortie du sinus coronaire représentée par la pression télédiastolique du ventricule gauche (PTDVG).
+b00078 [paragraphe] PPC = PAd - PTDVG
+b00079 [paragraphe] Bien que les limites de la perfusion coronarienne ne soient pas prédictibles, une pression artérielle diastolique d'au moins so mmHg doit être maintenue afin d'assurer une pression de perfusion coronarienne minimale. L'effet de la tachycardie sur la perfusion
+b00080 [legende] TABLEAU 22.7 Principes de prise en charge hémodynamique des principales cardiopathies
+undefined [image] 
+b00082 [paragraphe] CMH: cardiomyopathie hypertrophique; DC: débit cardiaque: FA: fibrillation atriale; N: normal; PAS: pression artérielle systolique; RVS: résistance vasculaire systémique.
+b00083 [paragraphe] coronarienne est délétère, d’une part en diminuant le temps de perfusion diastolique (donc d'oxygénation du myocarde) et d'autre part en accentuant la demande myocardique en oxygène. Afin de préserver l’homéostasie propre à chaque patient, un maintien de la fréquence cardiaque et de la tension artérielle dans une marge de 20% des valeurs habituelles du patient peut être conseillé. D’un point de vu
+b00084 [titre] 3.3 Les déterminants de la pression artérielle
+b00085 [paragraphe] D'après la loi de Hagen-Poiseuille, la pression artérielle moyenne (PAM) est égale au produit des résistances vasculaires systémiques (RVS) multiplié par le débit cardiaque (DC)
+b00086 [paragraphe] PAM = RVS x DC
+b00087 [paragraphe] avec RVS = 8 nL/rr*
+b00088 [paragraphe] et DC = FC x VES
+b00089 [paragraphe] où L représente la longueur de l'appareil circulatoire (qui est constante), n la viscosité du sang, r le rayon des vaisseaux, FC la fréquence cardiaque et VES le volume d'’éjection systolique.
+b00090 [paragraphe] Ainsi, en considérant 8L/7 comme une constante k, une substitution permet
+b00091 [paragraphe] d'obtenir:
+b00092 [paragraphe] PAM = [kn/r‘] x FC x VES
+b00093 [paragraphe] Selon cette relation, la pression artérielle systémique est directement proportionnelle à la viscosité du sang, la fréquence cardiaque et le volume d’éjection systolique et inversement proportionnelle au rayon des vaisseaux. On notera que les modifications de la pression artérielle liées à l’utilisation des agents anesthésiques sont surtout liées aux modifications de la composante résistive r qui 
+b00094 [titre] 3.4 Les déterminants du débit cardiaque
+b00095 [paragraphe] Le débit cardiaque est le résultat de la combinaison de la fréquence cardiaque et du volume éjectionnel. Ce dernier est régulé par la précharge, la fonction myocardique systolique (l’inotropisme) et diastolique ainsi que la postcharge.
+b00096 [titre] 3.4.1 La fréquence cardiaque
+b00097 [paragraphe] La fréquence cardiaque est un des déterminants les plus importants du débit cardiaque. Elle est régie par un contrôle nerveux grâce à l’interaction du tonus sympathique accélérateur et du tonus parasympathique modérateur prédominant à l’état basal. Elle est également modulée par des boucles de régulation ayant pour afférences des baro- et chémorécepteurs du système nerveux central et comme efféren
+b00098 [titre] 3.4.2 La précharge
+b00099 [paragraphe] La précharge se définit par l'ensemble des facteurs contribuant au stress ventriculaire télédiastolique, juste avant la contraction isovolumétrique. Ce stress peut se traduire par la loi de Laplace selon laquelle T = P x r / 2h, où T: tension de surface, P: pression intra-ventriculaire, r: rayon interne de la cavité ventriculaire et h: épaisseur murale ventriculaire. La précharge est donc proporti
+b00100 [titre] 3.4.3 La fonction myocardique systolique et diastolique
+b00101 [paragraphe] L’inotropie correspond à la propriété inhérente du myocarde de se contracter. Elle se mesure de plusieurs façons et se traduit principalement par la force qui caractérise la vitesse et l'amplitude du raccourcissement des fibres myocardiques. L'inotropie est indépendante de la précharge, de la postcharge et de la fréquence cardiaque. Elle est le résultat de la fixation du calcium sur les protéines 
+b00102 [paragraphe] La lusinotropie correspond à la fonction diastolique du myocarde. Elle est associée à la relaxation isovolumétrique et au remplissage ventriculaire. Elle se produit après une baisse du calcium intracellulaire. La fonction myocardique diastolique contribue également à la précharge par la compliance du ventricule, c'est-à-dire son aisance au remplissage.
+b00103 [titre] 3.4.4 La postcharge
+b00104 [paragraphe] La postcharge se définit par l’ensemble des facteurs contribuant au stress ventriculaire pendant la phase de contraction isovolumétrique et la phase éjectionelle du ventricule. Elle peut aussi être interprétée en fonction de la loi de Laplace. Concrètement, elle correspond à la pression systolique ventriculaire gauche nécessaire pour permettre l'ouverture de la valve aortique afin de propulser le 
+b00105 [titre] 3.5 Monitorage peropératoire du patient à risque cardiaque
+b00106 [paragraphe] Le but du monitorage peropératoire des patients souffrant d'insuffisance cardiaque ou de maladie coronarienne significative est la détection précoce d’un déséquilibre de la balance énergétique du myocarde pouvant mettre le patient à risque d’ischémie. Il doit comprendre un suivi du segment ST sur au moins deux dérivations. L'utilisation du monitorage invasif de la pression artérielle ou du débit c
+b00107 [titre] 3.5.1 Électrocardiogramme (ECG)
+b00108 [paragraphe] L'apparition d’une élévation du segment ST durant une chirurgie non cardiaque est relativement rare et doit faire suspecter une ischémie myocardique. D’autres modifications électriques doivent faire suspecter la présence d’une ischémie myocardique telles qu’une inversion aiguë de l'onde T ou une dépression en pente descendante du segment ST. De plus, la présence d’une arythmie ou d’une anomalie de
+b00109 [titre] 3.5.2 Échocardiographie
+b00110 [paragraphe] L’échocardiographie par voie transæsophagienne (ETO) peut être utilisée chez les patients à haut risque cardiovasculaire lors de procédures à haut risque telles que les chirurgies vasculaires majeures. Son utilisation permet de détecter à la fois des anomalies régionales de contractilité, de quantifier une ou des valvulopathies ainsi que de suivre l’état volémique à l’aide de divers index dynamiqu
+b00111 [titre] 3.5.3 Monitorage de la pression invasive
+b00112 [paragraphe] L'utilisation d’un monitorage de pression artérielle invasive par la catéthérisation de l’artère radiale, fémorale ou pulmonaire permet d’obtenir une information en continu. Le monitorage de pression artérielle radiale est utilisé pour le suivi des cardiopathes de façon à optimiser la pression de perfusion coronarienne. Il permettra de titrer plus rapidement et plus précisément les agents vasoacti
+b00113 [titre] 3.6 Patient porteur d'un dispositif implantable
+b00114 [paragraphe] Les dispositifs implantables sont de deux types: les pacemakers à rôle de stimulateur et les défibrillateurs automatiques implantables (DAI).
+b00115 [paragraphe] Concernant les stimulateurs, le risque le plus important est le dysfonctionnement par interférences électromagnétiques. Afin de les éviter au maximum, il est conseillé d’utiliser des bistouris bipolaires. Si un bistouri électrique est utilisé, le stimulateur doit être contrôlé systématiquement en postopératoire. La dépendance du patient au stimulateur est un élément indispensable à connaître. Un d
+b00116 [paragraphe] Concernant les DAI, les risques d’interférences sont identiques. Leurs dysfonctionnements peuvent avoir deux conséquences: l’inhibition avec survenue d’arythmie ventriculaire grave persistante ou le risque de décharge inadaptée peropératoire. L'appareil doit être désactivé soit en plaçant un aimant sur le boîtier lors de la période opératoire, soit en effectuant une reprogrammation temporaire le t
+b00117 [titre] 4. Ischémie myocardique postopératoire
+b00118 [paragraphe] Les soins postopératoires des patients à haut risque cardiovasculaire respectent le même principe fondamental qu’en peropératoire: le maintien d’un équilibre entre l’apport et la consommation en oxygène au niveau myocardique. La phase de réveil anesthésique comporte certains facteurs de risque pouvant favoriser la souffrance myocardique par déséquilibre énergétique et contre lesquels il convient d
+b00119 [paragraphe] Dès que possible, les traitements antiangineux habituels doivent être repris. Les thérapies antiplaquettaires et anticoagulantes doivent également être reprises le plus tôt possible après la chirurgie. Si un événement coronarien survient en per- ou postopératoire, son traitement doit considérer le risque hémorragique. On orientera le patient vers une prise en charge adaptée prenant en compte le co
+b00120 [legende] FIGURE 22.2 Prise en charge d'une élévation postopératoire de troponine sérique
+undefined [image] 
+b00122 [paragraphe] IDM:infarctus du myocarde; NSTEM!: infarctus du myocarde sans élévation du segment ST; STEMI: infarctus du myocarde avec élévation du segment ST.
+b00123 [paragraphe] Modifiée de Fellahi et a! Angesth Crit Core Pain Med 2018; 37: 367-374.
+b00124 [paragraphe] CONCLUSION
+b00125 [paragraphe] L'évaluation du risque chirurgical des patients à haut risque de complications cardiovasculaires est primordiale afin d'optimiser la trajectoire opératoire de ces malades.
+b00126 [paragraphe] Une bonne compréhension de la physiopathologie et un monitorage adapté sont essentiels afin d'anticiper les situations à risque de dommage myocardique et de mieux les prévenir. L’optimisation pré- et peropératoire permettra au clinicien de minimiser la morbidité associée aux diverses procédures proposées. La stratification des malades et la planification de la prise en charge périopératoire, en co
+b00127 [paragraphe] NOTIONS ESSENTIELLES
+b00128 [paragraphe] L'évaluation et la stratification du risque cardiovasculaire représentent un enjeu majeur de santé publique dans les pays industrialisés.
+b00129 [paragraphe] Le but est de prévenir la survenue d’un dommage myocardique postopératoire d'origine ischémique, associé à un surrisque indépendant de morbimortalité dans les 30 jours postopératoires.
+b00130 [paragraphe] L'estimation du risque lié au patient par le score de Lee clinique et la mesure de la réserve fonctionnelle en METS est à la fois simple et robuste.
+b00131 [paragraphe] Cette estimation, couplée à l'estimation du risque lié à la chirurgie, permet le plus souvent de surseoir aux explorations fonctionnelles préopératoires moyennant l’optimisation du traitement médical.
+b00132 [paragraphe] Le maintien de l'équilibre de la balance énergétique du myocarde constitue la pierre angulaire de la prise en charge peropératoire.
+b00133 [paragraphe] Toute élévation de troponine postopératoire doit faire l’objet d’une stratégie préétablie et pluridisciplinaire de prise en charge.

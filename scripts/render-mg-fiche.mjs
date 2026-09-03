@@ -12,7 +12,7 @@
  * Usage :
  *   node scripts/render-mg-fiche.mjs <coursId> <htmlBodyFile> "<nomCours>" [annee]
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import os from 'node:os';
@@ -26,7 +26,16 @@ const ROOT = join(__dirname, '..');
 dotenv({ path: join(ROOT, '.env.local') });
 dotenv({ path: join(ROOT, '.env') });
 
-const [, , coursId, htmlBodyFile, nomCoursArg, anneeArg] = process.argv;
+const rawArgs = process.argv.slice(2);
+const noPublish = rawArgs.includes('--no-publish');
+const pdfFlagIndex = rawArgs.indexOf('--pdf');
+const localPdfPath = pdfFlagIndex >= 0 ? resolve(rawArgs[pdfFlagIndex + 1] || '') : null;
+const qaFlagIndex = rawArgs.indexOf('--qa-dir');
+const qaDir = qaFlagIndex >= 0 ? resolve(rawArgs[qaFlagIndex + 1] || '') : null;
+const positionalArgs = rawArgs.filter((arg, index) => arg !== '--no-publish' && arg !== '--pdf' && arg !== '--qa-dir'
+  && (pdfFlagIndex < 0 || index !== pdfFlagIndex + 1)
+  && (qaFlagIndex < 0 || index !== qaFlagIndex + 1));
+const [coursId, htmlBodyFile, nomCoursArg, anneeArg] = positionalArgs;
 const nomCours = (nomCoursArg ?? 'Major ECN').slice(0, 200);
 const annee = (anneeArg ?? '2025-2026').slice(0, 20);
 if (!coursId || !htmlBodyFile) {
@@ -72,12 +81,14 @@ writeFileSync(tmpHtml, fullHtml, 'utf-8');
 console.log(`→ Rendu de « ${nomCours} »…`);
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: true, args: ['--no-sandbox', '--font-render-hinting=none', '--allow-file-access-from-files'] });
 const page = await browser.newPage();
+page.setDefaultTimeout(120000);
+page.setDefaultNavigationTimeout(120000);
 // Mesurer dans un viewport aux dimensions de la zone imprimable : au format
 // écran par défaut (800px), la carte éclair est mesurée plus large donc plus
 // courte qu'à l'impression, et le zoom calculé plus bas la fait déborder.
 const mmToPx = (x) => Math.round((x * 96) / 25.4);
 await page.setViewport({ width: mmToPx(210 - M.left - M.right), height: mmToPx(297 - M.top - M.bottom) });
-await page.goto(pathToFileURL(tmpHtml).href, { waitUntil: 'networkidle0' });
+await page.goto(pathToFileURL(tmpHtml).href, { waitUntil: 'networkidle0', timeout: 120000 });
 try { await page.evaluate(() => document.fonts.ready); } catch {}
 await page.evaluate((mm) => {
   const [t, b] = mm; const toPx = (x) => (x * 96) / 25.4; const avail = toPx(297 - t - b) - 4;
@@ -95,6 +106,29 @@ await page.evaluate((mm) => {
     }
   });
 }, [M.top, M.bottom]);
+await page.emulateMediaType('print');
+if (qaDir) {
+  mkdirSync(qaDir, { recursive: true });
+  // The layout contains fixed A4 sheets (210 mm wide) while the viewport is
+  // deliberately narrower to model printable content. A plain screenshot of
+  // that viewport clipped the right-hand logo and led to false cover defects.
+  // Capture the complete physical sheet for visual QA instead.
+  const captureSheet = async (name) => {
+    const y = await page.evaluate(() => window.scrollY);
+    await page.screenshot({
+      path: join(qaDir, name),
+      clip: { x: 0, y, width: mmToPx(210), height: mmToPx(297) },
+      captureBeyondViewport: true,
+    });
+  };
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await captureSheet('01-cover.png');
+  await page.evaluate(() => document.querySelector('.partie-page--first')?.scrollIntoView());
+  await captureSheet('02-first-part.png');
+  await page.evaluate(() => document.querySelector('.fiche-eclair-page')?.scrollIntoView());
+  await captureSheet('03-fiche-eclair.png');
+  console.log(`✔ Aperçus QA : ${qaDir}`);
+}
 const pdf = await page.pdf({
   format: 'A4', printBackground: true,
   margin: { top: `${M.top}mm`, right: `${M.right}mm`, bottom: `${M.bottom}mm`, left: `${M.left}mm` },
@@ -103,6 +137,14 @@ const pdf = await page.pdf({
 await browser.close();
 
 const pages = (await PDFDocument.load(pdf)).getPageCount();
+if (localPdfPath) {
+  writeFileSync(localPdfPath, pdf);
+  console.log(`✔ PDF local : ${localPdfPath} (${pages} pages)`);
+}
+if (noPublish) {
+  console.log(`✔ ${nomCours} rendu localement (${pages} pages) — publication désactivée.`);
+  process.exit(0);
+}
 const storagePath = `${coursId}/fiche.pdf`;
 const { error: upErr } = await supabase.storage.from('fiches').upload(storagePath, Buffer.from(pdf), { contentType: 'application/pdf', upsert: true });
 if (upErr) { console.error('Upload échoué :', upErr.message); process.exit(1); }

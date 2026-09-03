@@ -67,7 +67,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 1</b>\n\nLa radiographie thoracique réalisée à l’admission est reproduite ci-dessous.\n\nQuel est votre diagnostic principal ? Sur quels arguments ?",
-          "images": ["annales-cardiologie/seance-2025-06-05-correction/figures/img-003-012.jpg"],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-003-012.jpg"
+          ],
           "reponseAttendue": "Œdème aigu pulmonaire compliqué d’une détresse respiratoire aiguë, probablement secondaire à une cardiopathie valvulaire de type rétrécissement aortique probablement dégénératif, ou insuffisance mitrale.",
           "correctionGenerale": "<b>Œdème aigu pulmonaire (OAP), compliqué d’une détresse respiratoire aiguë, probablement secondaire à une cardiopathie valvulaire de type rétrécissement aortique (RA) probablement dégénératif, ou insuffisance mitrale (IM)</b>\n\n• <b>Terrain</b> : homme de 83 ans → RA dégénératif\n• <b>Insuffisance cardiaque aiguë</b> : dyspnée NYHA 4, crépitants pulmonaires diffus\n• <b>Détresse respiratoire aiguë</b> : tirage respiratoire, désaturation avec SpO₂ à 84 %, polypnée avec fréquence respiratoire à 25/min\n• <b>RA ou IM</b> : souffle systolique\n• <b>Radiographie pulmonaire</b> : syndrome alvéolaire en ailes de papillon\n• Par argument de gravité pour l’œdème aigu pulmonaire\n• Par argument de fréquence pour le RA\n• Pas d’argument pour une origine infectieuse de la détresse respiratoire car patient apyrétique"
         },
@@ -95,7 +97,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 5</b>\n\nLe patient a bénéficié de la prise en charge que vous lui avez proposée. Six mois plus tard, il présente des lipothymies. Vous réalisez l’ECG suivant.\n\nAnalysez le tracé.",
-          "images": ["annales-cardiologie/seance-2025-06-05-correction/figures/img-017-072.jpg"],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-017-072.jpg"
+          ],
           "reponseAttendue": "Électrocardiogramme 12 dérivations : rythme non sinusal, FC à 30/min, dissociation auriculo-ventriculaire ou blocage d’une onde P sur 2, QRS larges. Au total : trouble conductif de haut grade — bloc auriculo-ventriculaire complet (BAV 3) ou BAV 2/1.",
           "correctionGenerale": "• Électrocardiogramme (ECG) 12 dérivations\n• Rythme non sinusal\n• FC à 30/min\n• Dissociation auriculo-ventriculaire, ou blocage d’une onde P sur 2\n• QRS larges\n\n<b>Au total : trouble conductif de haut grade — bloc auriculo-ventriculaire (BAV) complet, ou de type 3, ou BAV 2/1.</b>"
         },
@@ -133,7 +137,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nUn électrocardiogramme est réalisé. Comment l’interprétez-vous ?",
-          "images": ["annales-cardiologie/seance-2025-06-05-correction/figures/img-027-116.jpg"],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-027-116.jpg"
+          ],
           "reponseAttendue": "Électrocardiogramme 12 dérivations : rythme sinusal et régulier, FC à 80/min, espace PR normal, axe gauche, QRS larges > 120 ms avec aspect de bloc de branche gauche complet, pas d’hypertrophie ventriculaire gauche, troubles de repolarisation en rapport avec le trouble conductif (pas de perte de la discordance électrique). Au total : bloc de branche gauche complet.",
           "correctionGenerale": "• Électrocardiogramme 12 dérivations\n• Rythme sinusal et régulier\n• Fréquence cardiaque (FC) à 80/min\n• Espace PR normal\n• Axe gauche, QRS larges > 120 ms avec aspect de <b>bloc de branche gauche complet</b>\n• Pas d’hypertrophie ventriculaire gauche\n• Pas de trouble de la repolarisation surajouté, pas de perte de la discordance électrique\n\n<b>Au total : bloc de branche gauche complet, avec troubles de repolarisation en rapport avec le trouble conductif.</b>"
         },
@@ -175,84 +181,132 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\nLe patient présente une hyperglycémie. Quelle stratégie adoptez-vous dès l’admission aux soins intensifs ?",
-          "images": [],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-037-156.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-038-163.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-039-168.jpg"
+          ],
           "reponseAttendue": "Régime diabétique pauvre en sucre ; surveillance rapprochée des glycémies pré- et postprandiales ; bandelette urinaire à la recherche d’une cétonurie et prise en charge d’une acidocétose ; arrêt de la metformine pendant 48-72 h après la coronarographie ; insulinothérapie sous-cutanée par insuline rapide pour normaliser les glycémies, voire IVSE si besoin ; introduction d’un inhibiteur du SGLT2 (dapagliflozine 10 mg) 48-72 h après la coronarographie.",
           "correctionGenerale": "• Régime diabétique pauvre en sucre\n• Surveillance rapprochée des glycémies préprandiales et postprandiales\n• Bandelette urinaire pour recherche d’une cétonurie et prise en charge d’une acidocétose\n• <b>Arrêt de la metformine</b> pendant 48-72 h après la coronarographie\n• Mise en place d’une <b>insulinothérapie sous-cutanée</b> avec de l’insuline rapide pour normalisation des glycémies préprandiales et postprandiales ; si besoin, insulinothérapie intraveineuse au pousse-seringue électrique (IVSE)\n• Introduction d’un inhibiteur du SGLT2 : dapagliflozine (Forxiga®) 10 mg, 48-72 h après la coronarographie"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nLe bilan biologique montre un LDL-cholestérol à 1,67 g/L, mais le patient vous affirme que son bilan biologique était normal lors de sa dernière prise de sang.\n\nLa valeur du LDL-cholestérol réalisée à l’admission est-elle valable ?",
-          "images": [],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-037-156.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-038-163.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-039-168.jpg"
+          ],
           "reponseAttendue": "Non : pour que la valeur de LDL-cholestérol soit valable, elle doit être réalisée à jeun. Il est probable que le patient n’était pas à jeun lors de son entrée en USIC, donc lors du bilan lipidique. Il faut refaire le bilan lipidique à jeun le lendemain de l’admission.",
           "correctionGenerale": "• Pour que la valeur de LDL-cholestérol soit valable, elle doit être <b>réalisée à jeun</b>\n• Il est probable que le patient ne soit pas à jeun lors de son entrée en USIC, donc lors du bilan lipidique\n• Par conséquent, la valeur de LDL-cholestérol <b>n’est pas valable</b>\n• Il faut refaire le bilan lipidique à jeun le lendemain de l’admission du patient"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 4</b>\n\nLe diagnostic est donc un SCA ST+ antérieur.\n\nQuelle(s) stratégie(s) thérapeutique(s) pharmacologique(s) cardiovasculaire(s) allez-vous proposer au patient ? Préciser pour chaque classe thérapeutique les posologies cibles, les durées et les éléments de surveillance.",
-          "images": [],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-037-156.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-038-163.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-039-168.jpg"
+          ],
           "reponseAttendue": "Bi-antiagrégation plaquettaire pendant 1 an (aspirine + ticagrélor) puis mono-antiagrégation au long cours ; anticoagulation curative par énoxaparine 1 mg/kg/j SC en 2 fois, à arrêter le plus précocement possible, puis relais préventif ; bêtabloquant (bisoprolol, cible FC < 70/min) ; statine (atorvastatine 80 mg/j, cible LDL-c < 0,55 g/L) ; IEC ou ARA2 (périndopril ou valsartan) ; SGLT2 (dapagliflozine 10 mg) 48-72 h après la coronarographie ; en cas de FEVG < 40 % persistante, spironolactone et Entresto® en remplacement de l’IEC/ARA2 ; IPP (pantoprazole) pendant la durée de la bi-antiagrégation ; patch et gomme de nicotine ; prise en charge du diabète (objectif HbA1c < 6,5 %) ; surveillance clinique et biologique.",
           "correctionGenerale": "<b>Bi-antiagrégation plaquettaire pendant 1 an</b>, puis poursuite d’une mono-antiagrégation plaquettaire au long cours\n• Aspirine : Kardégic® 75 mg ou aspirine 100 mg 1/j\n• Inhibiteurs des récepteurs P2Y12 : ticagrélor (Brilique®) 90 mg 2/jour\n\n<b>Anticoagulation curative</b>\n• À arrêter le plus précocement possible selon l’évaluation de la charge thrombotique coronaire, par énoxaparine (Lovenox®) 1 mg/kg/j SC en 2 fois\n• Relais par une anticoagulation préventive par énoxaparine 0,4 mL SC 1/jour pour la durée de l’hospitalisation\n\n• <b>Bêtabloquant</b> : bisoprolol 1,25 mg au minimum, à majorer progressivement selon la tolérance clinique et hémodynamique jusqu’à 10 mg/j. Cible FC < 70/min. Traitement au long cours\n• <b>Statines</b> : atorvastatine 80 mg/jour ou à dose maximale tolérée. Cible : LDL-c < 0,55 g/L. Traitement au long cours\n• <b>IEC ou ARA2</b>, traitement au long cours : périndopril 2 mg 1 cp/j à majorer jusqu’à 8 mg/j, ou valsartan 80 mg 1 cp/j à majorer jusqu’à 160 mg/j, selon la tolérance clinique, hémodynamique et rénale\n• <b>SGLT2</b> : dapagliflozine (Forxiga®) 10 mg, 48-72 h après la coronarographie. Traitement au long cours\n\n<b>Si persistance d’une FEVG < 40 % sur l’ETT de réévaluation</b>\n• Inhibiteur des minéralocorticoïdes : Aldactone®. Traitement au long cours\n• Valsartan/sacubitril (Entresto®) 24/26 mg 2/j, en remplacement de l’IEC/ARA2. Traitement au long cours\n\n• <b>Inhibiteur de la pompe à protons</b> : pantoprazole 20 mg 1 cp/jour, pendant la durée de la bi-antiagrégation plaquettaire\n• <b>Patch de nicotine</b> : Nicopatch®, posologie selon les signes de manque et la tolérance, et gomme de nicotine Nicopass®\n• <b>Prise en charge du diabète</b>, objectif HbA1c < 6,5 % : réintroduction de la metformine à 48-72 h de la coronarographie et majoration à 1000 mg 3/j, traitement au long cours ; introduction d’un autre antidiabétique selon l’évolution de l’HbA1c\n\n<b>Surveillance</b>\n• Clinique : FC, PA, signes d’insuffisance cardiaque, récidive de douleurs thoraciques, signes de manque ou de surdosage en nicotine, recherche des effets indésirables des traitements\n• Biologique : exploration des anomalies lipidiques et HbA1c à 3 mois ; NFS, plaquettes, ionogramme, urée, créatinine précocement après introduction des IEC/ARA2 ; CPK et bilan hépatique 6 semaines après introduction des statines et en cas de signes d’intolérance"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 5</b>\n\nÀ J2, le patient décrit une dyspnée. L’examen clinique est sans particularité, il n’existe aucun crépitant, l’échocardiographie montre une stabilité des paramètres avec une fraction d’éjection stable à 45 %.\n\nAvant de débuter une thérapeutique de l’insuffisance cardiaque, quelle molécule pourrait, selon vous, avoir cet effet secondaire ?",
-          "images": [],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-037-156.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-038-163.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-039-168.jpg"
+          ],
           "reponseAttendue": "Le ticagrélor (Brilique®) : la dyspnée est un effet indésirable fréquent de cette molécule.",
           "correctionGenerale": "• <b>Ticagrélor (Brilique®)</b> : la dyspnée fait partie de ses effets indésirables fréquents"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 6</b>\n\nÀ J3, le patient présente une dyspnée stable. L’électrocardiogramme montre l’apparition d’une fibrillation atriale avec une cadence ventriculaire aux alentours de 130 battements par minute.\n\nQuels sont les principes du traitement de cette fibrillation atriale à la phase aiguë d’un SCA ST+ antérieur ?",
-          "images": [],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-037-156.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-038-163.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-039-168.jpg"
+          ],
           "reponseAttendue": "Introduction d’un anticoagulant curatif per os d’emblée ou en relais de l’anticoagulation parentérale (score CHA₂DS₂-VA à 2) : AOD (rivaroxaban, apixaban ou dabigatran) ou AVK avec INR entre 2 et 3. Poursuite d’une bi-antiagrégation plaquettaire avec switch du ticagrélor pour le clopidogrel 75 mg (dose de charge 300 mg) + Kardégic® 75 mg pendant 1 mois, puis mono-antiagrégation avec anticoagulation pendant 1 an. Contrôle de la fréquence cardiaque par majoration du bisoprolol ± digoxine, objectif FC < 110/min. Contrôle du rythme car FA de moins de 48 heures : cardioversion médicamenteuse par amiodarone 600 à 900 mg IVSE, ou cardioversion électrique sous anesthésie générale ± prémédication par Cordarone® ; poursuite au long cours d’un traitement antiarythmique par amiodarone 200 mg 1 cp/jour. Holter-ECG à 1 mois pour dépister une récidive.",
           "correctionGenerale": "<b>Introduction d’un traitement anticoagulant curatif per os</b>, d’emblée ou en relais de l’anticoagulation parentérale — score CHA₂DS₂-VA à 2, au long cours\n• Anticoagulant oral direct (AOD) : rivaroxaban (Xarelto®) 20 mg 1/jour, ou apixaban (Eliquis®) 5 mg 2/jour, ou dabigatran (Pradaxa®) 150 mg 2/jour\n• Ou antivitamine K (AVK) — warfarine, objectif INR entre 2 et 3 — avec anticoagulation parentérale en attendant l’efficacité de l’AVK (HNF au PSE ou HBPM sous-cutanée)\n\n<b>Poursuite d’une bi-antiagrégation plaquettaire</b>\n• Switch du ticagrélor pour le clopidogrel 75 mg 1/j avec dose de charge de 300 mg per os, + Kardégic® 75 mg 1/j, pour une durée de 1 mois, puis mono-antiagrégation avec anticoagulation pendant 1 an\n\n<b>Contrôle de la fréquence cardiaque</b>\n• Majoration du bêtabloquant bisoprolol précédemment introduit, selon la PA, ± digoxine per os ou IV, objectif FC < 110/min\n\n<b>Contrôle du rythme cardiaque</b>, car FA de moins de 48 heures\n• Cardioversion médicamenteuse avec amiodarone (Cordarone®) 600 à 900 mg IVSE\n• Ou cardioversion électrique par choc électrique externe sous anesthésie générale, ± avec prémédication par Cordarone® IVSE pour favoriser l’efficacité du choc\n• Poursuite au long cours d’un traitement antiarythmique par amiodarone (Cordarone®) 200 mg 1 cp/jour\n\n• Holter-ECG à 1 mois pour le dépistage d’une récidive de la FA"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 7</b>\n\nLe patient retrouve un rythme sinusal.\n\nQuelle sera votre stratégie antithrombotique par la suite ?",
-          "images": [],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-037-156.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-038-163.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-039-168.jpg"
+          ],
           "reponseAttendue": "Score CHA₂DS₂-VA à 2, score HAS-BLED à 0 : risque ischémique élevé (diabète, DFG à 60 mL/min, SCA ST+) mais faible risque hémorragique. Trithérapie antithrombotique pendant 1 mois (clopidogrel 75 mg + Kardégic® 75 mg + anticoagulant oral) ; puis bithérapie jusqu’à 1 an après le stenting coronaire (clopidogrel 75 mg + anticoagulant oral, arrêt du Kardégic®) ; puis, après 1 an, monothérapie par anticoagulant oral au long cours (arrêt du clopidogrel).",
           "correctionGenerale": "• Score CHA₂DS₂-VA à 2, score HAS-BLED à 0\n• Pas de facteur de risque d’hémorragie. Facteurs de risque ischémique : diabète, DFG à 60 mL/min, SCA ST+\n→ <b>Risque ischémique élevé mais faible risque hémorragique</b>\n\n<b>Trithérapie antithrombotique pendant 1 mois</b>\n• Bi-antiagrégation plaquettaire : clopidogrel 75 mg 1/j + Kardégic® 75 mg 1/j\n• Anticoagulation : AOD — rivaroxaban (Xarelto®) 20 mg 1/jour, ou apixaban (Eliquis®) 5 mg 2/jour, ou dabigatran (Pradaxa®) 150 mg 2/jour ; ou AVK (warfarine, INR 2-3) si contre-indication aux AOD\n\n<b>Après 1 mois : bithérapie antithrombotique jusqu’à 1 an après le stenting coronaire</b>\n• Mono-antiagrégation plaquettaire : clopidogrel 75 mg 1/j ; arrêt du Kardégic® 75 mg 1/j\n• Anticoagulation : idem\n\n<b>Après 1 an : monothérapie antithrombotique au long cours</b>\n• Arrêt du clopidogrel 75 mg 1/j\n• Anticoagulation seule : idem"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 8</b>\n\nVous interrogez le patient sur son tabagisme (évalué à 40 paquets-années). Le patient vous avoue avoir repris son tabagisme depuis 1 mois, à sa sortie du centre de réadaptation. Il a réduit sa consommation de moitié par rapport à la période préopératoire et ne fume plus que 20 cigarettes par jour.\n\nQuelles sont les méthodes simples d’évaluation de la dépendance tabagique pouvant être disponibles lors d’une consultation ?",
-          "images": [],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-037-156.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-038-163.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-039-168.jpg"
+          ],
           "reponseAttendue": "L’analyse du monoxyde de carbone expiré en consultation, le test de Fagerström, le test de Horn et l’échelle HAD.",
           "correctionGenerale": "• Analyse du monoxyde de carbone expiré en consultation\n• <b>Test de Fagerström</b>\n• <b>Test de Horn</b>\n• <b>Échelle HAD</b>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 9</b>\n\nQuels sont les moyens pharmacologiques (et voies d’administration) que vous connaissez, indiqués dans le sevrage tabagique ?",
-          "images": [],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-037-156.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-038-163.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-039-168.jpg"
+          ],
           "reponseAttendue": "Les substituts nicotiniques (Nicopatch® par voie transdermique, Nicopass® et Nicorette® per os, Nicorette® par inhalation), le bupropion (Zyban®) per os et la varénicline (Champix®) per os.",
           "correctionGenerale": "<b>Substituts nicotiniques</b>\n• Nicopatch® par voie transdermique\n• Nicopass®, Nicorette® par voie orale\n• Nicorette® par inhalation\n\n• <b>Bupropion (Zyban®)</b> per os\n• <b>Varénicline (Champix®)</b> per os"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 10</b>\n\nLe patient décrit aussi des myalgies et vous suspectez des myalgies secondaires aux statines.\n\nQuel bilan complémentaire allez-vous prescrire ?",
-          "images": [],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-037-156.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-038-163.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-039-168.jpg"
+          ],
           "reponseAttendue": "Un bilan biologique avec dosage des CPK.",
           "correctionGenerale": "• Bilan biologique : <b>dosage des CPK</b>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 11</b>\n\nVous demandez une MAPA des 24 heures, réalisée hors de son activité professionnelle :\n• Mesures valides : 51/60\n• Pressions de jour : PAS moyenne 161, PAD moyenne 89\n• Pressions de nuit : PAS moyenne 158, PAD moyenne 81\n\nInterprétez celle-ci.",
-          "images": [],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-037-156.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-038-163.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-039-168.jpg"
+          ],
           "reponseAttendue": "HTA, car PA diurne > 135/85 mmHg (161/89 mmHg) et PA nocturne > 120/70 mmHg (158/81 mmHg), avec un profil non dipper (pas de baisse ou faible baisse de la pression artérielle en période nocturne).",
           "correctionGenerale": "<b>HTA</b>, car :\n• PA diurne > 135/85 mmHg : 161/89 mmHg\n• PA nocturne > 120/70 mmHg : 158/81 mmHg\n• <b>Profil non dipper</b> : pas de baisse, ou faible baisse, de la pression artérielle en période nocturne"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 12</b>\n\nCompte tenu de cet examen, quelle pathologie associée allez-vous rechercher en priorité ?",
-          "images": [],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-037-156.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-038-163.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-039-168.jpg"
+          ],
           "reponseAttendue": "Un syndrome d’apnées obstructives du sommeil (SAOS), par polysomnographie ou polygraphie nocturne, car HTA sans baisse de la pression artérielle nocturne, épisode de FA avec trigger ischémique, et obésité avec IMC à 31 kg/m².",
           "correctionGenerale": "<b>Syndrome d’apnées obstructives du sommeil (SAOS)</b>, par polysomnographie / polygraphie nocturne, car HTA :\n• Sans baisse de la pression artérielle nocturne\n• Épisode de FA, avec trigger ischémique\n• Obésité avec IMC à 31 kg/m²"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 13</b>\n\nLa pathologie recherchée est prise en charge. Le patient garde des chiffres tensionnels élevés et il est observant. Il est traité par bêtabloquant et IEC aux posologies optimales.\n\nQuelles sont les trois autres classes thérapeutiques que vous pourriez ensuite initier pour prendre en charge son hypertension artérielle ?",
-          "images": [],
+          "images": [
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-037-156.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-038-163.jpg",
+            "annales-cardiologie/seance-2025-06-05-correction/figures/img-039-168.jpg"
+          ],
           "reponseAttendue": "Un diurétique thiazidique, un inhibiteur calcique et un inhibiteur des minéralocorticoïdes.",
           "correctionGenerale": "• Diurétique thiazidique\n• Inhibiteurs calciques\n• Inhibiteurs des minéralocorticoïdes"
         }
@@ -306,7 +360,7 @@
           "enonce": "<b>Question n° 6</b>\n\nCitez les indications actuelles d’implantation de stimulateurs cardiaques sans sonde (ex. : Micra®).",
           "images": [],
           "reponseAttendue": "Absence d’accès veineux au niveau des membres supérieurs ; haut risque d’infection de la loge du pacemaker chez un patient ayant des antécédents d’infection de matériel ou chez les patients dialysés.",
-          "correctionGenerale": "• Absence d’accès veineux au niveau des membres supérieurs\n• Haut risque d’infection de la loge du pacemaker chez un patient ayant des antécédents d’infection de matériel, ou chez les patients dialysés\n\n<i>Rappel des recommandations ESC projetées en séance</i> : les stimulateurs sans sonde doivent être considérés (classe IIa) comme alternative aux stimulateurs transveineux lorsqu’il n’existe pas d’accès veineux au membre supérieur, ou lorsque le risque infectieux de la loge est particulièrement élevé (antécédent d’infection, patient hémodialysé) ; ils peuvent être considérés (classe IIb) comme alternative à la stimulation mono-ventriculaire standard en tenant compte de l’espérance de vie et de la décision médicale partagée."
+          "correctionGenerale": "• Absence d’accès veineux au niveau des membres supérieurs\n• Haut risque d’infection de la loge du pacemaker chez un patient ayant des antécédents d’infection de matériel, ou chez les patients dialysés\n\n<i>Rappel des recommandations ESC</i> : les stimulateurs sans sonde doivent être considérés (classe IIa) comme alternative aux stimulateurs transveineux lorsqu’il n’existe pas d’accès veineux au membre supérieur, ou lorsque le risque infectieux de la loge est particulièrement élevé (antécédent d’infection, patient hémodialysé) ; ils peuvent être considérés (classe IIb) comme alternative à la stimulation mono-ventriculaire standard en tenant compte de l’espérance de vie et de la décision médicale partagée."
         },
         {
           "format": "qroc",
@@ -320,7 +374,7 @@
           "enonce": "<b>Question n° 8</b>\n\nQuelles sont les règles à suivre concernant le traitement antithrombotique avant une cardioversion pour réduire une fibrillation atriale ?",
           "images": [],
           "reponseAttendue": "Une anticoagulation efficace pendant au moins 3 semaines, quel que soit le score CHA₂DS₂-VA, avant une cardioversion : anticoagulant oral direct d’emblée (rivaroxaban 20 mg 1/j, apixaban 5 mg 2/j ou dabigatran 150 mg 2/j) ; en cas de contre-indication aux AOD (insuffisance rénale sévère), AVK — warfarine (Coumadine®) — à posologie permettant un INR entre 2 et 3, directement ou en relais d’une anticoagulation parentérale par HBPM ou HNF. Alternative : cardioversion précoce dans les 48 heures suivant le début de la FA, ou après contrôle de la vacuité de l’auricule gauche par ETO ; anticoagulation poursuivie au moins 4 semaines après cardioversion, et au long cours si le score CHA₂DS₂-VA le justifie.",
-          "correctionGenerale": "<b>Anticoagulation efficace pendant au moins 3 semaines</b>, quel que soit le score CHA₂DS₂-VA, avant une cardioversion, par :\n• Anticoagulant oral direct d’emblée : rivaroxaban (Xarelto®) 20 mg 1/jour, ou apixaban (Eliquis®) 5 mg 2/jour, ou dabigatran (Pradaxa®) 150 mg 2/jour\n• En cas de contre-indication aux anticoagulants oraux directs (insuffisance rénale sévère) : antivitamine K (AVK) — warfarine (Coumadine®) — à une posologie permettant un INR entre 2 et 3, directement ou en relais d’une anticoagulation parentérale par héparine de bas poids moléculaire (HBPM) ou héparine non fractionnée (HNF)\n\n<i>Rappel de l’algorithme ESC « Cardioversion for atrial fibrillation » projeté en séance</i>\n• Vérifier d’abord le statut anticoagulant : si le patient est déjà sous anticoagulant oral efficace, on peut procéder à une cardioversion immédiate ou différée ; sinon, débuter l’anticoagulation dès que possible (AOD, ou AVK avec relais par HBPM/HNF)\n• Vérifier ensuite la durée de l’épisode : cardioversion précoce possible si la FA date de moins de 48 heures ; au-delà de 48 heures ou en cas de durée inconnue, cardioversion élective après au moins 3 semaines d’anticoagulation efficace, ou plus tôt si une ETO exclut un thrombus de l’auricule gauche\n• Après cardioversion : anticoagulation au moins 4 semaines, et au long cours si le score CHA₂DS₂-VA ≥ 1 chez l’homme ou ≥ 2 chez la femme"
+          "correctionGenerale": "<b>Anticoagulation efficace pendant au moins 3 semaines</b>, quel que soit le score CHA₂DS₂-VA, avant une cardioversion, par :\n• Anticoagulant oral direct d’emblée : rivaroxaban (Xarelto®) 20 mg 1/jour, ou apixaban (Eliquis®) 5 mg 2/jour, ou dabigatran (Pradaxa®) 150 mg 2/jour\n• En cas de contre-indication aux anticoagulants oraux directs (insuffisance rénale sévère) : antivitamine K (AVK) — warfarine (Coumadine®) — à une posologie permettant un INR entre 2 et 3, directement ou en relais d’une anticoagulation parentérale par héparine de bas poids moléculaire (HBPM) ou héparine non fractionnée (HNF)\n\n<i>Rappel de l’algorithme ESC « Cardioversion for atrial fibrillation »</i>\n• Vérifier d’abord le statut anticoagulant : si le patient est déjà sous anticoagulant oral efficace, on peut procéder à une cardioversion immédiate ou différée ; sinon, débuter l’anticoagulation dès que possible (AOD, ou AVK avec relais par HBPM/HNF)\n• Vérifier ensuite la durée de l’épisode : cardioversion précoce possible si la FA date de moins de 48 heures ; au-delà de 48 heures ou en cas de durée inconnue, cardioversion élective après au moins 3 semaines d’anticoagulation efficace, ou plus tôt si une ETO exclut un thrombus de l’auricule gauche\n• Après cardioversion : anticoagulation au moins 4 semaines, et au long cours si le score CHA₂DS₂-VA ≥ 1 chez l’homme ou ≥ 2 chez la femme"
         },
         {
           "format": "qroc",
@@ -376,7 +430,7 @@
           "enonce": "<b>Question n° 16</b>\n\nCitez les indications d’implantation d’un défibrillateur automatique en prévention primaire dans l’insuffisance cardiaque.",
           "images": [],
           "reponseAttendue": "Patient porteur d’une insuffisance cardiaque chronique symptomatique (NYHA 2-3) secondaire à une cardiopathie ischémique, avec une FEVG ≤ 35 % malgré 3 mois de traitement bien conduit (bêtabloquant, inhibiteur du système rénine-angiotensine-aldostérone, inhibiteur des minéralocorticoïdes, inhibiteur du SGLT2, à posologie maximale ou maximale tolérée), avec une espérance de vie de plus d’un an et un statut fonctionnel satisfaisant — recommandation de classe I A.",
-          "correctionGenerale": "• Patient porteur d’une <b>insuffisance cardiaque chronique symptomatique (NYHA 2-3)</b> secondaire à une <b>cardiopathie ischémique</b>, avec une <b>FEVG ≤ 35 %</b> malgré 3 mois de traitement bien conduit (bêtabloquant, inhibiteur du système rénine-angiotensine-aldostérone, inhibiteur des minéralocorticoïdes, inhibiteur du SGLT2, à posologie maximale ou maximale tolérée), avec une espérance de vie de plus de 1 an avec un statut fonctionnel satisfaisant → <b>recommandation I A</b>\n\n<i>Rappel des recommandations ESC projetées en séance</i> : le défibrillateur doit être considéré (classe IIa) dans les mêmes conditions pour une cardiopathie non ischémique. Il n’est pas recommandé dans les 40 jours suivant un infarctus, ni chez les patients en classe NYHA IV avec symptômes sévères réfractaires au traitement pharmacologique, sauf s’ils sont candidats à une resynchronisation, une assistance ventriculaire ou une transplantation cardiaque."
+          "correctionGenerale": "• Patient porteur d’une <b>insuffisance cardiaque chronique symptomatique (NYHA 2-3)</b> secondaire à une <b>cardiopathie ischémique</b>, avec une <b>FEVG ≤ 35 %</b> malgré 3 mois de traitement bien conduit (bêtabloquant, inhibiteur du système rénine-angiotensine-aldostérone, inhibiteur des minéralocorticoïdes, inhibiteur du SGLT2, à posologie maximale ou maximale tolérée), avec une espérance de vie de plus de 1 an avec un statut fonctionnel satisfaisant → <b>recommandation I A</b>\n\n<i>Rappel des recommandations ESC</i> : le défibrillateur doit être considéré (classe IIa) dans les mêmes conditions pour une cardiopathie non ischémique. Il n’est pas recommandé dans les 40 jours suivant un infarctus, ni chez les patients en classe NYHA IV avec symptômes sévères réfractaires au traitement pharmacologique, sauf s’ils sont candidats à une resynchronisation, une assistance ventriculaire ou une transplantation cardiaque."
         }
       ]
     }

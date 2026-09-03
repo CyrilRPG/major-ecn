@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-08-10T13:45:30.784Z",
+  "totals": {
+    "courses": 1,
+    "ok": 0,
+    "repair": 1,
+    "missing": 0
+  },
+  "rows": [
+    {
+      "orderIndex": 50,
+      "title": "Fractures articulaires récentes du calcanéus",
+      "pages": 22,
+      "textCharacters": 19168,
+      "mechanicalFiche": false,
+      "parts": 6,
+      "ficheTables": 15,
+      "tableErrors": 0,
+      "partHeaderErrors": 0,
+      "bareDetails": 0,
+      "paragraphDetails": 0,
+      "listlessDetails": 0,
+      "figures": 5,
+      "synthesis": 1,
+      "eclair": 1,
+      "mechanicalQuestions": 0,
+      "cardPromptQuestions": 0,
+      "genericQuestionCount": 0,
+      "repeatedQuestionStems": 0,
+      "dpClinicalFailures": 8,
+      "mechanicalCards": 0,
+      "genericSeries": 0,
+      "defects": [
+        "dp-clinical"
+      ],
+      "status": "repair"
+    }
+  ]
+}

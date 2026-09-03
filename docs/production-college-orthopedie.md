@@ -116,6 +116,32 @@ Un sous-agent `general-purpose` par chapitre, **4 en parallèle** — au-delà, 
 écritures concurrentes saturent le MCP. Insertion directe via `execute_sql`,
 dollar-quoting `$c$…$c$` obligatoire (les apostrophes françaises sont partout).
 
+### ⚠️ Deux règles d'exécution, apprises à la dure
+
+**1. Chaque agent travaille dans SON sous-dossier.** Le scratchpad de session est
+partagé entre agents parallèles : un fichier de travail au nom générique
+(`stripped.html`, `tmp.html`) est écrasé par l'agent voisin, et toute mesure
+prise dessus devient fausse sans le moindre signal d'erreur. Imposer un
+sous-dossier par chapitre dans le brief.
+
+**2. Écrire en base par petits lots, et sauvegarder sur disque avant tout
+rendu.** Une coupure d'API (limite de session, réseau) tue l'agent sans préavis.
+Ce qui est en base est acquis ; ce qui n'est qu'en mémoire est perdu.
+
+**3. Une série s'insère en UNE SEULE requête atomique** — CTE chaînant
+`insert série … returning` → `insert questions … returning` → `insert items`.
+
+C'est la parade structurelle au seul incident de données de cette production :
+une coupure entre l'insertion des questions et celle des items avait laissé une
+série de 5 questions **sans aucun item**, donc en ligne et injouable pour les
+élèves. Une consigne du type « insère les items dans la foulée » repose sur la
+discipline de l'agent ; la requête atomique rend le cas impossible quel que soit
+le moment de la coupure. Les trois agents de reprise l'ont adoptée d'eux-mêmes.
+
+Contrôle de rattrapage à passer après toute coupure, au cas où : la requête du
+§9 détecte les questions n'ayant pas exactement 5 items. Une série incomplète se
+**supprime et se régénère**, elle ne se rafistole pas.
+
 Le brief doit contenir, sans rien omettre :
 
 1. **Le chemin de `extract.json`** et la consigne d'**ignorer tout bloc portant
@@ -203,14 +229,140 @@ ligne `fiches`. Exige `SUPABASE_SERVICE_ROLE_KEY` dans `.env.local`.
 Marqueurs `__LOGO__` et `__WATERMARK__` laissés tels quels : le script les
 remplace par les data-URI.
 
-### ⚠️ Aucune cible de pagination
-La longueur découle de la source, et d'elle seule. Si le chapitre justifie
-7 pages, la fiche en fait 7 ; s'il en justifie 40, elle en fait 40. **Ne jamais
-rallonger** pour atteindre un volume, **ne jamais couper** pour tenir un format.
+### ⚠️ Une fiche CONDENSE, elle ne transcrit pas
+
+**7 à 40 pages, jamais au-delà.** C'est la norme maison, mesurée : sur les 500
+fiches Major ECN en ligne, 458 (92 %) tiennent dans cette fourchette.
+
+Repères chiffrés du corpus de référence, à viser :
+
+| Mesure | Médiane | 9e décile | Maximum observé |
+|---|---|---|---|
+| Texte du corps (hors balises) | **23 000 car.** | 38 400 car. | 63 700 car. |
+| Pages | 16 | — | 52 |
+| Figures | 1 | 8 | 62 |
+
+**La contrainte dure porte sur les PAGES, pas sur les caractères.** Le compte de
+caractères sert à estimer la pagination *avant* le rendu — c'est un indicateur,
+pas un critère de conformité.
+
+Repère : **≈ 1 350 caractères par page**, mais le ratio dépend du nombre de
+figures et varie de 1 220 à 1 570 (mesuré sur les fiches d'Orthopédie) :
+
+| Figures | 15 | 13 | 12 | 8 | 5 |
+|---|---|---|---|---|---|
+| Car./page | 1 246 | 1 222 | 1 348 / 1 319 | 1 302 | **1 567** |
+
+Une fiche pauvre en figures loge donc **jusqu'à 30 % de texte en plus** pour la
+même pagination. Estimer avec le ratio correspondant au nombre de figures
+retenues, viser **20 000 à 35 000 caractères**, et **trancher sur les pages
+après rendu** : une fiche à 33 000 caractères et 21 pages est conforme ; une
+fiche à 30 000 caractères et 45 pages ne l'est pas.
+
+Plafond dur de sécurité : 50 000 caractères — au-delà, aucune configuration de
+figures ne tient dans 40 pages.
+
+> **Erreur commise, à ne pas refaire.** La version précédente de ce paragraphe
+> disait « la longueur découle de la source, et d'elle seule ». Les quatre
+> premières fiches ont donc été écrites à **80 000 caractères** pour des
+> chapitres EMC de 95 000 : une réécriture du chapitre, pas une fiche. Résultat :
+> 57 à 65 pages, au-dessus du maximum absolu du corpus existant. La densité de
+> mise en page n'y était pour rien (1 410 car./page contre 1 329 en référence) —
+> c'était bien un excès de matière.
+
+### ⚠️ Le critère de sélection est le concours, pas la source
+
+**Ces fiches servent à faire réussir les EVC.** La question à se poser devant
+chaque paragraphe n'est donc pas « est-ce dans la source ? » mais **« est-ce
+nécessaire pour réussir l'épreuve ? »**. L'exhaustivité n'est pas l'objectif —
+la couverture de ce qui tombe l'est.
+
+| À garder | À écarter |
+|---|---|
+| Définitions | Détail des temps opératoires |
+| Indications, contre-indications | Nomenclature d'ancillaire |
+| Classifications | Variantes techniques marginales |
+| Valeurs seuils et chiffres-clés | Historique au-delà de ce qui éclaire la technique actuelle |
+| Complications et leur prévention | Redites entre parties |
+| Principes qui expliquent le geste | |
+| Conduite à tenir | |
+
+Ces sources sont des chapitres de **techniques chirurgicales** EMC : elles
+consacrent l'essentiel de leur volume au compagnonnage opératoire, qui n'est pas
+interrogé. C'est ce qui explique le rapport de 1 à 3 entre le chapitre et la
+fiche attendue.
+
+Second volet de la consigne : **« toutes les notions bien organisées
+nécessaires à la réussite »**. Donc aucun trou sur une notion qui tombe, et une
+organisation qui se révise. **Le plan de l'EMC n'a pas à être respecté** s'il
+n'est pas l'ordre le plus utile à un candidat : regrouper, comparer en tableau,
+remonter les indications avant la technique sont des choix légitimes.
+
+Le travail attendu est donc un travail de **sélection et de condensation** :
+fusionner les redites, préférer un tableau à trois paragraphes. Un chapitre
+pauvre donne une fiche courte — mais aucun chapitre ne justifie de dépasser
+40 pages.
+
+Ce qui doit passer **intégralement** dans les flashcards (100 à 200 par
+chapitre) et les séries n'a pas à figurer dans la fiche : les trois supports se
+répartissent la matière, ils ne la répètent pas.
 
 Corollaire : **zéro contenu hors programme**. Pas de rappel général, pas de mise
 en contexte ajoutée de mémoire, pas de complément « utile ». Ce qui n'est pas
 dans l'input n'entre pas dans la fiche.
+
+### ⚠️ Une cellule de détail est une LISTE À PUCES, jamais un paragraphe
+
+C'est le défaut le plus visible qu'ait produit cette chaîne. Mesuré :
+
+| | Fiches Major ECN exemplaires | Les 8 premières fiches d'Orthopédie |
+|---|---|---|
+| `<li>` par fiche | **270** | 37 |
+| Listes imbriquées | **72** | 6 |
+| Marqueurs `fmark` | 39 (sélectifs) | 0 |
+
+À pagination et volume de texte identiques (18-22 pages, ~30 000 caractères),
+les fiches de référence découpent en **sept fois plus de puces**. Un pavé de
+prose dans une cellule est illisible et ne se révise pas.
+
+**Le balisage de référence, à reproduire tel quel :**
+
+```html
+<tr>
+  <td class="ft-concept">Réponse ventriculaire</td>
+  <td class="ft-detail content"><ul>
+    <li>Sous la dépendance du <strong>nœud atrioventriculaire (AV)</strong></li>
+    <li>Capacité de filtration variable selon :<ul>
+      <li>État du système nerveux autonome</li>
+      <li>Imprégnation en médicaments bradycardisants</li>
+    </ul></li>
+  </ul></td>
+</tr>
+```
+
+Règles qui en découlent :
+
+- **`<td class="ft-detail content">`** — la classe `content` est obligatoire,
+  c'est elle qui porte les règles de puces. Sans elle, rien ne s'applique.
+- **Aucun `<p>` dans une cellule de détail.** Une idée = un `<li>`.
+- **Une puce tient en une à deux lignes.** Si elle en fait quatre, elle contient
+  plusieurs idées : la scinder, ou l'éclater en sous-liste.
+- **Sous-listes par `<ul>` imbriqué dans le `<li>` parent** : la charte rend le
+  niveau 1 en **disque plein** et les niveaux 2+ en **cercle creux indenté**
+  (`.content ul { list-style-type: disc }`, `.content ul ul { circle }`). C'est
+  le rendu attendu ; ne le simule jamais avec des caractères tapés.
+- **`<strong>` sur les mots-clés et les valeurs chiffrées**, pas sur des phrases
+  entières.
+
+**Marqueurs `fmark` — sémantiques et sélectifs.** `<span class="fmark m-ecn">★</span>`
+(ocre, tombe à l'examen), `m-yield` (bleu nuit, haut rendement), `m-trap`
+(bordeaux, piège). Ils se placent **après** le libellé du concept, sur une
+minorité de lignes.
+
+> **Erreur commise, à ne pas refaire.** Les 8 premières fiches préfixaient
+> **chaque** concept d'un `◆` tapé en dur, sans classe. Un marqueur présent
+> partout n'informe plus ; et écrit en littéral, il perd la couleur qui porte
+> son sens.
 
 ### ⚠️ Le piège du `<thead>`
 `thead { display: table-header-group }` fait **répéter l'en-tête en haut de
@@ -225,9 +377,21 @@ bannière visible : sans elle, le titre de la grande partie disparaît des pages
 de continuation.
 
 ### Images
-Filtres : ≥ 200×200 px, ratio ≤ 5:1, **25 maximum par fiche**. Au-delà, trier par
-utilité pédagogique — privilégier tableaux, algorithmes, classifications et
-schémas explicatifs ; écarter les photos peropératoires redondantes.
+Filtres : ≥ 200×200 px, ratio ≤ 5:1. **8 à 20 par fiche**, pas de plancher
+au-delà de 8. Trier par utilité pédagogique — privilégier tableaux, algorithmes,
+classifications et schémas explicatifs ; écarter les photos peropératoires
+redondantes, et **toute figure dont le texte d'accompagnement a disparu à la
+condensation**.
+
+Repère du corpus de référence : médiane **1** figure par fiche, 9e décile **8**.
+Ces chapitres de techniques chirurgicales justifient nettement plus, mais 25 est
+un chiffre de transcription, pas de synthèse.
+
+> **Erreur commise, à ne pas refaire.** Un plancher à 12 avait été imposé aux
+> agents de condensation : trois sur quatre s'y sont arrêtés exactement, en
+> déclarant ne plus pouvoir descendre sans entamer du contenu interrogeable.
+> C'était donc le plancher qui décidait du tri, et non l'utilité pédagogique.
+> Un plancher doit rester assez bas pour ne jamais être la contrainte active.
 
 Taille de rendu :
 
@@ -256,7 +420,25 @@ pédagogique propre — mais **sans légende inventée**.
 
 ## 9. Contrôles après chaque lot
 
-À passer systématiquement, avant d'enchaîner :
+À passer systématiquement, avant d'enchaîner.
+
+**Contrôle de longueur des fiches** — celui qui manquait, et sans lequel les
+quatre premières fiches sont parties à 65 pages :
+
+```sql
+select c.titre, f.pages,
+       length(regexp_replace(f.content_html,'<[^>]+>',' ','g')) as texte,
+       round(length(regexp_replace(f.content_html,'<[^>]+>',' ','g'))::numeric
+             / nullif(f.pages,0)) as car_par_page
+from cours c join fiches f on f.cours_id = c.id
+where c.matiere_id = 'col-orthopedie'
+order by f.pages desc;
+```
+
+`pages` doit être **entre 7 et 40**, `texte` sous **50 000**. Une fiche hors
+fourchette se refait — elle ne se republie pas telle quelle.
+
+Puis les contrôles de contenu :
 
 ```sql
 select c.titre,
@@ -305,6 +487,36 @@ joker SQL, le motif matche `cover-logo` et produit un faux positif. Utiliser
 
 ---
 
+## 9 bis. Chapitre trop pauvre pour 8 QCM + 8 DP (consigne du commanditaire, 2026-08-04)
+
+Certains chapitres du fonds sont trop minces (ex. `bilan-articulaire-main`,
+8,9 k car — un cours d'ergothérapie de goniométrie) pour produire honnêtement
+**8 séries QCM ET 8 séries DP** sans inventer. Le quota n'est jamais un motif de
+remplissage : **on ne bourre pas, on n'hallucine pas**. Règle arbitrée :
+
+- **QCM** : deux leviers, au choix ou combinés —
+  1. **Aller dans le détail** : un chapitre mince mais précis (valeurs normales,
+     repères chiffrés, technique de mesure) permet des QCM pointus ; on descend
+     d'un cran dans la finesse plutôt que de rester en surface.
+  2. **Réduire le nombre de séries** : si même en détaillant la matière ne suffit
+     pas, produire **moins de 8 séries QCM** (ce que la source soutient
+     réellement) plutôt que des questions creuses.
+
+- **DP** : un DP exige un cas clinique qui progresse — souvent impossible à bâtir
+  sur un chapitre purement technique/métrologique. Solution : **construire les DP
+  autour de chapitres voisins plus importants**, en y **intégrant certaines
+  notions du chapitre pauvre**. Le DP « appartient » alors au chapitre riche (cas
+  clinique réaliste) et fait apparaître, comme éléments testés, les notions du
+  chapitre mince. Rien n'est inventé : les autres chapitres sont aussi sourcés.
+
+**Traçabilité** : quand un chapitre reçoit moins de 8/8, le noter (worklist ou
+compte rendu) avec la raison, pour ne pas le relire comme « incomplet par
+accident ». Insertion : `_ins-chapter.mjs … --thin` autorise < 8 séries tout en
+gardant les contrôles de structure (5 items/Q, vignette DP, « Nouvel élément »,
+100-200 flashcards).
+
+---
+
 ## 10. Facturation
 
 Aucune action. `admin_facturation_lines()` balaie tous les collèges de la
@@ -321,6 +533,29 @@ flashcards, soit **18 € par item**.
 | Conclure « aucune fiche n'a d'image » depuis `scripts/mg-fiches-data/` | Dossier partiel : la base a 502/502 fiches illustrées | Interroger la **base**, pas un dossier local |
 | `ilike '%__LOGO__%'` | `_` est un joker : faux positif sur `cover-logo` | `regexp_matches` |
 | Détecteur de mots collés par motif `[a-z]{4,}(de|la|le)[a-z]{3,}` | Matche « grandement », « profondeur » : 133/133 faussement signalés | Détecter par **hapax du corpus**, pas par forme |
+| Écrire « la longueur de la fiche découle de la source, et d'elle seule » | Les 4 premières fiches à 80-94 k caractères, soit 57 à 65 pages, pour des chapitres de 95 k : des copies remises en page | Fourchette **7-40 pages**, texte **< 50 000 car.**, contrôle SQL avant publication (§8, §9) |
+| Soupçonner la charte (`thead` répété, grandes figures) devant des fiches trop longues | Temps perdu à optimiser des sauts de page ; un agent a scindé 18 lignes pour rien | **Mesurer d'abord** : `car./page` était à 1 410 contre 1 329 en référence — la mise en page était bonne, c'était un excès de matière |
+| Nom de fichier de travail générique dans le scratchpad partagé | `stripped.html` écrasé deux fois par des agents voisins ; mesures faussées sans erreur visible | Un **sous-dossier par chapitre**, imposé dans le brief |
+| Repérer les chapitres déjà traités par mot-clé (`slug.includes('scoliose')`) | Confond « Traitement **chirurgical** des scolioses » et « Traitement **orthopédique** des scolioses » : un chapitre saute | Liste figée dans `.corpus-orthopedie/worklist.json`, appariement par slug **exact** |
 | Bannière de partie dans la seule première table | Le titre de partie disparaît des pages de continuation | `--repeat` sur les tables suivantes |
 | Interdire la sous-chaîne `entra` dans les titres | « pivot central » rejeté à tort | La regex vise le mot entier |
 | Renseigner `importance` | Arbitrage pédagogique qui n'appartient pas à la génération | Toujours 0 |
+| Transformer une phrase contenant « : » en puce N+2 | Hiérarchie artificielle, illisible et non éditoriale | Une sous-liste n'existe que si le modèle source déclare explicitement une relation parent-enfant |
+| Fabriquer des concepts « Repère 1 », un plan générique ou un sous-titre « Synthèse issue de… » | Fiche structurellement valide mais pédagogiquement vide | Titres, parties et concepts médicaux nommés ; bannir ces gabarits au validateur |
+| Positionner le logo indépendamment du gabarit de couverture ou faire flotter une image sous les puces | Logo rogné / titre cassé, puis grands vides dans les cellules | Appliquer la règle de couverture centralisée : logo en position absolue dans la zone imprimable, en haut à droite ; réserver une colonne de titre à gauche. Dans une cellule, une petite image peut accompagner le texte ; tout schéma annoté ou grand visuel est placé sous le texte, pleine largeur |
+| Rendre ou publier le squelette HTML contenant encore `__IMGFILE:…__` | Images vides dans le PDF et dans l’éditeur | Toujours exécuter `_fiche-build.mjs`, auditer le HTML autoportant puis publier ce même HTML avec ses data-URI |
+| Retoucher un paquet généré mécaniquement sans remplacer ses séries, items et cartes | Des gabarits ou répétitions survivent en base malgré une fiche corrigée | Sauvegarder, supprimer transactionnellement le paquet complet puis republier un lot neuf et sourcé ; audit final par signatures des anciens gabarits |
+| Transformer automatiquement une flashcard en énoncé de QCM et ses autres versos en distracteurs | Questions hors-sujet, réponses répétitives et justifications interchangeables | Les cartes et les évaluations sont deux productions distinctes : chaque QCM est rédigé par sous-thème avec cinq propositions médicalement cohérentes et une justification propre à chaque proposition ; tout helper qui effectue cette conversion est interdit |
+| Utiliser un exemple illustratif comme carte ou question | Apprentissage de détails non transférables | Les exemples restent dans la fiche ; QCM, DP et cartes testent le principe transférable uniquement |
+| Appeler « DP » une succession de QCM techniques sans patient ni suivi | Pas de raisonnement clinique progressif | Vignette : patient, motif, données initiales, décision, geste et point de suivi ; les questions 2–7 apportent chacune un nouvel élément clinique ou de suivi |
+| Évaluer une couverture depuis un screenshot limité au viewport imprimable | Faux logo « rogné » et corrections CSS contradictoires | Les aperçus QA capturent désormais la feuille A4 complète ; valider la position logo/titre sur cet aperçu avant chaque publication |
+| Déduire un cours depuis un numéro de script ou `cours.order_index` | Les numéros historiques de base ne correspondent pas à l’ordre de `worklist.json` ; un contenu peut être publié sur le mauvais cours | Toute tâche porte le triplet explicite `slug` + `coursId` + titre de la worklist ; vérifier ce triplet avant snapshot et juste avant publication ; bannir les générateurs `produce-orthopedie-NNN` comme sélecteurs de cible |
+| Écrire un rapport d’audit sur `worklist.json` | La file des sources et identifiants est perdue, puis les agents ciblent des cours erronés | `worklist.json` est protégé dans l’auditeur ; tous les rapports vont dans `audit-production-*.json` et une copie de secours est conservée |
+| Auditer des énoncés HTML sans retirer les balises | Un DP valide commençant par `<p><em>Nouvel élément</em>` est faussement rejeté | Toujours convertir le HTML en texte avant les tests de début d’énoncé, de patient et de suivi ; conserver un test automatisé de cette forme éditable |
+| Corriger seulement une vignette DP sans refaire passer la banque par le validateur | Des cartes sur un exemple ou un ancien gabarit peuvent survivre | Toute republication, même limitée aux DP, repasse le validateur intégral : 100–200 rectos spécifiques, aucun « exemple » testable, QCM et DP distincts des cartes |
+| Exiger une liste dans une cellule qui contient uniquement un tableau comparatif éditable | Faux positif `listless-detail` sur une synthèse utile et déjà structurée | Une cellule est conforme si elle contient une liste pédagogique, une figure autonome, ou un tableau comparatif éditable ; une phrase narrative seule reste bloquante |
+| Afficher une étoile « tombé aux EVC/annales » sans annale fournie et traçable | Fausse autorité, information non sourcée | Les fiches Orthopédie n'affichent aucune étoile ni mention d'annale/EVC, sauf source explicitement fournie, référencée et validée |
+| Considérer un `<img>` ou une data-URI comme valide sans vérifier son décodage dans Chromium | Légende visible au-dessus d'un cadre blanc ou d'une image cassée | Auditer `naturalWidth`/`naturalHeight` de chaque figure, rendre le PDF et inspecter les pages concernées ; sinon supprimer la figure et tracer l'exception source |
+| Laisser « QCM — Série », « sous-thème », « Question : » ou « Nouvel élément : » dans un énoncé | Formulation artificielle qui montre la mécanique de production | Les QCM sont des questions directes ; les DP progressent par les données cliniques rédigées naturellement, sans étiquette de série, de cours, de question ni de nouvel élément |
+| Propager des séquences mojibake (`Ã©`, `â€™`…) d'un script ou d'un export | Accents français dégradés et lecture difficile | Lire/écrire systématiquement en UTF-8, contrôler les chaînes publiées avec le détecteur mojibake et corriger depuis `extract.json`, jamais par translittération approximative |
+| Aplatir toutes les puces ou créer une sous-liste après chaque deux-points | Fiche soit plate, soit artificiellement indentée | Ajouter une liste N+2 uniquement lorsqu'une relation parent-enfant est explicitement portée par la source ; auditer les listes imbriquées au rendu |

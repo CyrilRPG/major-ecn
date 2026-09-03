@@ -119,6 +119,8 @@
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nQuel geste pouvez-vous proposer pour confirmer votre diagnostic ?",
           "images": [
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-genou-photo1-cicatrice.jpg",
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-genou-photo2-radiographies.jpg",
             "annales-orthopedie/evcp2019correction/figures/img-033-156.png"
           ],
           "reponseAttendue": "Une ponction du liquide articulaire pour analyse bactériologique et cytologique.",
@@ -128,6 +130,8 @@
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nQuelle prise en charge médicale est nécessaire en urgence ?",
           "images": [
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-genou-photo1-cicatrice.jpg",
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-genou-photo2-radiographies.jpg",
             "annales-orthopedie/evcp2019correction/figures/recadre/img-036-169.png",
             "annales-orthopedie/evcp2019correction/figures/recadre/img-037-174.png"
           ],
@@ -137,28 +141,40 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nQuelles vont être les difficultés chirurgicales que vous anticipez ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-genou-photo1-cicatrice.jpg",
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-genou-photo2-radiographies.jpg"
+          ],
           "reponseAttendue": "La couverture cutanée (lambeau) et le saignement.",
           "correctionGenerale": "• Couverture cutanée (lambeau)\n• Saignement"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°5</b>\n\nQuels temps chirurgicaux doivent être absolument réalisés ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-genou-photo1-cicatrice.jpg",
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-genou-photo2-radiographies.jpg"
+          ],
           "reponseAttendue": "Synovectomie élargie, luxation de la prothèse, changement des pièces mobiles, prélèvements multiples, lavage abondant et fermeture de qualité.",
           "correctionGenerale": "• Synovectomie élargie\n• Luxation de la prothèse\n• Changement des pièces mobiles\n• Prélèvements multiples\n• Lavage abondant (Karcher)\n• Fermeture de qualité"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°6</b>\n\nQuelles informations principales donnez-vous à la patiente et à sa famille ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-genou-photo1-cicatrice.jpg",
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-genou-photo2-radiographies.jpg"
+          ],
           "reponseAttendue": "Le caractère nosocomial de l’infection, la nécessité d’une antibiothérapie prolongée avec surveillance biologique, la possibilité de « sauvetage » de la prothèse du fait de la prise en charge précoce, et en cas d’échec une dépose-repose en un ou deux temps.",
           "correctionGenerale": "• Infection « nosocomiale »\n• Antibiothérapie prolongée avec surveillance biologique\n• « Sauvetage » de la prothèse possible car prise en charge précoce\n• Si échec : dépose-repose en 1 ou 2 temps"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°7</b>\n\nComment gérez-vous le traitement médical ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-genou-photo1-cicatrice.jpg",
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-genou-photo2-radiographies.jpg"
+          ],
           "reponseAttendue": "Antibiothérapie secondairement adaptée à l’antibiogramme dès les résultats bactériologiques, en concertation avec les infectiologues ; surveillance des fonctions rénale et hépatique ; relais temporaire de l’Eliquis par HNF à dose curative (demi-vie courte) en raison du risque de reprise chirurgicale.",
           "correctionGenerale": "• Antibiothérapie secondairement adaptée à l’antibiogramme dès les résultats bactériologiques ; concertation avec l’équipe d’infectiologie\n• Surveillance des fonctions rénale et hépatique\n• Relais temporaire de l’Eliquis par HNF à dose curative (demi-vie courte), car risque éventuel de reprise chirurgicale\n\nBibliographie : HAS, <i>Prothèse de hanche ou de genou : diagnostic et prise en charge de l’infection dans le mois suivant l’implantation</i>, mars 2014 ; HAS 2008, <i>Prise en charge des surdosages en antivitamine K…</i>"
         }
@@ -361,6 +377,8 @@
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nQuelles sont les complications précoces d’une telle fracture ?",
           "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-103-458.png",
+            "annales-orthopedie/evcp2019correction/figures/img-103-460.png",
             "annales-orthopedie/evcp2019correction/figures/img-108-463.png"
           ],
           "reponseAttendue": "Complications vasculaires (artère brachiale : absence de pouls radial, doigts blancs), complications nerveuses (nerf interosseux antérieur ++, nerf médian, nerf ulnaire, nerf radial) et syndrome des loges.",
@@ -370,6 +388,8 @@
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nQuel traitement proposez-vous ?",
           "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-103-458.png",
+            "annales-orthopedie/evcp2019correction/figures/img-103-460.png",
             "annales-orthopedie/evcp2019correction/figures/recadre/img-111-464.png",
             "annales-orthopedie/evcp2019correction/figures/recadre/img-112-465.png"
           ],
@@ -379,7 +399,10 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nEst-il nécessaire de proposer une immobilisation postopératoire, et si oui laquelle ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-103-458.png",
+            "annales-orthopedie/evcp2019correction/figures/img-103-460.png"
+          ],
           "reponseAttendue": "Oui : une immobilisation postopératoire par simple écharpe contre-écharpe, sans plâtre circulaire.",
           "correctionGenerale": "Immobilisation postopératoire par simple écharpe contre-écharpe (pas de plâtre circulaire)."
         },
@@ -387,6 +410,8 @@
           "format": "qroc",
           "enonce": "<b>Question n°5</b>\n\nQuelles sont les complications secondaires et tardives d’une telle fracture ? Les citer.",
           "images": [
+            "annales-orthopedie/evcp2019correction/figures/img-103-458.png",
+            "annales-orthopedie/evcp2019correction/figures/img-103-460.png",
             "annales-orthopedie/evcp2019correction/figures/img-116-466.png",
             "annales-orthopedie/evcp2019correction/figures/recadre/img-117-467.png",
             "annales-orthopedie/evcp2019correction/figures/img-117-468.png"

@@ -93,11 +93,7 @@ function buildCover(meta) {
       <div class="cover-year">Année&nbsp;2025-2026</div>
       <div class="cover-item">${esc(meta.item || '')}</div></div>
     <div class="cover-plan"><div class="cover-section-label">Plan du cours</div><ol class="cover-plan-list">${planLi}</ol></div>
-    <div class="cover-legend"><div class="cover-section-label">Légende</div><div class="cover-legend-items">
-      <span class="cover-legend-item"><span class="cover-legend-sym cover-legend-sym--1">★</span><span class="cover-legend-text">Déjà tombé aux EVC</span></span>
-      <span class="cover-legend-item"><span class="cover-legend-sym cover-legend-sym--2">◆</span><span class="cover-legend-text">Notion à haut rendement</span></span>
-      <span class="cover-legend-item"><span class="cover-legend-sym cover-legend-sym--3">⚠</span><span class="cover-legend-text">Piège classique</span></span>
-    </div></div></div></section>`;
+    </div></section>`;
 }
 
 // Renumérote une table pour l'item : partie-banner-num + ft-tag → roman ; titre

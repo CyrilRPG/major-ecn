@@ -1,0 +1,56 @@
+{
+  "Q1C": { "juste": true, "enonce": "Sténose coronaire serrée.", "justification": "L’obstacle épicardique limite le débit sanguin disponible pour le myocarde." },
+  "Q1D": { "juste": true, "enonce": "Élévation de la pression télédiastolique du ventricule gauche.", "justification": "Elle abaisse la pression de perfusion coronarienne, différence entre diastolique aortique et pression de sortie." },
+
+  "Q4A": { "juste": false, "enonce": "Il requiert une élévation de la créatine kinase MB pour être retenu.", "justification": "Sa définition repose sur la troponine, plus sensible pour un dommage myocardique limité." },
+
+  "Q5B": { "juste": false, "enonce": "Elle se définit par une pression artérielle pulmonaire moyenne supérieure à 45 mmHg.", "justification": "Le seuil hémodynamique retenu se situe très en dessous de cette valeur, autour de 20 mmHg." },
+  "Q5D": { "juste": false, "enonce": "Un remplissage vasculaire abondant traite en première intention la défaillance droite aiguë.", "justification": "Une surcharge distend le ventricule droit et aggrave son interdépendance avec le ventricule gauche." },
+
+  "Q6D": { "juste": true, "enonce": "Accident vasculaire cérébral ou ischémique transitoire ancien.", "justification": "L’atteinte cérébrovasculaire constitue le facteur neurologique du score." },
+
+  "Q7D": { "juste": true, "enonce": "Danser ou pratiquer une marche rapide prolongée.", "justification": "Un effort soutenu de plusieurs minutes dépasse le seuil de quatre METS." },
+
+  "Q9A": { "juste": false, "enonce": "Débuter un bêtabloquant à forte dose la veille pour stabiliser la cardiopathie.", "justification": "Une introduction tardive et non titrée expose à hypotension, bradycardie et accident vasculaire cérébral." },
+  "Q9D": { "juste": false, "enonce": "Se contenter d’une réserve fonctionnelle supérieure à 4 METS pour valider le geste.", "justification": "Une bonne tolérance à l’effort ne dispense pas de traiter d’abord la cardiopathie instable." },
+
+  "Q10B": { "juste": false, "enonce": "Elle justifie à elle seule un test d’ischémie avant tout geste.", "justification": "L’indication dépend aussi du risque chirurgical et de la capacité du résultat à modifier la décision." },
+  "Q10C": { "juste": false, "enonce": "Un test d’effort maximal reste réalisable chez tout patient sous 4 METS.", "justification": "Une réserve limitée rend souvent l’épreuve ininterprétable et conduit à préférer une exploration pharmacologique." },
+
+  "Q11C": { "juste": true, "enonce": "Cure d’anévrisme de l’aorte abdominale.", "justification": "Le terrain vasculaire et l’instabilité hémodynamique attendue placent ce geste au-delà de 5 % de complications." },
+  "Q11E": { "juste": true, "enonce": "Duodénopancréatectomie céphalique.", "justification": "La durée, les pertes sanguines et les transferts liquidiens en font une chirurgie à risque cardiaque élevé." },
+
+  "Q12E": { "juste": true, "enonce": "Exérèse d’une lésion cutanée superficielle.", "justification": "Ce geste très bref sous anesthésie locale se situe sous le seuil de 1 % de complications cardiaques." },
+
+  "Q13E": { "juste": true, "enonce": "Anomalie récente du rythme perçue à l’auscultation.", "justification": "Une irrégularité nouvelle demande une caractérisation électrique avant l’anesthésie." },
+
+  "Q14A": { "juste": false, "enonce": "Prescrire un bilan cardiaque complet à tout opéré de plus de soixante ans.", "justification": "L’indication naît d’une question clinique précise, non du seul critère d’âge." },
+
+  "Q15B": { "juste": false, "enonce": "Quantification directe de la sévérité d’une sténose coronaire épicardique.", "justification": "L’anatomie coronaire s’explore par coronarographie ou scanner, hors de portée de l’échographie transthoracique." },
+  "Q15C": { "juste": false, "enonce": "Estimation fiable de la pression artérielle diastolique battement par battement.", "justification": "Cette donnée provient du brassard ou du cathéter artériel, pas de l’imagerie ultrasonore." },
+
+  "Q16A": { "juste": false, "enonce": "Introduire un bêtabloquant chez tout patient devant subir une chirurgie à risque intermédiaire.", "justification": "L’introduction préopératoire systématique n’est pas recommandée en dehors d’une indication cardiologique propre." },
+
+  "Q17C": { "juste": true, "enonce": "Prévoir une interruption d’au moins douze heures lorsque la suspension est retenue.", "justification": "Ce délai réduit nettement le risque d’hypotension artérielle à l’induction." },
+  "Q17E": { "juste": true, "enonce": "Reprendre le traitement dès que volémie et fonction rénale le permettent.", "justification": "Le bénéfice pronostique de fond justifie de raccourcir la fenêtre sans traitement." },
+
+  "Q18A": { "juste": false, "enonce": "Considérer que le risque thrombotique disparaît un mois après un stent pharmacoactif.", "justification": "La vulnérabilité de l’endoprothèse persiste bien au-delà de ce délai, très insuffisant." },
+  "Q18E": { "juste": true, "enonce": "Apprécier la stabilité de la lésion coronaire sous-jacente.", "justification": "Une plaque instable rend l’arrêt du traitement plus dangereux qu’une lésion ancienne quiescente." },
+
+  "Q19E": { "juste": true, "enonce": "Rappeler son bénéfice démontré chez le coronarien opéré d’une chirurgie vasculaire.", "justification": "Les effets pléiotropes sur la fonction endothéliale soutiennent cette prévention cardiovasculaire." },
+
+  "Q20A": { "juste": false, "enonce": "Considérer qu’un INR normalisé autorise à poursuivre un anticoagulant direct jusqu’au matin.", "justification": "L’INR reflète mal l’activité des anticoagulants directs, dont l’arrêt suit un délai propre." },
+  "Q20B": { "juste": false, "enonce": "Arrêter une héparine de bas poids moléculaire curative deux heures avant l’incision.", "justification": "Une dernière injection curative demande environ vingt-quatre heures de délai avant un geste chirurgical." },
+
+  "Q21A": { "juste": false, "enonce": "PAM approximativement égale au rapport du débit cardiaque sur les résistances.", "justification": "La loi de Hagen-Poiseuille pose un produit entre débit et résistances, jamais une division." },
+  "Q21C": { "juste": false, "enonce": "La pression artérielle est proportionnelle au rayon des vaisseaux.", "justification": "Elle varie en sens inverse du rayon, un vaisseau élargi abaissant les résistances." },
+
+  "Q22E": { "juste": true, "enonce": "Postcharge imposée à l’éjection.", "justification": "Elle conditionne l’ouverture aortique et le volume finalement propulsé dans la circulation." },
+
+  "Q23B": { "juste": false, "enonce": "La ventilation en pression positive augmente le retour veineux systémique.", "justification": "L’élévation de pression intrathoracique gêne l’arrivée du sang vers l’oreillette droite." },
+  "Q23C": { "juste": true, "enonce": "La compliance ventriculaire diastolique y participe.", "justification": "Un ventricule rigide se remplit moins pour une même pression d’amont." },
+
+  "Q24A": { "juste": false, "enonce": "Réduire l’inotropisme pour ménager le ventricule dilaté.", "justification": "Une baisse de contractilité diminue le volume antérograde d’un ventricule déjà surchargé par la fuite." },
+
+  "Q25A": { "juste": false, "enonce": "Tolérer une pression artérielle diastolique à 35 mmHg pendant la dissection.", "justification": "La pression de perfusion coronarienne exige une diastolique maintenue autour d’au moins 50 mmHg." }
+}

@@ -48,6 +48,8 @@ const MAP: { keys: string[]; theme: SpecialtyTheme }[] = [
   // hériterait de l'identité visuelle de la médecine générale.
   { keys: ['urgence', 'reanimation', 'rea'],  theme: { Icon: HeartPulse,    accent: '#DC2626', bg: '#FEE2E2' } },
   { keys: ['dermatologie', 'dermato'],        theme: { Icon: Hand,          accent: '#EA580C', bg: '#FFEDD5' } },
+  { keys: ['orthopedie', 'orthopedique'],     theme: { Icon: Bone,          accent: '#0369A1', bg: '#E0F2FE' } },
+  { keys: ['odontologie', 'odonto'],          theme: { Icon: Smile,         accent: '#0D9488', bg: '#CCFBF1' } },
   { keys: ['medecine generale', 'medecine'],  theme: { Icon: Stethoscope,   accent: '#1E40AF', bg: '#DBEAFE' } },
 ];
 

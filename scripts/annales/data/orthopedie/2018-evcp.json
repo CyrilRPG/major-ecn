@@ -79,7 +79,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nQuel(s) est (sont) le(s) mécanisme(s) lésionnel(s) de ce traumatisme ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2018-correction/figures/img-015-063.png"
+          ],
           "reponseAttendue": "Rotation externe et hyperflexion plantaire.",
           "correctionGenerale": "• Rotation externe\n• Hyperflexion plantaire"
         },
@@ -87,6 +89,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nClassification des fractures ouvertes.",
           "images": [
+            "annales-orthopedie/evcp-2018-correction/figures/img-015-063.png",
             "annales-orthopedie/evcp-2018-correction/figures/recadre/img-021-089.png",
             "annales-orthopedie/evcp-2018-correction/figures/img-022-094.png",
             "annales-orthopedie/evcp-2018-correction/figures/img-022-095.png"
@@ -97,21 +100,27 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nConduite à tenir en urgence.",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2018-correction/figures/img-015-063.png"
+          ],
           "reponseAttendue": "Réduction en urgence par manœuvre externe aux urgences sous antalgie adaptée (manœuvre de l’arrache-botte), lavage de la plaie au sérum physiologique et pansement occlusif, immobilisation temporaire par attelle plâtrée postérieure, contrôle radiologique post-réduction, antibioprophylaxie par Augmentin IV (bolus 2 g puis 1 g × 3/j), puis stabilisation au bloc opératoire.",
           "correctionGenerale": "• Réduction en urgence par manœuvre externe (aux urgences ++) avec antalgie adaptée IV et/ou gazeuse — manœuvre de l’arrache-botte\n• Lavage de la plaie au sérum physiologique, pansement occlusif (pas de dérivés chlorés ou iodés, cytotoxiques pour le cartilage)\n• Immobilisation temporaire par attelle plâtrée postérieure\n• Contrôle radiologique post-réduction\n• Antibioprophylaxie : Augmentin IV, bolus 2 g puis 1 g × 3/j\n• Puis stabilisation au bloc opératoire"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°5</b>\n\nPrincipes du traitement.",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2018-correction/figures/img-015-063.png"
+          ],
           "reponseAttendue": "Si l’état cutané est favorable : parage et lavage abondant, ostéosynthèse première de la malléole externe par plaque tiers-tube par abord latéral, ostéosynthèse de la malléole médiale, +/− ostéosynthèse de la malléole postérieure. Si l’état cutané est précaire : ostéosynthèse temporaire par fixateur externe tibio-calcanéen puis conversion secondaire une fois l’œdème et les phlyctènes résorbés.",
           "correctionGenerale": "<b>État cutané favorable</b>\n• Parage, lavage abondant\n• Ostéosynthèse première de la malléole externe par plaque 1/3 tube par abord latéral\n• Ostéosynthèse de la malléole médiale (vis ou broche)\n• +/− ostéosynthèse de la malléole postérieure\n\n<b>État cutané précaire</b>\n• Ostéosynthèse temporaire par fixateur externe tibio-calcanéen\n• Conversion secondaire par ostéosynthèse interne une fois l’œdème et les phlyctènes résorbés"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°6</b>\n\nL’évolution est compliquée par la survenue d’un écoulement suppuré de la cicatrice médiale au 10ᵉ jour postopératoire, avec une température à 37,8 °C. Quel est votre diagnostic et votre prise en charge ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2018-correction/figures/img-015-063.png"
+          ],
           "reponseAttendue": "Arthrite septique tibio-talienne sur fracture ouverte : reprise chirurgicale avec arthrotomie médiale, prélèvements profonds, synovectomie, lavage abondant (6 à 9 L), changement du matériel d’ostéosynthèse, et antibiothérapie probabiliste IV (vancomycine + tazocilline +/− gentamicine si sepsis sévère) secondairement adaptée à l’antibiogramme.",
           "correctionGenerale": "<b>Diagnostic</b> : arthrite septique tibio-talienne post-fracture ouverte.\n\n<b>Prise en charge</b>\n• Reprise chirurgicale\n• Arthrotomie médiale\n• Prélèvements profonds à visée bactériologique\n• Synovectomie\n• Lavage abondant au sérum physiologique (6 à 9 L)\n• Changement de la broche / vis d’ostéosynthèse\n• Antibiothérapie probabiliste IV : vancomycine + tazocilline (pipéracilline-tazobactam) +/− gentamicine si sepsis sévère\n• Secondairement adaptée à l’antibiogramme"
         }
@@ -138,14 +147,20 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nQuelles sont les options chirurgicales ? Discutez chacune d’elles au décours du bilan d’imagerie.",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2018-correction/figures/img-030-128.png",
+            "annales-orthopedie/evcp-2018-correction/figures/img-030-130.png"
+          ],
           "reponseAttendue": "Ostéotomie tibiale de valgisation (fermeture ou ouverture) si arthrose fémoro-tibiale interne avec défaut d’axe osseux ; prothèse unicompartimentale fémoro-tibiale interne si défaut d’axe minime lié à l’usure et réductible ; prothèse tricompartimentale si lésions des autres compartiments, défaut d’axe important, grade 4 d’Ahlbäck ou subluxation transversale du tibia.",
           "correctionGenerale": "• <b>Ostéotomie tibiale de valgisation</b> (fermeture / ouverture) — arthrose fémoro-tibiale interne + défaut d’axe osseux\n• <b>Prothèse unicompartimentale fémoro-tibiale interne</b> — défaut d’axe minime lié à l’usure (réductible)\n• <b>Prothèse tricompartimentale</b> :\n  – Si lésions associées des autres compartiments\n  – Si défaut d’axe important au pangonogramme\n  – Grade 4 d’Ahlbäck\n  – Subluxation transversale du tibia sous le fémur"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nÀ l’examen clinique, que recherchez-vous qui déterminera votre choix définitif ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2018-correction/figures/img-030-128.png",
+            "annales-orthopedie/evcp-2018-correction/figures/img-030-130.png"
+          ],
           "reponseAttendue": "L’absence de laxité du pivot central (une laxité contre-indiquant la PUC), la réductibilité de la déformation, un IMC > 30, des douleurs diffuses avec syndrome fémoro-patellaire et une composante inflammatoire avec épanchement abondant — ces trois derniers orientant vers une PTG.",
           "correctionGenerale": "• Absence de laxité du pivot central (contre-indication à la PUC)\n• Réductibilité de la déformation\n• IMC > 30 → PTG\n• Douleurs diffuses avec syndrome fémoro-patellaire → PTG\n• Composante inflammatoire avec épanchement abondant → PTG"
         },
@@ -153,6 +168,8 @@
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nAu troisième jour, le patient présente une dyspnée. Quel diagnostic évoquez-vous en priorité ? Comment le confirmer ?",
           "images": [
+            "annales-orthopedie/evcp-2018-correction/figures/img-030-128.png",
+            "annales-orthopedie/evcp-2018-correction/figures/img-030-130.png",
             "annales-orthopedie/evcp-2018-correction/figures/img-039-168.png",
             "annales-orthopedie/evcp-2018-correction/figures/recadre/img-040-173.png"
           ],

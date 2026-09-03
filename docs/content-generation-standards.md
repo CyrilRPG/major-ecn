@@ -4,60 +4,113 @@
 > exclusivement sur les sources fournies (fiche PDF + annales du cours).
 > En l'absence de source, on ne génère pas — on demande la source.
 
+## Standard canonique de production par collège (2026)
+
+Le standard ci-dessous remplace les anciens volumes 4 + 4 encore mentionnés
+dans les descriptions historiques des actions admin :
+
+| Banque | Séries | Questions par série | Format |
+|---|---:|---:|---|
+| QCM | 8 | 5 | 5 propositions A-E, 1 à 4 exactes |
+| DP QCM | 8 | 7 | vignette commune et progression clinique naturelle |
+| QROC | 8 | 5 | réponse attendue obligatoire, aucun item |
+| DP QROC | 8 | 7 | vignette commune et progression clinique naturelle |
+
+Un cours standard contient donc **32 séries, 192 questions et 480 items QCM**,
+ainsi que **100 à 200 flashcards**. Les QCM/DP QCM portent
+`allowed_voies=['interne']`; les QROC/DP QROC portent
+`allowed_voies=['externe']`. Le staff voit les quatre banques.
+
+### Fiche Major ECN et figures source
+
+- La fiche est une synthèse pédagogique inédite : aucun assemblage de blocs
+  copiés-collés du document source.
+- Le niveau N+2 est réservé aux dépendances réelles d'un N+1 ; il n'est ni
+  systématique, ni décoratif, et les lignes N+1 simples restent majoritaires.
+- Une image contenant du texte est toujours placée après le texte, dans une
+  ligne pleine largeur. Elle n'est jamais réduite dans une troisième colonne.
+- Les numéros éditoriaux du document source ne sont jamais affichés. Lorsqu'ils
+  sont incrustés dans le raster, utiliser un recadrage ou un masque blanc ciblé,
+  sans génération ni altération du contenu médical de l'image.
+- Le PDF final est rendu intégralement en PNG et chaque page est contrôlée :
+  page blanche, contenu rogné, débordement, tableau tronqué, figure illisible,
+  répétition de bandeau et page anormalement creuse.
+
+Les questions 2 à 7 d'un DP apportent une donnée clinique, biologique,
+thérapeutique ou évolutive nouvelle dans une phrase naturelle. Les étiquettes
+visibles telles que « Nouvel élément : » ou « Question : » sont interdites.
+La vignette reste stockée dans `qcm_series.vignette` et n'est jamais répétée
+dans les énoncés.
+
+La publication de masse passe par `replace_cours_generated_content` dans sa
+version QCM/QROC ou par le publieur de collège avec rollback et audit de lecture
+par cours. Un collège en production reste `specific` jusqu'à réussite de
+l'audit global, puis seulement il peut passer à `all`.
+
 ---
 
-## QCM — 40 par cours, ventilés en 8 séries de 5
+## Banques d'entraînement — 32 séries par cours
 
 À chaque demande « génère des QCM pour le cours X » :
 
+Ne jamais dériver les propositions d'une flashcard, ni utiliser les versos de
+cartes comme distracteurs. Les QCM sont une rédaction indépendante, organisée
+par sous-thème, avec des propositions plausibles, spécifiques et justifiées une
+à une depuis la source.
+
 ### Découpage obligatoire
 
-| Série | Type | Format | Nb questions |
-|---|---|---|---|
-| Cours — Série 1 | Questions isolées | 5 items A-E, 1+ bonnes réponses | 5 |
-| Cours — Série 2 | Questions isolées | 5 items A-E, 1+ bonnes réponses | 5 |
-| Cours — Série 3 | Questions isolées | 5 items A-E, 1+ bonnes réponses | 5 |
-| Cours — Série 4 | Questions isolées | 5 items A-E, 1+ bonnes réponses | 5 |
-| DP 1 | Dossier progressif | Vignette commune + 5 questions enchaînées | 5 |
-| DP 2 | Dossier progressif | Vignette commune + 5 questions enchaînées | 5 |
-| DP 3 | Dossier progressif | Vignette commune + 5 questions enchaînées | 5 |
-| DP 4 | Dossier progressif | Vignette commune + 5 questions enchaînées | 5 |
+| Banque | Séries | Questions/série | Contraintes |
+|---|---:|---:|---|
+| QCM isolés | 8 | 5 | cinq propositions A-E, une à quatre exactes |
+| DP QCM | 8 | 7 | vignette commune et progression clinique |
+| QROC isolés | 8 | 5 | réponse courte, objectivable, sans proposition |
+| DP QROC | 8 | 7 | vignette distincte et progression clinique |
 
-**Total : 40 QCM, 8 séries.**
+**Total : 32 séries, 192 questions et 480 propositions QCM.**
 
 ### Nomenclature des séries (champ `label` dans `qcm_series`)
 
-- Séries de cours : `Cours — Série 1 · <sous-thème>` à `Cours — Série 4 · …`
-  Les 4 sous-thèmes doivent être complémentaires et non chevauchants.
-- Dossiers progressifs : `DP 1 · <titre court du cas>` à `DP 4 · …`
-  (ex. `DP 1 · Pneumonie de la femme âgée`)
+- QCM : `QCM — Série 1 · <sous-thème>` à `QCM — Série 8 · …`.
+- DP QCM : `DP QCM 1 · <titre court du cas>` à `DP QCM 8 · …`.
+- QROC : `QROC — Série 1 · <sous-thème>` à `QROC — Série 8 · …`.
+- DP QROC : `DP QROC 1 · <titre court du cas>` à `DP QROC 8 · …`.
+- Les 32 intitulés sont uniques et les sous-thèmes complémentaires.
 
 ### Style des questions
 
-**Cours** (Séries 1 à 4) : 20 questions au total — questions de connaissances
-isolées sur des points hypertombables, format EVC :
+**Questions isolées** : connaissances et raisonnement sur les points utiles aux
+EVC :
 - énoncé court, factuel
 - 5 items A à E
 - 1 à 4 bonnes réponses possibles
 - justification médicale par item (validée par la fiche ou les annales)
 
-**Dossiers progressifs** (DP 1 à DP 4) : 4 DP × 5 questions chacun, en
-conditions réelles annales :
+**Dossiers progressifs** : 8 DP QCM et 8 DP QROC de sept questions chacun :
 - énoncé clinique unique en tête (vignette de 8-15 lignes : patient, motif,
   examen, première para-clinique)
+- la vignette décrit également la décision initiale et un point de suivi ; un
+  DP technique reste un cas patient, jamais une liste de questions de cours
+- les questions 2 à 7 apportent naturellement une donnée clinique, biologique,
+  opératoire, thérapeutique ou évolutive réellement utile au raisonnement ;
+- les libellés artificiels « Nouvel élément », « À l'étape », « Question » et
+  les annonces de génération sont interdits ;
+- les exemples illustratifs du cours ne deviennent ni le sujet d’une carte ni
+  le cœur d’une question : on teste la règle générale transférable
 - **La vignette est stockée dans `qcm_series.vignette` (colonne dédiée)
   PAS dans le `enonce` des questions.** Le composant `QcmSession` l'affiche
   automatiquement dans un encadré séparé bordé bordeaux au-dessus de chaque
   question. Ne JAMAIS la dupliquer dans `qcm_questions.enonce`.
 - chaque `qcm_questions.enonce` contient uniquement la question spécifique
   (sans la vignette)
-- 5 questions qui suivent le raisonnement clinique : diagnostic → para-clinique
-  complémentaire → diagnostic différentiel → thérapeutique → suivi/complication
+- les sept questions suivent un raisonnement cohérent : analyse initiale,
+  diagnostic ou risque, examens, décision, traitement, surveillance et
+  complication/adaptation ;
 - **inspiration directe des annales du cours** : style, longueur, niveau de
   pertinence des distracteurs
 - **pas trop faciles** : viser le niveau réel des EVC, pas un exercice scolaire
-- pièges classiques attendus : item piège « toutes les réponses ci-dessus »,
-  faux amis pharmaco, contre-indications souvent oubliées
+- les distracteurs sont plausibles et spécifiques. Les formulations « toutes
+  les réponses ci-dessus » et les inversions mécaniques sont interdites.
 
 Idem pour les **annales** (`qcm_series.type = 'annale'`) qui ont une vignette
 commune : on remplit `qcm_series.vignette` et les `qcm_questions.enonce` ne
@@ -73,13 +126,13 @@ contiennent que la question.
 
 ---
 
-## Flashcards — 50 à 200 par cours, exhaustives
+## Flashcards — 100 à 200 par cours, exhaustives
 
 À chaque demande « génère des flashcards exhaustifs pour X » :
 
 ### Volume
 
-- **Minimum 50** cartes
+- **Minimum 100** cartes
 - **Maximum 200** cartes
 - Cible : ~1 carte par notion essentielle de la fiche + 1 carte par item piège
   des annales du cours
@@ -151,7 +204,7 @@ Quand l'utilisateur demande une génération :
    - `qcm_questions` : 5 lignes par série. **Pour les DP : `enonce` ne
      contient que la question spécifique (sans la vignette).**
    - `qcm_items` : 5 items A-E par question avec `is_correct` et `justification`
-   - `flashcards` : 50-200 lignes
+   - `flashcards` : 100-200 lignes
 5. **Déclencher la réindexation RAG** (`reindexCoursAction`) après insertion
    pour mettre à jour `cours_chunks`.
 
@@ -160,8 +213,8 @@ Quand l'utilisateur demande une génération :
 L'admin peut aussi déclencher la génération automatique :
 - Onglet « Flashcards » → bouton **Générer flashcards exhaustifs** (action
   `generateFlashcardsAction`)
-- Onglet « QCM » → bouton **Générer 4 séries de 5 QCM** (action
-  `generateQcmAction`)
+- L'ancien bouton « Générer 4 séries de 5 QCM » ne respecte pas le standard
+  collège 2026 et ne doit pas être utilisé pour cette production.
 
 Les deux actions appellent Claude Sonnet 4.6 avec le contexte fiche + annales
 et respectent les standards ci-dessus.

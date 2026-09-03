@@ -78,7 +78,7 @@
           "enonce": "<b>Sujet 2 — Question 2</b>\n\nDonnez les critères de classification de l’IMC d’après l’OMS ; citez les différentes tranches.",
           "images": [],
           "reponseAttendue": "Moins de 16,5 : dénutrition ; 16,5 à 18,5 : maigreur ; 18,5 à 25 : corpulence normale ; 25 à 30 : surpoids ; 30 à 35 : obésité modérée ; 35 à 40 : obésité sévère ; plus de 40 : obésité morbide ou massive.",
-          "correctionGenerale": "<i>Réponse donnée sous forme du tableau de classification de l’OMS, retranscrit ci-dessous.</i>\n\n• Moins de 16,5 : <b>dénutrition</b>\n• 16,5 à 18,5 : <b>maigreur</b>\n• 18,5 à 25 : <b>corpulence normale</b>\n• 25 à 30 : <b>surpoids</b>\n• 30 à 35 : <b>obésité modérée</b>\n• 35 à 40 : <b>obésité sévère</b>\n• Plus de 40 : <b>obésité morbide ou massive</b>"
+          "correctionGenerale": "<b>Classification de l’OMS</b>\n\n• Moins de 16,5 : <b>dénutrition</b>\n• 16,5 à 18,5 : <b>maigreur</b>\n• 18,5 à 25 : <b>corpulence normale</b>\n• 25 à 30 : <b>surpoids</b>\n• 30 à 35 : <b>obésité modérée</b>\n• 35 à 40 : <b>obésité sévère</b>\n• Plus de 40 : <b>obésité morbide ou massive</b>"
         },
         {
           "format": "qroc",

@@ -269,8 +269,8 @@
           "format": "qroc",
           "enonce": "<b>Partie 1 — Question 1</b>\n\nUn homme de 54 ans présente une altération de l’état général, une diarrhée et une hépatomégalie à bord non tranchant.\n\nAntécédents et mode de vie : bronchite chronique, dépression, consommation d’alcool de 60 g/j, pancréatite aiguë 5 ans plus tôt, tabagisme non sevré à 25 paquets-années. Poids 81 kg pour 2 m.\n\nCalculez son IMC.",
           "images": [],
-          "reponseAttendue": "IMC = poids / taille², soit 81 / 2² ≈ 20 ; le corrigé retient une valeur de 17.",
-          "correctionGenerale": "• <b>IMC = poids / taille²</b>, soit environ <b>17</b> selon le corrigé"
+          "reponseAttendue": "IMC = poids / taille², soit 81 / 2² ≈ 20 kg/m².",
+          "correctionGenerale": "• <b>IMC = poids / taille²</b> = 81 / 2² ≈ <b>20 kg/m²</b>"
         },
         {
           "format": "qroc",

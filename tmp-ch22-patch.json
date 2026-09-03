@@ -1,0 +1,837 @@
+{
+ "Q1C": {
+  "juste": true,
+  "enonce": "Sténose coronaire serrée.",
+  "justification": "L’obstacle épicardique limite le débit sanguin disponible pour le myocarde."
+ },
+ "Q1D": {
+  "juste": true,
+  "enonce": "Élévation de la pression télédiastolique du ventricule gauche.",
+  "justification": "Elle abaisse la pression de perfusion coronarienne, différence entre diastolique aortique et pression de sortie."
+ },
+ "Q4A": {
+  "juste": false,
+  "enonce": "Il requiert une élévation de la créatine kinase MB pour être retenu.",
+  "justification": "Sa définition repose sur la troponine, plus sensible pour un dommage myocardique limité."
+ },
+ "Q5B": {
+  "juste": false,
+  "enonce": "Elle se définit par une pression artérielle pulmonaire moyenne supérieure à 45 mmHg.",
+  "justification": "Le seuil hémodynamique retenu se situe très en dessous de cette valeur, autour de 20 mmHg."
+ },
+ "Q5D": {
+  "juste": false,
+  "enonce": "Un remplissage vasculaire abondant traite en première intention la défaillance droite aiguë.",
+  "justification": "Une surcharge distend le ventricule droit et aggrave son interdépendance avec le ventricule gauche."
+ },
+ "Q6D": {
+  "juste": true,
+  "enonce": "Accident vasculaire cérébral ou ischémique transitoire ancien.",
+  "justification": "L’atteinte cérébrovasculaire constitue le facteur neurologique du score."
+ },
+ "Q7D": {
+  "juste": true,
+  "enonce": "Danser ou pratiquer une marche rapide prolongée.",
+  "justification": "Un effort soutenu de plusieurs minutes dépasse le seuil de quatre METS."
+ },
+ "Q9A": {
+  "juste": false,
+  "enonce": "Débuter un bêtabloquant à forte dose la veille pour stabiliser la cardiopathie.",
+  "justification": "Une introduction tardive et non titrée expose à hypotension, bradycardie et accident vasculaire cérébral."
+ },
+ "Q9D": {
+  "juste": false,
+  "enonce": "Se contenter d’une réserve fonctionnelle supérieure à 4 METS pour valider le geste.",
+  "justification": "Une bonne tolérance à l’effort ne dispense pas de traiter d’abord la cardiopathie instable."
+ },
+ "Q10B": {
+  "juste": false,
+  "enonce": "Elle justifie à elle seule un test d’ischémie avant tout geste.",
+  "justification": "L’indication dépend aussi du risque chirurgical et de la capacité du résultat à modifier la décision."
+ },
+ "Q10C": {
+  "juste": false,
+  "enonce": "Un test d’effort maximal reste réalisable chez tout patient sous 4 METS.",
+  "justification": "Une réserve limitée rend souvent l’épreuve ininterprétable et conduit à préférer une exploration pharmacologique."
+ },
+ "Q11C": {
+  "juste": true,
+  "enonce": "Cure d’anévrisme de l’aorte abdominale.",
+  "justification": "Le terrain vasculaire et l’instabilité hémodynamique attendue placent ce geste au-delà de 5 % de complications."
+ },
+ "Q11E": {
+  "juste": true,
+  "enonce": "Duodénopancréatectomie céphalique.",
+  "justification": "La durée, les pertes sanguines et les transferts liquidiens en font une chirurgie à risque cardiaque élevé."
+ },
+ "Q12E": {
+  "juste": true,
+  "enonce": "Exérèse d’une lésion cutanée superficielle.",
+  "justification": "Ce geste très bref sous anesthésie locale se situe sous le seuil de 1 % de complications cardiaques."
+ },
+ "Q13E": {
+  "juste": true,
+  "enonce": "Anomalie récente du rythme perçue à l’auscultation.",
+  "justification": "Une irrégularité nouvelle demande une caractérisation électrique avant l’anesthésie."
+ },
+ "Q14A": {
+  "juste": false,
+  "enonce": "Prescrire un bilan cardiaque complet à tout opéré de plus de soixante ans.",
+  "justification": "L’indication naît d’une question clinique précise, non du seul critère d’âge."
+ },
+ "Q15B": {
+  "juste": false,
+  "enonce": "Quantification directe de la sévérité d’une sténose coronaire épicardique.",
+  "justification": "L’anatomie coronaire s’explore par coronarographie ou scanner, hors de portée de l’échographie transthoracique."
+ },
+ "Q15C": {
+  "juste": false,
+  "enonce": "Estimation fiable de la pression artérielle diastolique battement par battement.",
+  "justification": "Cette donnée provient du brassard ou du cathéter artériel, pas de l’imagerie ultrasonore."
+ },
+ "Q16A": {
+  "juste": false,
+  "enonce": "Introduire un bêtabloquant chez tout patient devant subir une chirurgie à risque intermédiaire.",
+  "justification": "L’introduction préopératoire systématique n’est pas recommandée en dehors d’une indication cardiologique propre."
+ },
+ "Q17C": {
+  "juste": true,
+  "enonce": "Prévoir une interruption d’au moins douze heures lorsque la suspension est retenue.",
+  "justification": "Ce délai réduit nettement le risque d’hypotension artérielle à l’induction."
+ },
+ "Q17E": {
+  "juste": true,
+  "enonce": "Reprendre le traitement dès que volémie et fonction rénale le permettent.",
+  "justification": "Le bénéfice pronostique de fond justifie de raccourcir la fenêtre sans traitement."
+ },
+ "Q18A": {
+  "juste": false,
+  "enonce": "Considérer que le risque thrombotique disparaît un mois après un stent pharmacoactif.",
+  "justification": "La vulnérabilité de l’endoprothèse persiste bien au-delà de ce délai, très insuffisant."
+ },
+ "Q18E": {
+  "juste": true,
+  "enonce": "Apprécier la stabilité de la lésion coronaire sous-jacente.",
+  "justification": "Une plaque instable rend l’arrêt du traitement plus dangereux qu’une lésion ancienne quiescente."
+ },
+ "Q19E": {
+  "juste": true,
+  "enonce": "Rappeler son bénéfice démontré chez le coronarien opéré d’une chirurgie vasculaire.",
+  "justification": "Les effets pléiotropes sur la fonction endothéliale soutiennent cette prévention cardiovasculaire."
+ },
+ "Q20A": {
+  "juste": false,
+  "enonce": "Considérer qu’un INR normalisé autorise à poursuivre un anticoagulant direct jusqu’au matin.",
+  "justification": "L’INR reflète mal l’activité des anticoagulants directs, dont l’arrêt suit un délai propre."
+ },
+ "Q20B": {
+  "juste": false,
+  "enonce": "Arrêter une héparine de bas poids moléculaire curative deux heures avant l’incision.",
+  "justification": "Une dernière injection curative demande environ vingt-quatre heures de délai avant un geste chirurgical."
+ },
+ "Q21A": {
+  "juste": false,
+  "enonce": "PAM approximativement égale au rapport du débit cardiaque sur les résistances.",
+  "justification": "La loi de Hagen-Poiseuille pose un produit entre débit et résistances, jamais une division."
+ },
+ "Q21C": {
+  "juste": false,
+  "enonce": "La pression artérielle est proportionnelle au rayon des vaisseaux.",
+  "justification": "Elle varie en sens inverse du rayon, un vaisseau élargi abaissant les résistances."
+ },
+ "Q22E": {
+  "juste": true,
+  "enonce": "Postcharge imposée à l’éjection.",
+  "justification": "Elle conditionne l’ouverture aortique et le volume finalement propulsé dans la circulation."
+ },
+ "Q23B": {
+  "juste": false,
+  "enonce": "La ventilation en pression positive augmente le retour veineux systémique.",
+  "justification": "L’élévation de pression intrathoracique gêne l’arrivée du sang vers l’oreillette droite."
+ },
+ "Q23C": {
+  "juste": true,
+  "enonce": "La compliance ventriculaire diastolique y participe.",
+  "justification": "Un ventricule rigide se remplit moins pour une même pression d’amont."
+ },
+ "Q24A": {
+  "juste": false,
+  "enonce": "Réduire l’inotropisme pour ménager le ventricule dilaté.",
+  "justification": "Une baisse de contractilité diminue le volume antérograde d’un ventricule déjà surchargé par la fuite."
+ },
+ "Q25A": {
+  "juste": false,
+  "enonce": "Tolérer une pression artérielle diastolique à 35 mmHg pendant la dissection.",
+  "justification": "La pression de perfusion coronarienne exige une diastolique maintenue autour d’au moins 50 mmHg."
+ },
+ "Q26A": {
+  "juste": false,
+  "enonce": "Limiter le suivi du segment ST à une seule dérivation.",
+  "justification": "Le monitorage du cardiopathe demande au moins deux dérivations pour repérer une ischémie."
+ },
+ "Q26B": {
+  "juste": false,
+  "enonce": "Réserver l’échographie transœsophagienne aux seules chirurgies à faible risque.",
+  "justification": "Elle trouve son intérêt chez les patients à haut risque soumis à des procédures majeures."
+ },
+ "Q27A": {
+  "juste": false,
+  "enonce": "Quantifier la surface d’une sténose aortique.",
+  "justification": "Cette mesure valvulaire relève de l’échographie et non du signal électrique."
+ },
+ "Q27B": {
+  "juste": false,
+  "enonce": "Affirmer une hypovolémie devant une tachycardie sinusale isolée.",
+  "justification": "Douleur, fièvre, anémie ou anesthésie légère produisent la même accélération sans déficit volémique."
+ },
+ "Q28A": {
+  "juste": false,
+  "enonce": "Remplacer le dosage de troponine pour affirmer un dommage myocardique.",
+  "justification": "Le diagnostic biologique repose sur le biomarqueur, que l’image ne fournit pas."
+ },
+ "Q29B": {
+  "juste": false,
+  "enonce": "Suspicion d’hypertension artérielle pulmonaire à quantifier.",
+  "justification": "L’estimation des pressions pulmonaires relève de l’échographie ou du cathétérisme droit."
+ },
+ "Q29E": {
+  "juste": true,
+  "enonce": "Titration précise d’agents vasoactifs puissants.",
+  "justification": "La mesure continue permet d’ajuster les doses plus vite et plus finement."
+ },
+ "Q30B": {
+  "juste": false,
+  "enonce": "Une pression veineuse centrale à 12 mmHg garantit une réponse au remplissage.",
+  "justification": "Aucune valeur seuil de pression statique ne prédit fiablement le gain de volume d’éjection."
+ },
+ "Q31D": {
+  "juste": true,
+  "enonce": "Préciser l’indication d’implantation du dispositif.",
+  "justification": "Une cardiopathie rythmique ou une prévention de mort subite oriente la stratégie périopératoire."
+ },
+ "Q32D": {
+  "juste": true,
+  "enonce": "Reprogrammation involontaire vers un mode de secours.",
+  "justification": "Certains générateurs basculent sur un réglage par défaut après une interférence intense."
+ },
+ "Q32E": {
+  "juste": true,
+  "enonce": "Brûlure au point de contact d’une sonde de stimulation.",
+  "justification": "Le courant peut se concentrer à l’interface entre l’électrode et le tissu myocardique."
+ },
+ "Q33E": {
+  "juste": true,
+  "enonce": "Éloigner le générateur électrochirurgical des câbles de monitorage.",
+  "justification": "Le rayonnement du câble actif ajoute des artefacts au tracé de surveillance."
+ },
+ "Q34B": {
+  "juste": false,
+  "enonce": "Fixer l’aimant définitivement pour la durée du séjour hospitalier.",
+  "justification": "Son maintien prolongé laisse le dispositif hors de sa programmation habituelle après le geste."
+ },
+ "Q35A": {
+  "juste": false,
+  "enonce": "Se satisfaire d’un tracé ECG normal pour conclure au bon fonctionnement du boîtier.",
+  "justification": "Un rythme spontané peut masquer une modification de programmation ou d’impédance de sonde."
+ },
+ "Q35C": {
+  "juste": false,
+  "enonce": "Reprogrammer le stimulateur en mode asynchrone permanent avant le retour en chambre.",
+  "justification": "Ce mode expose à une compétition rythmique et doit céder la place au réglage chronique."
+ },
+ "Q37E": {
+  "juste": true,
+  "enonce": "Patient dont la réserve fonctionnelle est faible avant chirurgie intermédiaire.",
+  "justification": "Une faible capacité d’effort accompagne souvent une maladie cardiaque méconnue à dépister."
+ },
+ "Q38C": {
+  "juste": false,
+  "enonce": "Rapporter l’élévation à la chirurgie elle-même sans autre exploration.",
+  "justification": "Le geste opératoire ne suffit pas à expliquer une libération de troponine qui doit être analysée."
+ },
+ "Q38E": {
+  "juste": true,
+  "enonce": "Situer la valeur par rapport au 99e percentile de référence.",
+  "justification": "Le diagnostic de dommage myocardique commence par le dépassement de ce seuil normatif."
+ },
+ "Q39A": {
+  "juste": false,
+  "enonce": "Le NSTEMI se définit par une troponine normale malgré la douleur.",
+  "justification": "Ce tableau comporte une élévation du biomarqueur, seul le sus-décalage persistant manquant."
+ },
+ "Q40C": {
+  "juste": false,
+  "enonce": "Interrompre définitivement les antiangineux habituels après l’épisode.",
+  "justification": "Le traitement antiangineux doit être repris dès que possible pour protéger le myocarde."
+ },
+ "Q41B": {
+  "juste": false,
+  "enonce": "Le traitement par aspirine impose de reporter la colectomie.",
+  "justification": "Ce geste programmé peut se dérouler sous antiagrégant selon la balance thrombotique et hémorragique."
+ },
+ "Q41E": {
+  "juste": true,
+  "enonce": "La chirurgie digestive majeure relève d’un risque intermédiaire à élevé.",
+  "justification": "Le type d’intervention pèse dans la stratification au même titre que les antécédents."
+ },
+ "Q42A": {
+  "juste": false,
+  "enonce": "Elle correspond à une dépense inférieure à quatre METS.",
+  "justification": "Monter deux étages sans pause dépasse ce niveau et traduit une réserve satisfaisante."
+ },
+ "Q42B": {
+  "juste": false,
+  "enonce": "Elle dispense de gérer le bisoprolol en périopératoire.",
+  "justification": "La gestion du bêtabloquant chronique reste requise quelle que soit la capacité d’effort."
+ },
+ "Q43A": {
+  "juste": false,
+  "enonce": "Substituer un inhibiteur calcique au bisoprolol le matin du geste.",
+  "justification": "Ce changement de classe supprime la protection chronotrope attendue du bêtabloquant chronique."
+ },
+ "Q43B": {
+  "juste": true,
+  "enonce": "Poursuivre le bêtabloquant à sa posologie habituelle.",
+  "justification": "Le maintien du traitement chronique est recommandé en période périopératoire."
+ },
+ "Q44A": {
+  "juste": false,
+  "enonce": "Approfondir l’anesthésie jusqu’à une PAM de 45 mmHg pour ralentir le cœur.",
+  "justification": "Cette hypotension profonde effondre la pression de perfusion coronarienne du patient coronarien."
+ },
+ "Q44D": {
+  "juste": false,
+  "enonce": "Transfuser dès que l’hémoglobine descend sous 12 g/dL.",
+  "justification": "Un seuil transfusionnel aussi haut n’est pas retenu, même chez le patient coronarien opéré."
+ },
+ "Q44E": {
+  "juste": true,
+  "enonce": "Maintenir fréquence et pression dans une marge de 20 % des valeurs habituelles.",
+  "justification": "Rester proche de l’homéostasie propre au patient limite le déséquilibre énergétique myocardique."
+ },
+ "Q45D": {
+  "juste": false,
+  "enonce": "Un champ opératoire sec exclut une baisse du volume d’éjection.",
+  "justification": "Une chute de débit peut survenir sans saignement, par dépression myocardique des agents."
+ },
+ "Q46D": {
+  "juste": true,
+  "enonce": "Reprendre la feuille d’anesthésie à la recherche d’épisodes hypotensifs.",
+  "justification": "La durée passée sous la cible tensionnelle oriente vers un mécanisme de déséquilibre."
+ },
+ "Q46E": {
+  "juste": true,
+  "enonce": "Examiner le patient à la recherche de signes de défaillance cardiaque.",
+  "justification": "Dyspnée, crépitants ou marbrures modifieraient immédiatement le niveau d’urgence."
+ },
+ "Q47B": {
+  "juste": false,
+  "enonce": "Suspendre le bisoprolol pour faciliter la récupération à domicile.",
+  "justification": "L’arrêt du bêtabloquant après un dommage myocardique expose à un rebond adrénergique."
+ },
+ "Q48E": {
+  "juste": true,
+  "enonce": "L’irradiation du souffle vers les carotides.",
+  "justification": "Cette propagation cervicale renforce l’hypothèse d’un obstacle valvulaire aortique."
+ },
+ "Q49A": {
+  "juste": false,
+  "enonce": "Réaliser l’arthroplastie sous rachianesthésie en bolus unique.",
+  "justification": "Le bloc sympathique dense et rapide de cette technique est déconseillé chez ces patients."
+ },
+ "Q49B": {
+  "juste": false,
+  "enonce": "Se limiter à un ECG de repos pour quantifier la sténose.",
+  "justification": "Surface, gradient et retentissement ventriculaire s’obtiennent par l’échocardiographie."
+ },
+ "Q49E": {
+  "juste": true,
+  "enonce": "Organiser un projet thérapeutique valvulaire avant le geste orthopédique.",
+  "justification": "Le bilan préopératoire d’une valvulopathie découverte débouche sur une décision personnalisée."
+ },
+ "Q50B": {
+  "juste": false,
+  "enonce": "Une vitesse maximale transaortique inférieure à 2 m/s.",
+  "justification": "Une vélocité aussi basse traduirait un obstacle minime, incompatible avec la surface mesurée."
+ },
+ "Q51D": {
+  "juste": true,
+  "enonce": "Traiter sans délai toute baisse des résistances vasculaires systémiques.",
+  "justification": "Le débit fixe ne peut compenser une vasodilatation, qui effondre la pression systémique."
+ },
+ "Q51E": {
+  "juste": true,
+  "enonce": "Conserver la contraction atriale en préservant le rythme sinusal.",
+  "justification": "La contraction auriculaire fournit une part importante du volume télédiastolique dans cette cardiopathie."
+ },
+ "Q52A": {
+  "juste": false,
+  "enonce": "Cathéter artériel pulmonaire systématique pour toute urgence abdominale.",
+  "justification": "Ce dispositif invasif se réserve à des situations sélectionnées, pas à une règle générale."
+ },
+ "Q53E": {
+  "juste": true,
+  "enonce": "Vérifier la profondeur d’anesthésie et alléger si elle est excessive.",
+  "justification": "Une concentration excessive d’hypnotique entretient la vasoplégie et la dépression myocardique."
+ },
+ "Q54D": {
+  "juste": true,
+  "enonce": "La nature urgente de l’intervention réalisée.",
+  "justification": "Un geste non programmé prive le patient de toute optimisation cardiologique préalable."
+ },
+ "Q55B": {
+  "juste": false,
+  "enonce": "Élévation marquée de la postcharge.",
+  "justification": "Une résistance d’éjection plus forte s’oppose au gradient et réduit l’obstruction dynamique."
+ },
+ "Q55E": {
+  "juste": true,
+  "enonce": "Manœuvre de Valsalva ou pression intrathoracique élevée.",
+  "justification": "La réduction du retour veineux diminue le volume cavitaire et accentue le gradient."
+ },
+ "Q56A": {
+  "juste": false,
+  "enonce": "Prescrire un dérivé nitré la veille pour prévenir l’angor.",
+  "justification": "La vasodilatation nitrée abaisse la précharge et aggrave l’obstruction dynamique."
+ },
+ "Q56B": {
+  "juste": false,
+  "enonce": "Imposer un jeûne hydrique de douze heures avant l’intervention.",
+  "justification": "Un jeûne prolongé réduit la volémie dont dépend le remplissage de ce ventricule."
+ },
+ "Q57D": {
+  "juste": true,
+  "enonce": "Disposer d’un vasoconstricteur pur prêt à l’emploi.",
+  "justification": "Restaurer la postcharge par un agent sans effet inotrope réduit le gradient."
+ },
+ "Q57E": {
+  "juste": true,
+  "enonce": "Titrer l’induction pour éviter une chute brutale de pression.",
+  "justification": "Une injection lente permet de corriger la vasoplégie avant qu’elle s’installe."
+ },
+ "Q58B": {
+  "juste": false,
+  "enonce": "Le tableau traduit une dysfonction systolique du ventricule gauche.",
+  "justification": "Un ventricule hyperkinétique de petite taille écarte ce mécanisme contractile."
+ },
+ "Q58C": {
+  "juste": true,
+  "enonce": "Le pneumopéritoine a pu réduire le retour veineux.",
+  "justification": "L’insufflation abdominale gêne le retour du sang vers le cœur droit."
+ },
+ "Q58E": {
+  "juste": true,
+  "enonce": "La vasodilatation anesthésique a pu déclencher le mécanisme.",
+  "justification": "Une postcharge effondrée accélère l’éjection et démasque le bourrelet sous-aortique."
+ },
+ "Q59A": {
+  "juste": false,
+  "enonce": "Perfuser un dérivé nitré pour soulager le ventricule.",
+  "justification": "La baisse de précharge et de postcharge accentue l’obstruction dynamique sous-aortique."
+ },
+ "Q59B": {
+  "juste": false,
+  "enonce": "Accélérer la fréquence par un agent chronotrope positif.",
+  "justification": "Une diastole raccourcie diminue encore le volume ventriculaire et majore le gradient."
+ },
+ "Q59E": {
+  "juste": true,
+  "enonce": "Restaurer les résistances systémiques par un agent alpha-adrénergique.",
+  "justification": "Une postcharge relevée s’oppose au gradient et améliore l’éjection antérograde."
+ },
+ "Q60A": {
+  "juste": false,
+  "enonce": "Attribuer l’hypotension à la seule perte du rythme sinusal.",
+  "justification": "La fréquence rapide raccourcit aussi la diastole et participe pleinement à la chute de débit."
+ },
+ "Q60B": {
+  "juste": false,
+  "enonce": "Prescrire un remplissage massif comme unique traitement de l’arythmie.",
+  "justification": "Le volume ne rétablit pas le rythme et peut surcharger un ventricule peu compliant."
+ },
+ "Q61B": {
+  "juste": false,
+  "enonce": "Introduire un vasodilatateur artériel pour abaisser la postcharge.",
+  "justification": "Cette baisse de résistance ravive le gradient sous-aortique de la cardiomyopathie."
+ },
+ "Q61C": {
+  "juste": false,
+  "enonce": "Accepter une fréquence de repos supérieure à 110 par minute.",
+  "justification": "Une diastole écourtée compromet le remplissage du ventricule hypertrophié."
+ },
+ "Q62D": {
+  "juste": true,
+  "enonce": "Le poids et l’âge de la patiente.",
+  "justification": "Ces paramètres conditionnent la posologie prescrite et l’élimination attendue du produit."
+ },
+ "Q64A": {
+  "juste": false,
+  "enonce": "L’apixaban doit être arrêté quinze jours avant une chirurgie programmée.",
+  "justification": "Sa demi-vie courte rend un tel délai excessif et expose inutilement au risque embolique."
+ },
+ "Q64B": {
+  "juste": false,
+  "enonce": "Une héparine non fractionnée intraveineuse doit être poursuivie jusqu’au bloc.",
+  "justification": "Toute anticoagulation active à l’incision majore directement le saignement opératoire."
+ },
+ "Q64E": {
+  "juste": true,
+  "enonce": "Le relais garde sa place chez les porteurs de valve mécanique.",
+  "justification": "Cette indication à très haut risque embolique fait exception à la règle générale."
+ },
+ "Q65C": {
+  "juste": false,
+  "enonce": "Doser systématiquement l’activité anti-Xa avant tout geste programmé.",
+  "justification": "Ce dosage spécialisé reste inutile lorsque le délai d’arrêt recommandé a été respecté."
+ },
+ "Q65E": {
+  "juste": true,
+  "enonce": "S’assurer de la disponibilité des moyens de réversion en cas d’hémorragie.",
+  "justification": "Un antidote ou un concentré de facteurs doit être identifié avant l’incision."
+ },
+ "Q66A": {
+  "juste": false,
+  "enonce": "Transfuser du plasma frais congelé pour antagoniser l’apixaban.",
+  "justification": "Le plasma reste inefficace sur l’inhibiteur du facteur Xa, qui dispose d’un antidote spécifique."
+ },
+ "Q66B": {
+  "juste": false,
+  "enonce": "Interrompre la surveillance de l’hémoglobine tant que la pression se maintient.",
+  "justification": "Une déglobulisation peut précéder nettement la baisse de pression artérielle."
+ },
+ "Q67A": {
+  "juste": false,
+  "enonce": "Reprendre l’apixaban en salle de réveil quel que soit l’état du drain.",
+  "justification": "Un drainage encore productif traduit une hémostase incomplète et interdit cette reprise immédiate."
+ },
+ "Q67D": {
+  "juste": true,
+  "enonce": "Tenir compte du risque hémorragique propre au site opératoire.",
+  "justification": "Un saignement dans un espace clos impose une reprise plus tardive qu’ailleurs."
+ },
+ "Q67E": {
+  "juste": true,
+  "enonce": "Peser le risque thromboembolique lié à la fibrillation atriale.",
+  "justification": "Une fenêtre sans anticoagulation prolongée expose à un accident embolique cérébral."
+ },
+ "Q68B": {
+  "juste": false,
+  "enonce": "La recommandation de prendre un anti-inflammatoire en cas de douleur.",
+  "justification": "Cette association majore le risque digestif hémorragique sous anticoagulant."
+ },
+ "Q68C": {
+  "juste": false,
+  "enonce": "L’indication d’arrêter l’apixaban dès la cicatrisation cutanée.",
+  "justification": "La durée du traitement dépend de l’indication rythmique, pas de la plaie opératoire."
+ },
+ "Q69A": {
+  "juste": false,
+  "enonce": "Souffle systolique connu et inchangé.",
+  "justification": "Un signe valvulaire stable témoigne du terrain, pas d’une décompensation en cours."
+ },
+ "Q69C": {
+  "juste": false,
+  "enonce": "Fraction d’éjection mesurée six mois plus tôt.",
+  "justification": "Une valeur ancienne renseigne le terrain mais pas l’état hémodynamique actuel."
+ },
+ "Q69E": {
+  "juste": true,
+  "enonce": "Turgescence jugulaire et reflux hépatojugulaire.",
+  "justification": "Ces signes traduisent une élévation des pressions de remplissage droites."
+ },
+ "Q70A": {
+  "juste": false,
+  "enonce": "La marche de trente minutes prouve une fraction d’éjection normale.",
+  "justification": "Une bonne tolérance à l’effort coexiste souvent avec une fonction systolique altérée."
+ },
+ "Q70B": {
+  "juste": false,
+  "enonce": "Le sommeil à plat autorise à sortir le patient du groupe à risque cardiaque.",
+  "justification": "Le score de Lee et le risque chirurgical continuent de classer ce patient parmi les vulnérables."
+ },
+ "Q71A": {
+  "juste": false,
+  "enonce": "Introduire un traitement inotrope oral avant l’intervention.",
+  "justification": "Aucun soutien contractile oral n’est indiqué en préparation d’une chirurgie programmée."
+ },
+ "Q71C": {
+  "juste": false,
+  "enonce": "Poursuivre l’inhibiteur du SRAA sans jamais discuter sa suspension.",
+  "justification": "Ce blocage majore l’hypotension d’induction et mérite une décision individuelle."
+ },
+ "Q72C": {
+  "juste": true,
+  "enonce": "Vérifier la profondeur d’anesthésie et la dose des agents.",
+  "justification": "Une concentration excessive d’hypnotique abaisse à la fois résistances et inotropisme."
+ },
+ "Q72E": {
+  "juste": true,
+  "enonce": "Mesurer le lactate pour apprécier le retentissement tissulaire.",
+  "justification": "Une élévation traduit une dette d’oxygène malgré des chiffres tensionnels rassurants."
+ },
+ "Q73B": {
+  "juste": false,
+  "enonce": "Administrer un inotrope puissant en première intention.",
+  "justification": "L’échographie montre une contractilité inchangée, sans défaillance nouvelle justifiant ce soutien."
+ },
+ "Q73E": {
+  "juste": true,
+  "enonce": "Maintenir la pression dans une marge proche des valeurs habituelles du patient.",
+  "justification": "Un écart de plus de 20 % expose les organes à une hypoperfusion."
+ },
+ "Q74A": {
+  "juste": false,
+  "enonce": "Diurèse horaire abondante depuis le retour en chambre.",
+  "justification": "Une élimination urinaire soutenue plaide contre une rétention hydrosodée croissante."
+ },
+ "Q74E": {
+  "juste": true,
+  "enonce": "Orthopnée apparue dans la nuit.",
+  "justification": "La gêne en décubitus accompagne l’élévation des pressions de remplissage gauches."
+ },
+ "Q75B": {
+  "juste": false,
+  "enonce": "Perfuser un bolus de cristalloïde pour améliorer la diurèse.",
+  "justification": "Un apport supplémentaire majorerait la congestion pulmonaire déjà installée."
+ },
+ "Q75E": {
+  "juste": true,
+  "enonce": "Suivre créatinine et ionogramme pendant la déplétion.",
+  "justification": "La tolérance rénale du traitement conditionne sa poursuite et son intensité."
+ },
+ "Q76B": {
+  "juste": false,
+  "enonce": "Programmation systématique en mode asynchrone dès la consultation.",
+  "justification": "Ce réglage se décide selon la dépendance et le risque d’interférence, pas par principe."
+ },
+ "Q76C": {
+  "juste": false,
+  "enonce": "Certitude qu’un aimant suffit dans tous les cas.",
+  "justification": "La réponse magnétique varie selon le modèle et doit être connue avant d’y recourir."
+ },
+ "Q76D": {
+  "juste": false,
+  "enonce": "Arrêt préventif des traitements antiarythmiques une semaine avant.",
+  "justification": "L’amiodarone se poursuit jusqu’au matin du geste en raison de sa longue demi-vie."
+ },
+ "Q76E": {
+  "juste": true,
+  "enonce": "Indication de l’implantation et dépendance au dispositif.",
+  "justification": "Le rythme d’échappement et le motif de pose déterminent la stratégie de sécurité."
+ },
+ "Q77D": {
+  "juste": true,
+  "enonce": "L’application d’un aimant peut imposer un mode asynchrone.",
+  "justification": "Ce mode fixe rend l’appareil insensible au bruit électrique du bistouri."
+ },
+ "Q77E": {
+  "juste": true,
+  "enonce": "Une surveillance mécanique du pouls doit compléter le tracé.",
+  "justification": "Le signal électrique peut persister alors que la contraction efficace a disparu."
+ },
+ "Q78D": {
+  "juste": true,
+  "enonce": "Contrôler le stimulateur après tout usage du bistouri électrique.",
+  "justification": "Une vérification systématique dépiste une reprogrammation ou une altération de sonde."
+ },
+ "Q78E": {
+  "juste": true,
+  "enonce": "Préparer un dispositif de stimulation externe avant l’incision.",
+  "justification": "Une pause chez un patient dépendant doit pouvoir être relayée immédiatement."
+ },
+ "Q79B": {
+  "juste": false,
+  "enonce": "Mesure de température centrale pour détecter une inhibition du stimulateur.",
+  "justification": "Cette variable thermique renseigne mal sur l’activité électrique ou mécanique du cœur."
+ },
+ "Q79E": {
+  "juste": true,
+  "enonce": "Onde de pléthysmographie affichée en permanence.",
+  "justification": "Elle confirme qu’une contraction efficace suit chaque impulsion du boîtier."
+ },
+ "Q81B": {
+  "juste": false,
+  "enonce": "Passer en coagulation monopolaire continue pour gagner du temps.",
+  "justification": "Une activation prolongée augmente précisément la durée d’inhibition du stimulateur."
+ },
+ "Q81D": {
+  "juste": true,
+  "enonce": "Éloigner la plaque de retour du trajet des sondes.",
+  "justification": "Un courant qui contourne le boîtier réduit le couplage électrique parasite."
+ },
+ "Q82D": {
+  "juste": true,
+  "enonce": "Vérifier les seuils de stimulation et l’impédance des sondes.",
+  "justification": "Une altération de sonde se traduit par des valeurs différentes de la référence."
+ },
+ "Q82E": {
+  "juste": true,
+  "enonce": "Consigner l’exposition et son résultat dans le dossier du patient.",
+  "justification": "La traçabilité oriente les équipes de rythmologie lors du suivi ultérieur."
+ },
+ "Q83D": {
+  "juste": true,
+  "enonce": "Enregistrement des événements rythmiques survenus.",
+  "justification": "La mémoire du boîtier documente les épisodes et les thérapies délivrées."
+ },
+ "Q83E": {
+  "juste": true,
+  "enonce": "Stimulation antitachycardique par salves rapides.",
+  "justification": "Des salves de stimulation peuvent interrompre une arythmie rapide avant tout choc."
+ },
+ "Q85A": {
+  "juste": false,
+  "enonce": "Il augmente l’énergie du prochain choc délivré.",
+  "justification": "L’énergie programmée reste inchangée, l’aimant agissant uniquement sur la détection."
+ },
+ "Q85B": {
+  "juste": false,
+  "enonce": "Il désactive la fonction de stimulation antibradycardique.",
+  "justification": "La composante stimulateur poursuit son fonctionnement pendant l’application."
+ },
+ "Q85D": {
+  "juste": false,
+  "enonce": "Il reprogramme définitivement le boîtier en mode de secours.",
+  "justification": "L’effet cesse dès le retrait, sans modification durable des paramètres enregistrés."
+ },
+ "Q85E": {
+  "juste": true,
+  "enonce": "Il suspend habituellement la détection des tachyarythmies.",
+  "justification": "Les thérapies antitachycardiques sont neutralisées tant que l’aimant reste en place."
+ },
+ "Q86B": {
+  "juste": false,
+  "enonce": "Report de l’analyse du rythme à la fin de l’intervention.",
+  "justification": "Le retard de diagnostic laisserait une arythmie maligne évoluer sous électrocoagulation."
+ },
+ "Q86C": {
+  "juste": false,
+  "enonce": "Confiance dans les thérapies internes malgré l’aimant en place.",
+  "justification": "Le dispositif reste neutralisé et laisse toute arythmie sans traitement interne."
+ },
+ "Q86E": {
+  "juste": true,
+  "enonce": "Personnel identifié pour retirer l’aimant sans délai.",
+  "justification": "La protection interne doit pouvoir être restaurée dès la fin du geste."
+ },
+ "Q87D": {
+  "juste": true,
+  "enonce": "Débuter une réanimation si le rythme devient non perfusant.",
+  "justification": "L’arrêt circulatoire impose massage et choc externe sans attendre le dispositif."
+ },
+ "Q87E": {
+  "juste": true,
+  "enonce": "Corriger un trouble ionique ou une hypoxémie déclenchante.",
+  "justification": "Une cause réversible entretiendrait l’arythmie malgré les traitements électriques."
+ },
+ "Q88E": {
+  "juste": true,
+  "enonce": "Documenter l’énergie délivrée et la réponse obtenue.",
+  "justification": "Le compte rendu transmet ces éléments au rythmologue chargé du suivi."
+ },
+ "Q89A": {
+  "juste": false,
+  "enonce": "Retirer les électrodes de défibrillation externe avant le transport.",
+  "justification": "Une récidive précoce demanderait un choc immédiat pendant le trajet vers l’unité."
+ },
+ "Q89D": {
+  "juste": true,
+  "enonce": "Vérifier que l’aimant a été retiré du boîtier.",
+  "justification": "Sans ce retrait, les thérapies internes resteraient neutralisées après le départ du bloc."
+ },
+ "Q89E": {
+  "juste": true,
+  "enonce": "Confirmer la restauration du mode de fonctionnement habituel.",
+  "justification": "Une programmation temporaire doit céder la place au réglage chronique avant les soins continus."
+ },
+ "Q90A": {
+  "juste": false,
+  "enonce": "Hypercholestérolémie traitée par statine.",
+  "justification": "Ce facteur de risque vasculaire figure hors des cinq items du score de Lee."
+ },
+ "Q90B": {
+  "juste": false,
+  "enonce": "Indice de masse corporelle élevé.",
+  "justification": "L’obésité reste absente de la stratification clinique du risque cardiaque périopératoire."
+ },
+ "Q91A": {
+  "juste": false,
+  "enonce": "Coronarographie de contrôle avant la sortie.",
+  "justification": "Cet examen invasif se discute sur un tableau clinique, pas comme surveillance de routine."
+ },
+ "Q91D": {
+  "juste": true,
+  "enonce": "Reprise précoce des traitements antiangineux habituels.",
+  "justification": "Le maintien de la cardioprotection médicamenteuse prolonge la protection myocardique postopératoire."
+ },
+ "Q91E": {
+  "juste": true,
+  "enonce": "Contrôle de l’hémoglobine et de l’oxygénation.",
+  "justification": "Anémie et hypoxémie entretiennent un déséquilibre entre apport et consommation myocardiques."
+ },
+ "Q92D": {
+  "juste": true,
+  "enonce": "Une stratégie préétablie doit encadrer ce résultat.",
+  "justification": "La prise en charge pluridisciplinaire est définie avant même le premier dosage."
+ },
+ "Q92E": {
+  "juste": true,
+  "enonce": "L’épisode s’inscrit dans les trente jours postopératoires.",
+  "justification": "Cette fenêtre temporelle fait partie de la définition du dommage myocardique."
+ },
+ "Q93D": {
+  "juste": true,
+  "enonce": "Dosage répété de la troponine à quelques heures d’intervalle.",
+  "justification": "La courbe d’évolution sépare une atteinte aiguë d’une élévation chronique."
+ },
+ "Q94A": {
+  "juste": false,
+  "enonce": "La reprise précoce du traitement antiangineux.",
+  "justification": "Ce traitement protège la balance énergétique du myocarde et doit être repris tôt."
+ },
+ "Q94B": {
+  "juste": false,
+  "enonce": "L’analgésie postopératoire efficace.",
+  "justification": "Une douleur contrôlée limite la tachycardie et l’hypertension qui favorisent l’ischémie."
+ },
+ "Q94E": {
+  "juste": true,
+  "enonce": "Le saignement peropératoire mal compensé.",
+  "justification": "La perte sanguine abaisse le transport artériel d’oxygène vers le myocarde."
+ },
+ "Q95A": {
+  "juste": false,
+  "enonce": "Majorer la sédation pour supprimer toute perception douloureuse.",
+  "justification": "Une sédation profonde entretient la vasoplégie sans traiter la cause du dommage."
+ },
+ "Q95B": {
+  "juste": false,
+  "enonce": "Programmer une épreuve d’effort avant la sortie d’hospitalisation.",
+  "justification": "Une exploration d’effort reste inadaptée à un dommage myocardique aigu en cours."
+ },
+ "Q95D": {
+  "juste": true,
+  "enonce": "Restaurer la pression artérielle pour rétablir la perfusion coronarienne.",
+  "justification": "Les modifications de ST apparaissent pendant l’hypotension et imposent de la corriger."
+ },
+ "Q96A": {
+  "juste": false,
+  "enonce": "Interrompre le bêtabloquant puisque la troponine décroît.",
+  "justification": "L’amélioration biologique reste insuffisante pour arrêter un traitement cardioprotecteur chronique."
+ },
+ "Q96B": {
+  "juste": false,
+  "enonce": "Retenir un infarctus de type 1 sans exploration supplémentaire.",
+  "justification": "Le mécanisme par déséquilibre offre-demande reste le plus probable dans ce contexte."
+ },
+ "Q96C": {
+  "juste": false,
+  "enonce": "Limiter le compte rendu à la mention d’une anomalie biologique isolée.",
+  "justification": "Le dommage myocardique documenté engage un suivi que le compte rendu doit préciser."
+ },
+ "Q96E": {
+  "juste": true,
+  "enonce": "Poursuivre la surveillance cardiovasculaire dans les trente jours.",
+  "justification": "Le surrisque de morbimortalité s’étend sur cette période postopératoire entière."
+ }
+}

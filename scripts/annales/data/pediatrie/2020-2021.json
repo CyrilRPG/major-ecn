@@ -316,28 +316,40 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\nQuelle est la démarche diagnostique de première intention pour orienter ces hypothèses ?",
-          "images": [],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-055-127.jpg",
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-055-128.jpg"
+          ],
           "reponseAttendue": "Pour la maladie cœliaque : IgA totales et IgA anti-transglutaminases. Pour l’APLV : test d’éviction.",
           "correctionGenerale": "• <b>Maladie cœliaque</b> : IgA totales, IgA anti-transglutaminases\n• <b>APLV</b> : test d’éviction"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nUne partie des résultats du bilan sanguin est : NFS normale, CRP < 5 mg/L, ionogramme sanguin normal, ECBU (leucocytes 10/mm³, hématies 0/mm³, culture négative), IgA anti-transglutaminase 40 UI/L (N < 5), coproculture négative, virocult négatif.\n\nQuel diagnostic retenez-vous ? Comment confirmez-vous ce diagnostic ? Justifiez.",
-          "images": [],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-055-127.jpg",
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-055-128.jpg"
+          ],
           "reponseAttendue": "Les IgA anti-transglutaminase sont positives mais inférieures à 10 fois la normale : une biopsie intestinale est nécessaire. Si le taux était supérieur à 10 fois la normale, on doserait les IgA anti-endomysium et, si elles étaient positives, la maladie cœliaque serait confirmée sans biopsie.",
           "correctionGenerale": "• IgA anti-transglutaminase positives (mais inférieures à 10 fois la normale)\n• <b>Nécessité d’une biopsie intestinale</b>\n• Si > 10 × N : IgA anti-endomysium, et si positives, maladie cœliaque confirmée"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 4</b>\n\nLes investigations que vous avez demandées auront lieu dans 15 jours : débutez-vous un traitement spécifique en attendant ? Justifiez.",
-          "images": [],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-055-127.jpg",
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-055-128.jpg"
+          ],
           "reponseAttendue": "Non : pas de régime sans gluten avant la biopsie, en raison du risque de négativer la biopsie.",
           "correctionGenerale": "<b>Non, pas de régime sans gluten avant la biopsie</b> : risque de négativer la biopsie."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 5</b>\n\nUne fois le diagnostic confirmé, quel est le traitement proposé ? Précisez la durée.",
-          "images": [],
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-055-127.jpg",
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-055-128.jpg"
+          ],
           "reponseAttendue": "L’éviction du gluten, régime à vie.",
           "correctionGenerale": "• Éviction du gluten\n• <b>Régime à VIE</b>"
         }

@@ -1,0 +1,11 @@
+import { readFileSync } from 'node:fs';
+import { createClient } from '@supabase/supabase-js';
+import { config } from 'dotenv';
+config({ path: '.env.local' });
+const [,, snapshotPath] = process.argv; if (!snapshotPath) throw new Error('usage: node restore-orthopedie-snapshot.mjs <snapshot.json>');
+const s=JSON.parse(readFileSync(snapshotPath,'utf8'));
+const series=s.series.map(series=>({label:series.label,vignette:series.vignette||'',questions:s.questions.filter(q=>q.serie_id===series.id).sort((a,b)=>a.order_index-b.order_index).map(q=>({enonce:q.enonce,correction_generale:q.correction_generale||'',items:s.items.filter(i=>i.question_id===q.id).sort((a,b)=>a.lettre.localeCompare(b.lettre)).map(i=>({lettre:i.lettre,enonce:i.enonce,is_correct:i.is_correct,justification:i.justification||''}))}))}));
+const flashcards=s.flashcards.sort((a,b)=>a.order_index-b.order_index).map(({recto,verso})=>({recto,verso})); const supa=createClient(process.env.NEXT_PUBLIC_SUPABASE_URL,process.env.SUPABASE_SERVICE_ROLE_KEY,{auth:{persistSession:false}});
+const {error}=await supa.rpc('replace_cours_generated_content',{p_cours_id:s.course.id,p_payload:{series,flashcards,thin:false},p_replace:true}); if(error)throw error;
+const fiche=s.fiches[0]; const {error:fe}=await supa.from('fiches').update({titre:fiche.titre,content_html:fiche.content_html,content_format:fiche.content_format,storage_path:fiche.storage_path,pages:fiche.pages}).eq('id',fiche.id); if(fe)throw fe;
+console.log(`✓ Snapshot restauré : ${s.course.id} (${series.length} séries, ${flashcards.length} cartes)`);

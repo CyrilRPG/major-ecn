@@ -1,0 +1,43 @@
+{
+  "generatedAt": "2026-08-10T23:02:39.843Z",
+  "totals": {
+    "courses": 1,
+    "ok": 1,
+    "repair": 0,
+    "missing": 0
+  },
+  "rows": [
+    {
+      "coursId": "bd887272-07a1-4843-b2cf-d3861d0a3c91",
+      "orderIndex": 40,
+      "title": "Chirurgie du disque intervertébral cervical",
+      "pages": 19,
+      "textCharacters": 16298,
+      "mechanicalFiche": false,
+      "parts": 6,
+      "ficheTables": 12,
+      "tableErrors": 0,
+      "partHeaderErrors": 0,
+      "bareDetails": 0,
+      "paragraphDetails": 0,
+      "listlessDetails": 0,
+      "figures": 8,
+      "brokenFigureImages": 0,
+      "nestedLists": 0,
+      "synthesis": 1,
+      "eclair": 1,
+      "mechanicalQuestions": 0,
+      "cardPromptQuestions": 0,
+      "genericQuestionCount": 0,
+      "repeatedQuestionStems": 50,
+      "dpClinicalFailures": 0,
+      "mechanicalCards": 0,
+      "genericSeries": 0,
+      "studentScaffolding": 0,
+      "unsupportedAnnales": false,
+      "mojibake": false,
+      "defects": [],
+      "status": "ok"
+    }
+  ]
+}

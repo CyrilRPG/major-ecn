@@ -1,0 +1,603 @@
+{
+  "title": "Traitement chirurgical des cyphoses et des camptocormies",
+  "year": "2025-2026",
+  "sourceBlocks": [
+    17,
+    18,
+    19,
+    23,
+    27,
+    30,
+    32,
+    60,
+    62,
+    67,
+    71,
+    73,
+    75,
+    81,
+    82,
+    92,
+    104,
+    107,
+    126,
+    128,
+    133,
+    140,
+    145,
+    147,
+    152,
+    155,
+    162,
+    179,
+    180,
+    200,
+    201,
+    215,
+    217,
+    226,
+    228,
+    235,
+    248,
+    253,
+    256,
+    259,
+    260,
+    262,
+    272
+  ],
+  "parts": [
+    {
+      "title": "Évaluer la déformation et poser l’indication",
+      "sections": [
+        {
+          "title": "Cyphose : forme, étiologie et retentissement",
+          "rows": [
+            {
+              "concept": "Retentissement sagittal",
+              "bullets": [
+                "Une cyphose thoracolombaire peut déséquilibrer le tronc en position debout.",
+                "L’indication opératoire dépend de la sévérité, de l’évolutivité pendant la croissance et des complications neurologiques."
+              ]
+            },
+            {
+              "concept": "Cyphose régulière",
+              "bullets": [
+                "Elle s’étend à grand rayon, surtout sur le thoracique et parfois jusqu’au lombaire.",
+                "Les cyphoses posturales sont habituellement réductibles et relèvent d’un traitement conservateur."
+              ]
+            },
+            {
+              "concept": "Cyphose angulaire",
+              "bullets": [
+                "Elle réalise une cassure plus courte de l’harmonie rachidienne.",
+                "Chez l’enfant, elle peut être congénitale ou liée à un syndrome avec dystrophie osseuse."
+              ]
+            },
+            {
+              "kind": "a_retenir",
+              "bullets": [
+                "Le traitement chirurgical est adapté à l’étiologie, à la localisation et à la réductibilité."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Bilan préopératoire",
+          "rows": [
+            {
+              "concept": "Imagerie",
+              "bullets": [
+                "Le bilan complète l’examen clinique et analyse l’équilibre global du tronc.",
+                "Il guide le choix d’une réduction postérieure, antérieure ou combinée selon la localisation et la réductibilité."
+              ],
+              "image": {
+                "path": "img/img_001.png",
+                "position": "after",
+                "size": "large"
+              }
+            },
+            {
+              "concept": "Réductibilité",
+              "bullets": [
+                "Les clichés en extension et sur billot contribuent à distinguer une déformation souple d’une déformation rigide."
+              ],
+              "image": {
+                "path": "img/img_002.png",
+                "position": "after",
+                "size": "large"
+              }
+            },
+            {
+              "concept": "Neurologie",
+              "bullets": [
+                "IRM médullaire et bilan électrophysiologique sont évalués avant chirurgie de déformation thoracique.",
+                "PES et PEM préopératoires servent de référence au monitorage peropératoire."
+              ]
+            },
+            {
+              "concept": "Anesthésie",
+              "bullets": [
+                "Le bilan cardiaque et pulmonaire est exhaustif.",
+                "Les abords étendus et ostéotomies exposent aux risques hémorragique et thromboembolique."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Préparer et corriger une cyphose régulière",
+      "sections": [
+        {
+          "title": "Préparation à la réduction",
+          "rows": [
+            {
+              "concept": "Traction",
+              "bullets": [
+                "La traction peut participer à la préparation d’une réduction de cyphose."
+              ],
+              "image": {
+                "path": "img/img_003.png",
+                "position": "after",
+                "size": "large"
+              }
+            },
+            {
+              "concept": "Installation ventrale",
+              "bullets": [
+                "Le décubitus ventral réduit une partie d’une cyphose souple.",
+                "La table de Jackson avec appui sternal et appuis iliaques laisse l’abdomen libre et favorise la lordose."
+              ]
+            },
+            {
+              "concept": "Objectif opératoire",
+              "bullets": [
+                "La préparation recherche une correction contrôlée tout en préservant les structures neurologiques."
+              ]
+            },
+            {
+              "kind": "piege",
+              "bullets": [
+                "Une réduction n’est jamais décidée sur l’angle seul : l’équilibre global et la souplesse sont déterminants."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Cyphose thoracique régulière",
+          "rows": [
+            {
+              "concept": "Situation typique",
+              "bullets": [
+                "La maladie de Scheuermann est l’étiologie la plus fréquente des cyphoses thoraciques régulières.",
+                "Une déformation souple peut être corrigée par instrumentation et arthrodèse postérieures."
+              ],
+              "image": {
+                "path": "img/img_004.png",
+                "position": "after",
+                "size": "large"
+              }
+            },
+            {
+              "concept": "Libération antérieure",
+              "bullets": [
+                "La thoracoscopie permet une libération antérieure lorsque l’assouplissement est nécessaire.",
+                "Le repérage fluoroscopique du niveau et de la largeur du corps vertébral est indispensable."
+              ],
+              "image": {
+                "path": "img/img_006.png",
+                "position": "after",
+                "size": "large"
+              }
+            },
+            {
+              "concept": "Planification du montage",
+              "bullets": [
+                "L’étendue de l’arthrodèse et les étages instrumentés sont planifiés sur les clichés préopératoires.",
+                "En thoracique, les montages recouvrants limitent les problèmes de cyphose jonctionnelle."
+              ]
+            },
+            {
+              "concept": "Arthrodèse",
+              "bullets": [
+                "Les articulaires ouvertes et curetées sont arthrodésées ; une greffe osseuse postérieure est réalisée."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Instrumenter et réduire par voie postérieure",
+      "sections": [
+        {
+          "title": "Principes de réduction sur instrumentation",
+          "rows": [
+            {
+              "concept": "Manœuvre de levier",
+              "bullets": [
+                "L’instrumentation par crochets associe des points d’ancrage et une réduction par levier."
+              ]
+            },
+            {
+              "concept": "Cintrage in situ",
+              "bullets": [
+                "Le modelage direct de la tige réduit la cyphose.",
+                "Le verrouillage progressif laisse d’abord coulisser la tige dans les implants distaux."
+              ],
+              "image": {
+                "path": "img/img_011.png",
+                "position": "after",
+                "size": "large"
+              }
+            },
+            {
+              "concept": "Persuadeurs",
+              "bullets": [
+                "Des vis polyaxiales avec persuadeurs étagés ramènent progressivement les vertèbres à une tige rigide.",
+                "Les tiges en cobalt-chrome limitent la déformation de la tige."
+              ],
+              "image": {
+                "path": "img/img_014.png",
+                "position": "after",
+                "size": "large"
+              }
+            },
+            {
+              "concept": "Laçages sous-lamaires",
+              "bullets": [
+                "Un ruban souple sous-lamaire permet de ramener successivement les vertèbres aux tiges par traction."
+              ],
+              "image": {
+                "path": "img/img_016.png",
+                "position": "after",
+                "size": "large"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Ostéotomies postérieures",
+          "rows": [
+            {
+              "concept": "Indication",
+              "bullets": [
+                "Les déformations rigides peuvent nécessiter des ostéotomies en complément de l’ouverture étagée des articulaires postérieures."
+              ]
+            },
+            {
+              "concept": "Ponte",
+              "bullets": [
+                "L’ostéotomie de Ponte est une fermeture postérieure avec ouverture antérieure sur un segment souple."
+              ],
+              "image": {
+                "path": "img/img_017.png",
+                "position": "after",
+                "size": "large"
+              }
+            },
+            {
+              "concept": "Risque antérieur",
+              "bullets": [
+                "La déchirure discale et l’élongation de la colonne antérieure peuvent exposer à un risque vasculaire."
+              ]
+            },
+            {
+              "concept": "Cyphose thoracolombaire",
+              "bullets": [
+                "Les cyphoses globales du patient âgé sont souvent liées à une dégénérescence discale multiétagée.",
+                "La camptocormie associe surtout défaillance des muscles paravertébraux et des haubans ligamentaires postérieurs."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Traiter les cyphoses angulaires souples",
+      "sections": [
+        {
+          "title": "Réduction et reconstruction",
+          "rows": [
+            {
+              "concept": "Étiologies",
+              "bullets": [
+                "Les cals vicieux et séquelles de spondylodiscite ou de mal de Pott peuvent créer une cyphose angulaire.",
+                "Une perte de substance vertébrale post-traumatique ou infectieuse participe à la déformation."
+              ]
+            },
+            {
+              "concept": "Séquence en cas de souplesse",
+              "bullets": [
+                "La réduction postérieure est réalisée en premier ; un abord antérieur avec greffe ou cage complète la reconstruction."
+              ]
+            },
+            {
+              "concept": "Réduction à ciel ouvert",
+              "bullets": [
+                "Les techniques s’inspirent des cyphoses régulières ; un montage recouvrant est utilisé dans les déformations thoraciques."
+              ],
+              "image": {
+                "path": "img/img_020.png",
+                "position": "after",
+                "size": "large"
+              }
+            },
+            {
+              "concept": "Vis de Schanz",
+              "bullets": [
+                "Une distraction parallèle initiale provoque un ligamentotaxis dans les situations décrites."
+              ],
+              "image": {
+                "path": "img/img_022.png",
+                "position": "after",
+                "size": "large"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Techniques mini-invasives et greffe antérieure",
+          "rows": [
+            {
+              "concept": "Voie percutanée",
+              "bullets": [
+                "L’ostéosynthèse percutanée se réalise sous fluoroscopie par petites incisions paravertébrales."
+              ]
+            },
+            {
+              "concept": "Miniabord vidéoassisté",
+              "bullets": [
+                "L’abord antérolatéral utilise une incision réduite et une caméra.",
+                "Le niveau vertébral est repéré sous fluoroscopie."
+              ],
+              "image": {
+                "path": "img/img_023.png",
+                "position": "after",
+                "size": "large"
+              }
+            },
+            {
+              "concept": "Préparation antérieure",
+              "bullets": [
+                "Les disques sont réséqués et les plateaux vertébraux avivés.",
+                "Une greffe spongieuse ou une cage remplie d’os peut être interposée entre les plateaux adjacents."
+              ],
+              "image": {
+                "path": "img/img_026.png",
+                "position": "after",
+                "size": "large"
+              }
+            },
+            {
+              "concept": "Objectif",
+              "bullets": [
+                "La reconstruction antérieure restaure l’appui après réduction de la déformation."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Cyphoses angulaires rigides et cas particuliers",
+      "sections": [
+        {
+          "title": "Cyphose angulaire rigide",
+          "rows": [
+            {
+              "concept": "Double abord",
+              "bullets": [
+                "Une ostéotomie et une greffe peuvent précéder une réduction postérieure lors d’un premier temps antérieur."
+              ]
+            },
+            {
+              "concept": "Fermeture postérieure",
+              "bullets": [
+                "Une ostéotomie complète par abord postérieur est une alternative ; au lombaire, elle constitue une technique de choix parmi les ostéotomies postérieures."
+              ]
+            },
+            {
+              "concept": "Ouverture postérieure",
+              "bullets": [
+                "Le centre de rotation est postérieur, au niveau du canal.",
+                "L’ouverture antérieure est comblée par greffe ou cage afin de préserver la longueur autour de la moelle."
+              ],
+              "image": {
+                "path": "img/img_030.png",
+                "position": "after",
+                "size": "large"
+              }
+            },
+            {
+              "concept": "Fermeture-ouverture et résection",
+              "bullets": [
+                "Les déformations sévères peuvent justifier une ostéotomie de fermeture-ouverture ou une résection segmentaire.",
+                "La résection permet aussi une correction frontale si une scoliose est associée."
+              ],
+              "image": {
+                "path": "img/img_032.png",
+                "position": "after",
+                "size": "large"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Tassement ostéoporotique et cyphose jonctionnelle",
+          "rows": [
+            {
+              "concept": "Tassement ostéoporotique",
+              "bullets": [
+                "Un recul du mur postérieur et une cyphose accentuée peuvent comprimer la face antérieure de la moelle.",
+                "L’ostéosynthèse percutanée permet une correction dans les situations décrites."
+              ]
+            },
+            {
+              "concept": "Cimentation",
+              "bullets": [
+                "La vertébroplastie à travers des vis canulées augmente la résistance à l’arrachement après polymérisation du ciment."
+              ],
+              "image": {
+                "path": "img/img_035.png",
+                "position": "after",
+                "size": "large"
+              }
+            },
+            {
+              "concept": "Cyphose jonctionnelle",
+              "bullets": [
+                "Elle peut survenir après arthrodèse thoracolombaire étagée, notamment en cas de déséquilibre sagittal ou d’ostéoporose.",
+                "Le pontage des charnières limite ce risque."
+              ]
+            },
+            {
+              "concept": "Reprise",
+              "bullets": [
+                "Une cyphose jonctionnelle sévère peut nécessiter l’extension de l’instrumentation.",
+                "La vertébroplastie aux étages adjacents peut limiter progression et arrachement."
+              ],
+              "image": {
+                "path": "img/img_039.png",
+                "position": "after",
+                "size": "large"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "synthesis": {
+    "chiffres": {
+      "headers": [
+        "Repère",
+        "Utilité",
+        "Conséquence"
+      ],
+      "rows": [
+        [
+          "Cyphose souple",
+          "Réductibilité sur clichés",
+          "Réduction postérieure possible"
+        ],
+        [
+          "Cyphose rigide",
+          "Ostéotomie discutée",
+          "Correction contrôlée"
+        ],
+        [
+          "PES / PEM",
+          "Référence préopératoire",
+          "Monitorage peropératoire"
+        ],
+        [
+          "Greffe ou cage antérieure",
+          "Reconstruction de l’appui",
+          "Soutien intersomatique"
+        ],
+        [
+          "Ostéoporose",
+          "Risque de jonction",
+          "Cimentation et prévention"
+        ]
+      ]
+    },
+    "tables": [
+      {
+        "title": "Bilan préopératoire",
+        "headers": [
+          "Volet",
+          "Recherche",
+          "But"
+        ],
+        "rows": [
+          [
+            "Imagerie",
+            "Type et équilibre global",
+            "Stratégie de correction"
+          ],
+          [
+            "Neurologie",
+            "IRM, PES, PEM",
+            "Sécurité médullaire"
+          ],
+          [
+            "Anesthésie",
+            "Bilan cardio-pulmonaire",
+            "Anticiper les risques"
+          ]
+        ]
+      },
+      {
+        "title": "Souple ou rigide",
+        "headers": [
+          "Déformation",
+          "Principe",
+          "Technique rapportée"
+        ],
+        "rows": [
+          [
+            "Régulière souple",
+            "Instrumentation et arthrodèse",
+            "Voie postérieure"
+          ],
+          [
+            "Angulaire souple",
+            "Réduction puis reconstruction",
+            "Postérieur puis antérieur"
+          ],
+          [
+            "Angulaire rigide",
+            "Ostéotomie / double abord",
+            "Correction progressive"
+          ]
+        ]
+      },
+      {
+        "title": "Complications et prévention",
+        "headers": [
+          "Risque",
+          "Prévention / réponse",
+          "Contexte"
+        ],
+        "rows": [
+          [
+            "Neurologique",
+            "Monitorage et stratégie adaptée",
+            "Déformation sévère"
+          ],
+          [
+            "Jonctionnel",
+            "Pontage des charnières",
+            "Arthrodèse étagée"
+          ],
+          [
+            "Arrachement ostéoporotique",
+            "Cimentation / vertébroplastie",
+            "Os fragilisé"
+          ]
+        ]
+      }
+    ],
+    "keyPoints": [
+      "L’indication dépend de l’étiologie, de la sévérité, de la souplesse et de l’équilibre global.",
+      "Les clichés dynamiques guident la distinction souple-rigide.",
+      "PES et PEM préopératoires fondent le monitorage peropératoire.",
+      "La voie postérieure instrumentée est centrale dans les cyphoses réductibles.",
+      "La reconstruction antérieure par greffe ou cage complète certaines corrections angulaires.",
+      "Les ostéotomies sont réservées aux déformations rigides sélectionnées.",
+      "L’ostéoporose impose de prévenir arrachement et cyphose jonctionnelle."
+    ],
+    "eclair": [
+      "Bilan : équilibre sagittal + imagerie + neurologie + anesthésie.",
+      "Souple : instrumentation / arthrodèse postérieure selon le contexte.",
+      "Angulaire souple : réduction postérieure puis reconstruction antérieure.",
+      "Rigide : double abord ou ostéotomie adaptée.",
+      "PES / PEM : référence de monitorage médullaire.",
+      "Greffe ou cage : restauration de l’appui antérieur.",
+      "Ostéoporose : prévenir la jonction et renforcer les ancrages."
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-08-10T13:46:14.380Z",
+  "totals": {
+    "courses": 1,
+    "ok": 0,
+    "repair": 1,
+    "missing": 0
+  },
+  "rows": [
+    {
+      "orderIndex": 53,
+      "title": "Fractures de l'extrémité inférieure du fémur",
+      "pages": 26,
+      "textCharacters": 18880,
+      "mechanicalFiche": false,
+      "parts": 5,
+      "ficheTables": 21,
+      "tableErrors": 16,
+      "partHeaderErrors": 5,
+      "bareDetails": 0,
+      "paragraphDetails": 0,
+      "listlessDetails": 0,
+      "figures": 0,
+      "synthesis": 1,
+      "eclair": 1,
+      "mechanicalQuestions": 0,
+      "cardPromptQuestions": 0,
+      "genericQuestionCount": 0,
+      "repeatedQuestionStems": 3,
+      "dpClinicalFailures": 8,
+      "mechanicalCards": 0,
+      "genericSeries": 0,
+      "defects": [
+        "table-head",
+        "dp-clinical"
+      ],
+      "status": "repair"
+    }
+  ]
+}
