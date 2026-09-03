@@ -153,7 +153,8 @@ test('les annales d’une spécialité restent visibles quelle que soit la voie'
   // Pas d'`allowed_voies` sur les annales : les élèves sans voie voient tout…
   assert.equal(canStudentReadSerie(qroc, ctx({ voie: null })), true);
   assert.equal(canStudentReadSerie(qcm, ctx({ voie: null })), true);
-  // …et hors Médecine générale, la voie ne masque rien.
+  // …et l'exemption « annales » les préserve dans les deux voies, y compris
+  // depuis que la règle voie ↔ kind s'applique à tous les collèges.
   for (const voie of ['interne', 'externe'] as const) {
     assert.equal(canStudentReadSerie(qroc, ctx({ voie })), true);
     assert.equal(canStudentReadSerie(qcm, ctx({ voie })), true);
@@ -177,18 +178,32 @@ test('les annales de Médecine générale échappent aussi à la voie', () => {
   assert.equal(canStudentReadSerie(banqueMg, ctx({ voie: 'interne' })), false);
 });
 
-test('la voie ne trie les séries QUE sur les items de Médecine générale', () => {
-  // Régression : la règle voie ↔ kind s'appliquait à tous les collèges. Les
-  // annales EVC d'une spécialité étant presque toutes des QROC, aucun élève
-  // « interne » de Gériatrie, Psychiatrie ou Orthopédie n'en voyait une seule.
-  const annaleSpecialite = { id: '1', label: 'Annales - Orthopédie - 2019 - EVCF', type: 'qcm', kind: 'qroc', mg_series: false, is_revisions: true };
+test('la voie trie les séries dans TOUS les collèges, annales exceptées', () => {
+  // Régression du 03/09/2026 : la règle voie ↔ kind ne s'appliquait qu'aux items
+  // de Médecine générale (garde `mg_series`), si bien qu'une élève de voie
+  // interne inscrite en Psychiatrie ouvrait les QROC de son collège.
+  const qrocSpecialite = { id: '1', label: 'QROC — Série 1', type: 'qcm', kind: 'qroc', mg_series: false, is_revisions: false };
+  assert.equal(canStudentReadSerie(qrocSpecialite, ctx({ voie: 'interne' })), false);
+  assert.equal(canStudentReadSerie(qrocSpecialite, ctx({ voie: 'externe' })), true);
+
+  const dpSpecialite = { id: '2', label: 'DP 1 · Trouble bipolaire', type: 'qcm', kind: 'dp', mg_series: false, is_revisions: false };
+  assert.equal(canStudentReadSerie(dpSpecialite, ctx({ voie: 'interne' })), true);
+  assert.equal(canStudentReadSerie(dpSpecialite, ctx({ voie: 'externe' })), false);
+
+  // L'exemption qui compte reste celle des annales : le sujet officiel d'une
+  // session n'appartient à aucune voie, dans une spécialité comme ailleurs.
+  const annaleSpecialite = { id: '3', label: 'Annales - Orthopédie - 2019 - EVCF', type: 'qcm', kind: 'qroc', mg_series: false, is_revisions: true };
   assert.equal(canStudentReadSerie(annaleSpecialite, ctx({ voie: 'interne' })), true);
   assert.equal(canStudentReadSerie(annaleSpecialite, ctx({ voie: 'externe' })), true);
 
-  // Sur un item de Médecine générale, la voie tranche toujours.
-  const qrocMg = { id: '2', label: 'QROC — Série 1', type: 'qcm', kind: 'qroc', mg_series: true };
+  // Sur un item de Médecine générale, la voie tranchait déjà : inchangé.
+  const qrocMg = { id: '4', label: 'QROC — Série 1', type: 'qcm', kind: 'qroc', mg_series: true };
   assert.equal(canStudentReadSerie(qrocMg, ctx({ voie: 'interne' })), false);
   assert.equal(canStudentReadSerie(qrocMg, ctx({ voie: 'externe' })), true);
+
+  // Un élève sans voie renseignée n'est jamais filtré (164 comptes au 03/09/2026).
+  assert.equal(canStudentReadSerie(qrocSpecialite, ctx({ voie: null })), true);
+  assert.equal(canStudentReadSerie(dpSpecialite, ctx({ voie: null })), true);
 });
 
 test('voie externe : l’exception « Révisions » de la policy SQL est rejouée', () => {

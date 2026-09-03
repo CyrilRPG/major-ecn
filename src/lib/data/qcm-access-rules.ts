@@ -152,15 +152,22 @@ export function canStudentReadSerie(
   const allowedOffers = serie.allowed_offers;
   if (allowedOffers?.length && !allowedOffers.some((o) => ctx.offers.has(o))) return false;
 
-  // qcm_series_voie_restrict : la voie de concours ne trie les séries QUE sur les
-  // items de Médecine générale (`not mg_series` dans la policy SQL), jamais les
-  // ANNALES EVC — le sujet officiel d'une session n'appartient à aucune voie —
-  // et la voie externe garde accès à tout sur un item « Révisions… »
-  // (`is_revisions`).
+  // qcm_series_voie_restrict : la voie de concours trie les séries de TOUS les
+  // collèges — l'épreuve de la voie interne est un QCM, celle de la voie externe
+  // est rédactionnelle, et c'est vrai en Psychiatrie comme en Médecine générale.
   //
-  // Sans l'exemption des annales, les 282 séries « Annales - … » de `kind`
-  // 'qroc' disparaissaient pour tout élève de voie interne.
-  if (serie.type === 'qcm' && !entrainement && !isAnnaleLabel(label) && ctx.voie && serie.mg_series === true) {
+  // Deux exemptions, et seulement deux :
+  //  - les ANNALES EVC : le sujet officiel d'une session n'appartient à aucune
+  //    voie. Sans elle, les 282 séries « Annales - … » de `kind` 'qroc'
+  //    disparaissaient pour tout élève de voie interne ;
+  //  - un item « Révisions… » (`is_revisions`), où la voie externe garde accès
+  //    aux séries QCM/DP.
+  //
+  // La garde `mg_series` qui bornait cette règle à la Médecine générale a été
+  // RETIRÉE le 03/09/2026 : ajoutée le 22/08 pour sauver les annales, elle était
+  // devenue redondante avec l'exemption ci-dessus, et laissait une élève de voie
+  // interne inscrite en Psychiatrie ouvrir les QROC de son collège.
+  if (serie.type === 'qcm' && !entrainement && !isAnnaleLabel(label) && ctx.voie) {
     const kind = serie.kind ?? 'qcm';
     if (ctx.voie === 'interne' && kind === 'qroc') return false;
     if (ctx.voie === 'externe' && kind !== 'qroc' && serie.is_revisions !== true) return false;
