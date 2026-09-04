@@ -59,7 +59,12 @@ const nextConfig: NextConfig = {
 
       // Anciens articles, vers leur équivalent actuel
       { source: "/evc-pae-liste-complete-des-documents-a-fournir-et-les-regles-a-connaitre-pour-une-candidature-reussie", destination: "/blog/evc-pae-liste-documents-fournir", permanent: true },
+      // Le slug historique porte un « w » parasite en fin d'URL. Les deux
+      // formes sont redirigées : celle réellement indexée (avec le « w ») et
+      // celle sans, qui renvoyait un 404 et laissait croire à un doublon
+      // partiel de l'article principal.
       { source: "/evc-pae-comment-se-presenterw", destination: "/blog/comment-se-presenter-aux-evc", permanent: true },
+      { source: "/evc-pae-comment-se-presenter", destination: "/blog/comment-se-presenter-aux-evc", permanent: true },
       // Cette adresse n'est pas dans l'export mais ressort encore dans les
       // résultats de recherche, et renvoyait un 404.
       { source: "/comment-se-presenter-aux-epreuves-de-verification-des-connaissances", destination: "/blog/comment-se-presenter-aux-evc", permanent: true },

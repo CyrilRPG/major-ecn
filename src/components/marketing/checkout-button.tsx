@@ -22,6 +22,22 @@ import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty } from '@/lib/dat
 import { CONTENT_PENDING_NOTICE } from '@/lib/stripe/approfondi';
 import { TurnstileWidget } from './turnstile-widget';
 
+/**
+ * Renonciation expresse au droit de rétractation — texte contractuel, à ne pas
+ * reformuler sans validation juridique. Il est repris tel quel dans la preuve
+ * de consentement (métadonnées Stripe) et dans l'email de confirmation.
+ *
+ * L'article visé est celui que citent déjà les CGS (§10.1) et les Conditions
+ * Particulières : L. 221-28 13° du code de la consommation, qui couvre la
+ * fourniture d'un contenu numérique non fourni sur support matériel.
+ */
+const RENONCIATION_RETRACTATION =
+  'Le Client déclare renoncer expressément à son droit de rétractation en vue d’accéder, '
+  + 'sans délai avant la fin dudit délai de rétractation, à la plateforme de la Société et aux '
+  + 'services associés dans les conditions des conditions générales de services. En conséquence, '
+  + 'en application de l’article L. 221-28 13°, du code de la consommation, le Client ne saurait '
+  + 'rétracter son engagement à l’égard de la Société.';
+
 type ProfileRow = {
   first_name: string | null;
   last_name: string | null;
@@ -99,7 +115,13 @@ export function CheckoutButton({
   // cases cochées valent acceptation de ces stipulations contractuelles.
   const [acceptCguCgs, setAcceptCguCgs] = useState(false);
   const [acceptCp, setAcceptCp] = useState(false);
-  const acceptTerms = acceptCguCgs && acceptCp;
+  // Renonciation au droit de rétractation : case DISTINCTE et dédiée depuis le
+  // 04/09/2026. Elle était auparavant déduite des deux autres (les CGS et les
+  // Conditions Particulières la stipulent) ; un consentement exprès et séparé
+  // est la seule forme opposable pour l'article L. 221-28 13° du code de la
+  // consommation, qui exige une demande expresse ET la reconnaissance de la
+  // perte du droit de rétractation.
+  const [acceptRetractation, setAcceptRetractation] = useState(false);
   const [captchaToken, setCaptchaToken] = useState('');
   const [captchaNonce, setCaptchaNonce] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -243,6 +265,10 @@ export function CheckoutButton({
       setError('Vous devez accepter les Conditions Particulières pour continuer.');
       return;
     }
+    if (!acceptRetractation) {
+      setError('Vous devez accepter la renonciation au droit de rétractation pour accéder immédiatement à la plateforme.');
+      return;
+    }
     if (TURNSTILE_ENABLED && !captchaToken) {
       setError('Merci de valider le test anti-robot.');
       return;
@@ -270,14 +296,14 @@ export function CheckoutButton({
           voie: needsVoie ? voie : '',
           installments,
           consents: {
-            // Deux cases côté UI (CGU + CGS, puis CP) ; côté serveur un flag
-            // par document + renonciation rétractation, cette dernière étant
-            // intégrée dans les CGS et Conditions Particulières acceptées
-            // (CGS §10.1 et CP).
+            // Trois cases côté UI (CGU + CGS, puis CP, puis renonciation au
+            // droit de rétractation) ; côté serveur un flag par document. La
+            // renonciation a sa propre case depuis le 04/09/2026 : elle n'est
+            // plus déduite de l'acceptation des CGS et des CP.
             cgu: acceptCguCgs,
             cgs: acceptCguCgs,
             cp: acceptCp,
-            waiveRetractation: acceptTerms,
+            waiveRetractation: acceptRetractation,
             timestamp: new Date().toISOString(),
           },
           turnstileToken: captchaToken,
@@ -463,9 +489,10 @@ export function CheckoutButton({
         </p>
       </fieldset>
 
-      {/* Consentement — deux cases obligatoires. L'acceptation des CGS et
-          des Conditions Particulières emporte consentement à l'exécution
-          immédiate (CGS §10.1, CP §Observations). */}
+      {/* Consentement — trois cases obligatoires : CGU + CGS, Conditions
+          Particulières, puis renonciation expresse au droit de rétractation
+          (CGS §10.1, CP §Observations, article L. 221-28 13° du code de la
+          consommation). */}
       <SectionLabel n={4} title="Confirmation" />
 
       <ConsentCheckbox
@@ -493,6 +520,13 @@ export function CheckoutButton({
             {' '}de Major ECN.
           </>
         }
+      />
+
+      <ConsentCheckbox
+        checked={acceptRetractation}
+        onChange={setAcceptRetractation}
+        accent={color.main}
+        text={RENONCIATION_RETRACTATION}
       />
 
       {/* Captcha anti-robot (Cloudflare Turnstile) */}

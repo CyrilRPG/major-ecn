@@ -29,10 +29,12 @@ const ALWAYS_BCC = '';
 
 /**
  * Destinataires des récapitulatifs internes (inscriptions, souscriptions,
- * diagnostics…). Adresse OFFICIELLE Major ECN uniquement — jamais d'adresse
- * privée. Ajouter d'autres destinataires internes via EMAIL_BCC si besoin.
+ * diagnostics…). Ces messages ne partent JAMAIS à un étudiant : la liste n'est
+ * donc jamais exposée à l'extérieur, et la direction y figure nommément.
+ * Demande de Cyril, 04/09/2026 — il doit recevoir chaque inscription.
+ * Ajouter d'autres destinataires internes via EMAIL_BCC si besoin.
  */
-export const INTERNAL_NOTIFY_EMAILS = ['contact@major-ecn.fr'];
+export const INTERNAL_NOTIFY_EMAILS = ['contact@major-ecn.fr', 'abonan1@yahoo.fr'];
 
 /** Adresses mises EN COPIE VISIBLE du mail de confirmation d'achat qui porte
  *  les documents contractuels (CGU, CGS, Conditions Particulières), pour toute

@@ -546,6 +546,11 @@ export function purchaseConfirmationEmail({
       <tr>
         <td>
           <p style="margin:0 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#7A8499;">Documents contractuels (PDF en pièces jointes)</p>
+          <p style="margin:0 0 10px;font-size:13px;color:#1F2937;line-height:1.55;">
+            <strong>Nous avons bien pris en compte votre renonciation au droit de rétractation.</strong>
+            Elle vous ouvre l&rsquo;accès immédiat à la plateforme, conformément à l&rsquo;article
+            L.&nbsp;221-28 13° du code de la consommation et aux CGS (§&nbsp;10.1).
+          </p>
           <p style="margin:0;font-size:13px;color:#1F2937;line-height:1.55;">
             Vous trouverez en pièces jointes les documents contractuels acceptés au moment de
             votre souscription : <strong>CGU</strong>, <strong>CGS</strong> et
@@ -579,6 +584,9 @@ export function purchaseConfirmationEmail({
     accessLineText,
     ``,
     `Activez votre compte : ${setupUrl}`,
+    ``,
+    `Nous avons bien pris en compte votre renonciation au droit de rétractation.`,
+    `Elle vous ouvre l'accès immédiat à la plateforme (article L. 221-28 13° du code de la consommation, CGS § 10.1).`,
     ``,
     `Documents contractuels en pièces jointes : CGU, CGS, Conditions Particulières.`,
     `Également consultables sur major-ecn.fr/cgu, /cgs, /conditions-particulieres.`,
