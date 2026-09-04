@@ -501,15 +501,29 @@ export async function provisionStudentAccount(
       setupUrlPrefix: setupUrl.slice(0, 60) + '…',
       attachments: attachments.length,
     });
-    // Copie visible à la direction : ce mail vaut remise des documents
-    // contractuels, pour toutes les formules (pas seulement Approfondi).
-    const sendResult = await sendEmail({ to: input.email, cc: CONTRACT_COPY_EMAILS, subject, html, text, attachments });
+    const sendResult = await sendEmail({ to: input.email, subject, html, text, attachments });
     if (sendResult.ok) {
       emailVia = 'resend';
       log('email-sent-resend', { id: sendResult.id });
     } else {
       emailError = sendResult.error;
       log('email-fail-resend', { error: sendResult.error });
+    }
+
+    // Copie à la direction — un envoi SÉPARÉ, à l'identique (même objet, même
+    // corps, mêmes pièces jointes contractuelles). Ce mail valant remise des
+    // CGU/CGS/CP, la direction doit en recevoir un exemplaire pour toutes les
+    // formules. Deux raisons de ne plus passer par le champ `cc` :
+    //   - une adresse en copie est exposée à l'étudiant dans l'en-tête du mail ;
+    //   - les copies carbone sont les premières filtrées par les messageries
+    //     grand public, ce qui rendait la réception aléatoire.
+    // Le lien d'activation est celui de l'étudiant, à usage unique : cette
+    // copie se lit, elle ne se clique pas.
+    try {
+      const copie = await sendEmail({ to: CONTRACT_COPY_EMAILS, subject, html, text, attachments, replyTo: input.email });
+      log('email-copie-direction', { ok: copie.ok, error: copie.ok ? null : copie.error });
+    } catch (e) {
+      log('email-copie-direction-throw', { error: e instanceof Error ? e.message : 'inconnue' });
     }
   } catch (e) {
     emailError = e instanceof Error ? e.message : 'Erreur Resend inconnue';

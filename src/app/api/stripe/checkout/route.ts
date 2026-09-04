@@ -34,6 +34,8 @@ import { installmentCancelAt, lastChargeDate } from '@/lib/stripe/installments';
 import { siteUrl } from '@/lib/email/send';
 import { verifyTurnstile, clientIp } from '@/lib/turnstile';
 import { collegeIdForSpecialty, specialtyByName } from '@/lib/data/enrollable-colleges';
+import { decodeSignaturePng, storeInscriptionSignature, attachSessionToSignature } from '@/lib/signatures/inscription';
+import { RENONCIATION_RETRACTATION } from '@/lib/legal/consents';
 
 type Consents = {
   cgu?: boolean;
@@ -57,6 +59,8 @@ type Body = {
    *  'urg-plus', 'mipic') — obligatoire quand formule = 'programme-approfondi'. */
   approfondiVariant?: string;
   consents?: Consents;
+  /** Signature manuscrite tracée à l'inscription (data URL PNG). */
+  signaturePng?: string;
   turnstileToken?: string;
 };
 
@@ -162,6 +166,17 @@ export async function POST(req: Request) {
     );
   }
 
+  // Signature manuscrite : même exigence que les consentements — elle est
+  // validée ici, avant toute création de session, pour qu'un client modifié ne
+  // puisse pas s'en dispenser.
+  const signaturePng = decodeSignaturePng(body.signaturePng);
+  if (!signaturePng) {
+    return NextResponse.json(
+      { error: 'Signature manuscrite manquante ou invalide.' },
+      { status: 400 },
+    );
+  }
+
   // Spécialité → collège débloqué. Pour l'Approfondi, la spécialité et le collège
   // cible viennent de l'offre choisie (catalogue Approfondi) ; sinon on résout
   // depuis le libellé de spécialité (défaut Médecine générale).
@@ -205,8 +220,37 @@ export async function POST(req: Request) {
   // abonnement) : c'est ce que l'équipe relit dans le dashboard Stripe.
   const scopeSuffix = [specialtyName, voieLabel(body.voie)].filter(Boolean).join(', ');
 
+  // La signature est rangée AVANT l'ouverture du paiement : une signature
+  // perdue ne serait plus rattrapable une fois la carte débitée. Si le
+  // stockage échoue, on refuse la session plutôt que de vendre sans preuve.
+  let signature: { id: string; path: string };
+  try {
+    signature = await storeInscriptionSignature(signaturePng, {
+      email: (body.email ?? '').trim(),
+      firstName: body.firstName ?? '',
+      lastName: body.lastName ?? '',
+      phone: body.phone ?? null,
+      formule: formule.name,
+      specialty: specialtyName,
+      voie: body.voie || null,
+      installments,
+      signedAt: new Date().toISOString(),
+      clause: RENONCIATION_RETRACTATION,
+    });
+  } catch (e) {
+    console.error('[stripe/checkout] signature non enregistrée', e);
+    return NextResponse.json(
+      { error: "Votre signature n'a pas pu être enregistrée. Merci de réessayer dans un instant." },
+      { status: 500 },
+    );
+  }
+
   try {
     const commonMetadata = {
+      // Chemin de la signature manuscrite dans le bucket privé — le lien entre
+      // le paiement et la preuve signée.
+      signature_id: signature.id,
+      signature_path: signature.path,
       formule: formule.id,
       approfondi_variant: approfondiTier?.id ?? '',
       first_name: body.firstName ?? '',
@@ -302,6 +346,10 @@ export async function POST(req: Request) {
         },
       });
 
+      // Complète le manifeste de la signature avec la session. Best-effort :
+      // l'image est déjà écrite, une inscription ne se refuse pas ici.
+      await attachSessionToSignature(signature.path, session.id).catch(() => {});
+
       return NextResponse.json({
         url: session.url,
         sessionId: session.id,
@@ -337,6 +385,8 @@ export async function POST(req: Request) {
         ? { custom_text: { submit: { message: submitMessage } } }
         : {}),
     });
+
+    await attachSessionToSignature(signature.path, session.id).catch(() => {});
 
     return NextResponse.json({
       url: session.url,

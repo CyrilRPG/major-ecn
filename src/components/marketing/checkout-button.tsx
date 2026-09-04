@@ -21,22 +21,8 @@ import { createClient } from '@/lib/supabase/client';
 import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty } from '@/lib/data/enrollable-colleges';
 import { CONTENT_PENDING_NOTICE } from '@/lib/stripe/approfondi';
 import { TurnstileWidget } from './turnstile-widget';
-
-/**
- * Renonciation expresse au droit de rétractation — texte contractuel, à ne pas
- * reformuler sans validation juridique. Il est repris tel quel dans la preuve
- * de consentement (métadonnées Stripe) et dans l'email de confirmation.
- *
- * L'article visé est celui que citent déjà les CGS (§10.1) et les Conditions
- * Particulières : L. 221-28 13° du code de la consommation, qui couvre la
- * fourniture d'un contenu numérique non fourni sur support matériel.
- */
-const RENONCIATION_RETRACTATION =
-  'Le Client déclare renoncer expressément à son droit de rétractation en vue d’accéder, '
-  + 'sans délai avant la fin dudit délai de rétractation, à la plateforme de la Société et aux '
-  + 'services associés dans les conditions des conditions générales de services. En conséquence, '
-  + 'en application de l’article L. 221-28 13°, du code de la consommation, le Client ne saurait '
-  + 'rétracter son engagement à l’égard de la Société.';
+import { SignaturePad } from '@/components/student/signature-pad';
+import { RENONCIATION_RETRACTATION, MENTION_SIGNATURE } from '@/lib/legal/consents';
 
 type ProfileRow = {
   first_name: string | null;
@@ -122,6 +108,9 @@ export function CheckoutButton({
   // consommation, qui exige une demande expresse ET la reconnaissance de la
   // perte du droit de rétractation.
   const [acceptRetractation, setAcceptRetractation] = useState(false);
+  // Signature manuscrite (data URL PNG) — conservée côté serveur comme preuve
+  // de l'engagement, au même titre que les cases cochées.
+  const [signaturePng, setSignaturePng] = useState<string | null>(null);
   const [captchaToken, setCaptchaToken] = useState('');
   const [captchaNonce, setCaptchaNonce] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -269,6 +258,10 @@ export function CheckoutButton({
       setError('Vous devez accepter la renonciation au droit de rétractation pour accéder immédiatement à la plateforme.');
       return;
     }
+    if (!signaturePng) {
+      setError('Merci de signer dans le cadre prévu pour valider votre inscription.');
+      return;
+    }
     if (TURNSTILE_ENABLED && !captchaToken) {
       setError('Merci de valider le test anti-robot.');
       return;
@@ -306,6 +299,7 @@ export function CheckoutButton({
             waiveRetractation: acceptRetractation,
             timestamp: new Date().toISOString(),
           },
+          signaturePng,
           turnstileToken: captchaToken,
         }),
       });
@@ -528,6 +522,15 @@ export function CheckoutButton({
         accent={color.main}
         text={RENONCIATION_RETRACTATION}
       />
+
+      {/* Signature manuscrite — dernier geste avant le paiement. Elle est
+          conservée côté serveur et consultable depuis la fiche de l'élève. */}
+      <div className="rounded-xl border bg-white p-3" style={{ borderColor: signaturePng ? color.main : '#E5E9F0' }}>
+        <p className="mb-2 text-[12px] font-semibold" style={{ color: '#1F2937' }}>
+          {MENTION_SIGNATURE}
+        </p>
+        <SignaturePad onChange={setSignaturePng} disabled={loading} />
+      </div>
 
       {/* Captcha anti-robot (Cloudflare Turnstile) */}
       {TURNSTILE_ENABLED && (

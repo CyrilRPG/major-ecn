@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { ImpersonateAction } from './impersonate-action';
 import { EditStudentDialog } from './edit-student-dialog';
 import { EmargementsDialog } from './emargements-dialog';
+import { SignatureInscriptionDialog } from './signature-inscription-dialog';
 import { BulkEmailDialog } from './bulk-email-dialog';
 import { initials } from '@/lib/utils';
 import { parseScope, offerLabel } from '@/lib/auth/permissions';
@@ -510,6 +511,11 @@ export function StudentsTable({
                         <span className="hidden lg:inline">Certificats</span>
                       </Link>
                       <EmargementsDialog
+                        studentId={s.id}
+                        studentName={`${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || s.email || 'élève'}
+                      />
+
+                      <SignatureInscriptionDialog
                         studentId={s.id}
                         studentName={`${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || s.email || 'élève'}
                       />
