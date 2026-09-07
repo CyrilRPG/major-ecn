@@ -183,3 +183,33 @@ export async function listSignaturesForEmail(email: string): Promise<StoredSigna
     }),
   );
 }
+
+/**
+ * Télécharge une signature par son chemin de stockage, tel qu'il est rangé dans
+ * la metadata Stripe (`signature_path`). Sert au provisioning pour apposer la
+ * signature sur les documents contractuels joints au mail d'achat.
+ *
+ * Ne lève pas : une signature illisible ne doit pas empêcher l'envoi du mail.
+ * Le manifeste est renvoyé avec l'image, pour l'horodatage de la signature.
+ */
+export async function downloadSignature(
+  path: string,
+): Promise<{ png: Buffer | null; manifest: SignatureManifest | null }> {
+  try {
+    const admin = createAdminClient();
+    const [{ data: png }, { data: json }] = await Promise.all([
+      admin.storage.from(SIGNATURES_BUCKET).download(path),
+      admin.storage.from(SIGNATURES_BUCKET).download(path.replace(/\.png$/, '.json')),
+    ]);
+    const manifest = json
+      ? ((JSON.parse(await json.text()) as SignatureManifest) ?? null)
+      : null;
+    return {
+      png: png ? Buffer.from(await png.arrayBuffer()) : null,
+      manifest,
+    };
+  } catch (e) {
+    console.error('[signature] téléchargement impossible', { path, error: String(e) });
+    return { png: null, manifest: null };
+  }
+}

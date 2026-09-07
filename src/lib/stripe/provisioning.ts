@@ -27,6 +27,8 @@ import { FORMULES, type FormuleId } from '@/lib/stripe';
 import { getApprofondiTier } from '@/lib/stripe/approfondi';
 import { highestOffer, type Offer } from '@/types/domain';
 import { applyGeriatrieMgBonus } from '@/lib/auth/geriatrie-mg-bonus';
+import { buildContractAttachments } from '@/lib/legal/contract-pdf';
+import { downloadSignature } from '@/lib/signatures/inscription';
 
 export type ProvisioningInput = {
   email: string;
@@ -37,6 +39,13 @@ export type ProvisioningInput = {
   amountTotalCents?: number;
   /** Téléphone collecté au checkout (récap interne). */
   phone?: string;
+  /** Adresse de facturation Stripe, mise en forme sur une ligne. C'est
+   *  l'« adresse du domicile » que désignent les Conditions Particulières. */
+  address?: string | null;
+  /** Chemin de la signature manuscrite dans le bucket privé
+   *  (`metadata.signature_path`) — elle est apposée sur les PDF contractuels
+   *  joints au mail d'achat. */
+  signaturePath?: string | null;
   /** Spécialité préparée (libellé affiché). */
   specialty?: string;
   /** Collège débloqué (col-…) résolu depuis la spécialité au checkout.
@@ -57,6 +66,32 @@ export type ProvisioningInput = {
   /** Source de l'appel : webhook OU /merci. Utile pour le log d'audit. */
   source?: 'webhook' | 'merci';
 };
+
+/**
+ * Adresse de facturation Stripe → une ligne lisible, telle qu'elle est reportée
+ * en « ADRESSE DU DOMICILE » sur les Conditions Particulières.
+ *
+ * Stripe la collecte sur sa propre page de paiement (`billing_address_collection:
+ * 'required'`) plutôt que dans notre formulaire : c'est la seule adresse
+ * réellement vérifiée par le moyen de paiement, et cela évite un champ de plus
+ * avant le bouton d'achat. Renvoie `null` quand rien n'a été collecté — le
+ * document porte alors « Non communiquée » plutôt qu'une adresse tronquée.
+ */
+export function formatStripeAddress(
+  address: {
+    line1?: string | null; line2?: string | null; postal_code?: string | null;
+    city?: string | null; state?: string | null; country?: string | null;
+  } | null | undefined,
+): string | null {
+  if (!address) return null;
+  const rue = [address.line1, address.line2].filter(Boolean).join(', ');
+  const ville = [address.postal_code, address.city].filter(Boolean).join(' ');
+  // Le pays n'est utile que hors de France : sur un contrat français, « FR »
+  // en fin d'adresse est du bruit.
+  const pays = address.country && address.country.toUpperCase() !== 'FR' ? address.country : null;
+  const ligne = [rue, ville, pays].filter(Boolean).join(', ').trim();
+  return ligne || null;
+}
 
 /** Normalise la voie ('Voie externe' → 'externe', etc.) vers la forme courte
  *  attendue par la RLS (current_voie). Renvoie null si non reconnue. */
@@ -476,6 +511,15 @@ export async function provisionStudentAccount(
 
   const formule = FORMULES[input.formuleId];
 
+  // Signature manuscrite recueillie avant l'ouverture du paiement : elle est
+  // apposée sur les trois documents contractuels. Best-effort — un stockage
+  // muet ne doit pas retenir le mail d'activation de l'élève.
+  const signature = input.signaturePath
+    ? await downloadSignature(input.signaturePath)
+        .then((r) => ({ png: r.png, signedAt: r.manifest?.signedAt ?? null }))
+        .catch(() => ({ png: null as Buffer | null, signedAt: null as string | null }))
+    : { png: null as Buffer | null, signedAt: null as string | null };
+
   // -- Tentative 1 : Resend (avec PJ légales : CGU, CGS, CP au format PDF)
   try {
     const { subject, html, text } = purchaseConfirmationEmail({
@@ -487,19 +531,41 @@ export async function provisionStudentAccount(
       specialty: approfondiTier?.specialtyName ?? input.specialty ?? null,
       contentPending,
     });
-    // Les PDFs sont hébergés côté public/legal — Resend les téléchargera
-    // côté serveur via `path` et les attachera au mail.
-    const base = siteUrl();
-    const attachments = [
-      { filename: 'CGU - Major ECN.pdf', path: `${base}/legal/cgu.pdf` },
-      { filename: 'CGS - Major ECN.pdf', path: `${base}/legal/cgs.pdf` },
-      { filename: 'Conditions Particulières - Major ECN.pdf', path: `${base}/legal/conditions-particulieres.pdf` },
-    ];
+    // Pièces contractuelles RENSEIGNÉES : identité, adresse du domicile,
+    // offre souscrite, date d'effet et signature manuscrite du candidat sont
+    // apposées sur les modèles de `public/legal`. En cas d'échec du rendu, la
+    // fonction retombe d'elle-même sur les PDF statiques : le mail d'achat part
+    // toujours avec ses trois documents.
+    const contrats = await buildContractAttachments({
+      client: {
+        firstName,
+        lastName,
+        email: input.email,
+        phone,
+        address: input.address ?? null,
+      },
+      offer: {
+        formuleId: input.formuleId,
+        formuleLabel: approfondiTier ? `Programme ${approfondiTier.tierLabel}` : formule.name,
+        specialty: approfondiTier?.specialtyName ?? input.specialty ?? null,
+        voie: input.voie ?? null,
+        coverageLabel: approfondiTier?.coverageLabel ?? null,
+        amountEuros: amountEurosTotal,
+        installments: input.installments ?? 1,
+      },
+      effectiveAt: new Date(),
+      signaturePng: signature.png,
+      signedAt: signature.signedAt,
+    });
+    const attachments = contrats.attachments;
     log('email-resend-attempt', {
       to: input.email,
       subject,
       setupUrlPrefix: setupUrl.slice(0, 60) + '…',
       attachments: attachments.length,
+      contratsRenseignes: contrats.filled,
+      contratsErreur: contrats.error,
+      signature: signature.png ? 'apposée' : 'absente',
     });
     const sendResult = await sendEmail({ to: input.email, subject, html, text, attachments });
     if (sendResult.ok) {

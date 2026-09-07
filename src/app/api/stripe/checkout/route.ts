@@ -324,7 +324,7 @@ export async function POST(req: Request) {
         cancel_url: cancelUrl,
         locale: 'fr',
         allow_promotion_codes: true,
-        billing_address_collection: 'auto',
+        billing_address_collection: 'required',
         phone_number_collection: { enabled: true },
         metadata: { ...commonMetadata, cancel_at: String(cancelAt) },
         subscription_data: {
@@ -370,7 +370,7 @@ export async function POST(req: Request) {
       cancel_url: cancelUrl,
       locale: 'fr',
       allow_promotion_codes: true,
-      billing_address_collection: 'auto',
+      billing_address_collection: 'required',
       phone_number_collection: { enabled: true },
       metadata: commonMetadata,
       payment_intent_data: {

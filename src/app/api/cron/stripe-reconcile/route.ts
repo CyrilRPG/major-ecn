@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { provisionStudentAccount } from '@/lib/stripe/provisioning';
+import { provisionStudentAccount, formatStripeAddress } from '@/lib/stripe/provisioning';
 import { ensureInstallmentPlanEnds } from '@/lib/stripe/installments';
 import { sendEmail, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
 import { auditWebhooks, auditAndFixUnboundedPlans } from '@/lib/stripe/health';
@@ -272,6 +272,8 @@ export async function GET(req: Request) {
         approfondiVariant: meta.approfondi_variant ?? '',
         contentPending: meta.content_pending === '1',
         phone: meta.phone ?? session.customer_details?.phone ?? '',
+        address: formatStripeAddress(session.customer_details?.address),
+        signaturePath: meta.signature_path || null,
         sessionId: session.id,
         source: 'webhook',
       });

@@ -17,7 +17,7 @@
 import { NextResponse } from 'next/server';
 import type Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
-import { provisionStudentAccount } from '@/lib/stripe/provisioning';
+import { provisionStudentAccount, formatStripeAddress } from '@/lib/stripe/provisioning';
 import { ensureInstallmentPlanEnds } from '@/lib/stripe/installments';
 import type { FormuleId } from '@/lib/stripe';
 
@@ -170,6 +170,10 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     approfondiVariant: metadata.approfondi_variant ?? '',
     contentPending: metadata.content_pending === '1',
     phone,
+    // Adresse du domicile et signature manuscrite : elles alimentent les
+    // documents contractuels pre-remplis joints au mail d'achat.
+    address: formatStripeAddress(session.customer_details?.address),
+    signaturePath: metadata.signature_path || null,
     sessionId: session.id,
     source: 'webhook',
   });
