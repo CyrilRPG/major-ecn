@@ -3,7 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import { Check, Download, X } from 'lucide-react';
 import { ArenaPage, Notice, Panel } from '@/components/arena/arena-shell';
 import { Container, Eyebrow } from '@/components/arena/arena-ui';
-import { ARENA, BODY, DISPLAY, TABULAR } from '@/components/arena/tokens';
+import { ARENA, BODY, CAPS, DISPLAY, TABULAR } from '@/components/arena/tokens';
 import { ReportDialog } from '@/components/arena/report-dialog';
 import { ZoomableImage } from '@/components/qcm/image-zoom';
 import { effectiveBareme, getAttempt, getPreviewAttempt, listAnswers, listReportsForParticipant } from '@/lib/arena/db';
@@ -67,7 +67,7 @@ export default async function CorrectionsPage({ params, searchParams }: Params) 
     <ArenaPage nav={nav}>
       <Container className="max-w-3xl py-10 sm:py-14">
         <Eyebrow>Corrections · manche {number}{round.theme ? ` · ${round.theme}` : ''}</Eyebrow>
-        <h1 className="mt-4 text-3xl font-extrabold sm:text-5xl" style={{ fontFamily: DISPLAY, letterSpacing: '-0.04em' }}>Les corrections détaillées.</h1>
+        <h1 className="mt-4 text-[2.4rem] leading-[0.95] sm:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Les corrections détaillées.</h1>
         {round.corrections_intro && <p className="mt-4 text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY, whiteSpace: 'pre-line' }}>{round.corrections_intro}</p>}
         {pdfUrl && (
           <a href={pdfUrl} className="mt-5 inline-flex items-center gap-2 text-sm font-bold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft, fontFamily: BODY }}>

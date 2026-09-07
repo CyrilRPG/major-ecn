@@ -1,13 +1,15 @@
 import { ArenaPage } from '@/components/arena/arena-shell';
 import { Container } from '@/components/arena/arena-ui';
-import { BODY, DISPLAY, LIGHT, MONO } from '@/components/arena/tokens';
+import { BODY, CAPS, ARENA, HEADLINE } from '@/components/arena/tokens';
 import { Leaderboard } from '@/components/arena/leaderboard';
+import { Stadium } from '@/components/arena/stadium';
 import { LandingBareme, type BaremeCard } from '@/components/arena/landing/bareme-board';
 import { LandingChrono } from '@/components/arena/landing/chrono';
 import { LandingFinal } from '@/components/arena/landing/final';
 import { LandingFormat } from '@/components/arena/landing/format';
 import { ArenaFxStyles, Bib, StadiumScreen } from '@/components/arena/landing/fx';
 import { LandingHero, type HeroState } from '@/components/arena/landing/hero';
+import { LandingPillars } from '@/components/arena/landing/pillars';
 import { LandingTrack, type TrackRound } from '@/components/arena/landing/track';
 import { computeTournamentStandings, effectiveBareme, roundMaxScore } from '@/lib/arena/db';
 import { leaderboardRows } from '@/lib/arena/ranking';
@@ -28,11 +30,10 @@ export async function generateMetadata({ params }: Params) {
 }
 
 /**
- * Landing d'un tournoi (§8.1) — parcours « entrer dans l'arène » :
- * tunnel (hero sombre) → la piste (clair) → le format (clair) → le
- * chronomètre (sombre) → le barème (clair) → l'écran des Meilleurs scores
- * (sombre) → le règlement (clair) → l'entrée finale (sombre).
- * Contenu réel dans le HTML servi ; état en direct ; appels à l'inscription.
+ * Landing d'un tournoi (§8.1) — parcours « entrer dans l'arène » dans la DA
+ * des maquettes : hero photo → piliers → la piste → le format → le
+ * chronomètre → le barème → l'écran des Meilleurs scores → le règlement →
+ * l'entrée finale. Contenu réel dans le HTML servi ; état en direct.
  */
 export default async function TournamentLandingPage({ params, searchParams }: Params) {
   const { slug } = await params;
@@ -101,6 +102,8 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
         tickerItems={ticker}
       />
 
+      <LandingPillars />
+
       <LandingTrack
         rounds={trackRounds}
         cumulative="Chaque manche est ouverte 24 h. Les points de chaque manche jouée s’additionnent dans un score cumulé ; une manche manquée compte pour zéro. Le classement est provisoire après chaque manche, final après la dernière."
@@ -124,24 +127,25 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
 
       {/* MEILLEURS SCORES — écran de stade */}
       {t.leaderboard_enabled && (
-        <section className="relative isolate overflow-hidden py-16 sm:py-24" style={{ background: '#0A1020', color: '#F4F6FB' }}>
-          <div aria-hidden className="pointer-events-none absolute inset-0 -z-10" style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 0%, rgba(228,0,43,0.22), transparent 65%)' }} />
+        <section className="relative isolate overflow-hidden py-16 sm:py-24" style={{ background: `linear-gradient(180deg, ${ARENA.surface}, ${ARENA.bg})` }}>
+          <div aria-hidden className="pointer-events-none absolute inset-0 -z-10" style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 0%, rgba(228,0,43,0.20), transparent 65%)' }} />
           <Container>
             <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start lg:gap-14">
               <div className="lg:sticky lg:top-10">
                 <Bib>Le fil rouge</Bib>
-                <h2 className="mt-4 text-[1.9rem] font-extrabold leading-[1.05] sm:text-[2.5rem] lg:text-[3rem]" style={{ fontFamily: DISPLAY, letterSpacing: '-0.03em' }}>Une position à défendre, manche après manche.</h2>
-                <p className="mt-4 text-[15px] leading-relaxed sm:text-base" style={{ color: '#A5AFC4', fontFamily: BODY }}>
+                <h2 className="mt-4 text-[2.1rem] leading-[0.98] sm:text-[2.9rem] lg:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Une position à défendre, <span style={{ color: ARENA.red }}>manche après manche.</span></h2>
+                <p className="mt-4 text-[15px] leading-relaxed sm:text-base" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
                   Le classement est cumulatif : provisoire après M1, cumulé après M2, final après M3. Il se gagne, se perd et se rattrape. Seul votre pseudonyme apparaît, jamais votre identité.
                 </p>
               </div>
-              <StadiumScreen>
+              <StadiumScreen title={standings?.isFinal ? 'Classement final' : lastCounted ? `Classement provisoire cumulé · après M${lastCounted}` : 'Le tableau s’allume après la manche 1'}>
                 <Leaderboard
                   rows={board}
-                  subtitle={standings?.isFinal ? 'Classement final' : lastCounted ? `Classement provisoire cumulé · après M${lastCounted}` : 'Le tableau s’allume après la manche 1'}
+                  subtitle={standings?.isFinal ? 'Classement final (cumulé)' : lastCounted ? `Classement provisoire (cumulé) · après M${lastCounted}` : 'Classement provisoire (cumulé)'}
                   totalMax={totalMax}
                   rulesHref={`${base}/regles#classement`}
                   emptyMessage={lastCounted ? 'Aucun participant n’atteint encore le seuil du classement.' : 'Le tableau s’allumera après la publication des résultats de la première manche.'}
+                  flat
                 />
               </StadiumScreen>
             </div>
@@ -149,35 +153,37 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
         </section>
       )}
 
-      {/* RÈGLEMENT — clair */}
-      <section id="regles" className="py-16 sm:py-24" style={{ background: LIGHT.bg, color: LIGHT.text }}>
-        <Container>
-          <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
-            <div>
-              <Bib tone="light">Règlement</Bib>
-              <h2 className="mt-4 text-[1.9rem] font-extrabold leading-[1.05] sm:text-[2.5rem] lg:text-[3rem]" style={{ fontFamily: DISPLAY, letterSpacing: '-0.03em' }}>Les règles de l’arène.</h2>
-              <ol className="mt-8 space-y-3">
-                {PUBLIC_RULES.map((r, i) => (
-                  <li key={i} className="flex gap-4 text-[14.5px] leading-relaxed" style={{ color: LIGHT.textSoft, fontFamily: BODY }}>
-                    <span className="shrink-0 pt-0.5 text-sm" style={{ fontFamily: MONO, fontVariantNumeric: 'tabular-nums', color: LIGHT.red, fontWeight: 500 }}>{(i + 1).toString().padStart(2, '0')}</span>
-                    <span>{r}</span>
-                  </li>
-                ))}
-              </ol>
+      {/* RÈGLEMENT — sur l'amphithéâtre */}
+      <Stadium photo="amphitheatre" darken={0.7} tint={0.35} position="center 60%" className="py-16 sm:py-24">
+        <section id="regles">
+          <Container>
+            <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
+              <div>
+                <Bib>Règlement</Bib>
+                <h2 className="mt-4 text-[2.1rem] leading-[0.98] sm:text-[2.9rem] lg:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Les règles <span style={{ color: ARENA.red }}>de l’arène.</span></h2>
+                <ol className="mt-8 space-y-3">
+                  {PUBLIC_RULES.map((r, i) => (
+                    <li key={i} className="flex gap-4 text-[14.5px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
+                      <span className="shrink-0 pt-0.5 text-[15px] leading-none" style={{ fontFamily: HEADLINE, color: ARENA.redSoft, letterSpacing: '0.06em' }}>{(i + 1).toString().padStart(2, '0')}</span>
+                      <span>{r}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+              <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'rgba(11,15,20,0.78)', boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}`, backdropFilter: 'blur(8px)' }}>
+                <p className="text-[11px]" style={{ ...CAPS, color: ARENA.redSoft, letterSpacing: '0.22em' }}>Nature du dispositif</p>
+                <p className="mt-3 text-[15px] leading-relaxed" style={{ fontFamily: BODY, color: ARENA.text }}>{WARNING_NATURE}</p>
+                <p className="mt-7 text-[11px]" style={{ ...CAPS, color: ARENA.warn, letterSpacing: '0.22em' }}>Connexion</p>
+                <p className="mt-3 text-[15px] leading-relaxed" style={{ fontFamily: BODY, color: ARENA.text }}>{WARNING_CONNECTION}</p>
+                <p className="mt-7 text-[11px]" style={{ ...CAPS, color: ARENA.textMuted, letterSpacing: '0.22em' }}>Après la clôture</p>
+                <p className="mt-3 text-[15px] leading-relaxed" style={{ fontFamily: BODY, color: ARENA.textSoft }}>
+                  Chaque participant reçoit les corrections détaillées de la manche : réponses attendues, pièges de l’énoncé, erreurs les plus fréquentes et encadré méthodologique. C’est la contrepartie de la participation.
+                </p>
+              </div>
             </div>
-            <div className="rounded-[1.25rem] bg-white p-6 sm:p-8" style={{ boxShadow: `inset 0 0 0 1px ${LIGHT.line}, 0 20px 40px -24px rgba(16,24,40,0.18)` }}>
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: LIGHT.textMuted, fontFamily: BODY }}>Nature du dispositif</p>
-              <p className="mt-3 text-[15px] leading-relaxed" style={{ fontFamily: BODY }}>{WARNING_NATURE}</p>
-              <p className="mt-7 text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: LIGHT.textMuted, fontFamily: BODY }}>Connexion</p>
-              <p className="mt-3 text-[15px] leading-relaxed" style={{ fontFamily: BODY }}>{WARNING_CONNECTION}</p>
-              <p className="mt-7 text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: LIGHT.textMuted, fontFamily: BODY }}>Après la clôture</p>
-              <p className="mt-3 text-[15px] leading-relaxed" style={{ fontFamily: BODY }}>
-                Chaque participant reçoit les corrections détaillées de la manche : réponses attendues, pièges de l’énoncé, erreurs les plus fréquentes et encadré méthodologique. C’est la contrepartie de la participation.
-              </p>
-            </div>
-          </div>
-        </Container>
-      </section>
+          </Container>
+        </section>
+      </Stadium>
 
       <LandingFinal
         eyebrow={`${t.edition_label || 'Édition en cours'} · ${t.specialty}`}

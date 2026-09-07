@@ -1,6 +1,6 @@
 import { ArenaPage, Panel } from '@/components/arena/arena-shell';
 import { Container, Eyebrow } from '@/components/arena/arena-ui';
-import { ARENA, BODY, DISPLAY, TABULAR } from '@/components/arena/tokens';
+import { ARENA, BODY, CAPS, DISPLAY, TABULAR } from '@/components/arena/tokens';
 import { effectiveBareme } from '@/lib/arena/db';
 import { describeBareme } from '@/lib/arena/scoring';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
@@ -26,7 +26,7 @@ export default async function RulesPage({ params }: Params) {
     <ArenaPage nav={ctx.nav}>
       <Container className="max-w-3xl py-12 sm:py-16">
         <Eyebrow>Règles publiques</Eyebrow>
-        <h1 className="mt-4 text-3xl font-extrabold sm:text-5xl" style={{ fontFamily: DISPLAY, letterSpacing: '-0.04em' }}>Les règles de l’arène.</h1>
+        <h1 className="mt-4 text-[2.4rem] leading-[0.95] sm:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Les règles de l’arène.</h1>
 
         <ol className="mt-10 space-y-3">
           {PUBLIC_RULES.map((r, i) => (
@@ -37,14 +37,14 @@ export default async function RulesPage({ params }: Params) {
           ))}
         </ol>
 
-        <h2 id="classement" className="mt-14 text-2xl font-extrabold" style={{ fontFamily: DISPLAY, letterSpacing: '-0.03em' }}>Comment est calculé le classement ?</h2>
+        <h2 id="classement" className="mt-14 text-[1.7rem] leading-none" style={{ ...CAPS, color: ARENA.text }}>Comment est calculé le classement ?</h2>
         <div className="mt-4 space-y-3 text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
           <p>Le score cumulé additionne vos scores de manche. Une manche non jouée compte pour zéro. Le rang s’affiche lorsque votre score cumulé atteint <strong style={{ color: ARENA.text }}>{t.threshold_pct.toLocaleString('fr-FR')} %</strong> du maximum cumulé des manches déjà publiées : ce droit est réévalué après chaque manche, dans les deux sens.</p>
           <p>Au classement final, il faut avoir joué au moins <strong style={{ color: ARENA.text }}>{t.min_rounds_final} manches</strong>. Les égalités sont départagées par le total de points, puis le nombre de réponses parfaites (score maximal prévu par le barème, sans règle indispensable ou inacceptable déclenchée), puis le temps moyen par manche, le plus faible l’emportant. Une manche jouée avec un chronomètre réduit (entrée tardive) est exclue du calcul du temps moyen, mais compte pour les points.</p>
           <p>Le classement public, « Meilleurs scores », n’affiche que les participants ayant droit au rang, au plus {t.leaderboard_size} entrées, sans jamais indiquer d’effectif.</p>
         </div>
 
-        <h2 className="mt-14 text-2xl font-extrabold" style={{ fontFamily: DISPLAY, letterSpacing: '-0.03em' }}>Barème par manche</h2>
+        <h2 className="mt-14 text-[1.7rem] leading-none" style={{ ...CAPS, color: ARENA.text }}>Barème par manche</h2>
         <p className="mt-2 text-sm" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Généré depuis le paramétrage de chaque manche. Le barème est verrouillé à l’ouverture de la manche.</p>
         <div className="mt-6 space-y-6">
           {ctx.snap.rounds.map((r) => {
@@ -77,7 +77,7 @@ export default async function RulesPage({ params }: Params) {
           })}
         </div>
 
-        <h2 className="mt-14 text-2xl font-extrabold" style={{ fontFamily: DISPLAY, letterSpacing: '-0.03em' }}>Avertissements</h2>
+        <h2 className="mt-14 text-[1.7rem] leading-none" style={{ ...CAPS, color: ARENA.text }}>Avertissements</h2>
         <div className="mt-4 space-y-3 text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
           <p>{WARNING_NATURE}</p>
           <p>{WARNING_CONNECTION}</p>

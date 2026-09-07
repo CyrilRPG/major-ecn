@@ -15,8 +15,9 @@ export function StartRoundButton({ slug, roundNumber, label, preview }: { slug: 
     <div className="space-y-3">
       <FormError>{error}</FormError>
       <ArenaButton
+        size="lg"
         disabled={pending}
-        className="w-full sm:w-auto"
+        className="w-full"
         onClick={() => {
           setError(null);
           start(async () => {

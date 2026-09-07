@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ARENA, BODY, TABULAR } from './arena-ui';
+import { ARENA, BODY, HEADLINE, TABULAR } from './arena-ui';
 import { browserTimezone, parisAndLocalLabel, remainingLabel } from '@/lib/arena/time';
 
 /**
@@ -38,15 +38,15 @@ export function Countdown({
     );
   }
   return (
-    <div>
-      <p className="text-[11px] font-extrabold uppercase tracking-[0.22em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>{label}</p>
-      <div className="mt-3 flex items-end justify-center gap-3 sm:gap-5">
+    <div className="text-center">
+      <p className="text-[11px] font-bold uppercase tracking-[0.24em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>{label}</p>
+      <div className="mt-3 flex items-end justify-center gap-2 sm:gap-4">
         {(['j', 'h', 'min', 's'] as const).map((u, i) => (
-          <div key={u} className="flex items-end gap-3 sm:gap-5">
-            {i > 0 && <span aria-hidden className="pb-3 text-2xl sm:text-4xl" style={{ color: ARENA.textMuted }}>:</span>}
+          <div key={u} className="flex items-end gap-2 sm:gap-4">
+            {i > 0 && <span aria-hidden className="pb-4 text-3xl" style={{ color: ARENA.redDeep, fontFamily: HEADLINE }}>:</span>}
             <div className="text-center">
-              <span className="block text-[2.4rem] leading-none sm:text-6xl" style={{ ...TABULAR, fontWeight: 500 }}>{cell(parts[i])}</span>
-              <span className="mt-1.5 block text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>{u}</span>
+              <span className="block text-[2.8rem] leading-none sm:text-[4rem]" style={{ fontFamily: HEADLINE, letterSpacing: '0.04em', textShadow: '0 0 24px rgba(228,0,43,0.35)' }}>{cell(parts[i])}</span>
+              <span className="mt-1.5 block text-[10px] font-bold uppercase tracking-[0.22em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>{u}</span>
             </div>
           </div>
         ))}

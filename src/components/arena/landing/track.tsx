@@ -1,85 +1,81 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ARENA, BODY, Container, DISPLAY, LIGHT, MONO } from '../arena-ui';
+import { ArrowRight, CalendarClock, Lock } from 'lucide-react';
 import { LocalTime } from '../countdown';
-import { Bib, LaneLines } from './fx';
-
-/* ============================================================
-   « La piste » (fond clair) : les manches sont des couloirs de
-   piste d'athlétisme. Marqueur pulsant sur la manche ouverte,
-   couloir grisé pour les manches clôturées, ligne d'arrivée
-   au bout. Sur mobile, les couloirs s'empilent.
-   ============================================================ */
+import { ARENA, BODY, CAPS, Container, DISPLAY, HEADLINE, buttonClass, buttonStyle } from '../arena-ui';
+import { Bib, Reveal } from './fx';
 
 export type TrackRound = {
-  number: number;
-  theme: string;
-  opensAt: string | null;
-  closesAt: string | null;
+  number: number; theme: string; opensAt: string | null; closesAt: string | null;
   state: 'unscheduled' | 'upcoming' | 'open' | 'closed';
-  correctionsHref: string | null;
-  playHref: string | null;
+  correctionsHref: string | null; playHref: string | null;
 };
 
+const STATE_LABEL = { open: 'Ouverte', upcoming: 'À venir', closed: 'Clôturée', unscheduled: 'À programmer' } as const;
+
+/** « La piste » : les manches du tournoi, en couloirs, avec leur état en direct. */
 export function LandingTrack({ rounds, cumulative }: { rounds: TrackRound[]; cumulative: string }) {
   return (
-    <section className="relative isolate overflow-hidden py-16 sm:py-24" style={{ background: LIGHT.bg, color: LIGHT.text }}>
-      <LaneLines lanes={rounds.length + 1} tone="light" />
-      {/* Ligne d'arrivée à droite */}
-      <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 hidden w-10 lg:block" style={{ backgroundImage: 'repeating-linear-gradient(0deg, #14254E 0 10px, transparent 10px 20px), repeating-linear-gradient(0deg, transparent 0 10px, #14254E 10px 20px)', backgroundSize: '50% 100%', backgroundPosition: '0 0, 100% 0', backgroundRepeat: 'no-repeat', opacity: 0.08 }} />
+    <section id="manches" className="relative isolate overflow-hidden py-16 sm:py-24" style={{ background: `linear-gradient(180deg, ${ARENA.bg}, ${ARENA.surface})` }}>
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10" style={{ background: 'radial-gradient(ellipse 60% 50% at 15% 0%, rgba(228,0,43,0.16), transparent 60%)' }} />
       <Container>
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div className="max-w-2xl">
-            <Bib tone="light">La piste</Bib>
-            <h2 className="mt-4 text-[1.9rem] font-extrabold leading-[1.05] sm:text-[2.5rem] lg:text-[3rem]" style={{ fontFamily: DISPLAY, letterSpacing: '-0.03em' }}>
-              {rounds.length} manches, un seul total.
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
+          <Reveal>
+            <Bib>La piste</Bib>
+            <h2 className="mt-4 text-[2.1rem] leading-[0.98] sm:text-[2.9rem] lg:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>
+              {rounds.length || 3} manches, <span style={{ color: ARENA.red }}>un seul total.</span>
             </h2>
-            <p className="mt-4 text-[15px] leading-relaxed sm:text-base" style={{ color: LIGHT.textSoft, fontFamily: BODY }}>{cumulative}</p>
-          </div>
-        </div>
+            <p className="mt-4 max-w-md text-[15px] leading-relaxed sm:text-base" style={{ color: ARENA.textSoft, fontFamily: BODY }}>{cumulative}</p>
+            <div className="mt-6 flex items-center gap-3 rounded-xl px-4 py-3" style={{ background: 'rgba(228,0,43,0.08)', boxShadow: 'inset 0 0 0 1px rgba(228,0,43,0.35)' }}>
+              <span className="text-[2rem] leading-none" style={{ fontFamily: HEADLINE, color: ARENA.redSoft }}>Σ</span>
+              <p className="text-[13px] leading-snug" style={{ color: ARENA.text, fontFamily: BODY }}>
+                <strong>Score cumulé</strong> = M1 + M2 + M3. Provisoire après chaque manche, final après la dernière.
+              </p>
+            </div>
+          </Reveal>
 
-        <ol className="mt-12 space-y-3">
-          {rounds.map((r, i) => {
-            const open = r.state === 'open';
-            const closed = r.state === 'closed';
-            return (
-              <motion.li
-                key={r.number}
-                initial={{ opacity: 0, x: -24 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: i * 0.1 }}
-                className="relative grid items-center gap-4 rounded-2xl px-5 py-4 sm:grid-cols-[6rem_1fr_auto] sm:px-7 sm:py-5"
-                style={{
-                  background: open ? '#FFFFFF' : closed ? 'rgba(255,255,255,0.55)' : '#FFFFFF',
-                  boxShadow: open ? `inset 0 0 0 2px ${LIGHT.red}, 0 24px 48px -24px rgba(192,17,46,0.45)` : `inset 0 0 0 1px ${LIGHT.line}, 0 8px 24px -16px rgba(16,24,40,0.12)`,
-                  opacity: closed ? 0.85 : 1,
-                }}
-              >
-                {/* Numéro de couloir */}
-                <div className="flex items-center gap-3">
-                  <span className="text-5xl leading-none" style={{ fontFamily: MONO, fontVariantNumeric: 'tabular-nums', fontWeight: 500, color: open ? LIGHT.red : closed ? LIGHT.textMuted : LIGHT.text }}>M{r.number}</span>
-                  {open && <span className="arena-pulse h-2.5 w-2.5 rounded-full" style={{ background: ARENA.red }} />}
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[15px] font-extrabold" style={{ fontFamily: DISPLAY, letterSpacing: '-0.01em' }}>{r.theme || `Thème annoncé avant la manche ${r.number}`}</p>
-                  <p className="mt-1 text-[13px]" style={{ color: LIGHT.textSoft, fontFamily: BODY }}>
-                    {r.opensAt && r.closesAt ? <>Du <LocalTime iso={r.opensAt} withYear /> au <LocalTime iso={r.closesAt} /></> : 'Date annoncée prochainement'}
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="rounded-full px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.16em]" style={{ background: open ? LIGHT.red : closed ? '#E9EBEF' : '#EEF2FF', color: open ? '#fff' : closed ? LIGHT.textMuted : '#1E3A8A', fontFamily: BODY }}>
-                    {open ? 'Ouverte' : closed ? 'Clôturée' : r.state === 'upcoming' ? 'À venir' : 'Date à venir'}
-                  </span>
-                  {open && r.playHref && <Link href={r.playHref} className="text-sm font-extrabold underline-offset-4 hover:underline" style={{ color: LIGHT.red, fontFamily: DISPLAY }}>Jouer</Link>}
-                  {closed && r.correctionsHref && <Link href={r.correctionsHref} className="text-sm font-extrabold underline-offset-4 hover:underline" style={{ color: LIGHT.red, fontFamily: DISPLAY }}>Corrections</Link>}
-                </div>
-              </motion.li>
-            );
-          })}
-        </ol>
+          <ol className="space-y-3">
+            {rounds.map((r, i) => {
+              const open = r.state === 'open';
+              return (
+                <Reveal key={r.number} delay={i * 0.06}>
+                  <li
+                    className="relative grid grid-cols-[auto_1fr] items-center gap-4 overflow-hidden rounded-2xl p-4 sm:grid-cols-[auto_1fr_auto] sm:gap-6 sm:p-5"
+                    style={{ background: open ? 'linear-gradient(90deg, rgba(228,0,43,0.16), rgba(20,26,34,0.85))' : ARENA.raised, boxShadow: `inset 0 0 0 1px ${open ? 'rgba(228,0,43,0.55)' : ARENA.line}` }}
+                  >
+                    <span aria-hidden className="absolute inset-y-0 left-0 w-[4px]" style={{ background: open ? ARENA.red : r.state === 'closed' ? ARENA.textMuted : ARENA.lineStrong }} />
+                    <span className="flex items-baseline gap-1 pl-2 leading-none" style={{ fontFamily: HEADLINE }}>
+                      <span className="text-[2.8rem] sm:text-[3.4rem]" style={{ color: open ? ARENA.text : ARENA.textSoft }}>M{r.number}</span>
+                      {open && <span className="arena-pulse inline-block h-2.5 w-2.5 -translate-y-6 rounded-full" style={{ background: ARENA.red }} />}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="flex flex-wrap items-center gap-2">
+                        <span className="text-[15px] font-semibold uppercase tracking-[0.04em] sm:text-[17px]" style={{ fontFamily: DISPLAY, color: ARENA.text }}>{r.theme || `Manche ${r.number}`}</span>
+                        <Bib tone={open ? 'red' : r.state === 'closed' ? 'muted' : 'muted'}>{STATE_LABEL[r.state]}</Bib>
+                      </span>
+                      <span className="mt-1 flex items-center gap-1.5 text-[12.5px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>
+                        <CalendarClock className="h-3.5 w-3.5 shrink-0" />
+                        {r.opensAt && r.closesAt ? (
+                          <span>Du <LocalTime iso={r.opensAt} /> au <LocalTime iso={r.closesAt} /></span>
+                        ) : 'Dates annoncées prochainement'}
+                      </span>
+                    </span>
+                    <span className="col-span-2 sm:col-span-1">
+                      {r.playHref ? (
+                        <Link href={r.playHref} className={`${buttonClass('primary')} w-full sm:w-auto`} style={buttonStyle('primary')}>Jouer <ArrowRight className="h-4 w-4" /></Link>
+                      ) : r.correctionsHref ? (
+                        <Link href={r.correctionsHref} className="inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.1em] underline-offset-4 hover:underline" style={{ color: ARENA.redSoft, fontFamily: DISPLAY }}>Corrections <ArrowRight className="h-4 w-4" /></Link>
+                      ) : r.state === 'closed' ? (
+                        <span className="inline-flex items-center gap-1.5 text-[12px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}><Lock className="h-3.5 w-3.5" /> Corrections à venir</span>
+                      ) : null}
+                    </span>
+                  </li>
+                </Reveal>
+              );
+            })}
+          </ol>
+        </div>
       </Container>
     </section>
   );

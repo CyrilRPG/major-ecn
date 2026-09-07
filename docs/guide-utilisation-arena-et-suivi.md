@@ -174,13 +174,14 @@ importer les questions → publier.
 
 ### 2.9 Ce que voit un participant
 
-Landing « entrer dans l'arène » (refonte du 07/09/2026) : hero sombre avec tableau
-d'affichage LED et compte à rebours en temps restant (heure de Paris rappelée, heure
-locale affichée si différente), puis alternance de sections claires et sombres — la
-piste des manches, le format (« Court. Exigeant. Chaque réponse compte. »), le
-chronomètre, le barème, l'écran des Meilleurs scores, le règlement, l'entrée finale.
-Le score cumulé est rappelé sur la piste, le format et le classement. L'ancienne
-maquette `/arena-preview` redirige vers la landing de démonstration. Ensuite : inscription (prénom, nom, email, spécialité, pseudonyme,
+Landing « entrer dans l'arène » dans la direction artistique des maquettes client
+(refonte du 07/09/2026) : hero sur photo de stade sous lumière rouge avec le casque
+et le wordmark EVC ARENA / Major ECN, tableau d'affichage en direct de la manche,
+bandeau des six piliers, la piste des manches, le format (« Court. Exigeant. Chaque
+réponse compte. »), le chronomètre avec l'écran de question tel qu'il sera joué, le
+barème, l'écran des Meilleurs scores, le règlement sur l'amphithéâtre, l'entrée finale
+sous les projecteurs. Le score cumulé est rappelé sur la piste, le format et le
+classement. L'ancienne maquette `/arena-preview` redirige vers la landing de démo. Ensuite : inscription (prénom, nom, email, spécialité, pseudonyme,
 avatar, deux cases de consentement distinctes jamais pré-cochées), confirmation par
 email, espace personnel (manches, scores, rang si le seuil est atteint, corrections,
 invitation d'un collègue par WhatsApp, Messenger, email ou lien, préférences, suppression
@@ -193,6 +194,33 @@ tentative par manche, chronomètre côté serveur qui continue en cas de déconn
 durée réduite au temps restant en cas d'entrée tardive (§2.4).
 
 ---
+
+
+### 2.10 Identité visuelle (maquettes du 01/09/2026)
+
+Les trois planches déposées dans `templates/evc arena/` (parcours complet, cahier
+des charges illustré, visuels et expérience) ont été reprises écran par écran :
+
+| Maquette | Écran de la plateforme |
+|---|---|
+| 1. Inscription | `/arena/<slug>/inscription` — carte centrée, logo, accroche « Relevez le défi. Mesurez-vous aux meilleurs. », six avatars au choix, deux consentements, « Je m'inscris », « Déjà inscrit ? Se connecter », mention « aucun numéro de téléphone » |
+| 2. Modération pseudonyme | Vérification en direct dans le formulaire : croix rouge « mot ou format non autorisé », coche verte « pseudonyme disponible », rappel des quatre règles |
+| 3. Accueil avant la manche | `/arena/<slug>/manche/<n>` — Manche n / N, thème, ouverture et fermeture, « Règles de la manche », barème, avertissement rouge, encadré connexion ambre, « Commencer la manche » |
+| 4. Pendant la manche | Anneau de temps, question n / N et progression, énoncé, type de réponse en rouge, propositions cochées en vert, « Valider & suivante » |
+| 5 et 6. Fin de manche | Score de la manche en grand (rouge sous 50 %, vert au-dessus), score cumulé, rang en vert si le seuil est atteint, prochaine manche, « Voir mon récap » |
+| 7 et 8. Classements | `/arena/<slug>/classement` et écran de stade de la landing — rang, pseudonyme, score cumulé sur le maximum, ligne du participant surlignée ; **sans médaille ni trophée** (§13 du cahier des charges prime sur la maquette) |
+| 9 et 10. Emails | En-tête EVC ARENA · Major ECN, bouton rouge ; contenus inchangés |
+| 11. Reprise après fermeture | Écran « Reprise de votre partie en cours » avec temps restant et question courante, « Reprendre la partie » |
+| 12. Temps écoulé | Écran « Temps écoulé ! », « Voir mon résultat » |
+| 13. Coupure internet | Voile « Connexion perdue » avec chronomètre visible, « Réessayer » |
+| 14. Invitation | Lien personnalisé avec copie, partage WhatsApp, Telegram, Email, Messenger, Lien (la limite « 2 amis par mois » de la maquette n'est pas dans le cahier des charges et n'est pas appliquée) |
+| 15. Administration | Bloc « Tableau de bord » sombre en tête de chaque tournoi : inscriptions, participants par manche et taux, courbe des inscriptions, rétention, top 5 cumul |
+| Style visuel | Fond `#0B0F14`, surfaces `#1A1F26`, rouge Major ECN `#E4002B`, titres Oswald / Bebas Neue, texte Inter ; barre d'onglets mobile Accueil · Classement · Profil · Aide pour les participants |
+
+Photos de stade (Unsplash, licence libre) dans `public/arena/`, crédits dans
+`public/arena/CREDITS.md`. Le logo casque est un SVG (`src/components/arena/arena-logo.tsx`).
+Écarts volontaires avec les maquettes, imposés par le cahier des charges : aucun
+trophée, médaille ni badge (§13), aucune mention « top 5 % » (§7), aucun effectif.
 
 ## 3. Suivi pédagogique individuel
 

@@ -13,6 +13,8 @@ import { ParticipantsTable, type ParticipantView } from '@/components/admin/aren
 import { ReportsPanel, type ReportView } from '@/components/admin/arena/reports-panel';
 import { EmailsPanel, type EmailLogView } from '@/components/admin/arena/emails-panel';
 import { PdfPanel } from '@/components/admin/arena/pdf-panel';
+import { ArenaDashboard, type DashboardData } from '@/components/admin/arena/dashboard';
+import { roundState } from '@/lib/arena/time';
 
 export const dynamic = 'force-dynamic';
 
@@ -108,6 +110,26 @@ export default async function TournamentAdminPage({ params, searchParams }: { pa
   const log = (logRes.data ?? []) as { id: string; created_at: string; actor_label: string | null; kind: string; details: string | null; round_id: string | null }[];
   const allQrpNs = qrpNs([...snap.questionsByRound.values()].flat());
 
+  /* Tableau de bord (maquette 15) */
+  const byDay = new Map<string, number>();
+  for (const p of [...participants].sort((a, b) => a.created_at.localeCompare(b.created_at))) {
+    const day = new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', timeZone: 'Europe/Paris' }).format(new Date(p.created_at));
+    byDay.set(day, (byDay.get(day) ?? 0) + 1);
+  }
+  let cumul = 0;
+  const registrationsByDay = [...byDay.entries()].map(([day, n]) => ({ day, total: (cumul += n) }));
+  const dashboard: DashboardData = {
+    status: STATUS_LABEL[snap.status], openRound: snap.openRound, registered: participants.length, confirmed: confirmed.length,
+    rounds: snap.rounds.map((r) => { const k = kpiRounds.find((x) => x.number === r.number)!; return { number: r.number, theme: r.theme, done: k.done, started: k.started, state: roundState(r) }; }),
+    retention: [{ label: 'M1 → M2', value: retention(1, 2) }, { label: 'M2 → M3', value: retention(2, 3) }, { label: 'M1 → M3', value: retention(1, 3) }],
+    registrationsByDay,
+    top: standings.standings.filter((x) => x.rank !== null).sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0)).slice(0, 5).map((x) => ({ rank: x.rank as number, pseudo: participants.find((p) => p.id === x.participantId)?.pseudo ?? '?', total: x.totalScore })),
+    eligible: standings.standings.filter((x) => x.rank !== null).length,
+    marketing: participants.filter((p) => p.consent_marketing && !p.marketing_unsubscribed_at).length,
+    reportsOpen: reportViews.filter((r) => r.status === 'open').length,
+    leaderboardHref: `/arena/${t.slug}/classement`,
+  };
+
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 lg:px-8">
       <header className="mb-6 border-b border-(--color-border) pb-5">
@@ -131,6 +153,8 @@ export default async function TournamentAdminPage({ params, searchParams }: { pa
           ))}
         </nav>
       </header>
+
+      <ArenaDashboard d={dashboard} />
 
       {tab === 'parametres' && <SettingsForm t={t} integrity={integrity} effectiveStatus={snap.status} />}
 

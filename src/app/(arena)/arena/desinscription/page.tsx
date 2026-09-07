@@ -3,7 +3,7 @@ import { arenaDb, getParticipant } from '@/lib/arena/db';
 import { verifySignedLinkToken } from '@/lib/arena/session';
 import { ArenaFooter, Panel, Wordmark } from '@/components/arena/arena-shell';
 import { Container } from '@/components/arena/arena-ui';
-import { ARENA, BODY, DISPLAY } from '@/components/arena/tokens';
+import { ARENA, BODY, CAPS } from '@/components/arena/tokens';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Désinscription — EVC Arena', robots: { index: false, follow: false } };
@@ -35,7 +35,7 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
       </header>
       <main className="flex-1">
         <Container className="max-w-lg py-14">
-          <h1 className="text-3xl font-extrabold" style={{ fontFamily: DISPLAY, letterSpacing: '-0.04em' }}>
+          <h1 className="text-3xl font-extrabold" style={{ ...CAPS, color: ARENA.text }}>
             {done ? 'Vous êtes désinscrit(e)' : 'Lien invalide'}
           </h1>
           <Panel className="mt-6">

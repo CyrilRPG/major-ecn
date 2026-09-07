@@ -429,3 +429,22 @@ export async function deleteMyAccount(slug: string): Promise<Ok | Err> {
   return { ok: true };
 }
 
+
+/* ------------------------------------------------------------------ */
+/* Vérification du pseudonyme en direct (maquette « modération »)      */
+/* ------------------------------------------------------------------ */
+
+export type PseudoCheck = { status: 'ok' | 'short' | 'invalid' | 'forbidden' | 'taken'; message: string };
+
+/** Filtre automatique (§3.3) + disponibilité dans le tournoi, sans effet de bord. */
+export async function checkPseudo(slug: string, rawPseudo: string): Promise<PseudoCheck> {
+  const pseudo = String(rawPseudo ?? '').trim();
+  if (pseudo.length < 3) return { status: 'short', message: '3 caractères minimum.' };
+  if (pseudo.length > 24) return { status: 'invalid', message: '24 caractères maximum.' };
+  if (!isValidPseudo(pseudo) || pseudoForbidden(pseudo)) return { status: 'forbidden', message: 'Ce pseudonyme contient un mot ou un format non autorisé.' };
+  const v = await visibleSnapshot(slug);
+  if (!v) return { status: 'invalid', message: 'Tournoi introuvable.' };
+  const { data } = await arenaDb().from('arena_participants').select('id').eq('tournament_id', v.snap.tournament.id).eq('pseudo_key', pseudoKey(pseudo)).maybeSingle();
+  if (data) return { status: 'taken', message: 'Ce pseudonyme est déjà pris dans ce tournoi.' };
+  return { status: 'ok', message: 'Ce pseudonyme est disponible.' };
+}

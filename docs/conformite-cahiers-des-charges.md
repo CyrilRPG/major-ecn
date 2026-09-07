@@ -114,7 +114,7 @@ Tournoi de démonstration prêt pour la recette du client : `/arena/demo-medecin
 
 | Exigence | Réalisation | État |
 |---|---|---|
-| §13 Identité visuelle : sombre, rouge Major ECN, grands chiffres, sobre, vocabulaire imposé | Composants `src/components/arena/*` | OK |
+| §13 Identité visuelle : sombre, rouge Major ECN, grands chiffres, sobre, vocabulaire imposé | Composants `src/components/arena/*` ; refonte du 07/09/2026 sur les trois maquettes client (`templates/evc arena/`) : photos de stade, casque, Oswald / Bebas Neue / Inter, quinze écrans repris (guide §2.10) ; trophées et médailles des maquettes écartés | OK |
 | §14 Écrans et états listés | Tous présents, y compris mode prévisualisation, barèmes, tableau de bord avec statut | OK |
 | §15 Configuration complète ; 15.1 statuts explicites et journalisés, transitions manuelles confirmées, dates figées ; 15.2 prévisualisation réelle ; 15.3 duplication ; 15.4 import, suivi, modération, export, emails | Administration `/admin/arena` | OK |
 | §16 Tests : barème (six cas), départage, seuil, fenêtres tronquées, comptes non confirmés, seconde tentative bloquée, statuts, neutralisation, prévisualisation, duplication | Tests unitaires (23) et recette manuelle du 7 septembre documentée dans `docs/chantier-arena-et-suivi.md` ; test de charge à 200 participants à réaliser sur Vercel | OK (charge : à faire) |

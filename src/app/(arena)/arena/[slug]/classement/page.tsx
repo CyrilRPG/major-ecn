@@ -1,6 +1,6 @@
 import { ArenaPage, Notice } from '@/components/arena/arena-shell';
 import { Container, Eyebrow } from '@/components/arena/arena-ui';
-import { ARENA, BODY, DISPLAY } from '@/components/arena/tokens';
+import { ARENA, BODY, CAPS } from '@/components/arena/tokens';
 import { Leaderboard } from '@/components/arena/leaderboard';
 import { computeTournamentStandings, effectiveBareme, roundMaxScore } from '@/lib/arena/db';
 import { leaderboardRows } from '@/lib/arena/ranking';
@@ -30,7 +30,7 @@ export default async function LeaderboardPage({ params }: Params) {
     <ArenaPage nav={ctx.nav}>
       <Container className="max-w-3xl py-12 sm:py-16">
         <Eyebrow>{t.specialty}{t.edition_label ? ` · ${t.edition_label}` : ''}</Eyebrow>
-        <h1 className="mt-4 text-3xl font-extrabold sm:text-5xl" style={{ fontFamily: DISPLAY, letterSpacing: '-0.04em' }}>Meilleurs scores</h1>
+        <h1 className="mt-4 text-[2.4rem] leading-[0.95] sm:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Meilleurs scores</h1>
         <p className="mt-3 text-[15px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
           Classement cumulé, provisoire après chaque manche et final après la dernière.
         </p>

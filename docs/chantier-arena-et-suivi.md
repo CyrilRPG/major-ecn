@@ -68,6 +68,7 @@ brouillon, module de suivi réservé à l'administration) jusqu'à validation du
 ### Avancement
 
 - [x] Maquette non répertoriée `/arena-preview` → remplacée le 07/09/2026 par la landing refondue (`src/components/arena/landing/`), `/arena-preview` redirige vers la démo
+- [x] Refonte complète de la DA sur les maquettes client du 01/09/2026 (07/09/2026) : landing, inscription, manche (avant/pendant/après, reprise, temps écoulé, connexion perdue), espace, invitation, classement, connexion, hub, OG, emails, tableau de bord admin ; photos Unsplash `public/arena/` + `CREDITS.md`
 - [x] Jetons de DA dans `src/components/arena/tokens.ts` (module sans `'use client'` : un export non-composant d'un module client arrive vide dans un composant serveur)
 - [x] Migration SQL (`20260906120000_arena.sql`)
 - [x] Lib : scoring + tests §6.4, ranking + tests, import + tests, temps, session, emails, séquence

@@ -51,10 +51,11 @@ function shell(t: TournamentRow, p: ParticipantRow | null, title: string, bodyHt
   return `<!doctype html><html lang="fr"><body style="margin:0;background:#F3F4F6;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F3F4F6;padding:24px 0"><tr><td align="center">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:14px;overflow:hidden">
-<tr><td style="background:#060A14;padding:22px 28px">
-  <span style="font-size:18px;font-weight:800;color:#fff;letter-spacing:-0.02em">EVC</span>
-  <span style="font-size:18px;font-weight:800;color:#F25667;letter-spacing:0.2em;margin-left:8px">ARENA</span>
-  <span style="display:block;font-size:12px;color:#A5AFC4;margin-top:4px">${esc(t.title)}${t.edition_label ? ` · ${esc(t.edition_label)}` : ''}</span>
+<tr><td style="background:#0B0F14;padding:24px 28px;border-bottom:4px solid #E4002B">
+  <span style="font-family:Impact,'Arial Narrow',Oswald,sans-serif;font-size:26px;font-weight:700;color:#fff;letter-spacing:0.02em;text-transform:uppercase">EVC</span>
+  <span style="font-family:Impact,'Arial Narrow',Oswald,sans-serif;font-size:26px;font-weight:700;color:#E4002B;letter-spacing:0.08em;margin-left:8px;text-transform:uppercase">ARENA</span>
+  <span style="font-size:10px;font-weight:700;color:#B8BEC8;letter-spacing:0.3em;margin-left:12px;text-transform:uppercase">Major ECN</span>
+  <span style="display:block;font-size:12px;color:#B8BEC8;margin-top:6px">${esc(t.title)}${t.edition_label ? ` · ${esc(t.edition_label)}` : ''}</span>
 </td></tr>
 <tr><td style="padding:28px">
   <h1 style="margin:0 0 18px;font-size:22px;line-height:1.25;color:${NAVY}">${esc(title)}</h1>
