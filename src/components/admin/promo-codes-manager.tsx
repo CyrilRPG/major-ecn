@@ -55,34 +55,55 @@ function remiseLabel(c: PromoCodeRow): string {
 const day = (iso: string | null) =>
   iso ? new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : null;
 
-/** Boutons de périmètre : une valeur « Toutes » (null) puis les choix. */
+/**
+ * Boutons de périmètre — sélection MULTIPLE.
+ *
+ * Un bouton « Toutes … » qui vide la sélection, puis un bouton par valeur qui
+ * s'ajoute ou se retire. Le choix était unique jusqu'au 07/09/2026 : on ne
+ * pouvait viser qu'une seule formule ou les trois, jamais deux.
+ */
 function FacetButtons({
   legend,
   hint,
   options,
-  value,
-  onChange,
+  values,
+  onToggle,
+  onClear,
   allLabel,
 }: {
   legend: string;
   hint?: string;
   options: { value: string; label: string }[];
-  value: string | null;
-  onChange: (v: string | null) => void;
+  /** Vide = aucune restriction sur cette facette. */
+  values: string[];
+  onToggle: (v: string) => void;
+  onClear: () => void;
   allLabel: string;
 }) {
+  const aucune = values.length === 0;
   return (
     <div>
       <p className="mb-1 text-xs font-semibold text-(--color-ink-soft)">{legend}</p>
       <div className="flex flex-wrap gap-1.5">
-        {[{ value: '', label: allLabel }, ...options].map((o) => {
-          const v = o.value === '' ? null : o.value;
-          const on = value === v;
+        <button
+          type="button"
+          onClick={onClear}
+          aria-pressed={aucune}
+          className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+            aucune
+              ? 'border-(--color-primary) bg-(--color-primary) text-white'
+              : 'border-(--color-border) bg-white text-(--color-ink-soft) hover:border-(--color-primary) hover:text-(--color-ink)'
+          }`}
+        >
+          {allLabel}
+        </button>
+        {options.map((o) => {
+          const on = values.includes(o.value);
           return (
             <button
-              key={o.value || '__all__'}
+              key={o.value}
               type="button"
-              onClick={() => onChange(v)}
+              onClick={() => onToggle(o.value)}
               aria-pressed={on}
               className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
                 on
@@ -95,7 +116,10 @@ function FacetButtons({
           );
         })}
       </div>
-      {hint && <p className="mt-1 text-[11px] text-(--color-ink-muted)">{hint}</p>}
+      <p className="mt-1 text-[11px] text-(--color-ink-muted)">
+        {hint ? `${hint} ` : ''}
+        Plusieurs choix possibles ; aucun sélectionné = aucune restriction.
+      </p>
     </div>
   );
 }
@@ -119,9 +143,12 @@ export function PromoCodesManager({
 
   // Périmètre : trois facettes, `null` = « toutes ». Aucune facette choisie =
   // code valable sur toutes les formations (aucun `applies_to` côté Stripe).
-  const [formule, setFormule] = useState<string | null>(null);
-  const [specialty, setSpecialty] = useState<string | null>(null);
-  const [tier, setTier] = useState<string | null>(null);
+  /* Sélection MULTIPLE sur chaque facette : un tableau vide = aucune
+     restriction. On peut donc viser « Essentielle + Intensive » sans emporter
+     le Programme Approfondi, ce que le choix unique interdisait. */
+  const [formules, setFormules] = useState<string[]>([]);
+  const [specialties, setSpecialties] = useState<string[]>([]);
+  const [tiers, setTiers] = useState<string[]>([]);
   /** Inclure les formules qu'un produit Stripe unique empêche de rattacher à
    *  une spécialité (Essentielle, Intensive…). Vrai par défaut : « toutes les
    *  formules, spécialité X » est la demande courante, et l'écran dit alors
@@ -185,48 +212,48 @@ export function PromoCodesManager({
    * Stripe, pas un choix de notre part.
    */
   function estDistinguable(o: OfferOption): boolean {
-    if (specialty !== null && o.specialtyKey === null) return false;
-    if (tier !== null && o.tier === null) return false;
+    if (specialties.length > 0 && o.specialtyKey === null) return false;
+    if (tiers.length > 0 && o.tier === null) return false;
     return true;
   }
 
-  /** Offres de la formule choisie que la spécialité / le niveau ne peut pas
+  /** Offres des formules choisies que la spécialité / le niveau ne peut pas
    *  départager : incluses seulement si l'admin l'accepte. */
   const nonDistinguables = useMemo(
-    () => offers.filter((o) => (formule === null || o.formule === formule) && !estDistinguable(o)),
+    () =>
+      offers.filter(
+        (o) => (formules.length === 0 || formules.includes(o.formule)) && !estDistinguable(o),
+      ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [offers, formule, specialty, tier],
+    [offers, formules, specialties, tiers],
   );
 
   /** Offres retenues par le périmètre courant. */
   const matched = useMemo(
     () =>
       offers.filter((o) => {
-        if (formule !== null && o.formule !== formule) return false;
+        if (formules.length > 0 && !formules.includes(o.formule)) return false;
         if (!estDistinguable(o)) return inclureNonDistinguables;
-        if (specialty !== null && o.specialtyKey !== specialty) return false;
-        if (tier !== null && o.tier !== tier) return false;
+        if (specialties.length > 0 && !specialties.includes(o.specialtyKey ?? '')) return false;
+        if (tiers.length > 0 && !tiers.includes(o.tier ?? '')) return false;
         return true;
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [offers, formule, specialty, tier, inclureNonDistinguables],
+    [offers, formules, specialties, tiers, inclureNonDistinguables],
   );
 
   /** Offres effectivement retenues qui resteront valables hors du périmètre. */
   const elargies = useMemo(
     () => matched.filter((o) => !estDistinguable(o)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [matched, specialty, tier],
+    [matched, specialties, tiers],
   );
 
-  const allOffers = formule === null && specialty === null && tier === null;
+  const allOffers = formules.length === 0 && specialties.length === 0 && tiers.length === 0;
 
-  function selectFormule(v: string | null) {
-    setFormule(v);
-  }
-
-  function selectSpecialty(v: string | null) {
-    setSpecialty(v);
+  /** Ajoute ou retire une valeur d'une facette. */
+  function bascule(setter: (f: (v: string[]) => string[]) => void, valeur: string) {
+    setter((liste) => (liste.includes(valeur) ? liste.filter((x) => x !== valeur) : [...liste, valeur]));
   }
 
   function reset() {
@@ -235,9 +262,9 @@ export function PromoCodesManager({
     setStartsAt('');
     setExpiresAt('');
     setMaxRedemptions('');
-    setFormule(null);
-    setSpecialty(null);
-    setTier(null);
+    setFormules([]);
+    setSpecialties([]);
+    setTiers([]);
     setInclureNonDistinguables(true);
     setActive(true);
     setAlsoCovered(null);
@@ -395,24 +422,27 @@ export function PromoCodesManager({
             legend="Formule"
             allLabel="Toutes les formules"
             options={formuleOptions}
-            value={formule}
-            onChange={selectFormule}
+            values={formules}
+            onToggle={(v) => bascule(setFormules, v)}
+            onClear={() => setFormules([])}
           />
 
           <FacetButtons
             legend="Spécialité"
             allLabel="Toutes les spécialités"
             options={specialtyOptions}
-            value={specialty}
-            onChange={selectSpecialty}
+            values={specialties}
+            onToggle={(v) => bascule(setSpecialties, v)}
+            onClear={() => setSpecialties([])}
           />
 
           <FacetButtons
             legend="Niveau"
             allLabel="Tous les niveaux"
             options={tierOptions}
-            value={tier}
-            onChange={setTier}
+            values={tiers}
+            onToggle={(v) => bascule(setTiers, v)}
+            onClear={() => setTiers([])}
           />
 
           {/* Formules qu'un produit Stripe unique empêche de rattacher à une
