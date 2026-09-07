@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Reveal } from './reveal';
+import { AccompagnementSpecialite } from './accompagnement-humain';
 import { AncreTunnel } from './ancre-tunnel';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
 import { ACCROCHE_FORMULE } from '@/lib/formules-accroches';
@@ -1014,6 +1015,7 @@ export function PediatriePageContent({
       <Offre />
       <Programme />
       <Voies />
+      <AccompagnementSpecialite />
       <Formules specialite={specialite} paliers={paliers} />
       <Temoignages />
       <FaqSection paliers={paliers} />

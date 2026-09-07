@@ -8,6 +8,7 @@ import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
 import { lienPaiement } from '@/lib/tunnel-inscription';
 import { AncreTunnel } from './ancre-tunnel';
+import { AccompagnementTarifs } from './accompagnement-humain';
 import { DrapeauOrigine } from './drapeau-origine';
 
 /**
@@ -66,11 +67,15 @@ const FORMULES: Formule[] = [
   {
     n: 1,
     nom: 'Essentielle',
-    accroche: 'Je prépare les EVC en autonomie',
+    accroche: 'Je prépare les EVC à mon rythme, sans rester seul',
     prix: '495 €',
     sousPrix: 'ou 124 €/mois en 4x sans frais',
     items: [
       'Plateforme pédagogique complète',
+      // Placée en 2e position : l'accompagnement humain de cette formule doit
+      // se lire sans dérouler la carte. Ni mentor, ni suivi individuel, ni
+      // accompagnement quotidien — ce n'est pas ce que l'Essentielle propose.
+      'Réponses à vos questions par notre équipe pédagogique',
       'Fiches de synthèse',
       'QCM et cas cliniques corrigés',
       'Flashcards',
@@ -87,24 +92,27 @@ const FORMULES: Formule[] = [
   {
     n: 2,
     nom: 'Intensive',
-    accroche: 'J’intensifie mes révisions',
+    accroche: 'Je révise avec nos enseignants et bénéficie d’un accompagnement renforcé',
     prix: '995 €',
     sousPrix: 'ou 249 €/mois en 4x sans frais',
     encadre: {
       fort: '18 h de cours en direct (lives interactifs)',
       suite: 'Replays disponibles pendant toute la préparation',
     },
+    // L'écart avec l'Essentielle n'est pas « plus de contenu » : c'est
+    // l'interaction directe avec les enseignants. Les quatre premières lignes
+    // le disent avant tout le reste.
     items: [
-      'Tout le contenu de la formule Essentielle',
-      'Annales EVC corrigées',
+      'Plateforme complète de préparation',
+      'Cours et révisions en direct avec nos enseignants',
+      'Posez vos questions directement pendant les séances',
+      'Réponses à vos questions tout au long de votre préparation',
+      'Replays accessibles pour revoir les séances',
       '18 h de cours en direct (lives interactifs)',
-      'Lives interactifs avec vos enseignants',
-      'Replays disponibles pendant toute la préparation',
-      'QCM supplémentaires expliqués',
-      'QROC expliqués',
+      'Annales EVC corrigées',
+      'QCM supplémentaires et QROC expliqués',
       'Corrections approfondies',
       'Épreuves blanches inspirées des EVC',
-      'Coaching : parcours du Major (médecine générale)',
       'Suivi de progression',
     ],
     voies: ['Voie interne : QCM', 'Voie externe : épreuve rédactionnelle'],
@@ -116,7 +124,7 @@ const FORMULES: Formule[] = [
   {
     n: 3,
     nom: 'Approfondie',
-    accroche: 'Je reprends le programme avec un accompagnement renforcé',
+    accroche: 'Une préparation complète avec nos enseignants, du programme jusqu’au jour J',
     prefixePrix: 'à partir de',
     prix: `${APPROFONDI_MIN_EUROS_FR} €`,
     sousPrix: 'soit de 36 à 100 h de cours en direct + lives interactifs + replays selon la spécialité',
@@ -124,19 +132,20 @@ const FORMULES: Formule[] = [
       fort: 'Notre accompagnement le plus complet',
       suite: 'Pour reprendre le programme en profondeur et vous préparer avec un encadrement renforcé.',
     },
+    // C'est la formule où la présence humaine est la plus forte : elle se lit
+    // dès les premières lignes, avant le volume de contenu.
     items: [
-      'Tout le contenu des formules Essentielle et Intensive',
-      'De 36 à 100 h de cours en direct + lives interactifs',
-      'Replays disponibles pendant toute la préparation',
-      'QCM massifs + QROC expliqués',
-      'Corrections ultra-détaillées',
+      'Plateforme complète de préparation',
+      'Programme approfondi avec nos enseignants spécialistes',
+      'Cours interactifs en direct + replays',
+      'Échanges et questions directement avec les enseignants',
+      'Réponses à vos questions tout au long de la préparation',
+      'Suivi de votre progression',
+      'Accompagnement jusqu’aux EVC',
+      'De 36 à 100 h de cours en direct selon la spécialité',
+      'QCM massifs + QROC expliqués, corrections ultra-détaillées',
       'Épreuves blanches inédites dans les conditions EVC',
       'Dossiers cliniques approfondis et inédits',
-      'Cours avancés avec spécialistes',
-      'Entraînements spécifiques et examens blancs',
-      'Coaching personnalisé et échanges avec l’équipe',
-      'Parcours du Major (médecine générale) complet',
-      'Suivi individualisé de votre progression',
     ],
     voies: ['Voie interne : QCM', 'Voie externe : épreuve rédactionnelle'],
     cta: 'Choisir Approfondie',
@@ -314,6 +323,13 @@ function TarifsHero({ specialite }: { specialite?: string }) {
             </Reveal>
           ))}
         </div>
+
+        {/* Ce qui vaut pour les trois formules, et ce que les deux formules
+            accompagnées ajoutent. Bloc court : la hiérarchie est déjà portée
+            par les cartes. */}
+        <Reveal delay={0.24}>
+          <AccompagnementTarifs />
+        </Reveal>
       </div>
     </section>
   );

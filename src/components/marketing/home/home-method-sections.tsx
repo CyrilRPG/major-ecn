@@ -9,6 +9,7 @@ import {
   BORDER, Eyebrow, INK_SOFT,
   JAKARTA, MANROPE, NAVY, RED, RED_DEEP, RED_GRADIENT, Reveal, SectionTitle,
 } from './home-ui';
+import { AccompagnementReperesAccueil } from '../accompagnement-humain';
 
 /* ============================================================
    BLOC 4 — DEUX VOIES. UNE MÉTHODE ADAPTÉE À VOTRE ÉPREUVE.
@@ -630,10 +631,19 @@ export function EnseignantsSection() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-4xl text-center">
-          <Eyebrow icon={<Users className="h-3.5 w-3.5" />}>Nos enseignants</Eyebrow>
+          <Eyebrow icon={<Users className="h-3.5 w-3.5" />}>Accompagnement humain</Eyebrow>
           <div className="mt-5">
-            <SectionTitle line1="Nos enseignants :" line2="bien plus que des formateurs" rule />
+            <SectionTitle line1="Une plateforme puissante." line2="Des enseignants bien réels." rule />
           </div>
+          {/* Rendre l'accompagnement concret dès le titre : la technologie ne
+              suffit pas à décrire ce que reçoit un candidat. */}
+          <p className="mx-auto mt-5 max-w-3xl text-[15px] leading-relaxed sm:text-base" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
+            Parce qu’une préparation aux EVC ne se résume pas à des QCM et des fiches, Major ECN associe
+            technologie et accompagnement humain. Posez vos questions, échangez avec nos enseignants lors
+            des séances en direct et bénéficiez d’une équipe pédagogique disponible tout au long de votre
+            préparation.
+          </p>
+          <AccompagnementReperesAccueil />
         </Reveal>
 
         <div className="mt-12 grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-12">

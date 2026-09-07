@@ -217,7 +217,9 @@ export function FormulePageContent({ variant, specialite }: { variant: Variant; 
               </div>
               {/* Side badges flottants premium */}
               <div className="pointer-events-none absolute right-4 top-8 flex flex-col gap-2">
-                {['Accès 24h/24\n7j/7', 'Plateforme\nweb & mobile', 'Paiement\nsécurisé', 'Support réactif\n7j/7'].map(b => (
+                {/* « Support réactif 7j/7 » annonçait une permanence humaine
+                    inexistante : remplacé par ce qui est réellement offert. */}
+                {['Accès 24h/24\n7j/7', 'Plateforme\nweb & mobile', 'Paiement\nsécurisé', 'Réponses à\nvos questions'].map(b => (
                   <span key={b} className="rounded-lg bg-white/95 px-3 py-2 text-[10px] font-bold leading-tight whitespace-pre-line shadow-md backdrop-blur"
                     style={{ color: NAVY }}>{b}</span>
                 ))}
@@ -454,7 +456,7 @@ export function FormulePageContent({ variant, specialite }: { variant: Variant; 
       <section className="bg-white py-6 border-t" style={{ borderColor: BORDER }}>
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center justify-center gap-6 text-center text-xs" style={{ color: INK_SOFT }}>
-            {["Accès immédiat après inscription", 'Paiement sécurisé en 1x, 3x ou 4x', 'Sans engagement', 'Support réactif 7j/7'].map(b => (
+            {["Accès immédiat après inscription", 'Paiement sécurisé en 1x, 3x ou 4x', 'Sans engagement', 'Réponses à vos questions par notre équipe pédagogique'].map(b => (
               <span key={b} className="flex items-center gap-1.5">
                 <Check className="h-3.5 w-3.5" style={{ color: c.color }} /> {b}
               </span>

@@ -871,7 +871,10 @@ export function StatsSection() {
           {[
             'Contenu rédigé par des médecins spécialistes français',
             'Mis à jour chaque trimestre selon le programme officiel',
-            'Accompagnement personnalisé par un tuteur dédié',
+            // « Tuteur dédié » promettait un service qui n'existe pas : ce que
+            // le candidat obtient réellement, ce sont des réponses de l'équipe
+            // pédagogique et des échanges avec les enseignants.
+            'Réponses à vos questions par notre équipe pédagogique',
           ].map((p) => (
             <span key={p} className="inline-flex items-center gap-2 text-xs text-white/55 sm:text-sm" style={{ fontFamily: MANROPE }}>
               <span className="h-1.5 w-1.5 rounded-full bg-[#C84A5A]" />

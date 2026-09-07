@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Reveal } from './reveal';
+import { AccompagnementSpecialite } from './accompagnement-humain';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE, type PaletteFormule } from '@/lib/formules-palette';
 import { ACCROCHE_FORMULE } from '@/lib/formules-accroches';
 import { lienPaiement } from '@/lib/tunnel-inscription';
@@ -1079,6 +1080,7 @@ export function OrthopediePageContent({ specialite }: { specialite?: string }) {
       <Programme />
       <Plateforme />
       <Laureats />
+      <AccompagnementSpecialite />
       <Formules specialite={specialite} />
       <FaqSection />
     </div>

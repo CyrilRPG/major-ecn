@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Reveal } from './reveal';
+import { AccompagnementSpecialite } from './accompagnement-humain';
 import { AncreTunnel } from './ancre-tunnel';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
 import { ACCROCHE_FORMULE } from '@/lib/formules-accroches';
@@ -1110,6 +1111,7 @@ export function CardiologiePageContent({
       <ParcoursDuMajor />
       <Plateforme />
       <Temoignages />
+      <AccompagnementSpecialite />
       <Formules specialite={specialite} prixApprofondie={prixApprofondie} />
       <FaqSection prixApprofondie={prixApprofondie} />
       <CtaFinal />

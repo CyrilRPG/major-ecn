@@ -10,6 +10,7 @@ import {
   Shield, ShieldCheck, Target, TrendingUp, Trophy, Users, X, Zap,
 } from 'lucide-react';
 import { Reveal } from './reveal';
+import { AccompagnementPlateforme } from './accompagnement-humain';
 
 /**
  * Page Plateforme — reprise stricte des maquettes
@@ -1480,6 +1481,9 @@ export function PlateformePageContent() {
       <RecordedCoursesSection />
       <TeamSection />
       <PlatformToolsSection />
+      {/* Aussitôt après les fonctionnalités : la plateforme est un outil, pas
+          un self-service — on peut poser ses questions. */}
+      <AccompagnementPlateforme />
       <PlateformeCta />
       <PlateformeFaqSection />
     </div>

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Reveal } from './reveal';
+import { AccompagnementSpecialite } from './accompagnement-humain';
 import { AncreTunnel } from './ancre-tunnel';
 import {
   FORMULE_APPROFONDIE,
@@ -1187,6 +1188,9 @@ export function PsychiatrieRadiologiePage({ kind }: { kind: SpecialtyKind }) {
       <BlocSession psy={psy} />
       <Reperes psy={psy} />
       <Methode psy={psy} />
+      {/* Bloc commun aux deux spécialités : posé avant la bifurcation pour
+          qu'il apparaisse en psychiatrie comme en radiologie. */}
+      <AccompagnementSpecialite />
 
       {/* Les instructions de la FAQ radiologie placent la preuve avant le prix. */}
       {psy ? (

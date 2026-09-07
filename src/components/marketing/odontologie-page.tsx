@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Reveal } from './reveal';
+import { AccompagnementSpecialite } from './accompagnement-humain';
 import { AncreTunnel } from './ancre-tunnel';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
 import { ACCROCHE_FORMULE } from '@/lib/formules-accroches';
@@ -90,8 +91,8 @@ const HERO_CARTE = [
   'Méthodologie QCM éprouvée',
   '+ de 2 000 QCM, dossiers cliniques & annales corrigées',
   'Cours en direct & replays selon la formule',
-  'Plateforme disponible 24h/24 – 7j/7',
-  'Réponses à vos questions',
+  'Plateforme accessible pendant toute votre préparation',
+  'Réponses à vos questions par notre équipe pédagogique',
 ];
 
 function Hero() {
@@ -909,6 +910,7 @@ export function OdontologiePageContent({
       <Domaines />
       <Besoins />
       <Preuves />
+      <AccompagnementSpecialite />
       <Formules specialite={specialite} paliers={paliers} />
       <FaqSection paliers={paliers} />
       <TexteSeo />
