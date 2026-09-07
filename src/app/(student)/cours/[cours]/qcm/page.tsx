@@ -14,6 +14,8 @@ import { EditHintTooltip } from '@/components/professor/edit-hint-tooltip';
 import { buildQcmAccessContext, canStudentReadSerie, SERIE_ACCESS_COLUMNS, type SerieAccessRow } from '@/lib/data/qcm-access';
 import { estSerieAnnale, anneeDeSerieAnnale } from '@/lib/data/annales';
 import { SerieCard } from '@/components/qcm/serie-card';
+import { StudentExercisesEntry } from '@/components/student/exercices/student-exercises-entry';
+import { estTableAbsente } from '@/lib/student-exercises/regles';
 
 type SerieListRow = SerieAccessRow & {
   order_index: number;
@@ -128,6 +130,15 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   const isEntrainement = (label: string) => /entra[iî]nement/i.test(label);
   const isDp = (label: string) => /^dp\b/i.test(label);
 
+  // QCM personnels de l'élève sur cet item (table optionnelle tant que la
+  // migration 20260907100000 n'est pas appliquée : on n'échoue jamais).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dbEleve = supabase as any;
+  const { count: mesQcm, error: mesErr } = profile.role === 'student'
+    ? await dbEleve.from('student_exercises').select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id).eq('cours_id', coursId).eq('kind', 'qcm')
+    : { count: 0, error: null };
+
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-5 lg:px-8">
       {canEditQcm && (
@@ -154,6 +165,10 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
           </p>
         </div>
       )}
+      {profile.role === 'student' && (
+        <StudentExercisesEntry coursId={coursId} kind="qcm" count={mesQcm ?? 0} indisponible={estTableAbsente(mesErr)} />
+      )}
+
       {/* Bandeau d'info : ampoule + tagline EVC. */}
       <div className="mb-4 flex items-center gap-3 rounded-2xl border border-(--color-border) bg-(--color-surface) px-4 py-3 shadow-(--shadow-soft)">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FEF3E2] text-[#B26A00]">

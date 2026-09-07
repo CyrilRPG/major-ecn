@@ -12,8 +12,25 @@ import { fetchAuthentifie } from '@/lib/auth/fresh-token';
 export type ImportCollege = { id: string; name: string; parentId: string | null; courses: { id: string; title: string }[] };
 export type ImportHistoryRow = {
   id: string; title: string; voie: 'interne' | 'externe'; format: string; status: string; estimatedPriceCents: number; billedPriceCents: number | null;
-  result: { questions?: PreviewQuestion[]; warnings?: string[] } | null; warnings: string[]; error: string | null; createdAt: string; courseTitle: string; collegeName: string; serieId: string | null;
+  result: ImportResultat | null; warnings: string[]; error: string | null; createdAt: string; courseTitle: string; collegeName: string; serieId: string | null;
 };
+/** `exercise_imports.result` : résultat final (questions) OU progression d'une
+ *  analyse par lots en cours (plan + partiels), cf. route analyse. */
+type ImportResultat = {
+  questions?: PreviewQuestion[]; warnings?: string[];
+  meta?: { model?: string; lots?: number; pages?: number; cout?: { usd?: number } };
+  etape?: 'analyse'; plan?: { lots?: unknown[]; lotsCorrige?: unknown[]; nbPagesSujet?: number }; partiels?: Record<string, unknown>; partielsCorrige?: Record<string, unknown>;
+};
+type ProgressionAnalyse = { lotsFaits: number; lotsTotal: number; exercices: number; coutUsd?: number };
+type ReponseAnalyse = { ok?: boolean; error?: string; done?: boolean; progress?: ProgressionAnalyse } | null;
+
+/** Avancement lisible d'un import en cours d'analyse, depuis sa ligne. */
+function avancement(r: ImportResultat | null): string | null {
+  if (!r || r.etape !== 'analyse' || !r.plan) return null;
+  const total = (r.plan.lots?.length ?? 0) + (r.plan.lotsCorrige?.length ?? 0);
+  const faits = Object.keys(r.partiels ?? {}).length + Object.keys(r.partielsCorrige ?? {}).length;
+  return total ? `lot ${Math.min(faits, total)}/${total}` : null;
+}
 type PreviewQuestion = { client_id: string; format: 'qcm' | 'qroc'; enonce: string; items: { lettre: string; enonce: string; is_correct: boolean; justification: string; images?: unknown[] }[]; reponse_attendue: string; correction_generale: string; images?: { source_description: string; placement: string }[]; warnings: string[] };
 type Format = 'pdf' | 'docx' | 'txt';
 type Mode = 'combined' | 'paired';
@@ -107,17 +124,8 @@ export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCo
         }
 
         setEtape('Analyse en cours…');
-        const res = await fetchAuthentifie('/api/admin/import-exercices/analyse', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: prepared.id }),
-        });
-        const payload = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
-        if (!res.ok || !payload?.ok) {
-          setError(payload?.error ?? `L’analyse a échoué (code ${res.status}). L’import est enregistré : réessayez depuis la liste.`);
-          router.refresh();
-          return;
-        }
+        const fin = await analyserJusquAuBout(prepared.id);
+        if (!fin.ok) { setError(fin.error); router.refresh(); return; }
         setSubject(null); setAnswer(null); setTitle(''); setEstimate(null);
         router.refresh();
       } catch (e) {
@@ -135,21 +143,44 @@ export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCo
     setError(null);
     start(async () => {
       try {
-        const res = await fetchAuthentifie('/api/admin/import-exercices/analyse', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id }),
-        });
-        const payload = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
-        if (!res.ok || !payload?.ok) setError(payload?.error ?? `L’analyse a échoué (code ${res.status}).`);
+        setEtape('Reprise de l’analyse…');
+        const fin = await analyserJusquAuBout(id);
+        if (!fin.ok) setError(fin.error);
         router.refresh();
       } catch (e) {
         setError(messageErreur(e));
+      } finally {
+        setEtape(null);
       }
     });
   };
 
   const toggleOffer = (offer: string) => setOffers((prev) => prev.includes(offer) ? prev.filter((x) => x !== offer) : [...prev, offer]);
+
+  /**
+   * Enchaîne les appels à la route d'analyse jusqu'à `done`. Chaque appel
+   * traite autant de lots que son délai le permet et persiste l'avancement :
+   * un document de plusieurs centaines de pages passe donc en plusieurs
+   * appels, sans jamais dépasser la durée maximale d'une fonction.
+   */
+  const analyserJusquAuBout = async (id: string): Promise<{ ok: true } | { ok: false; error: string }> => {
+    for (let tour = 0; tour < 200; tour++) {
+      const res = await fetchAuthentifie('/api/admin/import-exercices/analyse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      const payload = (await res.json().catch(() => null)) as ReponseAnalyse;
+      if (!res.ok || !payload?.ok) {
+        return { ok: false, error: payload?.error ?? `L’analyse a échoué (code ${res.status}). L’import est enregistré : relancez-le depuis la liste, les lots déjà analysés sont conservés.` };
+      }
+      if (payload.done) return { ok: true };
+      const pr = payload.progress;
+      setEtape(pr ? `Analyse : lot ${pr.lotsFaits}/${pr.lotsTotal} · ${pr.exercices} exercice${pr.exercices > 1 ? 's' : ''} trouvé${pr.exercices > 1 ? 's' : ''}…` : 'Analyse en cours…');
+      router.refresh();
+    }
+    return { ok: false, error: 'L’analyse n’a pas abouti après de nombreux appels : relancez-la depuis la liste.' };
+  };
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
@@ -179,12 +210,12 @@ export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCo
         </div>
         <aside className="h-fit rounded-2xl border border-[#C9E6D5] bg-[#F3FBF6] p-5"><div className="flex items-center gap-2 text-sm font-semibold text-[#16793C]"><CircleDollarSign className="h-4 w-4" /> Estimation IA</div><p className="mt-2 text-3xl font-semibold tabular-nums text-[#124A2A]">{estimate == null ? '—' : money(estimate)}</p><p className="mt-2 text-xs leading-5 text-[#38624A]">Calculée avant l’analyse à partir de la taille et du type de document. Le montant affiché est conservé pour cet import.</p></aside>
       </section>
-      <section className="mt-8"><h2 className="text-lg font-semibold text-(--color-ink)">Imports récents</h2><p className="mt-1 text-sm text-(--color-ink-soft)">Ouvrez les détails pour vérifier les exercices dans leur présentation étudiante.</p><div className="mt-4 overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface)">{history.length === 0 ? <p className="px-5 py-10 text-center text-sm text-(--color-ink-muted)">Aucun import pour le moment.</p> : <div className="divide-y divide-(--color-border)">{history.map((row) => <div key={row.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center"><div className="min-w-0 flex-1"><p className="truncate font-semibold text-(--color-ink)">{row.title}</p><p className="text-xs text-(--color-ink-muted)">{row.collegeName} · {row.courseTitle} · {row.voie === 'interne' ? 'QCM' : 'QROC'} · {new Date(row.createdAt).toLocaleDateString('fr-FR')}</p>{row.error && <p className="mt-1 text-xs text-[#B4233C]">{row.error}</p>}</div><span className={cn('w-fit rounded-full px-2.5 py-1 text-xs font-semibold', STATUS[row.status]?.className ?? 'bg-slate-100 text-slate-700')}>{STATUS[row.status]?.label ?? row.status}</span><span className="text-sm font-semibold tabular-nums text-(--color-ink)">{money(row.billedPriceCents ?? row.estimatedPriceCents)}</span><div className="flex gap-2"><Button size="sm" variant="outline" onClick={() => setSelected(row)} disabled={!row.result}><Eye /> Détails</Button>{row.status === 'ready' && <Button size="sm" onClick={() => start(async () => { try { const r = await publishExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); } })} disabled={pending}>Publier</Button>}{row.status === 'failed' && <Button size="sm" variant="outline" onClick={() => relancer(row.id)} disabled={pending}><RotateCw className="h-4 w-4" /> Relancer</Button>}{!['published','cancelled'].includes(row.status) && <Button size="sm" variant="ghost" onClick={() => start(async () => { try { const r = await cancelExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); } })} disabled={pending}><X /></Button>}</div></div>)}</div>}</div></section>
+      <section className="mt-8"><h2 className="text-lg font-semibold text-(--color-ink)">Imports récents</h2><p className="mt-1 text-sm text-(--color-ink-soft)">Ouvrez les détails pour vérifier les exercices dans leur présentation étudiante.</p><div className="mt-4 overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface)">{history.length === 0 ? <p className="px-5 py-10 text-center text-sm text-(--color-ink-muted)">Aucun import pour le moment.</p> : <div className="divide-y divide-(--color-border)">{history.map((row) => <div key={row.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center"><div className="min-w-0 flex-1"><p className="truncate font-semibold text-(--color-ink)">{row.title}</p><p className="text-xs text-(--color-ink-muted)">{row.collegeName} · {row.courseTitle} · {row.voie === 'interne' ? 'QCM' : 'QROC'} · {new Date(row.createdAt).toLocaleDateString('fr-FR')}</p>{row.error && <p className="mt-1 text-xs text-[#B4233C]">{row.error}</p>}{row.result?.meta?.cout?.usd != null && <p className="mt-1 text-[11px] text-(--color-ink-muted)">{row.result.meta.pages ?? '?'} pages · {row.result.meta.lots ?? '?'} lots · coût IA {row.result.meta.cout.usd.toFixed(2)} $ · {row.result.meta.model}</p>}</div><span className={cn('w-fit rounded-full px-2.5 py-1 text-xs font-semibold', STATUS[row.status]?.className ?? 'bg-slate-100 text-slate-700')}>{STATUS[row.status]?.label ?? row.status}{row.status === 'processing' && avancement(row.result) ? ` · ${avancement(row.result)}` : ''}</span><span className="text-sm font-semibold tabular-nums text-(--color-ink)">{money(row.billedPriceCents ?? row.estimatedPriceCents)}</span><div className="flex gap-2"><Button size="sm" variant="outline" onClick={() => setSelected(row)} disabled={!row.result?.questions?.length}><Eye /> Détails</Button>{row.status === 'ready' && <Button size="sm" onClick={() => start(async () => { try { const r = await publishExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); } })} disabled={pending}>Publier</Button>}{(row.status === 'failed' || row.status === 'processing') && <Button size="sm" variant="outline" onClick={() => relancer(row.id)} disabled={pending}><RotateCw className="h-4 w-4" /> {row.status === 'failed' ? 'Relancer' : 'Reprendre'}</Button>}{!['published','cancelled'].includes(row.status) && <Button size="sm" variant="ghost" onClick={() => start(async () => { try { const r = await cancelExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); } })} disabled={pending}><X /></Button>}</div></div>)}</div>}</div></section>
       {selected && <PreviewDialog row={selected} onClose={() => setSelected(null)} />}
     </main>
   );
 }
-const STATUS: Record<string, { label: string; className: string }> = { draft: { label: 'Brouillon', className: 'bg-slate-100 text-slate-700' }, processing: { label: 'Analyse', className: 'bg-amber-100 text-amber-800' }, ready: { label: 'À valider', className: 'bg-blue-100 text-blue-800' }, publishing: { label: 'Publication', className: 'bg-amber-100 text-amber-800' }, published: { label: 'Publié', className: 'bg-green-100 text-green-800' }, cancelled: { label: 'Annulé', className: 'bg-slate-100 text-slate-700' }, failed: { label: 'Échec', className: 'bg-red-100 text-red-800' } };
+const STATUS: Record<string, { label: string; className: string }> = { draft: { label: 'Brouillon', className: 'bg-slate-100 text-slate-700' }, processing: { label: 'Analyse en cours', className: 'bg-amber-100 text-amber-800' }, ready: { label: 'À valider', className: 'bg-blue-100 text-blue-800' }, publishing: { label: 'Publication', className: 'bg-amber-100 text-amber-800' }, published: { label: 'Publié', className: 'bg-green-100 text-green-800' }, cancelled: { label: 'Annulé', className: 'bg-slate-100 text-slate-700' }, failed: { label: 'Échec', className: 'bg-red-100 text-red-800' } };
 function Choice({ active, title, text, onClick }: { active: boolean; title: string; text: string; onClick: () => void }) { return <button type="button" onClick={onClick} className={cn('rounded-xl border p-4 text-left transition-colors', active ? 'border-(--color-primary) bg-(--color-primary-soft)' : 'border-(--color-border) hover:bg-(--color-surface-soft)')}><p className="font-semibold text-(--color-ink)">{title}</p><p className="mt-1 text-xs text-(--color-ink-muted)">{text}</p></button>; }
 function Select({ label, value, onChange, children, disabled }: { label: string; value: string; onChange: (value: string) => void; children: React.ReactNode; disabled?: boolean }) { return <label className="block text-xs font-medium text-(--color-ink-soft)">{label}<span className="relative mt-1 block"><select disabled={disabled} value={value} onChange={(e) => onChange(e.target.value)} className="h-10 w-full appearance-none rounded-lg border border-(--color-border) bg-white px-3 pr-8 text-sm text-(--color-ink) outline-none focus:border-(--color-primary)">{children}</select><ChevronDown className="pointer-events-none absolute right-2 top-3 h-4 w-4 text-(--color-ink-muted)" /></span></label>; }
 function FileDrop({ label, accept, file, onFile }: { label: string; accept: Format; file: File | null; onFile: (file: File | null) => void }) { const mime = accept === 'pdf' ? '.pdf,application/pdf' : accept === 'docx' ? '.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document' : '.txt,text/plain'; return <label className="flex min-h-28 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-(--color-border) bg-(--color-surface-soft) px-4 text-center hover:border-(--color-primary)"><UploadCloud className="h-5 w-5 text-(--color-primary)" /><span className="mt-2 text-xs font-semibold text-(--color-ink)">{label}</span><span className="mt-1 max-w-full truncate text-[11px] text-(--color-ink-muted)">{file ? file.name : `Déposer un ${accept.toUpperCase()}`}</span><input type="file" accept={mime} className="sr-only" onChange={(e) => onFile(e.target.files?.[0] ?? null)} /></label>; }

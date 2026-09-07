@@ -50,10 +50,24 @@ export const maxDuration = 300;
  *  rattrapé même si le cron n'a pas tourné pendant plusieurs jours. */
 const LOOKBACK_DAYS = 7;
 
+/**
+ * Une vente privée est un Payment Link créé par scripts/creer-lien-paiement-prive.mjs :
+ * ses métadonnées (recopiées par Stripe sur la session Checkout) portent
+ * `vente: 'privee-hors-plateforme'` et `lien_prive`. Une session issue d'un
+ * Payment Link quelconque (`payment_link` renseigné) n'a pas non plus été
+ * créée par le tunnel du site, donc n'a jamais de `formule` à provisionner.
+ */
+function estVentePrivee(session: Stripe.Checkout.Session): boolean {
+  const meta = session.metadata ?? {};
+  return meta.vente === 'privee-hors-plateforme' || Boolean(meta.lien_prive) || Boolean(session.payment_link);
+}
+
 type Recovered = {
   sessionId: string;
   email: string;
   formule: string;
+  /** Vente privée conclue hors plateforme (Payment Link) : aucun compte à créer. */
+  ventePrivee: boolean;
   amountTotal: number | null;
   installments: number;
   planBounded: string | null;
@@ -147,6 +161,8 @@ export async function GET(req: Request) {
 
   const missing = paid.filter((s) => !done.has(s.id));
   const recovered: Recovered[] = [];
+  /** Ventes privées vues mais non mémorisables (migration du journal absente). */
+  const ventesPriveesNonJournalisees: Array<{ sessionId: string; email: string; amountTotal: number | null; planBounded: string | null }> = [];
 
   for (const session of missing) {
     const meta = session.metadata ?? {};
@@ -154,16 +170,66 @@ export async function GET(req: Request) {
     const formuleId = meta.formule as FormuleId | undefined;
     const installments = Number(meta.installments ?? '1') || 1;
 
+    const ventePrivee = estVentePrivee(session);
+
     const entry: Recovered = {
       sessionId: session.id,
       email,
-      formule: formuleId ?? '(inconnue)',
+      formule: formuleId ?? (ventePrivee ? 'vente privée' : '(inconnue)'),
+      ventePrivee,
       amountTotal: session.amount_total,
       installments,
       planBounded: null,
       provisioned: false,
       error: null,
     };
+
+    // Vente privée (scripts/creer-lien-paiement-prive.mjs) : le paiement est
+    // volontairement SANS formule, donc sans compte à créer ni email à envoyer.
+    // Avant ce contrôle, le cron la signalait chaque heure comme un ÉCHEC
+    // (« metadata.formule absente ») pendant sept jours — l'alerte du
+    // 06/09/2026 pour un 4× de 598,75 €. On borne tout de même le plan (c'est
+    // le seul risque financier), on inscrit la session au journal pour qu'elle
+    // ne revienne plus, et on la mentionne UNE fois, à titre d'information.
+    if (ventePrivee) {
+      if (session.mode === 'subscription' && session.subscription && installments > 1) {
+        const subId =
+          typeof session.subscription === 'string' ? session.subscription : session.subscription.id;
+        try {
+          const r = await ensureInstallmentPlanEnds({
+            subscriptionId: subId,
+            installments,
+            fallbackCancelAt: meta.cancel_at ? Number(meta.cancel_at) : null,
+          });
+          entry.planBounded = r.applied ? r.via : 'déjà borné';
+        } catch (e) {
+          entry.planBounded = 'ÉCHEC';
+          entry.error = e instanceof Error ? e.message : String(e);
+        }
+      }
+      // `email` est NOT NULL dans le journal ; une vente privée a toujours un
+      // email client (collecté par le Payment Link), on garde un repli lisible.
+      const { error: journalErr } = await a.from('stripe_provisioning_log').insert({
+        session_id: session.id,
+        user_id: null,
+        email: email || `vente-privee+${session.id}@major-ecn.fr`,
+        source: 'vente-privee',
+      });
+      if (journalErr?.code === '23514' || /stripe_provisioning_log_source_check/.test(journalErr?.message ?? '')) {
+        // La migration 20260906120000 (source 'vente-privee' autorisée) n'est
+        // pas encore appliquée : impossible de mémoriser la session. On la
+        // laisse HORS de l'alerte plutôt que de la signaler toutes les heures ;
+        // elle reste visible dans la réponse JSON du cron.
+        ventesPriveesNonJournalisees.push({ sessionId: session.id, email, amountTotal: session.amount_total, planBounded: entry.planBounded });
+        continue;
+      }
+      if (journalErr && !/duplicate|23505/i.test(journalErr.message ?? '') && journalErr.code !== '23505') {
+        // Sans journal, la session reviendrait à chaque passage : on le dit.
+        entry.error = entry.error ?? `journal impossible : ${journalErr.message}`;
+      }
+      recovered.push(entry);
+      continue;
+    }
 
     // Une session sans email ou sans formule ne peut pas être provisionnée
     // automatiquement : on la signale pour traitement manuel.
@@ -234,7 +300,9 @@ export async function GET(req: Request) {
         const montant = r.amountTotal != null ? `${(r.amountTotal / 100).toFixed(2)} €` : '—';
         const statut = r.error
           ? `<strong style="color:#C0112E">ÉCHEC — ${r.error}</strong>`
-          : '<strong style="color:#16793C">rattrapé</strong>';
+          : r.ventePrivee
+            ? '<strong style="color:#1E4D8B">vente privée — hors plateforme, aucun compte à créer</strong>'
+            : '<strong style="color:#16793C">rattrapé</strong>';
         return `<tr>
           <td style="padding:6px 10px;border-bottom:1px solid #eee">${r.email || '(email absent)'}</td>
           <td style="padding:6px 10px;border-bottom:1px solid #eee">${r.formule}</td>
@@ -246,9 +314,13 @@ export async function GET(req: Request) {
       .join('');
 
     const failed = recovered.filter((r) => r.error).length;
+    const ventesPrivees = recovered.filter((r) => r.ventePrivee && !r.error).length;
+    const rattrapes = recovered.length - ventesPrivees;
     const subject = infraProblems.length > 0
       ? `🚨 Chaîne de paiement : ${infraProblems.length} anomalie(s) détectée(s)`
-      : `⚠️ ${recovered.length} paiement(s) Stripe rattrapé(s)${failed ? ` — ${failed} en échec` : ''}`;
+      : rattrapes === 0
+        ? `ℹ️ ${ventesPrivees} vente(s) privée(s) Stripe encaissée(s) — rien à provisionner`
+        : `⚠️ ${rattrapes} paiement(s) Stripe rattrapé(s)${failed ? ` — ${failed} en échec` : ''}`;
 
     const infraHtml = infraProblems.length > 0
       ? `<h3 style="color:#C0112E;font-family:sans-serif">Anomalies de configuration</h3>
@@ -262,9 +334,13 @@ export async function GET(req: Request) {
       subject,
       html: `
         ${infraHtml}
-        ${recovered.length === 0 ? '' : `<p>Ces paiements étaient <strong>payés côté Stripe mais jamais provisionnés</strong> :
+        ${rattrapes === 0 ? '' : `<p>Ces paiements étaient <strong>payés côté Stripe mais jamais provisionnés</strong> :
         ni le webhook ni la page /merci ne les avaient traités. Le rattrapage automatique
         vient de créer les comptes et d'envoyer les emails d'activation.</p>`}
+        ${ventesPrivees === 0 ? '' : `<p>Les lignes « vente privée » correspondent à un lien de paiement
+        de gré à gré (hors tunnel du site) : le règlement est encaissé et le plan borné,
+        mais <strong>aucun compte n'est créé automatiquement</strong> — l'accès de cet
+        élève se règle à la main, comme convenu pour ce type de vente.</p>`}
         ${recovered.length === 0 ? '' : `<table style="border-collapse:collapse;font-family:sans-serif;font-size:13px">
           <tr>
             <th style="text-align:left;padding:6px 10px">Email</th>
@@ -279,7 +355,7 @@ export async function GET(req: Request) {
         Stripe ne fonctionne pas : vérifiez son URL et ses événements.</p>`,
       text: [
         ...infraProblems,
-        ...recovered.map((r) => `${r.email} — ${r.formule} — ${r.error ? `ÉCHEC: ${r.error}` : 'rattrapé'}`),
+        ...recovered.map((r) => `${r.email} — ${r.formule} — ${r.error ? `ÉCHEC: ${r.error}` : r.ventePrivee ? 'vente privée, rien à provisionner' : 'rattrapé'}`),
       ].join('\n'),
     });
   }
@@ -289,7 +365,9 @@ export async function GET(req: Request) {
     unboundedPlans: unbounded,
     checked: paid.length,
     alreadyDone: paid.length - missing.length,
-    recovered: recovered.length,
+    recovered: recovered.filter((r) => !r.ventePrivee).length,
+    ventesPrivees: recovered.filter((r) => r.ventePrivee).length,
+    ventesPriveesNonJournalisees,
     failed: recovered.filter((r) => r.error).length,
     details: recovered,
   });

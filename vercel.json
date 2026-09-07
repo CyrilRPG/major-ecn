@@ -25,6 +25,10 @@
     {
       "path": "/api/cron/promo-codes-activate",
       "schedule": "5 * * * *"
+    },
+    {
+      "path": "/api/cron/audit-corriges-recolte",
+      "schedule": "*/30 * * * *"
     }
   ]
 }

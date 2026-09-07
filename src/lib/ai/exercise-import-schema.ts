@@ -1,24 +1,30 @@
 /**
- * Schéma de sortie de l'import d'exercices — module PUR.
+ * Import d'exercices — schéma de sortie, découpage en lots et fusion.
  *
- * Séparé de `exercise-import.ts` (marqué `server-only`) pour être vérifiable
- * hors Next : cf. `tests/exercise-import-schema.test.ts`, qui contrôle les
- * règles du MODE STRICT d'OpenAI. Un schéma non conforme fait échouer la
- * requête avec « 400 — Invalid schema for response_format » et l'analyse ne
- * démarre jamais : c'est exactement ce qui bloquait tous les imports le
- * 03/09/2026 (`item_letter` absent de `required`).
+ * MODULE PUR : aucune dépendance serveur, pour être vérifiable hors Next
+ * (`tests/exercise-import-*.test.ts`). L'appel au modèle vit dans
+ * `exercise-import.ts`, l'orchestration dans la route `analyse`.
+ *
+ * POURQUOI DES LOTS (06/09/2026)
+ * -----------------------------
+ * L'analyse envoyait le document ENTIER en une requête et attendait un seul
+ * JSON. Sur un sujet de 160 pages, la réponse s'arrêtait après une trentaine
+ * de pages : plafond de sortie, ou modèle qui « résume » quand la tâche est
+ * trop longue. Le document est désormais découpé en lots de quelques pages,
+ * chaque lot est extrait séparément, et les résultats sont fusionnés ici.
+ * Deux lots voisins se recouvrent d'une page pour qu'un exercice à cheval
+ * soit vu en entier par au moins l'un des deux ; le modèle ne restitue que les
+ * exercices qui COMMENCENT dans les pages « cœur » du lot, et la fusion
+ * dédoublonne par sécurité.
  */
 
+/* ─────────── Schéma JSON (sorties structurées) ─────────── */
+
 /**
- * Schéma d'une image, partagé par les images de question et celles d'item.
- *
- * MODE STRICT D'OPENAI : `required` doit énumérer TOUS les champs de
- * `properties`, sans exception. Un champ facultatif s'exprime donc par un type
- * nullable, jamais par son absence de `required`. Ce schéma était dupliqué à
- * deux endroits et omettait `item_letter` : chaque import échouait en
- * « OpenAI 400 — Invalid schema for response_format », et l'analyse n'a donc
- * jamais abouti une seule fois (03/09/2026). Une définition unique évite que
- * les deux copies divergent à nouveau.
+ * Règles de forme, communes aux sorties structurées d'Anthropic et au mode
+ * strict d'OpenAI (cf. tests) : tout objet porte `additionalProperties: false`
+ * et son `required` énumère TOUTES ses propriétés. Un champ facultatif est donc
+ * un type nullable, jamais une clé absente de `required`.
  */
 const IMAGE_SCHEMA = {
   type: 'object',
@@ -32,41 +38,102 @@ const IMAGE_SCHEMA = {
   },
 } as const;
 
+const ITEM_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['lettre', 'enonce', 'is_correct', 'justification', 'images'],
+  properties: {
+    lettre: { type: 'string' },
+    enonce: { type: 'string' },
+    is_correct: { type: 'boolean' },
+    justification: { type: 'string' },
+    images: { type: 'array', items: IMAGE_SCHEMA },
+  },
+} as const;
+
 export const outputSchema = {
-  type: 'object', additionalProperties: false,
+  type: 'object',
+  additionalProperties: false,
   required: ['questions', 'warnings'],
   properties: {
     warnings: { type: 'array', items: { type: 'string' } },
     questions: {
-      type: 'array', items: {
-        type: 'object', additionalProperties: false,
-        required: ['client_id', 'source_pages', 'format', 'enonce', 'images', 'items', 'reponse_attendue', 'correction_generale', 'warnings'],
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: [
+          'client_id', 'numero_source', 'source_pages', 'format', 'enonce', 'images', 'items',
+          'reponse_attendue', 'correction_generale', 'warnings',
+        ],
         properties: {
-          client_id: { type: 'string' }, source_pages: { type: 'array', items: { type: 'integer' } },
-          format: { type: 'string', enum: ['qcm', 'qroc'] }, enonce: { type: 'string' },
-          reponse_attendue: { type: 'string' }, correction_generale: { type: 'string' }, warnings: { type: 'array', items: { type: 'string' } },
+          client_id: { type: 'string' },
+          /** Numéro de l'exercice tel qu'imprimé (« 12 », « Q3 », « DP 2 – Q4 »),
+           *  `null` s'il n'y en a pas. Sert à recoller un corrigé séparé et à
+           *  dédoublonner les lots qui se recouvrent. */
+          numero_source: { type: ['string', 'null'] },
+          source_pages: { type: 'array', items: { type: 'integer' } },
+          format: { type: 'string', enum: ['qcm', 'qroc'] },
+          enonce: { type: 'string' },
+          reponse_attendue: { type: 'string' },
+          correction_generale: { type: 'string' },
+          warnings: { type: 'array', items: { type: 'string' } },
           images: { type: 'array', items: IMAGE_SCHEMA },
-          items: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['lettre', 'enonce', 'is_correct', 'justification', 'images'], properties: { lettre: { type: 'string' }, enonce: { type: 'string' }, is_correct: { type: 'boolean' }, justification: { type: 'string' }, images: { type: 'array', items: IMAGE_SCHEMA } } } },
+          items: { type: 'array', items: ITEM_SCHEMA },
         },
       },
     },
   },
 } as const;
 
-/* ─────────── Forme du résultat renvoyé par le modèle ─────────── */
+/**
+ * Sortie de la passe « corrigé seul » (mode sujet + corrigé séparés, quand le
+ * corrigé est trop long pour accompagner chaque lot du sujet).
+ */
+export const correctionsSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['corrections', 'warnings'],
+  properties: {
+    warnings: { type: 'array', items: { type: 'string' } },
+    corrections: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['numero_source', 'source_pages', 'lettres_justes', 'justifications', 'reponse_attendue', 'correction_generale'],
+        properties: {
+          numero_source: { type: 'string' },
+          source_pages: { type: 'array', items: { type: 'integer' } },
+          /** Lettres des propositions exactes (QCM), vide pour une QROC. */
+          lettres_justes: { type: 'array', items: { type: 'string' } },
+          justifications: {
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['lettre', 'texte'],
+              properties: { lettre: { type: 'string' }, texte: { type: 'string' } },
+            },
+          },
+          reponse_attendue: { type: 'string' },
+          correction_generale: { type: 'string' },
+        },
+      },
+    },
+  },
+} as const;
+
+/* ─────────── Formes des résultats ─────────── */
 
 export type ImportVoie = 'interne' | 'externe';
 
 export type ImagePlacement = 'question' | 'item' | 'correction';
 
 export type ImportedImage = {
-  /** Référence de page dans le document source. L'image reste traçable même si
-   * le fournisseur ne peut pas extraire son binaire natif. */
   source_page: number | null;
   source_description: string;
   placement: ImagePlacement;
-  /** Lettre de l'item illustré, `null` pour une image de question ou de
-   *  correction. En mode strict, le champ est toujours renvoyé (cf. IMAGE_SCHEMA). */
   item_letter?: string | null;
 };
 
@@ -80,6 +147,7 @@ export type ImportedItem = {
 
 export type ImportedQuestion = {
   client_id: string;
+  numero_source?: string | null;
   source_pages: number[];
   format: 'qcm' | 'qroc';
   enonce: string;
@@ -95,17 +163,196 @@ export type ExerciseImportResult = {
   warnings: string[];
 };
 
+export type ImportedCorrection = {
+  numero_source: string;
+  source_pages: number[];
+  lettres_justes: string[];
+  justifications: { lettre: string; texte: string }[];
+  reponse_attendue: string;
+  correction_generale: string;
+};
+
+export type CorrectionsResult = { corrections: ImportedCorrection[]; warnings: string[] };
+
+/* ─────────── Découpage en lots ─────────── */
+
+/** Pages par lot : assez pour garder le contexte d'un dossier progressif,
+ *  assez peu pour que la réponse tienne largement dans le budget de sortie. */
+export const PAGES_PAR_LOT = 8;
+/** Recouvrement entre lots voisins, pour les exercices à cheval. */
+export const RECOUVREMENT_PAGES = 1;
+
+export type Lot = {
+  /** Index 0-based, stable d'une reprise à l'autre. */
+  index: number;
+  /** Pages réellement envoyées (1-based, inclusives). */
+  debut: number;
+  fin: number;
+  /** Pages dont les exercices sont attendus de CE lot (1-based, inclusives). */
+  coeurDebut: number;
+  coeurFin: number;
+};
+
+/**
+ * Plan de découpage : cœurs disjoints qui couvrent 1..nbPages, chaque lot
+ * élargi d'un recouvrement de part et d'autre. Déterministe : une reprise
+ * après panne retrouve exactement les mêmes lots.
+ */
+export function planifierLots(nbPages: number, taille = PAGES_PAR_LOT, recouvrement = RECOUVREMENT_PAGES): Lot[] {
+  if (!Number.isInteger(nbPages) || nbPages < 1) return [];
+  const t = Math.max(1, Math.floor(taille));
+  const r = Math.max(0, Math.floor(recouvrement));
+  const lots: Lot[] = [];
+  for (let debut = 1, index = 0; debut <= nbPages; debut += t, index++) {
+    const coeurFin = Math.min(nbPages, debut + t - 1);
+    lots.push({
+      index,
+      coeurDebut: debut,
+      coeurFin,
+      debut: Math.max(1, debut - r),
+      fin: Math.min(nbPages, coeurFin + r),
+    });
+  }
+  return lots;
+}
+
+/**
+ * Découpe un texte brut (TXT, DOCX converti) en « pages » virtuelles de taille
+ * bornée, en coupant de préférence à une frontière de paragraphe. Le résultat
+ * est ensuite planifié comme un PDF (`planifierLots`), ce qui unifie les deux
+ * chemins.
+ */
+export function paginerTexte(texte: string, taillePage = 6000): string[] {
+  const propre = texte.replace(/\r\n?/g, '\n').trim();
+  if (!propre) return [];
+  const pages: string[] = [];
+  let reste = propre;
+  while (reste.length > taillePage) {
+    // Coupe au dernier saut de paragraphe dans la fenêtre, sinon au dernier
+    // saut de ligne, sinon brutalement.
+    let coupe = reste.lastIndexOf('\n\n', taillePage);
+    if (coupe < taillePage * 0.4) coupe = reste.lastIndexOf('\n', taillePage);
+    if (coupe < taillePage * 0.4) coupe = taillePage;
+    pages.push(reste.slice(0, coupe).trim());
+    reste = reste.slice(coupe).trim();
+  }
+  if (reste) pages.push(reste);
+  return pages;
+}
+
+/* ─────────── Fusion des lots ─────────── */
+
+const normaliser = (s: string) =>
+  String(s ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/<[^>]+>/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim();
+
+/**
+ * Numéro d'exercice comparable d'un document à l'autre : « Q12 », « Question
+ * 12 », « 12. » et « n° 12 » désignent le même exercice ; « DP 2 – Q4 » et
+ * « Dossier 2, question 4 » aussi (→ « 2-4 »). On ne garde que les suites de
+ * chiffres, dans l'ordre ; sans chiffre, le texte alphanumérique brut.
+ */
+export function normaliserNumero(n: string | null | undefined): string {
+  const brut = String(n ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const chiffres = brut.match(/\d+/g);
+  if (chiffres && chiffres.length > 0) return chiffres.map((c) => String(Number(c))).join('-');
+  return brut.replace(/[^a-z0-9]+/g, '');
+}
+
+/** Clé de dédoublonnage d'un exercice : numéro imprimé si présent, sinon les
+ *  premiers mots de l'énoncé. Deux lots voisins peuvent restituer le même
+ *  exercice à cheval sur leur page commune. */
+export function cleExercice(q: Pick<ImportedQuestion, 'numero_source' | 'enonce'>): string {
+  const numero = normaliserNumero(q.numero_source);
+  const debut = normaliser(q.enonce).split(' ').slice(0, 12).join(' ');
+  return numero ? `n:${numero}|${debut.slice(0, 40)}` : `e:${debut}`;
+}
+
+/**
+ * Fusionne les résultats des lots dans l'ordre du document (`ordre` = première
+ * page cœur, ce qui reste juste quand un lot a été scindé en cours de route).
+ * Un doublon (même clé) garde la version la plus complète (plus de
+ * propositions, corrigé plus long). Les avertissements des lots sont
+ * conservés, préfixés du libellé du lot.
+ */
+export function fusionnerLots(lots: Array<{ ordre: number; label: string; result: ExerciseImportResult }>): ExerciseImportResult {
+  const tri = [...lots].sort((a, b) => a.ordre - b.ordre);
+  const vues = new Map<string, ImportedQuestion>();
+  const ordre: string[] = [];
+  const warnings: string[] = [];
+  let doublons = 0;
+
+  for (const lot of tri) {
+    for (const w of lot.result.warnings ?? []) if (w?.trim()) warnings.push(`${lot.label} : ${w.trim()}`);
+    for (const q of lot.result.questions ?? []) {
+      const cle = cleExercice(q);
+      const existante = vues.get(cle);
+      if (!existante) { vues.set(cle, q); ordre.push(cle); continue; }
+      doublons++;
+      if (completude(q) > completude(existante)) vues.set(cle, q);
+    }
+  }
+  if (doublons > 0) warnings.unshift(`${doublons} exercice(s) vu(s) dans deux lots voisins, fusionné(s).`);
+  return { questions: ordre.map((c) => vues.get(c) as ImportedQuestion), warnings };
+}
+
+function completude(q: ImportedQuestion): number {
+  return (q.items?.length ?? 0) * 10
+    + (q.items ?? []).filter((i) => i.justification?.trim()).length
+    + Math.min(5, Math.floor((q.correction_generale?.length ?? 0) / 100))
+    + (q.reponse_attendue?.trim() ? 2 : 0);
+}
+
+/**
+ * Applique un corrigé extrait séparément aux questions du sujet, par numéro
+ * imprimé. Une question sans corrigé correspondant reçoit un avertissement ;
+ * un corrigé orphelin est signalé une fois.
+ */
+export function appliquerCorrections(sujet: ExerciseImportResult, corrections: CorrectionsResult): ExerciseImportResult {
+  const parNumero = new Map<string, ImportedCorrection>();
+  for (const c of corrections.corrections ?? []) {
+    const k = normaliserNumero(c.numero_source);
+    if (k && !parNumero.has(k)) parNumero.set(k, c);
+  }
+  const utilises = new Set<string>();
+  const questions = sujet.questions.map((q) => {
+    const k = normaliserNumero(q.numero_source);
+    const c = k ? parNumero.get(k) : undefined;
+    if (!c) {
+      return { ...q, warnings: [...(q.warnings ?? []), 'Aucun corrigé trouvé pour cet exercice dans le document de correction.'] };
+    }
+    utilises.add(k);
+    const justes = new Set(c.lettres_justes.map((l) => normaliserLettre(l)).filter(Boolean) as string[]);
+    const justifs = new Map(c.justifications.map((j) => [normaliserLettre(j.lettre), j.texte] as const));
+    const items = q.items.map((it) => {
+      const lettre = normaliserLettre(it.lettre) ?? it.lettre;
+      return {
+        ...it,
+        is_correct: q.format === 'qcm' ? justes.has(lettre) : it.is_correct,
+        justification: it.justification?.trim() || justifs.get(lettre) || '',
+      };
+    });
+    return {
+      ...q,
+      items,
+      reponse_attendue: q.reponse_attendue?.trim() || c.reponse_attendue || '',
+      correction_generale: q.correction_generale?.trim() || c.correction_generale || '',
+    };
+  });
+  const warnings = [...sujet.warnings, ...(corrections.warnings ?? []).map((w) => `Corrigé : ${w}`)];
+  const orphelins = [...parNumero.keys()].filter((k) => !utilises.has(k)).length;
+  if (orphelins > 0) warnings.push(`${orphelins} corrigé(s) sans exercice correspondant dans le sujet (numérotation différente ?).`);
+  return { questions, warnings };
+}
+
 /* ─────────── Contrôle de ce que le modèle renvoie ─────────── */
 
 const LETTRES = 'ABCDEFGHIJK';
 
 /**
  * Ramène une lettre de proposition à une seule majuscule de A à K.
- *
  * Les corrigés ne l'écrivent pas tous pareil : « A », « a », « A. », « A) »,
- * « (A) », et certains numérotent les propositions de 1 à 11. Rejeter ces
- * formes revenait à jeter tout le document (incident du 03/09/2026).
- * `null` quand rien d'exploitable n'en ressort.
+ * « (A) », et certains numérotent les propositions de 1 à 11. `null` quand
+ * rien d'exploitable n'en ressort.
  */
 export function normaliserLettre(brute: string): string | null {
   const net = String(brute ?? '').toUpperCase().replace(/[^A-K0-9]/g, '');
@@ -117,12 +364,8 @@ export function normaliserLettre(brute: string): string | null {
 
 /**
  * Contrôle chaque question et ÉCARTE celles qui sont inexploitables, au lieu
- * d'interrompre tout l'import à la première.
- *
- * Un document d'annales fait couramment plus de cent pages : une proposition
- * mal formée en tête ne doit pas coûter les quatre-vingts exercices qui
- * suivent. Chaque écart est consigné dans les avertissements, visibles dans le
- * détail de l'import, pour que le rejet reste vérifiable.
+ * d'interrompre tout l'import à la première. Chaque écart est consigné dans
+ * les avertissements, visibles dans le détail de l'import.
  */
 export function validate(result: ExerciseImportResult, voie: ImportVoie): ExerciseImportResult {
   const wanted = voie === 'interne' ? 'qcm' : 'qroc';
@@ -141,6 +384,7 @@ export function validate(result: ExerciseImportResult, voie: ImportVoie): Exerci
     if (seen.has(q.client_id)) q.client_id = crypto.randomUUID();
     seen.add(q.client_id);
     q.warnings = q.warnings ?? [];
+    q.items = q.items ?? [];
 
     if (q.format === 'qcm') {
       if (q.items.length < 2) { ecarter(`${q.items.length} proposition(s), il en faut au moins deux`); return; }

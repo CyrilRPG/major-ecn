@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AlertTriangle, BarChart3, BookOpen, CalendarClock, CalendarDays, ChevronDown, Clapperboard, ClipboardList, Cog, Eye, GraduationCap, Library, ListTree, Mail, Megaphone, MessageCircle, MessagesSquare, MonitorPlay, Newspaper, PencilRuler, Receipt, ScrollText, ShieldCheck, Ticket, Trophy, Upload, UserCog, Users, X } from 'lucide-react';
+import { AlertTriangle, BarChart3, BookOpen, CalendarClock, CalendarDays, ChevronDown, Clapperboard, ClipboardList, Cog, Eye, GraduationCap, Library, ListTree, Mail, Megaphone, MessageCircle, MessagesSquare, MonitorPlay, Newspaper, PencilRuler, Receipt, ScrollText, ShieldCheck, Sparkles, Ticket, Trophy, Upload, UserCog, Users, X } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
@@ -30,7 +30,11 @@ const GROUPS: Group[] = [
     items: [
       { href: '/admin/arborescence', label: 'Arborescence', Icon: ListTree },
       { href: '/admin/contenu', label: 'Contenu', Icon: Library, profContent: true },
+      // Propositions d'élèves (flashcards / QCM) à verser dans la base commune :
+      // visibles de tout le staff, l'action est bornée au périmètre du professeur.
+      { href: '/admin/entrainements-eleves', label: 'Entraînements d’élèves', Icon: Sparkles, staff: true },
       { href: '/admin/import-exercices', label: 'Import d’exercices', Icon: Upload, adminOnly: true },
+      { href: '/admin/audit-corriges', label: 'Audit des corrigés', Icon: ShieldCheck, adminOnly: true },
       { href: '/admin/videos', label: 'Vidéos', Icon: Clapperboard, profContent: true },
       { href: '/admin/epreuves-blanches', label: 'Épreuves blanches', Icon: PencilRuler, adminOnly: true },
       { href: '/admin/interrogations', label: 'Interrogations de spécialité', Icon: ClipboardList, adminOnly: true },

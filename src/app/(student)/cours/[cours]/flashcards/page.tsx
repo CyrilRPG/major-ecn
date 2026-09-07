@@ -7,6 +7,8 @@ import { FlashcardSession } from '@/components/flashcards/flashcard-session';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { DIFFICULTY_SCORE, type Difficulty } from '@/types/domain';
+import { StudentExercisesEntry } from '@/components/student/exercices/student-exercises-entry';
+import { estTableAbsente } from '@/lib/student-exercises/regles';
 
 export default async function FlashcardsPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -47,17 +49,30 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ cou
     scoreMap.set(r.flashcard_id, (scoreMap.get(r.flashcard_id) ?? 0) + delta);
   }
 
+  // Entraînements personnels de l'élève sur cet item (table optionnelle tant
+  // que la migration 20260907100000 n'est pas appliquée : on n'échoue jamais).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { count: mesFlashcards, error: mesErr } = await (supabase as any)
+    .from('student_exercises').select('id', { count: 'exact', head: true })
+    .eq('user_id', user.id).eq('cours_id', coursId).eq('kind', 'flashcard');
+  const entree = profile.role === 'student'
+    ? <div className="mx-auto w-full max-w-4xl px-4 pt-4 lg:px-8"><StudentExercisesEntry coursId={coursId} kind="flashcard" count={mesFlashcards ?? 0} indisponible={estTableAbsente(mesErr)} /></div>
+    : null;
+
   if (allCards.length === 0) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-6">
-        <div className="rounded-xl border border-(--color-border) bg-(--color-surface)">
-          <EmptyState
-            icon={Layers3}
-            title="Pas encore de flashcards"
-            description="Les flashcards arrivent dès que l’équipe pédagogique les a finalisées pour ce cours."
-          />
+      <>
+        {entree}
+        <div className="mx-auto max-w-2xl px-4 py-6">
+          <div className="rounded-xl border border-(--color-border) bg-(--color-surface)">
+            <EmptyState
+              icon={Layers3}
+              title="Pas encore de flashcards"
+              description="Les flashcards arrivent dès que l’équipe pédagogique les a finalisées pour ce cours."
+            />
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -73,14 +88,17 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ cou
   const editable = canEditCoursContent(profile, 'flashcards', c.matiere_id, c.id);
 
   return (
-    <FlashcardSession
-      cards={input}
-      total={allCards.length}
-      coursId={coursId}
-      backHref={`/cours/${coursId}`}
-      collegeName={c.titre}
-      matiereName={c.matieres?.nom ?? undefined}
-      editable={editable}
-    />
+    <>
+      {entree}
+      <FlashcardSession
+        cards={input}
+        total={allCards.length}
+        coursId={coursId}
+        backHref={`/cours/${coursId}`}
+        collegeName={c.titre}
+        matiereName={c.matieres?.nom ?? undefined}
+        editable={editable}
+      />
+    </>
   );
 }
