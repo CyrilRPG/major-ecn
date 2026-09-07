@@ -498,21 +498,25 @@ function SpecialitesGrid() {
 
   const filtrees = useMemo(() => {
     const n = normaliser(q.trim());
-    return SPECIALITIES.filter((s) => {
+    const retenues = SPECIALITIES.filter((s) => {
       if (famille !== 'Toutes' && s.family !== famille) return false;
       if (n.length < 2) return true;
       return normaliser(`${s.name} ${s.description} ${s.family}`).includes(n);
     });
+    // Les spécialités dotées d'une page dédiée passent en tête : ce sont les
+    // préparations que l'on veut faire découvrir en premier, et elles se
+    // perdaient sinon au milieu de la grille (psychiatrie 18e, radiologie 23e).
+    return [
+      ...retenues.filter((s) => PAGES_DEDIEES.has(s.slug)),
+      ...retenues.filter((s) => !PAGES_DEDIEES.has(s.slug)),
+    ];
   }, [q, famille]);
 
   const cherche = normaliser(q.trim()).length >= 2 || famille !== 'Toutes';
-  const visibles = useMemo(() => {
-    if (cherche || tout) return filtrees;
-    const debut = filtrees.slice(0, SPEC_INITIAL_COUNT);
-    const dejaVues = new Set(debut.map((s) => s.slug));
-    const dediees = filtrees.filter((s) => PAGES_DEDIEES.has(s.slug) && !dejaVues.has(s.slug));
-    return [...debut, ...dediees];
-  }, [cherche, tout, filtrees]);
+  const visibles = useMemo(
+    () => (cherche || tout ? filtrees : filtrees.slice(0, SPEC_INITIAL_COUNT)),
+    [cherche, tout, filtrees],
+  );
   const montrees = new Set(visibles.map((s) => s.slug));
   const restantes = SPECIALITIES.filter((s) => !montrees.has(s.slug)).map((s) => s.name);
 
