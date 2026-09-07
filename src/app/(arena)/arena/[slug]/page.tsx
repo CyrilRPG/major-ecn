@@ -4,7 +4,7 @@ import { ARENA, BODY, CAPS, HEADLINE } from '@/components/arena/tokens';
 import { Stadium } from '@/components/arena/stadium';
 import { LandingBareme, type BaremeCard } from '@/components/arena/landing/bareme-board';
 import { LandingCorrections } from '@/components/arena/landing/corrections';
-import { ArenaFxStyles } from '@/components/arena/landing/fx';
+import { ArenaFxStyles, GoldEyebrow, Reveal } from '@/components/arena/landing/fx';
 import { LandingHero, type HeroState } from '@/components/arena/landing/hero';
 import { LandingRounds, type RoundCard } from '@/components/arena/landing/rounds';
 import { LandingSteps } from '@/components/arena/landing/steps';
@@ -84,8 +84,10 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
         rounds={rounds.length || 3}
         questions={t.questions_per_round}
         minutes={t.round_duration_minutes}
+        minRounds={t.min_rounds_final}
         state={heroState}
         primary={primary}
+        secondary={participant ? { href: `${base}/espace`, label: 'Ouvrir mon espace' } : { href: `${base}/regles`, label: 'Lire les règles' }}
         registrationOpen={ctx.registrationOpen && !participant}
       />
 
@@ -115,30 +117,29 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
           <Container>
             <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
               <div>
-                <p className="inline-flex items-center gap-3 text-[12px]" style={{ ...CAPS, color: ARENA.warn, letterSpacing: '0.26em' }}>
-                  <span aria-hidden className="h-[3px] w-8 rounded-full" style={{ background: ARENA.warn }} />
-                  Règlement
-                </p>
+                <GoldEyebrow>Règlement</GoldEyebrow>
                 <h2 className="mt-4 text-[2.1rem] leading-[0.98] sm:text-[2.9rem] lg:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Les règles <span style={{ color: ARENA.red }}>de l’arène.</span></h2>
                 <ol className="mt-8 space-y-3">
                   {PUBLIC_RULES.map((r, i) => (
                     <li key={i} className="flex gap-4 text-[14.5px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-                      <span className="shrink-0 pt-0.5 text-[15px] leading-none" style={{ fontFamily: HEADLINE, color: ARENA.redSoft, letterSpacing: '0.06em' }}>{(i + 1).toString().padStart(2, '0')}</span>
+                      <span className="shrink-0 pt-0.5 text-[15px] leading-none" style={{ fontFamily: HEADLINE, color: ARENA.gold, letterSpacing: '0.06em' }}>{(i + 1).toString().padStart(2, '0')}</span>
                       <span>{r}</span>
                     </li>
                   ))}
                 </ol>
               </div>
-              <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'rgba(11,15,20,0.78)', boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}`, backdropFilter: 'blur(8px)' }}>
+              <Reveal delay={0.15}>
+              <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'rgba(11,15,20,0.78)', boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}, 0 0 0 1px rgba(212,169,74,0.12)`, backdropFilter: 'blur(8px)' }}>
                 <p className="text-[11px]" style={{ ...CAPS, color: ARENA.redSoft, letterSpacing: '0.22em' }}>Nature du dispositif</p>
                 <p className="mt-3 text-[15px] leading-relaxed" style={{ fontFamily: BODY, color: ARENA.text }}>{WARNING_NATURE}</p>
-                <p className="mt-7 text-[11px]" style={{ ...CAPS, color: ARENA.warn, letterSpacing: '0.22em' }}>Connexion</p>
+                <p className="mt-7 text-[11px]" style={{ ...CAPS, color: ARENA.gold, letterSpacing: '0.22em' }}>Connexion</p>
                 <p className="mt-3 text-[15px] leading-relaxed" style={{ fontFamily: BODY, color: ARENA.text }}>{WARNING_CONNECTION}</p>
                 <p className="mt-7 text-[11px]" style={{ ...CAPS, color: ARENA.textMuted, letterSpacing: '0.22em' }}>Le score est cumulatif</p>
                 <p className="mt-3 text-[15px] leading-relaxed" style={{ fontFamily: BODY, color: ARENA.textSoft }}>
                   Chaque manche jouée ajoute ses points à votre total ; une manche non jouée compte pour zéro. Le classement se lit sur ce total, provisoire après M1 et M2, final après M3, avec au moins {t.min_rounds_final} manches jouées.
                 </p>
               </div>
+              </Reveal>
             </div>
           </Container>
         </section>

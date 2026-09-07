@@ -5,21 +5,25 @@ import { PHOTOS } from './tokens';
 type Photo = keyof typeof PHOTOS;
 
 /**
- * Fond photographique de stade (photos Unsplash, crédits dans
- * public/arena/CREDITS.md) : image en couverture, voile sombre, teinte rouge
- * Major ECN et vignettage pour garder le texte lisible. `beams` ajoute deux
- * faisceaux de projecteurs statiques (aucune animation infantile, §13).
+ * Fond photographique de l'arène (visuels client + photos Unsplash, crédits
+ * dans public/arena/CREDITS.md) : image en couverture, voile sombre, teinte
+ * rouge Major ECN, lueur dorée en pied et vignettage pour garder le texte
+ * lisible. `beams` ajoute deux faisceaux statiques ; `animate` applique un
+ * lent travelling (Ken Burns), coupé sous prefers-reduced-motion (§13).
  */
 export function Stadium({
-  photo = 'stadiumRed', darken = 0.62, tint = 0.28, beams = false, position = 'center', priority = false, className = '', children,
+  photo = 'stadiumRed', darken = 0.62, tint = 0.28, gold = 0.18, beams = false, animate = false, position = 'center', priority = false, className = '', children,
 }: {
-  photo?: Photo; darken?: number; tint?: number; beams?: boolean; position?: string; priority?: boolean; className?: string; children?: ReactNode;
+  photo?: Photo; darken?: number; tint?: number; gold?: number; beams?: boolean; animate?: boolean; position?: string; priority?: boolean; className?: string; children?: ReactNode;
 }) {
   return (
     <div className={`relative isolate overflow-hidden ${className}`}>
-      <Image src={PHOTOS[photo]} alt="" fill priority={priority} sizes="100vw" className="-z-30 object-cover" style={{ objectPosition: position }} />
+      <div aria-hidden className={`absolute inset-0 -z-30 ${animate ? 'arena-kenburns' : ''}`} style={{ transformOrigin: 'center 40%' }}>
+        <Image src={PHOTOS[photo]} alt="" fill priority={priority} sizes="100vw" className="object-cover" style={{ objectPosition: position }} />
+      </div>
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-20" style={{ background: `rgba(11,15,20,${darken})` }} />
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-20" style={{ background: `linear-gradient(180deg, rgba(228,0,43,${tint * 0.55}) 0%, rgba(11,15,20,0) 45%, rgba(11,15,20,0.92) 100%)` }} />
+      {gold > 0 && <div aria-hidden className="pointer-events-none absolute inset-0 -z-20" style={{ background: `radial-gradient(ellipse 70% 45% at 50% 100%, rgba(212,169,74,${gold}), transparent 70%)` }} />}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-20" style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 40%, rgba(0,0,0,0) 40%, rgba(11,15,20,0.85) 100%)' }} />
       {beams && (
         <>

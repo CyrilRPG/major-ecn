@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { ARENA, BODY, DISPLAY, HEADLINE } from '../arena-ui';
+import { ARENA, BODY, DISPLAY, GOLD_LINE, HEADLINE } from '../arena-ui';
 
 /* ============================================================
    Effets de l'arène — sobres, rapides, désactivés sous
@@ -16,18 +16,44 @@ export function ArenaFxStyles() {
 @keyframes arena-pulse { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
 @keyframes arena-sweep { 0% { transform: translateX(-120%) skewX(-18deg) } 100% { transform: translateX(320%) skewX(-18deg) } }
 @keyframes arena-led { 0%,100% { opacity: 1 } 92% { opacity: 1 } 94% { opacity: .82 } 96% { opacity: 1 } }
+@keyframes arena-kenburns { 0% { transform: scale(1) translateY(0) } 100% { transform: scale(1.07) translateY(-1.5%) } }
+@keyframes arena-shimmer { 0% { background-position: -200% 0 } 100% { background-position: 200% 0 } }
+@keyframes arena-float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
 .arena-ticker { animation: arena-ticker 46s linear infinite }
 .arena-pulse { animation: arena-pulse 1.6s ease-in-out infinite }
 .arena-sweep { animation: arena-sweep 9s ease-in-out infinite }
 .arena-led { animation: arena-led 7s linear infinite }
-@media (prefers-reduced-motion: reduce) { .arena-ticker, .arena-pulse, .arena-sweep, .arena-led { animation: none } }
+.arena-kenburns { animation: arena-kenburns 28s ease-out forwards }
+.arena-shimmer { background-size: 200% 100%; animation: arena-shimmer 4.5s linear infinite }
+.arena-float { animation: arena-float 6s ease-in-out infinite }
+.arena-lift { transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s }
+.arena-lift:hover { transform: translateY(-4px) }
+@media (prefers-reduced-motion: reduce) { .arena-ticker, .arena-pulse, .arena-sweep, .arena-led, .arena-kenburns, .arena-shimmer, .arena-float { animation: none } .arena-lift:hover { transform: none } }
     `}</style>
   );
 }
 
+/** Filet doré animé (reflet qui glisse), pour souligner titres et séparer les sections. */
+export function GoldRule({ className = '', width = 96, align = 'left' }: { className?: string; width?: number | string; align?: 'left' | 'center' }) {
+  return (
+    <span aria-hidden className={`arena-shimmer block h-[2px] rounded-full ${align === 'center' ? 'mx-auto' : ''} ${className}`} style={{ width, backgroundImage: GOLD_LINE }} />
+  );
+}
+
+/** Sur-titre doré des sections du modèle : filet + capitales espacées. */
+export function GoldEyebrow({ children, align = 'left', className = '' }: { children: ReactNode; align?: 'left' | 'center'; className?: string }) {
+  return (
+    <p className={`inline-flex items-center gap-3 text-[12px] font-semibold uppercase ${align === 'center' ? 'justify-center' : ''} ${className}`} style={{ fontFamily: DISPLAY, color: ARENA.gold, letterSpacing: '0.28em' }}>
+      <span aria-hidden className="arena-shimmer h-[2px] w-8 rounded-full" style={{ backgroundImage: GOLD_LINE }} />
+      {children}
+      {align === 'center' && <span aria-hidden className="arena-shimmer h-[2px] w-8 rounded-full" style={{ backgroundImage: GOLD_LINE }} />}
+    </p>
+  );
+}
+
 /** Étiquette rouge en capitales condensées (dossard de section). */
-export function Bib({ children, tone = 'red' }: { children: ReactNode; tone?: 'red' | 'muted' | 'ok' }) {
-  const c = tone === 'red' ? ARENA.red : tone === 'ok' ? ARENA.okDeep : ARENA.raised2;
+export function Bib({ children, tone = 'red' }: { children: ReactNode; tone?: 'red' | 'muted' | 'ok' | 'gold' }) {
+  const c = tone === 'red' ? ARENA.red : tone === 'ok' ? ARENA.okDeep : tone === 'gold' ? ARENA.goldDeep : ARENA.raised2;
   return (
     <span className="inline-flex items-center gap-2 rounded-md px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white" style={{ background: c, fontFamily: DISPLAY }}>
       {children}
@@ -55,6 +81,17 @@ export function StadiumScreen({ children, title, className = '' }: { children: R
   );
 }
 
+/** Chiffre de compte à rebours : glisse à chaque changement de valeur. */
+export function FlipDigit({ value, className, style }: { value: string; className?: string; style?: CSSProperties }) {
+  return (
+    <span className={`relative inline-block overflow-hidden ${className ?? ''}`} style={style}>
+      <motion.span key={value} initial={{ y: '-40%', opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }} className="inline-block">
+        {value}
+      </motion.span>
+    </span>
+  );
+}
+
 /** Chiffres de tableau d'affichage (jours · heures · minutes · secondes). */
 export function LedDigits({ parts, size = 'lg' }: { parts: (number | null)[]; size?: 'md' | 'lg' }) {
   const cell = (v: number | null) => (v === null ? '--' : v.toString().padStart(2, '0'));
@@ -76,7 +113,7 @@ export function LedDigits({ parts, size = 'lg' }: { parts: (number | null)[]; si
 }
 
 /** Compteur qui monte jusqu'à `to` quand la tuile entre à l'écran. */
-export function CountUp({ to, duration = 900, className, style }: { to: number; duration?: number; className?: string; style?: React.CSSProperties }) {
+export function CountUp({ to, duration = 900, className, style }: { to: number; duration?: number; className?: string; style?: CSSProperties }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: '-40px' });
   const [v, setV] = useState(0);
@@ -115,9 +152,18 @@ export function Ticker({ items }: { items: string[] }) {
 }
 
 /** Apparition en fondu-montée, déclenchée à l'entrée à l'écran. */
-export function Reveal({ children, delay = 0, className }: { children: ReactNode; delay?: number; className?: string }) {
+export function Reveal({ children, delay = 0, className, y = 22 }: { children: ReactNode; delay?: number; className?: string; y?: number }) {
   return (
-    <motion.div className={className} initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay }}>
+    <motion.div className={className} initial={{ opacity: 0, y }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay }}>
+      {children}
+    </motion.div>
+  );
+}
+
+/** Entrée en scène au chargement (hero), sans attendre le défilement. */
+export function Enter({ children, delay = 0, className, y = 18, scale = 1 }: { children: ReactNode; delay?: number; className?: string; y?: number; scale?: number }) {
+  return (
+    <motion.div className={className} initial={{ opacity: 0, y, scale }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay }}>
       {children}
     </motion.div>
   );

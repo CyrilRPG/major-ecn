@@ -1,7 +1,7 @@
 'use client';
 
 import { ARENA, BODY, CAPS, Container, HEADLINE, TABULAR } from '../arena-ui';
-import { Bib, Reveal } from './fx';
+import { GoldEyebrow, Reveal } from './fx';
 
 export type BaremeCard = { type: 'QRM' | 'QRU' | 'QRP'; title: string; lines: { situation: string; points: string }[]; notes: string[] };
 
@@ -13,7 +13,7 @@ export function LandingBareme({ cards, roundLabel }: { cards: BaremeCard[]; roun
     <section id="bareme" className="py-16 sm:py-24" style={{ background: ARENA.bg }}>
       <Container>
         <Reveal>
-          <Bib>Barème annoncé avant chaque manche</Bib>
+          <GoldEyebrow>Barème annoncé avant chaque manche</GoldEyebrow>
           <h2 className="mt-4 max-w-3xl text-[2.1rem] leading-[0.98] sm:text-[2.9rem] lg:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>
             Vous connaissez la règle <span style={{ color: ARENA.red }}>avant d’entrer sur la piste.</span>
           </h2>
@@ -37,7 +37,7 @@ export function LandingBareme({ cards, roundLabel }: { cards: BaremeCard[]; roun
                   {c.lines.map((l) => (
                     <div key={l.situation} className="flex items-center justify-between gap-3 py-2.5" style={{ borderBottom: `1px solid ${ARENA.line}` }}>
                       <dt className="text-[13px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>{l.situation}</dt>
-                      <dd className="shrink-0 rounded-md px-2 py-0.5 text-[13px]" style={{ ...TABULAR, background: 'rgba(228,0,43,0.14)', color: ARENA.text }}>{l.points}</dd>
+                      <dd className="shrink-0 rounded-md px-2 py-0.5 text-[13px]" style={{ ...TABULAR, background: 'rgba(212,169,74,0.12)', color: ARENA.goldSoft, boxShadow: 'inset 0 0 0 1px rgba(212,169,74,0.3)' }}>{l.points}</dd>
                     </div>
                   ))}
                 </dl>

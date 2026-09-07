@@ -3,10 +3,10 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { motion } from 'framer-motion';
 
-import { ARENA, BODY, CAPS, DISPLAY, HEADLINE, LIGHT, MONO, RED_GLOW, TABULAR, buttonClass, buttonStyle, palette, type Tone } from './tokens';
+import { ARENA, BODY, CAPS, DISPLAY, GOLD_GLOW, GOLD_LINE, HEADLINE, LIGHT, MONO, RED_GLOW, TABULAR, buttonClass, buttonStyle, palette, type Tone } from './tokens';
 
 // Jetons re-exportés pour les composants CLIENT ; les composants serveur importent './tokens' directement.
-export { ARENA, BODY, CAPS, DISPLAY, HEADLINE, LIGHT, MONO, RED_GLOW, TABULAR, buttonClass, buttonStyle, palette, type Tone };
+export { ARENA, BODY, CAPS, DISPLAY, GOLD_GLOW, GOLD_LINE, HEADLINE, LIGHT, MONO, RED_GLOW, TABULAR, buttonClass, buttonStyle, palette, type Tone };
 
 export function Container({ children, className = '' }: { children: ReactNode; className?: string }) {
   return <div className={`mx-auto w-full max-w-[80rem] px-5 sm:px-8 lg:px-12 ${className}`}>{children}</div>;

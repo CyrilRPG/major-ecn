@@ -43,7 +43,7 @@ export default async function RegisterPage({ params, searchParams }: Params) {
 
   return (
     <ArenaPage nav={ctx.nav}>
-      <Stadium photo="seatsRed" darken={0.72} tint={0.2} position="center 40%" className="py-10 sm:py-16">
+      <Stadium photo="heroArena" darken={0.48} tint={0.1} gold={0.2} animate position="center 30%" className="py-10 sm:py-16">
         <Container className="max-w-4xl">
           <div className="rounded-[1.6rem] p-6 sm:p-10 lg:p-12" style={{ background: 'rgba(11,15,20,0.88)', boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}, 0 50px 100px -40px rgba(0,0,0,0.95)`, backdropFilter: 'blur(10px)' }}>
             <div className="flex flex-col items-center text-center">

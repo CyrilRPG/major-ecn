@@ -26,6 +26,10 @@ export const ARENA = {
   /** Vert des maquettes : proposition cochée, pseudonyme disponible, rang affiché. */
   ok: '#2ECC71',
   okDeep: '#1B8A4A',
+  /** Or de l'arène (modèle client) : numéros, pictogrammes, filets, accents secondaires. */
+  gold: '#D4A94A',
+  goldSoft: '#E8C878',
+  goldDeep: '#8E6B1F',
   /** Bandeau « mode prévisualisation » (§15.2) et avertissement connexion : couleur distincte. */
   warn: '#F5B32B',
   preview: '#F5B32B',
@@ -60,6 +64,10 @@ export const TABULAR: CSSProperties = { fontFamily: DISPLAY, fontVariantNumeric:
 
 /** Titre condensé en capitales (style maquettes). */
 export const CAPS: CSSProperties = { fontFamily: DISPLAY, textTransform: 'uppercase', letterSpacing: '0.02em', fontWeight: 700 };
+
+/** Filet doré (dégradé) pour les séparateurs et soulignements. */
+export const GOLD_LINE = 'linear-gradient(90deg, rgba(212,169,74,0) 0%, #E8C878 30%, #D4A94A 50%, #E8C878 70%, rgba(212,169,74,0) 100%)';
+export const GOLD_GLOW = '0 0 0 1px rgba(212,169,74,0.45), 0 18px 48px -18px rgba(212,169,74,0.45)';
 
 export const RED_GLOW = '0 0 0 1px rgba(228,0,43,0.35), 0 18px 48px -12px rgba(228,0,43,0.55)';
 

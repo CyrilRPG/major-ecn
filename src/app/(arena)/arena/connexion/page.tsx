@@ -25,7 +25,7 @@ export default async function ArenaLoginPage({ searchParams }: { searchParams: P
         </Container>
       </header>
       <main className="flex-1">
-        <Stadium photo="floodlights" darken={0.6} tint={0.22} position="center 30%" className="flex min-h-[calc(100svh-4.5rem)] items-center py-12">
+        <Stadium photo="heroArena" darken={0.48} tint={0.1} gold={0.2} animate position="center 30%" className="flex min-h-[calc(100svh-4.5rem)] items-center py-12">
           <Container className="max-w-md">
             <div className="rounded-[1.6rem] p-6 text-center sm:p-9" style={{ background: 'rgba(11,15,20,0.86)', boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}, 0 50px 100px -40px rgba(0,0,0,0.95)`, backdropFilter: 'blur(10px)' }}>
               <ArenaLogoStack size="sm" />

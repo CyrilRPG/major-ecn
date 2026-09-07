@@ -116,7 +116,7 @@ export function ArenaFooter({ slug }: { slug: string }) {
             <a href="https://www.youtube.com/@majorecn" target="_blank" rel="noreferrer" aria-label="YouTube" className={social} style={{ boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}` }}><Youtube className="h-4 w-4" /></a>
             <a href="https://www.instagram.com/majorecn" target="_blank" rel="noreferrer" aria-label="Instagram" className={social} style={{ boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}` }}><Instagram className="h-4 w-4" /></a>
           </div>
-          <p className="text-right text-[10.5px] font-bold uppercase leading-relaxed" style={{ letterSpacing: '0.2em', color: ARENA.text, fontFamily: BODY }}>Des médecins<br />pour les médecins</p>
+          <p className="text-left text-[10.5px] font-bold uppercase leading-relaxed lg:text-right" style={{ letterSpacing: '0.2em', color: ARENA.goldSoft, fontFamily: BODY }}>Des médecins<br />pour les médecins</p>
         </div>
         <p className="max-w-3xl text-[12.5px] leading-relaxed" style={{ color: ARENA.textMuted, fontFamily: BODY }}>
           {WARNING_NATURE} EVC Arena est un dispositif Major ECN — préparation aux EVC depuis 2011. <Link href="/" className="underline-offset-4 hover:underline">major-ecn.fr</Link>

@@ -4,6 +4,7 @@ import { Helmet } from '../arena-logo';
 import { Container } from '../arena-ui';
 import { Stadium } from '../stadium';
 import { ARENA, BODY, CAPS, DISPLAY, HEADLINE, buttonClass, buttonStyle } from '../tokens';
+import { GoldEyebrow, Reveal } from './fx';
 
 /** Section « Après chaque manche, vous recevez les corrections détaillées » du modèle, avec un aperçu de la fiche de corrections. */
 export function LandingCorrections({ specialty, href }: { specialty: string; href: string }) {
@@ -11,7 +12,7 @@ export function LandingCorrections({ specialty, href }: { specialty: string; hre
     <Stadium photo="lightsFog" darken={0.55} tint={0.08} position="center 60%" className="py-14 sm:py-20">
       <Container>
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-14">
-          <div className="flex gap-6">
+          <Reveal className="flex gap-6">
             <span className="hidden h-[5.5rem] w-[5.5rem] shrink-0 items-center justify-center rounded-2xl sm:flex" style={{ background: 'rgba(255,255,255,0.06)', boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}` }}>
               <span className="relative">
                 <FileText className="h-12 w-12" style={{ color: ARENA.text }} strokeWidth={1.4} />
@@ -19,20 +20,17 @@ export function LandingCorrections({ specialty, href }: { specialty: string; hre
               </span>
             </span>
             <div>
-              <p className="inline-flex items-center gap-3 text-[12px]" style={{ ...CAPS, color: ARENA.warn, letterSpacing: '0.26em' }}>
-                <span aria-hidden className="h-[3px] w-8 rounded-full" style={{ background: ARENA.warn }} />
-                Après chaque manche
-              </p>
+              <GoldEyebrow>Après chaque manche</GoldEyebrow>
               <h2 className="mt-3 text-[1.9rem] leading-[0.98] sm:text-[2.6rem]" style={{ ...CAPS, color: ARENA.text }}>Vous recevez les corrections détaillées</h2>
               <p className="mt-4 max-w-xl text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
                 Quel que soit votre classement, vous accédez à un corrigé complet et commenté : réponses attendues, pièges de l’énoncé, erreurs les plus fréquentes et encadré méthodologique, pour comprendre vos erreurs et consolider vos connaissances.
               </p>
               <Link href={href} className={`${buttonClass('primary')} mt-6`} style={buttonStyle('primary')}>Comment ça marche <ArrowRight className="h-4 w-4" /></Link>
             </div>
-          </div>
+          </Reveal>
 
           {/* Aperçu de la fiche de corrections + tranches de livres */}
-          <div className="relative mx-auto w-full max-w-md">
+          <Reveal delay={0.15} className="relative mx-auto w-full max-w-md">
             <div className="rounded-xl bg-white p-5 text-left shadow-[0_40px_80px_-30px_rgba(0,0,0,0.9)] sm:p-6" style={{ color: '#14254E' }}>
               <div className="flex items-center gap-2">
                 <Helmet size={26} />
@@ -54,10 +52,10 @@ export function LandingCorrections({ specialty, href }: { specialty: string; hre
             </div>
             <div aria-hidden className="absolute -right-4 top-6 hidden flex-col gap-1.5 lg:flex xl:-right-10">
               {['Apprendre', 'Comprendre', 'Progresser', 'Réussir'].map((w, i) => (
-                <span key={w} className="rounded-sm px-3 py-2 text-[11px] font-semibold uppercase" style={{ background: ['#2A1C14', '#1B2431', '#2E1719', '#20222B'][i], color: '#D9B15C', fontFamily: DISPLAY, letterSpacing: '0.24em', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.08)' }}>{w}</span>
+                <span key={w} className="rounded-sm px-3 py-2 text-[11px] font-semibold uppercase" style={{ background: ['#2A1C14', '#1B2431', '#2E1719', '#20222B'][i], color: ARENA.goldSoft, fontFamily: DISPLAY, letterSpacing: '0.24em', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.08)' }}>{w}</span>
               ))}
             </div>
-          </div>
+          </Reveal>
         </div>
       </Container>
     </Stadium>
