@@ -174,14 +174,13 @@ importer les questions → publier.
 
 ### 2.9 Ce que voit un participant
 
-Landing « entrer dans l'arène » dans la direction artistique des maquettes client
-(refonte du 07/09/2026) : hero sur photo de stade sous lumière rouge avec le casque
-et le wordmark EVC ARENA / Major ECN, tableau d'affichage en direct de la manche,
-bandeau des six piliers, la piste des manches, le format (« Court. Exigeant. Chaque
-réponse compte. »), le chronomètre avec l'écran de question tel qu'il sera joué, le
-barème, l'écran des Meilleurs scores, le règlement sur l'amphithéâtre, l'entrée finale
-sous les projecteurs. Le score cumulé est rappelé sur la piste, le format et le
-classement. L'ancienne maquette `/arena-preview` redirige vers la landing de démo. Ensuite : inscription (prénom, nom, email, spécialité, pseudonyme,
+Landing sur le modèle de page principale fourni par le client (07/09/2026) : hero sur
+le visuel de l'arène médicale avec le casque et le wordmark EVC ARENA / BY MAJOR ECN,
+« Le tournoi de QCM des EVC », carte de la manche en cours (thème, date, compte à
+rebours, bouton), puis les trois étapes 01 · 02 · 03 (section claire), les manches du
+tournoi avec les Meilleurs scores, les corrections détaillées, le barème et le
+règlement. Le score cumulé est rappelé dans le hero et le règlement. L'ancienne
+maquette `/arena-preview` redirige vers la landing de démo. Ensuite : inscription (prénom, nom, email, spécialité, pseudonyme,
 avatar, deux cases de consentement distinctes jamais pré-cochées), confirmation par
 email, espace personnel (manches, scores, rang si le seuil est atteint, corrections,
 invitation d'un collègue par WhatsApp, Messenger, email ou lien, préférences, suppression
@@ -218,7 +217,7 @@ des charges illustré, visuels et expérience) ont été reprises écran par éc
 | Style visuel | Fond `#0B0F14`, surfaces `#1A1F26`, rouge Major ECN `#E4002B`, titres Oswald / Bebas Neue, texte Inter ; barre d'onglets mobile Accueil · Classement · Profil · Aide pour les participants |
 
 Photos de stade (Unsplash, licence libre) dans `public/arena/`, crédits dans
-`public/arena/CREDITS.md`. Le logo casque est un SVG (`src/components/arena/arena-logo.tsx`).
+`public/arena/CREDITS.md`. Le logo casque est le visuel fourni par le client, détouré en PNG transparent (`public/arena/helmet.png`, composants dans `src/components/arena/arena-logo.tsx`) ; le hero utilise le visuel client `public/arena/hero-arena.jpg`.
 Écarts volontaires avec les maquettes, imposés par le cahier des charges : aucun
 trophée, médaille ni badge (§13), aucune mention « top 5 % » (§7), aucun effectif.
 

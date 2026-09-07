@@ -72,7 +72,7 @@ type ButtonProps = {
 export function ArenaButton({ children, variant = 'primary', size = 'md', className = '', onClick, type = 'button', disabled }: ButtonProps) {
   const base =
     'inline-flex items-center justify-center gap-2.5 rounded-lg uppercase transition-[transform,box-shadow,background-color,opacity] duration-150 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40';
-  const dims = size === 'lg' ? 'px-8 py-4 text-[17px] tracking-[0.08em]' : 'px-6 py-3.5 text-[15px] tracking-[0.08em]';
+  const dims = size === 'lg' ? 'px-6 py-4 text-[15px] tracking-[0.06em] sm:px-8 sm:text-[17px] sm:tracking-[0.08em]' : 'px-6 py-3.5 text-[15px] tracking-[0.08em]';
   const styles: CSSProperties =
     variant === 'primary'
       ? { background: `linear-gradient(180deg, ${ARENA.redSoft} 0%, ${ARENA.red} 45%, ${ARENA.redDeep} 100%)`, color: '#fff', boxShadow: RED_GLOW, fontFamily: DISPLAY, fontWeight: 600 }

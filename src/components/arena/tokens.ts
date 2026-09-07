@@ -71,12 +71,16 @@ export const PHOTOS = {
   seatsRedPortrait: '/arena/seats-red-portrait.jpg',
   amphitheatre: '/arena/amphitheatre.jpg',
   lightsFog: '/arena/lights-fog.jpg',
+  /** Hero de la landing (visuel fourni par le client, 07/09/2026). */
+  heroArena: '/arena/hero-arena.jpg',
+  /** Casque spartiate détouré (logo, visuel fourni par le client). */
+  helmet: '/arena/helmet.png',
 } as const;
 
 /* Styles de lien-bouton (pour <Link>) — ici et non dans arena-ui.tsx : une
    fonction exportée d'un module client ne peut pas être appelée côté serveur. */
 export const buttonClass = (variant: 'primary' | 'ghost' = 'primary', size: 'md' | 'lg' = 'md') =>
-  `inline-flex items-center justify-center gap-2.5 rounded-lg uppercase transition-[transform,box-shadow] duration-150 active:scale-[0.98] ${size === 'lg' ? 'px-8 py-4 text-[17px] tracking-[0.08em]' : 'px-6 py-3.5 text-[15px] tracking-[0.08em]'} ${variant === 'primary' ? 'text-white' : ''}`;
+  `inline-flex items-center justify-center gap-2.5 rounded-lg uppercase transition-[transform,box-shadow] duration-150 active:scale-[0.98] ${size === 'lg' ? 'px-6 py-4 text-[15px] tracking-[0.06em] sm:px-8 sm:text-[17px] sm:tracking-[0.08em]' : 'px-6 py-3.5 text-[15px] tracking-[0.08em]'} ${variant === 'primary' ? 'text-white' : ''}`;
 export const buttonStyle = (variant: 'primary' | 'ghost' = 'primary'): CSSProperties =>
   variant === 'primary'
     ? { background: `linear-gradient(180deg, ${ARENA.redSoft} 0%, ${ARENA.red} 45%, ${ARENA.redDeep} 100%)`, boxShadow: RED_GLOW, fontFamily: DISPLAY, fontWeight: 600 }
