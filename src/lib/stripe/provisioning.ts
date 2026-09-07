@@ -419,7 +419,7 @@ export async function provisionStudentAccount(
     : FORMULES[input.formuleId].amountCents;
   const amountEurosTotal = totalCents / 100;
 
-  // Récap interne (contact@ + abonan1@) — envoyé une seule fois grâce à la
+  // Récap interne (contact@major-ecn.fr) — envoyé une seule fois grâce à la
   // déduplication ci-dessus. N'interrompt jamais le provisioning.
   try {
     const formuleForNotif = FORMULES[input.formuleId];

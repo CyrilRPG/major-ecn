@@ -659,7 +659,7 @@ export function resetPasswordEmail({ firstName, resetUrl }: ResetPasswordArgs) {
 
 /* ============================================================
    Récap interne — nouvelle inscription Espace Découverte (gratuit)
-   Envoyé à contact@major-ecn.fr + abonan1@yahoo.fr à chaque création
+   Envoyé à contact@major-ecn.fr (INTERNAL_NOTIFY_EMAILS) à chaque création
    de compte découverte, avec toutes les infos saisies.
    ============================================================ */
 type DecouverteSignupNotificationArgs = {
@@ -725,7 +725,7 @@ export function decouverteSignupNotificationEmail({
 
 /* ============================================================
    Récap interne — nouvelle souscription payante (après paiement Stripe)
-   Envoyé à contact@major-ecn.fr + abonan1@yahoo.fr une seule fois
+   Envoyé à contact@major-ecn.fr (INTERNAL_NOTIFY_EMAILS) une seule fois
    (déduplication via stripe_provisioning_log).
    ============================================================ */
 type PurchaseNotificationArgs = {

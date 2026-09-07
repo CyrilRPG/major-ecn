@@ -41,19 +41,22 @@ export default async function AdminFacturationPage() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (c: any) => {
       const decouverte = !!c.is_decouverte || c.matiere_nom === 'Découverte';
+      const matiere = (c.matiere_nom as string) ?? '—';
+      // Odontologie : QCM / rédactionnel à 2,50 € le cours (voir BILLING_EUR).
+      const odontologie = matiere === odontoNom || odontoSousColleges.has(matiere);
       const line = {
         is_mg: !!c.is_mg,
         is_decouverte: decouverte,
+        is_odontologie: odontologie,
         has_fiche: !!c.has_fiche,
         n_series: Number(c.n_series ?? 0),
         n_flash: Number(c.n_flash ?? 0),
       };
       const p = billingLinePrices(line);
-      const matiere = (c.matiere_nom as string) ?? '—';
       return {
         id: c.line_id as string,
         titre: c.titre as string,
-        matiere: odontoSousColleges.has(matiere) ? odontoNom : matiere,
+        matiere: odontologie ? odontoNom : matiere,
         fichePrice: p.fiche,
         qcmPrice: p.qcm,
         flashPrice: p.flash,

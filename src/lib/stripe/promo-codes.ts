@@ -1,17 +1,25 @@
 /**
  * Codes de réduction — création et lecture.
  *
- * POURQUOI UN POURCENTAGE, ET PLUS UN MONTANT
- * -------------------------------------------
- * Jusqu'au 03/09/2026 un code portait un montant en euros (`amount_off`,
- * `duration: 'once'`). Or le paiement en 3× / 4× est un abonnement Stripe
- * borné à N mensualités : en production, la remise en euros a été imputée sur
- * CHACUNE des trois mensualités d'une candidate, soit trois fois la réduction
- * prévue. Un code est désormais un pourcentage du prix, avec
- * `duration: 'forever'` : appliqué à chaque mensualité comme au paiement
- * comptant, il retire toujours exactement X % du prix total, quel que soit le
- * nombre de prélèvements. Les anciens codes en euros restent listés, mais on
- * n'en crée plus.
+ * DEUX FORMES DE REMISE
+ * ---------------------
+ * - un POURCENTAGE du prix (`percent_off`, `duration: 'forever'`) : en 3× / 4×
+ *   (abonnement borné à N mensualités), chaque mensualité est réduite de X %,
+ *   donc le total aussi — exactement comme au paiement comptant ;
+ * - un MONTANT en euros (`amount_off`, `duration: 'once'`) : Stripe l'impute
+ *   sur le premier prélèvement. Si la remise dépasse ce premier prélèvement,
+ *   `src/lib/stripe/installments.ts` reporte l'excédent sur les mensualités
+ *   suivantes, pour que le candidat obtienne exactement le montant promis.
+ *
+ * HISTORIQUE — À NE PAS REPRODUIRE
+ * --------------------------------
+ * Le 03/09/2026, une remise en euros s'était retrouvée imputée sur CHACUNE des
+ * trois mensualités d'une candidate. La réaction avait été de n'autoriser que
+ * le pourcentage ET de faire fermer d'office par le cron tout code en euros
+ * encore actif — y compris ceux créés depuis le dashboard Stripe et remis à
+ * des candidats nommément. Résultat : « les codes promo ne fonctionnent pas »
+ * (06/09/2026). Règle depuis : AUCUN automatisme ne désactive un code. Seul un
+ * admin ferme un code, à la main, depuis /admin/codes-promo.
  *
  * OÙ VIVENT LES CODES
  * -------------------
@@ -28,13 +36,18 @@
  *     son quota, son état actif/inactif).
  * On crée toujours la paire ensemble : un coupon par code, jamais partagé.
  *
- * DEUX LIMITES DE STRIPE À CONNAÎTRE
- * ----------------------------------
+ * TROIS LIMITES DE STRIPE À CONNAÎTRE
+ * -----------------------------------
  * 1. Le montant d'un coupon est IMMUABLE après création. Corriger une remise =
  *    désactiver le code et en créer un autre. L'admin en est averti dans l'UI.
  * 2. Il n'existe pas de « date de début ». On la stocke dans les métadonnées du
  *    code (`starts_at`), on crée le code inactif, et le cron
  *    `/api/cron/promo-codes-activate` l'active le jour venu.
+ * 3. Un code limité à certaines formations est IGNORÉ SANS MESSAGE par
+ *    Checkout sur les autres : le champ reste vide, sans erreur (vérifié le
+ *    07/09/2026 sur une session de production). Un candidat qui « n'arrive pas
+ *    à appliquer son code » achète presque toujours une autre formation que
+ *    celle du périmètre.
  *
  * CE QU'ON NE PROPOSE PAS, ET POURQUOI
  * ------------------------------------
@@ -62,10 +75,10 @@ export type PromoCodeStatus = 'actif' | 'programme' | 'inactif' | 'expire' | 'ep
 export type PromoCodeRow = {
   id: string;
   code: string;
-  /** Remise en pourcentage du prix (codes créés depuis le 03/09/2026). */
+  /** Remise en pourcentage du prix. `null` pour un code en euros. */
   percentOff: number | null;
-  /** Remise en euros des anciens codes (montant fixe, `duration: once`).
-   *  `null` pour un code en pourcentage. */
+  /** Remise en euros (montant fixe, `duration: once`). `null` pour un code en
+   *  pourcentage. */
   amountEuros: number | null;
   active: boolean;
   status: PromoCodeStatus;
@@ -81,8 +94,11 @@ export type PromoCodeRow = {
 
 export type PromoCodeInput = {
   code: string;
-  /** Pourcentage du prix retiré, de 1 à 100 (deux décimales au plus). */
-  percentOff: number;
+  /** Pourcentage du prix retiré, de 1 à 100 (deux décimales au plus).
+   *  Exactement un des deux champs `percentOff` / `amountEuros` est renseigné. */
+  percentOff: number | null;
+  /** Montant fixe retiré, en euros (deux décimales au plus). */
+  amountEuros: number | null;
   /** 'YYYY-MM-DD' ou vide. */
   startsAt: string;
   /** 'YYYY-MM-DD' ou vide. */
@@ -127,14 +143,30 @@ export function validatePromoInput(input: PromoCodeInput): PromoValidation {
         + 'souligné (ex. RENTREE2026). Les espaces et accents ne sont pas acceptés.',
     };
   }
-  if (!Number.isFinite(input.percentOff) || input.percentOff <= 0) {
-    return { ok: false, error: 'Le pourcentage de réduction doit être supérieur à 0 %.' };
+  const enPourcentage = input.percentOff !== null;
+  const enEuros = input.amountEuros !== null;
+  if (enPourcentage === enEuros) {
+    return { ok: false, error: 'Indiquez la remise soit en pourcentage du prix, soit en euros.' };
   }
-  if (input.percentOff > 100) {
-    return { ok: false, error: 'Le pourcentage de réduction ne peut pas dépasser 100 %.' };
-  }
-  if (Math.round(input.percentOff * 100) !== input.percentOff * 100) {
-    return { ok: false, error: 'Le pourcentage ne peut pas avoir plus de deux décimales.' };
+  if (enPourcentage) {
+    const pct = input.percentOff as number;
+    if (!Number.isFinite(pct) || pct <= 0) {
+      return { ok: false, error: 'Le pourcentage de réduction doit être supérieur à 0 %.' };
+    }
+    if (pct > 100) {
+      return { ok: false, error: 'Le pourcentage de réduction ne peut pas dépasser 100 %.' };
+    }
+    if (Math.round(pct * 100) !== pct * 100) {
+      return { ok: false, error: 'Le pourcentage ne peut pas avoir plus de deux décimales.' };
+    }
+  } else {
+    const euros = input.amountEuros as number;
+    if (!Number.isFinite(euros) || euros <= 0) {
+      return { ok: false, error: 'Le montant de la réduction doit être supérieur à 0 €.' };
+    }
+    if (Math.round(euros * 100) !== euros * 100) {
+      return { ok: false, error: 'Le montant ne peut pas avoir plus de deux décimales.' };
+    }
   }
   if (input.startsAt && !isValidDay(input.startsAt)) {
     return { ok: false, error: 'Date de début invalide.' };
@@ -229,15 +261,28 @@ export async function createPromoCode(
   }
 
   try {
+    const remise: Stripe.CouponCreateParams =
+      input.percentOff !== null
+        ? {
+            name: `Code ${code} (−${input.percentOff} %)`,
+            percent_off: input.percentOff,
+            // `forever` : la remise suit chaque facture de l'abonnement. En
+            // 3×/4× (mode subscription, borné à N mensualités par un schedule)
+            // chaque mensualité est réduite de X % — donc le total aussi,
+            // exactement comme en paiement comptant.
+            duration: 'forever',
+          }
+        : {
+            name: `Code ${code} (−${input.amountEuros} €)`,
+            amount_off: Math.round((input.amountEuros as number) * 100),
+            currency: 'eur',
+            // `once` : imputé une seule fois, sur le premier prélèvement. En
+            // 3×/4×, `installments.ts` reporte l'éventuel excédent sur les
+            // mensualités suivantes — jamais la remise entière sur chacune.
+            duration: 'once',
+          };
     const coupon = await stripe.coupons.create({
-      name: `Code ${code} (−${input.percentOff} %)`,
-      percent_off: input.percentOff,
-      // `forever` : la remise suit chaque facture de l'abonnement. En 3×/4×
-      // (mode subscription, borné à N mensualités par un schedule) chaque
-      // mensualité est réduite de X % — donc le total aussi, exactement comme
-      // en paiement comptant. Avec `once`, un montant en euros s'était retrouvé
-      // imputé sur chacune des trois mensualités d'une candidate (03/09/2026).
-      duration: 'forever',
+      ...remise,
       ...(productIds.length > 0 ? { applies_to: { products: productIds } } : {}),
       metadata: { source: PROMO_SOURCE, offers: input.offers.join(',') },
     });
@@ -375,37 +420,47 @@ async function buildProductLabelMap(stripe: Stripe): Promise<Map<string, string>
   return map;
 }
 
-/**
- * Ferme les codes à montant fixe en euros encore actifs (appelé par le cron).
- *
- * Depuis le 03/09/2026 un code est un pourcentage (cf. en-tête) : un code en
- * euros encore ouvert reproduirait la remise multipliée par le nombre de
- * mensualités. Ils sont fermés d'office, y compris ceux créés depuis le
- * dashboard Stripe, et marqués dans leurs métadonnées. Un code en euros
- * réactivé à la main serait refermé au passage suivant.
- */
-export async function deactivateFixedAmountPromoCodes(
-  stripe: Stripe,
-): Promise<{ deactivated: string[]; errors: string[] }> {
-  const deactivated: string[] = [];
-  const errors: string[] = [];
+/** Marqueur que l'ancien cron posait sur les codes en euros qu'il fermait
+ *  d'office (du 03/09 au 07/09/2026). Sert à les rouvrir, une fois. */
+export const CLOSED_BY_CRON_REASON = 'montant fixe remplacé par un pourcentage (2026-09-03)';
 
-  const list = await stripe.promotionCodes.list({ active: true, limit: 100, expand: ['data.promotion.coupon'] });
+/**
+ * Rouvre les codes que l'ancien cron avait fermés d'office (appelé par le cron).
+ *
+ * Ces codes avaient été remis à des candidats : les laisser fermés, c'est une
+ * promotion communiquée qui ne marche pas. Un code expiré ou épuisé entre-temps
+ * ne se rouvre pas (Stripe le refuse), et un code dont le nom a été repris par
+ * un nouveau code actif non plus : ces cas sont remontés dans `errors`.
+ * Idempotent : le marqueur est effacé à la réouverture, le passage suivant ne
+ * trouve plus rien à faire.
+ *
+ * C'est le SEUL automatisme autorisé à changer l'état d'un code, avec
+ * l'ouverture des codes programmés : jamais de fermeture automatique.
+ */
+export async function reopenPromoCodesClosedByCron(
+  stripe: Stripe,
+): Promise<{ reopened: string[]; errors: string[] }> {
+  const reopened: string[] = [];
+  const errors: string[] = [];
+  const now = Math.floor(Date.now() / 1000);
+
+  const list = await stripe.promotionCodes.list({ active: false, limit: 100 });
   for (const p of list.data) {
-    const coupon = couponOf(p);
-    if (!coupon || coupon.amount_off == null) continue;
+    if (p.metadata?.deactivated_reason !== CLOSED_BY_CRON_REASON) continue;
+    if (p.expires_at && p.expires_at <= now) continue;
+    if (p.max_redemptions !== null && p.times_redeemed >= (p.max_redemptions ?? 0)) continue;
     try {
       await stripe.promotionCodes.update(p.id, {
-        active: false,
-        metadata: { auto_activate: '0', deactivated_reason: 'montant fixe remplacé par un pourcentage (2026-09-03)' },
+        active: true,
+        metadata: { deactivated_reason: '', reopened_at: new Date().toISOString() },
       });
-      deactivated.push(p.code);
+      reopened.push(p.code);
     } catch (e) {
       errors.push(`${p.code} : ${e instanceof Error ? e.message : 'erreur Stripe'}`);
     }
   }
 
-  return { deactivated, errors };
+  return { reopened, errors };
 }
 
 /**

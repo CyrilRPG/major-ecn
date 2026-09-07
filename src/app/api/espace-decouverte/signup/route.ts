@@ -250,7 +250,7 @@ export async function POST(req: Request) {
 
   enrollInCampaign(email, firstName, 'espace_decouverte').catch(() => {});
 
-  // Récap interne (contact@ + abonan1@) — n'interrompt jamais le flux étudiant.
+  // Récap interne (contact@major-ecn.fr) — n'interrompt jamais le flux étudiant.
   try {
     const notif = decouverteSignupNotificationEmail({
       firstName,

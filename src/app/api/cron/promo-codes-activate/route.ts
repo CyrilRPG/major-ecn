@@ -10,10 +10,16 @@
  * toujours — c'est-à-dire une promotion communiquée aux candidats qui ne marche
  * pas. Le cron tourne donc chaque heure, et ne touche jamais à un code qu'un
  * admin a fermé à la main (`auto_activate` repassé à '0' à la désactivation).
+ *
+ * CE CRON N'A PAS LE DROIT DE FERMER UN CODE. Du 03/09 au 07/09/2026 il
+ * fermait d'office tout code en euros : cinq codes remis à des candidats se
+ * sont retrouvés refusés sur la page de paiement (« les codes promo ne
+ * fonctionnent pas du tout »). Il ne fait plus qu'ouvrir : les codes
+ * programmés le jour venu, et — une fois — les codes qu'il avait fermés.
  */
 import { NextResponse } from 'next/server';
 import { getStripe } from '@/lib/stripe';
-import { activateScheduledPromoCodes, deactivateFixedAmountPromoCodes } from '@/lib/stripe/promo-codes';
+import { activateScheduledPromoCodes, reopenPromoCodesClosedByCron } from '@/lib/stripe/promo-codes';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -31,17 +37,17 @@ export async function GET(req: Request) {
     if (activated.length > 0) {
       console.log('[promo-codes-activate] codes ouverts :', activated.join(', '));
     }
-    // Les codes à montant fixe en euros n'ont plus cours (remise multipliée
-    // par le nombre de mensualités en 3×/4×) : fermés à chaque passage.
-    const fermes = await deactivateFixedAmountPromoCodes(stripe);
-    if (fermes.deactivated.length > 0) {
-      console.log('[promo-codes-activate] codes en euros fermés :', fermes.deactivated.join(', '));
+    // Réparation : rouvre les codes en euros que l'ancienne version de ce cron
+    // avait fermés d'office. Sans effet une fois tous rouverts.
+    const rouverts = await reopenPromoCodesClosedByCron(stripe);
+    if (rouverts.reopened.length > 0) {
+      console.log('[promo-codes-activate] codes rouverts :', rouverts.reopened.join(', '));
     }
-    errors.push(...fermes.errors);
+    errors.push(...rouverts.errors);
     if (errors.length > 0) {
       console.error('[promo-codes-activate] erreurs :', errors.join(' | '));
     }
-    return NextResponse.json({ ok: true, activated, deactivated: fermes.deactivated, errors });
+    return NextResponse.json({ ok: true, activated, reopened: rouverts.reopened, errors });
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Erreur';
     console.error('[promo-codes-activate]', e);

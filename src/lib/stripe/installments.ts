@@ -21,6 +21,7 @@
  * ou déjà terminé, on ne fait rien. On peut donc appeler cette fonction depuis
  * plusieurs déclencheurs redondants (webhook + page /merci) sans risque.
  */
+import type Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
 
 /** Marge (en jours) entre le dernier prélèvement et l'arrêt automatique du plan.
@@ -48,6 +49,89 @@ export function lastChargeDate(startSeconds: number, installments: number): Date
 export function installmentCancelAt(startSeconds: number, installments: number): number {
   return Math.floor(lastChargeDate(startSeconds, installments).getTime() / 1000)
     + CANCEL_BUFFER_DAYS * 86400;
+}
+
+/**
+ * Excédent d'une remise en euros à reporter sur CHACUNE des mensualités
+ * suivantes, en centimes.
+ *
+ * Checkout impute un coupon `amount_off` (`duration: once`) sur le premier
+ * prélèvement, sans pouvoir descendre sous zéro : une remise de 400 € sur un
+ * 4× de 123,75 € n'en retire que 123,75 €. Le reste (276,25 €) est réparti sur
+ * les N−1 mensualités suivantes, arrondi au centime supérieur pour ne jamais
+ * faire payer un centime de trop au candidat.
+ */
+export function reportRemiseFixeCents(params: {
+  amountOffCents: number;
+  firstInvoiceCents: number;
+  installments: number;
+}): number {
+  const { amountOffCents, firstInvoiceCents, installments } = params;
+  if (installments <= 1) return 0;
+  const excedent = Math.max(0, amountOffCents - Math.max(0, firstInvoiceCents));
+  if (excedent === 0) return 0;
+  return Math.ceil(excedent / (installments - 1));
+}
+
+type PhaseDiscount = { promotion_code: string } | { coupon: string };
+
+/** Remises à poser sur la phase du schedule — cf. `ensureInstallmentPlanEnds`. */
+async function phaseDiscounts(
+  stripe: Stripe,
+  phase0: Stripe.SubscriptionSchedule.Phase,
+  installments: number,
+): Promise<PhaseDiscount[]> {
+  const result: PhaseDiscount[] = [];
+  let firstInvoiceCents: number | null = null;
+
+  for (const d of phase0.discounts ?? []) {
+    const couponId = typeof d.coupon === 'string' ? d.coupon : d.coupon?.id;
+    const promoId = typeof d.promotion_code === 'string' ? d.promotion_code : d.promotion_code?.id;
+    if (!couponId && !promoId) continue;
+
+    const coupon = couponId ? await stripe.coupons.retrieve(couponId) : null;
+    if (!coupon || coupon.amount_off == null) {
+      // Pourcentage (ou coupon illisible : on conserve le comportement d'avant).
+      result.push(promoId ? { promotion_code: promoId } : { coupon: couponId as string });
+      continue;
+    }
+
+    // Montant en euros : déjà imputé sur le premier prélèvement par Checkout.
+    if (firstInvoiceCents === null) firstInvoiceCents = await phaseFirstInvoiceCents(stripe, phase0);
+    const report = reportRemiseFixeCents({
+      amountOffCents: coupon.amount_off,
+      firstInvoiceCents,
+      installments,
+    });
+    if (report <= 0) continue;
+
+    const carry = await stripe.coupons.create({
+      name: `Report ${coupon.name ?? coupon.id} (${installments}×)`,
+      amount_off: report,
+      currency: coupon.currency ?? 'eur',
+      // `forever` sur une phase bornée à N−1 mensualités restantes : chacune
+      // porte sa part de l'excédent, et rien au-delà de la phase.
+      duration: 'forever',
+      metadata: { source: 'major-ecn-report-remise', origin_coupon: coupon.id },
+    });
+    result.push({ coupon: carry.id });
+  }
+
+  return result;
+}
+
+/** Montant du premier prélèvement AVANT remise : somme des prix de la phase. */
+async function phaseFirstInvoiceCents(
+  stripe: Stripe,
+  phase0: Stripe.SubscriptionSchedule.Phase,
+): Promise<number> {
+  let total = 0;
+  for (const it of phase0.items) {
+    const price = typeof it.price === 'string' ? await stripe.prices.retrieve(it.price) : it.price;
+    if ('deleted' in price && price.deleted) continue;
+    total += ((price as Stripe.Price).unit_amount ?? 0) * (it.quantity ?? 1);
+  }
+  return total;
 }
 
 export type EnsureInstallmentResult = {
@@ -110,23 +194,24 @@ export async function ensureInstallmentPlanEnds(params: {
       quantity: it.quantity ?? 1,
     }));
 
-    // Remise saisie dans Checkout (code promo) : on la reporte EXPLICITEMENT
-    // sur la phase, pour que chaque mensualité soit réduite du même
-    // pourcentage (les codes sont en pourcentage depuis le 03/09/2026 ; un
-    // code en euros s'était vu imputé sur chacune des mensualités). Sans
-    // `discounts`, la réécriture des phases pourrait perdre ou dupliquer la
-    // remise selon les versions de l'API.
-    const discounts = (phase0.discounts ?? [])
-      .map((d) => {
-        const coupon = typeof d.coupon === 'string' ? d.coupon : d.coupon?.id;
-        const promo = typeof d.promotion_code === 'string' ? d.promotion_code : d.promotion_code?.id;
-        return promo ? { promotion_code: promo } : coupon ? { coupon } : null;
-      })
-      .filter((d): d is { promotion_code: string } | { coupon: string } => d !== null);
+    // Remise saisie dans Checkout (code promo). Une remise posée sur la phase
+    // s'applique à CHAQUE facture de la phase, quelle que soit la `duration`
+    // du coupon : c'est ainsi qu'une remise en euros s'est retrouvée imputée
+    // trois fois (03/09/2026). D'où deux traitements :
+    //  - pourcentage : reporté tel quel sur la phase, chaque mensualité est
+    //    réduite de X % — donc le total aussi ;
+    //  - montant en euros : le premier prélèvement, déjà encaissé par
+    //    Checkout, porte la remise (bornée à son montant). Le coupon est
+    //    RETIRÉ de la phase ; si la remise dépassait ce premier prélèvement,
+    //    l'excédent est réparti sur les mensualités suivantes par un coupon
+    //    de report, pour que le candidat obtienne exactement le montant promis.
+    const discounts = await phaseDiscounts(stripe, phase0, installments);
 
     // `duration` = N cycles mensuels à partir du début de la phase. Avec un
     // prix mensuel et `end_behavior: 'cancel'`, l'abonnement est prélevé
     // exactement N fois (1er prélèvement compris) puis annulé automatiquement.
+    // `discounts` est TOUJOURS explicite (`''` = aucune) : sans lui, Stripe
+    // conserverait la remise copiée depuis l'abonnement sur toute la phase.
     await stripe.subscriptionSchedules.update(schedule.id, {
       end_behavior: 'cancel',
       phases: [
@@ -134,7 +219,7 @@ export async function ensureInstallmentPlanEnds(params: {
           items,
           start_date: phase0.start_date,
           duration: { interval: 'month', interval_count: installments },
-          ...(discounts.length > 0 ? { discounts } : {}),
+          discounts: discounts.length > 0 ? discounts : '',
         },
       ],
     });

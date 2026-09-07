@@ -45,8 +45,7 @@ const euros = (n: number) =>
 const pourcent = (n: number) =>
   n.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 
-/** Libellé de la remise d'un code : pourcentage pour les codes actuels, euros
- *  pour les anciens codes à montant fixe (toujours listés, plus créés). */
+/** Libellé de la remise d'un code : pourcentage du prix ou montant en euros. */
 function remiseLabel(c: PromoCodeRow): string {
   if (c.percentOff !== null) return `−${pourcent(c.percentOff)} %`;
   if (c.amountEuros !== null) return `−${euros(c.amountEuros)} €`;
@@ -143,8 +142,14 @@ export function PromoCodesManager({
    *  la création attend une confirmation explicite. */
   const [alsoCovered, setAlsoCovered] = useState<string[] | null>(null);
 
-  const percentOff = Number(amount.replace(',', '.'));
-  const percentValide = Number.isFinite(percentOff) && percentOff > 0 && percentOff <= 100;
+  /** Unité de la remise : pourcentage du prix, ou montant fixe en euros. */
+  const [unite, setUnite] = useState<'pourcentage' | 'euros'>('pourcentage');
+  const remise = Number(amount.replace(',', '.'));
+  const remiseValide =
+    Number.isFinite(remise) && remise > 0 && (unite === 'euros' || remise <= 100);
+  /** Prix payé après remise, pour l'aperçu par formation. */
+  const apresRemise = (prix: number) =>
+    unite === 'pourcentage' ? prix * (1 - remise / 100) : Math.max(0, prix - remise);
 
   /* ─────────────── Facettes disponibles ─────────────── */
 
@@ -229,7 +234,8 @@ export function PromoCodesManager({
     setSaving(true);
     const r = await createPromoCodeAction({
       code,
-      percentOff,
+      percentOff: unite === 'pourcentage' ? remise : null,
+      amountEuros: unite === 'euros' ? remise : null,
       startsAt,
       expiresAt,
       maxRedemptions: maxRedemptions.trim() ? Number(maxRedemptions) : null,
@@ -270,20 +276,45 @@ export function PromoCodesManager({
             </span>
           </label>
 
-          <label className="block">
-            <span className={labelClass}>Réduction (% du prix)</span>
-            <input
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              inputMode="decimal"
-              placeholder="10"
-              className={inputClass}
-            />
+          <div className="block">
+            <span className={labelClass}>Réduction</span>
+            <div className="flex gap-2">
+              <input
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                inputMode="decimal"
+                placeholder={unite === 'pourcentage' ? '10' : '400'}
+                aria-label={unite === 'pourcentage' ? 'Réduction en pourcentage du prix' : 'Réduction en euros'}
+                className={inputClass}
+              />
+              <div className="flex shrink-0 overflow-hidden rounded-lg border border-(--color-border)">
+                {(['pourcentage', 'euros'] as const).map((u) => (
+                  <button
+                    key={u}
+                    type="button"
+                    onClick={() => setUnite(u)}
+                    aria-pressed={unite === u}
+                    className={`px-3 text-sm font-bold ${
+                      unite === u
+                        ? 'bg-(--color-primary) text-white'
+                        : 'bg-white text-(--color-ink-soft) hover:bg-(--color-sand-100)'
+                    }`}
+                  >
+                    {u === 'pourcentage' ? '%' : '€'}
+                  </button>
+                ))}
+              </div>
+            </div>
             <span className="mt-1 block text-[11px] text-(--color-ink-muted)">
-              Pourcentage retiré du prix total, que le candidat paie en 1, 3 ou 4 fois :
-              chaque mensualité est réduite d’autant. Non modifiable après création.
+              {unite === 'pourcentage'
+                ? 'Pourcentage retiré du prix total, que le candidat paie en 1, 3 ou 4 fois : '
+                  + 'chaque mensualité est réduite d’autant.'
+                : 'Montant retiré du prix total, que le candidat paie en 1, 3 ou 4 fois : '
+                  + 'imputé sur le premier prélèvement, l’éventuel excédent est réparti sur '
+                  + 'les mensualités suivantes.'}
+              {' '}Non modifiable après création.
             </span>
-          </label>
+          </div>
 
           <label className="block">
             <span className={labelClass}>Date de début (optionnel)</span>
@@ -401,9 +432,9 @@ export function PromoCodesManager({
                     <span className="text-(--color-ink)">{o.label}</span>
                     <span className="shrink-0 font-semibold tabular-nums text-(--color-ink-soft)">
                       {euros(o.amountEuros)} €
-                      {percentValide && (
+                      {remiseValide && (
                         <span className="text-(--color-ink)">
-                          {' '}→ {euros(o.amountEuros * (1 - percentOff / 100))} €
+                          {' '}→ {euros(apresRemise(o.amountEuros))} €
                         </span>
                       )}
                     </span>
@@ -412,6 +443,16 @@ export function PromoCodesManager({
               </ul>
             )}
           </div>
+
+          {!allOffers && (
+            <p className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-[11px] leading-snug text-amber-900">
+              Sur une autre formation que celles-ci, Stripe ignore le code <strong>sans
+              afficher d’erreur</strong> : le champ reste vide et le candidat croit que
+              le code « ne marche pas ». Si le code est remis à une personne précise,
+              vérifiez qu’il couvre bien la formation qu’elle va acheter, ou laissez
+              « Toutes les formations ».
+            </p>
+          )}
 
           <p className="text-[11px] leading-snug text-(--color-ink-muted)">
             Pas de filtre par voie : la voie interne ou externe est choisie dans le
@@ -533,9 +574,9 @@ export function PromoCodesManager({
         })}
         <p className="pt-1 text-[11px] text-(--color-ink-muted)">
           Un code ne se supprime pas — Stripe ne le permet pas, et l’historique des remises déjà
-          accordées doit rester lisible. Désactivez-le. Le pourcentage n’est pas modifiable non
-          plus : pour le corriger, désactivez ce code et créez-en un nouveau. Les anciens codes
-          à montant fixe en euros restent listés mais ne sont plus proposés à la création.
+          accordées doit rester lisible. Désactivez-le. La remise n’est pas modifiable non
+          plus : pour la corriger, désactivez ce code et créez-en un nouveau. Aucun automatisme
+          ne ferme un code : seul un administrateur le fait, ici.
         </p>
       </section>
     </div>

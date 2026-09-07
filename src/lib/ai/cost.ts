@@ -1,7 +1,13 @@
 import type { AnthropicUsage } from './anthropic';
 
-/** Tarifs Anthropic (USD/M tokens), Claude Sonnet 4.5/4.6 par défaut. */
+/** Tarifs Anthropic (USD/M tokens). Sonnet 5 : 2 $ / 10 $ ; Opus 5 : 5 $ / 25 $ ;
+ *  Fable 5.1 : 10 $ / 50 $ ; Haiku 4.5 : 1 $ / 5 $. Modèle inconnu → Sonnet 4.5. */
 const RATES: Record<string, { in: number; out: number }> = {
+  'claude-sonnet-5':         { in: 2,  out: 10 },
+  'claude-opus-5':           { in: 5,  out: 25 },
+  'claude-opus-4-8':         { in: 5,  out: 25 },
+  'claude-fable-5-1':        { in: 10, out: 50 },
+  'claude-fable-5':          { in: 10, out: 50 },
   'claude-sonnet-4-5':       { in: 3,  out: 15 },
   'claude-sonnet-4-6':       { in: 3,  out: 15 },
   'claude-sonnet-4-7':       { in: 3,  out: 15 },
@@ -12,14 +18,26 @@ const RATES: Record<string, { in: number; out: number }> = {
 };
 
 function rateFor(model: string) {
-  // Strip date suffixes like "-20251001"
-  const base = model.split('-').slice(0, 4).join('-');
-  return RATES[base] ?? RATES['claude-sonnet-4-5'];
+  // Retire un éventuel suffixe de date (« -20251001 ») : on retient le plus
+  // long préfixe connu, car les identifiants n'ont pas tous le même nombre de
+  // segments (« claude-sonnet-5 » vs « claude-sonnet-4-6 »).
+  const parts = model.split('-');
+  for (let n = parts.length; n >= 2; n--) {
+    const r = RATES[parts.slice(0, n).join('-')];
+    if (r) return r;
+  }
+  return RATES['claude-sonnet-4-5'];
 }
 
 export function usageToUsd(usage: AnthropicUsage, model: string): number {
   const r = rateFor(model);
-  return (usage.input_tokens / 1_000_000) * r.in + (usage.output_tokens / 1_000_000) * r.out;
+  // Cache de prompt : lecture facturée 10 % du tarif d'entrée, écriture 125 %.
+  const lus = usage.cache_read_input_tokens ?? 0;
+  const ecrits = usage.cache_creation_input_tokens ?? 0;
+  return (usage.input_tokens / 1_000_000) * r.in
+    + (lus / 1_000_000) * r.in * 0.1
+    + (ecrits / 1_000_000) * r.in * 1.25
+    + (usage.output_tokens / 1_000_000) * r.out;
 }
 
 /** Prix facturé à l'étudiant / centre, en €. */
@@ -40,6 +58,10 @@ export const PRICE_EUR = {
  */
 export const BILLING_EUR = {
   qcm_per_course: 5,
+  /** Collège Odontologie (copie de Major Odontologie) : la production IA des
+   *  QCM / questions rédactionnelles y est facturée 2,50 € le cours au lieu de
+   *  5 € — arbitrage de Cyril, 06/09/2026. */
+  qcm_per_course_odontologie: 2.5,
   fiche: 10,
   flashcards_per_course: 3,
   ai_response: 0.1,
@@ -75,12 +97,21 @@ export const BILLING_MG_THRESHOLDS = {
 export function billingLinePrices(line: {
   is_mg: boolean;
   is_decouverte: boolean;
+  /** Cours du collège Odontologie ou de l'un de ses sous-collèges. */
+  is_odontologie?: boolean;
   has_fiche: boolean;
   n_series: number;
   n_flash: number;
 }): { fiche: number; qcm: number; flash: number } {
   const fiche = line.has_fiche ? BILLING_EUR.fiche : 0;
   if (line.is_decouverte) return { fiche, qcm: 0, flash: 0 };
+  if (line.is_odontologie) {
+    return {
+      fiche,
+      qcm: line.n_series > 0 ? BILLING_EUR.qcm_per_course_odontologie : 0,
+      flash: line.n_flash > 0 ? BILLING_EUR.flashcards_per_course : 0,
+    };
+  }
   if (line.is_mg) {
     const qcm = Math.min(
       BILLING_EUR.qcm_per_course,

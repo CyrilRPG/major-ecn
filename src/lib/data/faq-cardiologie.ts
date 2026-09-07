@@ -20,6 +20,60 @@ export type BlocFaqCardio =
 export type QuestionCardio = { q: string; blocs: BlocFaqCardio[] };
 
 export const FAQ_CARDIO: QuestionCardio[] = [
+  /* ---- Session 2026 : postes, voies, date, format, convocation.
+          Chiffres et date issus de l'arrêté du 12 juin 2026. ---- */
+  {
+    q: 'Combien de postes sont ouverts en cardiologie aux EVC 2026 ?',
+    blocs: [
+      { p: 'Pour la session 2026, 146 postes sont ouverts en voie interne et 20 en voie externe en médecine cardiovasculaire, soit 166 postes au total.' },
+      { p: 'Ces chiffres figurent en annexe de l’arrêté du 12 juin 2026 portant ouverture des épreuves de vérification des connaissances.' },
+      { chute: 'Avec seulement 20 postes, la voie externe en cardiologie est l’une des plus étroites de la session. C’est précisément pour ce type de configuration que Major ECN adapte l’intensité de la préparation : lorsque le nombre de postes est réduit, le niveau d’exigence attendu ne laisse aucune place à l’approximation.' },
+    ],
+  },
+  {
+    q: 'La cardiologie est-elle ouverte dans les deux voies ?',
+    blocs: [
+      { p: 'Oui. La médecine cardiovasculaire fait partie des treize spécialités ouvertes en voie externe pour 2026, et elle figure également parmi les spécialités bien dotées en voie interne.' },
+      { p: 'Un candidat en cardiologie peut donc se présenter dans l’une ou l’autre voie, selon sa situation. Plusieurs spécialités, notamment chirurgicales, ne sont ouvertes qu’en voie interne cette année.' },
+      { chute: 'Major ECN prépare les deux voies en cardiologie, avec des entraînements distincts : QCM pour la voie interne, QROC pour la voie externe.' },
+    ],
+  },
+  {
+    q: 'Quand a lieu l’épreuve de cardiologie ?',
+    blocs: [
+      { p: 'L’épreuve se déroule le jeudi 3 décembre 2026, à l’Espace Jean-Monnet de Rungis.' },
+      { p: 'Elle s’inscrit dans un calendrier qui s’étend du 10 novembre 2026 au 15 janvier 2027.' },
+      { chute: 'La préparation Major ECN est calée sur cette échéance : le rythme des cours, des entraînements et des révisions programmées est construit pour vous amener prêt au jour de votre épreuve, et non à une date théorique.' },
+    ],
+  },
+  {
+    q: 'Quel est le format de l’épreuve en cardiologie ?',
+    blocs: [
+      { p: 'Le format dépend de votre voie.' },
+      { p: 'En voie interne, l’épreuve repose sur un QCM, de 10 h à 12 h.' },
+      { p: 'En voie externe, deux épreuves écrites de deux heures sont prévues, de 10 h à 12 h puis de 15 h à 17 h.' },
+      { p: 'Les deux voies passent le même jour. Les connaissances médicales évaluées se recoupent largement : c’est la manière de les restituer qui diffère.' },
+      { chute: 'C’est pourquoi Major ECN différencie les entraînements selon la voie présentée. Un candidat qui s’entraîne dans le mauvais format travaille un exercice qu’il ne passera pas.' },
+    ],
+  },
+  {
+    q: 'Le nombre de postes signifie-t-il que l’épreuve est plus facile ?',
+    blocs: [
+      { p: 'Non.' },
+      { p: 'Un nombre élevé de postes peut également attirer davantage de candidats. C’est le rapport entre le nombre de candidats et le nombre de postes qui détermine la sélectivité réelle, et ce rapport n’est pas connu à l’avance.' },
+      { p: 'Il faut aussi garder à l’esprit qu’un poste peut rester vacant si aucune copie n’atteint le niveau attendu : la sélection porte sur un niveau, pas seulement sur un rang.' },
+      { chute: 'C’est la raison d’être de la méthode Major ECN : ne pas viser un rang, mais atteindre le niveau attendu par le jury, quelle que soit la configuration de la session.' },
+    ],
+  },
+  {
+    q: 'Comment obtenir ma convocation ?',
+    blocs: [
+      { p: 'La convocation est mise à disposition par le Centre national de gestion, au plus tôt un mois avant la date de l’épreuve.' },
+      { p: 'Pour la cardiologie, l’épreuve ayant lieu le 3 décembre 2026, la convocation ne sera donc pas disponible avant le début du mois de novembre.' },
+      { chute: 'Les équipes Major ECN restent disponibles pour répondre à vos questions sur le déroulement de la session tout au long de votre préparation.' },
+    ],
+  },
+  /* ---- La préparation Major ECN ---- */
   {
     q: 'En quoi Major ECN m’apporte-t-il plus qu’une simple plateforme de préparation aux EVC ?',
     blocs: [
@@ -156,6 +210,28 @@ export const FAQ_CARDIO: QuestionCardio[] = [
       { p: 'Parce qu’une préparation efficace ne consiste pas seulement à accumuler des documents.' },
       { p: 'Major ECN associe contenus pédagogiques, entraînements, méthodologie, outils de mémorisation, examens blancs, suivi de progression et accompagnement humain.' },
       { chute: 'L’objectif est de vous donner les outils et la méthode nécessaires pour structurer votre travail et vous présenter aux EVC dans les meilleures conditions possibles.' },
+    ],
+  },
+  /* ---- Toujours en dernière position : aucune promesse de résultat. ---- */
+  {
+    q: 'Major ECN garantit-il la réussite aux EVC ?',
+    blocs: [
+      { p: 'Non. Et aucune préparation sérieuse ne peut garantir la réussite à un concours.' },
+      { p: 'Les EVC dépendent notamment du niveau des copies, du nombre de candidats et du nombre de postes ouverts. Aucun organisme de préparation ne maîtrise ces paramètres.' },
+      { p: 'Ce que Major ECN apporte, en revanche :' },
+      {
+        liste: [
+          'un cadre de travail structuré ;',
+          'des contenus adaptés à la cardiologie et à votre voie ;',
+          'des cours avec des médecins spécialistes ;',
+          'des entraînements réguliers ;',
+          'des corrections détaillées ;',
+          'des examens blancs ;',
+          'un suivi de progression.',
+        ],
+      },
+      { p: 'Depuis 2011, plus de 9 000 médecins ont préparé leurs épreuves avec Major ECN.' },
+      { chute: 'Le travail personnel, la régularité et l’investissement du candidat restent déterminants.' },
     ],
   },
 ];

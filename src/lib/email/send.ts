@@ -30,17 +30,18 @@ const ALWAYS_BCC = '';
 /**
  * Destinataires des récapitulatifs internes (inscriptions, souscriptions,
  * diagnostics…). Ces messages ne partent JAMAIS à un étudiant : la liste n'est
- * donc jamais exposée à l'extérieur, et la direction y figure nommément.
- * Demande de Cyril, 04/09/2026 — il doit recevoir chaque inscription.
+ * donc jamais exposée à l'extérieur.
+ * Seule la boîte contact de Major ECN les reçoit : l'adresse personnelle de la
+ * direction en a été retirée le 06/09/2026 à la demande de Cyril.
  * Ajouter d'autres destinataires internes via EMAIL_BCC si besoin.
  */
-export const INTERNAL_NOTIFY_EMAILS = ['contact@major-ecn.fr', 'abonan1@yahoo.fr'];
+export const INTERNAL_NOTIFY_EMAILS = ['contact@major-ecn.fr'];
 
-/** Adresses mises EN COPIE VISIBLE du mail de confirmation d'achat qui porte
- *  les documents contractuels (CGU, CGS, Conditions Particulières), pour toute
- *  inscription payante quelle que soit la formule. Demande de Cyril,
- *  03/09/2026. */
-export const CONTRACT_COPY_EMAILS = ['abonan1@yahoo.fr'];
+/** Adresses qui reçoivent un EXEMPLAIRE du mail de confirmation d'achat qui
+ *  porte les documents contractuels (CGU, CGS, Conditions Particulières), pour
+ *  toute inscription payante quelle que soit la formule. C'est la boîte contact
+ *  de Major ECN, et non plus une adresse personnelle (Cyril, 06/09/2026). */
+export const CONTRACT_COPY_EMAILS = ['contact@major-ecn.fr'];
 
 export type EmailAttachment = {
   /** Nom de fichier affiché dans le mail (ex: "CGU.pdf"). */
@@ -53,7 +54,7 @@ export type EmailAttachment = {
 
 export type SendEmailInput = {
   /** Destinataire principal. Accepte une liste pour notifier plusieurs
-   *  adresses explicites (ex. récap interne → contact@ + abonan1@). */
+   *  adresses explicites (ex. récap interne → INTERNAL_NOTIFY_EMAILS). */
   to: string | string[];
   subject: string;
   html: string;

@@ -86,7 +86,7 @@ const HERO_PROMESSES = [
 const HERO_CHIFFRES = [
   { fort: 'Depuis 2011', suite: 'à vos côtés pour réussir' },
   { fort: '+ 9 000', suite: 'médecins accompagnés' },
-  { fort: 'Toutes', suite: 'les spécialités préparées' },
+  { fort: 'Voie interne et voie externe', suite: 'préparées' },
   { fort: '+ 2 000', suite: 'QCM & QROC en cardiologie' },
 ];
 
@@ -124,8 +124,8 @@ function Hero() {
               Préparation EVC <span style={{ color: '#E8324A' }}>2026</span>
             </span>
             <span
-              className="mt-3 block text-[3.2rem] font-black leading-[0.95] text-white sm:text-[4.6rem] lg:text-[5.2rem]"
-              style={{ fontFamily: "'Fraunces', 'Plus Jakarta Sans', serif", letterSpacing: '-0.035em' }}
+              className="mt-3 block text-[2.7rem] font-black leading-[1.02] text-white sm:text-[3.6rem] lg:text-[4.1rem]"
+              style={{ letterSpacing: '-0.035em' }}
             >
               Cardiologie
             </span>
@@ -174,6 +174,87 @@ function Hero() {
                 <p className="mt-2 text-[12px] uppercase tracking-[0.08em]" style={{ color: WHITE_MUTED, fontFamily: FONT_BODY }}>{c.suite}</p>
               </div>
             ))}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   BLOC SESSION — les faits chiffrés de la spécialité, juste sous
+   le hero. Même composant que la page anesthésie-réanimation : la
+   médecine cardiovasculaire est ouverte dans les deux voies pour
+   la session 2026, les deux sont annoncées. Le bloc est rendu par
+   le serveur (le Reveal n'anime que l'opacité, le texte est dans
+   le HTML servi).
+   ============================================================ */
+
+const ARTICLE_CARDIO = 'evc-cardiologie-medecine-cardiovasculaire-2026';
+const ARTICLE_CALENDRIER = 'calendrier-evc-2026-dates-epreuves-specialites';
+const ARTICLE_RATIO = 'evc-ratio-candidats-postes-choix-specialite-2026';
+
+function BlocSession() {
+  return (
+    <section className="py-12 sm:py-14" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <div
+            className="grid grid-cols-1 gap-8 rounded-[1.25rem] px-7 py-8 sm:px-9 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center"
+            style={{ background: PAPER, border: `1px solid ${LINE}` }}
+          >
+            <div>
+              <p className="text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ color: RED }}>
+                Session 2026
+              </p>
+              <h2 className="mt-3 text-[1.5rem] font-black leading-tight tracking-tight sm:text-[1.8rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
+                Médecine cardiovasculaire
+              </h2>
+              <p className="mt-4 text-[15px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                <span className="font-black" style={{ color: NAVY }}>146 postes en voie interne.</span>{' '}
+                <span className="font-black" style={{ color: RED_DEEP }}>20 postes en voie externe.</span>
+                <br />
+                Épreuve le <span className="font-black" style={{ color: NAVY }}>jeudi 3 décembre 2026</span>,
+                Espace Jean-Monnet, Rungis.
+              </p>
+              <p className="mt-3 text-[12.5px]" style={{ color: INK_MUTED, fontFamily: FONT_BODY }}>
+                Source : arrêté du 12 juin 2026.
+              </p>
+              <p className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13.5px] font-bold">
+                <Link href={`/blog/${ARTICLE_CALENDRIER}`} className="underline underline-offset-4" style={{ color: RED }}>
+                  Calendrier complet par spécialité →
+                </Link>
+                <Link href={`/blog/${ARTICLE_RATIO}`} className="underline underline-offset-4" style={{ color: RED }}>
+                  Comprendre le ratio candidats/postes →
+                </Link>
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="rounded-2xl bg-white px-6 py-6" style={{ border: `1px solid ${LINE}` }}>
+                <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: NAVY, letterSpacing: '-0.03em' }}>146</p>
+                <p className="mt-2 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                  postes ouverts
+                  <span className="block font-black" style={{ color: NAVY }}>en voie interne</span>
+                </p>
+              </div>
+              <div className="rounded-2xl bg-white px-6 py-6" style={{ border: `1px solid ${LINE}` }}>
+                <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: RED_DEEP, letterSpacing: '-0.03em' }}>20</p>
+                <p className="mt-2 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                  postes ouverts
+                  <span className="block font-black" style={{ color: NAVY }}>en voie externe</span>
+                </p>
+              </div>
+              <div className="sm:col-span-2 rounded-2xl px-6 py-5" style={{ background: '#FDF2F4' }}>
+                <p className="text-[13px] leading-relaxed" style={{ color: INK, fontFamily: FONT_BODY }}>
+                  Les deux voies sont ouvertes :{' '}
+                  <span className="font-black" style={{ color: NAVY }}>QCM en voie interne, QROC en voie externe.</span>{' '}
+                  <Link href={`/blog/${ARTICLE_CARDIO}`} className="font-black underline underline-offset-4" style={{ color: RED }}>
+                    EVC Cardiologie 2026 : que réviser vraiment →
+                  </Link>
+                </p>
+              </div>
+            </div>
           </div>
         </Reveal>
       </div>
@@ -651,7 +732,7 @@ function Temoignages() {
                     <div>
                       <p
                         className="text-[1.15rem] font-black leading-tight tracking-tight sm:text-[1.3rem]"
-                        style={{ color: NAVY, fontFamily: "'Fraunces', 'Plus Jakarta Sans', serif", letterSpacing: '-0.02em' }}
+                        style={{ color: NAVY, letterSpacing: '-0.02em' }}
                       >
                         {t.titre}
                       </p>
@@ -727,7 +808,7 @@ function Formules({ specialite, prixApprofondie }: { specialite?: string; prixAp
                 <div className="mt-auto pt-7 text-center">
                   <p className="text-[2rem] font-black leading-none tabular-nums" style={{ color: ESS.deep, letterSpacing: '-0.03em' }}>495 €</p>
                   <Link
-                    href={lienPaiement('/formules/essentielle', specialite)}
+                    href={lienPaiement('/formules/essentielle', "Cardiologie")}
                     className="mt-5 flex w-full items-center justify-center rounded-lg px-6 py-3 text-[13px] font-black tracking-tight text-white"
                     style={{ background: ESS.grad }}
                   >
@@ -753,7 +834,7 @@ function Formules({ specialite, prixApprofondie }: { specialite?: string; prixAp
                 <div className="mt-auto pt-7 text-center">
                   <p className="text-[2rem] font-black leading-none tabular-nums" style={{ color: INT.deep, letterSpacing: '-0.03em' }}>995 €</p>
                   <Link
-                    href={lienPaiement('/formules/intensive', specialite)}
+                    href={lienPaiement('/formules/intensive', "Cardiologie")}
                     className="mt-5 flex w-full items-center justify-center rounded-lg px-6 py-3 text-[13px] font-black tracking-tight text-white"
                     style={{ background: INT.grad }}
                   >
@@ -782,7 +863,7 @@ function Formules({ specialite, prixApprofondie }: { specialite?: string; prixAp
                     <span className="mt-1.5 block text-[2rem] font-black tabular-nums" style={{ letterSpacing: '-0.03em' }}>{prixApprofondie} €</span>
                   </p>
                   <Link
-                    href={lienPaiement('/formules/programme-approfondi', specialite)}
+                    href={lienPaiement('/formules/programme-approfondi', "Cardiologie")}
                     className="mt-5 flex w-full items-center justify-center rounded-lg px-6 py-3 text-[13px] font-black tracking-tight text-white"
                     style={{ background: APP.grad }}
                   >
@@ -950,11 +1031,13 @@ function FaqSection({ prixApprofondie }: { prixApprofondie: string }) {
 
 const CTA_POINTS = ['Choisissez votre voie.', 'Choisissez votre niveau d’accompagnement.', 'Nous vous aidons à structurer la suite.'];
 
+/** Trois repères renseignés. L'ancien « Lauréats — EVC accompagnés », sans
+    chiffre, a été retiré le 06/09/2026 : une statistique vide à côté de trois
+    statistiques chiffrées attirait l'attention sur ce qui manquait. */
 const CTA_REPERES = [
   { fort: '+ 9 000', suite: 'médecins accompagnés' },
   { fort: 'Depuis 2011', suite: 'à vos côtés pour réussir' },
-  { fort: 'Toutes', suite: 'les spécialités préparées' },
-  { fort: 'Lauréats', suite: 'EVC accompagnés' },
+  { fort: 'Voie interne et voie externe', suite: 'préparées' },
 ];
 
 function CtaFinal() {
@@ -1015,9 +1098,10 @@ export function CardiologiePageContent({
 }) {
   return (
     <div className="overflow-x-hidden" style={{ background: '#FFFFFF' }}>
-      <AncreTunnel actif={!!specialite} />
+      <AncreTunnel actif />
       <FilAriane />
       <Hero />
+      <BlocSession />
       <Raisonnement />
       <TempsPrecieux />
       <Thematiques />
