@@ -222,12 +222,41 @@ export const GAIN_TEMPS = [
   ],
 ];
 
-export const PSY_FORMULES = [
+/**
+ * Formules — même structure que les autres pages spécialité du site
+ * (orthopédie, pédiatrie, anesthésie) : un encadré « ce que reprend la
+ * formule précédente », puis la liste de ce qu'elle ajoute. Les couleurs
+ * viennent de `lib/formules-palette` : vert, rouge, bleu foncé.
+ */
+export type FormuleSpecialite = {
+  n: number;
+  nom: string;
+  accroche: string;
+  prefixe?: string;
+  prix: string;
+  encadre: { fort: string; suite?: string; plus?: string[] };
+  items: string[];
+  href: string;
+  recommandee?: boolean;
+};
+
+/** Rappel commun aux trois formules, colonne de droite du bloc tarifs. */
+export const TOUTES_FORMULES: { fort: string; suite: string }[] = [
+  { fort: "Plateforme complète", suite: "Accessible pendant toute la période de préparation" },
+  { fort: "Méthode adaptée à votre voie", suite: "QCM pour la voie interne, QROC et rédaction pour la voie externe" },
+  { fort: "Encadrement par des médecins spécialistes", suite: "qui connaissent les EVC et votre spécialité" },
+  { fort: "Paiement 100 % sécurisé", suite: "en plusieurs fois sans frais" },
+  { fort: "Accompagnement selon les modalités", suite: "de la formule choisie" },
+];
+
+export const PSY_FORMULES: FormuleSpecialite[] = [
   {
-    name: "Essentielle",
-    subtitle: "Autonomie guidée",
-    price: "495 €",
+    n: 1,
+    nom: "Essentielle",
+    accroche: "Autonomie guidée",
+    prix: "495 €",
     href: "/formules/essentielle",
+    encadre: { fort: "La base complète", suite: "de la préparation Major ECN." },
     items: [
       "Accès à la plateforme complète",
       "+ de 2 000 questions, dossiers et annales",
@@ -238,13 +267,16 @@ export const PSY_FORMULES = [
     ],
   },
   {
-    name: "Intensive",
-    subtitle: "Révision finale accompagnée",
-    price: "995 €",
+    n: 2,
+    nom: "Intensive",
+    accroche: "Révision finale accompagnée",
+    prix: "995 €",
     href: "/formules/intensive",
+    encadre: {
+      fort: "Tout le contenu de l’Essentielle",
+      suite: "Environ 18 à 20 h de révisions guidées",
+    },
     items: [
-      "Tout le contenu de l’Essentielle",
-      "Environ 18 à 20 h de révisions guidées",
       "Cours en direct & replays selon le programme",
       "Méthodologie EVC",
       "Entraînements intensifs & corrections détaillées",
@@ -252,14 +284,21 @@ export const PSY_FORMULES = [
     ],
   },
   {
-    name: "Approfondie",
-    subtitle: "Préparation la plus complète",
-    price: "2 095 €",
+    n: 3,
+    nom: "Approfondie",
+    accroche: "Préparation la plus complète",
+    prefixe: "À partir de",
+    prix: "2 095 €",
     href: "/formules/programme-approfondi",
+    recommandee: true,
+    encadre: {
+      fort: "Tout le contenu de l’Intensive",
+      plus: [
+        "Reprise approfondie des connaissances essentielles",
+        "Programme d’enseignement complet",
+      ],
+    },
     items: [
-      "Tout le contenu de l’Intensive",
-      "Reprise approfondie des connaissances essentielles",
-      "Programme d’enseignement complet",
       "Nombreux cours en direct & replays",
       "Dossiers et situations cliniques complets",
       "Méthodologie renforcée",
@@ -269,12 +308,14 @@ export const PSY_FORMULES = [
   },
 ];
 
-export const RADIO_FORMULES = [
+export const RADIO_FORMULES: FormuleSpecialite[] = [
   {
-    name: "Essentielle",
-    subtitle: "Travaillez à votre rythme",
-    price: "495 €",
+    n: 1,
+    nom: "Essentielle",
+    accroche: "Travaillez à votre rythme",
+    prix: "495 €",
     href: "/formules/essentielle",
+    encadre: { fort: "La base complète", suite: "de la préparation Major ECN." },
     items: [
       "Accès à la plateforme complète",
       "QCM, QROC, dossiers et annales",
@@ -284,12 +325,13 @@ export const RADIO_FORMULES = [
     ],
   },
   {
-    name: "Intensive",
-    subtitle: "Consolidez et entraînez-vous",
-    price: "995 €",
+    n: 2,
+    nom: "Intensive",
+    accroche: "Consolidez et entraînez-vous",
+    prix: "995 €",
     href: "/formules/intensive",
+    encadre: { fort: "Tout le contenu de la formule Essentielle" },
     items: [
-      "Tout le contenu de la formule Essentielle",
       "Cours en direct et replays",
       "Entraînements intensifs",
       "Corrections détaillées",
@@ -297,13 +339,18 @@ export const RADIO_FORMULES = [
     ],
   },
   {
-    name: "Approfondie",
-    subtitle: "Reprenez en profondeur les points clés avec nos enseignants",
-    price: "2 295 €",
+    n: 3,
+    nom: "Approfondie",
+    accroche: "Reprenez en profondeur les points clés avec nos enseignants",
+    prefixe: "À partir de",
+    prix: "2 295 €",
     href: "/formules/programme-approfondi",
+    recommandee: true,
+    encadre: {
+      fort: "Tout le contenu de la formule Intensive",
+      plus: ["Programme approfondi de cours"],
+    },
     items: [
-      "Tout le contenu de la formule Intensive",
-      "Programme approfondi de cours",
       "Dossiers avancés et cas complexes",
       "Méthodologie renforcée",
       "Accompagnement personnalisé",

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { PsychiatrieRadiologiePage } from "@/components/marketing/psychiatrie-radiologie-page";
+import { JsonLd, breadcrumbSchema, faqSchema } from "@/components/seo/json-ld";
+import faqRadiologie from "@/lib/data/faq-radiologie.json";
 
 export const metadata: Metadata = {
   title: "Préparation EVC Radiologie et Imagerie médicale 2026",
@@ -26,6 +28,22 @@ export const metadata: Metadata = {
   },
 };
 
+/** Le composant de page est un composant client : le JSON-LD est émis ici,
+    côté serveur, comme sur les autres pages spécialité. */
 export default function RadiologiePage() {
-  return <PsychiatrieRadiologiePage kind="radiologie" />;
+  return (
+    <>
+      <JsonLd
+        data={[
+          breadcrumbSchema([
+            { name: "Accueil", path: "/" },
+            { name: "Spécialités", path: "/specialites" },
+            { name: "Radiologie & Imagerie médicale", path: "/specialites/radiologie-et-imagerie-medicale" },
+          ]),
+          faqSchema(faqRadiologie.map(({ q, a }) => ({ q, a: a.replaceAll("**", "") }))),
+        ]}
+      />
+      <PsychiatrieRadiologiePage kind="radiologie" />
+    </>
+  );
 }
