@@ -1,5 +1,6 @@
 import 'server-only';
 import { getCurrentUserAndProfile } from '@/lib/auth/get-profile';
+import { ARENA_PUBLIC_ENABLED } from '@/lib/modules-flags';
 import { getTournamentBySlug, loadTournamentSnapshot, type TournamentSnapshot } from './db';
 import { PUBLIC_STATUSES } from './time';
 import type { TournamentRow } from './types';
@@ -27,7 +28,13 @@ export async function currentStaff(): Promise<StaffInfo> {
   }
 }
 
+/** Statut public ET module mis en service (mode test : personnel uniquement, cf. modules-flags.ts). */
 export function isPublic(t: TournamentRow): boolean {
+  return ARENA_PUBLIC_ENABLED && PUBLIC_STATUSES.has(t.status);
+}
+
+/** Statut public au sens du cycle de vie (§15.1), indépendamment du mode test. */
+export function isPublicStatus(t: TournamentRow): boolean {
   return PUBLIC_STATUSES.has(t.status);
 }
 
@@ -48,5 +55,5 @@ export async function visibleSnapshot(slug: string): Promise<{ snap: TournamentS
 
 /** Inscription possible (§2.3) : tournoi public et non terminé. */
 export function registrationOpen(snap: TournamentSnapshot): boolean {
-  return isPublic(snap.tournament) && snap.status !== 'finished' && snap.status !== 'archived';
+  return isPublicStatus(snap.tournament) && snap.status !== 'finished' && snap.status !== 'archived';
 }

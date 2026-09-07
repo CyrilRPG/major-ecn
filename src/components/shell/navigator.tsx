@@ -1,5 +1,4 @@
-'use client';
-
+import { SUIVI_STUDENT_ENABLED } from '@/lib/modules-flags';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -281,10 +280,12 @@ export function Navigator({
               </Link>
 
               {/* Suivi individuel : rendez-vous du candidat avec l'équipe pédagogique. */}
-              <Link href="/mes-rendez-vous" className={topLevelClass(rendezVousActive)}>
-                <CalendarCheck className="h-[18px] w-[18px] shrink-0" />
-                Mes rendez-vous
-              </Link>
+              {SUIVI_STUDENT_ENABLED && (
+                <Link href="/mes-rendez-vous" className={topLevelClass(rendezVousActive)}>
+                  <CalendarCheck className="h-[18px] w-[18px] shrink-0" />
+                  Mes rendez-vous
+                </Link>
+              )}
 
               <Link href="/notes" className={topLevelClass(notesActive)}>
                 <NotebookPen className="h-[18px] w-[18px] shrink-0" />

@@ -1,4 +1,6 @@
+import { redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
+import { SUIVI_STUDENT_ENABLED } from '@/lib/modules-flags';
 import { listAppointments } from '@/lib/suivi/db';
 import { MesRendezVous, type MyAppointment } from '@/components/student/mes-rendez-vous';
 
@@ -11,7 +13,9 @@ export const dynamic = 'force-dynamic';
  * lecture en propre). Aucune information sur un autre candidat n'est transmise.
  */
 export default async function MesRendezVousPage() {
-  const { user } = await requireUser();
+  const { user, profile } = await requireUser();
+  // Mode test : rubrique réservée au personnel tant que le module n'est pas mis en service.
+  if (!SUIVI_STUDENT_ENABLED && profile?.role !== 'admin' && profile?.role !== 'professor') redirect('/accueil');
   const rows = await listAppointments({ userId: user.id });
   const appointments: MyAppointment[] = rows.map((a) => ({ id: a.id, starts_at: a.starts_at, ends_at: a.ends_at, status: a.status, moved_from: a.moved_from }));
   return (
