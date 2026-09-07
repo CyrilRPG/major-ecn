@@ -67,7 +67,8 @@ brouillon, module de suivi réservé à l'administration) jusqu'à validation du
 
 ### Avancement
 
-- [x] Maquette non répertoriée `/arena-preview` (conservée comme référence de DA)
+- [x] Maquette non répertoriée `/arena-preview` → remplacée le 07/09/2026 par la landing refondue (`src/components/arena/landing/`), `/arena-preview` redirige vers la démo
+- [x] Jetons de DA dans `src/components/arena/tokens.ts` (module sans `'use client'` : un export non-composant d'un module client arrive vide dans un composant serveur)
 - [x] Migration SQL (`20260906120000_arena.sql`)
 - [x] Lib : scoring + tests §6.4, ranking + tests, import + tests, temps, session, emails, séquence
 - [x] Public : landing, inscription, confirmation, connexion, espace, manche, corrections,

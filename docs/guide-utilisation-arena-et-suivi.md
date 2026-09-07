@@ -174,8 +174,13 @@ importer les questions → publier.
 
 ### 2.9 Ce que voit un participant
 
-Landing avec compte à rebours en temps restant (heure de Paris rappelée, heure locale
-affichée si différente), inscription (prénom, nom, email, spécialité, pseudonyme,
+Landing « entrer dans l'arène » (refonte du 07/09/2026) : hero sombre avec tableau
+d'affichage LED et compte à rebours en temps restant (heure de Paris rappelée, heure
+locale affichée si différente), puis alternance de sections claires et sombres — la
+piste des manches, le format (« Court. Exigeant. Chaque réponse compte. »), le
+chronomètre, le barème, l'écran des Meilleurs scores, le règlement, l'entrée finale.
+Le score cumulé est rappelé sur la piste, le format et le classement. L'ancienne
+maquette `/arena-preview` redirige vers la landing de démonstration. Ensuite : inscription (prénom, nom, email, spécialité, pseudonyme,
 avatar, deux cases de consentement distinctes jamais pré-cochées), confirmation par
 email, espace personnel (manches, scores, rang si le seuil est atteint, corrections,
 invitation d'un collègue par WhatsApp, Messenger, email ou lien, préférences, suppression
