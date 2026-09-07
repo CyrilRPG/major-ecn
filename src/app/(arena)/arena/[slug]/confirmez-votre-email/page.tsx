@@ -1,6 +1,7 @@
 import { Mail } from 'lucide-react';
 import { ArenaPage, Panel } from '@/components/arena/arena-shell';
-import { ARENA, BODY, Container, DISPLAY, Eyebrow } from '@/components/arena/arena-ui';
+import { Container, Eyebrow } from '@/components/arena/arena-ui';
+import { ARENA, BODY, DISPLAY } from '@/components/arena/tokens';
 import { ResendConfirmation } from '@/components/arena/resend-confirmation';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
 import { siteUrl } from '@/lib/email/send';

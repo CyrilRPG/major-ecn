@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { arenaDb, getParticipant } from '@/lib/arena/db';
 import { verifySignedLinkToken } from '@/lib/arena/session';
 import { ArenaFooter, Panel, Wordmark } from '@/components/arena/arena-shell';
-import { ARENA, BODY, Container, DISPLAY } from '@/components/arena/arena-ui';
+import { Container } from '@/components/arena/arena-ui';
+import { ARENA, BODY, DISPLAY } from '@/components/arena/tokens';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Désinscription — EVC Arena', robots: { index: false, follow: false } };

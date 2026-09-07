@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArenaFooter, Notice, Panel, Wordmark } from '@/components/arena/arena-shell';
-import { ARENA, BODY, Container, DISPLAY } from '@/components/arena/arena-ui';
+import { Container } from '@/components/arena/arena-ui';
+import { ARENA, BODY, DISPLAY } from '@/components/arena/tokens';
 import { LoginForm } from '@/components/arena/login-form';
 
 export const dynamic = 'force-dynamic';

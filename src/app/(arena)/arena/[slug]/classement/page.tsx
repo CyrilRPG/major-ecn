@@ -1,5 +1,6 @@
 import { ArenaPage, Notice } from '@/components/arena/arena-shell';
-import { ARENA, BODY, Container, DISPLAY, Eyebrow } from '@/components/arena/arena-ui';
+import { Container, Eyebrow } from '@/components/arena/arena-ui';
+import { ARENA, BODY, DISPLAY } from '@/components/arena/tokens';
 import { Leaderboard } from '@/components/arena/leaderboard';
 import { computeTournamentStandings, effectiveBareme, roundMaxScore } from '@/lib/arena/db';
 import { leaderboardRows } from '@/lib/arena/ranking';

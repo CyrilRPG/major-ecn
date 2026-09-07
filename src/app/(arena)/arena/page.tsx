@@ -4,7 +4,8 @@ import { currentStaff, isPublic } from '@/lib/arena/access';
 import { listTournaments } from '@/lib/arena/db';
 import { STATUS_LABEL } from '@/lib/arena/time';
 import { ArenaFooter, Panel, Wordmark } from '@/components/arena/arena-shell';
-import { ARENA, BODY, Container, DISPLAY } from '@/components/arena/arena-ui';
+import { Container } from '@/components/arena/arena-ui';
+import { ARENA, BODY, DISPLAY } from '@/components/arena/tokens';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'EVC Arena — tournois de QCM', robots: { index: false, follow: false } };

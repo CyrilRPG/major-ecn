@@ -1,5 +1,6 @@
 import { ArenaPage, Panel } from '@/components/arena/arena-shell';
-import { ARENA, BODY, Container, DISPLAY, Eyebrow, TABULAR } from '@/components/arena/arena-ui';
+import { Container, Eyebrow } from '@/components/arena/arena-ui';
+import { ARENA, BODY, DISPLAY, TABULAR } from '@/components/arena/tokens';
 import { effectiveBareme } from '@/lib/arena/db';
 import { describeBareme } from '@/lib/arena/scoring';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';

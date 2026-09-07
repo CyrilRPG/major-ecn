@@ -1,17 +1,9 @@
-import type { Metadata } from 'next';
-import { ArenaPreview } from '@/components/arena/arena-preview';
+import { redirect } from 'next/navigation';
 
 /**
- * Page test EVC Arena — non répertoriée (noindex hérité du layout du segment,
- * absente du sitemap). Sert à valider l'interface et la direction artistique
- * avant de développer le module complet.
+ * L'ancienne maquette non répertoriée est remplacée par le tournoi de
+ * démonstration réel (visible du personnel connecté à l'administration).
  */
-export const metadata: Metadata = {
-  title: 'EVC Arena — maquette',
-  description: 'Tournoi de QCM Major ECN : trois manches, douze questions, douze minutes, une seule tentative.',
-  robots: { index: false, follow: false },
-};
-
 export default function ArenaPreviewPage() {
-  return <ArenaPreview />;
+  redirect('/arena/demo-medecine-interne');
 }

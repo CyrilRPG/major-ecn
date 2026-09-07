@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { ARENA, BODY, Container, DISPLAY } from './arena-ui';
+import { Container } from './arena-ui';
+import { ARENA, BODY, DISPLAY } from './tokens';
 import { WARNING_NATURE } from '@/lib/arena/texts';
 
 /**
@@ -28,6 +29,8 @@ export function Wordmark({ small }: { small?: boolean }) {
       <span className={`${small ? 'text-[15px]' : 'text-lg'} font-extrabold uppercase tracking-[0.22em]`} style={{ color: ARENA.redSoft }}>
         Arena
       </span>
+      {/* La marque Major ECN reste identifiable, discrètement, sur chaque page (notoriété). */}
+      <span className={`${small ? 'text-[11px]' : 'text-xs'} font-semibold`} style={{ color: ARENA.textSoft, fontFamily: BODY }}>— by Major ECN</span>
     </span>
   );
 }
@@ -39,11 +42,8 @@ export function ArenaTopBar({ nav }: { nav: ShellNav }) {
     <header className="relative z-20" style={{ borderBottom: `1px solid ${ARENA.line}` }}>
       <Container className="flex h-[4.25rem] items-center justify-between gap-4">
         <Link href={base} className="flex min-w-0 items-center gap-3" aria-label={`${nav.title} — accueil`}>
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white p-1.5">
-            <Image src="/major-ecn-logo.png" alt="Major ECN" width={56} height={56} className="h-full w-full object-contain" priority />
-          </span>
+          <Wordmark small />
           <span className="hidden h-6 w-px sm:block" style={{ background: ARENA.lineStrong }} />
-          <span className="hidden sm:inline-flex"><Wordmark small /></span>
           <span className="hidden truncate text-xs font-bold uppercase tracking-[0.14em] md:block" style={{ color: ARENA.textMuted, fontFamily: BODY }}>
             {nav.title}{nav.editionLabel ? ` · ${nav.editionLabel}` : ''}
           </span>
@@ -123,14 +123,16 @@ export function ArenaPage({ nav, children }: { nav: ShellNav; children: ReactNod
   );
 }
 
-/** Carte sombre standard. */
-export function Panel({ children, className = '', accent = false }: { children: ReactNode; className?: string; accent?: boolean }) {
+/** Carte standard ; `tone="light"` pour les sections claires. */
+export function Panel({ children, className = '', accent = false, tone = 'dark' }: { children: ReactNode; className?: string; accent?: boolean; tone?: 'dark' | 'light' }) {
+  const light = tone === 'light';
   return (
     <div
       className={`rounded-[1.25rem] p-5 sm:p-7 ${className}`}
       style={{
-        background: accent ? 'rgba(228,0,43,0.08)' : ARENA.surface,
-        boxShadow: `inset 0 0 0 1px ${accent ? 'rgba(228,0,43,0.3)' : ARENA.line}`,
+        background: accent ? (light ? '#FDF1F3' : 'rgba(228,0,43,0.08)') : light ? '#FFFFFF' : ARENA.surface,
+        boxShadow: light ? `inset 0 0 0 1px ${accent ? 'rgba(192,17,46,0.25)' : '#E8E7E3'}, 0 8px 24px -12px rgba(16,24,40,0.10)` : `inset 0 0 0 1px ${accent ? 'rgba(228,0,43,0.3)' : ARENA.line}`,
+        color: light ? '#14254E' : undefined,
       }}
     >
       {children}
