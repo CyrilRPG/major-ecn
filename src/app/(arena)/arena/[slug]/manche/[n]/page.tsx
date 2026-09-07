@@ -144,6 +144,7 @@ export default async function RoundPage({ params, searchParams }: Params) {
           <div className="mt-8 flex flex-wrap gap-3">
             {published && <Link href={`${base}/manche/${number}/corrections${preview ? '?preview=1' : ''}`} className="text-sm font-bold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft, fontFamily: BODY }}>Consulter les corrections</Link>}
             {preview ? <RestartPreviewButton slug={slug} roundNumber={number} /> : <Link href={`${base}/espace`} className="text-sm font-bold underline-offset-4 hover:underline" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Retour à mon espace</Link>}
+            {!preview && <Link href={`${base}/espace#inviter`} className="text-sm font-bold underline-offset-4 hover:underline" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Inviter un collègue</Link>}
           </div>
         </Container>
       </ArenaPage>

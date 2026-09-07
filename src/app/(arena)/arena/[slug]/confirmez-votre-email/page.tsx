@@ -3,6 +3,7 @@ import { ArenaPage, Panel } from '@/components/arena/arena-shell';
 import { ARENA, BODY, Container, DISPLAY, Eyebrow } from '@/components/arena/arena-ui';
 import { ResendConfirmation } from '@/components/arena/resend-confirmation';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
+import { siteUrl } from '@/lib/email/send';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,6 +34,7 @@ export default async function ConfirmEmailPage({ params, searchParams }: Params)
             </div>
           </div>
           {e && <div className="mt-6">{<ResendConfirmation slug={slug} email={e} />}</div>}
+          <p className="mt-6 text-sm" style={{ color: ARENA.textSoft, fontFamily: BODY }}>En attendant, invitez un collègue : partagez la page du tournoi <span className="break-all font-bold" style={{ color: ARENA.text }}>{siteUrl()}/arena/{slug}</span>. Votre lien personnel d’invitation vous attend dans votre espace.</p>
         </Panel>
       </Container>
     </ArenaPage>

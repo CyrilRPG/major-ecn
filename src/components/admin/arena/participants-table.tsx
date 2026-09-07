@@ -2,10 +2,10 @@
 
 import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Ban, Download, MailCheck, RotateCcw, Trash2, Unlock } from 'lucide-react';
+import { Ban, Download, MailCheck, Pencil, RotateCcw, Trash2, Unlock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { blockParticipant, deleteParticipantData, resendConfirmationAdmin, resetAttempt } from '@/app/admin/arena/actions';
+import { blockParticipant, deleteParticipantData, renameParticipant, resendConfirmationAdmin, resetAttempt } from '@/app/admin/arena/actions';
 
 export type ParticipantView = {
   id: string; pseudo: string; first_name: string; last_name: string; email: string; specialty: string;
@@ -95,6 +95,7 @@ export function ParticipantsTable({ tournamentId, rows }: { tournamentId: string
                 <td className="px-3 py-2">
                   <div className="flex justify-end gap-1">
                     {!p.confirmed && !p.anonymized && <Button variant="ghost" size="sm" title="Renvoyer la confirmation" disabled={pending} onClick={() => run(() => resendConfirmationAdmin(p.id))}><MailCheck className="h-4 w-4" /></Button>}
+                    {!p.anonymized && <Button variant="ghost" size="sm" title="Modérer le pseudonyme" disabled={pending} onClick={() => { const v = prompt('Nouveau pseudonyme :', p.pseudo); if (v && v.trim() !== p.pseudo) run(() => renameParticipant(p.id, v)); }}><Pencil className="h-4 w-4" /></Button>}
                     {!p.anonymized && (p.blocked
                       ? <Button variant="ghost" size="sm" title="Débloquer" disabled={pending} onClick={() => run(() => blockParticipant(p.id, '', false))}><Unlock className="h-4 w-4" /></Button>
                       : <Button variant="ghost" size="sm" title="Bloquer (exclusion §10)" disabled={pending} onClick={() => { const reason = prompt('Motif du blocage :'); if (reason !== null) run(() => blockParticipant(p.id, reason, true)); }}><Ban className="h-4 w-4" /></Button>)}

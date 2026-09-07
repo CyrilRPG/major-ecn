@@ -15,7 +15,7 @@ import { sanitizeBareme } from '@/lib/arena/scoring';
 import { anonymizeParticipant } from '@/lib/arena/sequence';
 import { newToken } from '@/lib/arena/session';
 import { remainingLabel, toDate, type TournamentStatus } from '@/lib/arena/time';
-import { defaultEmailSequence, qrpNs, type SequenceKind } from '@/lib/arena/types';
+import { defaultEmailSequence, isValidPseudo, pseudoKey, qrpNs, type SequenceKind } from '@/lib/arena/types';
 import { neutralizeQuestion } from './questions-actions';
 import { siteUrl } from '@/lib/email/send';
 
@@ -298,6 +298,20 @@ export async function blockParticipant(id: string, reason: string, block: boolea
   if (!p) return err('Participant introuvable.');
   await arenaDb().from('arena_participants').update({ blocked_at: block ? new Date().toISOString() : null, blocked_reason: block ? reason.trim() || null : null }).eq('id', id);
   await logAdmin(actor, { tournamentId: p.tournament_id, kind: block ? 'participant_blocked' : 'participant_unblocked', details: `${p.pseudo} (${p.email})${reason ? ` : ${reason}` : ''}` });
+  revalidate(p.tournament_id);
+  return { ok: true };
+}
+
+/** Modération du pseudonyme (§3.3) : renommage par l'administration, tracé ; le participant garde ses scores. */
+export async function renameParticipant(id: string, rawPseudo: string): Promise<Ok | Err> {
+  const actor = await ensureArenaAdmin();
+  const p = await getParticipant(id);
+  if (!p) return err('Participant introuvable.');
+  const pseudo = rawPseudo.trim();
+  if (!isValidPseudo(pseudo)) return err('Pseudonyme invalide (3 à 24 caractères : lettres, chiffres, espaces, tirets, points).');
+  const { error } = await arenaDb().from('arena_participants').update({ pseudo, pseudo_key: pseudoKey(pseudo) }).eq('id', id);
+  if (error) return err(String(error.code) === '23505' ? 'Ce pseudonyme est déjà pris dans ce tournoi.' : error.message);
+  await logAdmin(actor, { tournamentId: p.tournament_id, kind: 'participant_renamed', oldValue: p.pseudo, newValue: pseudo, details: `Pseudonyme modéré : « ${p.pseudo} » → « ${pseudo} » (${p.email}).` });
   revalidate(p.tournament_id);
   return { ok: true };
 }

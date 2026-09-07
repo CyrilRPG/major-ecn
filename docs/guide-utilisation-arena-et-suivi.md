@@ -33,6 +33,12 @@ correspondante dans `src/lib/modules-flags.ts` (`ARENA_PUBLIC_ENABLED`,
 Pour tester en mode test, connectez-vous à l'administration **dans le même navigateur**,
 puis ouvrez les pages publiques : elles s'affichent pour vous seul.
 
+Un **tournoi de démonstration** est prêt : « EVC Arena Médecine interne — Démo »
+(`/admin/arena`, landing `/arena/demo-medecine-interne`), 36 questions de médecine
+interne, manche 1 ouverte 7 jours, manches 2 et 3 programmées ensuite. Il se recrée à
+l'identique avec `node scripts/arena-demo-seed.mjs`. La matrice de conformité section
+par section est dans `docs/conformite-cahiers-des-charges.md`.
+
 ---
 
 ## 2. EVC Arena — tournoi de QCM
