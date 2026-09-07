@@ -44,14 +44,14 @@ export default async function RegisterPage({ params, searchParams }: Params) {
   return (
     <ArenaPage nav={ctx.nav}>
       <Stadium photo="seatsRed" darken={0.72} tint={0.2} position="center 40%" className="py-10 sm:py-16">
-        <Container className="max-w-xl">
-          <div className="rounded-[1.6rem] p-6 sm:p-9" style={{ background: 'rgba(11,15,20,0.88)', boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}, 0 50px 100px -40px rgba(0,0,0,0.95)`, backdropFilter: 'blur(10px)' }}>
+        <Container className="max-w-4xl">
+          <div className="rounded-[1.6rem] p-6 sm:p-10 lg:p-12" style={{ background: 'rgba(11,15,20,0.88)', boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}, 0 50px 100px -40px rgba(0,0,0,0.95)`, backdropFilter: 'blur(10px)' }}>
             <div className="flex flex-col items-center text-center">
               <ArenaLogoStack size="md" />
               <p className="mt-4 text-[1.35rem] leading-tight sm:text-[1.6rem]" style={{ ...CAPS, color: ARENA.text, letterSpacing: '0.04em' }}>
                 Relevez le défi. <span style={{ color: ARENA.red }}>Mesurez-vous aux meilleurs.</span>
               </p>
-              <p className="mt-2 text-[13.5px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
+              <p className="mx-auto mt-2 max-w-xl text-[13.5px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
                 {t.specialty}{t.edition_label ? ` · ${t.edition_label}` : ''}. Aucun paiement, aucune dotation : un entraînement ludique entre médecins candidats aux EVC.
               </p>
             </div>

@@ -112,14 +112,16 @@ export function RegisterForm({
         <Field label="Prénom" htmlFor="r-first" required><TextInput id="r-first" required autoComplete="given-name" value={firstName} onChange={(e) => setFirstName(e.target.value)} /></Field>
         <Field label="Nom" htmlFor="r-last" required><TextInput id="r-last" required autoComplete="family-name" value={lastName} onChange={(e) => setLastName(e.target.value)} /></Field>
       </div>
-      <Field label="Email" htmlFor="r-email" required hint="Un lien de confirmation vous sera envoyé : il authentifie votre compte.">
-        <TextInput id="r-email" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="prenom.nom@exemple.fr" />
-      </Field>
-      <Field label="Spécialité" htmlFor="r-spe" required>
-        <SelectInput id="r-spe" required value={specialty} onChange={(e) => setSpecialty(e.target.value)}>
-          {specialties.map((s) => <option key={s} value={s} style={{ color: '#111' }}>{s}</option>)}
-        </SelectInput>
-      </Field>
+      <div className="grid gap-4 sm:grid-cols-2 sm:items-start">
+        <Field label="Email" htmlFor="r-email" required hint="Un lien de confirmation vous sera envoyé : il authentifie votre compte.">
+          <TextInput id="r-email" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="prenom.nom@exemple.fr" />
+        </Field>
+        <Field label="Spécialité" htmlFor="r-spe" required>
+          <SelectInput id="r-spe" required value={specialty} onChange={(e) => setSpecialty(e.target.value)}>
+            {specialties.map((s) => <option key={s} value={s} style={{ color: '#111' }}>{s}</option>)}
+          </SelectInput>
+        </Field>
+      </div>
 
       <div>
         <Field
