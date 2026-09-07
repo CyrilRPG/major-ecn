@@ -809,7 +809,7 @@ function Formules({ specialite }: { specialite?: string }) {
                   </ul>
 
                   <Link
-                    href={lienPaiement(f.href, specialite)}
+                    href={lienPaiement(f.href, "Orthopédie")}
                     className="mt-6 flex items-center justify-center rounded-xl px-5 py-3.5 text-[14px] font-black tracking-tight text-white transition-transform duration-300 hover:scale-[1.02]"
                     style={{ background: f.p.grad, boxShadow: `0 18px 42px -22px ${f.p.ombre}` }}
                   >
@@ -1070,7 +1070,7 @@ function FaqSection() {
 export function OrthopediePageContent({ specialite }: { specialite?: string }) {
   return (
     <div className="overflow-x-hidden" style={{ background: '#FFFFFF' }}>
-      <AncreTunnel actif={!!specialite} />
+      <AncreTunnel actif />
       <Hero />
       <BlocSession />
       <GagnezDuTemps />

@@ -13,7 +13,7 @@
  */
 import { useState } from 'react';
 import { AlertTriangle, ArrowRight, Check, Clock, GraduationCap, Layers3, Phone } from 'lucide-react';
-import { APPROFONDI_SPECIALTIES, CONTENT_PENDING_NOTICE } from '@/lib/stripe/approfondi';
+import { APPROFONDI_SPECIALTIES, CONTENT_PENDING_NOTICE, getApprofondiSpecialty } from '@/lib/stripe/approfondi';
 import { CheckoutButton } from './checkout-button';
 import { CallbackRequestForm } from './callback-request-form';
 
@@ -27,9 +27,10 @@ function euros(cents: number): string {
   return (cents / 100).toLocaleString('fr-FR', { maximumFractionDigits: 0 });
 }
 
-export function ApprofondiPurchase() {
-  const [specKey, setSpecKey] = useState<string | null>(null);
-  const [tierId, setTierId] = useState<string | null>(null);
+export function ApprofondiPurchase({ initialSpecialty }: { initialSpecialty?: string }) {
+  const initialSpec = getApprofondiSpecialty(initialSpecialty);
+  const [specKey, setSpecKey] = useState<string | null>(initialSpec?.key ?? (initialSpecialty ? OTHER : null));
+  const [tierId, setTierId] = useState<string | null>(initialSpec?.tiers.find((t) => t.tier === 'base')?.id ?? null);
 
   const spec = APPROFONDI_SPECIALTIES.find((s) => s.key === specKey) ?? null;
   const tier = spec?.tiers.find((t) => t.id === tierId) ?? null;
@@ -55,6 +56,7 @@ export function ApprofondiPurchase() {
               key={s.key}
               type="button"
               onClick={() => pickSpecialty(s.key)}
+              aria-pressed={specKey === s.key}
               className="flex items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-[13.5px] font-semibold transition-colors"
               style={{
                 borderColor: specKey === s.key ? CTA.main : BORDER,
@@ -68,6 +70,7 @@ export function ApprofondiPurchase() {
           ))}
           <button
             type="button"
+            aria-pressed={isOther}
             onClick={() => { setSpecKey(OTHER); setTierId(null); }}
             className="flex items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-[13.5px] font-semibold transition-colors sm:col-span-2"
             style={{
@@ -96,6 +99,7 @@ export function ApprofondiPurchase() {
                   key={t.id}
                   type="button"
                   onClick={() => setTierId(t.id)}
+                  aria-pressed={active}
                   className="w-full rounded-xl border px-4 py-3 text-left transition-colors"
                   style={{
                     borderColor: active ? CTA.main : BORDER,
@@ -180,6 +184,7 @@ export function ApprofondiPurchase() {
             </div>
           )}
           <CheckoutButton
+            key={tier.id}
             formuleId="programme-approfondi"
             approfondiVariant={tier.id}
             label={`Payer ${euros(tier.amountCents)} € et créer mon compte`}

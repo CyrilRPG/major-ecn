@@ -44,12 +44,27 @@ export function DialogueSpecialite({
      dialogue sortait de l'écran. */
   const router = useRouter();
   const boite = useRef<HTMLDivElement>(null);
+  const declencheur = useRef<HTMLButtonElement>(null);
 
   // Fermeture au clavier + verrouillage du défilement d'arrière-plan.
   useEffect(() => {
     if (!ouvert) return;
+    const bouton = declencheur.current;
     const surEchap = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setOuvert(false);
+      if (e.key === 'Tab') {
+        const controls = boite.current?.querySelectorAll<HTMLElement>('button, a[href], [tabindex="0"]');
+        if (!controls?.length) return;
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (e.shiftKey && (document.activeElement === first || document.activeElement === boite.current)) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     document.addEventListener('keydown', surEchap);
     const overflow = document.body.style.overflow;
@@ -58,6 +73,7 @@ export function DialogueSpecialite({
     return () => {
       document.removeEventListener('keydown', surEchap);
       document.body.style.overflow = overflow;
+      bouton?.focus({ preventScroll: true });
     };
   }, [ouvert]);
 
@@ -68,7 +84,7 @@ export function DialogueSpecialite({
 
   return (
     <>
-      <button type="button" onClick={() => setOuvert(true)} className={className} style={style}>
+      <button ref={declencheur} type="button" aria-haspopup="dialog" aria-expanded={ouvert} onClick={() => setOuvert(true)} className={className} style={style}>
         {children}
       </button>
 

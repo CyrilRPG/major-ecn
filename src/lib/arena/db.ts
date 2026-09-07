@@ -1,0 +1,263 @@
+import 'server-only';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { fetchAllRows } from '@/lib/supabase/fetch-all';
+import { readSession } from './session';
+import { sanitizeBareme, scoreQuestion, type Bareme } from './scoring';
+import { computeStandings, type RankingAttempt, type RankingRound, type Standing } from './ranking';
+import { effectiveStatus, type TournamentStatus } from './time';
+import {
+  defaultEmailSequence,
+  type AnswerRow, type AttemptRow, type ParticipantRow, type QuestionRow, type ReportRow, type RoundRow, type TournamentRow,
+} from './types';
+
+/**
+ * EVC Arena — accès aux données (service role). Les tables `arena_*` sont
+ * réservées à l'administration côté RLS : tout passe par ici, et chaque
+ * fonction publique ne renvoie que ce que l'appelant a le droit de voir.
+ */
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function arenaDb(): any {
+  return createAdminClient();
+}
+
+export function normalizeTournament(row: Record<string, unknown>): TournamentRow {
+  return {
+    ...(row as unknown as TournamentRow),
+    bareme: sanitizeBareme(row.bareme),
+    email_sequence: defaultEmailSequence(row.email_sequence),
+    texts: (row.texts && typeof row.texts === 'object' ? row.texts : {}) as Record<string, string>,
+    threshold_pct: Number(row.threshold_pct ?? 50),
+  };
+}
+
+export async function getTournamentBySlug(slug: string): Promise<TournamentRow | null> {
+  const { data } = await arenaDb().from('arena_tournaments').select('*').eq('slug', slug).maybeSingle();
+  return data ? normalizeTournament(data) : null;
+}
+
+export async function getTournament(id: string): Promise<TournamentRow | null> {
+  const { data } = await arenaDb().from('arena_tournaments').select('*').eq('id', id).maybeSingle();
+  return data ? normalizeTournament(data) : null;
+}
+
+export async function listTournaments(): Promise<TournamentRow[]> {
+  const { data } = await arenaDb().from('arena_tournaments').select('*').order('created_at', { ascending: false });
+  return ((data ?? []) as Record<string, unknown>[]).map(normalizeTournament);
+}
+
+export async function listRounds(tournamentId: string): Promise<RoundRow[]> {
+  const { data } = await arenaDb().from('arena_rounds').select('*').eq('tournament_id', tournamentId).order('number');
+  return (data ?? []) as RoundRow[];
+}
+
+export async function getRound(id: string): Promise<RoundRow | null> {
+  const { data } = await arenaDb().from('arena_rounds').select('*').eq('id', id).maybeSingle();
+  return (data as RoundRow) ?? null;
+}
+
+function normalizeQuestion(q: Record<string, unknown>): QuestionRow {
+  return {
+    ...(q as unknown as QuestionRow),
+    weight: Number(q.weight ?? 1),
+    images: Array.isArray(q.images) ? (q.images as string[]) : [],
+    items: Array.isArray(q.items) ? (q.items as QuestionRow['items']) : [],
+  };
+}
+
+export async function listQuestions(roundId: string): Promise<QuestionRow[]> {
+  const { data } = await arenaDb().from('arena_questions').select('*').eq('round_id', roundId).order('order_index');
+  return ((data ?? []) as Record<string, unknown>[]).map(normalizeQuestion);
+}
+
+export async function listQuestionsForRounds(roundIds: string[]): Promise<QuestionRow[]> {
+  if (roundIds.length === 0) return [];
+  const { data } = await arenaDb().from('arena_questions').select('*').in('round_id', roundIds).order('order_index');
+  return ((data ?? []) as Record<string, unknown>[]).map(normalizeQuestion);
+}
+
+export async function getQuestion(id: string): Promise<QuestionRow | null> {
+  const { data } = await arenaDb().from('arena_questions').select('*').eq('id', id).maybeSingle();
+  return data ? normalizeQuestion(data) : null;
+}
+
+export async function getParticipant(id: string): Promise<ParticipantRow | null> {
+  const { data } = await arenaDb().from('arena_participants').select('*').eq('id', id).maybeSingle();
+  return (data as ParticipantRow) ?? null;
+}
+
+export async function findParticipantByEmail(tournamentId: string, email: string): Promise<ParticipantRow | null> {
+  const { data } = await arenaDb().from('arena_participants').select('*').eq('tournament_id', tournamentId).eq('email', email).maybeSingle();
+  return (data as ParticipantRow) ?? null;
+}
+
+export async function listParticipants(tournamentId: string): Promise<ParticipantRow[]> {
+  return fetchAllRows<ParticipantRow>((from, to) =>
+    arenaDb().from('arena_participants').select('*').eq('tournament_id', tournamentId).order('id').range(from, to),
+  );
+}
+
+export async function listAttemptsForRounds(roundIds: string[], includePreview = false): Promise<AttemptRow[]> {
+  if (roundIds.length === 0) return [];
+  return fetchAllRows<AttemptRow>((from, to) => {
+    let q = arenaDb().from('arena_attempts').select('*').in('round_id', roundIds);
+    if (!includePreview) q = q.eq('is_preview', false);
+    return q.order('id').range(from, to);
+  });
+}
+
+export async function getAttempt(roundId: string, participantId: string): Promise<AttemptRow | null> {
+  const { data } = await arenaDb().from('arena_attempts').select('*').eq('round_id', roundId).eq('participant_id', participantId).maybeSingle();
+  return (data as AttemptRow) ?? null;
+}
+
+export async function getAttemptById(id: string): Promise<AttemptRow | null> {
+  const { data } = await arenaDb().from('arena_attempts').select('*').eq('id', id).maybeSingle();
+  return (data as AttemptRow) ?? null;
+}
+
+export async function getPreviewAttempt(roundId: string, userId: string): Promise<AttemptRow | null> {
+  const { data } = await arenaDb().from('arena_attempts').select('*').eq('round_id', roundId).eq('preview_user_id', userId).eq('is_preview', true).maybeSingle();
+  return (data as AttemptRow) ?? null;
+}
+
+export async function listAnswers(attemptId: string): Promise<AnswerRow[]> {
+  const { data } = await arenaDb().from('arena_answers').select('*').eq('attempt_id', attemptId).order('validated_at');
+  return (data ?? []) as AnswerRow[];
+}
+
+export async function listReportsForParticipant(participantId: string): Promise<ReportRow[]> {
+  const { data } = await arenaDb().from('arena_reports').select('*').eq('participant_id', participantId);
+  return (data ?? []) as ReportRow[];
+}
+
+export async function arenaLog(entry: {
+  tournamentId: string | null;
+  roundId?: string | null;
+  actorId?: string | null;
+  actorLabel?: string | null;
+  kind: string;
+  oldValue?: unknown;
+  newValue?: unknown;
+  details?: string | null;
+}): Promise<void> {
+  try {
+    await arenaDb().from('arena_log').insert({
+      tournament_id: entry.tournamentId,
+      round_id: entry.roundId ?? null,
+      actor_id: entry.actorId ?? null,
+      actor_label: entry.actorLabel ?? null,
+      kind: entry.kind,
+      old_value: entry.oldValue ?? null,
+      new_value: entry.newValue ?? null,
+      details: entry.details ?? null,
+    });
+  } catch (err) {
+    console.error('[arena] journal', err);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Barème effectif et maxima                                            */
+/* ------------------------------------------------------------------ */
+
+/** Barème appliqué à une manche : l'instantané verrouillé à l'ouverture (§6.10), sinon celui du tournoi. */
+export function effectiveBareme(t: TournamentRow, r: RoundRow): Bareme {
+  return r.bareme_snapshot ? sanitizeBareme(r.bareme_snapshot) : t.bareme;
+}
+
+export function roundDuration(t: TournamentRow, r: RoundRow): number {
+  return r.duration_minutes ?? t.round_duration_minutes;
+}
+
+/** Maximum atteignable d'une manche : questions non neutralisées, pondération comprise. */
+export function roundMaxScore(questions: readonly QuestionRow[], bareme: Bareme): number {
+  let max = 0;
+  for (const q of questions) {
+    if (q.neutralized_at) continue;
+    max += scoreQuestion({ type: q.type, expected_count: q.expected_count, weight: q.weight, items: q.items }, [], bareme).max;
+  }
+  return Math.round(max * 1000) / 1000;
+}
+
+/* ------------------------------------------------------------------ */
+/* Classement                                                          */
+/* ------------------------------------------------------------------ */
+
+export type TournamentSnapshot = {
+  tournament: TournamentRow;
+  rounds: RoundRow[];
+  questionsByRound: Map<string, QuestionRow[]>;
+  status: TournamentStatus;
+  openRound: number | null;
+};
+
+export async function loadTournamentSnapshot(t: TournamentRow, now = new Date()): Promise<TournamentSnapshot> {
+  const rounds = await listRounds(t.id);
+  const questions = await listQuestionsForRounds(rounds.map((r) => r.id));
+  const questionsByRound = new Map<string, QuestionRow[]>();
+  for (const q of questions) {
+    const list = questionsByRound.get(q.round_id) ?? [];
+    list.push(q);
+    questionsByRound.set(q.round_id, list);
+  }
+  const eff = effectiveStatus(t.status, rounds, now);
+  return { tournament: t, rounds, questionsByRound, status: eff.status, openRound: eff.openRound };
+}
+
+export async function computeTournamentStandings(snap: TournamentSnapshot): Promise<{ standings: Standing[]; isFinal: boolean; countedRounds: RoundRow[] }> {
+  const { tournament: t, rounds } = snap;
+  const rankingRounds: RankingRound[] = rounds.map((r) => ({
+    id: r.id,
+    number: r.number,
+    counted: Boolean(r.results_published_at),
+    maxScore: roundMaxScore(snap.questionsByRound.get(r.id) ?? [], effectiveBareme(t, r)),
+  }));
+  const publishedRounds = rounds.filter((r) => r.results_published_at);
+  const isFinal = rounds.length > 0 && publishedRounds.length === rounds.length;
+  const attempts = await listAttemptsForRounds(publishedRounds.map((r) => r.id));
+  // Une manche sans aucun participant est ignorée dans le cumul (§10).
+  const withAttempts = new Set(attempts.filter((a) => a.status !== 'in_progress').map((a) => a.round_id));
+  const countedRounds = publishedRounds.filter((r) => withAttempts.has(r.id));
+  for (const rr of rankingRounds) rr.counted = rr.counted && withAttempts.has(rr.id);
+  const participants = await listParticipants(t.id);
+  const rankingAttempts: RankingAttempt[] = attempts
+    .filter((a) => a.status !== 'in_progress' && a.participant_id)
+    .map((a) => ({
+      participantId: a.participant_id as string,
+      roundId: a.round_id,
+      score: Number(a.score ?? 0),
+      perfectCount: a.perfect_count ?? 0,
+      durationSeconds: a.duration_seconds ?? 0,
+      truncated: a.truncated,
+    }));
+  const standings = computeStandings(
+    rankingRounds,
+    rankingAttempts,
+    participants.map((p) => ({
+      id: p.id,
+      pseudo: p.pseudo,
+      avatarSeed: p.avatar_seed,
+      excluded: Boolean(p.blocked_at || p.anonymized_at || !p.email_confirmed_at),
+    })),
+    { thresholdPct: t.threshold_pct, minRoundsFinal: t.min_rounds_final, isFinal },
+  );
+  return { standings, isFinal, countedRounds };
+}
+
+/* ------------------------------------------------------------------ */
+/* Participant courant                                                 */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Participant authentifié pour ce tournoi (cookie signé + compte confirmé,
+ * non bloqué, non anonymisé). Null sinon : l'appelant redirige vers la
+ * connexion.
+ */
+export async function currentParticipant(tournamentId: string): Promise<ParticipantRow | null> {
+  const s = await readSession();
+  if (!s || s.tournamentId !== tournamentId) return null;
+  const p = await getParticipant(s.participantId);
+  if (!p || p.tournament_id !== tournamentId || !p.email_confirmed_at || p.blocked_at || p.anonymized_at) return null;
+  return p;
+}

@@ -18,7 +18,15 @@ export type AuditEntity =
   | 'mock_exam_question'
   | 'mock_exam_submission'
   | 'exercise_import'
-  | 'blog_post';
+  | 'blog_post'
+  | 'arena_tournament'
+  | 'arena_round'
+  | 'arena_question'
+  | 'arena_participant'
+  | 'suivi_campaign'
+  | 'suivi_appointment'
+  | 'suivi_report'
+  | 'suivi_settings';
 
 export type AuditPayload = {
   actor: Pick<Profile, 'id' | 'first_name' | 'last_name' | 'email' | 'role'>;

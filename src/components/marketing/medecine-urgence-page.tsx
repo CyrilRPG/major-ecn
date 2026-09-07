@@ -603,7 +603,7 @@ function Formules({ specialite, paliers }: { specialite?: string; paliers: Palie
                   </ul>
                   <p className="mt-auto text-center text-[11.5px]" style={{ color: INK_MUTED, fontFamily: FONT_BODY }}>Paiement en 1 ou 4 fois</p>
                   <Link
-                    href={lienPaiement(f.href, specialite)}
+                    href={lienPaiement(f.href, "Médecine d’urgence")}
                     className="mt-4 flex items-center justify-center rounded-lg px-6 py-3 text-[13px] font-black tracking-tight text-white"
                     style={{ background: f.p.grad }}
                   >
@@ -649,7 +649,7 @@ function Formules({ specialite, paliers }: { specialite?: string; paliers: Palie
               connaissances prioritaires, entraînez-vous efficacement et concentrez votre temps sur vos lacunes clés.
             </p>
             <Link
-              href={lienPaiement('/formules/intensive', specialite)}
+              href={lienPaiement('/formules/intensive', "Médecine d’urgence")}
               className="inline-flex items-center justify-center rounded-lg px-7 py-3.5 text-[13.5px] font-black tracking-tight text-white transition-transform duration-300 hover:scale-[1.02]"
               style={{ background: INT.grad }}
             >
@@ -891,7 +891,7 @@ export function MedecineUrgencePageContent({
 }) {
   return (
     <div className="overflow-x-hidden" style={{ background: '#FFFFFF' }}>
-      <AncreTunnel actif={!!specialite} />
+      <AncreTunnel actif />
       <FilAriane />
       <Hero />
       <Reperes />

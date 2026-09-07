@@ -655,7 +655,7 @@ function Formules({ specialite, paliers }: { specialite?: string; paliers: Palie
                   ))}
                 </div>
                 <Link
-                  href={lienPaiement('/formules/essentielle', specialite)}
+                  href={lienPaiement('/formules/essentielle', "Pédiatrie")}
                   className="mt-auto flex items-center justify-center rounded-lg px-6 py-3 text-[13px] font-black tracking-tight text-white"
                   style={{ background: ESS.grad }}
                 >
@@ -681,7 +681,7 @@ function Formules({ specialite, paliers }: { specialite?: string; paliers: Palie
                   ))}
                 </ul>
                 <Link
-                  href={lienPaiement('/formules/intensive', specialite)}
+                  href={lienPaiement('/formules/intensive', "Pédiatrie")}
                   className="mt-auto flex items-center justify-center rounded-lg px-6 py-3 text-[13px] font-black tracking-tight text-white"
                   style={{ background: INT.grad }}
                 >
@@ -716,7 +716,7 @@ function Formules({ specialite, paliers }: { specialite?: string; paliers: Palie
                   ))}
                 </ul>
                 <Link
-                  href={lienPaiement('/formules/programme-approfondi', specialite)}
+                  href={lienPaiement('/formules/programme-approfondi', "Pédiatrie")}
                   className="mt-auto flex items-center justify-center rounded-lg px-6 py-3 text-[13px] font-black tracking-tight text-white"
                   style={{ background: APP.grad }}
                 >
@@ -1001,7 +1001,7 @@ export function PediatriePageContent({
 }) {
   return (
     <div className="overflow-x-hidden" style={{ background: '#FFFFFF' }}>
-      <AncreTunnel actif={!!specialite} />
+      <AncreTunnel actif />
       <FilAriane />
       <Hero />
       <BlocSession />

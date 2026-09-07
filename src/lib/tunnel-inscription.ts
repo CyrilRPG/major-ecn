@@ -20,11 +20,16 @@ export const PARAM_SPECIALITE = 'specialite';
 
 /**
  * Spécialités dont la page dédiée porte réellement un bloc de formules
- * (ancre `#formules`). Les autres — y compris Médecine générale, dont la page
- * ne présente pas les tarifs — passent par la page Tarifs, qui porte les trois
- * mêmes cartes.
+ * (ancre `#formules`). Les spécialités sans page dédiée passent par Tarifs.
  */
 export const PAGE_FORMULES_PAR_SPECIALITE: Record<string, string> = {
+  'Médecine générale': '/specialites/medecine-generale',
+  'Cardiologie': '/specialites/cardiologie-et-maladies-vasculaires',
+  'Pédiatrie': '/specialites/pediatrie',
+  'Médecine d’urgence': '/specialites/medecine-d-urgence',
+  'Psychiatrie': '/specialites/psychiatrie',
+  'Radiologie et imagerie médicale': '/specialites/radiologie-et-imagerie-medicale',
+  'Odontologie': '/specialites/odontologie-chirurgie-dentaire',
   'Orthopédie': '/specialites/chirurgie-orthopedique-et-traumatologie',
   'Anesthésie-réanimation': '/specialites/anesthesie-reanimation',
 };

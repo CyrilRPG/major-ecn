@@ -22,6 +22,8 @@ const nextConfig: NextConfig = {
   // Search Console (rapport « Pages » → indexées + 404).
   async redirects() {
     return [
+      { source: '/specialites/radiologie', destination: '/specialites/radiologie-et-imagerie-medicale', permanent: true },
+      { source: '/specialites/radiodiagnostic-et-imagerie-medicale', destination: '/specialites/radiologie-et-imagerie-medicale', permanent: true },
       // `/formules` n'a pas de page d'index (seulement /formules/<offre>) et
       // renvoyait un 404, alors que la page était liée depuis /contact et
       // explorée par Google. Les trois offres sont présentées sur /tarifs.

@@ -933,7 +933,7 @@ function Formules({
                 <div className="mt-auto flex flex-wrap items-center justify-between gap-4 border-t pt-6" style={{ borderColor: LINE_SOFT }}>
                   <p className="text-[2rem] font-black leading-none tabular-nums" style={{ color: ESS.deep, letterSpacing: '-0.03em' }}>495 €</p>
                   <Link
-                    href={lienPaiement('/formules/essentielle', specialite)}
+                    href={lienPaiement('/formules/essentielle', "Médecine générale")}
                     className="inline-flex items-center justify-center rounded-lg px-6 py-3 text-[13px] font-black tracking-tight text-white"
                     style={{ background: ESS.grad }}
                   >
@@ -969,7 +969,7 @@ function Formules({
                 <div className="mt-auto flex flex-wrap items-center justify-between gap-4 border-t pt-6" style={{ borderColor: LINE_SOFT }}>
                   <p className="text-[2rem] font-black leading-none tabular-nums" style={{ color: INT.deep, letterSpacing: '-0.03em' }}>995 €</p>
                   <Link
-                    href={lienPaiement('/formules/intensive', specialite)}
+                    href={lienPaiement('/formules/intensive', "Médecine générale")}
                     className="inline-flex items-center justify-center rounded-lg px-6 py-3 text-[13px] font-black tracking-tight text-white"
                     style={{ background: INT.grad }}
                   >
@@ -1016,7 +1016,7 @@ function Formules({
                     </span>
                   </p>
                   <Link
-                    href={lienPaiement('/formules/programme-approfondi', specialite)}
+                    href={lienPaiement('/formules/programme-approfondi', "Médecine générale")}
                     className="inline-flex items-center justify-center rounded-lg px-6 py-3 text-[13px] font-black tracking-tight text-white"
                     style={{ background: APP.grad }}
                   >
@@ -1235,7 +1235,7 @@ export function MedecineGeneralePageContent({
 }) {
   return (
     <div className="overflow-x-hidden" style={{ background: '#FFFFFF' }}>
-      <AncreTunnel actif={!!specialite} />
+      <AncreTunnel actif />
       <FilAriane />
       <Hero />
       <BlocSession />

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { applyDeletionPolicy } from '@/lib/suivi/sweep';
 
 export async function POST(req: Request) {
   const guard = await requireAdminRequest(req);
@@ -16,6 +17,10 @@ export async function POST(req: Request) {
   try { admin = createAdminClient(); } catch (e) {
     return NextResponse.json({ error: e instanceof Error ? e.message : 'Service indisponible' }, { status: 500 });
   }
+
+  // Suivi individuel (§18) : selon le réglage, une trace statistique anonyme
+  // est conservée avant que la cascade n'efface les données nominatives.
+  try { await applyDeletionPolicy(body.userId); } catch (e) { console.error('[suivi] politique de suppression :', e); }
 
   // Supabase auth.admin.deleteUser supprime le user. Le profil cascade via ON DELETE CASCADE.
   const { error } = await admin.auth.admin.deleteUser(body.userId);

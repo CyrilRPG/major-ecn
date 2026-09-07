@@ -29,6 +29,14 @@
     {
       "path": "/api/cron/audit-corriges-recolte",
       "schedule": "*/30 * * * *"
+    },
+    {
+      "path": "/api/cron/arena-sweep",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/suivi-sweep",
+      "schedule": "*/15 * * * *"
     }
   ]
 }

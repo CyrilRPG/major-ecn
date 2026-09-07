@@ -648,7 +648,7 @@ function Formules({ specialite, paliers }: { specialite?: string; paliers: Palie
                     <span className="mt-1 block text-[2rem] font-black tabular-nums" style={{ letterSpacing: '-0.03em' }}>{f.prix}</span>
                   </p>
                   <Link
-                    href={lienPaiement(f.href, specialite)}
+                    href={lienPaiement(f.href, "Odontologie")}
                     className="mt-5 flex items-center justify-center rounded-lg px-6 py-3 text-[13px] font-black tracking-tight text-white"
                     style={{ background: f.p.grad }}
                   >
@@ -898,7 +898,7 @@ export function OdontologiePageContent({
 }) {
   return (
     <div className="overflow-x-hidden" style={{ background: '#FFFFFF' }}>
-      <AncreTunnel actif={!!specialite} />
+      <AncreTunnel actif />
       <FilAriane />
       <Hero />
       <Reperes />

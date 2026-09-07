@@ -13,7 +13,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   AlertTriangle, ArrowRight, Calendar, Check, CheckCircle2,
-  GitFork, Loader2, Lock, LogIn, Mail, Phone, ShieldCheck, Sparkles,
+  GitFork, Loader2, Lock, LogIn, Mail, Phone, ShieldCheck,
   Stethoscope, User, UserCheck,
 } from 'lucide-react';
 import type { FormuleId } from '@/lib/stripe';
@@ -574,7 +574,6 @@ export function CheckoutButton({
 
       {/* Stripe powered */}
       <p className="flex items-center justify-center gap-1.5 text-[11px]" style={{ color: '#7A8499' }}>
-        <Sparkles className="h-3 w-3" style={{ color: color.main }} />
         Paiement traité par <strong style={{ color: '#635BFF' }}>Stripe</strong> · Aucune carte stockée chez nous
       </p>
     </form>

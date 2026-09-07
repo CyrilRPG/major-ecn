@@ -68,6 +68,13 @@ export function ProfilPopup({ autoOpen = true }: { autoOpen?: boolean }) {
     const tryTrigger = () => {
       if (shownRef.current || !minPassed) return;
       if (Date.now() - start < MIN_DELAY_MS) return;
+      // Le choix d'une offre et le paiement restent prioritaires sur le diagnostic.
+      const url = new URL(window.location.href);
+      if (url.pathname.startsWith('/formules/') || url.searchParams.has('specialite')) return;
+      if (url.hash === '#formules' || url.hash === '#choisir-formule') return;
+      if (document.querySelector('[role="dialog"][aria-modal="true"]')) return;
+      const tarifs = document.getElementById('formules')?.getBoundingClientRect();
+      if (tarifs && tarifs.top < window.innerHeight && tarifs.bottom > 0) return;
       openPopup('teaser');
     };
     const onScroll = () => {

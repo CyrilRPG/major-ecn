@@ -702,9 +702,10 @@ function PaymentSection({ variant, c, specialite }: { variant: Variant; c: Payme
 
             <div className="mt-6">
               {isApprofondi ? (
-                <ApprofondiPurchase />
+                <ApprofondiPurchase key={specialiteTunnel ?? 'libre'} initialSpecialty={specialiteTunnel} />
               ) : (
                 <CheckoutButton
+                  key={specialiteTunnel ?? 'libre'}
                   formuleId={VARIANT_TO_FORMULE_ID[variant]}
                   label={`Payer ${c.price} € et créer mon compte`}
                   color={ctaColor}

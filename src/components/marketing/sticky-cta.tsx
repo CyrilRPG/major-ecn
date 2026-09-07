@@ -65,7 +65,7 @@ const ROUTES: RouteConfig[] = [
     // Page d'une spécialité (ex. /specialites/medecine-generale)
     test: (p) => p.startsWith('/specialites/'),
     zones: [
-      { label: 'Voir les formules', dest: 'sel:#programme', equivalent: 'a[href^="/formules"]' },
+      { label: 'Voir les formules', dest: '#formules', equivalent: 'a[href^="/formules"]' },
     ],
   },
   {
@@ -146,7 +146,7 @@ export function StickyCtaBar() {
 
   useEffect(() => {
     if (!cfg) return;
-    update();
+    const frame = window.requestAnimationFrame(update);
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     window.addEventListener('focusin', update);
@@ -154,6 +154,7 @@ export function StickyCtaBar() {
     // Filet de sécurité pour les environnements sans événement scroll fiable.
     const tick = window.setInterval(update, 500);
     return () => {
+      window.cancelAnimationFrame(frame);
       window.removeEventListener('scroll', update);
       window.removeEventListener('resize', update);
       window.removeEventListener('focusin', update);

@@ -55,6 +55,8 @@ export async function updateSession(request: NextRequest) {
     path.startsWith('/accueil') ||
     path.startsWith('/entrainement') ||
     path.startsWith('/agenda') ||
+    // Suivi individuel : rendez-vous du candidat (session à rafraîchir comme /agenda).
+    path.startsWith('/mes-rendez-vous') ||
     path.startsWith('/admin') ||
     path.startsWith('/cours') ||
     path.startsWith('/facultes') ||

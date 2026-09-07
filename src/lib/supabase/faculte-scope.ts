@@ -45,6 +45,21 @@ const TABLES_CLOISONNEES = new Set([
   'admin_audit_logs',
   'forum_questions',
   'item_popups',
+  // EVC Arena (tournoi de QCM)
+  'arena_bareme_templates',
+  'arena_tournaments',
+  'arena_participants',
+  // Suivi pédagogique individuel
+  'suivi_settings',
+  'suivi_staff_roles',
+  'suivi_campaigns',
+  'suivi_slots',
+  'suivi_appointments',
+  'suivi_reports',
+  'suivi_alerts',
+  'suivi_email_templates',
+  'suivi_history',
+  'suivi_booking_tokens',
 ]);
 
 /**

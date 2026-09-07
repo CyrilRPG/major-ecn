@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  ArrowRight, CalendarDays, ChevronRight, Home, Lock,
+  ArrowRight, CalendarCheck, CalendarDays, ChevronRight, Home, Lock,
   MousePointerClick, NotebookPen, PencilRuler, PenLine, RefreshCcw, Star, Target, Trophy, X,
 } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
@@ -200,6 +200,7 @@ export function Navigator({
   const trainActive = pathname.startsWith('/entrainement');
   const transversalActive = pathname.startsWith('/revisions-transversales');
   const agendaActive = pathname.startsWith('/agenda');
+  const rendezVousActive = pathname.startsWith('/mes-rendez-vous');
   const notesActive = pathname.startsWith('/notes');
   const revoirActive = pathname.startsWith('/revoir');
   const mesEntrainementsActive = pathname.startsWith('/mes-entrainements');
@@ -277,6 +278,12 @@ export function Navigator({
               <Link href="/agenda" className={topLevelClass(agendaActive)}>
                 <CalendarDays className="h-[18px] w-[18px] shrink-0" />
                 Agenda
+              </Link>
+
+              {/* Suivi individuel : rendez-vous du candidat avec l'équipe pédagogique. */}
+              <Link href="/mes-rendez-vous" className={topLevelClass(rendezVousActive)}>
+                <CalendarCheck className="h-[18px] w-[18px] shrink-0" />
+                Mes rendez-vous
               </Link>
 
               <Link href="/notes" className={topLevelClass(notesActive)}>

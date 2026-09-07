@@ -128,6 +128,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
     // adaptée et l'accès au forum d'entraide entre profs/élèves.
     const blockedPrefixes = [
       '/agenda',
+      '/mes-rendez-vous',
       '/notes',
       '/revisions-transversales',
       '/entrainement',

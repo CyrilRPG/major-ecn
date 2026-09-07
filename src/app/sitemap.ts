@@ -38,6 +38,8 @@ const STATIC_ROUTES: {
   { path: '/specialites/anesthesie-reanimation', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/specialites/cardiologie-et-maladies-vasculaires', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/specialites/pediatrie', priority: 0.7, changeFrequency: 'monthly' },
+  { path: '/specialites/psychiatrie', priority: 0.7, changeFrequency: 'monthly' },
+  { path: '/specialites/radiologie-et-imagerie-medicale', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/specialites/medecine-d-urgence', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/specialites/odontologie-chirurgie-dentaire', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/temoignages', priority: 0.7, changeFrequency: 'weekly' },

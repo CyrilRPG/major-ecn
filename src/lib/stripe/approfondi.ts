@@ -14,6 +14,8 @@
  * Module « pur » (aucune dépendance serveur) → importable client ET serveur.
  */
 
+import { specialtyByName } from '@/lib/data/enrollable-colleges';
+
 /** Sous-matières de Médecine Générale incluses dans l'offre « Approfondi » (13 spé).
  *  L'offre « Approfondi + » couvre la totalité des sous-matières MG.
  *
@@ -120,6 +122,18 @@ export const APPROFONDI_SPECIALTIES: ApprofondiSpecialty[] = [
         amountCents: 269500, hoursLabel: 'Plus de 50 h de cours',
         envPriceId: 'STRIPE_PRICE_APPRO_PSY_PLUS',
         targetCollege: 'col-psychiatrie',
+      },
+    ],
+  },
+  {
+    key: 'radiologie',
+    name: 'Radiologie et imagerie médicale',
+    tiers: [
+      {
+        id: 'radio', tier: 'base', tierLabel: 'Approfondi',
+        amountCents: 229500,
+        envPriceId: 'STRIPE_PRICE_APPRO_RADIO',
+        targetCollege: null, contentPending: true,
       },
     ],
   },
@@ -305,6 +319,17 @@ const TIER_BY_ID: Record<string, ApprofondiTier & { specialtyName: string }> = (
 export function getApprofondiTier(id: string | null | undefined): (ApprofondiTier & { specialtyName: string }) | null {
   if (!id) return null;
   return TIER_BY_ID[id] ?? null;
+}
+
+/** Retrouve l'offre de la spécialité portée par le tunnel, y compris ses alias. */
+export function getApprofondiSpecialty(name: string | null | undefined): ApprofondiSpecialty | null {
+  if (!name) return null;
+  const specialty = specialtyByName(name);
+  const norm = (value: string) => value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
+  return APPROFONDI_SPECIALTIES.find((item) =>
+    norm(item.name) === norm(specialty?.name ?? name)
+    || (specialty?.collegeId && item.tiers.some((tier) => tier.targetCollege === specialty.collegeId)),
+  ) ?? null;
 }
 
 /** true si un id d'offre Approfondi est valide. */

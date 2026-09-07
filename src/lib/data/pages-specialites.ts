@@ -11,6 +11,9 @@ export const PAGES_SPECIALITES = new Map<string, string>([
   ['anesthesie-reanimation', '/specialites/anesthesie-reanimation'],
   ['cardiologie-et-maladies-vasculaires', '/specialites/cardiologie-et-maladies-vasculaires'],
   ['pediatrie', '/specialites/pediatrie'],
+  ['psychiatrie', '/specialites/psychiatrie'],
+  ['radiodiagnostic-et-imagerie-medicale', '/specialites/radiologie-et-imagerie-medicale'],
+  ['radiologie-et-imagerie-medicale', '/specialites/radiologie-et-imagerie-medicale'],
   ['medecine-d-urgence', '/specialites/medecine-d-urgence'],
   ['odontologie', '/specialites/odontologie-chirurgie-dentaire'],
 ]);
