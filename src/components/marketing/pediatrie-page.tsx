@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Reveal } from './reveal';
 import { AncreTunnel } from './ancre-tunnel';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
+import { ACCROCHE_FORMULE } from '@/lib/formules-accroches';
 import { lienPaiement } from '@/lib/tunnel-inscription';
 import { FAQ_PEDIA, type BlocFaqPedia } from '@/lib/data/faq-pediatrie';
 
@@ -597,6 +598,7 @@ const ESS_EXTERNE = ['Banque complète de QROC', 'Annales EVC corrigées', 'Cas 
 
 const INTENSIVE = [
   'Tout le contenu de l’Essentielle',
+  'Annales EVC corrigées',
   '18 heures de cours et d’accompagnement',
   'Replays des cours et entraînements',
   'Entraînements intensifs QCM ou QROC selon votre voie',
@@ -634,7 +636,7 @@ function Formules({ specialite, paliers }: { specialite?: string; paliers: Palie
             <article className="flex h-full flex-col overflow-hidden rounded-[1.25rem] bg-white" style={{ border: `1px solid ${ESS.line}` }}>
               <h3 className="px-6 py-3.5 text-center text-[13.5px] font-black uppercase tracking-[0.08em] text-white" style={{ background: ESS.grad }}>Essentielle</h3>
               <div className="flex flex-1 flex-col px-6 py-6">
-                <p className="text-center text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>Pour travailler en autonomie</p>
+                <p className="text-center text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{ACCROCHE_FORMULE.essentielle}</p>
                 <p className="mt-3 text-center text-[2rem] font-black leading-none tabular-nums" style={{ color: ESS.deep, letterSpacing: '-0.03em' }}>495 €</p>
                 <div className="mb-7 mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-1 xl:gap-4">
                   {[
@@ -670,7 +672,8 @@ function Formules({ specialite, paliers }: { specialite?: string; paliers: Palie
             <article className="flex h-full flex-col overflow-hidden rounded-[1.25rem] bg-white" style={{ border: `1px solid ${INT.line}` }}>
               <h3 className="px-6 py-3.5 text-center text-[13.5px] font-black uppercase tracking-[0.08em] text-white" style={{ background: INT.grad }}>Intensive</h3>
               <div className="flex flex-1 flex-col px-6 py-6">
-                <p className="text-center text-[12px] font-black uppercase tracking-[0.05em]" style={{ color: NAVY }}>18 h de cours et d’accompagnement</p>
+                <p className="text-center text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{ACCROCHE_FORMULE.intensive}</p>
+                <p className="mt-2 text-center text-[12px] font-black uppercase tracking-[0.05em]" style={{ color: NAVY }}>18 h de cours et d’accompagnement</p>
                 <p className="mt-3 text-center text-[2rem] font-black leading-none tabular-nums" style={{ color: INT.deep, letterSpacing: '-0.03em' }}>995 €</p>
                 <ul className="mb-7 mt-6 space-y-2.5">
                   {INTENSIVE.map((t) => (
@@ -696,7 +699,8 @@ function Formules({ specialite, paliers }: { specialite?: string; paliers: Palie
             <article className="flex h-full flex-col overflow-hidden rounded-[1.25rem] bg-white" style={{ border: `1px solid ${APP.line}` }}>
               <h3 className="px-6 py-3.5 text-center text-[13.5px] font-black uppercase tracking-[0.08em] text-white" style={{ background: APP.grad }}>Approfondie</h3>
               <div className="flex flex-1 flex-col px-6 py-6">
-                <p className="text-center text-[12px] font-black uppercase leading-snug tracking-[0.05em]" style={{ color: NAVY }}>
+                <p className="text-center text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{ACCROCHE_FORMULE.approfondie}</p>
+                <p className="mt-2 text-center text-[12px] font-black uppercase leading-snug tracking-[0.05em]" style={{ color: NAVY }}>
                   À partir de {paliers[0]?.heures ?? '36 h'} de cours et d’accompagnement
                 </p>
                 <p className="mt-3 text-center text-[2rem] font-black leading-none tabular-nums" style={{ color: APP.deep, letterSpacing: '-0.03em' }}>

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Reveal } from './reveal';
 import { AncreTunnel } from './ancre-tunnel';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
+import { ACCROCHE_FORMULE } from '@/lib/formules-accroches';
 import { lienPaiement } from '@/lib/tunnel-inscription';
 import { FAQ_CARDIO, type BlocFaqCardio } from '@/lib/data/faq-cardiologie';
 
@@ -771,6 +772,7 @@ const ESSENTIELLE_POINTS = [
   'Plateforme Major ECN',
   'Fiches & fiches éclair',
   'QCM & QROC',
+  'Annales corrigées',
   'Cas cliniques',
   'Flashcards',
   'Révisions programmées',
@@ -795,7 +797,7 @@ function Formules({ specialite, prixApprofondie }: { specialite?: string; prixAp
               <div className="flex flex-1 flex-col px-6 py-7">
                 <h3 className="text-center text-[1.15rem] font-black uppercase tracking-[0.06em]" style={{ color: ESS.main }}>Essentielle</h3>
                 <p className="mt-3 text-center text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                  Pour travailler principalement en autonomie.
+                  {ACCROCHE_FORMULE.essentielle}
                 </p>
                 <ul className="mt-6 space-y-2.5">
                   {ESSENTIELLE_POINTS.map((p) => (
@@ -825,11 +827,11 @@ function Formules({ specialite, prixApprofondie }: { specialite?: string; prixAp
               <div className="flex flex-1 flex-col px-6 py-7">
                 <h3 className="text-center text-[1.15rem] font-black uppercase tracking-[0.06em]" style={{ color: INT.main }}>Intensive</h3>
                 <p className="mt-3 text-center text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                  Pour structurer les derniers mois avant l’épreuve.
+                  {ACCROCHE_FORMULE.intensive}
                 </p>
                 <p className="mt-6 rounded-xl px-5 py-4 text-center text-[12.5px] leading-relaxed" style={{ background: INT.soft, color: INK }}>
-                  Tout le contenu de l’Essentielle, avec un programme intensif de révision des thèmes prioritaires
-                  et un renforcement des automatismes.
+                  Tout le contenu de l’Essentielle, annales corrigées comprises, avec un programme intensif de
+                  révision des thèmes prioritaires et un renforcement des automatismes.
                 </p>
                 <div className="mt-auto pt-7 text-center">
                   <p className="text-[2rem] font-black leading-none tabular-nums" style={{ color: INT.deep, letterSpacing: '-0.03em' }}>995 €</p>
@@ -851,7 +853,7 @@ function Formules({ specialite, prixApprofondie }: { specialite?: string; prixAp
               <div className="flex flex-1 flex-col px-6 py-7">
                 <h3 className="text-center text-[1.15rem] font-black uppercase tracking-[0.06em]" style={{ color: APP.main }}>Approfondie</h3>
                 <p className="mt-3 text-center text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                  Pour bénéficier d’un accompagnement pédagogique beaucoup plus complet.
+                  {ACCROCHE_FORMULE.approfondie}
                 </p>
                 <p className="mt-6 rounded-xl px-5 py-4 text-center text-[12.5px] leading-relaxed" style={{ background: APP.soft, color: INK }}>
                   Tout le socle numérique Major ECN, complété par les cours approfondis de la spécialité, les

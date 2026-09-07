@@ -63,7 +63,6 @@ function FacetButtons({
   value,
   onChange,
   allLabel,
-  disabledNote,
 }: {
   legend: string;
   hint?: string;
@@ -71,42 +70,32 @@ function FacetButtons({
   value: string | null;
   onChange: (v: string | null) => void;
   allLabel: string;
-  /** Facette sans objet pour la sélection courante : on explique au lieu de
-   *  proposer un bouton qui ne changerait rien. */
-  disabledNote?: string;
 }) {
   return (
     <div>
       <p className="mb-1 text-xs font-semibold text-(--color-ink-soft)">{legend}</p>
-      {disabledNote ? (
-        <p className="rounded-lg border border-dashed border-(--color-border) px-3 py-2 text-[11px] text-(--color-ink-muted)">
-          {disabledNote}
-        </p>
-      ) : (
-        <div className="flex flex-wrap gap-1.5">
-          {[{ value: '', label: allLabel }, ...options].map((o) => {
-            const v = o.value === '' ? null : o.value;
-            const on = value === v;
-            return (
-              <button
-                key={o.value || '__all__'}
-                type="button"
-                onClick={() => onChange(v)}
-                className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
-                  on
-                    ? 'border-(--color-primary) bg-(--color-primary) text-white'
-                    : 'border-(--color-border) bg-white text-(--color-ink-soft) hover:border-(--color-primary) hover:text-(--color-ink)'
-                }`}
-              >
-                {o.label}
-              </button>
-            );
-          })}
-        </div>
-      )}
-      {hint && !disabledNote && (
-        <p className="mt-1 text-[11px] text-(--color-ink-muted)">{hint}</p>
-      )}
+      <div className="flex flex-wrap gap-1.5">
+        {[{ value: '', label: allLabel }, ...options].map((o) => {
+          const v = o.value === '' ? null : o.value;
+          const on = value === v;
+          return (
+            <button
+              key={o.value || '__all__'}
+              type="button"
+              onClick={() => onChange(v)}
+              aria-pressed={on}
+              className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                on
+                  ? 'border-(--color-primary) bg-(--color-primary) text-white'
+                  : 'border-(--color-border) bg-white text-(--color-ink-soft) hover:border-(--color-primary) hover:text-(--color-ink)'
+              }`}
+            >
+              {o.label}
+            </button>
+          );
+        })}
+      </div>
+      {hint && <p className="mt-1 text-[11px] text-(--color-ink-muted)">{hint}</p>}
     </div>
   );
 }
@@ -133,6 +122,11 @@ export function PromoCodesManager({
   const [formule, setFormule] = useState<string | null>(null);
   const [specialty, setSpecialty] = useState<string | null>(null);
   const [tier, setTier] = useState<string | null>(null);
+  /** Inclure les formules qu'un produit Stripe unique empêche de rattacher à
+   *  une spécialité (Essentielle, Intensive…). Vrai par défaut : « toutes les
+   *  formules, spécialité X » est la demande courante, et l'écran dit alors
+   *  exactement ce que le code couvrira en plus. */
+  const [inclureNonDistinguables, setInclureNonDistinguables] = useState(true);
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -152,6 +146,11 @@ export function PromoCodesManager({
     unite === 'pourcentage' ? prix * (1 - remise / 100) : Math.max(0, prix - remise);
 
   /* ─────────────── Facettes disponibles ─────────────── */
+  /* Les trois facettes sont INDÉPENDANTES : choisir une spécialité ne doit pas
+     retirer d'autorité les formules Essentielle et Intensive du périmètre.
+     Elles se croisaient jusqu'au 07/09/2026, si bien que cocher « Gériatrie »
+     ramenait le code au seul Programme Approfondi, et choisir « Essentielle »
+     faisait disparaître la liste des spécialités. */
 
   const formuleOptions = useMemo(() => {
     const seen = new Map<string, string>();
@@ -159,56 +158,75 @@ export function PromoCodesManager({
     return [...seen].map(([value, label]) => ({ value, label }));
   }, [offers]);
 
-  /** Offres compatibles avec la formule choisie — base des facettes suivantes. */
-  const byFormule = useMemo(
-    () => offers.filter((o) => formule === null || o.formule === formule),
-    [offers, formule],
-  );
-
   const specialtyOptions = useMemo(() => {
     const seen = new Map<string, string>();
-    for (const o of byFormule) {
+    for (const o of offers) {
       if (o.specialtyKey && o.specialtyName && !seen.has(o.specialtyKey)) {
         seen.set(o.specialtyKey, o.specialtyName);
       }
     }
     return [...seen].map(([value, label]) => ({ value, label }));
-  }, [byFormule]);
-
-  const bySpecialty = useMemo(
-    () => byFormule.filter((o) => specialty === null || o.specialtyKey === specialty),
-    [byFormule, specialty],
-  );
+  }, [offers]);
 
   const tierOptions = useMemo(() => {
     const seen = new Map<string, string>();
-    for (const o of bySpecialty) {
+    for (const o of offers) {
       if (o.tier && o.tierLabel && !seen.has(o.tier)) seen.set(o.tier, o.tierLabel);
     }
     return [...seen].map(([value, label]) => ({ value, label }));
-  }, [bySpecialty]);
+  }, [offers]);
+
+  /**
+   * Une offre est « distinguable » quand le périmètre demandé porte sur une
+   * dimension que SON produit Stripe sépare réellement. La Formule Essentielle
+   * est vendue au même prix pour toutes les spécialités : un seul produit
+   * Stripe, sur lequel « Gériatrie » ne veut rien dire. Restreindre un coupon à
+   * ce produit le rend valable pour toutes les spécialités — c'est un fait
+   * Stripe, pas un choix de notre part.
+   */
+  function estDistinguable(o: OfferOption): boolean {
+    if (specialty !== null && o.specialtyKey === null) return false;
+    if (tier !== null && o.tier === null) return false;
+    return true;
+  }
+
+  /** Offres de la formule choisie que la spécialité / le niveau ne peut pas
+   *  départager : incluses seulement si l'admin l'accepte. */
+  const nonDistinguables = useMemo(
+    () => offers.filter((o) => (formule === null || o.formule === formule) && !estDistinguable(o)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [offers, formule, specialty, tier],
+  );
 
   /** Offres retenues par le périmètre courant. */
   const matched = useMemo(
-    () => bySpecialty.filter((o) => tier === null || o.tier === tier),
-    [bySpecialty, tier],
+    () =>
+      offers.filter((o) => {
+        if (formule !== null && o.formule !== formule) return false;
+        if (!estDistinguable(o)) return inclureNonDistinguables;
+        if (specialty !== null && o.specialtyKey !== specialty) return false;
+        if (tier !== null && o.tier !== tier) return false;
+        return true;
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [offers, formule, specialty, tier, inclureNonDistinguables],
+  );
+
+  /** Offres effectivement retenues qui resteront valables hors du périmètre. */
+  const elargies = useMemo(
+    () => matched.filter((o) => !estDistinguable(o)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [matched, specialty, tier],
   );
 
   const allOffers = formule === null && specialty === null && tier === null;
 
-  /** Change la formule et abandonne les facettes devenues sans objet (une
-   *  spécialité n'existe que sous le Programme Approfondi). */
   function selectFormule(v: string | null) {
     setFormule(v);
-    const next = offers.filter((o) => v === null || o.formule === v);
-    if (specialty !== null && !next.some((o) => o.specialtyKey === specialty)) setSpecialty(null);
-    if (tier !== null && !next.some((o) => o.tier === tier)) setTier(null);
   }
 
   function selectSpecialty(v: string | null) {
     setSpecialty(v);
-    const next = byFormule.filter((o) => v === null || o.specialtyKey === v);
-    if (tier !== null && !next.some((o) => o.tier === tier)) setTier(null);
   }
 
   function reset() {
@@ -220,6 +238,7 @@ export function PromoCodesManager({
     setFormule(null);
     setSpecialty(null);
     setTier(null);
+    setInclureNonDistinguables(true);
     setActive(true);
     setAlsoCovered(null);
   }
@@ -386,13 +405,6 @@ export function PromoCodesManager({
             options={specialtyOptions}
             value={specialty}
             onChange={selectSpecialty}
-            disabledNote={
-              specialtyOptions.length === 0
-                ? 'Cette formule est vendue au même prix pour toutes les spécialités : '
-                  + 'elle ne forme qu’une seule fiche produit Stripe, sur laquelle la '
-                  + 'spécialité ne peut pas être distinguée.'
-                : undefined
-            }
           />
 
           <FacetButtons
@@ -401,12 +413,33 @@ export function PromoCodesManager({
             options={tierOptions}
             value={tier}
             onChange={setTier}
-            disabledNote={
-              tierOptions.length === 0
-                ? 'Aucun niveau à distinguer dans ce périmètre.'
-                : undefined
-            }
           />
+
+          {/* Formules qu'un produit Stripe unique empêche de rattacher à une
+              spécialité : on ne les retire plus d'autorité, on dit ce qu'elles
+              impliquent et on laisse l'admin décider. */}
+          {nonDistinguables.length > 0 && (
+            <div className="rounded-lg border border-(--color-border) bg-(--color-sand-100) p-2.5">
+              <label className="flex items-start gap-2 text-xs text-(--color-ink)">
+                <input
+                  type="checkbox"
+                  checked={inclureNonDistinguables}
+                  onChange={(e) => setInclureNonDistinguables(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0"
+                />
+                <span>
+                  <strong>
+                    Inclure {nonDistinguables.map((o) => o.label).join(', ')}
+                  </strong>
+                  {' — '}
+                  {nonDistinguables.length > 1 ? 'ces formules sont vendues' : 'cette formule est vendue'}
+                  {' '}au même prix pour toutes les spécialités : {nonDistinguables.length > 1 ? 'elles ne forment' : 'elle ne forme'}
+                  {' '}qu’une fiche produit Stripe, sur laquelle la spécialité n’existe pas. Le code y sera
+                  donc valable <strong>quelle que soit la spécialité</strong> achetée.
+                </span>
+              </label>
+            </div>
+          )}
 
           {/* Offres retenues, avec leur prix : c'est le contrôle final avant
               création, le périmètre d'un coupon n'étant pas modifiable ensuite. */}
@@ -429,7 +462,12 @@ export function PromoCodesManager({
               <ul className="space-y-0.5">
                 {matched.map((o) => (
                   <li key={o.key} className="flex items-baseline justify-between gap-3 text-xs">
-                    <span className="text-(--color-ink)">{o.label}</span>
+                    <span className="text-(--color-ink)">
+                      {o.label}
+                      {elargies.includes(o) && (
+                        <span className="text-(--color-ink-muted)"> — toutes spécialités</span>
+                      )}
+                    </span>
                     <span className="shrink-0 font-semibold tabular-nums text-(--color-ink-soft)">
                       {euros(o.amountEuros)} €
                       {remiseValide && (

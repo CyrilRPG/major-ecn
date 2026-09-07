@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Reveal } from './reveal';
 import { AncreTunnel } from './ancre-tunnel';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
+import { ACCROCHE_FORMULE } from '@/lib/formules-accroches';
 import { lienPaiement } from '@/lib/tunnel-inscription';
 import { FAQ_URGENCE, FAQ_URGENCE_VISIBLES, type BlocFaqUrgence } from '@/lib/data/faq-medecine-urgence';
 
@@ -545,6 +546,7 @@ const ESSENTIELLE = [
 const INTENSIVE = [
   '18 h de cours en direct',
   'Replays des cours',
+  'Annales corrigées',
   'Entraînements intensifs',
   'Dossiers et cas cliniques',
   'Échanges avec les enseignants',
@@ -574,9 +576,9 @@ function Formules({ specialite, paliers }: { specialite?: string; paliers: Palie
 
         <div className="mt-11 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
           {[
-            { p: ESS, nom: 'Essentielle', accroche: 'Autonomie guidée', sur: null, prix: '495 €', prefixe: null, items: ESSENTIELLE, intro: null, href: '/formules/essentielle', cta: 'Découvrir l’Essentielle' },
-            { p: INT, nom: 'Intensive', accroche: 'Entraînement + accompagnement', sur: '18 h de cours et d’accompagnement', prix: '995 €', prefixe: null, items: INTENSIVE, intro: 'Tout l’Essentielle, plus :', href: '/formules/intensive', cta: 'Découvrir l’Intensive' },
-            { p: APP, nom: 'Approfondie', accroche: 'Accompagnement renforcé', sur: `À partir de ${heures} et d’accompagnement`, prix: `${paliers[0]?.prix} €`, prefixe: 'À partir de', items: [`À partir de ${heures} en direct`, ...APPROFONDIE], intro: 'Tout l’Intensive, plus :', href: '/formules/programme-approfondi', cta: 'Découvrir l’Approfondie' },
+            { p: ESS, nom: 'Essentielle', accroche: ACCROCHE_FORMULE.essentielle, sur: null, prix: '495 €', prefixe: null, items: ESSENTIELLE, intro: null, href: '/formules/essentielle', cta: 'Découvrir l’Essentielle' },
+            { p: INT, nom: 'Intensive', accroche: ACCROCHE_FORMULE.intensive, sur: '18 h de cours et d’accompagnement', prix: '995 €', prefixe: null, items: INTENSIVE, intro: 'Tout l’Essentielle, plus :', href: '/formules/intensive', cta: 'Découvrir l’Intensive' },
+            { p: APP, nom: 'Approfondie', accroche: ACCROCHE_FORMULE.approfondie, sur: `À partir de ${heures} et d’accompagnement`, prix: `${paliers[0]?.prix} €`, prefixe: 'À partir de', items: [`À partir de ${heures} en direct`, ...APPROFONDIE], intro: 'Tout l’Intensive, plus :', href: '/formules/programme-approfondi', cta: 'Découvrir l’Approfondie' },
           ].map((f, i) => (
             <Reveal key={f.nom} delay={i * 0.06}>
               <article className="flex h-full flex-col overflow-hidden rounded-[1.25rem] bg-white" style={{ border: `1px solid ${f.p.line}` }}>

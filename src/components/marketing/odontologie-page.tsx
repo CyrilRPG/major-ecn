@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Reveal } from './reveal';
 import { AncreTunnel } from './ancre-tunnel';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
+import { ACCROCHE_FORMULE } from '@/lib/formules-accroches';
 import { lienPaiement } from '@/lib/tunnel-inscription';
 import { FAQ_ODO, FAQ_ODO_VISIBLES, type BlocFaqOdo } from '@/lib/data/faq-odontologie';
 
@@ -577,6 +578,7 @@ const INTENSIVE = [
   '18 h de cours avec les enseignants',
   'Échanges et questions en direct',
   'Replays des séances',
+  'Annales corrigées',
   'Dossiers inédits travaillés ensemble',
   'Méthodologie & corrections détaillées',
   'Accompagnement jusqu’aux épreuves',
@@ -594,9 +596,9 @@ const APPROFONDIE = [
 function Formules({ specialite, paliers }: { specialite?: string; paliers: PalierApprofondi[] }) {
   const heures = paliers[0]?.heures ?? '36 h de cours';
   const cartes = [
-    { p: ESS, nom: 'Essentielle', accroche: 'Autonomie guidée', chapeau: 'Pour les candidats qui ont déjà de bonnes bases et veulent surtout s’entraîner et se perfectionner.', sur: null, intro: null, items: ESSENTIELLE, prefixe: null, prix: '495 €', href: '/formules/essentielle', cta: 'Choisir Essentielle', recommandee: false },
-    { p: INT, nom: 'Intensive', accroche: 'Entraînement + accompagnement', chapeau: null, sur: '18 h de cours et d’accompagnement', intro: 'Tout l’Essentielle +', items: INTENSIVE, prefixe: null, prix: '995 €', href: '/formules/intensive', cta: 'Choisir Intensive', recommandee: false },
-    { p: APP, nom: 'Approfondie', accroche: 'Accompagnement renforcé', chapeau: null, sur: `À partir de ${heures} et d’accompagnement`, intro: 'Tout l’Intensive +', items: APPROFONDIE, prefixe: 'À partir de', prix: `${paliers[0]?.prix} €`, href: '/formules/programme-approfondi', cta: 'Choisir Approfondie', recommandee: true },
+    { p: ESS, nom: 'Essentielle', accroche: ACCROCHE_FORMULE.essentielle, chapeau: 'Pour les candidats qui ont déjà de bonnes bases et veulent surtout s’entraîner et se perfectionner.', sur: null, intro: null, items: ESSENTIELLE, prefixe: null, prix: '495 €', href: '/formules/essentielle', cta: 'Choisir Essentielle', recommandee: false },
+    { p: INT, nom: 'Intensive', accroche: ACCROCHE_FORMULE.intensive, chapeau: null, sur: '18 h de cours et d’accompagnement', intro: 'Tout l’Essentielle +', items: INTENSIVE, prefixe: null, prix: '995 €', href: '/formules/intensive', cta: 'Choisir Intensive', recommandee: false },
+    { p: APP, nom: 'Approfondie', accroche: ACCROCHE_FORMULE.approfondie, chapeau: null, sur: `À partir de ${heures} et d’accompagnement`, intro: 'Tout l’Intensive +', items: APPROFONDIE, prefixe: 'À partir de', prix: `${paliers[0]?.prix} €`, href: '/formules/programme-approfondi', cta: 'Choisir Approfondie', recommandee: true },
   ];
 
   return (

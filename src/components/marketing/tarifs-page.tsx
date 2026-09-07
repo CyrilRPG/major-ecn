@@ -96,6 +96,7 @@ const FORMULES: Formule[] = [
     },
     items: [
       'Tout le contenu de la formule Essentielle',
+      'Annales EVC corrigées',
       '18 h de cours en direct (lives interactifs)',
       'Lives interactifs avec vos enseignants',
       'Replays disponibles pendant toute la préparation',

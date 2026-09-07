@@ -52,6 +52,7 @@ const INTENSIVE_ITEMS = [
   '18 h de cours en direct (lives interactifs)',
   'Lives interactifs avec vos enseignants',
   'Replays disponibles pendant toute la préparation',
+  'Annales EVC corrigées',
   'QCM supplémentaires expliqués',
   'QROC expliqués',
   'Corrections approfondies',

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Reveal } from './reveal';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE, type PaletteFormule } from '@/lib/formules-palette';
+import { ACCROCHE_FORMULE } from '@/lib/formules-accroches';
 import { lienPaiement } from '@/lib/tunnel-inscription';
 import { AncreTunnel } from './ancre-tunnel';
 import { DrapeauOrigine } from './drapeau-origine';
@@ -890,7 +891,7 @@ const FORMULES: {
   items: string[]; deuxColonnes?: boolean; cta: string; href: string; p: Pal; recommandee?: boolean;
 }[] = [
   {
-    n: 1, nom: 'Essentielle', accroche: 'Je prépare les EVC principalement en autonomie.', prix: '495 €',
+    n: 1, nom: 'Essentielle', accroche: ACCROCHE_FORMULE.essentielle, prix: '495 €',
     encadre: { fort: 'La base complète', suite: 'de la préparation Major ECN.' },
     colonnes: [
       { titre: 'Voie interne (QCM)', accent: VOIE_INTERNE, items: ['Banque complète de QCM corrigés', 'Méthodologie QCM et pièges'] },
@@ -905,18 +906,19 @@ const FORMULES: {
     cta: 'Choisir Essentielle', href: '/formules/essentielle', p: ESS,
   },
   {
-    n: 2, nom: 'Intensive', accroche: 'Je bénéficie de toute l’Essentielle + 18 h d’enseignement.', prix: '995 €',
+    n: 2, nom: 'Intensive', accroche: ACCROCHE_FORMULE.intensive, prix: '995 €',
     encadre: { fort: 'Tout le contenu de la formule Essentielle', suite: '+ 18 h de cours en direct, lives interactifs et replays' },
     items: [
       '18 h de cours en direct (lives interactifs)', 'Lives interactifs avec vos enseignants',
-      'Replays disponibles pendant toute la préparation', 'QCM supplémentaires expliqués',
+      'Replays disponibles pendant toute la préparation', 'Annales EVC corrigées',
+      'QCM supplémentaires expliqués',
       'QROC expliqués', 'Corrections approfondies', 'Épreuves blanches inspirées des EVC',
       'Suivi de progression',
     ],
     cta: 'Choisir Intensive', href: '/formules/intensive', p: INT,
   },
   {
-    n: 3, nom: 'Approfondie', accroche: 'Je bénéficie de tout l’Intensive + notre accompagnement le plus complet.',
+    n: 3, nom: 'Approfondie', accroche: ACCROCHE_FORMULE.approfondie,
     prefixe: 'À partir de', prix: '2 095 €',
     encadre: {
       fort: 'Tout le contenu des formules Essentielle + Intensive',

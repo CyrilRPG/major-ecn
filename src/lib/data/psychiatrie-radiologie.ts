@@ -1,3 +1,5 @@
+import { ACCROCHE_FORMULE } from '@/lib/formules-accroches';
+
 /** Textes des maquettes fournies, sans les pictogrammes décoratifs. */
 export type SpecialtyKind = "psychiatrie" | "radiologie";
 
@@ -253,7 +255,7 @@ export const PSY_FORMULES: FormuleSpecialite[] = [
   {
     n: 1,
     nom: "Essentielle",
-    accroche: "Autonomie guidée",
+    accroche: ACCROCHE_FORMULE.essentielle,
     prix: "495 €",
     href: "/formules/essentielle",
     encadre: { fort: "La base complète", suite: "de la préparation Major ECN." },
@@ -269,7 +271,7 @@ export const PSY_FORMULES: FormuleSpecialite[] = [
   {
     n: 2,
     nom: "Intensive",
-    accroche: "Révision finale accompagnée",
+    accroche: ACCROCHE_FORMULE.intensive,
     prix: "995 €",
     href: "/formules/intensive",
     encadre: {
@@ -278,6 +280,7 @@ export const PSY_FORMULES: FormuleSpecialite[] = [
     },
     items: [
       "Cours en direct & replays selon le programme",
+      "Annales corrigées",
       "Méthodologie EVC",
       "Entraînements intensifs & corrections détaillées",
       "Accompagnement renforcé",
@@ -286,7 +289,7 @@ export const PSY_FORMULES: FormuleSpecialite[] = [
   {
     n: 3,
     nom: "Approfondie",
-    accroche: "Préparation la plus complète",
+    accroche: ACCROCHE_FORMULE.approfondie,
     prefixe: "À partir de",
     prix: "2 095 €",
     href: "/formules/programme-approfondi",
@@ -312,7 +315,7 @@ export const RADIO_FORMULES: FormuleSpecialite[] = [
   {
     n: 1,
     nom: "Essentielle",
-    accroche: "Travaillez à votre rythme",
+    accroche: ACCROCHE_FORMULE.essentielle,
     prix: "495 €",
     href: "/formules/essentielle",
     encadre: { fort: "La base complète", suite: "de la préparation Major ECN." },
@@ -327,12 +330,13 @@ export const RADIO_FORMULES: FormuleSpecialite[] = [
   {
     n: 2,
     nom: "Intensive",
-    accroche: "Consolidez et entraînez-vous",
+    accroche: ACCROCHE_FORMULE.intensive,
     prix: "995 €",
     href: "/formules/intensive",
     encadre: { fort: "Tout le contenu de la formule Essentielle" },
     items: [
       "Cours en direct et replays",
+      "Annales corrigées",
       "Entraînements intensifs",
       "Corrections détaillées",
       "Accompagnement renforcé",
@@ -341,7 +345,7 @@ export const RADIO_FORMULES: FormuleSpecialite[] = [
   {
     n: 3,
     nom: "Approfondie",
-    accroche: "Reprenez en profondeur les points clés avec nos enseignants",
+    accroche: ACCROCHE_FORMULE.approfondie,
     prefixe: "À partir de",
     prix: "2 295 €",
     href: "/formules/programme-approfondi",

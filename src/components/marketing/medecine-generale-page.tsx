@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Reveal } from './reveal';
 import { AncreTunnel } from './ancre-tunnel';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
+import { ACCROCHE_FORMULE } from '@/lib/formules-accroches';
 import { lienPaiement } from '@/lib/tunnel-inscription';
 import { FAQ_MG, FAQ_MG_VISIBLES, type BlocFaqMg } from '@/lib/data/faq-medecine-generale';
 
@@ -851,6 +852,7 @@ const ESSENTIELLE_EXTERNE = [
 
 const INTENSIVE = [
   'Tout le contenu de l’Essentielle adapté à votre voie',
+  'Annales corrigées 2009-2025',
   '18 heures de cours et d’accompagnement',
   'Replays disponibles pendant toute la préparation',
   'Séries supplémentaires QCM ou QROC',
@@ -902,7 +904,7 @@ function Formules({
               <div className="flex flex-1 flex-col px-6 py-7 sm:px-7">
                 <h3 className="text-center text-[1.25rem] font-black uppercase tracking-[0.06em]" style={{ color: ESS.main }}>Essentielle</h3>
                 <p className="mt-3 text-center text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                  Pour travailler en autonomie avec une préparation structurée.
+                  {ACCROCHE_FORMULE.essentielle}
                 </p>
 
                 <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -954,7 +956,7 @@ function Formules({
                   18 h de cours et d’accompagnement
                 </p>
                 <p className="mt-3 text-center text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                  Pour intensifier vos révisions et aller à l’essentiel avant les EVC.
+                  {ACCROCHE_FORMULE.intensive}
                 </p>
 
                 <ul className="mt-6 space-y-2.5">
@@ -990,7 +992,7 @@ function Formules({
                   À partir de 55 h de cours
                 </p>
                 <p className="mt-3 text-center text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                  Pour bénéficier d’une préparation approfondie avec nos médecins spécialistes.
+                  {ACCROCHE_FORMULE.approfondie}
                 </p>
 
                 <ul className="mt-6 space-y-2.5">
