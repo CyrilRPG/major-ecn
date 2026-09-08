@@ -39,6 +39,11 @@ export const GERIATRIE_MG_BONUS_COURS_IDS: string[] = [
   'd03249d2-d5fe-4a2a-b308-b911aa9c1569', // Hypertension artérielle
   '2cfbbe72-c1fd-4fa7-b881-5a3d2a65dbbc', // Insuffisance cardiaque
   '91b03319-376a-4c6f-89e2-c4bba5bb856f', // Rétrécissement aortique
+  // Demande du 2026-09-08 (Cyril) : le versant vasculaire et coronarien.
+  'd67ad5dc-5cac-4d1c-b727-08d450cdfa45', // Maladie thrombo-embolique veineuse
+  '6d749450-c78f-4773-a23e-a0e1a42943f4', // AOMI (contient l'ischémie aiguë de membre)
+  '4b59b714-d0b9-4ed3-b47b-5441fc1cc2d5', // Syndromes coronariens aigus
+  '81e10e39-ee3c-420d-8bb3-f96e79bb2268', // Angor d'effort (syndrome coronarien chronique)
 
   // Dermatologie
   'd1000001-de00-4000-a000-000000000002', // Ectoparasitoses cutanées
@@ -108,6 +113,15 @@ export const GERIATRIE_MG_BONUS_COURS_IDS: string[] = [
   'cb0186f1-e517-4409-9d9d-43e36ef5ae82', // Épanchement pleural et pneumothorax
   '2408bcb9-6d67-4a0d-8066-4ceabae1eb78', // Imagerie et EFR
   'd370b0b8-0b0c-45b5-8dfb-f303d83f7a33', // Pathologies respiratoires spécifiques (IRC + pneumonie)
+  // Demande du 2026-09-08 (Cyril) : les pneumopathies aiguës communautaires.
+  // Médecine générale n'avait aucun cours PAC ; celui-ci est une COPIE du cours
+  // homonyme du collège Pneumologie (Major ECN, 7ff2a299-…), déposée dans
+  // `col-mg-pneumologie` en `access_type = 'specific'` : la RLS exige que le
+  // collège du cours soit dans le scope de l'élève, on ne pouvait donc pas
+  // accorder le cours d'origine sans faire apparaître « Pneumologie » comme
+  // collège à part entière (et sans ouvrir ses épreuves blanches / son agenda).
+  // `access_type = 'specific'` le garde invisible pour les élèves MG ordinaires.
+  'cca321f8-144c-4048-a982-675116a6f78d', // Infections bronchopulmonaires communautaires de l'adulte
 
   // Rhumatologie
   '2ebc5f0a-dcae-4ea4-b9f0-775ffea6aeb2', // Douleur et thérapeutiques antalgiques

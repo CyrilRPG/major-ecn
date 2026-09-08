@@ -53,6 +53,7 @@ type Row = {
                     titre: string;
                     order_index: number | null;
                     importance: number | null;
+                    access_type: 'all' | 'specific' | null;
                     course_progress: { video_watched: boolean | null; fiche_read: boolean | null }[] | null;
                   }[]
                 | null;
@@ -75,7 +76,7 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
     .from('facultes')
     .select(
       `semestres(matieres(id, nom, icon_key, color_hex, order_index, parent_matiere_id,
-         cours(id, titre, order_index, importance, course_progress(video_watched, fiche_read))))`,
+         cours(id, titre, order_index, importance, access_type, course_progress(video_watched, fiche_read))))`,
     )
     .eq('id', EDN_FACULTE_ID)
     .maybeSingle();
@@ -127,9 +128,17 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
       ? m.id
       : (m.parent_matiere_id && canAccessCollege(scope, m.parent_matiere_id) ? m.parent_matiere_id : m.id);
 
+  // Un cours en accès restreint (`access_type = 'specific'`) n'apparaît que
+  // pour les élèves qui le listent explicitement dans leur scope — sinon le
+  // navigateur l'affichait alors que la page du cours, elle, redirigeait.
+  // Même dérogation que `/cours/[cours]` et `/matieres/[matiere]` :
+  // l'administration parcourt l'espace élève sans restriction.
+  const isAdmin = profile.role === 'admin';
   const buildCours = (m: (typeof colleges)[number]) =>
     [...(m.cours ?? [])]
-      .filter((c) => canAccessCours(scope, grantedCollegeId(m), c.id))
+      .filter((c) =>
+        isAdmin
+        || canAccessCours(scope, grantedCollegeId(m), c.id, c.access_type ?? 'all'))
       .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
       .map((c) => {
         const cp = c.course_progress?.[0];
