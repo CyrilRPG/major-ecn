@@ -114,16 +114,41 @@ export async function prepareExerciseImportAction(raw: unknown): Promise<Prepare
   return { ok: true, id, uploads };
 }
 
+/**
+ * Publication d'un import validé.
+ *
+ * `publish_exercise_import` est ATOMIQUE et IDEMPOTENTE : un import déjà publié
+ * renvoie simplement sa série existante. Cliquer deux fois ne crée donc jamais
+ * de doublon — ce qui compte, parce que la réponse de cette action peut se
+ * perdre alors que l'écriture, elle, a été validée en base (constaté le
+ * 08/09/2026 sur un import de 358 questions : série créée, mais
+ * « An unexpected response was received from the server » à l'écran).
+ *
+ * Deux précautions contre ce scénario :
+ *  - AUCUN `revalidatePath` sur `/admin/import-exercices`. La page est
+ *    `force-dynamic` : il n'y a pas de cache à invalider, mais Next renvoie
+ *    alors l'arbre RSC complet de la page DANS la réponse de l'action — la
+ *    liste des 30 derniers imports, `result` compris (plus de 400 ko de JSON
+ *    pour un seul import), en plus des 1 300 cours du sélecteur. Le composant
+ *    appelle `router.refresh()` de son côté, ce qui rafraîchit la liste par une
+ *    requête séparée, sans alourdir la réponse de la publication.
+ *  - le corps est enveloppé : une exception (réseau, jeton, quota) redescend en
+ *    message affichable au lieu d'une 500 que le client ne sait pas lire.
+ */
 export async function publishExerciseImportAction(id: string): Promise<ActionResult & { serieId?: string }> {
   const { profile } = await requireAdmin();
   if (!z.string().uuid().safeParse(id).success) return { ok: false, error: 'Import invalide.' };
-  const admin = createAdminClient();
-  const a = admin as unknown as { rpc: (name: string, args: unknown) => any; from: (table: string) => any };
-  const { data, error } = await a.rpc('publish_exercise_import', { p_import_id: id });
-  if (error || !data) return { ok: false, error: error?.message ?? 'Publication impossible.' };
-  await logAudit({ actor: profile, action: 'create', entity: 'qcm_series', entityId: data as string, description: `Publication de l’import d’exercices ${id.slice(0, 8)}` });
-  revalidatePath('/admin/import-exercices'); revalidatePath('/admin/facturation');
-  return { ok: true, id, serieId: data as string };
+  try {
+    const admin = createAdminClient();
+    const a = admin as unknown as { rpc: (name: string, args: unknown) => any; from: (table: string) => any };
+    const { data, error } = await a.rpc('publish_exercise_import', { p_import_id: id });
+    if (error || !data) return { ok: false, error: error?.message ?? 'Publication impossible.' };
+    await logAudit({ actor: profile, action: 'create', entity: 'qcm_series', entityId: data as string, description: `Publication de l’import d’exercices ${id.slice(0, 8)}` });
+    revalidatePath('/admin/facturation');
+    return { ok: true, id, serieId: data as string };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : 'Publication impossible.' };
+  }
 }
 
 export async function cancelExerciseImportAction(id: string): Promise<ActionResult> {
