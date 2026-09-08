@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import type { FormuleId } from '@/lib/stripe';
 import { createClient } from '@/lib/supabase/client';
-import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty } from '@/lib/data/enrollable-colleges';
+import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty, specialtyByName } from '@/lib/data/enrollable-colleges';
 import { CONTENT_PENDING_NOTICE } from '@/lib/stripe/approfondi';
 import { TurnstileWidget } from './turnstile-widget';
 import { SignaturePad } from '@/components/student/signature-pad';
@@ -87,8 +87,11 @@ export function CheckoutButton({
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  // Même règle que la page formule : on reconnaît le libellé quels que soient
+  // ses accents, sa casse ou son ancienneté, plutôt que de retomber en silence
+  // sur la première spécialité de la liste.
   const [specialty, setSpecialty] = useState<string>(
-    initialSpecialty && SPECIALTIES.includes(initialSpecialty) ? initialSpecialty : SPECIALTIES[0],
+    specialtyByName(initialSpecialty)?.name ?? SPECIALTIES[0],
   );
   const [voie, setVoie] = useState<string>('');
   const [installments, setInstallments] = useState<1 | 3 | 4>(1);

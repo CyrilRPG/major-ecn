@@ -18,7 +18,7 @@ import {
 } from './premium-ui';
 import type { FormuleId } from '@/lib/stripe';
 import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
-import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty } from '@/lib/data/enrollable-colleges';
+import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty, specialtyByName } from '@/lib/data/enrollable-colleges';
 import { DrapeauOrigine } from './drapeau-origine';
 
 const VARIANT_TO_FORMULE_ID: Record<'essentielle' | 'intensive' | 'approfondi', FormuleId> = {
@@ -533,7 +533,11 @@ function PaymentSection({ variant, c, specialite }: { variant: Variant; c: Payme
   // Spécialité arrivant du tunnel d'inscription (pop-up → page spécialité →
   // formule). On ne retient que les libellés réellement inscriptibles : c'est
   // la seule garantie que le formulaire saura la présélectionner.
-  const specialiteTunnel = specialite && ENROLLABLE_SPECIALTY_NAMES.includes(specialite) ? specialite : undefined;
+  // Résolution TOLÉRANTE (accents, casse, anciens libellés) : une comparaison
+  // stricte faisait retomber silencieusement le formulaire sur « Médecine
+  // générale » dès que le libellé transmis différait d'un accent, et le
+  // candidat payait alors une autre spécialité que la sienne.
+  const specialiteTunnel = specialtyByName(specialite)?.name;
 
   // Spécialité réellement sélectionnée dans le formulaire de paiement. Le
   // récapitulatif « Ce qui est inclus » doit décrire CETTE spécialité : afficher

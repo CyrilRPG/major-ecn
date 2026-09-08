@@ -469,8 +469,16 @@ const GRID_STRIP = [
     tarifs ou le formulaire de contact). */
 function SpecCard({ s }: { s: Speciality }) {
   const aSaPage = PAGES_DEDIEES.has(s.slug);
-  const enrollable = aSaPage || specialtyByName(s.name) != null;
-  const href = PAGES_DEDIEES.get(s.slug) ?? (enrollable ? '/tarifs' : '/contact');
+  const inscriptible = specialtyByName(s.name);
+  const enrollable = aSaPage || inscriptible != null;
+  /* Sans page dédiée, le lien emporte la spécialité choisie. Un lien nu vers
+     /tarifs perdait ce choix : le formulaire de paiement retombait sur son
+     premier item, « Médecine générale », et le récapitulatif annonçait
+     « Accès complet aux contenus de Médecine générale » à un candidat de
+     gériatrie (signalé le 08/09/2026). On transmet le libellé CANONIQUE, seul
+     à être reconnu à l'autre bout de la chaîne. */
+  const href = PAGES_DEDIEES.get(s.slug)
+    ?? (inscriptible ? `/tarifs?specialite=${encodeURIComponent(inscriptible.name)}#formules` : '/contact');
   return (
     // `id` : cible des liens « #slug » venus de l'accueil pour les spécialités
     // sans page dédiée (cf. lib/data/pages-specialites).
