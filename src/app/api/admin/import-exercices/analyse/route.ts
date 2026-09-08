@@ -216,12 +216,16 @@ export async function POST(req: Request) {
             const liste = t.genre === 'sujet' ? p.plan.lots : p.plan.lotsCorrige;
             const i = liste.findIndex((l) => cle(l) === cle(t.lot));
             if (i >= 0) liste.splice(i, 1, ...moities);
-            p.avertissementsDocs.push(`${libelle(t.lot)} : réponse trop longue, lot scindé en deux.`);
+            p.avertissementsDocs.push(e.motif === 'delai'
+              ? `${libelle(t.lot)} : analyse trop longue, lot scindé en deux et rejoué.`
+              : `${libelle(t.lot)} : réponse trop longue, lot scindé en deux.`);
             await sauvegarder(p);
             aFaire.push(...moities.map((lot) => ({ genre: t.genre, lot })));
             return;
           }
-          p.erreurs[cle(t.lot)] = `${libelle(t.lot)} : une seule page dépasse le budget de sortie, page ignorée.`;
+          p.erreurs[cle(t.lot)] = e.motif === 'delai'
+            ? `${libelle(t.lot)} : une seule page dépasse déjà le délai d'analyse, page ignorée.`
+            : `${libelle(t.lot)} : une seule page dépasse le budget de sortie, page ignorée.`;
           await sauvegarder(p);
           return;
         }

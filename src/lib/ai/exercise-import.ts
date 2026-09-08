@@ -71,9 +71,24 @@ function getClient(): Anthropic {
 
 /* ─────────── Erreurs typées ─────────── */
 
-/** La réponse a atteint le budget de sortie : le lot doit être scindé. */
+/**
+ * Le lot ne tient pas dans une requête : soit la réponse a atteint le budget de
+ * sortie, soit l'analyse a dépassé le délai. Dans les DEUX cas la réponse est
+ * la même — scinder le lot en deux et rejouer — d'où une seule erreur, avec son
+ * motif pour l'expliquer à l'utilisateur.
+ *
+ * Le délai était auparavant une erreur terminale : le lot restait en échec et
+ * l'utilisateur devait relancer à la main, pour retomber sur le même mur
+ * puisque le lot n'avait pas changé de taille.
+ */
+export type MotifLotTropLong = 'sortie' | 'delai';
+
 export class LotTropLongError extends Error {
-  constructor(public readonly lot: Lot) { super(`Lot ${lot.index + 1} (pages ${lot.debut}-${lot.fin}) : réponse tronquée par le budget de sortie.`); }
+  constructor(public readonly lot: Lot, public readonly motif: MotifLotTropLong = 'sortie') {
+    super(motif === 'delai'
+      ? `Lot ${lot.index + 1} (pages ${lot.debut}-${lot.fin}) : analyse trop longue.`
+      : `Lot ${lot.index + 1} (pages ${lot.debut}-${lot.fin}) : réponse tronquée par le budget de sortie.`);
+  }
 }
 
 /* ─────────── Prompts ─────────── */
@@ -172,10 +187,7 @@ async function appelStructure<T>(args: {
     // brut du SDK — « Anthropic : Request was aborted. » — à la place de
     // l'explication utile. La branche ci-dessous était devenue du code mort.
     if (e instanceof Anthropic.APIUserAbortError || abort.signal.aborted) {
-      throw new Error(
-        `Lot ${args.lot.index + 1} (pages ${args.lot.debut}-${args.lot.fin}) : l’analyse a dépassé le délai autorisé `
-        + `(${Math.round(DELAI_APPEL_MS / 1000)} s). Relancez : seuls les lots manquants seront rejoués.`,
-      );
+      throw new LotTropLongError(args.lot, 'delai');
     }
     if (e instanceof Anthropic.AuthenticationError) throw new Error('Clé Anthropic refusée : vérifiez ANTHROPIC_API_KEY.');
     if (e instanceof Anthropic.RateLimitError) throw new Error('Limite de débit Anthropic atteinte : relancez l’analyse dans quelques minutes.');
