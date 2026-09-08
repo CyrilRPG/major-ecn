@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { MeshGradient, NoiseTexture } from './premium-ui';
 import { TurnstileWidget } from './turnstile-widget';
+import { EVENEMENTS, pousserEvenement } from '@/lib/analytics/evenements';
 
 const RED = '#C0112E';
 const RED_DEEP = '#8B0E22';
@@ -158,6 +159,9 @@ export function EspaceDecouverteForm() {
         setSubmitting(false);
         return;
       }
+      // Conversion Google Ads « Formulaire inscription » : poussée avant la
+      // redirection, sinon la navigation emporterait l'événement.
+      pousserEvenement(EVENEMENTS.signupForm, { form_type: 'espace-decouverte' });
       {
         const base = j.redirectTo ?? '/espace-decouverte/confirmation';
         const sep = base.includes('?') ? '&' : '?';

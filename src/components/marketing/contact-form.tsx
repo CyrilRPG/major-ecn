@@ -6,6 +6,7 @@ import {
   Loader2, Mail, MessageSquare, Paperclip, Phone, Pill, Stethoscope, User,
 } from 'lucide-react';
 import { TurnstileWidget } from './turnstile-widget';
+import { EVENEMENTS, pousserEvenement } from '@/lib/analytics/evenements';
 
 /** Le captcha est requis côté UI uniquement si la clé publique est configurée. */
 const TURNSTILE_ENABLED = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
@@ -173,6 +174,9 @@ export function ContactForm() {
         setCaptchaNonce((n) => n + 1);
         return;
       }
+      // Conversion Google Ads « Formulaire contact » : poussée UNIQUEMENT
+      // après confirmation du serveur, jamais au clic sur « Envoyer ».
+      pousserEvenement(EVENEMENTS.contactForm, { page_path: window.location.pathname });
       setStatus('success');
     } catch {
       setErrMsg(`Connexion impossible. Écrivez-nous à ${CONTACT_EMAIL}.`);

@@ -5,6 +5,8 @@ import { QueryProvider } from '@/lib/query/providers';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { AntiCopyShield } from '@/components/anti-copy-shield';
 import { CookieConsentBanner } from '@/components/cookie-consent-banner';
+import { GoogleTagManager, GoogleTagManagerNoScript } from '@/components/analytics/google-tag-manager';
+import { SuiviAppels } from '@/components/analytics/suivi-appels';
 import { RattrapageLienNatif } from '@/components/auth/rattrapage-lien-natif';
 import './globals.css';
 
@@ -67,6 +69,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" suppressHydrationWarning className={`${sans.variable} ${display.variable} ${jakarta.variable} ${mono.variable}`}>
       <body className="min-h-screen antialiased">
+        <GoogleTagManagerNoScript />
+        <GoogleTagManager />
         {/* Avant tout code applicatif : voir le composant. */}
         <RattrapageLienNatif />
         <ThemeProvider attribute="class" forcedTheme="light" defaultTheme="light" enableSystem={false}>
@@ -74,6 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <TooltipProvider delayDuration={150}>{children}</TooltipProvider>
           </QueryProvider>
         </ThemeProvider>
+        <SuiviAppels />
         <AntiCopyShield />
         <CookieConsentBanner />
       </body>
