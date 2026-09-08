@@ -4,8 +4,8 @@ import { arenaDb } from './db';
 import { signedLinkToken } from './session';
 import { describeBareme, type Bareme } from './scoring';
 import { parisAndLocalLabel } from './time';
-import { COMMERCIAL_AFTER_M3, PUBLIC_RULES, UNDER_THRESHOLD_MESSAGE, WARNING_CONNECTION, WARNING_NATURE } from './texts';
-import type { EmailKind, ParticipantRow, TournamentRow } from './types';
+import { COMMERCIAL_AFTER_M3, publicRules, UNDER_THRESHOLD_MESSAGE, WARNING_CONNECTION, WARNING_NATURE } from './texts';
+import { DEFAULT_SECONDS_PER_QUESTION, type EmailKind, type ParticipantRow, type TournamentRow } from './types';
 
 /**
  * EVC Arena — emails (§11). Modèles sobres, texte + HTML, envoi journalisé
@@ -113,13 +113,13 @@ export function validatedEmail(t: TournamentRow, p: ParticipantRow, opts: { m1Op
     para(`Bonjour ${p.first_name},`),
     para(`Vous participez au tournoi EVC Arena ${t.specialty} sous le pseudonyme « ${p.pseudo} ».`),
     box(`<p style="margin:0;font-weight:700;color:${NAVY}">Manche 1 : ${esc(when)}</p>${opts.m1Theme ? `<p style="margin:6px 0 0;color:#374151">Thème : ${esc(opts.m1Theme)}</p>` : ''}`),
-    `<p style="margin:18px 0 6px;font-weight:700;color:${NAVY}">Les règles</p><ul style="margin:0;padding-left:18px;color:#374151;font-size:14px">${PUBLIC_RULES.map((r) => `<li>${esc(r)}</li>`).join('')}</ul>`,
+    `<p style="margin:18px 0 6px;font-weight:700;color:${NAVY}">Les règles</p><ul style="margin:0;padding-left:18px;color:#374151;font-size:14px">${publicRules(t).map((r: string) => `<li>${esc(r)}</li>`).join('')}</ul>`,
     `<p style="margin:18px 0 6px;font-weight:700;color:${NAVY}">Le barème de la manche 1</p>${baremeHtml}`,
     box(`<p style="margin:0;color:#374151;font-size:14px">${esc(WARNING_NATURE)}</p>`),
     button('Ouvrir mon espace', urls.space),
     para('Invitez un collègue : partagez votre lien personnel depuis votre espace.'),
   ].join(''));
-  const text = `Bonjour ${p.first_name},\n\nVotre inscription au tournoi EVC Arena ${t.specialty} est confirmée (pseudonyme : ${p.pseudo}).\nManche 1 : ${when}${opts.m1Theme ? ` — thème : ${opts.m1Theme}` : ''}.\n\nRègles :\n${PUBLIC_RULES.map((r) => `- ${r}`).join('\n')}\n\n${WARNING_NATURE}\n\nMon espace : ${urls.space}`;
+  const text = `Bonjour ${p.first_name},\n\nVotre inscription au tournoi EVC Arena ${t.specialty} est confirmée (pseudonyme : ${p.pseudo}).\nManche 1 : ${when}${opts.m1Theme ? ` — thème : ${opts.m1Theme}` : ''}.\n\nRègles :\n${publicRules(t).map((r: string) => `- ${r}`).join('\n')}\n\n${WARNING_NATURE}\n\nMon espace : ${urls.space}`;
   return { subject, html, text };
 }
 
@@ -131,11 +131,11 @@ export function roundReminderEmail(t: TournamentRow, p: ParticipantRow, kind: 'j
     : `Demain : manche ${round.number} — ${round.theme || t.specialty}`;
   const html = shell(t, p, kind === 'j7' ? `Manche ${round.number} : rendez-vous dans une semaine` : `Manche ${round.number} : c’est demain`, [
     para(`Bonjour ${p.first_name},`),
-    box(`<p style="margin:0;font-weight:700;color:${NAVY}">Ouverture : ${esc(open)}</p><p style="margin:6px 0 0;color:#374151">La manche reste ouverte 24 h. 12 questions, 12 minutes, une seule tentative.</p>${round.theme ? `<p style="margin:6px 0 0;color:#374151">Thème : ${esc(round.theme)}</p>` : ''}`),
+    box(`<p style="margin:0;font-weight:700;color:${NAVY}">Ouverture : ${esc(open)}</p><p style="margin:6px 0 0;color:#374151">La manche reste ouverte 24 h. ${t.questions_per_round} questions chronométrées une par une (${t.seconds_per_question ?? DEFAULT_SECONDS_PER_QUESTION} s chacune), une seule tentative.</p>${round.theme ? `<p style="margin:6px 0 0;color:#374151">Thème : ${esc(round.theme)}</p>` : ''}`),
     para(WARNING_CONNECTION),
     button('Voir mon espace', urls.space),
   ].join(''));
-  const text = `Bonjour ${p.first_name},\n\nManche ${round.number}${round.theme ? ` — ${round.theme}` : ''}\nOuverture : ${open}\nLa manche reste ouverte 24 h. 12 questions, 12 minutes, une seule tentative.\n\n${WARNING_CONNECTION}\n\nMon espace : ${urls.space}`;
+  const text = `Bonjour ${p.first_name},\n\nManche ${round.number}${round.theme ? ` — ${round.theme}` : ''}\nOuverture : ${open}\nLa manche reste ouverte 24 h. ${t.questions_per_round} questions chronométrées une par une (${t.seconds_per_question ?? DEFAULT_SECONDS_PER_QUESTION} s chacune), une seule tentative.\n\n${WARNING_CONNECTION}\n\nMon espace : ${urls.space}`;
   return { subject, html, text };
 }
 
@@ -157,7 +157,7 @@ export function relanceEmail(t: TournamentRow, p: ParticipantRow, round: { numbe
   const html = shell(t, p, `Il reste ${remaining} pour jouer la manche ${round.number}`, [
     para(`Bonjour ${p.first_name},`),
     para(`Vous n’avez pas encore joué la manche ${round.number}. La manche se termine dans ${remaining} : passé ce délai, elle comptera pour zéro dans votre score cumulé.`),
-    para('Douze minutes suffisent. Si vous commencez à moins de douze minutes de la clôture, votre temps sera limité au temps restant.'),
+    para(`Chaque question est chronométrée séparément (${t.seconds_per_question ?? DEFAULT_SECONDS_PER_QUESTION} s). Si vous commencez trop près de la clôture, votre temps sera limité au temps restant.`),
     button('Jouer maintenant', urls.round(round.number)),
   ].join(''));
   return { subject, html, text: `Bonjour ${p.first_name},\n\nVous n'avez pas encore joué la manche ${round.number}. Elle se termine dans ${remaining}.\n\nJouer : ${urls.round(round.number)}` };
@@ -203,7 +203,7 @@ export function inviteEmail(t: TournamentRow, from: ParticipantRow | null, landi
   const who = from ? `${from.first_name} vous invite` : 'Un confrère vous invite';
   const subject = `${who} au tournoi EVC Arena ${t.specialty}`;
   const html = shell(t, null, `${who} à entrer dans l’arène`, [
-    para(`Le tournoi EVC Arena ${t.specialty} de Major ECN : trois manches de 12 questions en 12 minutes, une seule tentative, un classement cumulé entre médecins candidats aux EVC.`),
+    para(`Le tournoi EVC Arena ${t.specialty} de Major ECN : trois manches de ${t.questions_per_round} questions chronométrées une par une, une seule tentative, un classement cumulé entre médecins candidats aux EVC.`),
     message ? box(`<p style="margin:0;color:#374151;font-style:italic">${esc(message)}</p>`) : '',
     button('Découvrir le tournoi', landingUrl),
     para(WARNING_NATURE),

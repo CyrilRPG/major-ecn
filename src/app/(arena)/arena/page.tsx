@@ -38,7 +38,7 @@ export default async function ArenaHubPage() {
             <ArenaLogoStack size="lg" />
             <h1 className="mt-6 text-[2rem] leading-none sm:text-[2.8rem]" style={{ ...CAPS, color: ARENA.text, letterSpacing: '0.06em' }}>Tournois de QCM par spécialité</h1>
             <p className="mt-3 max-w-xl text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-              Trois manches, douze questions, douze minutes, une seule tentative. Un classement cumulé à défendre.
+              Trois manches, douze questions chronométrées une par une, une seule tentative. Un classement cumulé à défendre.
             </p>
           </Container>
         </Stadium>

@@ -11,7 +11,7 @@ import { Field, FormError, TextArea, TextInput } from './form-ui';
  * partage WhatsApp (prioritaire), Telegram, email, Messenger, copie du lien.
  * Le lien porte le code d'invitation (source d'acquisition).
  */
-export function InviteBox({ slug, inviteUrl, specialty }: { slug: string; inviteUrl: string; specialty: string }) {
+export function InviteBox({ slug, inviteUrl, specialty, questions, secondsPerQuestion }: { slug: string; inviteUrl: string; specialty: string; questions: number; secondsPerQuestion: number }) {
   const [emails, setEmails] = useState('');
   const [message, setMessage] = useState('');
   const [result, setResult] = useState<string | null>(null);
@@ -19,7 +19,7 @@ export function InviteBox({ slug, inviteUrl, specialty }: { slug: string; invite
   const [copied, setCopied] = useState(false);
   const [pending, start] = useTransition();
 
-  const text = `Je participe au tournoi EVC Arena ${specialty} de Major ECN : 3 manches de 12 QCM en 12 minutes, une seule tentative. Rejoins-moi : ${inviteUrl}`;
+  const text = `Je participe au tournoi EVC Arena ${specialty} de Major ECN : 3 manches de ${questions} QCM, ${secondsPerQuestion} s par question, une seule tentative. Rejoins-moi : ${inviteUrl}`;
   const wa = `https://wa.me/?text=${encodeURIComponent(text)}`;
   const tg = `https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent(text)}`;
   const mailto = `mailto:?subject=${encodeURIComponent('Rejoins-moi sur EVC Arena')}&body=${encodeURIComponent(text)}`;

@@ -12,7 +12,7 @@ import { computeTournamentStandings, effectiveBareme, roundMaxScore } from '@/li
 import { leaderboardRows } from '@/lib/arena/ranking';
 import { describeBareme } from '@/lib/arena/scoring';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
-import { PUBLIC_RULES, WARNING_CONNECTION, WARNING_NATURE } from '@/lib/arena/texts';
+import { publicRules, WARNING_CONNECTION, WARNING_NATURE } from '@/lib/arena/texts';
 import { roundState } from '@/lib/arena/time';
 import { qrpNs } from '@/lib/arena/types';
 
@@ -120,7 +120,7 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
                 <GoldEyebrow>Règlement</GoldEyebrow>
                 <h2 className="mt-4 text-[2.1rem] leading-[0.98] sm:text-[2.9rem] lg:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Les règles <span style={{ color: ARENA.red }}>de l’arène.</span></h2>
                 <ol className="mt-8 space-y-3">
-                  {PUBLIC_RULES.map((r, i) => (
+                  {publicRules(t).map((r: string, i: number) => (
                     <li key={i} className="flex gap-4 text-[14.5px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
                       <span className="shrink-0 pt-0.5 text-[15px] leading-none" style={{ fontFamily: HEADLINE, color: ARENA.gold, letterSpacing: '0.06em' }}>{(i + 1).toString().padStart(2, '0')}</span>
                       <span>{r}</span>

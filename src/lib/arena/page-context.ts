@@ -45,7 +45,7 @@ export async function loadArenaPage(slug: string, opts: { preview?: boolean } = 
 export function arenaMetadata(snap: TournamentSnapshot, page?: { title?: string; description?: string; noindex?: boolean }) {
   const t = snap.tournament;
   const title = page?.title ? `${page.title} — ${t.title}` : (t.meta_title ?? t.title);
-  const description = page?.description ?? t.meta_description ?? `Tournoi de QCM ${t.specialty} : trois manches, douze questions, douze minutes, une seule tentative.`;
+  const description = page?.description ?? t.meta_description ?? `Tournoi de QCM ${t.specialty} : trois manches, ${t.questions_per_round} questions chronométrées une par une, une seule tentative.`;
   const index = t.indexable && !page?.noindex;
   return {
     title,

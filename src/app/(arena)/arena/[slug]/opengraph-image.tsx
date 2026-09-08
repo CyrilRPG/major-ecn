@@ -45,7 +45,7 @@ export default async function OpenGraphImage({ params }: { params: Promise<{ slu
             <div style={{ display: 'flex', fontSize: 20, letterSpacing: 12, textTransform: 'uppercase', color: '#F2F3F5', marginTop: 6, fontWeight: 700 }}>By Major ECN</div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-            <div style={{ display: 'flex', fontSize: 30, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2 }}>3 manches · 12 questions · 12 minutes · 1 tentative</div>
+            <div style={{ display: 'flex', fontSize: 30, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2 }}>3 manches · 12 questions chronométrées · 1 tentative</div>
             <div style={{ display: 'flex', fontSize: 24, color: '#B8BEC8' }}>major-ecn.fr</div>
           </div>
         </div>

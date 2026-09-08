@@ -4,7 +4,7 @@ import { ARENA, BODY, CAPS, DISPLAY, TABULAR } from '@/components/arena/tokens';
 import { effectiveBareme } from '@/lib/arena/db';
 import { describeBareme } from '@/lib/arena/scoring';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
-import { PUBLIC_RULES, WARNING_CONNECTION, WARNING_NATURE } from '@/lib/arena/texts';
+import { publicRules, WARNING_CONNECTION, WARNING_NATURE } from '@/lib/arena/texts';
 import { qrpNs } from '@/lib/arena/types';
 
 export const dynamic = 'force-dynamic';
@@ -29,7 +29,7 @@ export default async function RulesPage({ params }: Params) {
         <h1 className="mt-4 text-[2.4rem] leading-[0.95] sm:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Les règles de l’arène.</h1>
 
         <ol className="mt-10 space-y-3">
-          {PUBLIC_RULES.map((r, i) => (
+          {publicRules(t).map((r: string, i: number) => (
             <li key={i} className="flex gap-4 text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
               <span className="shrink-0 pt-0.5 text-sm" style={{ ...TABULAR, color: ARENA.redSoft }}>{(i + 1).toString().padStart(2, '0')}</span>
               <span>{r}</span>

@@ -151,7 +151,7 @@ export default async function SpacePage({ params, searchParams }: Params) {
             <Panel>
               <h2 id="inviter" className="text-[1.4rem] leading-none" style={{ ...CAPS, color: ARENA.text }}>Invitez un collègue à rejoindre l’Arena</h2>
               <p className="mt-2 mb-5 text-[13px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Plus on est de médecins, plus le défi est stimulant. Votre lien d’invitation personnalisé :</p>
-              <InviteBox slug={slug} inviteUrl={inviteUrl} specialty={t.specialty} />
+              <InviteBox slug={slug} inviteUrl={inviteUrl} specialty={t.specialty} questions={t.questions_per_round} secondsPerQuestion={t.seconds_per_question ?? 60} />
             </Panel>
 
             <Panel>

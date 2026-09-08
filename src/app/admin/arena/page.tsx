@@ -39,7 +39,7 @@ export default async function ArenaAdminPage() {
         <div>
           <h1 className="text-2xl font-bold text-(--color-ink)">EVC Arena</h1>
           <p className="mt-1 text-sm text-(--color-ink-soft)">
-            Tournois de QCM par spécialité : trois manches, douze questions, douze minutes, une seule tentative. Rien n’est visible du public tant qu’un tournoi est en brouillon ou programmé.
+            Tournois de QCM par spécialité : trois manches, douze questions chronométrées une par une, une seule tentative. Rien n’est visible du public tant qu’un tournoi est en brouillon ou programmé.
           </p>
         </div>
         <Link href="/arena" className="text-sm font-semibold text-(--color-primary) underline-offset-4 hover:underline" target="_blank">Ouvrir le hub public ↗</Link>

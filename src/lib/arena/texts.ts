@@ -1,3 +1,4 @@
+import { DEFAULT_SECONDS_PER_QUESTION } from './types';
 /**
  * EVC Arena — textes imposés par le cahier des charges, à reprendre
  * LITTÉRALEMENT (§2.4, §3.1, §9, §12.2, §19). Ils sont versionnés : la version
@@ -37,10 +38,19 @@ export function buttonTruncated(minutes: number): string {
 /** Mention discrète après M3 uniquement (§12.2). */
 export const COMMERCIAL_AFTER_M3 = 'Vous souhaitez poursuivre votre préparation ? Découvrez l’environnement Major ECN.';
 
-/** Règles publiques (§19). */
-export const PUBLIC_RULES: string[] = [
+/**
+ * Règles publiques (§19).
+ *
+ * Le nombre de questions et le temps alloué étaient écrits en toutes lettres
+ * (« 12 questions, 12 minutes »). Depuis que chaque question porte sa propre
+ * durée, ces deux valeurs viennent du tournoi : une règle publique fausse
+ * serait pire que pas de règle du tout.
+ */
+export function publicRules(t: { questions_per_round: number; seconds_per_question?: number | null }): string[] {
+  const secondes = t.seconds_per_question ?? DEFAULT_SECONDS_PER_QUESTION;
+  return [
   'Trois manches, dates annoncées à l’avance. Chaque manche est ouverte 24 h.',
-  '12 questions, 12 minutes, une seule tentative. Thème et barème annoncés à l’avance.',
+  `${t.questions_per_round} questions, ${secondes} s par question, une seule tentative. Chaque question est chronométrée séparément : le temps écoulé, on passe à la suivante. Thème et barème annoncés à l’avance.`,
   'Corrections après clôture.',
   'Classement cumulatif, provisoire après M1 et M2, final après M3.',
   'Au moins deux manches pour figurer au classement final.',
@@ -49,7 +59,8 @@ export const PUBLIC_RULES: string[] = [
   'Sous 50 % de score cumulé, aucun rang affiché et aucune apparition dans le classement public ; le seuil est réévalué après chaque manche sur le score cumulé du moment.',
   'Aucun effectif total affiché.',
   'EVC Arena est un entraînement ludique, pas un concours blanc.',
-];
+  ];
+}
 
 /** Message neutre sous le seuil (§7) — jamais de mention de perte de rang. */
 export const UNDER_THRESHOLD_MESSAGE =
