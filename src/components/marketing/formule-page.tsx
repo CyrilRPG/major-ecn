@@ -19,6 +19,7 @@ import {
 import type { FormuleId } from '@/lib/stripe';
 import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
 import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty, specialtyByName } from '@/lib/data/enrollable-colleges';
+import { deSpecialite } from '@/lib/stripe/copy';
 import { DrapeauOrigine } from './drapeau-origine';
 
 const VARIANT_TO_FORMULE_ID: Record<'essentielle' | 'intensive' | 'approfondi', FormuleId> = {
@@ -642,7 +643,7 @@ function PaymentSection({ variant, c, specialite }: { variant: Variant; c: Payme
                       // sélectionnée à l'inscription).
                       isContentPendingSpecialty(checkoutSpecialty)
                         ? `Accès à ${checkoutSpecialty} dès la mise en ligne des contenus`
-                        : `Accès complet aux contenus de ${checkoutSpecialty}`,
+                        : `Accès complet aux contenus ${deSpecialite(checkoutSpecialty)}`,
                       'QCM, fiches, flashcards, méthodologie EVC',
                       'Annales corrigées des sessions précédentes',
                       'Email de confirmation + activation immédiate',

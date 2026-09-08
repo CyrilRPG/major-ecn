@@ -19,6 +19,7 @@ import { getStripe } from '@/lib/stripe';
 import type { FormuleId } from '@/lib/stripe';
 import { provisionStudentAccount, formatStripeAddress } from '@/lib/stripe/provisioning';
 import { ensureInstallmentPlanEnds } from '@/lib/stripe/installments';
+import { deSpecialite } from '@/lib/stripe/copy';
 
 export const metadata = {
   title: 'Merci pour votre inscription — Major ECN',
@@ -165,7 +166,7 @@ export default async function MerciPage({
   const accessLine = specialty
     ? (contentPending
         ? `Accès à ${specialty} dès la mise en ligne des contenus`
-        : `Accès complet aux contenus de ${specialty}`)
+        : `Accès complet aux contenus ${deSpecialite(specialty)}`)
     : 'Accès complet aux contenus de la spécialité choisie';
 
   return (

@@ -99,6 +99,16 @@ export function approfondiStripeCopy(tier: {
   };
 }
 
+/**
+ * « de » élidé devant une spécialité qui commence par une voyelle :
+ * « contenus d'Odontologie », pas « contenus de Odontologie ». Concerne
+ * Odontologie, Orthopédie et Anesthésie-réanimation.
+ */
+export function deSpecialite(name: string): string {
+  const first = name.trim().charAt(0).toLowerCase();
+  return /[aeiouyàâäéèêëîïôöûü]/.test(first) ? `d’${name}` : `de ${name}`;
+}
+
 /** Forme courte de la voie de concours ('Voie externe' → 'externe'). */
 export function shortVoie(raw: string | null | undefined): 'interne' | 'externe' | null {
   const v = (raw ?? '').trim().toLowerCase().replace(/^voie\s+/, '');
