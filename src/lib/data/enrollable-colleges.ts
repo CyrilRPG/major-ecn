@@ -42,7 +42,9 @@ export const ENROLLABLE_SPECIALTIES: EnrollableSpecialty[] = [
   // dès le paiement, comme pour les autres spécialités.
   { collegeId: 'col-anesthesie-reanimation', name: 'Anesthésie-réanimation' },
   { collegeId: 'col-orthopedie', name: 'Orthopédie' },
-  { collegeId: null, name: 'Odontologie', contentPending: true },
+  // Contenus en ligne : `col-ecn-odontologie` (302 items, 302 fiches, 1 208 séries
+  // QCM/QROC, plus de 3 000 flashcards) — vérifié le 2026-09-08.
+  { collegeId: 'col-ecn-odontologie', name: 'Odontologie' },
 ];
 
 export const ENROLLABLE_SPECIALTY_NAMES = ENROLLABLE_SPECIALTIES.map((s) => s.name);

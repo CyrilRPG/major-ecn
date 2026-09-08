@@ -260,6 +260,10 @@ export const APPROFONDI_SPECIALTIES: ApprofondiSpecialty[] = [
     ],
   },
   {
+    // Contenus en ligne : le collège `col-ecn-odontologie` (semestre `edn-prog`,
+    // faculté `major-ecn`) porte 302 items, 302 fiches, 1 208 séries QCM/QROC et
+    // plus de 3 000 flashcards — vérifié le 2026-09-08. L'accès est donc accordé
+    // dès le paiement, comme pour les autres spécialités.
     key: 'odontologie',
     name: 'Odontologie',
     tiers: [
@@ -267,13 +271,13 @@ export const APPROFONDI_SPECIALTIES: ApprofondiSpecialty[] = [
         id: 'odonto', tier: 'base', tierLabel: 'Approfondi',
         amountCents: 209500, hoursLabel: '36 h de cours',
         envPriceId: 'STRIPE_PRICE_APPRO_ODONTO',
-        targetCollege: null, contentPending: true,
+        targetCollege: 'col-ecn-odontologie',
       },
       {
         id: 'odonto-plus', tier: 'plus', tierLabel: 'Approfondi +',
         amountCents: 269500, hoursLabel: 'Plus de 50 h de cours',
         envPriceId: 'STRIPE_PRICE_APPRO_ODONTO_PLUS',
-        targetCollege: null, contentPending: true,
+        targetCollege: 'col-ecn-odontologie',
       },
     ],
   },
