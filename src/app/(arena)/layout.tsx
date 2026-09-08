@@ -23,11 +23,18 @@ export const metadata: Metadata = {
 
 export default function ArenaLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className={`arena-root ${oswald.variable} ${bebas.variable} ${inter.variable} relative isolate flex min-h-screen flex-col overflow-x-hidden bg-[#0B0F14] text-[#F2F3F5] antialiased`}
-      style={{ fontFamily: "var(--font-inter), 'Inter', system-ui, sans-serif" }}
-    >
-      {children}
-    </div>
+    <>
+      {/* Le fond sombre était porté par la seule div ci-dessous : la page
+          restait posée sur le gris clair du `body` du site, qui réapparaissait
+          au rebond de défilement et derrière les barres du navigateur mobile.
+          Ce style n'existe que tant qu'une page de l'arène est montée. */}
+      <style>{'html:has(.arena-root), body:has(.arena-root){background:#0B0F14;color-scheme:dark}'}</style>
+      <div
+        className={`arena-root ${oswald.variable} ${bebas.variable} ${inter.variable} relative isolate flex min-h-screen flex-col overflow-x-hidden bg-[#0B0F14] text-[#F2F3F5] antialiased`}
+        style={{ fontFamily: "var(--font-inter), 'Inter', system-ui, sans-serif" }}
+      >
+        {children}
+      </div>
+    </>
   );
 }
