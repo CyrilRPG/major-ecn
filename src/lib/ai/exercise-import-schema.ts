@@ -391,6 +391,18 @@ export function validate(result: ExerciseImportResult, voie: ImportVoie): Exerci
       if (q.items.length > LETTRES.length) { ecarter(`${q.items.length} propositions, le maximum est ${LETTRES.length}`); return; }
       if (!q.items.some((i) => i.is_correct)) { ecarter('aucune proposition n’est marquée exacte'); return; }
 
+      // Une liste de propositions coupée par un saut de page peut n'être
+      // extraite qu'à moitié : la suite (« c) … d) … e) … ») ouvre la page
+      // suivante sans rappeler la question, et le modèle s'arrête parfois là.
+      // Constaté le 08/09/2026 sur deux questions d'un import de 358 (les
+      // trois dernières propositions manquaient, toutes exactes pour l'une).
+      // On n'écarte pas — un QCM à trois propositions existe — mais on le dit,
+      // pour que l'administrateur vérifie avant de publier.
+      if (q.items.length < 4) {
+        q.warnings.push(`Seulement ${q.items.length} propositions extraites : vérifiez que la liste n’est pas coupée par un saut de page dans la source.`);
+        avertissements.push(`${repere} : ${q.items.length} propositions seulement — liste peut-être coupée par un saut de page.`);
+      }
+
       // Lettres : on normalise, et si le compte n'y est pas on relettre dans
       // l'ORDRE DU DOCUMENT — cet ordre est l'information qui compte, la lettre
       // n'en est que l'étiquette.
