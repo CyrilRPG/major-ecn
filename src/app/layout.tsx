@@ -5,6 +5,7 @@ import { QueryProvider } from '@/lib/query/providers';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { AntiCopyShield } from '@/components/anti-copy-shield';
 import { CookieConsentBanner } from '@/components/cookie-consent-banner';
+import { RattrapageLienNatif } from '@/components/auth/rattrapage-lien-natif';
 import './globals.css';
 
 const sans = Manrope({ subsets: ['latin'], variable: '--font-manrope', display: 'swap' });
@@ -66,6 +67,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" suppressHydrationWarning className={`${sans.variable} ${display.variable} ${jakarta.variable} ${mono.variable}`}>
       <body className="min-h-screen antialiased">
+        {/* Avant tout code applicatif : voir le composant. */}
+        <RattrapageLienNatif />
         <ThemeProvider attribute="class" forcedTheme="light" defaultTheme="light" enableSystem={false}>
           <QueryProvider>
             <TooltipProvider delayDuration={150}>{children}</TooltipProvider>
