@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Check, RefreshCw } from 'lucide-react';
-import { DrawnAvatar } from '@/components/avatar/drawn-avatar';
+import { ArenaAvatar } from '@/components/arena/arena-avatar';
 import { checkPseudo, registerParticipant } from '@/app/(arena)/arena/[slug]/actions';
 import { CONSENT_MARKETING, CONSENT_TOURNAMENT } from '@/lib/arena/texts';
 import { browserTimezone } from '@/lib/arena/time';
@@ -148,7 +148,7 @@ export function RegisterForm({
             const on = s === seed;
             return (
               <button key={s} type="button" onClick={() => setSeed(s)} aria-pressed={on} aria-label="Choisir cet avatar" className="rounded-full p-0.5 transition-transform hover:scale-105" style={{ boxShadow: on ? `0 0 0 2.5px ${ARENA.red}, 0 0 20px rgba(228,0,43,0.5)` : `0 0 0 1.5px ${ARENA.lineStrong}` }}>
-                <DrawnAvatar seed={s} size={44} />
+                <ArenaAvatar seed={s} size={44} />
               </button>
             );
           })}

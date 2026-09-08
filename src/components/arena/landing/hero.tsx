@@ -65,7 +65,7 @@ export function LandingHero({
   ];
 
   return (
-    <Stadium photo="heroArena" darken={0.3} tint={0.12} gold={0.22} animate priority position="center 30%" className="flex min-h-[calc(100svh-4.5rem)]">
+    <Stadium photo="heroArena" darken={0.3} tint={0.12} gold={0} topShade={0.78} animate priority position="center 30%" className="flex min-h-[calc(100svh-4.5rem)]">
       {/* Devise verticale (gauche) */}
       <Enter delay={0.9} className="pointer-events-none absolute left-5 top-[38%] hidden xl:block 2xl:left-10">
         <div aria-hidden className="flex -rotate-[14deg] flex-col gap-1" style={{ fontFamily: DISPLAY, color: ARENA.text, letterSpacing: '0.3em', fontSize: 17, textTransform: 'uppercase', textShadow: shadow }}>

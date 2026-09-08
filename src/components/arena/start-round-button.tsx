@@ -8,7 +8,6 @@ import { ArenaButton } from './arena-ui';
 import { FormError } from './form-ui';
 
 export function StartRoundButton({ slug, roundNumber, label, preview }: { slug: string; roundNumber: number; label: string; preview: boolean }) {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
   return (
@@ -22,8 +21,10 @@ export function StartRoundButton({ slug, roundNumber, label, preview }: { slug: 
           setError(null);
           start(async () => {
             const r = await startAttempt(slug, roundNumber, preview);
-            if (r.ok) router.refresh();
-            else setError(r.error);
+            if (!r.ok) { setError(r.error); return; }
+            // Rechargement complet : garantit l'écran de passation immédiatement (router.refresh()
+            // pouvait laisser l'écran d'accueil affiché plusieurs secondes en recette).
+            window.location.assign(window.location.pathname + window.location.search);
           });
         }}
       >

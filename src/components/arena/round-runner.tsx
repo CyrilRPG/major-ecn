@@ -56,8 +56,10 @@ export function RoundRunner({
   const index = current ? questions.findIndex((q) => q.id === current.id) : questions.length;
   const deadline = useMemo(() => new Date(deadlineIso).getTime(), [deadlineIso]);
 
+  // Fin de manche : rafraîchit le rendu serveur, puis rechargement complet si l'écran n'a pas changé (secours).
   const finish = useCallback(() => {
     router.refresh();
+    window.setTimeout(() => window.location.assign(window.location.pathname + window.location.search), 2500);
   }, [router]);
 
   // Chronomètre : le serveur est seul juge, le client se contente d'afficher et de déclencher la clôture.

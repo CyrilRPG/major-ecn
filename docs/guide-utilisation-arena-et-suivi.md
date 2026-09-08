@@ -195,6 +195,15 @@ durée réduite au temps restant en cas d'entrée tardive (§2.4).
 ---
 
 
+### 2.9 bis Rejouer une manche pour tester
+
+Une seule tentative par manche (§2.2) : un compte qui a joué M1 voit l'écran de fin de
+manche et n'a rien à jouer avant l'ouverture de M2. Pour retester avec le même compte,
+onglet **Participants** du tournoi, icône ↺ à côté du score de la manche (« Réinitialiser
+la tentative »), avec un motif : la tentative et ses réponses sont supprimées et le
+participant peut rejouer. Le personnel dispose aussi de la prévisualisation (§15.2),
+rejouable sans limite et sans score.
+
 ### 2.10 Identité visuelle (maquettes du 01/09/2026)
 
 Les trois planches déposées dans `templates/evc arena/` (parcours complet, cahier
@@ -203,6 +212,7 @@ des charges illustré, visuels et expérience) ont été reprises écran par éc
 | Maquette | Écran de la plateforme |
 |---|---|
 | 1. Inscription | `/arena/<slug>/inscription` — carte centrée, logo, accroche « Relevez le défi. Mesurez-vous aux meilleurs. », six avatars au choix, deux consentements, « Je m'inscris », « Déjà inscrit ? Se connecter », mention « aucun numéro de téléphone » |
+| Avatars | Emblèmes vectoriels gladiateur × médecine (casque, bouclier au serpent, laurier au cœur, masque au stéthoscope, glaive et seringue, bâton d'Esculape, casque ECG, caducée ailé) déclinés en six palettes ; six propositions à l'inscription, « Autres avatars » pour en tirer d'autres |
 | 2. Modération pseudonyme | Vérification en direct dans le formulaire : croix rouge « mot ou format non autorisé », coche verte « pseudonyme disponible », rappel des quatre règles |
 | 3. Accueil avant la manche | `/arena/<slug>/manche/<n>` — Manche n / N, thème, ouverture et fermeture, « Règles de la manche », barème, avertissement rouge, encadré connexion ambre, « Commencer la manche » |
 | 4. Pendant la manche | Anneau de temps, question n / N et progression, énoncé, type de réponse en rouge, propositions cochées en vert, « Valider & suivante » |

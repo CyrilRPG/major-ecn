@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { RefreshCw, Trash2 } from 'lucide-react';
-import { DrawnAvatar } from '@/components/avatar/drawn-avatar';
+import { ArenaAvatar } from '@/components/arena/arena-avatar';
 import { changePseudo, deleteMyAccount, logoutArena, setMarketingConsent, shuffleAvatar } from '@/app/(arena)/arena/[slug]/actions';
 import { CONSENT_MARKETING } from '@/lib/arena/texts';
 import { ArenaButton, ARENA, BODY, DISPLAY } from './arena-ui';
@@ -25,7 +25,7 @@ export function SpaceSettings({
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-4">
-        <span className="rounded-full" style={{ boxShadow: `0 0 0 2px ${ARENA.lineStrong}` }}><DrawnAvatar seed={seed} size={64} title={pseudo} /></span>
+        <span className="rounded-full" style={{ boxShadow: `0 0 0 2px ${ARENA.lineStrong}` }}><ArenaAvatar seed={seed} size={64} title={pseudo} /></span>
         <div>
           <p className="text-lg font-extrabold" style={{ fontFamily: DISPLAY }}>{pseudo}</p>
           <p className="text-xs" style={{ color: ARENA.textMuted, fontFamily: BODY }}>{email}</p>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { DrawnAvatar } from '@/components/avatar/drawn-avatar';
+import { ArenaAvatar } from '@/components/arena/arena-avatar';
 import { ARENA, BODY, CAPS, DISPLAY, HEADLINE, TABULAR } from './arena-ui';
 
 /* ============================================================
@@ -82,7 +82,7 @@ export function Leaderboard({
                   </span>
                   <span className="flex min-w-0 items-center gap-3">
                     <span className="shrink-0 rounded-full" style={{ boxShadow: `0 0 0 2px ${podium || r.me ? 'rgba(228,0,43,0.7)' : ARENA.lineStrong}` }}>
-                      <DrawnAvatar seed={r.avatarSeed} size={34} title={r.pseudo} />
+                      <ArenaAvatar seed={r.avatarSeed} size={34} title={r.pseudo} />
                     </span>
                     <span className="min-w-0">
                       <span className="block truncate text-[15px] font-semibold" style={{ fontFamily: BODY, color: ARENA.text }}>

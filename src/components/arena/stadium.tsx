@@ -12,9 +12,9 @@ type Photo = keyof typeof PHOTOS;
  * lent travelling (Ken Burns), coupé sous prefers-reduced-motion (§13).
  */
 export function Stadium({
-  photo = 'stadiumRed', darken = 0.62, tint = 0.28, gold = 0.18, beams = false, animate = false, position = 'center', priority = false, className = '', children,
+  photo = 'stadiumRed', darken = 0.62, tint = 0.28, gold = 0.18, topShade = 0, beams = false, animate = false, position = 'center', priority = false, className = '', children,
 }: {
-  photo?: Photo; darken?: number; tint?: number; gold?: number; beams?: boolean; animate?: boolean; position?: string; priority?: boolean; className?: string; children?: ReactNode;
+  photo?: Photo; darken?: number; tint?: number; gold?: number; /** Dégradé noir depuis le haut (lisibilité du titre). */ topShade?: number; beams?: boolean; animate?: boolean; position?: string; priority?: boolean; className?: string; children?: ReactNode;
 }) {
   return (
     <div className={`relative isolate overflow-hidden ${className}`}>
@@ -23,6 +23,7 @@ export function Stadium({
       </div>
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-20" style={{ background: `rgba(11,15,20,${darken})` }} />
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-20" style={{ background: `linear-gradient(180deg, rgba(228,0,43,${tint * 0.55}) 0%, rgba(11,15,20,0) 45%, rgba(11,15,20,0.92) 100%)` }} />
+      {topShade > 0 && <div aria-hidden className="pointer-events-none absolute inset-0 -z-20" style={{ background: `linear-gradient(180deg, rgba(5,8,13,${topShade}) 0%, rgba(5,8,13,${topShade * 0.55}) 32%, rgba(5,8,13,0) 58%)` }} />}
       {gold > 0 && <div aria-hidden className="pointer-events-none absolute inset-0 -z-20" style={{ background: `radial-gradient(ellipse 70% 45% at 50% 100%, rgba(212,169,74,${gold}), transparent 70%)` }} />}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-20" style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 40%, rgba(0,0,0,0) 40%, rgba(11,15,20,0.85) 100%)' }} />
       {beams && (
