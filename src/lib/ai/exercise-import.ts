@@ -167,11 +167,20 @@ async function appelStructure<T>(args: {
     return { data, usage: { usage, usd: usageToUsd(usage, message.model), model: message.model } };
   } catch (e) {
     if (e instanceof LotTropLongError) throw e;
+    // Le dépassement de délai D'ABORD : `APIUserAbortError` hérite de
+    // `APIError`, donc la branche générique le happait et affichait le message
+    // brut du SDK — « Anthropic : Request was aborted. » — à la place de
+    // l'explication utile. La branche ci-dessous était devenue du code mort.
+    if (e instanceof Anthropic.APIUserAbortError || abort.signal.aborted) {
+      throw new Error(
+        `Lot ${args.lot.index + 1} (pages ${args.lot.debut}-${args.lot.fin}) : l’analyse a dépassé le délai autorisé `
+        + `(${Math.round(DELAI_APPEL_MS / 1000)} s). Relancez : seuls les lots manquants seront rejoués.`,
+      );
+    }
     if (e instanceof Anthropic.AuthenticationError) throw new Error('Clé Anthropic refusée : vérifiez ANTHROPIC_API_KEY.');
     if (e instanceof Anthropic.RateLimitError) throw new Error('Limite de débit Anthropic atteinte : relancez l’analyse dans quelques minutes.');
     if (e instanceof Anthropic.BadRequestError) throw new Error(`Requête refusée par Anthropic : ${e.message.slice(0, 300)}`);
     if (e instanceof Anthropic.APIError) throw new Error(`Anthropic ${e.status ?? ''} : ${e.message.slice(0, 300)}`);
-    if (abort.signal.aborted) throw new Error(`Lot ${args.lot.index + 1} : l’analyse a dépassé le délai autorisé, il sera rejoué.`);
     throw e;
   } finally {
     clearTimeout(minuterie);
