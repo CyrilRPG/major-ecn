@@ -699,7 +699,13 @@ function Select({
         }}
       >
         {options.map((o) => (
-          <option key={o.value} value={o.value}>{o.label}</option>
+          // Couleurs explicites : `color-scheme: light` (globals.css) suffit sur
+          // Chrome et Firefox, mais quelques moteurs peignent encore la liste
+          // avec le thème système et laissent les <option> hériter de la
+          // couleur foncée du <select> — texte sombre sur fond sombre.
+          <option key={o.value} value={o.value} style={{ backgroundColor: '#FFFFFF', color: '#1F2937' }}>
+            {o.label}
+          </option>
         ))}
       </select>
       {disabled ? (

@@ -100,7 +100,18 @@
   --easing-emphatic: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Thème des widgets NATIFS du navigateur (liste déroulante d'un <select>,
+ * barres de défilement, sélecteurs de date…). Le site force le thème clair
+ * côté CSS (`ThemeProvider forcedTheme="light"`), mais sans `color-scheme`
+ * le navigateur continue de peindre ces widgets avec le thème du SYSTÈME.
+ * Sous Windows en mode sombre, la liste d'un <select> s'ouvrait donc sur
+ * fond sombre pendant que les <option> héritaient de la couleur de texte
+ * foncée du contrôle : options illisibles (signalé le 08/09/2026 sur le
+ * sélecteur de spécialité du tunnel d'achat). */
+:root { color-scheme: light; }
+
 .dark {
+  color-scheme: dark;
   /* Dark tokens kept for coherence; light theme is forced in layout.tsx */
   --color-primary:       #F25667;  /* readable on dark surfaces */
   --color-primary-deep:  #F89BA3;  /* lighter for stronger emphasis */
