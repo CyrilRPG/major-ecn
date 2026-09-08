@@ -8,7 +8,7 @@ import {
   arenaDb, computeTournamentStandings, effectiveBareme, getParticipant, getRound, getTournament, listAttemptsForRounds, listParticipants,
   listQuestions, loadTournamentSnapshot, roundMaxScore,
 } from '@/lib/arena/db';
-import { confirmationEmail, relanceEmail, reportUpdateEmail, resultsEmail, roundOpeningEmail, roundReminderEmail, sendArenaEmail, validatedEmail } from '@/lib/arena/emails';
+import { confirmationEmail, loginEmail, relanceEmail, reportUpdateEmail, resultsEmail, roundOpeningEmail, roundReminderEmail, sendArenaEmail, validatedEmail } from '@/lib/arena/emails';
 import { finalizeAttempt, recomputeRound } from '@/lib/arena/grading';
 import { correctionsPdfSignedUrl } from '@/lib/arena/pdf-url';
 import { sanitizeBareme } from '@/lib/arena/scoring';
@@ -341,6 +341,53 @@ export async function resendConfirmationAdmin(id: string): Promise<Ok | Err> {
   if (!r.ok) return err(r.error);
   revalidate(t.id);
   return { ok: true };
+}
+
+/**
+ * Renvoie à un participant le lien dont il a besoin, sans que l'administration
+ * ait à savoir lequel.
+ *
+ * `resendConfirmationAdmin` refuse une adresse déjà confirmée — c'est correct
+ * pour la confirmation, mais inutilisable quand un inscrit confirmé dit
+ * simplement « je n'ai pas reçu le mail » : ce qu'il lui faut alors est un lien
+ * de connexion. Cette action choisit donc :
+ *   - adresse non confirmée  → nouveau lien de confirmation ;
+ *   - adresse confirmée      → lien de connexion valable une heure.
+ *
+ * Un participant bloqué ou anonymisé ne reçoit rien : lui renvoyer un lien
+ * reviendrait à défaire une décision de modération ou une demande d'effacement.
+ */
+export async function resendArenaLink(id: string): Promise<Ok<{ kind: 'confirmation' | 'login' }> | Err> {
+  const actor = await ensureArenaAdmin();
+  const p = await getParticipant(id);
+  if (!p) return err('Participant introuvable.');
+  if (p.anonymized_at) return err('Ce participant a demandé l’effacement de ses données.');
+  if (p.blocked_at) return err('Ce participant est bloqué : débloquez-le avant de lui renvoyer un lien.');
+  const t = await getTournament(p.tournament_id);
+  if (!t) return err('Tournoi introuvable.');
+
+  const { token, hash } = newToken();
+  if (!p.email_confirmed_at) {
+    await arenaDb().from('arena_participants')
+      .update({ confirmation_token_hash: hash, confirmation_sent_at: new Date().toISOString() })
+      .eq('id', p.id);
+    const url = `${siteUrl()}/arena/confirmer?t=${encodeURIComponent(token)}`;
+    const r = await sendArenaEmail({ tournament: t, participant: p, to: p.email, kind: 'confirmation', mail: confirmationEmail(t, p, url), triggeredBy: actor.user.id });
+    if (!r.ok) return err(r.error);
+    await logAdmin(actor, { tournamentId: t.id, kind: 'participant_email_resent', details: `Lien de confirmation renvoyé à ${p.email}.` });
+    revalidate(t.id);
+    return { ok: true, kind: 'confirmation' };
+  }
+
+  await arenaDb().from('arena_participants')
+    .update({ login_token_hash: hash, login_token_expires_at: new Date(Date.now() + 3_600_000).toISOString() })
+    .eq('id', p.id);
+  const url = `${siteUrl()}/arena/connecter?t=${encodeURIComponent(token)}`;
+  const r = await sendArenaEmail({ tournament: t, participant: p, to: p.email, kind: 'login', mail: loginEmail(t, p, url), triggeredBy: actor.user.id });
+  if (!r.ok) return err(r.error);
+  await logAdmin(actor, { tournamentId: t.id, kind: 'participant_email_resent', details: `Lien de connexion renvoyé à ${p.email}.` });
+  revalidate(t.id);
+  return { ok: true, kind: 'login' };
 }
 
 /** Réinitialisation exceptionnelle d'une tentative (incident technique avéré) : tracée. */

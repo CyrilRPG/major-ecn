@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useMemo, useTransition } from 'react';
-import { Loader2, Power, BookDown, BarChart3, Search, X, Eye } from 'lucide-react';
+import { Loader2, Power, BookDown, BarChart3, Search, X, Eye, Swords, MailCheck, CheckCircle2, Clock } from 'lucide-react';
 import { DiagnosticDetailsDialog } from './diagnostic-details-dialog';
 import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
+import { blockParticipant, resendArenaLink } from '@/app/admin/arena/actions';
 
 export type UnifiedLead = {
   id: string;
-  source: 'methodologie' | 'diagnostic';
+  source: 'methodologie' | 'diagnostic' | 'arena';
   first_name: string;
   last_name: string;
   email: string;
@@ -24,9 +25,18 @@ export type UnifiedLead = {
   session_evc?: string | null;
   obstacle?: string | null;
   answers?: Record<string, string> | null;
+  // Spécifiques EVC Arena
+  arena_pseudo?: string | null;
+  arena_tournament?: string | null;
+  /** Adresse confirmée : tant qu'elle ne l'est pas, l'inscrit ne peut pas jouer. */
+  arena_confirmed?: boolean;
+  arena_blocked_reason?: string | null;
+  arena_last_login_at?: string | null;
+  arena_consent_marketing?: boolean;
+  arena_acquisition?: string | null;
 };
 
-type Filter = 'all' | 'methodologie' | 'diagnostic';
+type Filter = 'all' | 'methodologie' | 'diagnostic' | 'arena';
 
 const PROFILE_COLORS: Record<string, { bg: string; fg: string }> = {
   construire: { bg: '#FDE7E9', fg: '#C0112E' },
@@ -41,18 +51,46 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
   const [search, setSearch] = useState('');
   const [detailLead, setDetailLead] = useState<UnifiedLead | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [resendingId, setResendingId] = useState<string | null>(null);
+  /** Retour du dernier renvoi, affiché sur la ligne concernée. */
+  const [resendResult, setResendResult] = useState<{ id: string; ok: boolean; message: string } | null>(null);
   const [, startTransition] = useTransition();
 
   const toggle = (lead: UnifiedLead) => {
     setTogglingId(lead.id);
     startTransition(async () => {
       try {
-        const res = await fetchAvecJetonFrais('/api/admin/toggle-lead', { leadId: lead.id, active: !lead.active, source: lead.source });
-        if (res.ok) {
-          setLeads((prev) => prev.map((l) => (l.id === lead.id && l.source === lead.source ? { ...l, active: !lead.active } : l)));
+        if (lead.source === 'arena') {
+          // Un inscrit Arena ne se « désactive » pas comme un lead : la seule
+          // notion équivalente est le blocage de participation, qui est tracé.
+          const res = await blockParticipant(lead.id, '', lead.active);
+          if (res.ok) {
+            setLeads((prev) => prev.map((l) => (l.id === lead.id && l.source === 'arena' ? { ...l, active: !lead.active } : l)));
+          }
+        } else {
+          const res = await fetchAvecJetonFrais('/api/admin/toggle-lead', { leadId: lead.id, active: !lead.active, source: lead.source });
+          if (res.ok) {
+            setLeads((prev) => prev.map((l) => (l.id === lead.id && l.source === lead.source ? { ...l, active: !lead.active } : l)));
+          }
         }
       } catch { /* ignore */ }
       setTogglingId(null);
+    });
+  };
+
+  const renvoyerLien = (lead: UnifiedLead) => {
+    setResendingId(lead.id);
+    setResendResult(null);
+    startTransition(async () => {
+      try {
+        const res = await resendArenaLink(lead.id);
+        setResendResult(res.ok
+          ? { id: lead.id, ok: true, message: res.kind === 'confirmation' ? 'Lien de confirmation renvoyé' : 'Lien de connexion renvoyé' }
+          : { id: lead.id, ok: false, message: res.error });
+      } catch {
+        setResendResult({ id: lead.id, ok: false, message: 'Envoi impossible.' });
+      }
+      setResendingId(null);
     });
   };
 
@@ -61,7 +99,7 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
     const q = search.trim().toLowerCase();
     if (q) {
       list = list.filter((l) =>
-        `${l.first_name} ${l.last_name} ${l.email} ${l.phone ?? ''} ${l.specialty ?? ''} ${l.profile_label ?? ''}`
+        `${l.first_name} ${l.last_name} ${l.email} ${l.phone ?? ''} ${l.specialty ?? ''} ${l.profile_label ?? ''} ${l.arena_pseudo ?? ''} ${l.arena_tournament ?? ''}`
           .toLowerCase()
           .includes(q),
       );
@@ -73,15 +111,25 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
     all: leads.length,
     methodologie: leads.filter((l) => l.source === 'methodologie').length,
     diagnostic: leads.filter((l) => l.source === 'diagnostic').length,
+    arena: leads.filter((l) => l.source === 'arena').length,
   }), [leads]);
 
   const activeCount = filtered.filter((l) => l.active).length;
+  /** Inscrits Arena qui n'ont jamais confirmé : ce sont eux qu'il faut relancer. */
+  const arenaEnAttente = filtered.filter((l) => l.source === 'arena' && !l.arena_confirmed).length;
 
   const TABS: { key: Filter; label: string; count: number }[] = [
     { key: 'all', label: 'Tous', count: counts.all },
     { key: 'methodologie', label: 'Méthodologie', count: counts.methodologie },
     { key: 'diagnostic', label: 'Diagnostic', count: counts.diagnostic },
+    { key: 'arena', label: 'EVC Arena', count: counts.arena },
   ];
+
+  const emails = filtered.map((l) => l.email).filter(Boolean);
+
+  const copierEmails = () => {
+    navigator.clipboard?.writeText(emails.join(', ')).catch(() => { /* presse-papiers indisponible */ });
+  };
 
   return (
     <>
@@ -93,7 +141,7 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher un lead (nom, e-mail, téléphone, spécialité…)"
+            placeholder="Rechercher un lead (nom, e-mail, téléphone, spécialité, pseudo…)"
             className="w-full rounded-xl border border-(--color-border) bg-(--color-surface) py-2.5 pl-9 pr-9 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
           />
           {search && (
@@ -124,19 +172,31 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
           >
             {t.key === 'methodologie' && <BookDown className="h-3.5 w-3.5" />}
             {t.key === 'diagnostic' && <BarChart3 className="h-3.5 w-3.5" />}
+            {t.key === 'arena' && <Swords className="h-3.5 w-3.5" />}
             {t.label}
             <span className={`rounded-full px-1.5 text-xs ${filter === t.key ? 'bg-white/25' : 'bg-(--color-surface-soft)'}`}>{t.count}</span>
           </button>
         ))}
       </div>
 
-      <div className="mb-4 flex items-center gap-4">
+      <div className="mb-4 flex flex-wrap items-center gap-4">
         <p className="text-sm font-bold text-(--color-ink-soft)">
           {filtered.length} lead{filtered.length !== 1 ? 's' : ''}
         </p>
         <span className="text-xs text-(--color-ink-muted)">
           {activeCount} actif{activeCount !== 1 ? 's' : ''} · {filtered.length - activeCount} désactivé{filtered.length - activeCount !== 1 ? 's' : ''}
+          {arenaEnAttente > 0 && ` · ${arenaEnAttente} Arena en attente de confirmation`}
         </span>
+        {emails.length > 0 && (
+          <button
+            type="button"
+            onClick={copierEmails}
+            className="rounded-lg border border-(--color-border) bg-(--color-surface) px-2.5 py-1 text-xs font-bold text-(--color-ink-soft) transition-colors hover:border-(--color-primary) hover:text-(--color-primary)"
+            title="Copier les adresses affichées, séparées par des virgules"
+          >
+            Copier les {emails.length} e-mails
+          </button>
+        )}
       </div>
 
       {filtered.length === 0 ? (
@@ -153,7 +213,7 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Téléphone</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Spécialité</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Source</th>
-                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Profil</th>
+                <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Profil / Statut</th>
                 <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Date</th>
                 <th className="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider text-(--color-ink-muted)">Actif</th>
               </tr>
@@ -161,6 +221,7 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
             <tbody>
               {filtered.map((l) => {
                 const pc = l.profile_key ? PROFILE_COLORS[l.profile_key] : null;
+                const res = resendResult && resendResult.id === l.id ? resendResult : null;
                 return (
                   <tr
                     key={`${l.source}-${l.id}`}
@@ -168,6 +229,9 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
                   >
                     <td className={`whitespace-nowrap px-4 py-3 font-medium ${l.active ? 'text-(--color-ink)' : 'text-gray-400 line-through'}`}>
                       {l.first_name} {l.last_name}
+                      {l.arena_pseudo && (
+                        <span className="ml-1.5 text-xs font-normal text-(--color-ink-muted)">« {l.arena_pseudo} »</span>
+                      )}
                     </td>
                     <td className={`whitespace-nowrap px-4 py-3 ${l.active ? 'text-(--color-ink-soft)' : 'text-gray-400'}`}>
                       <a href={`mailto:${l.email}`} className="hover:underline">{l.email}</a>
@@ -179,13 +243,17 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
                         <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: '#EDE7FA', color: '#6D28D9' }}>
                           <BarChart3 className="h-3 w-3" /> Diagnostic
                         </span>
+                      ) : l.source === 'arena' ? (
+                        <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: '#FDE7E9', color: '#C0112E' }} title={l.arena_tournament ?? undefined}>
+                          <Swords className="h-3 w-3" /> EVC Arena
+                        </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: '#E5F1FF', color: '#1E4D8B' }}>
                           <BookDown className="h-3 w-3" /> Méthodologie
                         </span>
                       )}
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3">
+                    <td className="px-4 py-3">
                       {l.source === 'diagnostic' ? (
                         <span className="inline-flex items-center gap-2">
                           {l.profile_label && (
@@ -202,6 +270,33 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
                             <Eye className="h-3.5 w-3.5" /> Détails
                           </button>
                         </span>
+                      ) : l.source === 'arena' ? (
+                        <span className="inline-flex flex-wrap items-center gap-2">
+                          {l.arena_confirmed ? (
+                            <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: '#E7F6EC', color: '#16793C' }}>
+                              <CheckCircle2 className="h-3 w-3" /> Confirmé
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: '#FEF0E4', color: '#B45309' }}>
+                              <Clock className="h-3 w-3" /> En attente
+                            </span>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => renvoyerLien(l)}
+                            disabled={resendingId === l.id || !l.active}
+                            className="inline-flex items-center gap-1 rounded-lg border border-(--color-border) bg-(--color-surface) px-2 py-1 text-xs font-bold text-(--color-ink) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) disabled:opacity-40"
+                            title={l.arena_confirmed
+                              ? 'Renvoyer un lien de connexion (valable 1 heure)'
+                              : 'Renvoyer le lien de confirmation d’inscription'}
+                          >
+                            {resendingId === l.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <MailCheck className="h-3.5 w-3.5" />}
+                            Renvoyer le lien
+                          </button>
+                          {res && (
+                            <span className={`text-xs font-bold ${res.ok ? 'text-[#16793C]' : 'text-[#C0001F]'}`}>{res.message}</span>
+                          )}
+                        </span>
                       ) : (
                         <span className="text-(--color-ink-muted)">—</span>
                       )}
@@ -216,7 +311,9 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
                         disabled={togglingId === l.id}
                         className="group mx-auto flex h-8 w-8 items-center justify-center rounded-lg border transition-all disabled:opacity-50"
                         style={l.active ? { background: '#E7F6EC', borderColor: '#86EFAC', color: '#16793C' } : { background: '#FDE7E9', borderColor: '#FCA5A5', color: '#C0001F' }}
-                        title={l.active ? 'Désactiver ce lead' : 'Réactiver ce lead'}
+                        title={l.source === 'arena'
+                          ? (l.active ? 'Bloquer ce participant (il ne pourra plus jouer)' : `Débloquer ce participant${l.arena_blocked_reason ? ` — motif : ${l.arena_blocked_reason}` : ''}`)
+                          : (l.active ? 'Désactiver ce lead' : 'Réactiver ce lead')}
                       >
                         {togglingId === l.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Power className="h-4 w-4" />}
                       </button>
