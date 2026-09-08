@@ -83,7 +83,7 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
         specialty={t.specialty}
         rounds={rounds.length || 3}
         questions={t.questions_per_round}
-        minutes={t.round_duration_minutes}
+        secondsPerQuestion={t.seconds_per_question}
         minRounds={t.min_rounds_final}
         state={heroState}
         primary={primary}
@@ -91,7 +91,7 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
         registrationOpen={ctx.registrationOpen && !participant}
       />
 
-      <LandingSteps questions={t.questions_per_round} minutes={t.round_duration_minutes} />
+      <LandingSteps questions={t.questions_per_round} secondsPerQuestion={t.seconds_per_question} />
 
       <LandingRounds
         rounds={roundCards}

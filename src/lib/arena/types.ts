@@ -76,7 +76,11 @@ export type TournamentRow = {
   threshold_pct: number;
   min_rounds_final: number;
   questions_per_round: number;
+  /** Plafond de sécurité de la manche entière (min). Le minutage réel est
+   *  la somme des durées de questions ; cette valeur borne les débordements. */
   round_duration_minutes: number;
+  /** Durée par défaut d'une question, en secondes (§3.4). */
+  seconds_per_question: number;
   retention_days: number;
   bareme: Bareme;
   email_sequence: EmailSequence;
@@ -125,6 +129,8 @@ export type QuestionRow = {
   erreurs_frequentes: string;
   references_text: string;
   source_question_id: string | null;
+  /** Durée propre à cette question, en secondes. `null` = celle du tournoi. */
+  duration_seconds: number | null;
   neutralized_at: string | null;
   neutralized_reason: string | null;
   neutralized_by: string | null;
@@ -216,6 +222,17 @@ export type ReportRow = {
 };
 
 /** Question telle que servie au candidat : jamais de `is_correct` ni de règle. */
+/**
+ * Durée d'une question quand rien ne la fixe.
+ *
+ * Sert aussi de filet tant que la migration `20260908120000_arena_duree_par_question`
+ * n'est pas appliquée : les colonnes manquent alors dans les lignes lues, et
+ * un `undefined` propagé jusqu'au chronomètre donnerait un compte à rebours
+ * NaN, donc une manche injouable. Avec ce repli, le code déployé avant la
+ * migration se comporte comme avant : une minute par question.
+ */
+export const DEFAULT_SECONDS_PER_QUESTION = 60;
+
 export type PublicQuestion = {
   id: string;
   order_index: number;
@@ -226,9 +243,13 @@ export type PublicQuestion = {
   vignette: string | null;
   images: string[];
   items: { lettre: string; enonce: string }[];
+  /** Durée allouée à CETTE question, en secondes, déjà résolue depuis le
+   *  tournoi. Le client s'en sert pour son chronomètre ; le serveur reste
+   *  seul juge (cf. `answerQuestion`). */
+  duration_seconds: number;
 };
 
-export function toPublicQuestion(q: QuestionRow): PublicQuestion {
+export function toPublicQuestion(q: QuestionRow, secondsPerQuestion: number | null | undefined): PublicQuestion {
   return {
     id: q.id,
     order_index: q.order_index,
@@ -239,6 +260,7 @@ export function toPublicQuestion(q: QuestionRow): PublicQuestion {
     vignette: q.vignette,
     images: Array.isArray(q.images) ? q.images : [],
     items: q.items.map((i) => ({ lettre: i.lettre, enonce: i.enonce })),
+    duration_seconds: q.duration_seconds ?? secondsPerQuestion ?? DEFAULT_SECONDS_PER_QUESTION,
   };
 }
 

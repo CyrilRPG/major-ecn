@@ -66,7 +66,12 @@ export default async function RoundPage({ params, searchParams }: Params) {
   if (attempt && attempt.status === 'in_progress' && new Date(attempt.deadline_at).getTime() > now.getTime()) {
     const answers = await listAnswers(attempt.id);
     const ordered = attempt.question_order.map((id) => questions.find((q) => q.id === id)).filter((q): q is NonNullable<typeof q> => Boolean(q));
-    const totalSeconds = Math.max(60, Math.round((new Date(attempt.deadline_at).getTime() - new Date(attempt.started_at).getTime()) / 1000));
+    // Le chronomètre est désormais par question : le client a besoin du départ
+    // de la tentative et de la dernière validation connue, pas d'un total.
+    const lastValidated = answers.reduce<string | null>(
+      (max, a) => (!max || a.validated_at > max ? a.validated_at : max),
+      null,
+    );
     return (
       <ArenaPage nav={nav} bare>
         <Stadium photo="lightsFog" darken={0.55} tint={0.1} className="min-h-[calc(100svh-4.5rem)] py-6 sm:py-10">
@@ -74,8 +79,9 @@ export default async function RoundPage({ params, searchParams }: Params) {
             <RoundRunner
               attemptId={attempt.id}
               deadlineIso={attempt.deadline_at}
-              totalSeconds={totalSeconds}
-              questions={ordered.map(toPublicQuestion)}
+              startedIso={attempt.started_at}
+              lastValidatedIso={lastValidated}
+              questions={ordered.map((q) => toPublicQuestion(q, t.seconds_per_question))}
               answeredIds={answers.map((a) => a.question_id)}
               baremeLabel={{ QRM: MODE_LABEL[bareme.QRM.mode], QRU: MODE_LABEL[bareme.QRU.mode], QRP: MODE_LABEL[bareme.QRP.mode] }}
               roundNumber={number}

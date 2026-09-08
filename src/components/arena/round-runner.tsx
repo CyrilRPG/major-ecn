@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Check, Clock3, Lock, WifiOff } from 'lucide-react';
-import { answerQuestion, expireAttempt } from '@/app/(arena)/arena/[slug]/actions';
+import { answerQuestion, expireAttempt, expireQuestion } from '@/app/(arena)/arena/[slug]/actions';
 import { ZoomableImage } from '@/components/qcm/image-zoom';
 import type { PublicQuestion } from '@/lib/arena/types';
 import { clockLabel } from '@/lib/arena/time';
@@ -28,12 +28,16 @@ import { Ring } from './ring';
 const TYPE_LABEL: Record<PublicQuestion['type'], string> = { QRM: 'Réponses multiples', QRU: 'Réponse unique', QRP: 'Nombre de réponses précisé' };
 
 export function RoundRunner({
-  attemptId, deadlineIso, totalSeconds, questions, answeredIds, baremeLabel, roundNumber, roundTheme, preview,
+  attemptId, deadlineIso, startedIso, lastValidatedIso, questions, answeredIds, baremeLabel, roundNumber, roundTheme, preview,
 }: {
   attemptId: string;
+  /** Échéance de la tentative entière : clôture de manche, filet de sécurité. */
   deadlineIso: string;
-  /** Durée effective de la tentative (secondes) — pour l'anneau. */
-  totalSeconds: number;
+  /** Démarrage de la tentative : point de départ du chronomètre de la 1re question. */
+  startedIso: string;
+  /** Dernière validation connue du serveur : point de départ de la question en
+   *  cours après une reprise. `null` si aucune question n'a encore été validée. */
+  lastValidatedIso: string | null;
   questions: PublicQuestion[];
   answeredIds: string[];
   baremeLabel: Record<'QRM' | 'QRU' | 'QRP', string>;
@@ -51,10 +55,24 @@ export function RoundRunner({
   const [expired, setExpired] = useState(false);
   const [pending, start] = useTransition();
   const expiring = useRef(false);
+  /** Début de la question affichée. Repris du serveur au chargement, puis
+   *  recalé à chaque validation : chaque question repart avec son plein temps. */
+  const [questionStart, setQuestionStart] = useState<number>(
+    () => new Date(lastValidatedIso ?? startedIso).getTime(),
+  );
+  /** Évite deux expirations concurrentes sur la même question. */
+  const expiringQuestion = useRef<string | null>(null);
 
   const current = useMemo(() => questions.find((q) => !answered.has(q.id)) ?? null, [questions, answered]);
   const index = current ? questions.findIndex((q) => q.id === current.id) : questions.length;
   const deadline = useMemo(() => new Date(deadlineIso).getTime(), [deadlineIso]);
+  /** Secondes allouées à la question affichée (réglage de l'administration). */
+  const totalSeconds = current?.duration_seconds ?? 60;
+  /** Échéance de la question : jamais au-delà de celle de la tentative. */
+  const questionEnd = useMemo(
+    () => Math.min(questionStart + totalSeconds * 1000, deadline),
+    [questionStart, totalSeconds, deadline],
+  );
 
   // Fin de manche : rafraîchit le rendu serveur, puis rechargement complet si l'écran n'a pas changé (secours).
   const finish = useCallback(() => {
@@ -62,21 +80,42 @@ export function RoundRunner({
     window.setTimeout(() => window.location.assign(window.location.pathname + window.location.search), 2500);
   }, [router]);
 
-  // Chronomètre : le serveur est seul juge, le client se contente d'afficher et de déclencher la clôture.
+  // Chronomètre : le serveur est seul juge, le client affiche et déclenche.
+  // Deux échéances se superposent — celle de la QUESTION, qui fait passer à la
+  // suivante sans réponse, et celle de la TENTATIVE (clôture de la manche), qui
+  // arrête tout. La seconde prime.
   useEffect(() => {
     const tick = () => {
-      const left = Math.max(0, Math.floor((deadline - Date.now()) / 1000));
-      setRemaining(left);
-      if (left === 0 && !expiring.current) {
-        expiring.current = true;
-        setExpired(true);
-        expireAttempt(attemptId).catch(() => undefined);
+      const maintenant = Date.now();
+      if (maintenant >= deadline) {
+        setRemaining(0);
+        if (!expiring.current) {
+          expiring.current = true;
+          setExpired(true);
+          expireAttempt(attemptId).catch(() => undefined);
+        }
+        return;
+      }
+      setRemaining(Math.max(0, Math.floor((questionEnd - maintenant) / 1000)));
+      if (maintenant >= questionEnd && current && expiringQuestion.current !== current.id) {
+        expiringQuestion.current = current.id;
+        const id = current.id;
+        expireQuestion(attemptId, id)
+          .then((r) => {
+            if (!r.ok || !r.expired) { expiringQuestion.current = null; return; }
+            setSelected([]);
+            setError(null);
+            setAnswered((prev) => new Set([...prev, id]));
+            setQuestionStart(Date.now());
+            if (r.finished) finish();
+          })
+          .catch(() => { expiringQuestion.current = null; });
       }
     };
     const t0 = window.setTimeout(tick, 0);
-    const id = window.setInterval(tick, 500);
-    return () => { window.clearTimeout(t0); window.clearInterval(id); };
-  }, [attemptId, deadline]);
+    const idt = window.setInterval(tick, 500);
+    return () => { window.clearTimeout(t0); window.clearInterval(idt); };
+  }, [attemptId, deadline, questionEnd, current, finish]);
 
   // Connexion perdue (maquette 13) : le timer continue, les réponses validées sont sauvegardées.
   useEffect(() => {
@@ -88,7 +127,7 @@ export function RoundRunner({
     return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off); window.clearTimeout(t); };
   }, []);
 
-  const urgent = remaining !== null && remaining <= 60;
+  const urgent = remaining !== null && remaining <= Math.max(5, Math.round(totalSeconds * 0.25));
   const progress = remaining === null ? 1 : Math.max(0, Math.min(1, remaining / Math.max(1, totalSeconds)));
   const clock = remaining === null ? '--:--' : clockLabel(remaining);
 
@@ -156,6 +195,8 @@ export function RoundRunner({
       }
       setSelected([]);
       setAnswered((prev) => new Set([...prev, current.id]));
+      setQuestionStart(Date.now());
+      expiringQuestion.current = null;
       if (r.finished) finish();
     });
   };

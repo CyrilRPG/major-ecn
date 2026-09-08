@@ -6,15 +6,16 @@ import { siteUrl } from '@/lib/email/send';
 import { currentStaff, registrationOpen, visibleSnapshot, visibleTournament } from '@/lib/arena/access';
 import {
   arenaDb, arenaLog, currentParticipant, effectiveBareme, findParticipantByEmail, getAttempt, getAttemptById, getPreviewAttempt,
-  getQuestion, getRound, getTournament, listAnswers, listQuestions, roundDuration,
+  getQuestion, getRound, getTournament, listAnswers, listQuestions, questionSeconds, roundTotalSeconds,
 } from '@/lib/arena/db';
 import { confirmationEmail, deletedEmail, inviteEmail, loginEmail, reportAckEmail, sendArenaEmail } from '@/lib/arena/emails';
 import { finalizeAttempt, gradeOne } from '@/lib/arena/grading';
+import type { Bareme } from '@/lib/arena/scoring';
 import { anonymizeParticipant } from '@/lib/arena/sequence';
 import { clearSessionCookie, newToken } from '@/lib/arena/session';
-import { attemptDeadline, roundState, toDate } from '@/lib/arena/time';
+import { attemptDeadline, questionDeadline, roundState, toDate } from '@/lib/arena/time';
 import { CONSENT_VERSION, pseudoForbidden } from '@/lib/arena/texts';
-import { isValidPseudo, normalizeEmail, pseudoKey, randomAvatarSeed, type AttemptRow } from '@/lib/arena/types';
+import { isValidPseudo, normalizeEmail, pseudoKey, randomAvatarSeed, type AttemptRow, type QuestionRow, type TournamentRow } from '@/lib/arena/types';
 
 /**
  * EVC Arena — actions serveur du parcours participant (§3, §8, §10).
@@ -207,7 +208,8 @@ export async function startAttempt(slug: string, roundNumber: number, preview = 
   }
 
   const closes = actor.kind === 'participant' ? toDate(round.closes_at) : null;
-  const { deadline, truncated } = attemptDeadline(now, roundDuration(t, round), closes);
+  // Temps alloué = somme des durées propres à chaque question (§3.4).
+  const { deadline, truncated } = attemptDeadline(now, roundTotalSeconds(t, questions), closes);
   const { data, error } = await arenaDb()
     .from('arena_attempts')
     .insert({
@@ -246,7 +248,7 @@ async function ownedAttempt(attemptId: string): Promise<{ attempt: AttemptRow; s
   return { attempt, slug: t.slug };
 }
 
-export type AnswerResult = Ok<{ finished: boolean; answeredCount: number }> | Err;
+export type AnswerResult = Ok<{ finished: boolean; answeredCount: number; expired?: boolean }> | Err;
 
 /** Validation irréversible d'une question (§3.4) ; la dernière clôt la manche. */
 export async function answerQuestion(attemptId: string, questionId: string, selectedRaw: string[]): Promise<AnswerResult> {
@@ -266,6 +268,15 @@ export async function answerQuestion(attemptId: string, questionId: string, sele
   const t = round ? await getTournament(round.tournament_id) : null;
   if (!round || !t) return err('Manche introuvable.');
   const bareme = effectiveBareme(t, round);
+
+  // Chaque question a sa propre échéance. Passée celle-ci, les cases cochées
+  // ne sont plus recevables : la question est enregistrée SANS réponse, comme
+  // si le participant n'avait rien validé. On ne rejette pas l'appel — sinon
+  // la manche resterait bloquée sur une question dont le temps est écoulé.
+  const echeance = await deadlineDeLaQuestion(attempt, t, q);
+  if (now > echeance.getTime() + ANSWER_GRACE_MS) {
+    return enregistrerSansReponse(attempt, q, bareme);
+  }
 
   const valid = new Set(q.items.map((i) => i.lettre));
   const selected = [...new Set(selectedRaw.map((l) => String(l).trim().toUpperCase()))].filter((l) => valid.has(l));
@@ -292,6 +303,66 @@ export async function answerQuestion(attemptId: string, questionId: string, sele
   const finished = attempt.question_order.every((id) => answers.some((a) => a.question_id === id));
   if (finished) await finalizeAttempt(attempt.id, 'submitted');
   return { ok: true, finished, answeredCount: answers.length };
+}
+
+/** Heure limite de la question en cours : la précédente validation fait foi. */
+async function deadlineDeLaQuestion(attempt: AttemptRow, t: TournamentRow, q: QuestionRow): Promise<Date> {
+  const answers = await listAnswers(attempt.id);
+  const dernier = answers.reduce<number>((max, a) => Math.max(max, new Date(a.validated_at).getTime()), 0);
+  return questionDeadline({
+    startedAt: new Date(attempt.started_at),
+    lastValidatedAt: dernier ? new Date(dernier) : null,
+    durationSeconds: questionSeconds(t, q),
+    attemptDeadline: new Date(attempt.deadline_at),
+  });
+}
+
+/** Écrit une réponse VIDE pour une question dont le temps est écoulé, et clôt
+ *  la manche si c'était la dernière. Le barème s'applique normalement à une
+ *  absence de réponse — aucune pénalité inventée ici. */
+async function enregistrerSansReponse(attempt: AttemptRow, q: QuestionRow, bareme: Bareme): Promise<AnswerResult> {
+  const g = gradeOne(q, [], bareme);
+  const { error } = await arenaDb().from('arena_answers').insert({
+    attempt_id: attempt.id,
+    question_id: q.id,
+    selected: [],
+    score: g.score,
+    max_score: g.max,
+    discordances: g.discordances,
+    is_perfect: g.is_perfect,
+    rule_triggered: g.rule_triggered,
+  });
+  if (error && String(error.code) !== '23505') return err(error.message);
+  const answers = await listAnswers(attempt.id);
+  const finished = attempt.question_order.every((id) => answers.some((a) => a.question_id === id));
+  if (finished) await finalizeAttempt(attempt.id, 'submitted');
+  return { ok: true, finished, answeredCount: answers.length, expired: true };
+}
+
+/**
+ * Appelé par le client quand le chronomètre d'UNE question tombe à zéro.
+ *
+ * Le serveur revérifie l'heure : un client en avance ne peut pas sauter une
+ * question, et un client en retard ne prolonge rien. Tant que l'échéance n'est
+ * pas atteinte, on ne fait rien et le client se resynchronise.
+ */
+export async function expireQuestion(attemptId: string, questionId: string): Promise<AnswerResult> {
+  const owned = await ownedAttempt(attemptId);
+  if ('ok' in owned) return owned;
+  const { attempt } = owned;
+  if (attempt.status !== 'in_progress') return err('Cette manche est terminée.');
+  if (!attempt.question_order.includes(questionId)) return err('Question inconnue pour cette manche.');
+  const q = await getQuestion(questionId);
+  if (!q) return err('Question introuvable.');
+  const round = await getRound(attempt.round_id);
+  const t = round ? await getTournament(round.tournament_id) : null;
+  if (!round || !t) return err('Manche introuvable.');
+  const echeance = await deadlineDeLaQuestion(attempt, t, q);
+  if (Date.now() < echeance.getTime()) {
+    const answers = await listAnswers(attempt.id);
+    return { ok: true, finished: false, answeredCount: answers.length, expired: false };
+  }
+  return enregistrerSansReponse(attempt, q, effectiveBareme(t, round));
 }
 
 /** Appelé par le client à l'expiration du chronomètre ; le serveur reste seul juge de l'heure. */

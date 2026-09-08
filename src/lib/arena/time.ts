@@ -107,16 +107,39 @@ export function roundState(r: RoundWindow, now: Date = new Date()): RoundState {
 }
 
 /**
- * Échéance d'une tentative (§2.4) : durée effective = min(durée de manche,
+ * Échéance d'une tentative (§2.4) : durée effective = min(temps alloué,
  * temps restant avant clôture). `truncated` signale une fenêtre réduite,
  * exclue du calcul du temps moyen (§6.13).
+ *
+ * Le temps alloué est désormais la SOMME des durées des questions de la
+ * manche (`roundTotalSeconds`), et non plus une durée de manche unique.
  */
-export function attemptDeadline(startedAt: Date, durationMinutes: number, closesAt: Date | null): { deadline: Date; truncated: boolean; effectiveSeconds: number } {
-  const full = new Date(startedAt.getTime() + durationMinutes * 60_000);
+export function attemptDeadline(startedAt: Date, durationSeconds: number, closesAt: Date | null): { deadline: Date; truncated: boolean; effectiveSeconds: number } {
+  const full = new Date(startedAt.getTime() + durationSeconds * 1000);
   if (closesAt && closesAt < full) {
     return { deadline: closesAt, truncated: true, effectiveSeconds: Math.max(0, Math.floor((closesAt.getTime() - startedAt.getTime()) / 1000)) };
   }
-  return { deadline: full, truncated: false, effectiveSeconds: durationMinutes * 60 };
+  return { deadline: full, truncated: false, effectiveSeconds: durationSeconds };
+}
+
+/**
+ * Échéance de la question en cours.
+ *
+ * Les questions sont validées une par une et de façon irréversible (§3.4) :
+ * la question n° k commence donc quand la n° k-1 a été validée, et la
+ * première au démarrage de la tentative. Aucune colonne supplémentaire n'est
+ * nécessaire — `arena_answers.validated_at` porte déjà l'information.
+ */
+export function questionDeadline(input: {
+  startedAt: Date;
+  lastValidatedAt: Date | null;
+  durationSeconds: number;
+  attemptDeadline: Date;
+}): Date {
+  const debut = input.lastValidatedAt && input.lastValidatedAt > input.startedAt ? input.lastValidatedAt : input.startedAt;
+  const fin = new Date(debut.getTime() + input.durationSeconds * 1000);
+  // Jamais au-delà de l'échéance de la tentative (clôture de manche comprise).
+  return fin < input.attemptDeadline ? fin : input.attemptDeadline;
 }
 
 /* ------------------------------------------------------------------ */

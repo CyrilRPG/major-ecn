@@ -28,7 +28,8 @@ export function SettingsForm({ t, integrity, effectiveStatus }: { t: TournamentR
     title: t.title, slug: t.slug, specialty: t.specialty, specialty_id: t.specialty_id, edition_label: t.edition_label,
     meta_title: t.meta_title ?? '', meta_description: t.meta_description ?? '', intro_text: t.intro_text, indexable: t.indexable,
     leaderboard_enabled: t.leaderboard_enabled, leaderboard_size: t.leaderboard_size, threshold_pct: t.threshold_pct, min_rounds_final: t.min_rounds_final,
-    questions_per_round: t.questions_per_round, round_duration_minutes: t.round_duration_minutes, retention_days: t.retention_days,
+    questions_per_round: t.questions_per_round, round_duration_minutes: t.round_duration_minutes,
+    seconds_per_question: t.seconds_per_question, retention_days: t.retention_days,
   });
   const [seq, setSeq] = useState<EmailSequence>(t.email_sequence);
   const [status, setStatus] = useState<'idle' | 'saved' | 'error'>('idle');
@@ -139,7 +140,12 @@ export function SettingsForm({ t, integrity, effectiveStatus }: { t: TournamentR
         <h2 className="text-base font-bold text-(--color-ink)">Règles du tournoi (§2, §7)</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           <Field label="Questions par manche" id="s-q"><Input id="s-q" type="number" min={1} max={100} value={form.questions_per_round} onChange={(e) => set('questions_per_round', num(e.target.value))} disabled={locked} /></Field>
-          <Field label="Durée d’une manche (min)" id="s-d"><Input id="s-d" type="number" min={1} max={240} value={form.round_duration_minutes} onChange={(e) => set('round_duration_minutes', num(e.target.value))} disabled={locked} /></Field>
+          <Field label="Durée d’une question (s)" id="s-q" hint="Appliquée à toute question qui ne fixe pas la sienne. Le temps d’une manche est la somme des durées de ses questions.">
+            <Input id="s-q" type="number" min={5} max={3600} value={form.seconds_per_question} onChange={(e) => set('seconds_per_question', num(e.target.value))} disabled={locked} />
+          </Field>
+          <Field label="Durée d’une manche (min) — historique" id="s-d" hint="N’est plus utilisée pour chronométrer : conservée pour les tournois d’avant le 08/09/2026.">
+            <Input id="s-d" type="number" min={1} max={240} value={form.round_duration_minutes} onChange={(e) => set('round_duration_minutes', num(e.target.value))} disabled={locked} />
+          </Field>
           <Field label="Manches minimum au final" id="s-min"><Input id="s-min" type="number" min={1} max={10} value={form.min_rounds_final} onChange={(e) => set('min_rounds_final', num(e.target.value))} /></Field>
           <Field label="Seuil d’affichage du rang (%)" id="s-th"><Input id="s-th" type="number" min={0} max={100} step="0.5" value={form.threshold_pct} onChange={(e) => set('threshold_pct', num(e.target.value))} /></Field>
           <Field label="Entrées des Meilleurs scores" id="s-lb"><Input id="s-lb" type="number" min={1} max={50} value={form.leaderboard_size} onChange={(e) => set('leaderboard_size', num(e.target.value))} /></Field>

@@ -6,7 +6,7 @@ import { sanitizeBareme, scoreQuestion, type Bareme } from './scoring';
 import { computeStandings, type RankingAttempt, type RankingRound, type Standing } from './ranking';
 import { effectiveStatus, type TournamentStatus } from './time';
 import {
-  defaultEmailSequence,
+  defaultEmailSequence, DEFAULT_SECONDS_PER_QUESTION,
   type AnswerRow, type AttemptRow, type ParticipantRow, type QuestionRow, type ReportRow, type RoundRow, type TournamentRow,
 } from './types';
 
@@ -166,8 +166,29 @@ export function effectiveBareme(t: TournamentRow, r: RoundRow): Bareme {
   return r.bareme_snapshot ? sanitizeBareme(r.bareme_snapshot) : t.bareme;
 }
 
+/** Durée héritée d'une manche entière (min). Ne sert plus à chronométrer une
+ *  tentative — le minutage est désormais par question — mais reste affichée
+ *  sur les tournois antérieurs au 08/09/2026 et sert de repère éditorial. */
 export function roundDuration(t: TournamentRow, r: RoundRow): number {
   return r.duration_minutes ?? t.round_duration_minutes;
+}
+
+/** Durée allouée à UNE question, en secondes : la sienne, sinon celle du tournoi. */
+export function questionSeconds(t: TournamentRow, q: QuestionRow): number {
+  return q.duration_seconds ?? t.seconds_per_question ?? DEFAULT_SECONDS_PER_QUESTION;
+}
+
+/**
+ * Temps total d'une manche : la SOMME des durées de ses questions.
+ *
+ * Aucun plafond n'est appliqué ici. Rogner la somme avec l'ancienne durée de
+ * manche retirerait en silence du temps aux dernières questions — l'inverse
+ * de ce que l'administration a réglé. Seule la clôture de la manche
+ * (`closes_at`) peut encore écourter une tentative, et elle est signalée au
+ * participant (`truncated`).
+ */
+export function roundTotalSeconds(t: TournamentRow, questions: readonly QuestionRow[]): number {
+  return questions.reduce((n, q) => n + questionSeconds(t, q), 0);
 }
 
 /** Maximum atteignable d'une manche : questions non neutralisées, pondération comprise. */

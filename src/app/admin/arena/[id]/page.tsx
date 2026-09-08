@@ -163,7 +163,7 @@ export default async function TournamentAdminPage({ params, searchParams }: { pa
       {tab === 'questions' && (
         <div className="space-y-6">
           {snap.rounds.map((r) => (
-            <QuestionsManager key={r.id} round={r} questions={snap.questionsByRound.get(r.id) ?? []} expected={t.questions_per_round} started={hasAttempts[r.id]} specialtyId={t.specialty_id} />
+            <QuestionsManager key={r.id} round={r} questions={snap.questionsByRound.get(r.id) ?? []} expected={t.questions_per_round} started={hasAttempts[r.id]} specialtyId={t.specialty_id} defaultSeconds={t.seconds_per_question} />
           ))}
         </div>
       )}

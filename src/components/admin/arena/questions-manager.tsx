@@ -19,7 +19,7 @@ import { LETTERS, questionIssues, type QuestionRow, type RoundRow } from '@/lib/
  * fichier ne transite par une action serveur), pioche dans la banque de QCM,
  * neutralisation (§10) quand la manche a déjà des participants.
  */
-export function QuestionsManager({ round, questions, expected, started, specialtyId }: { round: RoundRow; questions: QuestionRow[]; expected: number; started: boolean; specialtyId: string | null }) {
+export function QuestionsManager({ round, questions, expected, started, specialtyId, defaultSeconds }: { round: RoundRow; questions: QuestionRow[]; expected: number; started: boolean; specialtyId: string | null; /** Durée par défaut d'une question, réglée sur le tournoi. */ defaultSeconds: number }) {
   const router = useRouter();
   const [editing, setEditing] = useState<QuestionInput | null>(null);
   const [panel, setPanel] = useState<null | 'import' | 'bank'>(null);
@@ -28,12 +28,13 @@ export function QuestionsManager({ round, questions, expected, started, specialt
   const [pending, start] = useTransition();
 
   const blank = (): QuestionInput => ({
-    round_id: round.id, type: 'QRM', expected_count: null, weight: 1, enonce: '', vignette: '', images: [],
+    round_id: round.id, type: 'QRM', expected_count: null, weight: 1, duration_seconds: null, enonce: '', vignette: '', images: [],
     items: Array.from({ length: 5 }, () => ({ enonce: '', is_correct: false, indispensable: false, inacceptable: false, justification: '' })),
     explanation: '', pieges: '', erreurs_frequentes: '', references_text: '',
   });
   const toInput = (q: QuestionRow): QuestionInput => ({
-    id: q.id, round_id: q.round_id, type: q.type, expected_count: q.expected_count, weight: q.weight, enonce: q.enonce, vignette: q.vignette ?? '', images: q.images,
+    id: q.id, round_id: q.round_id, type: q.type, expected_count: q.expected_count, weight: q.weight, duration_seconds: q.duration_seconds,
+    enonce: q.enonce, vignette: q.vignette ?? '', images: q.images,
     items: q.items.map((i) => ({ enonce: i.enonce, is_correct: i.is_correct, indispensable: i.indispensable, inacceptable: i.inacceptable, justification: i.justification })),
     explanation: q.explanation, pieges: q.pieges, erreurs_frequentes: q.erreurs_frequentes, references_text: q.references_text,
   });
@@ -73,6 +74,7 @@ export function QuestionsManager({ round, questions, expected, started, specialt
       {editing && (
         <QuestionForm
           value={editing}
+          defaultSeconds={defaultSeconds}
           onCancel={() => setEditing(null)}
           onSaved={(issues) => { setEditing(null); setInfo(issues.length ? `Enregistrée avec avertissements : ${issues.join(' ')}` : 'Question enregistrée.'); router.refresh(); }}
           onError={setError}
@@ -95,7 +97,9 @@ export function QuestionsManager({ round, questions, expected, started, specialt
                   {q.items.length} propositions · réponse {q.items.filter((x) => x.is_correct).map((x) => x.lettre).join('') || '—'}
                   {q.items.some((x) => x.indispensable) ? ` · indispensable ${q.items.filter((x) => x.indispensable).map((x) => x.lettre).join('')}` : ''}
                   {q.items.some((x) => x.inacceptable) ? ` · inacceptable ${q.items.filter((x) => x.inacceptable).map((x) => x.lettre).join('')}` : ''}
-                  {q.weight !== 1 ? ` · coef ${q.weight}` : ''}{q.source_question_id ? ' · banque' : ''}
+                  {q.weight !== 1 ? ` · coef ${q.weight}` : ''}
+                  {` · ${q.duration_seconds ?? defaultSeconds} s`}{q.duration_seconds ? '' : ' (tournoi)'}
+                  {q.source_question_id ? ' · banque' : ''}
                   {q.neutralized_at ? ` · NEUTRALISÉE${q.neutralized_reason ? ` (${q.neutralized_reason})` : ''}` : ''}
                 </p>
                 {issues.length > 0 && !q.neutralized_at && <p className="mt-0.5 text-xs font-semibold text-(--color-danger)">{issues.join(' ')}</p>}
@@ -125,7 +129,7 @@ export function QuestionsManager({ round, questions, expected, started, specialt
 
 /* ------------------------------------------------------------------ */
 
-function QuestionForm({ value, onCancel, onSaved, onError }: { value: QuestionInput; onCancel: () => void; onSaved: (issues: string[]) => void; onError: (e: string) => void }) {
+function QuestionForm({ value, defaultSeconds, onCancel, onSaved, onError }: { value: QuestionInput; defaultSeconds: number; onCancel: () => void; onSaved: (issues: string[]) => void; onError: (e: string) => void }) {
   const [q, setQ] = useState<QuestionInput>(value);
   const [pending, start] = useTransition();
   const set = <K extends keyof QuestionInput>(k: K, v: QuestionInput[K]) => setQ((x) => ({ ...x, [k]: v }));
@@ -141,6 +145,12 @@ function QuestionForm({ value, onCancel, onSaved, onError }: { value: QuestionIn
         </div>
         {q.type === 'QRP' && <div className="space-y-1"><Label>n attendu</Label><Input type="number" min={1} max={11} value={q.expected_count ?? ''} onChange={(e) => set('expected_count', e.target.value ? Number(e.target.value) : null)} placeholder="= nb exactes" /></div>}
         <div className="space-y-1"><Label>Pondération</Label><Input type="number" step="0.5" min={0.5} max={10} value={q.weight ?? 1} onChange={(e) => set('weight', Number(e.target.value) || 1)} /></div>
+        {/* Chronomètre propre à la question. Vide = durée par défaut du tournoi. */}
+        <div className="space-y-1">
+          <Label>Durée (s)</Label>
+          <Input type="number" min={5} max={3600} value={q.duration_seconds ?? ''} placeholder={`${defaultSeconds} (tournoi)`}
+            onChange={(e) => set('duration_seconds', e.target.value ? Number(e.target.value) : null)} />
+        </div>
       </div>
       <div className="mt-3 space-y-1"><Label>Vignette clinique (facultatif)</Label><Textarea rows={2} value={q.vignette ?? ''} onChange={(e) => set('vignette', e.target.value)} /></div>
       <div className="mt-3 space-y-1"><Label>Énoncé</Label><Textarea rows={2} value={q.enonce} onChange={(e) => set('enonce', e.target.value)} /></div>

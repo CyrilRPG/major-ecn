@@ -42,6 +42,8 @@ const QuestionSchema = z.object({
   type: z.enum(['QRM', 'QRU', 'QRP']),
   expected_count: z.number().int().min(1).max(11).nullable().optional(),
   weight: z.number().positive().max(10).default(1),
+  /** Durée propre à la question, en secondes. `null` = celle du tournoi. */
+  duration_seconds: z.number().int().min(5).max(3600).nullable().optional(),
   enonce: z.string().trim().min(1, 'Énoncé requis.').max(5000),
   vignette: z.string().trim().max(5000).nullable().optional(),
   images: z.array(z.string().url().max(500)).max(6).default([]),
@@ -67,7 +69,8 @@ export async function saveQuestion(raw: QuestionInput): Promise<Ok<{ id: string;
   if (items.length < 2) return err('Au moins deux propositions sont nécessaires.');
   const db = arenaDb();
   const payload = {
-    round_id: d.round_id, type: d.type, expected_count: expected, weight: d.weight, enonce: d.enonce, vignette: d.vignette || null,
+    round_id: d.round_id, type: d.type, expected_count: expected, weight: d.weight, duration_seconds: d.duration_seconds ?? null,
+    enonce: d.enonce, vignette: d.vignette || null,
     images: d.images, items, explanation: d.explanation, pieges: d.pieges, erreurs_frequentes: d.erreurs_frequentes, references_text: d.references_text,
   };
   let id = d.id ?? null;

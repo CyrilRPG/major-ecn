@@ -41,9 +41,12 @@ const UNITS = ['jours', 'heures', 'minutes', 'secondes'];
  * tournoi, pour occuper toute la scène. Aucun effectif affiché (§7).
  */
 export function LandingHero({
-  specialty, rounds, questions, minutes, minRounds, state, primary, secondary, registrationOpen,
+  specialty, rounds, questions, secondsPerQuestion, minRounds, state, primary, secondary, registrationOpen,
 }: {
-  specialty: string; rounds: number; questions: number; minutes: number; minRounds: number;
+  specialty: string; rounds: number; questions: number;
+  /** Temps alloué à CHAQUE question (§3.4). */
+  secondsPerQuestion: number;
+  minRounds: number;
   state: HeroState; primary: Cta; secondary: Cta; registrationOpen: boolean;
 }) {
   const target = state.kind === 'open' ? state.closesAt : state.kind === 'upcoming' ? state.opensAt : null;
@@ -54,7 +57,7 @@ export function LandingHero({
   const stats = [
     { n: rounds, label: 'manches', text: 'ouvertes 24 h chacune' },
     { n: questions, label: 'questions', text: 'QRM · QRU · QRP' },
-    { n: minutes, label: 'minutes', text: 'chronomètre côté serveur' },
+    { n: secondsPerQuestion, label: 'secondes par question', text: 'chronomètre côté serveur' },
   ];
   const promises = [
     'Une seule tentative par manche',
@@ -84,7 +87,7 @@ export function LandingHero({
           </p>
           <GoldRule align="center" width={140} className="mt-3" />
           <p className="mt-3 text-[12px] sm:text-[14px]" style={{ ...CAPS, color: ARENA.text, letterSpacing: '0.16em', fontWeight: 500, textShadow: shadow }}>
-            {rounds} manches · {questions} questions · {minutes} minutes
+            {rounds} manches · {questions} questions · {secondsPerQuestion} s par question
           </p>
           <p className="text-[12px] sm:text-[14px]" style={{ ...CAPS, color: ARENA.goldSoft, letterSpacing: '0.16em', fontWeight: 500, textShadow: shadow }}>
             Une seule tentative · un classement cumulé

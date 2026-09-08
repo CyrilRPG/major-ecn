@@ -83,6 +83,10 @@ const SettingsSchema = z.object({
   min_rounds_final: z.number().int().min(1).max(10),
   questions_per_round: z.number().int().min(1).max(100),
   round_duration_minutes: z.number().int().min(1).max(240),
+  // Durée par défaut d'une question. Le minutage réel d'une manche est la
+  // somme des durées de ses questions ; `round_duration_minutes` ne sert
+  // plus qu'aux tournois d'avant le 08/09/2026.
+  seconds_per_question: z.number().int().min(5).max(3600),
   retention_days: z.number().int().min(30).max(3650),
   email_sequence: z.unknown(),
   texts: z.record(z.string(), z.string().max(4000)).optional(),
@@ -245,6 +249,7 @@ export async function duplicateTournament(id: string, raw: { title: string; spec
       meta_title: null, meta_description: null, intro_text: src.intro_text,
       leaderboard_enabled: src.leaderboard_enabled, leaderboard_size: src.leaderboard_size, threshold_pct: src.threshold_pct,
       min_rounds_final: src.min_rounds_final, questions_per_round: src.questions_per_round, round_duration_minutes: src.round_duration_minutes,
+      seconds_per_question: src.seconds_per_question,
       retention_days: src.retention_days, bareme: src.bareme, email_sequence: src.email_sequence, texts: src.texts, created_by: actor.user.id,
     })
     .select('id')
