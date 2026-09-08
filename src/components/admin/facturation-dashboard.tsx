@@ -68,6 +68,11 @@ const MANUAL_QCM_LINES = [
   // 5 € de QCM et 3 € de flashcards depuis longtemps, ces sept items n'y
   // ajoutent donc rien.
   { label: 'Pédiatrie MG — 7 fiches complémentaires', montant: 40 },
+  // Audit IA des corrigés sur TOUTE la base (07/09/2026) : 74 275 questions et
+  // 371 385 propositions relues en cohérence, puis 5 143 questions relues en
+  // rédaction. 18 958 constats produits. Coût fournisseur réel : 43,37 $.
+  // Forfait, en euros comme le reste de cette facturation.
+  { label: 'Audit corrigé base de données', montant: 70 },
 ];
 const MANUAL_QCM_TOTAL = MANUAL_QCM_LINES.reduce((s, l) => s + l.montant, 0);
 
