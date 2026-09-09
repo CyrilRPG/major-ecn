@@ -1,0 +1,142 @@
+{
+  "hostname": "mrrgfnirpwsknuyiwcqy.supabase.co",
+  "date": "2026-09-09",
+  "operations": [
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "9690356b-c56c-48ba-bb98-24a96a79ca3b",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions officielles 10 (ictère à J1) et 13 (détresse respiratoire à 36 SA) absentes du corrigé ; 13 questions pour 15 attendues."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "f866f681-aff8-4641-8c8b-39195c22157f",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Question officielle 8 « Qu’en attendez-vous ? » absente du corrigé ; 7 questions pour 8 attendues."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "a5174fb0-ba47-4dc8-98a3-c72cb3af2d58",
+      "before": {
+        "label": "Annales - Pédiatrie - 2017 - EVCP - Sujet 2"
+      },
+      "after": {
+        "label": "Annales - Pédiatrie - 2017 - EVCP - Sujet 3"
+      },
+      "reason": "Le dossier bronchiolite correspond au sujet 3 officiel ; le sujet 2 prématurité n’est pas corrigé."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "9506b38f-48b5-41e3-b6c6-c128013c7d79",
+      "before": {
+        "label": "Annales - Psychiatrie - 2013 - EVCP"
+      },
+      "after": {
+        "label": "Annales - Psychiatrie - 2013 - EVCP - Sujet adulte"
+      },
+      "reason": "Les huit questions du dossier adulte sont complètes ; le dossier enfant n’est pas corrigé."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "49bcd75c-cf6d-4559-807c-51db97901194",
+      "before": {
+        "label": "Annales - Psychiatrie - 2015 - EVCP"
+      },
+      "after": {
+        "label": "Annales - Psychiatrie - 2015 - EVCP - Sujet 3"
+      },
+      "reason": "Les six sous-questions du cas Thérèse correspondent au sujet 3 officiel."
+    },
+    {
+      "action": "insert",
+      "table": "qcm_questions",
+      "id": "987fd0c0-6772-4ca7-9db2-8418f2022dc2",
+      "after": {
+        "id": "987fd0c0-6772-4ca7-9db2-8418f2022dc2",
+        "serie_id": "e4f40411-e07d-4296-97dd-012d58710e68",
+        "order_index": 10,
+        "format": "qroc",
+        "enonce": "<b>Question n° 11</b>\n\nQuels sont les 5 critères devant conduire à l’épuration extra-rénale ?",
+        "reponse_attendue": "Hyperkaliémie sévère ; œdème aigu pulmonaire de surcharge réfractaire au traitement médical ; syndrome de lyse ; syndrome urémique majeur (urée > 40 mmol/L) ; acidose métabolique (pH < 7,20).",
+        "correction_generale": "• <b>Hyperkaliémie sévère</b>\n• <b>Œdème aigu pulmonaire de surcharge</b> réfractaire au traitement médical\n• <b>Syndrome de lyse</b>\n• <b>Syndrome urémique majeur</b> (urée &gt; 40 mmol/L)\n• <b>Acidose métabolique</b> (pH &lt; 7,20)",
+        "images": []
+      },
+      "reason": "Question 11 et réponse restaurées depuis le sujet EVCF.03 2016 p. 2 et le corrigé EVCF EVCP 2016 p. 93."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "b43c583e-f901-4fae-8e84-a4d49b5b1e8d",
+      "before": {
+        "enonce": "<b>Question n° 6</b>&nbsp;Quelle complication peut-on observer lors de la réhydratation IV d’une diarrhée sévère si le patient n’est pas correctement monitoré sur le plan biologique ?&nbsp;"
+      },
+      "after": {
+        "enonce": "<b>Question n° 6</b>&nbsp;Quelle complication peut-on observer lors de la réhydratation IV d’une diarrhée sévère si le patient n’est pas correctement monitoré sur le plan biologique ?\n\nComment se traduit cette complication ?"
+      },
+      "reason": "Restauration de la seconde consigne de Q6, dont les signes cliniques figurent déjà dans le corrigé publié."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "ca385e69-74a0-45c1-830a-5cc6cfb2ee5d",
+      "before": {
+        "enonce": "<b>Question n° 3</b>\n\nQuel traitement mettez-vous en place pour l’heure qui suit ? Quelle surveillance mettez-vous en place pour les 6 prochaines heures ?"
+      },
+      "after": {
+        "enonce": "<b>Questions n° 3 et 4</b>\n\nQuel traitement mettez-vous en place pour l’heure qui suit ? Quelle surveillance mettez-vous en place pour les 6 prochaines heures ?"
+      },
+      "reason": "Deux consignes officielles déjà corrigées dans une même carte : numérotation explicitée."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "17f8a561-194a-4205-a5f9-dce3b8b52853",
+      "before": {
+        "vignette": "Un patient de 54 ans se présente aux urgences pour une hémoptysie le matin même (50 cc). Il se plaint aussi d’une dyspnée d’effort légère pour monter 2 étages, d’une douleur de l’épaule droite ainsi que de douleurs dans la face postérieure du bras droit et les 4e et 5e doigts, apparues depuis trois mois. Le diagnostic de péri-arthrite scapulo-humérale avait été évoqué.\n\nIl a travaillé comme chauffagiste et calorifugeur en centrale électrique pendant 30 ans. On note une perte de 3 kg sur 2 mois (1 m 80, 72 kg) et un fébricule à 37,8 °C. Ses antécédents comprennent un tabagisme d’un paquet de cigarettes par jour depuis l’âge de 18 ans, non sevré, et une primo-infection tuberculeuse dans l’enfance.\n\nL’examen clinique montre une fréquence respiratoire à 16 par minute et un ptosis droit ; le patient est asthénique. Vous relevez une matité apicale droite avec, à l’auscultation, quelques râles."
+      },
+      "after": {
+        "vignette": "Un patient de 54 ans se présente aux urgences pour une hémoptysie le matin même (50 cc). Il se plaint aussi d’une dyspnée d’effort légère pour monter 2 étages, d’une douleur de l’épaule droite ainsi que de douleurs dans la face postérieure du bras droit et les 4e et 5e doigts, apparues depuis trois mois. Le diagnostic de péri-arthrite scapulo-humérale avait été évoqué.\n\nIl a travaillé comme chauffagiste et calorifugeur en centrale électrique pendant 30 ans. On note une perte de 3 kg sur 2 mois (1 m 80, 72 kg) et un fébricule à 37,8 °C. Ses antécédents comprennent un tabagisme d’un paquet de cigarettes par jour depuis l’âge de 18 ans, non sevré, et une primo-infection tuberculeuse dans l’enfance.\n\nL’examen clinique montre une fréquence respiratoire à 16 par minute et un ptosis droit ; le patient est asthénique. Vous relevez une matité apicale droite avec, à l’auscultation, quelques râles bronchiques et des sibilants diffus. Le patient récidive son hémoptysie (10 cc) en cours d’examen. L’auscultation cardiaque relève des bruits du cœur réguliers à 80 bpm. La pression artérielle est à 130/70 mmHg aux deux bras. La biologie montre : hémoglobine 11,0 g/dL ; hématocrite 40 % ; VGM 84."
+      },
+      "reason": "Fin de vignette rétablie depuis le sujet EVCP.38 2017, p. 3 : récidive de l’hémoptysie, constantes et biologie."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "ce28c9d3-5f23-4317-8dab-57dad2d5b766",
+      "before": {
+        "enonce": "Vous êtes pédiatre aux urgences pédiatriques et vous recevez un petit garçon, Thiago, âgé de 4 ans adressé par son médecin traitant pour une anémie.\nVoici le bilan sanguin : Hb = 8.5 g/dL ; VGM = 98 /fL ; Réticulocytes = 20 G/L ; Leucocytes = 8 G/L ; Neutrophiles = 3.1 G/L ; Plaquettes = 80 G/L.\n\nL'examen clinique retrouve une masse abdominale. Le scanner réalisé montre : [voir image].\nLe bilan biologique montre : LDH = 2696 UI/L ; AFP = 2 ng/ml (0.9-9) ; Dopamine/créatinine = 9580 (< 1300) ; HVA/créatinine = 853 (< 25) ; VMA/créatinine = 565 (<20).\n\nQuelle est votre hypothèse diagnostique ?"
+      },
+      "after": {
+        "enonce": "Vous êtes pédiatre aux urgences pédiatriques et vous recevez un petit garçon, Thiago, âgé de 4 ans adressé par son médecin traitant pour une anémie.\nVoici le bilan sanguin : Hb = 8.5 g/dL ; VGM = 98 /fL ; Réticulocytes = 20 G/L ; Leucocytes = 8 G/L ; Neutrophiles = 3.1 G/L ; Plaquettes = 80 G/L.\n\nL'examen clinique retrouve une masse abdominale. Le scanner réalisé montre :\n\nLe bilan biologique montre : LDH = 2696 UI/L ; AFP = 2 ng/ml (0.9-9) ; Dopamine/créatinine = 9580 (< 1300) ; HVA/créatinine = 853 (< 25) ; VMA/créatinine = 565 (<20).\n\nQuelle est votre hypothèse diagnostique ?"
+      },
+      "reason": "Suppression exacte de [voir image] ; figures déjà attachées et ponctuation préservée."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "3ce7b83f-cf3c-4f6a-a3a5-bc4863c9c604",
+      "before": {
+        "enonce": "Vous voyez le jeune Antoine, 6 mois, aux urgences. Il est né à terme, n'a pas d'antécédent particulier. Ses vaccinations obligatoires et facultatives sont à jour pour l'âge. Il présente une fièvre depuis 24h, mal tolérée avec un enfant qui est très grognon. Devant son état général, vous suspectez une méningite.\n\nAu direct de la ponction lombaire, on observe ceci [voir image]. Quel est votre diagnostic ?"
+      },
+      "after": {
+        "enonce": "Vous voyez le jeune Antoine, 6 mois, aux urgences. Il est né à terme, n'a pas d'antécédent particulier. Ses vaccinations obligatoires et facultatives sont à jour pour l'âge. Il présente une fièvre depuis 24h, mal tolérée avec un enfant qui est très grognon. Devant son état général, vous suspectez une méningite.\n\nAu direct de la ponction lombaire, on observe ceci. Quel est votre diagnostic ?"
+      },
+      "reason": "Suppression exacte de [voir image] ; figures déjà attachées et ponctuation préservée."
+    }
+  ]
+}

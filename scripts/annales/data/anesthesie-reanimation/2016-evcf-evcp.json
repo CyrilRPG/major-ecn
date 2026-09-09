@@ -114,6 +114,15 @@
           ],
           "reponseAttendue": "Liés au terrain : âge ≥ 65 ans, insuffisance rénale chronique, sexe masculin, obésité, hypertension artérielle, diabète, insuffisance cardiaque congestive, anémie. Liés aux procédures et au contexte : sepsis, instabilité hémodynamique, période périopératoire, chirurgie majeure (en urgence, abdomino-pelvienne, hémorragique), et agents néphrotoxiques (produits de contraste iodés, aminosides, AINS, bêta-lactamines, IEC…).",
           "correctionGenerale": "<i>Recommandations RFE 2015 : « Insuffisance rénale aiguë en périopératoire et en réanimation ».</i>\n\n<b>Facteurs de risque liés au terrain / aux pathologies sous-jacentes</b>\n• Âge ≥ 65 ans*\n• Insuffisance rénale chronique*\n• Sexe masculin\n• Origine ethnique africaine\n• Obésité (IMC > 40 kg/m²)\n• Hypertension artérielle\n• Insuffisance cardiaque congestive\n• Insuffisance hépatocellulaire\n• Insuffisance respiratoire sévère\n• Diabète\n• Cancer\n• Anémie\n\n<b>Facteurs de risque liés aux procédures / au contexte</b>\n• Sepsis*\n• Instabilité hémodynamique\n• Période périopératoire*\n• Chirurgie majeure* (en urgence, abdomino-pelvienne, cardio-vasculaire, thoracique, hémorragique)\n• Brûlures étendues\n• Traumatismes graves\n• Agents néphrotoxiques (médicaments, produits de contraste iodés)\n\n<b>Principaux agents néphrotoxiques</b> : produits de contraste iodés, aminosides, amphotéricine, AINS, bêta-lactamines (néphropathies interstitielles), sulfamides, aciclovir, méthotrexate, cisplatine, ciclosporine, tacrolimus, IEC.\n\n<b>Critères d’épuration extra-rénale en urgence</b> (RFE 2014, révisions 2017)\n• Hyperkaliémie sévère\n• OAP de surcharge réfractaire au traitement médical\n• Syndrome de lyse\n• Syndrome urémique majeur (urée > 40 mmol/L)\n• Acidose métabolique (pH < 7,20)"
+        },
+        {
+          "format": "qroc",
+          "enonce": "<b>Question n° 11</b>\n\nQuels sont les 5 critères devant conduire à l’épuration extra-rénale ?",
+          "images": [],
+          "reponseAttendue": "Hyperkaliémie sévère ; œdème aigu pulmonaire de surcharge réfractaire au traitement médical ; syndrome de lyse ; syndrome urémique majeur (urée > 40 mmol/L) ; acidose métabolique (pH < 7,20).",
+          "correctionGenerale": "• <b>Hyperkaliémie sévère</b>\n• <b>Œdème aigu pulmonaire de surcharge</b> réfractaire au traitement médical\n• <b>Syndrome de lyse</b>\n• <b>Syndrome urémique majeur</b> (urée &gt; 40 mmol/L)\n• <b>Acidose métabolique</b> (pH &lt; 7,20)",
+          "items": [],
+          "note": "Question 11 officielle ; corrigé source ANNALES AREA/EVCF EVCP 2016.pdf, page 93. Lecture visuelle le 09/09/2026."
         }
       ]
     },

@@ -42,6 +42,20 @@ test('allowed_voies et allowed_offers filtrent les séries importées', () => {
   );
 });
 
+test('une annale sans aucune offre autorisée est dépubliée pour tous les élèves', () => {
+  const serie = { id: 'annale', label: 'Annales - Pédiatrie - 2019 - EVCF', type: 'qcm', kind: 'qroc', allowed_offers: [] as string[] };
+  const offres = ['decouverte', 'essentiel', 'intensif', 'approfondi'];
+  for (const voie of ['interne', 'externe', null] as const) {
+    for (const offers of [new Set<string>(), ...offres.map((o) => new Set([o])), new Set(offres)]) {
+      assert.equal(canStudentReadSerie(serie, ctx({ voie, offers })), false);
+      assert.equal(canStudentReadSerie({ ...serie, allowed_offers: null }, ctx({ voie, offers })), true);
+    }
+  }
+  // Les rédacteurs conservent leur accès et les tentatives restent en base.
+  assert.equal(canStudentReadSerie(serie, ctx({ isStaff: true })), true);
+  assert.equal(canStudentReadSerie(serie, ctx({ isStaff: true, staffKinds: { qroc: false } })), false);
+});
+
 test("un entraînement sans allowed_voies suit le format de ses questions", () => {
   const entrainement = { id: '1', label: 'Entraînement 2', type: 'qcm' };
   assert.equal(canStudentReadSerie(entrainement, ctx({ voie: 'interne' }), ['qcm']), true);

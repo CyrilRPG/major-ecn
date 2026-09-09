@@ -38,6 +38,11 @@ for (const ligne of readFileSync('.env.local', 'utf8').split(/\r?\n/)) {
 const sb = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
 
 const data = charger(dataPath);
+// Les dossiers retirés après contrôle du sujet ne doivent pas réapparaître
+// lors d'un nouvel import, y compris avec --force.
+const retirees = data.series.filter((s) => s.publication === 'retiree');
+for (const s of retirees) console.log('  (retirée, non publiée) ' + s.label);
+data.series = data.series.filter((s) => s.publication !== 'retiree');
 const cheminFigure = (p) => (isAbsolute(p) ? p : join(ATELIER, p));
 
 // ---------------------------------------------------------------- 1. figures

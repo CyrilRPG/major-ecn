@@ -124,7 +124,9 @@
           "reponseAttendue": "La bandelette urinaire (et le rapport protéinurie/créatininurie sur échantillon).",
           "correctionGenerale": "• <b>Bandelette urinaire</b>\n• (Protéinurie/créatininurie sur échantillon)"
         }
-      ]
+      ],
+      "publication": "retiree",
+      "notePublication": "Question officielle 8 « Qu’en attendez-vous ? » absente du corrigé ; 7 questions pour 8 attendues."
     },
     {
       "label": "Annales - Pédiatrie - 2017 - EVCF - Sujet 1 - Partie 3",
@@ -368,7 +370,7 @@
       ]
     },
     {
-      "label": "Annales - Pédiatrie - 2017 - EVCP - Sujet 2",
+      "label": "Annales - Pédiatrie - 2017 - EVCP - Sujet 3",
       "annee": 2017,
       "type": "EVCP",
       "source": "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf",
@@ -540,7 +542,9 @@
           "correctionGenerale": "• Diphtérie\n• Tétanos\n• Poliomyélite\n• Coqueluche\n• <i>Haemophilus influenzae</i> type B\n• Hépatite B\n• Rougeole — Oreillons — Rubéole\n• Méningocoque C\n• Pneumocoque"
         }
       ],
-      "note": "Épreuve de vérification des connaissances fondamentales 2019 de pédiatrie : questions isolées.\n\n<i>Le corrigé ne traite pas les questions n° 10 et n° 13 de l’épreuve : la numérotation ci-dessous reprend celle du corrigé et comporte donc des sauts.</i>"
+      "note": "Épreuve de vérification des connaissances fondamentales 2019 de pédiatrie : questions isolées.\n\n<i>Le corrigé ne traite pas les questions n° 10 et n° 13 de l’épreuve : la numérotation ci-dessous reprend celle du corrigé et comporte donc des sauts.</i>",
+      "publication": "retiree",
+      "notePublication": "Questions officielles 10 (ictère à J1) et 13 (détresse respiratoire à 36 SA) absentes du corrigé ; 13 questions pour 15 attendues."
     },
     {
       "label": "Annales - Pédiatrie - 2019 - EVCP - Sujet 1",

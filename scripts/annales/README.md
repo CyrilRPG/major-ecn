@@ -109,6 +109,22 @@ présent, images servies.
 
 ### Retoucher du contenu déjà publié
 
+Une série incomplète reste conservée en base avec `allowed_offers = []` : elle
+est inaccessible aux élèves, y compris par lien direct, mais le staff et les
+tentatives existantes sont préservés. `null` signifie au contraire toutes les
+offres. Dans les données locales, `publication: "retiree"` empêche sa
+republication par `publier.mjs`, même avec `--force`.
+
+Les reprises contrôlées sont enregistrées dans `reprises/`. Leur application
+vérifie toutes les anciennes valeurs, sauvegarde les lignes dans `tmp/`, puis
+effectue uniquement des mises à jour ou insertions avec relecture :
+
+```bash
+node scripts/annales/finaliser.mjs --plan scripts/annales/reprises/2026-09-09.json
+node scripts/annales/finaliser.mjs --plan scripts/annales/reprises/2026-09-09.json --apply
+node scripts/annales/finaliser.mjs --plan scripts/annales/reprises/2026-09-09.json --verify
+```
+
 `publier.mjs --force` **supprime puis recrée** les questions : par cascade, il
 efface les `qcm_attempts` des élèves. Pour une retouche ciblée, deux scripts
 mettent à jour la seule colonne concernée, sans rien détruire :

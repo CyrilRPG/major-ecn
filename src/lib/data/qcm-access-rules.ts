@@ -150,7 +150,9 @@ export function canStudentReadSerie(
   if (allowedVoies && (!ctx.voie || !allowedVoies.includes(ctx.voie))) return false;
 
   const allowedOffers = serie.allowed_offers;
-  if (allowedOffers?.length && !allowedOffers.some((o) => ctx.offers.has(o))) return false;
+  // Comme en SQL : NULL = toutes les offres, [] = aucune offre (dépubliée).
+  // Tester la longueur rendrait les séries dépubliées accessibles par URL.
+  if (allowedOffers != null && !allowedOffers.some((o) => ctx.offers.has(o))) return false;
 
   // qcm_series_voie_restrict : la voie de concours trie les séries de TOUS les
   // collèges — l'épreuve de la voie interne est un QCM, celle de la voie externe

@@ -129,7 +129,7 @@
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 6</b>\n\nQuelle complication peut-on observer lors de la réalimentation, en particulier si la diarrhée a été sévère et prolongée ? Comment se traduit cette complication ?",
+          "enonce": "<b>Question n° 6</b>&nbsp;Quelle complication peut-on observer lors de la réhydratation IV d’une diarrhée sévère si le patient n’est pas correctement monitoré sur le plan biologique ?\n\nComment se traduit cette complication ?",
           "images": [],
           "reponseAttendue": "Une myélinolyse centropontine par correction trop rapide de l’hyponatrémie, se traduisant par une altération de la conscience, une paralysie horizontale du regard, une paralysie pseudobulbaire et une quadriplégie.",
           "correctionGenerale": "<b>Myélinolyse centropontine</b> par correction trop rapide de l’hyponatrémie\n• Altération de la conscience\n• Paralysie horizontale du regard\n• Paralysie pseudobulbaire\n• Quadriplégie"

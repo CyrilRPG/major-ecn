@@ -43,7 +43,7 @@ type QData = {
   reponseAttendue?: string; correctionGenerale?: string;
   items?: { lettre: string; enonce: string; isCorrect?: boolean; justification?: string; images?: string[] }[];
 };
-type SData = { label: string; annee: number; questions: QData[] };
+type SData = { label: string; annee: number; questions: QData[]; publication?: 'retiree' };
 
 const attendu = new Map<string, { college: string; serie: SData }>();
 for (const col of readdirSync('scripts/annales/data')) {
@@ -75,7 +75,8 @@ const { data, error } = await sb.from('qcm_series')
   .like('label', 'Annales - %');
 if (error) throw new Error(error.message);
 const series = (data ?? []) as unknown as Row[];
-const suivies = series.filter((s) => !college || attendu.has(s.label));
+const retirees = series.filter((s) => attendu.get(s.label)?.serie.publication === 'retiree');
+const suivies = series.filter((s) => (!college || attendu.has(s.label)) && !retirees.includes(s));
 
 /* ------------------------- 3. profils d'élève à qui la série doit s'ouvrir */
 
@@ -98,6 +99,13 @@ PROFILS.push({
 /* ------------------------------------------------------ 4. contrôles ----- */
 
 const parCours = new Map<string, Row[]>();
+
+for (const s of retirees) {
+  const formats = s.qcm_questions.map((q) => q.format);
+  if (PROFILS.some((p) => canStudentReadSerie(s, p.ctx, formats))) {
+    ko(s.label, 'série retirée encore accessible à un élève');
+  }
+}
 
 for (const s of suivies) {
   const ou = s.label;
@@ -164,6 +172,7 @@ for (const s of suivies) {
 
 // (5) complétude
 for (const [label, { college: col }] of attendu) {
+  if (attendu.get(label)?.serie.publication === 'retiree') continue;
   if (!series.some((s) => s.label === label)) ko(label, 'présente dans les données (' + col + ') mais PAS publiée');
 }
 for (const [coursId, lot] of parCours) {
