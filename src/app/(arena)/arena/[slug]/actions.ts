@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { estAvatarPlanche } from '@/components/arena/avatars';
 import { z } from 'zod';
 import { siteUrl } from '@/lib/email/send';
 import { currentStaff, registrationOpen, visibleSnapshot, visibleTournament } from '@/lib/arena/access';
@@ -444,15 +445,20 @@ export async function submitReport(slug: string, raw: z.input<typeof ReportSchem
   return { ok: true };
 }
 
-export async function shuffleAvatar(slug: string): Promise<Ok<{ seed: string }> | Err> {
+/**
+ * Choix d'un médaillon de la planche (§3.1 : l'avatar est public dans le
+ * classement). L'identifiant est vérifié contre le catalogue : on n'écrit pas
+ * en base une valeur venue du navigateur.
+ */
+export async function choisirAvatar(slug: string, avatarId: string): Promise<Ok<{ seed: string }> | Err> {
   const v = await visibleTournament(slug);
   if (!v) return err('Tournoi introuvable.');
   const p = await currentParticipant(v.tournament.id);
   if (!p) return err('Session expirée.');
-  const seed = randomAvatarSeed();
-  await arenaDb().from('arena_participants').update({ avatar_seed: seed }).eq('id', p.id);
+  if (!estAvatarPlanche(avatarId)) return err('Avatar inconnu.');
+  await arenaDb().from('arena_participants').update({ avatar_seed: avatarId }).eq('id', p.id);
   revalidatePath(`/arena/${slug}/espace`);
-  return { ok: true, seed };
+  return { ok: true, seed: avatarId };
 }
 
 export async function changePseudo(slug: string, rawPseudo: string): Promise<Ok | Err> {

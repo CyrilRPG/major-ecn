@@ -3,6 +3,7 @@
  * connaissent pas) et petits utilitaires purs partagés client/serveur.
  */
 import type { Bareme, QType } from './scoring';
+import { avatarPlancheAuHasard } from '@/components/arena/avatars';
 import type { TournamentStatus } from './time';
 
 export type ArenaItem = {
@@ -289,8 +290,13 @@ export function isValidPseudo(pseudo: string): boolean {
   return p.length >= 3 && p.length <= 24 && /^[\p{L}\p{N} _.\-]+$/u.test(p);
 }
 
+/**
+ * Graine d'avatar attribuée par défaut : un médaillon de la planche Major ECN.
+ * Les graines aléatoires historiques (« k3f9x2a1 ») restent lisibles, elles
+ * retombent sur l'emblème vectoriel.
+ */
 export function randomAvatarSeed(): string {
-  return Math.random().toString(36).slice(2, 10);
+  return avatarPlancheAuHasard();
 }
 
 export type ItemIssue = string;

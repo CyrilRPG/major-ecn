@@ -2,9 +2,10 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { RefreshCw, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { ArenaAvatar } from '@/components/arena/arena-avatar';
-import { changePseudo, deleteMyAccount, logoutArena, setMarketingConsent, shuffleAvatar } from '@/app/(arena)/arena/[slug]/actions';
+import { changePseudo, choisirAvatar, deleteMyAccount, logoutArena, setMarketingConsent } from '@/app/(arena)/arena/[slug]/actions';
+import { AVATARS_PLANCHE } from '@/components/arena/avatars';
 import { CONSENT_MARKETING } from '@/lib/arena/texts';
 import { ArenaButton, ARENA, BODY, DISPLAY } from './arena-ui';
 import { CheckRow, Field, FormError, TextInput } from './form-ui';
@@ -18,6 +19,7 @@ export function SpaceSettings({
   const [newPseudo, setNewPseudo] = useState(pseudo);
   const [consent, setConsent] = useState(marketing);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [choixOuvert, setChoixOuvert] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [pending, start] = useTransition();
@@ -33,13 +35,37 @@ export function SpaceSettings({
             type="button"
             className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold"
             style={{ color: ARENA.textSoft, fontFamily: BODY }}
-            disabled={pending}
-            onClick={() => start(async () => { const r = await shuffleAvatar(slug); if (r.ok) setSeed(r.seed); else setError(r.error); })}
+            aria-expanded={choixOuvert}
+            onClick={() => setChoixOuvert((v) => !v)}
           >
-            <RefreshCw className="h-3.5 w-3.5" /> Changer d’avatar
+            Changer d’avatar
           </button>
         </div>
       </div>
+
+      {choixOuvert && (
+        <div role="radiogroup" aria-label="Choisir un avatar" className="grid grid-cols-6 gap-2 sm:grid-cols-8 sm:gap-2.5">
+          {AVATARS_PLANCHE.map((a) => {
+            const on = a.id === seed;
+            return (
+              <button
+                key={a.id}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                title={a.label}
+                aria-label={a.label}
+                disabled={pending}
+                onClick={() => start(async () => { const r = await choisirAvatar(slug, a.id); if (r.ok) setSeed(r.seed); else setError(r.error); })}
+                className="rounded-full p-0.5 transition-transform hover:scale-105"
+                style={{ boxShadow: on ? `0 0 0 2.5px ${ARENA.red}, 0 0 20px rgba(228,0,43,0.5)` : `0 0 0 1.5px ${ARENA.lineStrong}` }}
+              >
+                <ArenaAvatar seed={a.id} size={44} title={a.label} />
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {canChangePseudo && (
         <form

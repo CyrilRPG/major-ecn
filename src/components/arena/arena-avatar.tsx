@@ -1,3 +1,5 @@
+import { cheminAvatar, estAvatarPlanche, libelleAvatar } from './avatars';
+
 /**
  * <ArenaAvatar /> — avatars EVC Arena, univers gladiateur × médecine.
  * Emblèmes vectoriels (isomorphes, déterministes pour une graine donnée) :
@@ -125,6 +127,23 @@ const WingedCaduceus = ({ p }: { p: P }) => (
 );
 
 export function ArenaAvatar({ seed, size = 40, className, title }: { seed: string; size?: number; className?: string; title?: string }) {
+  // Planche de médaillons fournie par Major ECN (09/09/2026) : elle prime sur
+  // les emblèmes générés, qui restent le repli des graines historiques.
+  if (estAvatarPlanche(seed)) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={cheminAvatar(seed)}
+        alt={title ?? libelleAvatar(seed)}
+        width={size}
+        height={size}
+        loading="lazy"
+        decoding="async"
+        className={className}
+        style={{ display: 'block', borderRadius: '50%' }}
+      />
+    );
+  }
   const { emblem, palette: p, laurel } = arenaAvatarParams(seed);
   const emblems = [
     <Helmet key="h" p={p} />,

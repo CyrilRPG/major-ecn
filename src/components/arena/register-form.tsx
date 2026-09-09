@@ -3,19 +3,20 @@
 import { useEffect, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Check, RefreshCw } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { ArenaAvatar } from '@/components/arena/arena-avatar';
 import { checkPseudo, registerParticipant } from '@/app/(arena)/arena/[slug]/actions';
 import { CONSENT_MARKETING, CONSENT_TOURNAMENT } from '@/lib/arena/texts';
 import { browserTimezone } from '@/lib/arena/time';
-import { randomAvatarSeed } from '@/lib/arena/types';
+import { AVATARS_PLANCHE, avatarPlancheAuHasard } from '@/components/arena/avatars';
 import { ArenaButton, ARENA, BODY } from './arena-ui';
 import { CheckRow, Field, FormError, SelectInput, TextInput, type FieldStatus } from './form-ui';
 
 /**
  * Formulaire d'inscription (§3, maquette « 1. Inscription » + « 2. Modération
  * pseudonyme ») : prénom, nom, email, spécialité, pseudonyme obligatoires ;
- * avatar au choix parmi six ; deux cases de consentement distinctes, jamais
+ * avatar au choix parmi la planche Major ECN ; deux cases de consentement
+ * distinctes, jamais
  * pré-cochées. Pas de numéro de téléphone. Le pseudonyme est vérifié en
  * direct (mots interdits, format, disponibilité).
  */
@@ -44,7 +45,6 @@ export function RegisterForm({
   const [pseudo, setPseudo] = useState('');
   const [pseudoStatus, setPseudoStatus] = useState<FieldStatus>(null);
   const [pseudoMsg, setPseudoMsg] = useState<string | null>(null);
-  const [seeds, setSeeds] = useState<string[]>([]);
   const [seed, setSeed] = useState('');
   const [c1, setC1] = useState(false);
   const [c2, setC2] = useState(false);
@@ -52,12 +52,10 @@ export function RegisterForm({
   const [pending, start] = useTransition();
   const checkRef = useRef(0);
 
+  // Sélection initiale tirée au sort côté navigateur : un rendu serveur
+  // aléatoire ferait diverger l'hydratation.
   useEffect(() => {
-    const t = window.setTimeout(() => {
-      const s = Array.from({ length: 6 }, () => randomAvatarSeed());
-      setSeeds(s);
-      setSeed(s[0]);
-    }, 0);
+    const t = window.setTimeout(() => setSeed(avatarPlancheAuHasard()), 0);
     return () => window.clearTimeout(t);
   }, []);
 
@@ -78,7 +76,7 @@ export function RegisterForm({
     return () => window.clearTimeout(t);
   }, [pseudo, slug]);
 
-  const avatarSeed = seed || 'arena';
+  const avatarSeed = seed || AVATARS_PLANCHE[0].id;
 
   return (
     <form
@@ -143,18 +141,25 @@ export function RegisterForm({
 
       <div>
         <p className="mb-2 text-[12px] font-semibold" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Avatar <span style={{ color: ARENA.textMuted }}>(facultatif)</span></p>
-        <div className="flex flex-wrap items-center gap-2.5">
-          {seeds.map((s) => {
-            const on = s === seed;
+        <div role="radiogroup" aria-label="Choisir un avatar" className="grid grid-cols-6 gap-2 sm:grid-cols-8 sm:gap-2.5">
+          {AVATARS_PLANCHE.map((a) => {
+            const on = a.id === seed;
             return (
-              <button key={s} type="button" onClick={() => setSeed(s)} aria-pressed={on} aria-label="Choisir cet avatar" className="rounded-full p-0.5 transition-transform hover:scale-105" style={{ boxShadow: on ? `0 0 0 2.5px ${ARENA.red}, 0 0 20px rgba(228,0,43,0.5)` : `0 0 0 1.5px ${ARENA.lineStrong}` }}>
-                <ArenaAvatar seed={s} size={44} />
+              <button
+                key={a.id}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                title={a.label}
+                aria-label={a.label}
+                onClick={() => setSeed(a.id)}
+                className="rounded-full p-0.5 transition-transform hover:scale-105"
+                style={{ boxShadow: on ? `0 0 0 2.5px ${ARENA.red}, 0 0 20px rgba(228,0,43,0.5)` : `0 0 0 1.5px ${ARENA.lineStrong}` }}
+              >
+                <ArenaAvatar seed={a.id} size={44} title={a.label} />
               </button>
             );
           })}
-          <button type="button" onClick={() => { const s = Array.from({ length: 6 }, () => randomAvatarSeed()); setSeeds(s); setSeed(s[0]); }} className="ml-1 inline-flex items-center gap-1.5 text-[12px] font-semibold" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-            <RefreshCw className="h-3.5 w-3.5" /> Autres avatars
-          </button>
         </div>
       </div>
 
