@@ -7,6 +7,7 @@ import { sanitizeBareme, scoreQuestion, type Bareme } from './scoring';
 import { computeArenaRankings, type ArenaRankings, type RankingAttempt, type RankingRound } from './ranking';
 import { ARENA_QUESTIONS_PER_ROUND, ARENA_ROUNDS } from './format';
 import { effectiveStatus, type TournamentStatus } from './time';
+import { resolveParticipantAvatars, type AvatarProfile } from './participant-avatar';
 import {
   defaultEmailSequence, DEFAULT_SECONDS_PER_QUESTION,
   type AnswerRow, type AttemptRow, type ParticipantRow, type QuestionRow, type ReportRow, type RoundRow, type TournamentRow,
@@ -86,20 +87,29 @@ export async function getQuestion(id: string): Promise<QuestionRow | null> {
   return data ? normalizeQuestion(data) : null;
 }
 
+function withParticipantAvatars(participants: ParticipantRow[]): Promise<ParticipantRow[]> {
+  return resolveParticipantAvatars(participants, async emails => {
+    const { data } = await arenaDb().from('profiles').select('email,faculte_id,avatar_seed')
+      .eq('faculte_id', 'major-ecn').in('email', emails).throwOnError();
+    return (data ?? []) as AvatarProfile[];
+  });
+}
+
 export async function getParticipant(id: string): Promise<ParticipantRow | null> {
   const { data } = await arenaDb().from('arena_participants').select('*').eq('id', id).maybeSingle().throwOnError();
-  return (data as ParticipantRow) ?? null;
+  return data ? (await withParticipantAvatars([data as ParticipantRow]))[0] : null;
 }
 
 export async function findParticipantByEmail(tournamentId: string, email: string): Promise<ParticipantRow | null> {
   const { data } = await arenaDb().from('arena_participants').select('*').eq('tournament_id', tournamentId).eq('email', email).maybeSingle().throwOnError();
-  return (data as ParticipantRow) ?? null;
+  return data ? (await withParticipantAvatars([data as ParticipantRow]))[0] : null;
 }
 
 export async function listParticipants(tournamentId: string): Promise<ParticipantRow[]> {
-  return fetchAllRows<ParticipantRow>((from, to) =>
+  const participants = await fetchAllRows<ParticipantRow>((from, to) =>
     arenaDb().from('arena_participants').select('*').eq('tournament_id', tournamentId).order('id').range(from, to),
   );
+  return withParticipantAvatars(participants);
 }
 
 export async function listAttemptsForRounds(roundIds: string[], includePreview = false): Promise<AttemptRow[]> {

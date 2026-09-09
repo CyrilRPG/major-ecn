@@ -4,9 +4,9 @@
  * Vingt-quatre médaillons détourés en PNG à fond transparent, dans
  * `public/arena/avatars/` : dix-huit soignants et six emblèmes, sur les trois
  * fonds de la charte (rouge, or, marine). Ils remplacent les emblèmes
- * vectoriels générés par graine — ceux-ci restent affichés pour les
- * participants déjà inscrits, dont l'`avatar_seed` ne fait partie de cette
- * liste (cf. `<ArenaAvatar />`).
+ * vectoriels générés par graine. Les anciens comptes liés à Major ECN
+ * récupèrent leur portrait enregistré via `resolveParticipantAvatars` ;
+ * les emblèmes restent un secours pour les comptes sans choix récupérable.
  *
  * L'identifiant part en base dans `arena_participants.avatar_seed` : il ne
  * change plus. Le libellé sert d'alternative textuelle.
