@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { ForgotPasswordForm } from './forgot-password-form';
 import { MarketingHeader } from '@/components/marketing/marketing-header';
 import { MarketingFooter } from '@/components/marketing/marketing-footer';
@@ -25,6 +26,9 @@ export default function ForgotPasswordPage() {
             <div className="mt-6">
               <ForgotPasswordForm />
             </div>
+            <p className="mt-6 rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-4 py-3 text-xs leading-relaxed text-(--color-ink-soft)">
+              Vous participez à <strong>EVC Arena</strong> (tournoi de QCM) ? Il n’y a pas de mot de passe : la connexion se fait par un lien envoyé à votre adresse email, depuis <Link href="/arena/connexion" className="font-semibold text-(--color-primary) underline-offset-4 hover:underline">la page de connexion de l’arène</Link>.
+            </p>
           </div>
         </div>
       </main>

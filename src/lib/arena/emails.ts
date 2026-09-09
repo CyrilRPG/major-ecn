@@ -93,10 +93,10 @@ export function loginEmail(t: TournamentRow, p: ParticipantRow, loginUrl: string
   const subject = `Votre lien de connexion — EVC Arena`;
   const html = shell(t, p, 'Votre lien de connexion', [
     para(`Bonjour ${p.first_name},`),
-    para('Cliquez sur le bouton ci-dessous pour ouvrir votre espace EVC Arena. Le lien est valable une heure.'),
+    para('Cliquez sur le bouton ci-dessous pour ouvrir votre espace EVC Arena. Le lien est valable deux heures et s’ouvre d’un clic sur « Ouvrir mon espace ».'),
     button('Ouvrir mon espace', loginUrl),
   ].join(''));
-  return { subject, html, text: `Bonjour ${p.first_name},\n\nVotre lien de connexion (valable une heure) :\n${loginUrl}` };
+  return { subject, html, text: `Bonjour ${p.first_name},\n\nVotre lien de connexion (valable deux heures) :\n${loginUrl}` };
 }
 
 export function validatedEmail(t: TournamentRow, p: ParticipantRow, opts: { m1Open: Date | null; m1Theme: string; bareme: Bareme; qrpNs: number[] }): Mail {

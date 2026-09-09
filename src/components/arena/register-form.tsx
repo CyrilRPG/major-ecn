@@ -98,11 +98,13 @@ export function RegisterForm({
             setError(r.error);
             return;
           }
+          const e = encodeURIComponent(email.trim().toLowerCase());
           if (r.alreadyConfirmed) {
-            router.push('/arena/connexion');
+            // Adresse déjà inscrite et confirmée : un lien de connexion vient d'être envoyé, la page de connexion l'explique.
+            router.push(`/arena/connexion?deja=1&e=${e}`);
             return;
           }
-          router.push(`/arena/${slug}/confirmez-votre-email?e=${encodeURIComponent(email.trim().toLowerCase())}`);
+          router.push(`/arena/${slug}/confirmez-votre-email?e=${e}${r.alreadyPending ? '&deja=1' : ''}`);
         });
       }}
     >

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Mail } from 'lucide-react';
 import { ArenaLogoStack } from '@/components/arena/arena-logo';
 import { ArenaPage } from '@/components/arena/arena-shell';
@@ -10,7 +11,7 @@ import { siteUrl } from '@/lib/email/send';
 
 export const dynamic = 'force-dynamic';
 
-type Params = { params: Promise<{ slug: string }>; searchParams: Promise<{ e?: string }> };
+type Params = { params: Promise<{ slug: string }>; searchParams: Promise<{ e?: string; deja?: string }> };
 
 export async function generateMetadata({ params }: Params) {
   const { slug } = await params;
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: Params) {
 /** Écran « confirmez votre email » (§3.2) : le compte est « non confirmé » tant que le lien n'est pas cliqué. */
 export default async function ConfirmEmailPage({ params, searchParams }: Params) {
   const { slug } = await params;
-  const { e } = await searchParams;
+  const { e, deja } = await searchParams;
   const ctx = await loadArenaPage(slug);
   return (
     <ArenaPage nav={ctx.nav}>
@@ -33,10 +34,12 @@ export default async function ConfirmEmailPage({ params, searchParams }: Params)
             <p className="mt-4 text-[11px]" style={{ ...CAPS, color: ARENA.redSoft, letterSpacing: '0.26em' }}>Inscription enregistrée</p>
             <h1 className="mt-2 text-[1.9rem] leading-none sm:text-[2.4rem]" style={{ ...CAPS, color: ARENA.text }}>Confirmez votre adresse email</h1>
             <div className="mt-5 space-y-3 text-left text-[14.5px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-              <p>Un email vient d’être envoyé{e ? <> à <strong style={{ color: ARENA.text }}>{e}</strong></> : ''}. Cliquez sur le lien qu’il contient pour authentifier votre compte : tant que ce n’est pas fait, l’accès aux manches est bloqué.</p>
+              {deja === '1' && <p style={{ color: ARENA.text }}><strong>Cette adresse était déjà enregistrée, sans confirmation.</strong> Nous venons de renvoyer l’email de confirmation (un envoi par minute).</p>}
+              <p>Un email vient d’être envoyé{e ? <> à <strong style={{ color: ARENA.text }}>{e}</strong></> : ''}. Ouvrez-le et cliquez sur « Confirmer mon adresse » : tant que ce n’est pas fait, l’accès aux manches est bloqué. Pensez aux courriers indésirables.</p>
               <p>Cette confirmation vaut authentification du compte. Elle ne constitue pas un consentement à recevoir les informations de Major ECN, qui relève uniquement de la seconde case du formulaire.</p>
             </div>
             {e && <div className="mt-6 text-left"><ResendConfirmation slug={slug} email={e} /></div>}
+            <p className="mt-4 text-[12.5px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Mauvaise adresse ? <Link href={`/arena/${slug}/inscription`} className="font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft }}>Recommencer l’inscription</Link> avec la bonne.</p>
             <p className="mt-6 text-[13px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>En attendant, invitez un collègue : partagez la page du tournoi <span className="break-all font-semibold" style={{ color: ARENA.text }}>{siteUrl()}/arena/{slug}</span>. Votre lien personnel d’invitation vous attend dans votre espace.</p>
           </div>
         </Container>

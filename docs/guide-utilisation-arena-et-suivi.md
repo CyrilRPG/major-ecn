@@ -204,6 +204,30 @@ la tentative »), avec un motif : la tentative et ses réponses sont supprimées
 participant peut rejouer. Le personnel dispose aussi de la prévisualisation (§15.2),
 rejouable sans limite et sans score.
 
+### 2.9 ter Emails d'accès : confirmation, connexion, doublons (revue du 09/09/2026)
+
+Le circuit a été rejoué de bout en bout sur la base réelle après les bugs signalés par le client.
+
+- **Inscription** : email de confirmation immédiat. Si l'envoi échoue, l'écran le dit (l'inscription
+  est conservée, un nouveau lien se demande depuis la page de connexion) au lieu d'afficher un faux
+  « email envoyé ».
+- **Adresse déjà inscrite** : si elle est confirmée, un lien de connexion part aussitôt et l'écran
+  « Vous êtes déjà inscrit » l'explique ; si elle n'a jamais été confirmée, l'email de confirmation est
+  renvoyé et l'écran le précise. Un seul compte par adresse et par tournoi.
+- **Liens reçus par email** : ils ne sont plus consommés au premier clic. La page d'atterrissage
+  (`/arena/confirmer`, `/arena/connecter`) affiche un bouton « Confirmer mon adresse » ou « Ouvrir mon
+  espace » ; seul ce bouton consomme le lien. Cause du bug initial : les antivirus et aperçus de
+  messagerie ouvrent les liens avant l'utilisateur, qui trouvait ensuite « lien déjà utilisé ».
+- **Lien de connexion** : valable deux heures, un envoi par minute et par adresse. Lien expiré ou
+  déjà utilisé : la page propose d'en recevoir un nouveau.
+- **Bug corrigé** : la page `/arena/connexion` filtrait les tournois « publics » avec le drapeau de mise
+  en service (désactivé en mode test) : aucun lien de connexion n'était jamais envoyé. Le filtre porte
+  désormais sur le statut du tournoi.
+- **Mot de passe oublié** : il n'y a pas de mot de passe. `/arena/mot-de-passe-oublie` et la page
+  « mot de passe oublié » du site renvoient vers la connexion par lien.
+- **Recette locale** : `EMAIL_DRY_RUN=1` dans `.env.local` journalise les emails sans appeler Resend
+  (ignoré en production). Script : `node tmp/_qa-arena-emails-flow.mjs` (17 contrôles, nettoie ses données).
+
 ### 2.10 Identité visuelle (maquettes du 01/09/2026)
 
 Les trois planches déposées dans `templates/evc arena/` (parcours complet, cahier

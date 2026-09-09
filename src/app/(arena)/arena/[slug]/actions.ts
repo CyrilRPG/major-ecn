@@ -9,7 +9,8 @@ import {
   arenaDb, arenaLog, currentParticipant, effectiveBareme, findParticipantByEmail, getAttempt, getAttemptById, getPreviewAttempt,
   getQuestion, getRound, getTournament, listAnswers, listQuestions, questionSeconds, roundTotalSeconds,
 } from '@/lib/arena/db';
-import { confirmationEmail, deletedEmail, inviteEmail, loginEmail, reportAckEmail, sendArenaEmail } from '@/lib/arena/emails';
+import { confirmationEmail, deletedEmail, inviteEmail, reportAckEmail, sendArenaEmail } from '@/lib/arena/emails';
+import { issueConfirmationLink, issueLoginLink } from '@/lib/arena/auth-links';
 import { finalizeAttempt, gradeOne } from '@/lib/arena/grading';
 import type { Bareme } from '@/lib/arena/scoring';
 import { anonymizeParticipant } from '@/lib/arena/sequence';
@@ -62,7 +63,9 @@ const RegisterSchema = z.object({
 
 export type RegisterInput = z.input<typeof RegisterSchema>;
 
-export async function registerParticipant(slug: string, raw: RegisterInput): Promise<Ok<{ participantId: string; alreadyConfirmed: boolean }> | Err> {
+export type RegisterResult = Ok<{ participantId: string; alreadyConfirmed: boolean; alreadyPending?: boolean; pseudo?: string }> | Err;
+
+export async function registerParticipant(slug: string, raw: RegisterInput): Promise<RegisterResult> {
   const parsed = RegisterSchema.safeParse(raw);
   if (!parsed.success) return err(parsed.error.issues[0]?.message ?? 'Formulaire invalide.');
   const input = parsed.data;
@@ -77,12 +80,18 @@ export async function registerParticipant(slug: string, raw: RegisterInput): Pro
   const email = normalizeEmail(input.email);
   const db = arenaDb();
   const existing = await findParticipantByEmail(t.id, email);
-  if (existing) {
-    if (existing.email_confirmed_at) return { ok: true, participantId: existing.id, alreadyConfirmed: true };
-    // Inscription non confirmée : on renvoie simplement un nouveau lien.
-    const r = await resendConfirmation(slug, email);
+  if (existing && !existing.anonymized_at) {
+    if (existing.blocked_at) return err('Ce compte a été suspendu par l’organisation. Contactez Major ECN.');
+    if (existing.email_confirmed_at) {
+      // Adresse déjà inscrite et confirmée : on envoie un lien de connexion, l'écran l'explique (§3.2 — un seul compte par adresse).
+      const r = await issueLoginLink(t, existing);
+      if (!r.ok) return r;
+      return { ok: true, participantId: existing.id, alreadyConfirmed: true, pseudo: existing.pseudo };
+    }
+    // Inscription enregistrée mais jamais confirmée : nouveau lien de confirmation (un par minute).
+    const r = await issueConfirmationLink(t, existing);
     if (!r.ok) return r;
-    return { ok: true, participantId: existing.id, alreadyConfirmed: false };
+    return { ok: true, participantId: existing.id, alreadyConfirmed: false, alreadyPending: true, pseudo: existing.pseudo };
   }
 
   const key = pseudoKey(input.pseudo);
@@ -131,6 +140,7 @@ export async function registerParticipant(slug: string, raw: RegisterInput): Pro
   const sent = await sendArenaEmail({ tournament: t, participant: created, to: email, kind: 'confirmation', mail: confirmationEmail(t, created, url) });
   if (!sent.ok && !sent.skipped) {
     console.error('[arena] email de confirmation', sent.error);
+    return err('Votre inscription est enregistrée mais l’email de confirmation n’a pas pu partir. Réessayez dans un instant depuis la page de connexion, ou contactez Major ECN.');
   }
   return { ok: true, participantId: created.id, alreadyConfirmed: false };
 }
@@ -141,13 +151,11 @@ export async function resendConfirmation(slug: string, rawEmail: string): Promis
   const email = normalizeEmail(rawEmail);
   const p = await findParticipantByEmail(v.tournament.id, email);
   // Réponse identique que le compte existe ou non : aucune énumération d'adresses.
-  if (!p || p.email_confirmed_at || p.anonymized_at) return { ok: true };
-  const last = p.confirmation_sent_at ? new Date(p.confirmation_sent_at).getTime() : 0;
-  if (Date.now() - last < 60_000) return err('Un email vient d’être envoyé. Patientez une minute avant de redemander.');
-  const { token, hash } = newToken();
-  await arenaDb().from('arena_participants').update({ confirmation_token_hash: hash, confirmation_sent_at: new Date().toISOString() }).eq('id', p.id);
-  const url = `${siteUrl()}/arena/confirmer?t=${encodeURIComponent(token)}`;
-  await sendArenaEmail({ tournament: v.tournament, participant: p, to: email, kind: 'confirmation', mail: confirmationEmail(v.tournament, p, url) });
+  if (!p || p.anonymized_at || p.blocked_at) return { ok: true };
+  // Adresse déjà confirmée : c'est un lien de connexion qu'il faut.
+  const r = p.email_confirmed_at ? await issueLoginLink(v.tournament, p) : await issueConfirmationLink(v.tournament, p);
+  if (!r.ok) return r;
+  if (r.throttled) return err('Un email vient d’être envoyé. Patientez une minute avant de redemander.');
   return { ok: true };
 }
 
@@ -157,11 +165,8 @@ export async function requestLoginLink(slug: string, rawEmail: string): Promise<
   const email = normalizeEmail(rawEmail);
   const p = await findParticipantByEmail(v.tournament.id, email);
   if (!p || p.anonymized_at || p.blocked_at) return { ok: true };
-  if (!p.email_confirmed_at) return resendConfirmation(slug, email);
-  const { token, hash } = newToken();
-  await arenaDb().from('arena_participants').update({ login_token_hash: hash, login_token_expires_at: new Date(Date.now() + 3_600_000).toISOString() }).eq('id', p.id);
-  const url = `${siteUrl()}/arena/connecter?t=${encodeURIComponent(token)}`;
-  await sendArenaEmail({ tournament: v.tournament, participant: p, to: email, kind: 'login', mail: loginEmail(v.tournament, p, url) });
+  const r = p.email_confirmed_at ? await issueLoginLink(v.tournament, p) : await issueConfirmationLink(v.tournament, p);
+  if (!r.ok) return r;
   return { ok: true };
 }
 

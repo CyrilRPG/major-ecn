@@ -106,6 +106,11 @@ function buildBcc(): string[] {
 export async function sendEmail(input: SendEmailInput): Promise<SendResult> {
   const key = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM ?? FALLBACK_FROM;
+  // Envoi à blanc (recette locale, jamais en production) : EMAIL_DRY_RUN=1 journalise sans appeler Resend.
+  if (process.env.EMAIL_DRY_RUN === '1' && process.env.NODE_ENV !== 'production') {
+    console.info('[email:dry-run]', { to: input.to, subject: input.subject });
+    return { ok: true, id: 'dry-run-' + Date.now().toString(36) };
+  }
   if (!key) return { ok: false, error: 'RESEND_API_KEY non configurée.' };
 
   const bcc = buildBcc();

@@ -1,0 +1,53 @@
+import Link from 'next/link';
+import { ArenaButton } from '@/components/arena/arena-ui';
+import { AuthCard } from '@/components/arena/auth-card';
+import { LoginForm } from '@/components/arena/login-form';
+import { ARENA, BODY } from '@/components/arena/tokens';
+import { lookupLoginToken } from '@/lib/arena/auth-links';
+import { loginWithTokenAction } from './actions';
+
+export const dynamic = 'force-dynamic';
+export const metadata = { title: 'Connexion — EVC Arena', robots: { index: false, follow: false } };
+
+/**
+ * Atterrissage du lien de connexion (lien magique). Le GET n'a aucun effet :
+ * les antivirus de messagerie ouvrent les liens avant l'utilisateur. Un bouton
+ * ouvre la session (action serveur). Lien expiré ou inconnu : nouveau lien.
+ */
+export default async function LoginLandingPage({ searchParams }: { searchParams: Promise<{ t?: string }> }) {
+  const { t } = await searchParams;
+  const found = await lookupLoginToken(t ?? '');
+
+  if (found.status !== 'ok') {
+    const titles = { unknown: 'Lien déjà utilisé ou inconnu', expired: 'Lien expiré', blocked: 'Compte suspendu' } as const;
+    const leads = {
+      unknown: 'Ce lien de connexion a déjà servi, ou il est incomplet. Demandez-en un nouveau : il arrive en moins d’une minute.',
+      expired: 'Ce lien de connexion n’est plus valable (il l’est deux heures). Demandez-en un nouveau : il arrive en moins d’une minute.',
+      blocked: 'Ce compte a été suspendu par l’organisation. Contactez Major ECN si vous pensez qu’il s’agit d’une erreur.',
+    } as const;
+    return (
+      <AuthCard title={titles[found.status]} lead={leads[found.status]}>
+        {found.status !== 'blocked' && <LoginForm />}
+        <p className="text-center text-[13px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>
+          Pas encore inscrit ? <Link href="/arena" className="font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft }}>Voir les tournois</Link>
+        </p>
+      </AuthCard>
+    );
+  }
+
+  const { participant: p, tournament } = found;
+  return (
+    <AuthCard
+      title="Bienvenue dans l’arène"
+      lead={<>
+        Bonjour {p.first_name}, votre lien de connexion est valide.
+        <span className="mt-2 block text-[12.5px]" style={{ color: ARENA.textMuted }}>{tournament.title} · pseudonyme « {p.pseudo} »</span>
+      </>}
+    >
+      <form action={loginWithTokenAction}>
+        <input type="hidden" name="t" value={t} />
+        <ArenaButton type="submit" size="lg" className="w-full">Ouvrir mon espace</ArenaButton>
+      </form>
+    </AuthCard>
+  );
+}
