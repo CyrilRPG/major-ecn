@@ -1,9 +1,9 @@
 import 'server-only';
 import { siteUrl } from '@/lib/email/send';
-import { arenaDb, arenaLog, getTournament, loadTournamentSnapshot } from './db';
+import { arenaDb, arenaLog, currentParticipant, getTournament, loadTournamentSnapshot } from './db';
 import { confirmationEmail, loginEmail, sendArenaEmail, validatedEmail } from './emails';
-import { hashToken, newToken, setSessionCookie } from './session';
-import { toDate } from './time';
+import { hashToken, newToken, readSession, setSessionCookie } from './session';
+import { PUBLIC_STATUSES, toDate } from './time';
 import { qrpNs, type ParticipantRow, type TournamentRow } from './types';
 
 /**
@@ -25,6 +25,17 @@ export const LOGIN_HOURS = 2;
 const THROTTLE_MS = 60_000;
 
 export type IssueResult = { ok: true; throttled?: boolean } | { ok: false; error: string };
+
+/** Réutilise uniquement une session signée et un participant encore autorisé. */
+export async function activeArenaSpace(expectedParticipantId?: string): Promise<string | null> {
+  const session = await readSession();
+  if (!session || (expectedParticipantId && session.participantId !== expectedParticipantId)) return null;
+  const participant = await currentParticipant(session.tournamentId);
+  if (!participant) return null;
+  const tournament = await getTournament(session.tournamentId);
+  if (!tournament || !PUBLIC_STATUSES.has(tournament.status)) return null;
+  return `/arena/${tournament.slug}/espace`;
+}
 
 /** (Re)génère le lien de confirmation et l'envoie. Silencieux si un envoi date de moins d'une minute. */
 export async function issueConfirmationLink(t: TournamentRow, p: ParticipantRow): Promise<IssueResult> {

@@ -1,9 +1,11 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { KeyRound } from 'lucide-react';
 import { Notice } from '@/components/arena/arena-shell';
 import { AuthCard } from '@/components/arena/auth-card';
 import { LoginForm } from '@/components/arena/login-form';
 import { ARENA, BODY } from '@/components/arena/tokens';
+import { activeArenaSpace } from '@/lib/arena/auth-links';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Connexion — EVC Arena', robots: { index: false, follow: false } };
@@ -21,6 +23,8 @@ const ERRORS: Record<string, string> = {
  */
 export default async function ArenaLoginPage({ searchParams }: { searchParams: Promise<{ erreur?: string; info?: string; deja?: string; e?: string }> }) {
   const { erreur, info, deja, e } = await searchParams;
+  const space = await activeArenaSpace();
+  if (space && erreur !== 'bloque' && deja !== '1') redirect(space);
   const alreadyRegistered = deja === '1';
   return (
     <AuthCard

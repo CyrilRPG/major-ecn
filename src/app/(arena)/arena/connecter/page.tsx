@@ -1,9 +1,10 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { ArenaButton } from '@/components/arena/arena-ui';
 import { AuthCard } from '@/components/arena/auth-card';
 import { LoginForm } from '@/components/arena/login-form';
 import { ARENA, BODY } from '@/components/arena/tokens';
-import { lookupLoginToken } from '@/lib/arena/auth-links';
+import { activeArenaSpace, lookupLoginToken } from '@/lib/arena/auth-links';
 import { loginWithTokenAction } from './actions';
 
 export const dynamic = 'force-dynamic';
@@ -17,6 +18,13 @@ export const metadata = { title: 'Connexion — EVC Arena', robots: { index: fal
 export default async function LoginLandingPage({ searchParams }: { searchParams: Promise<{ t?: string }> }) {
   const { t } = await searchParams;
   const found = await lookupLoginToken(t ?? '');
+
+  // Un lien déjà utilisé reste une entrée vers l'espace dans le navigateur connecté.
+  // Un lien valide d'un autre participant conserve son propre parcours de connexion.
+  if (found.status !== 'blocked') {
+    const space = await activeArenaSpace(found.status === 'ok' ? found.participant.id : undefined);
+    if (space) redirect(space);
+  }
 
   if (found.status !== 'ok') {
     const titles = { unknown: 'Lien déjà utilisé ou inconnu', expired: 'Lien expiré', blocked: 'Compte suspendu' } as const;

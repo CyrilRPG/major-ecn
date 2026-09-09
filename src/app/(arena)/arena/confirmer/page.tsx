@@ -1,9 +1,10 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { ArenaButton } from '@/components/arena/arena-ui';
 import { AuthCard } from '@/components/arena/auth-card';
 import { LoginForm } from '@/components/arena/login-form';
 import { ARENA, BODY } from '@/components/arena/tokens';
-import { lookupConfirmationToken } from '@/lib/arena/auth-links';
+import { activeArenaSpace, lookupConfirmationToken } from '@/lib/arena/auth-links';
 import { confirmEmailAction } from './actions';
 
 export const dynamic = 'force-dynamic';
@@ -17,6 +18,11 @@ export const metadata = { title: 'Confirmation de votre adresse — EVC Arena', 
 export default async function ConfirmLandingPage({ searchParams }: { searchParams: Promise<{ t?: string }> }) {
   const { t } = await searchParams;
   const found = await lookupConfirmationToken(t ?? '');
+
+  if (found.status !== 'blocked') {
+    const space = await activeArenaSpace(found.status === 'ok' ? found.participant.id : undefined);
+    if (space) redirect(space);
+  }
 
   if (found.status !== 'ok') {
     return (

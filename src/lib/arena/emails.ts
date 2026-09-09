@@ -45,7 +45,7 @@ export function arenaUrls(t: TournamentRow) {
   };
 }
 
-function shell(t: TournamentRow, p: ParticipantRow | null, title: string, bodyHtml: string): string {
+function shell(t: TournamentRow, p: ParticipantRow | null, title: string, bodyHtml: string, accessUrl?: string): string {
   const unsub = p ? `${siteUrl()}/arena/desinscription?t=${signedLinkToken('unsub', p.id)}` : null;
   const urls = arenaUrls(t);
   return `<!doctype html><html lang="fr"><body style="margin:0;background:#F3F4F6;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
@@ -63,7 +63,7 @@ function shell(t: TournamentRow, p: ParticipantRow | null, title: string, bodyHt
 </td></tr>
 <tr><td style="padding:18px 28px;border-top:1px solid #E5E7EB;font-size:12px;line-height:1.6;color:#6B7280">
   Vous recevez cet email parce que vous êtes inscrit(e) au tournoi EVC Arena de Major ECN.
-  <a href="${esc(urls.space)}" style="color:#6B7280">Mon espace</a> ·
+  <a href="${esc(accessUrl ?? urls.space)}" style="color:#6B7280">Mon espace</a> ·
   <a href="${esc(urls.rules)}" style="color:#6B7280">Règles</a>
   ${unsub ? ` · <a href="${esc(unsub)}" style="color:#6B7280">Ne plus recevoir les informations Major ECN</a>` : ''}
   <br>Major ECN — préparation aux EVC depuis 2011.
@@ -84,7 +84,7 @@ export function confirmationEmail(t: TournamentRow, p: ParticipantRow, confirmUr
     para(`Votre inscription au tournoi EVC Arena (${t.specialty}) est enregistrée sous le pseudonyme « ${p.pseudo} ». Pour accéder aux manches, confirmez votre adresse email en cliquant sur le bouton ci-dessous.`),
     button('Confirmer mon adresse email', confirmUrl),
     para('Ce lien est personnel. Si vous n’êtes pas à l’origine de cette inscription, ignorez simplement cet email.'),
-  ].join(''));
+  ].join(''), confirmUrl);
   const text = `Bonjour ${p.first_name},\n\nConfirmez votre adresse email pour accéder aux manches du tournoi EVC Arena (${t.specialty}) :\n${confirmUrl}\n\nSi vous n'êtes pas à l'origine de cette inscription, ignorez cet email.`;
   return { subject, html, text };
 }
@@ -95,7 +95,7 @@ export function loginEmail(t: TournamentRow, p: ParticipantRow, loginUrl: string
     para(`Bonjour ${p.first_name},`),
     para('Cliquez sur le bouton ci-dessous pour ouvrir votre espace EVC Arena. Le lien est valable deux heures et s’ouvre d’un clic sur « Ouvrir mon espace ».'),
     button('Ouvrir mon espace', loginUrl),
-  ].join(''));
+  ].join(''), loginUrl);
   return { subject, html, text: `Bonjour ${p.first_name},\n\nVotre lien de connexion (valable deux heures) :\n${loginUrl}` };
 }
 
