@@ -115,6 +115,11 @@ tentatives existantes sont préservés. `null` signifie au contraire toutes les
 offres. Dans les données locales, `publication: "retiree"` empêche sa
 republication par `publier.mjs`, même avec `--force`.
 
+La base doit porter `20260909143000_annales_publication_restrict.sql` : cette
+restriction RLS protège aussi la lecture directe de l'API. La migration
+`20260909144000_annales_voie_restore.sql` conserve l'accès aux annales complètes
+pour les deux voies, indépendamment du format QCM/QROC.
+
 Les reprises contrôlées sont enregistrées dans `reprises/`. Leur application
 vérifie toutes les anciennes valeurs, sauvegarde les lignes dans `tmp/`, puis
 effectue uniquement des mises à jour ou insertions avec relecture :

@@ -18,7 +18,7 @@ const plan = JSON.parse(readFileSync(planPath, 'utf8'));
 const env = parse(readFileSync('.env.local'));
 const sb = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
 assert.equal(new URL(env.NEXT_PUBLIC_SUPABASE_URL).hostname, plan.hostname, 'Mauvaise base cible');
-const permitted = { qcm_series: ['label', 'vignette', 'allowed_offers'], qcm_questions: ['enonce'] };
+const permitted = { qcm_series: ['label', 'vignette', 'allowed_offers'], qcm_questions: ['enonce'], qcm_items: ['justification'] };
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 const matches = (row, values) => Object.entries(values).every(([k, v]) => same(row[k], v));
 const get = async (table, id) => {

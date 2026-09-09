@@ -1,0 +1,115 @@
+{
+  "hostname": "mrrgfnirpwsknuyiwcqy.supabase.co",
+  "date": "2026-09-09",
+  "operations": [
+    {
+      "action": "update",
+      "table": "qcm_items",
+      "id": "2f311f4c-9f92-548b-8e08-3a537484f0f3",
+      "before": {
+        "justification": "Le document ne mentionne pas la nécessité d'une antibiothérapie systématique pour la gingivite gravidique."
+      },
+      "after": {
+        "justification": "La gingivite gravidique relève d'abord du contrôle de la plaque dentaire : hygiène bucco-dentaire et détartrage si nécessaire. Elle ne justifie pas à elle seule une antibiothérapie systématique."
+      },
+      "reason": "Remplacer la remarque éditoriale par une explication pédagogique : gingivite.",
+      "sources": [
+        "https://www.ameli.fr/assure/sante/themes/maladie-gencives/consultation-traitement-gingivite-parodontite",
+        "https://ansm.sante.fr/uploads/2021/03/11/9d56ce8171a4a370b3db47e702eab17f-1.pdf"
+      ]
+    },
+    {
+      "action": "update",
+      "table": "qcm_items",
+      "id": "3dbbe214-500b-4c8e-bfec-90455250a768",
+      "before": {
+        "justification": "La source ne précise pas que le groupe III est le plus fréquent ; la fréquence de 2,5 % le classe parmi les rares."
+      },
+      "after": {
+        "justification": "Le groupe III correspond aux divisions hautes du nerf médian. Cette variation anatomique est peu fréquente et ne représente pas le groupe le plus fréquent de la classification de Lanz."
+      },
+      "reason": "Remplacer la remarque éditoriale par une explication pédagogique : groupe III.",
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/839054/"
+      ]
+    },
+    {
+      "action": "update",
+      "table": "qcm_items",
+      "id": "612285f9-787d-5810-9b26-3763fc9d7e24",
+      "before": {
+        "justification": "Le document ne mentionne pas de supplémentation obligatoire en vitamine D."
+      },
+      "after": {
+        "justification": "La supplémentation en vitamine D ne constitue pas une obligation universelle pendant la grossesse. Elle est proposée en fonction de l'exposition solaire, des apports alimentaires et du risque de déficit."
+      },
+      "reason": "Remplacer la remarque éditoriale par une explication pédagogique : vitamine D.",
+      "sources": [
+        "https://www.has-sante.fr/upload/docs/application/pdf/femmes_enceintes_recos.pdf"
+      ]
+    },
+    {
+      "action": "update",
+      "table": "qcm_items",
+      "id": "65310b68-4f05-49cc-9a50-1b7a7b450342",
+      "before": {
+        "justification": "Le document ne mentionne pas l'ibuprofène parmi les médicaments autorisés. Seule la prednisolone est mentionnée comme anti-inflammatoire avec précaution."
+      },
+      "after": {
+        "justification": "L'ibuprofène est contre-indiqué à partir de 24 semaines d'aménorrhée, même pour une seule prise, en raison des risques rénaux et cardiopulmonaires fœtaux. Avant ce terme, il ne doit être utilisé qu'en cas de nécessité absolue évaluée médicalement, à la dose minimale et pendant la durée la plus courte possible."
+      },
+      "reason": "Remplacer la remarque éditoriale par une explication pédagogique : ibuprofène.",
+      "sources": [
+        "https://m.base-donnees-publique.medicaments.gouv.fr/rcp-61788736-0",
+        "https://ansm.sante.fr/uploads/2021/03/11/a6497f74fc2f18e8db0022973f9327e1.pdf"
+      ]
+    },
+    {
+      "action": "update",
+      "table": "qcm_items",
+      "id": "69dc2c0b-433d-5576-9400-00a9f902b83a",
+      "before": {
+        "justification": "Le document ne mentionne pas l'ibuprofène parmi les médicaments autorisés. Seule la prednisolone est mentionnée comme anti-inflammatoire avec précaution."
+      },
+      "after": {
+        "justification": "L'ibuprofène est contre-indiqué à partir de 24 semaines d'aménorrhée, même pour une seule prise, en raison des risques rénaux et cardiopulmonaires fœtaux. Avant ce terme, il ne doit être utilisé qu'en cas de nécessité absolue évaluée médicalement, à la dose minimale et pendant la durée la plus courte possible."
+      },
+      "reason": "Remplacer la remarque éditoriale par une explication pédagogique : ibuprofène.",
+      "sources": [
+        "https://m.base-donnees-publique.medicaments.gouv.fr/rcp-61788736-0",
+        "https://ansm.sante.fr/uploads/2021/03/11/a6497f74fc2f18e8db0022973f9327e1.pdf"
+      ]
+    },
+    {
+      "action": "update",
+      "table": "qcm_items",
+      "id": "903fb927-5632-4887-bf85-4854069514e5",
+      "before": {
+        "justification": "Le document ne mentionne pas de supplémentation obligatoire en vitamine D."
+      },
+      "after": {
+        "justification": "La supplémentation en vitamine D ne constitue pas une obligation universelle pendant la grossesse. Elle est proposée en fonction de l'exposition solaire, des apports alimentaires et du risque de déficit."
+      },
+      "reason": "Remplacer la remarque éditoriale par une explication pédagogique : vitamine D.",
+      "sources": [
+        "https://www.has-sante.fr/upload/docs/application/pdf/femmes_enceintes_recos.pdf"
+      ]
+    },
+    {
+      "action": "update",
+      "table": "qcm_items",
+      "id": "eff32293-109a-4f8a-9b8a-0bb5d0ee2ab9",
+      "before": {
+        "justification": "Le document ne mentionne pas la nécessité d'une antibiothérapie systématique pour la gingivite gravidique."
+      },
+      "after": {
+        "justification": "La gingivite gravidique relève d'abord du contrôle de la plaque dentaire : hygiène bucco-dentaire et détartrage si nécessaire. Elle ne justifie pas à elle seule une antibiothérapie systématique."
+      },
+      "reason": "Remplacer la remarque éditoriale par une explication pédagogique : gingivite.",
+      "sources": [
+        "https://www.ameli.fr/assure/sante/themes/maladie-gencives/consultation-traitement-gingivite-parodontite",
+        "https://ansm.sante.fr/uploads/2021/03/11/9d56ce8171a4a370b3db47e702eab17f-1.pdf"
+      ]
+    }
+  ]
+}
