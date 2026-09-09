@@ -1,32 +1,18 @@
 import 'server-only';
+import { after } from 'next/server';
 import { siteUrl } from '@/lib/email/send';
-import { arenaDb, arenaLog, currentParticipant, getTournament, loadTournamentSnapshot } from './db';
+import { arenaDb, arenaLog, currentParticipant, getParticipant, getTournament, loadTournamentSnapshot } from './db';
 import { confirmationEmail, loginEmail, sendArenaEmail, validatedEmail } from './emails';
 import { hashToken, newToken, readSession, setSessionCookie } from './session';
 import { PUBLIC_STATUSES, toDate } from './time';
 import { qrpNs, type ParticipantRow, type TournamentRow } from './types';
 
-/**
- * EVC Arena — liens de confirmation d'adresse et de connexion (sans mot de
- * passe). Un seul module pour l'inscription, la page de connexion, le renvoi
- * et les pages d'atterrissage des liens.
- *
- * Principes (revue du 09/09/2026, après les bugs signalés par le client) :
- * - un lien reçu par email n'est JAMAIS consommé par un simple GET : les
- *   antivirus et aperçus de messagerie ouvrent les liens avant l'utilisateur,
- *   ce qui rendait le lien « déjà utilisé ». La page d'atterrissage affiche un
- *   bouton ; seule l'action serveur (POST) consomme le jeton ;
- * - anti-rafale : un lien par minute et par adresse, sans révéler si l'adresse
- *   est inscrite ;
- * - le lien de connexion vaut LOGIN_HOURS heures ; le lien de confirmation
- *   reste valable jusqu'à son utilisation.
- */
 export const LOGIN_HOURS = 2;
-const THROTTLE_MS = 60_000;
+export type IssueResult = { ok: true; throttled?: boolean; retryAfter?: number } | { ok: false; error: string };
+type AccessKind = 'login' | 'confirmation';
+type TokenStatus = 'unknown' | 'expired' | 'blocked';
+export type TokenLookup = { status: 'ok'; participant: ParticipantRow; tournament: TournamentRow } | { status: TokenStatus };
 
-export type IssueResult = { ok: true; throttled?: boolean } | { ok: false; error: string };
-
-/** Réutilise uniquement une session signée et un participant encore autorisé. */
 export async function activeArenaSpace(expectedParticipantId?: string): Promise<string | null> {
   const session = await readSession();
   if (!session || (expectedParticipantId && session.participantId !== expectedParticipantId)) return null;
@@ -34,115 +20,102 @@ export async function activeArenaSpace(expectedParticipantId?: string): Promise<
   if (!participant) return null;
   const tournament = await getTournament(session.tournamentId);
   if (!tournament || !PUBLIC_STATUSES.has(tournament.status)) return null;
-  return `/arena/${tournament.slug}/espace`;
+  return '/arena/' + tournament.slug + '/espace';
 }
 
-/** (Re)génère le lien de confirmation et l'envoie. Silencieux si un envoi date de moins d'une minute. */
-export async function issueConfirmationLink(t: TournamentRow, p: ParticipantRow): Promise<IssueResult> {
-  const last = p.confirmation_sent_at ? new Date(p.confirmation_sent_at).getTime() : 0;
-  if (Date.now() - last < THROTTLE_MS) return { ok: true, throttled: true };
-  const { token, hash } = newToken();
-  const { error } = await arenaDb().from('arena_participants').update({ confirmation_token_hash: hash, confirmation_sent_at: new Date().toISOString() }).eq('id', p.id);
-  if (error) return { ok: false, error: error.message };
-  const url = `${siteUrl()}/arena/confirmer?t=${encodeURIComponent(token)}`;
-  const sent = await sendArenaEmail({ tournament: t, participant: p, to: p.email, kind: 'confirmation', mail: confirmationEmail(t, p, url) });
-  if (!sent.ok && !sent.skipped) {
-    console.error('[arena] email de confirmation', sent.error);
-    return { ok: false, error: 'L’email n’a pas pu être envoyé. Réessayez dans un instant ou contactez Major ECN.' };
-  }
-  return { ok: true };
-}
-
-/** Génère un lien de connexion (LOGIN_HOURS h) et l'envoie. Silencieux si un lien date de moins d'une minute. */
-export async function issueLoginLink(t: TournamentRow, p: ParticipantRow): Promise<IssueResult> {
-  const exp = p.login_token_expires_at ? new Date(p.login_token_expires_at).getTime() : 0;
-  const issuedAt = exp - LOGIN_HOURS * 3_600_000;
-  if (Date.now() - issuedAt < THROTTLE_MS) return { ok: true, throttled: true };
-  const { token, hash } = newToken();
-  const { error } = await arenaDb().from('arena_participants').update({ login_token_hash: hash, login_token_expires_at: new Date(Date.now() + LOGIN_HOURS * 3_600_000).toISOString() }).eq('id', p.id);
-  if (error) return { ok: false, error: error.message };
-  const url = `${siteUrl()}/arena/connecter?t=${encodeURIComponent(token)}`;
-  const sent = await sendArenaEmail({ tournament: t, participant: p, to: p.email, kind: 'login', mail: loginEmail(t, p, url) });
-  if (!sent.ok && !sent.skipped) {
-    console.error('[arena] email de connexion', sent.error);
-    return { ok: false, error: 'L’email n’a pas pu être envoyé. Réessayez dans un instant ou contactez Major ECN.' };
-  }
-  return { ok: true };
-}
-
-/** Lien adapté à l'état du compte : confirmation si l'adresse n'est pas confirmée, connexion sinon. */
-export async function issueAccessLink(t: TournamentRow, p: ParticipantRow): Promise<IssueResult> {
-  if (p.blocked_at || p.anonymized_at) return { ok: true };
-  return p.email_confirmed_at ? issueLoginLink(t, p) : issueConfirmationLink(t, p);
-}
-
-export type TokenLookup =
-  | { status: 'ok'; participant: ParticipantRow; tournament: TournamentRow }
-  | { status: 'unknown' | 'expired' | 'blocked' };
-
-/** Lecture sans effet de bord (page d'atterrissage du lien de confirmation). */
-export async function lookupConfirmationToken(token: string): Promise<TokenLookup> {
-  if (!token) return { status: 'unknown' };
-  const { data } = await arenaDb().from('arena_participants').select('*').eq('confirmation_token_hash', hashToken(token)).maybeSingle().throwOnError();
-  const p = data as ParticipantRow | null;
-  if (!p) return { status: 'unknown' };
-  if (p.blocked_at) return { status: 'blocked' };
-  const t = await getTournament(p.tournament_id);
-  if (!t) return { status: 'unknown' };
-  return { status: 'ok', participant: p, tournament: t };
-}
-
-/** Lecture sans effet de bord (page d'atterrissage du lien de connexion). */
-export async function lookupLoginToken(token: string): Promise<TokenLookup> {
-  if (!token) return { status: 'unknown' };
-  const { data } = await arenaDb().from('arena_participants').select('*').eq('login_token_hash', hashToken(token)).maybeSingle().throwOnError();
-  const p = data as ParticipantRow | null;
-  if (!p) return { status: 'unknown' };
-  if (!p.login_token_expires_at || new Date(p.login_token_expires_at).getTime() < Date.now()) return { status: 'expired' };
-  if (p.blocked_at) return { status: 'blocked' };
-  const t = await getTournament(p.tournament_id);
-  if (!t) return { status: 'unknown' };
-  return { status: 'ok', participant: p, tournament: t };
-}
-
-/** Consomme le lien de confirmation : adresse confirmée, email « inscription validée » (une fois), session ouverte. */
-export async function consumeConfirmationToken(token: string): Promise<{ ok: true; slug: string; first: boolean } | { ok: false; status: 'unknown' | 'blocked' }> {
-  const found = await lookupConfirmationToken(token);
-  if (found.status !== 'ok') return { ok: false, status: found.status === 'blocked' ? 'blocked' : 'unknown' };
-  const { participant: p, tournament: t } = found;
-  const first = !p.email_confirmed_at;
+/** Chaque envoi garde son propre jeton ; un renvoi ne révoque aucun lien précédent. */
+async function issueToken(t: TournamentRow, p: ParticipantRow, kind: AccessKind, triggeredBy?: string): Promise<IssueResult> {
   const db = arenaDb();
-  const { data: consumed } = await db.from('arena_participants').update({
-    email_confirmed_at: p.email_confirmed_at ?? new Date().toISOString(),
-    confirmation_token_hash: null,
-    last_login_at: new Date().toISOString(),
-  }).eq('id', p.id).eq('confirmation_token_hash', hashToken(token)).select('id').maybeSingle().throwOnError();
-  if (!consumed) return { ok: false, status: 'unknown' };
-  if (first) {
-    await arenaLog({ tournamentId: t.id, kind: 'participant_confirmed', details: `Adresse confirmée pour ${p.pseudo}.` });
-    if (t.email_sequence.validated.enabled) {
-      const snap = await loadTournamentSnapshot(t);
-      const m1 = snap.rounds[0];
-      const mail = validatedEmail(t, p, { m1Open: toDate(m1?.opens_at), m1Theme: m1?.theme ?? '', bareme: t.bareme, qrpNs: qrpNs(m1 ? snap.questionsByRound.get(m1.id) ?? [] : []) });
-      await sendArenaEmail({ tournament: t, participant: p, to: p.email, kind: 'validated', mail, dedupeKey: `validated:${t.id}:${p.id}` });
-    }
+  const { token, hash } = newToken();
+  const { data: reservation, error } = await db.rpc('arena_reserve_access_token', {
+    p_participant_id: p.id, p_kind: kind, p_token_hash: hash,
+  });
+  if (error) {
+    console.error('[arena:auth] reservation_failed', { participantId: p.id, kind, code: error.code });
+    return { ok: false, error: 'Le service de connexion est momentanément indisponible. Réessayez dans un instant.' };
   }
-  await setSessionCookie(p.id, t.id);
-  return { ok: true, slug: t.slug, first };
+  if (!reservation?.ok) return { ok: false, error: 'Ce compte ne peut pas recevoir de lien. Contactez Major ECN.' };
+  if (reservation.throttled) return { ok: true, throttled: true, retryAfter: reservation.retryAfter };
+  const url = siteUrl() + '/arena/' + (kind === 'login' ? 'connecter' : 'confirmer') + '?t=' + encodeURIComponent(token);
+  const sent = await sendArenaEmail({
+    tournament: t, participant: p, to: p.email, kind, triggeredBy,
+    mail: kind === 'login' ? loginEmail(t, p, url) : confirmationEmail(t, p, url),
+  });
+  // Une réponse réseau perdue n'implique pas que l'email n'est pas parti : son lien reste utilisable.
+  const delivery = sent.ok ? 'sent' : sent.uncertain ? 'pending' : 'failed';
+  const { error: deliveryError } = await db.from('arena_access_tokens').update({ delivery_status: delivery }).eq('id', reservation.tokenId);
+  if (deliveryError) console.error('[arena:auth] delivery_record_failed', { tokenId: reservation.tokenId, code: deliveryError.code });
+  console.info('[arena:auth] email_result', { participantId: p.id, kind, delivery, emailId: sent.ok ? sent.id : undefined });
+  if (!sent.ok) return { ok: false, error: sent.uncertain
+    ? 'Le service d’email n’a pas confirmé l’envoi. Vérifiez votre messagerie avant de réessayer.'
+    : 'L’email n’a pas pu être envoyé. Réessayez ou contactez Major ECN.' };
+  return { ok: true, retryAfter: 60 };
+}
+export function issueConfirmationLink(t: TournamentRow, p: ParticipantRow, triggeredBy?: string): Promise<IssueResult> {
+  return issueToken(t, p, 'confirmation', triggeredBy);
+}
+export function issueLoginLink(t: TournamentRow, p: ParticipantRow, triggeredBy?: string): Promise<IssueResult> {
+  return issueToken(t, p, 'login', triggeredBy);
+}
+export async function issueAccessLink(t: TournamentRow, p: ParticipantRow, triggeredBy?: string): Promise<IssueResult> {
+  if (p.blocked_at || p.anonymized_at) return { ok: true };
+  return p.email_confirmed_at ? issueLoginLink(t, p, triggeredBy) : issueConfirmationLink(t, p, triggeredBy);
 }
 
-/** Consomme le lien de connexion : session ouverte (et adresse confirmée si elle ne l'était pas). */
-export async function consumeLoginToken(token: string): Promise<{ ok: true; slug: string } | { ok: false; status: 'unknown' | 'expired' | 'blocked' }> {
-  const found = await lookupLoginToken(token);
+/** Lecture seule : ni les antivirus ni les aperçus d'email ne consomment les liens. */
+async function lookupToken(token: string, kind: AccessKind): Promise<TokenLookup> {
+  if (!/^[A-Za-z0-9_-]{43}$/.test(token)) return { status: 'unknown' };
+  const db = arenaDb();
+  const hash = hashToken(token);
+  const { data: row } = await db.from('arena_access_tokens')
+    .select('participant_id,expires_at,used_at,delivery_status,legacy').eq('token_hash', hash).eq('kind', kind).maybeSingle().throwOnError();
+  let p: ParticipantRow | null;
+  if (row) {
+    if (row.used_at || row.delivery_status === 'failed') return { status: 'unknown' };
+    if (row.expires_at && new Date(row.expires_at).getTime() <= Date.now()) return { status: 'expired' };
+    p = await getParticipant(row.participant_id);
+    if (row.legacy && (kind === 'login' ? p?.login_token_hash : p?.confirmation_token_hash) !== hash) return { status: 'unknown' };
+  } else {
+    const { data } = await db.from('arena_participants').select('*')
+      .eq(kind === 'login' ? 'login_token_hash' : 'confirmation_token_hash', hash).maybeSingle().throwOnError();
+    p = data as ParticipantRow | null;
+    if (p && kind === 'login' && (!p.login_token_expires_at || new Date(p.login_token_expires_at).getTime() <= Date.now())) return { status: 'expired' };
+  }
+  if (!p) return { status: 'unknown' };
+  if (p.blocked_at || p.anonymized_at) return { status: 'blocked' };
+  const tournament = await getTournament(p.tournament_id);
+  return tournament ? { status: 'ok', participant: p, tournament } : { status: 'unknown' };
+}
+export function lookupConfirmationToken(token: string): Promise<TokenLookup> { return lookupToken(token, 'confirmation'); }
+export function lookupLoginToken(token: string): Promise<TokenLookup> { return lookupToken(token, 'login'); }
+
+async function consumeToken(token: string, kind: AccessKind): Promise<
+  { ok: true; slug: string; first: boolean } | { ok: false; status: TokenStatus }
+> {
+  const found = await lookupToken(token, kind);
   if (found.status !== 'ok') return { ok: false, status: found.status };
   const { participant: p, tournament: t } = found;
-  const { data: consumed } = await arenaDb().from('arena_participants').update({
-    login_token_hash: null,
-    login_token_expires_at: null,
-    email_confirmed_at: p.email_confirmed_at ?? new Date().toISOString(),
-    last_login_at: new Date().toISOString(),
-  }).eq('id', p.id).eq('login_token_hash', hashToken(token)).select('id').maybeSingle().throwOnError();
-  if (!consumed) return { ok: false, status: 'unknown' };
+  const { data: consumed } = await arenaDb().rpc('arena_consume_access_token', {
+    p_token_hash: hashToken(token), p_kind: kind,
+  }).throwOnError();
+  if (!consumed?.ok) return { ok: false, status: consumed?.status ?? 'unknown' };
+  // Le succès de la connexion ne dépend pas de l'envoi d'un second email.
   await setSessionCookie(p.id, t.id);
-  return { ok: true, slug: t.slug };
+  if (consumed.first) after(async () => {
+    try {
+      await arenaLog({ tournamentId: t.id, kind: 'participant_confirmed', details: 'Adresse confirmée pour ' + p.pseudo + '.' });
+      if (t.email_sequence.validated.enabled) {
+        const snap = await loadTournamentSnapshot(t);
+        const m1 = snap.rounds[0];
+        const mail = validatedEmail(t, p, { m1Open: toDate(m1?.opens_at), m1Theme: m1?.theme ?? '', bareme: t.bareme, qrpNs: qrpNs(m1 ? snap.questionsByRound.get(m1.id) ?? [] : []) });
+        await sendArenaEmail({ tournament: t, participant: p, to: p.email, kind: 'validated', mail, dedupeKey: 'validated:' + t.id + ':' + p.id });
+      }
+    } catch (error) {
+      console.error('[arena:auth] welcome_email_failed', { participantId: p.id, error: error instanceof Error ? error.message : 'unknown' });
+    }
+  });
+  console.info('[arena:auth] session_opened', { participantId: p.id, kind });
+  return { ok: true, slug: t.slug, first: consumed.first };
 }
+export function consumeConfirmationToken(token: string) { return consumeToken(token, 'confirmation'); }
+export function consumeLoginToken(token: string) { return consumeToken(token, 'login'); }

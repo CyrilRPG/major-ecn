@@ -27,15 +27,15 @@ export default async function ConfirmEmailPage({ params, searchParams }: Params)
   return (
     <ArenaPage nav={ctx.nav}>
       <Stadium photo="heroArena" darken={0.48} tint={0.1} gold={0.2} animate position="center 30%" className="py-12 sm:py-20">
-        <Container className="max-w-xl">
+        <Container className="max-w-3xl">
           <div className="rounded-[1.6rem] p-6 text-center sm:p-9" style={{ background: 'rgba(11,15,20,0.88)', boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}, 0 50px 100px -40px rgba(0,0,0,0.95)`, backdropFilter: 'blur(10px)' }}>
             <ArenaLogoStack size="sm" />
             <span className="mx-auto mt-6 flex h-14 w-14 items-center justify-center rounded-full" style={{ background: 'rgba(228,0,43,0.14)', color: ARENA.redSoft, boxShadow: 'inset 0 0 0 1.5px rgba(228,0,43,0.5)' }}><Mail className="h-6 w-6" /></span>
             <p className="mt-4 text-[11px]" style={{ ...CAPS, color: ARENA.redSoft, letterSpacing: '0.26em' }}>Inscription enregistrée</p>
             <h1 className="mt-2 text-[1.9rem] leading-none sm:text-[2.4rem]" style={{ ...CAPS, color: ARENA.text }}>Confirmez votre adresse email</h1>
             <div className="mt-5 space-y-3 text-left text-[14.5px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-              {deja === '1' && <p style={{ color: ARENA.text }}><strong>Cette adresse était déjà enregistrée, sans confirmation.</strong> Nous venons de renvoyer l’email de confirmation (un envoi par minute).</p>}
-              <p>Un email vient d’être envoyé{e ? <> à <strong style={{ color: ARENA.text }}>{e}</strong></> : ''}. Ouvrez-le et cliquez sur « Confirmer mon adresse » : tant que ce n’est pas fait, l’accès aux manches est bloqué. Pensez aux courriers indésirables.</p>
+              {deja === '1' && <p style={{ color: ARENA.text }}><strong>Cette adresse est déjà enregistrée.</strong> Il reste à la confirmer pour accéder à votre espace.</p>}
+              <p>Consultez votre messagerie{e ? <> : <strong className="break-words [overflow-wrap:anywhere]" style={{ color: ARENA.text }}>{e}</strong></> : ''}. Dans l’email EVC Arena, cliquez sur « Confirmer mon adresse ». Pensez aussi aux courriers indésirables.</p>
               <p>Cette confirmation vaut authentification du compte. Elle ne constitue pas un consentement à recevoir les informations de Major ECN, qui relève uniquement de la seconde case du formulaire.</p>
             </div>
             {e && <div className="mt-6 text-left"><ResendConfirmation slug={slug} email={e} /></div>}

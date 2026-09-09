@@ -30,7 +30,6 @@ import {
   roundTotalSeconds,
 } from "@/lib/arena/db";
 import {
-  confirmationEmail,
   deletedEmail,
   inviteEmail,
   reportAckEmail,
@@ -41,7 +40,7 @@ import { finalizeAttempt, gradeOne } from "@/lib/arena/grading";
 import { attemptProgress } from "@/lib/arena/attempt-progress";
 import type { Bareme } from "@/lib/arena/scoring";
 import { anonymizeParticipant } from "@/lib/arena/sequence";
-import { clearSessionCookie, newToken } from "@/lib/arena/session";
+import { clearSessionCookie } from "@/lib/arena/session";
 import {
   attemptDeadline,
   questionDeadline,
@@ -193,7 +192,6 @@ export async function registerParticipant(
     invitedBy = inviter?.id ?? null;
   }
 
-  const { token, hash } = newToken();
   const { data: created, error } = await db
     .from("arena_participants")
     .insert({
@@ -206,8 +204,6 @@ export async function registerParticipant(
       pseudo_key: key,
       avatar_seed: input.avatarSeed || randomAvatarSeed(),
       timezone: input.timezone ?? null,
-      confirmation_token_hash: hash,
-      confirmation_sent_at: new Date().toISOString(),
       consent_tournament_at: new Date().toISOString(),
       consent_tournament_version: CONSENT_VERSION,
       consent_marketing: input.consentMarketing,
@@ -230,15 +226,8 @@ export async function registerParticipant(
     return err(error?.message ?? "Inscription impossible.");
   }
 
-  const url = `${siteUrl()}/arena/confirmer?t=${encodeURIComponent(token)}`;
-  const sent = await sendArenaEmail({
-    tournament: t,
-    participant: created,
-    to: email,
-    kind: "confirmation",
-    mail: confirmationEmail(t, created, url),
-  });
-  if (!sent.ok && !sent.skipped) {
+  const sent = await issueConfirmationLink(t, created);
+  if (!sent.ok) {
     console.error("[arena] email de confirmation", sent.error);
     return err(
       "Votre inscription est enregistrée mais l’email de confirmation n’a pas pu partir. Réessayez dans un instant depuis la page de connexion, ou contactez Major ECN.",
@@ -263,10 +252,6 @@ export async function resendConfirmation(
       ? await issueLoginLink(v.tournament, p)
       : await issueConfirmationLink(v.tournament, p);
     if (!r.ok) return r;
-    if (r.throttled)
-      return err(
-        "Un email vient d’être envoyé. Patientez une minute avant de redemander.",
-      );
     return { ok: true };
   } catch (error) {
     unstable_rethrow(error);

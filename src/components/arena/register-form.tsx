@@ -89,22 +89,26 @@ export function RegisterForm({
           return;
         }
         start(async () => {
-          const r = await registerParticipant(slug, {
-            firstName, lastName, email, specialty, pseudo, avatarSeed,
-            consentTournament: true, consentMarketing: c2,
-            timezone: browserTimezone(), source, utm, inviteCode,
-          });
-          if (!r.ok) {
-            setError(r.error);
-            return;
+          try {
+            const r = await registerParticipant(slug, {
+              firstName, lastName, email, specialty, pseudo, avatarSeed,
+              consentTournament: true, consentMarketing: c2,
+              timezone: browserTimezone(), source, utm, inviteCode,
+            });
+            if (!r.ok) {
+              setError(r.error);
+              return;
+            }
+            const e = encodeURIComponent(email.trim().toLowerCase());
+            if (r.alreadyConfirmed) {
+              // L'écran indique comment retrouver l'accès sans promettre un nouvel envoi en cas de délai de renvoi.
+              router.push(`/arena/connexion?deja=1&e=${e}`);
+              return;
+            }
+            router.push(`/arena/${slug}/confirmez-votre-email?e=${e}${r.alreadyPending ? '&deja=1' : ''}`);
+          } catch {
+            setError('La demande a été interrompue. Vérifiez votre messagerie : si votre inscription est enregistrée, vous pouvez aussi retrouver votre accès depuis « Se connecter ».');
           }
-          const e = encodeURIComponent(email.trim().toLowerCase());
-          if (r.alreadyConfirmed) {
-            // Adresse déjà inscrite et confirmée : un lien de connexion vient d'être envoyé, la page de connexion l'explique.
-            router.push(`/arena/connexion?deja=1&e=${e}`);
-            return;
-          }
-          router.push(`/arena/${slug}/confirmez-votre-email?e=${e}${r.alreadyPending ? '&deja=1' : ''}`);
         });
       }}
     >

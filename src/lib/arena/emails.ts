@@ -83,9 +83,9 @@ export function confirmationEmail(t: TournamentRow, p: ParticipantRow, confirmUr
     para(`Bonjour ${p.first_name},`),
     para(`Votre inscription au tournoi EVC Arena (${t.specialty}) est enregistrée sous le pseudonyme « ${p.pseudo} ». Pour accéder aux manches, confirmez votre adresse email en cliquant sur le bouton ci-dessous.`),
     button('Confirmer mon adresse email', confirmUrl),
-    para('Ce lien est personnel. Si vous n’êtes pas à l’origine de cette inscription, ignorez simplement cet email.'),
+    para('Ce lien est personnel et valable sept jours. Si vous n’êtes pas à l’origine de cette inscription, ignorez simplement cet email.'),
   ].join(''), confirmUrl);
-  const text = `Bonjour ${p.first_name},\n\nConfirmez votre adresse email pour accéder aux manches du tournoi EVC Arena (${t.specialty}) :\n${confirmUrl}\n\nSi vous n'êtes pas à l'origine de cette inscription, ignorez cet email.`;
+  const text = `Bonjour ${p.first_name},\n\nConfirmez votre adresse email pour accéder aux manches du tournoi EVC Arena (${t.specialty}) :\n${confirmUrl}\n\nCe lien est valable sept jours. Si vous n'êtes pas à l'origine de cette inscription, ignorez cet email.`;
   return { subject, html, text };
 }
 
@@ -264,7 +264,7 @@ export type SendArenaInput = {
   triggeredBy?: string | null;
 };
 
-export type SendArenaResult = { ok: true; id: string } | { ok: false; skipped?: boolean; error: string };
+export type SendArenaResult = { ok: true; id: string } | { ok: false; skipped?: boolean; uncertain?: boolean; error: string };
 
 export async function sendArenaEmail(input: SendArenaInput): Promise<SendArenaResult> {
   if (process.env.EMAIL_DRY_RUN === '1' && process.env.NODE_ENV !== 'production') {
@@ -292,7 +292,15 @@ export async function sendArenaEmail(input: SendArenaInput): Promise<SendArenaRe
     if (String(logErr.code) === '23505') return { ok: false, skipped: true, error: 'Déjà envoyé.' };
     return { ok: false, error: logErr.message };
   }
-  const res = await sendEmail({ to: input.to, subject: input.mail.subject, html: input.mail.html, text: input.mail.text });
+  let res;
+  try {
+    res = await sendEmail({ to: input.to, subject: input.mail.subject, html: input.mail.html, text: input.mail.text, timeoutMs: 15_000 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Erreur réseau';
+    await db.from('arena_emails').update({ error: 'Envoi non confirmé : ' + message }).eq('id', logRow.id);
+    console.error('[arena:email] delivery_unconfirmed', { emailId: logRow.id, kind: input.kind });
+    return { ok: false, uncertain: true, error: 'Le service d’email n’a pas confirmé l’envoi.' };
+  }
   await db.from('arena_emails').update(res.ok ? { resend_id: res.id } : { error: res.error }).eq('id', logRow.id);
   return res.ok ? { ok: true, id: res.id } : { ok: false, error: res.error };
 }

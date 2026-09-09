@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { ArenaButton } from '@/components/arena/arena-ui';
+import { AccessSubmit } from '@/components/arena/access-submit';
 import { AuthCard } from '@/components/arena/auth-card';
 import { LoginForm } from '@/components/arena/login-form';
 import { ARENA, BODY } from '@/components/arena/tokens';
@@ -27,10 +27,10 @@ export default async function LoginLandingPage({ searchParams }: { searchParams:
   }
 
   if (found.status !== 'ok') {
-    const titles = { unknown: 'Lien déjà utilisé ou inconnu', expired: 'Lien expiré', blocked: 'Compte suspendu' } as const;
+    const titles = { unknown: 'Reprendre la connexion', expired: 'Votre lien a expiré', blocked: 'Compte suspendu' } as const;
     const leads = {
-      unknown: 'Ce lien de connexion a déjà servi, ou il est incomplet. Demandez-en un nouveau : il arrive en moins d’une minute.',
-      expired: 'Ce lien de connexion n’est plus valable (il l’est deux heures). Demandez-en un nouveau : il arrive en moins d’une minute.',
+      unknown: 'Ce lien n’est plus disponible. Indiquez l’adresse de votre inscription pour recevoir un nouvel accès à votre Arena.',
+      expired: 'Les liens de connexion sont valables deux heures. Vous pouvez en demander un nouveau ci-dessous.',
       blocked: 'Ce compte a été suspendu par l’organisation. Contactez Major ECN si vous pensez qu’il s’agit d’une erreur.',
     } as const;
     return (
@@ -54,7 +54,7 @@ export default async function LoginLandingPage({ searchParams }: { searchParams:
     >
       <form action={loginWithTokenAction}>
         <input type="hidden" name="t" value={t} />
-        <ArenaButton type="submit" size="lg" className="w-full">Ouvrir mon espace</ArenaButton>
+        <AccessSubmit>Ouvrir mon espace</AccessSubmit>
       </form>
     </AuthCard>
   );

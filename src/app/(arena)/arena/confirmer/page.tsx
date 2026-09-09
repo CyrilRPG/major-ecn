@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { ArenaButton } from '@/components/arena/arena-ui';
+import { AccessSubmit } from '@/components/arena/access-submit';
 import { AuthCard } from '@/components/arena/auth-card';
 import { LoginForm } from '@/components/arena/login-form';
 import { ARENA, BODY } from '@/components/arena/tokens';
@@ -27,10 +27,10 @@ export default async function ConfirmLandingPage({ searchParams }: { searchParam
   if (found.status !== 'ok') {
     return (
       <AuthCard
-        title={found.status === 'blocked' ? 'Compte suspendu' : 'Lien déjà utilisé ou inconnu'}
+        title={found.status === 'blocked' ? 'Compte suspendu' : found.status === 'expired' ? 'Votre lien a expiré' : 'Reprendre la connexion'}
         lead={found.status === 'blocked'
           ? 'Ce compte a été suspendu par l’organisation. Contactez Major ECN si vous pensez qu’il s’agit d’une erreur.'
-          : 'Ce lien de confirmation a déjà servi, ou il est incomplet. Si votre adresse est déjà confirmée, demandez simplement un lien de connexion : il arrive en moins d’une minute.'}
+          : 'Ce lien n’est plus disponible. Indiquez l’adresse de votre inscription pour recevoir un nouvel accès à votre Arena.'}
       >
         {found.status !== 'blocked' && <LoginForm />}
         <p className="text-center text-[13px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>
@@ -46,13 +46,13 @@ export default async function ConfirmLandingPage({ searchParams }: { searchParam
     <AuthCard
       title={already ? 'Adresse déjà confirmée' : 'Confirmez votre adresse'}
       lead={<>
-        {already ? 'Votre adresse est déjà confirmée.' : <>Bonjour {p.first_name}, un dernier clic pour authentifier votre compte <strong style={{ color: ARENA.text }}>{p.email}</strong> et entrer dans l’arène.</>}
+        {already ? 'Votre adresse est déjà confirmée.' : <>Bonjour {p.first_name}, confirmez votre adresse <strong className="break-words [overflow-wrap:anywhere]" style={{ color: ARENA.text }}>{p.email}</strong> pour ouvrir votre espace.</>}
         <span className="mt-2 block text-[12.5px]" style={{ color: ARENA.textMuted }}>{tournament.title} · pseudonyme « {p.pseudo} »</span>
       </>}
     >
       <form action={confirmEmailAction}>
         <input type="hidden" name="t" value={t} />
-        <ArenaButton type="submit" size="lg" className="w-full">{already ? 'Ouvrir mon espace' : 'Confirmer mon adresse'}</ArenaButton>
+        <AccessSubmit>{already ? 'Ouvrir mon espace' : 'Confirmer mon adresse'}</AccessSubmit>
       </form>
       <p className="text-center text-[12px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>
         Cette confirmation authentifie votre compte. Elle ne vaut pas consentement à recevoir les informations de Major ECN.

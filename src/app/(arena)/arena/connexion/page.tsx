@@ -11,6 +11,7 @@ export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Connexion — EVC Arena', robots: { index: false, follow: false } };
 
 const ERRORS: Record<string, string> = {
+  service: 'La connexion n’a pas pu aboutir. Réessayez votre lien reçu par email ou demandez un nouvel accès ci-dessous.',
   lien: 'Ce lien n’est plus valable (déjà utilisé ou incomplet). Demandez un nouveau lien de connexion ci-dessous.',
   expire: 'Ce lien de connexion a expiré (il est valable deux heures). Demandez-en un nouveau ci-dessous.',
   bloque: 'Ce compte a été suspendu par l’organisation. Contactez Major ECN si vous pensez qu’il s’agit d’une erreur.',
@@ -30,7 +31,7 @@ export default async function ArenaLoginPage({ searchParams }: { searchParams: P
     <AuthCard
       title={alreadyRegistered ? 'Vous êtes déjà inscrit' : 'Connexion'}
       lead={alreadyRegistered
-        ? <>Cette adresse participe déjà au tournoi. Nous venons de lui envoyer un <strong style={{ color: ARENA.text }}>lien de connexion</strong> : ouvrez l’email et cliquez sur « Ouvrir mon espace ». Rien reçu ? Redemandez un lien ci-dessous.</>
+        ? <>Votre inscription existe déjà. Retrouvez le lien reçu dans votre messagerie et cliquez sur « Ouvrir mon espace ». Vous pouvez aussi demander un nouvel accès ci-dessous.</>
         : <>Pas de mot de passe sur EVC Arena : indiquez l’adresse email de votre inscription, vous recevrez un lien de connexion valable deux heures.</>}
     >
       {erreur && ERRORS[erreur] && <Notice tone="red">{ERRORS[erreur]}</Notice>}

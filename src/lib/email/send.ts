@@ -53,6 +53,8 @@ export type EmailAttachment = {
 };
 
 export type SendEmailInput = {
+  /** Budget optionnel des emails nécessaires à un parcours interactif. */
+  timeoutMs?: number;
   /** Destinataire principal. Accepte une liste pour notifier plusieurs
    *  adresses explicites (ex. récap interne → INTERNAL_NOTIFY_EMAILS). */
   to: string | string[];
@@ -117,6 +119,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendResult> {
 
   const res = await fetch(RESEND_URL, {
     method: 'POST',
+    signal: input.timeoutMs ? AbortSignal.timeout(input.timeoutMs) : undefined,
     headers: {
       'content-type': 'application/json',
       authorization: `Bearer ${key}`,
@@ -143,5 +146,6 @@ export async function sendEmail(input: SendEmailInput): Promise<SendResult> {
     return { ok: false, error: `Resend ${res.status}: ${body.slice(0, 200)}` };
   }
   const j = (await res.json().catch(() => ({}))) as { id?: string };
-  return { ok: true, id: j.id ?? 'unknown' };
+  if (!j.id || typeof j.id !== 'string') throw new Error('Le service d’email n’a pas fourni d’accusé d’envoi.');
+  return { ok: true, id: j.id };
 }
