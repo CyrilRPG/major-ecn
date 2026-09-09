@@ -26,6 +26,9 @@ Contrôle des UUID avant/après : les **74 084 tentatives et 17 591 sessions** d
 - TypeScript complet et ESLint ciblé : réussis dans le worktree isolé de vérification.
 - 16 tests des règles d'accès et 10 tests de publication/nettoyage : réussis.
 - API réelle sur 12 profils étudiants (3 états de voie × 4 offres) : 277 séries retirées et leurs questions inaccessibles ; annale complète témoin accessible ; lecture administrative conservée.
+- Relecture des 26 437 opérations conforme au plan ; comparaison des 26 349 lignes de la sauvegarde initiale du lot final : aucune disparition et aucun changement inattendu hors des champs prévus (horodatages des triggers exclus).
+- Déploiement applicatif `b55eff391e24828b9afa3eb135161cfde679eecd` : statut Vercel réussi. Contrôle HTTP authentifié sur `https://www.major-ecn.fr` : série retirée et révision en état 404 (marqueur Next.js dans le flux), ancien résultat accessible sans énoncé ni lien de reprise, annale complète témoin et DP d'orthopédie corrigé accessibles. L'énoncé restauré est présent et son préambule artificiel absent.
+- Compte de contrôle et ses deux lignes d'historique temporaires supprimés après les tests ; absence du compte confirmée dans Auth. Les 281 annales complètes restent publiées.
 - Plan exact versionné : `scripts/banques/reprises/2026-09-09-finalisation.json`.
 - Motifs complémentaires : `scripts/banques/reprises/2026-09-09-motifs-retrait.json` ; premier retrait : `2026-09-09-retraits.json`.
 - Sauvegardes intégrales avant écriture, résultats de contrôle et historique : répertoire local ignoré `tmp/banques-reprise/` ; aucun identifiant d'authentification n'est versionné.
