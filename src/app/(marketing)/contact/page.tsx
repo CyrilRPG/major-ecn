@@ -63,7 +63,10 @@ const STEPS = [
 /* ============================================================
    PAGE
    ============================================================ */
-export default function ContactPage() {
+/** `?motif=etablissement` (bandeau « Prise en charge établissement de santé »)
+    présélectionne l'objet « Devis établissement de santé » du formulaire. */
+export default async function ContactPage({ searchParams }: { searchParams: Promise<{ motif?: string }> }) {
+  const { motif } = await searchParams;
   return (
     <main className="bg-white" style={{ fontFamily: FONT }}>
       {/* breadcrumb */}
@@ -184,7 +187,7 @@ export default function ContactPage() {
               </div>
 
               {/* Formulaire */}
-              <ContactForm />
+              <ContactForm motifInitial={motif} />
             </div>
           </div>
         </div>

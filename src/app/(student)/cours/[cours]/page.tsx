@@ -12,6 +12,7 @@ import { estTitreRevisions } from '@/lib/videos/revisions';
 import { estItemAnnales } from '@/lib/data/annales';
 import { videoVisible, supportVisible, eleveAutorise, eleveExclu, type SupportOverride } from '@/lib/videos/audience';
 import { estOuverte } from '@/lib/videos/unlock';
+import { grouperParRubrique, rubriqueParDefaut } from '@/lib/videos/rubriques';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-locked-card';
 import { ItemPopups, type ItemPopup } from '@/components/student/item-popups';
@@ -38,7 +39,47 @@ type Action = {
   decorImage?: string;
   /** Carte verrouillée (parcours pas terminé) → grisée, lien désactivé. */
   locked?: boolean;
+  /** Rubrique vidéo (titre de section) à laquelle la carte appartient. */
+  rubrique?: string;
 };
+
+/**
+ * Remet les cartes d'une même rubrique côte à côte, dans l'ordre des rubriques
+ * (Préparation intensive d'abord), à la place de la première carte vidéo
+ * rencontrée. Les autres réordonnancements de la page (blocs masqués, slots
+ * de l'administrateur) peuvent disperser ces cartes ; l'élève doit pourtant
+ * les voir sous un seul en-tête par rubrique.
+ */
+function regrouperCartesParRubrique(actions: Action[], ordreRubriques: string[]): Action[] {
+  const ancre = actions.findIndex((a) => !!a.rubrique);
+  if (ancre === -1) return actions;
+  const rang = (r: string) => {
+    const i = ordreRubriques.indexOf(r);
+    return i === -1 ? ordreRubriques.length : i;
+  };
+  const rubriquees = actions
+    .map((a, i) => ({ a, i }))
+    .filter(({ a }) => !!a.rubrique)
+    .sort((x, y) => (rang(x.a.rubrique as string) - rang(y.a.rubrique as string)) || (x.i - y.i))
+    .map(({ a }) => a);
+  const autres = actions.filter((a) => !a.rubrique);
+  // `ancre` compte les cartes précédentes toutes confondues ; on ne garde que
+  // celles sans rubrique pour retrouver la même position dans `autres`.
+  const avant = actions.slice(0, ancre).filter((a) => !a.rubrique).length;
+  return [...autres.slice(0, avant), ...rubriquees, ...autres.slice(avant)];
+}
+
+/** Segments consécutifs de cartes : hors rubrique, ou sous un en-tête de rubrique. */
+function segmenterParRubrique(actions: Action[]): { rubrique: string | null; cartes: Action[] }[] {
+  const segments: { rubrique: string | null; cartes: Action[] }[] = [];
+  for (const a of actions) {
+    const r = a.rubrique ?? null;
+    const dernier = segments[segments.length - 1];
+    if (dernier && dernier.rubrique === r) dernier.cartes.push(a);
+    else segments.push({ rubrique: r, cartes: [a] });
+  }
+  return segments;
+}
 
 export default async function CoursApercuPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
@@ -50,7 +91,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     .select(`
       id, titre, description, matiere_id, access_type, hidden_blocks,
       matieres(nom, access_type),
-      videos(id, titre, type, storage_path, bunny_video_id, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)),
+      videos(id, titre, type, rubrique, storage_path, bunny_video_id, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)),
       fiches(storage_path), flashcards(id)
     `)
     .eq('id', coursId)
@@ -128,7 +169,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any)
       .from('videos')
-      .select('id, bunny_video_id, titre, serie_id, unlock_direct, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)')
+      .select('id, bunny_video_id, titre, type, rubrique, order_index, serie_id, unlock_direct, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)')
       .eq('cours_id', coursId)
       .eq('type', 'seance_approfondie')
       // Ordre choisi par l'administrateur (Contenu › Séances approfondies).
@@ -175,7 +216,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
    */
   /** Vidéos de COURS de l'item (plusieurs possibles, ordonnées côté admin). */
   const coursVideos = ((c.videos ?? []) as unknown as {
-    id: string; titre: string; type: string | null;
+    id: string; titre: string; type: string | null; rubrique: string | null;
     storage_path: string | null; bunny_video_id: string | null;
     order_index: number | null; voies: string[] | null; offers: string[] | null;
     denied_user_ids: string[] | null; allowed_user_ids: string[] | null;
@@ -188,6 +229,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
 
   type SAVid = {
     id: string; titre: string; bunny_video_id: string | null; serie_id: string | null;
+    type?: string | null; rubrique?: string | null; order_index?: number | null;
     unlock_direct?: boolean | null;
     voies?: string[] | null; offers?: string[] | null;
     denied_user_ids?: string[] | null; allowed_user_ids?: string[] | null;
@@ -195,6 +237,24 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   };
   const saVids = ((seanceApprofondieVideos ?? []) as SAVid[]);
   const isVideoUnlocked = (v: SAVid) => estOuverte(v, completedSerieIds, isAdmin);
+
+  // Rubriques vidéo de l'item : la Préparation intensive (cours vidéo) d'abord,
+  // le Programme approfondi ensuite ; puis l'ordre d'apparition des rubriques
+  // saisies par l'administrateur. Chaque groupe garde l'ordre des vidéos.
+  type VideoRubriquee =
+    | { kind: 'cours'; type: string | null; rubrique: string | null; order_index: number | null; video: (typeof coursVideos)[number] }
+    | { kind: 'seance'; type: string | null; rubrique: string | null; order_index: number | null; video: SAVid };
+  const rubriquesVideo = grouperParRubrique<VideoRubriquee>([
+    ...coursVideos.map((v): VideoRubriquee => ({ kind: 'cours', type: 'cours', rubrique: v.rubrique, order_index: v.order_index, video: v })),
+    ...saVids.map((v): VideoRubriquee => ({ kind: 'seance', type: 'seance_approfondie', rubrique: v.rubrique ?? null, order_index: v.order_index ?? null, video: v })),
+  ]);
+  const ordreRubriques = rubriquesVideo.map((g) => g.rubrique);
+  // En-têtes de section : seulement s'il y a de quoi distinguer — plusieurs
+  // rubriques, ou une rubrique saisie à la main. Un item ordinaire avec sa
+  // seule carte « Cours vidéo » garde l'aperçu habituel, sans titre de section.
+  const afficherRubriques = rubriquesVideo.length > 1
+    || coursVideos.some((v) => !!v.rubrique?.trim())
+    || saVids.some((v) => !!v.rubrique?.trim());
 
   // Mode Découverte : on retire « Cours vidéo » et « Interrogation »
   // (la vidéo est remplacée par une carte cadenas → popup tarifs).
@@ -319,68 +379,97 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
             available: (qcmSeriesForAvailability ?? []).some((s) => s.type === 'qcm' || s.type === 'seance' || s.type === 'qroc'),
           },
         );
-        if (hasSeanceApprofondie && isApprofondi) {
-          // Une carte PAR séance approfondie : l'élève voit d'un coup d'œil
-          // laquelle est ouverte, et par quelle séance du professeur.
-          const plusieurs = saVids.length > 1;
-          saVids.forEach((v, i) => {
-            const unlocked = isVideoUnlocked(v);
-            const gate = v.serie_id ? seanceLabelById.get(v.serie_id) : null;
-            standardActions.push({
-              href: unlocked
-                ? `/cours/${coursId}/seance-approfondie?v=${v.id}`
-                : '#locked-seance-approfondie',
-              // Le titre de la vidéo prime ; à défaut on numérote dans l'ordre.
-              label: v.titre?.trim()
-                ? v.titre.trim()
-                : plusieurs ? `Séance approfondie ${i + 1}` : 'Séance approfondie',
-              desc: unlocked
-                ? 'Cours vidéo approfondi par le professeur pour aller plus loin.'
-                : gate
-                  ? `Terminez « ${gate} » pour débloquer cette vidéo.`
-                  : 'Terminez la séance du professeur (DP & QI) qui ouvre cette vidéo.',
-              Icon: unlocked ? Video : Lock,
-              accent: '#7C3AED',
-              bg: '#F3EAFF',
-              available: unlocked,
-              locked: !unlocked,
-            });
-            // Support de la séance, juste après elle — seulement si au moins un
-            // document est visible pour l'élève (permissions propres du support).
-            if (supportsVisibles(v, !access || access.seanceApprofondie).length > 0) {
-              standardActions.push({
-                href: `/cours/${coursId}/support/${v.id}`,
-                label: `Supports — ${v.titre?.trim() || `Séance approfondie ${i + 1}`}`,
-                desc: 'Les documents de la séance, consultables en ligne (non téléchargeables).',
-                Icon: Paperclip,
-                accent: '#7C3AED',
-                bg: '#F3EAFF',
-                available: true,
-              });
-            }
-          });
-        }
-        // Le bloc s'ouvre si la formule inclut le résumé vidéo OU si au moins
-        // une vidéo cible explicitement cet élève.
-        if (!access || access.video || coursVideos.length > 0) {
+        // Cartes vidéo, rubrique par rubrique (Préparation intensive d'abord).
+        // Chaque carte porte sa rubrique : l'aperçu les regroupe sous un
+        // en-tête de section, pour que l'élève sache quoi travailler et dans
+        // quel ordre.
+        const afficherSeances = hasSeanceApprofondie && isApprofondi;
+        // Le bloc « Cours vidéo » s'ouvre si la formule inclut le résumé vidéo
+        // OU si au moins une vidéo cible explicitement cet élève.
+        const afficherCoursVideo = !access || access.video || coursVideos.length > 0;
+        const plusieursSeances = saVids.length > 1;
+        const rubriqueOuVide = (r: string) => (afficherRubriques ? { rubrique: r } : {});
+        const carteCoursVideo = (rubrique: string) => {
           standardActions.push(
             {
               href: `/cours/${coursId}/video`, label: 'Cours vidéo',
               desc: 'Le cours filmé, aligné sur les recommandations HAS.',
               Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
               available: coursVideosDisponibles,
+              ...rubriqueOuVide(rubrique),
             },
           );
-          for (const v of coursVideos.filter((x) => supportsVisibles(x, !access || access.video).length > 0)) {
-            standardActions.push({
-              href: `/cours/${coursId}/support/${v.id}`,
-              label: `Supports — ${v.titre?.trim() || 'Cours vidéo'}`,
-              desc: 'Les documents du cours, consultables en ligne (non téléchargeables).',
-              Icon: Paperclip, accent: '#E4002B', bg: '#FDE7E9',
-              available: true,
-            });
+        };
+        let carteCoursVideoPoussee = false;
+        for (const groupe of rubriquesVideo) {
+          for (const entree of groupe.videos) {
+            if (entree.kind === 'seance') {
+              if (!afficherSeances) continue;
+              const v = entree.video;
+              const i = saVids.indexOf(v);
+              // Une carte PAR séance approfondie : l'élève voit d'un coup d'œil
+              // laquelle est ouverte, et par quelle séance du professeur.
+              const unlocked = isVideoUnlocked(v);
+              const gate = v.serie_id ? seanceLabelById.get(v.serie_id) : null;
+              standardActions.push({
+                href: unlocked
+                  ? `/cours/${coursId}/seance-approfondie?v=${v.id}`
+                  : '#locked-seance-approfondie',
+                // Le titre de la vidéo prime ; à défaut on numérote dans l'ordre.
+                label: v.titre?.trim()
+                  ? v.titre.trim()
+                  : plusieursSeances ? `Séance approfondie ${i + 1}` : 'Séance approfondie',
+                desc: unlocked
+                  ? 'Cours vidéo approfondi par le professeur pour aller plus loin.'
+                  : gate
+                    ? `Terminez « ${gate} » pour débloquer cette vidéo.`
+                    : 'Terminez la séance du professeur (DP & QI) qui ouvre cette vidéo.',
+                Icon: unlocked ? Video : Lock,
+                accent: '#7C3AED',
+                bg: '#F3EAFF',
+                available: unlocked,
+                locked: !unlocked,
+                ...rubriqueOuVide(groupe.rubrique),
+              });
+              // Support de la séance, juste après elle — seulement si au moins un
+              // document est visible pour l'élève (permissions propres du support).
+              if (supportsVisibles(v, !access || access.seanceApprofondie).length > 0) {
+                standardActions.push({
+                  href: `/cours/${coursId}/support/${v.id}`,
+                  label: `Supports — ${v.titre?.trim() || `Séance approfondie ${i + 1}`}`,
+                  desc: 'Les documents de la séance, consultables en ligne (non téléchargeables).',
+                  Icon: Paperclip,
+                  accent: '#7C3AED',
+                  bg: '#F3EAFF',
+                  available: true,
+                  ...rubriqueOuVide(groupe.rubrique),
+                });
+              }
+            } else {
+              if (!afficherCoursVideo) continue;
+              const v = entree.video;
+              // Une seule carte « Cours vidéo » (la page liste toutes les
+              // vidéos) : elle se range dans la première rubrique rencontrée.
+              if (!carteCoursVideoPoussee) {
+                carteCoursVideo(groupe.rubrique);
+                carteCoursVideoPoussee = true;
+              }
+              if (supportsVisibles(v, !access || access.video).length > 0) {
+                standardActions.push({
+                  href: `/cours/${coursId}/support/${v.id}`,
+                  label: `Supports — ${v.titre?.trim() || 'Cours vidéo'}`,
+                  desc: 'Les documents du cours, consultables en ligne (non téléchargeables).',
+                  Icon: Paperclip, accent: '#E4002B', bg: '#FDE7E9',
+                  available: true,
+                  ...rubriqueOuVide(groupe.rubrique),
+                });
+              }
+            }
           }
         }
+        // Formule ouverte au cours vidéo mais aucune vidéo encore en ligne :
+        // la carte « Bientôt » reste affichée, comme avant.
+        if (afficherCoursVideo && !carteCoursVideoPoussee) carteCoursVideo(rubriqueParDefaut('cours'));
         if (!access || access.flashcards) {
           standardActions.push(
             {
@@ -493,6 +582,10 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       .sort((x, y) => (rankOf(typeOf(x.a.href), x.i) - rankOf(typeOf(y.a.href), y.i)) || x.i - y.i)
       .map((r) => r.a);
   }
+  // Les cartes d'une rubrique restent groupées, dans l'ordre des rubriques,
+  // quels que soient les réordonnancements ci-dessus.
+  actions = regrouperCartesParRubrique(actions, ordreRubriques);
+  const segments = segmenterParRubrique(actions);
 
   // Popups vidéo de l'item (actives, non encore vues par l'élève).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -533,8 +626,10 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
       )}
 
       <ApercuCoachmark />
-      <div data-tour="apercu-content" className={`grid gap-4 ${isMethodologie ? 'mx-auto sm:grid-cols-1 max-w-2xl' : 'sm:grid-cols-2'}`}>
-        {actions.map((a) => {
+      <div data-tour="apercu-content" className="space-y-6">
+      {segments.map((segment, si) => {
+        const grille = `grid gap-4 ${isMethodologie ? 'mx-auto sm:grid-cols-1 max-w-2xl' : 'sm:grid-cols-2'}`;
+        const cartes = segment.cartes.map((a) => {
           // Séance approfondie verrouillée → popup invitation DP/QI.
           if (a.href === '#locked-seance-approfondie') {
             return (
@@ -683,7 +778,25 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
             </span>
           </Tag>
           );
-        })}
+        });
+        // Rubrique vidéo : un en-tête de section (même style que les
+        // sur-titres de la page) au-dessus de ses cartes.
+        if (segment.rubrique) {
+          const idTitre = `rubrique-${si}`;
+          return (
+            <section key={`rubrique-${si}`} aria-labelledby={idTitre}>
+              <h2
+                id={idTitre}
+                className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-accent-deep)"
+              >
+                {segment.rubrique}
+              </h2>
+              <div className={grille}>{cartes}</div>
+            </section>
+          );
+        }
+        return <div key={`cartes-${si}`} className={grille}>{cartes}</div>;
+      })}
       </div>
 
       {/* Bandeau "tout le contenu de ce collège" (UpgradeBanner) :

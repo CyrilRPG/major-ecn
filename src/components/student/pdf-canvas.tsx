@@ -14,9 +14,17 @@
  *    (IntersectionObserver), un simple gabarit vide tenant sa place avant ;
  *  - la densité de pixels est plafonnée à 2 (les écrans à DPR 3 tripleraient
  *    la mémoire canvas pour un gain invisible sur un document).
+ *
+ * Deux filets de sécurité pour les navigateurs anciens (Chrome < 119,
+ * Safari < 17.4) : le polyfill importé en PREMIER ci-dessous, et un repli sur
+ * la visionneuse native (iframe) si pdf.js lève malgré tout une exception à
+ * l'exécution — le `.catch` du `dynamic()` de pdf-viewer ne couvre que
+ * l'échec de chargement du module, pas une erreur pendant le rendu.
  */
-import { useEffect, useRef, useState } from 'react';
+import '@/lib/polyfills/pdfjs-compat';
+import { Component, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
+import PdfFallbackFrame from './pdf-fallback-frame';
 
 // Worker servi en same-origin depuis /public. Le suffixe ?v=<version> casse
 // le cache navigateur quand la version de pdf.js change (sinon « API version
@@ -90,7 +98,38 @@ function LazyPage({
   );
 }
 
-export default function PdfCanvas({ src, zoom = 1 }: { src: string; zoom?: number }) {
+/**
+ * Capture toute exception levée par pdf.js pendant le rendu (y compris dans
+ * les effets de react-pdf) et bascule sur la visionneuse native, au lieu de
+ * laisser remonter l'erreur jusqu'à l'écran « Une erreur est survenue ».
+ */
+class PdfErrorBoundary extends Component<
+  { fallback: ReactNode; children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch(error: unknown) {
+    console.warn('[fiche] pdf.js indisponible, repli sur la visionneuse native :', error);
+  }
+  render() {
+    return this.state.failed ? this.props.fallback : this.props.children;
+  }
+}
+
+export default function PdfCanvas(props: { src: string; zoom?: number }) {
+  const [fallback, setFallback] = useState(false);
+  if (fallback) return <PdfFallbackFrame src={props.src} zoom={props.zoom} />;
+  return (
+    <PdfErrorBoundary fallback={<PdfFallbackFrame src={props.src} zoom={props.zoom} />}>
+      <PdfCanvasInner {...props} onFatal={() => setFallback(true)} />
+    </PdfErrorBoundary>
+  );
+}
+
+function PdfCanvasInner({ src, zoom = 1, onFatal }: { src: string; zoom?: number; onFatal: () => void }) {
   const [numPages, setNumPages] = useState(0);
   const [baseWidth, setBaseWidth] = useState(820);
   const [ratio, setRatio] = useState(Math.SQRT2); // A4 en attendant la vraie valeur
@@ -121,6 +160,10 @@ export default function PdfCanvas({ src, zoom = 1 }: { src: string; zoom?: numbe
       <Document
         file={src}
         onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+        // Une erreur de pdf.js (module, worker, mémoire…) ne doit jamais
+        // priver l'élève de sa fiche : on repasse à la visionneuse native.
+        onLoadError={onFatal}
+        onSourceError={onFatal}
         loading={<div className="py-24 text-sm text-(--color-ink-soft)">Chargement de la fiche…</div>}
         error={<div className="py-24 text-sm text-(--color-ink-soft)">Impossible d’afficher la fiche pour le moment. Rechargez la page ou vérifiez votre connexion.</div>}
         className="flex flex-col items-center gap-4 py-4"

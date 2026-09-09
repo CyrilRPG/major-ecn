@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Check, ExternalLink, Loader2, Plus, Save, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { composerReponseAttendue, reponseModele, variantesAcceptees } from '@/lib/qcm/grade';
 import {
   addQuestionAction, deleteQuestionAction, updateParcoursAction, updateQuestionAction,
   type QcmItem,
@@ -187,7 +188,9 @@ function QuestionCard({
 }) {
   const [enonce, setEnonce] = useState(question.enonce_html);
   const [items, setItems] = useState<QcmItem[]>(question.items ?? []);
-  const [reponse, setReponse] = useState(question.reponse_attendue ?? '');
+  // QROC : format stocké « modèle|variante|variante », présenté en deux champs.
+  const [reponseModeleQroc, setReponseModeleQroc] = useState(() => reponseModele(question.reponse_attendue));
+  const [variantesQroc, setVariantesQroc] = useState(() => variantesAcceptees(question.reponse_attendue).join('\n'));
   const [explication, setExplication] = useState(question.explication_html ?? '');
   const [image, setImage] = useState(question.image_path ?? '');
   const [saved, setSaved] = useState(false);
@@ -202,7 +205,7 @@ function QuestionCard({
     start(async () => {
       const res = await updateQuestionAction({
         id: question.id, parcoursId, enonceHtml: enonce, items,
-        reponseAttendue: question.format === 'qroc' ? reponse : null,
+        reponseAttendue: question.format === 'qroc' ? composerReponseAttendue(reponseModeleQroc, variantesQroc.split('\n')) : null,
         explicationHtml: explication || null, imagePath: image || null, ordre: question.ordre,
       });
       if ('error' in res) setErr(res.error);
@@ -248,9 +251,12 @@ function QuestionCard({
           ))}
         </div>
       ) : (
-        <div className="mt-2">
-          <Field label="Réponse attendue" hint="Séparez les variantes acceptées par « | ». Affichée à l’élève pour son auto-évaluation.">
-            <input className={inputCls} value={reponse} onChange={(e) => setReponse(e.target.value)} />
+        <div className="mt-2 grid gap-2 sm:grid-cols-2">
+          <Field label="Réponse modèle (affichée à l’élève)">
+            <input className={inputCls} value={reponseModeleQroc} onChange={(e) => setReponseModeleQroc(e.target.value)} />
+          </Field>
+          <Field label="Autres formulations acceptées, une par ligne (auto-correction)" hint="Reconnues comme justes ; l’élève ne voit que la réponse modèle.">
+            <textarea className={`${inputCls} min-h-[60px]`} value={variantesQroc} onChange={(e) => setVariantesQroc(e.target.value)} />
           </Field>
         </div>
       )}

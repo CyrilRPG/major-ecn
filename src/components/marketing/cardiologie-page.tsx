@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Reveal } from './reveal';
 import { AccompagnementSpecialite } from './accompagnement-humain';
 import { AncreTunnel } from './ancre-tunnel';
+import { EtablissementSanteBanner } from './etablissement-sante-banner';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
 import { ACCROCHE_FORMULE } from '@/lib/formules-accroches';
 import { lienPaiement } from '@/lib/tunnel-inscription';
@@ -895,6 +896,8 @@ function Formules({ specialite, prixApprofondie }: { specialite?: string; prixAp
           </Reveal>
         </div>
       </div>
+
+      <EtablissementSanteBanner largeur="specialite" />
     </section>
   );
 }

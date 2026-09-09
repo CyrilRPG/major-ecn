@@ -281,6 +281,30 @@ export const APPROFONDI_SPECIALTIES: ApprofondiSpecialty[] = [
       },
     ],
   },
+  {
+    // Copie physique de Médecine d'urgence (`col-mir`) vendue sous son propre
+    // nom, mêmes prix, format QCM seulement (voie interne imposée par le
+    // registre `ENROLLABLE_SPECIALTIES`). Le collège cible est TOUJOURS
+    // `col-medecine-intensive-reanimation`, jamais `col-mir` :
+    // `getApprofondiSpecialty()` apparie aussi par collège cible et
+    // renverrait sinon l'offre Médecine d'urgence.
+    key: 'medecine-intensive-reanimation',
+    name: 'Médecine intensive et réanimation',
+    tiers: [
+      {
+        id: 'mir', tier: 'base', tierLabel: 'Approfondi',
+        amountCents: 209500, hoursLabel: '36 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_MIR',
+        targetCollege: 'col-medecine-intensive-reanimation',
+      },
+      {
+        id: 'mir-plus', tier: 'plus', tierLabel: 'Approfondi +',
+        amountCents: 269500, hoursLabel: 'Plus de 50 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_MIR_PLUS',
+        targetCollege: 'col-medecine-intensive-reanimation',
+      },
+    ],
+  },
 ];
 
 /** Message affiché à l'étudiant — dans le tunnel d'achat ET sur la page de

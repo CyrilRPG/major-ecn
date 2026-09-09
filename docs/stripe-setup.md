@@ -194,6 +194,33 @@ d'une nouvelle offre.
 
 ---
 
+## 10 bis. Médecine intensive et réanimation (MIR) — prix Approfondi à créer
+
+Nouvelle spécialité vendable depuis le 10/09/2026 : copie physique du collège
+`col-mir` (Médecine d'urgence) sous `col-medecine-intensive-reanimation`, au
+format **QCM seulement** (voie interne imposée par `ENROLLABLE_SPECIALTIES`).
+Les formules Essentielle / Intensive utilisent les prix uniques existants ;
+seul le Programme Approfondi a besoin de deux prix Stripe dédiés, **aux mêmes
+montants que Médecine d'urgence** :
+
+| Offre (`approfondi.ts`) | Produit Stripe à créer | Montant | Variable Vercel |
+|---|---|---|---|
+| `mir` | `prod_VENDvaWnEymmTz` → `price_1UDuSoFAa1EUmjlQoURLBVeY` | 2 095,00 € | `STRIPE_PRICE_APPRO_MIR` |
+| `mir-plus` | `prod_VENDJvjbWgZJTi` → `price_1UDuSqFAa1EUmjlQ0t3Qm6VQ` | 2 695,00 € | `STRIPE_PRICE_APPRO_MIR_PLUS` |
+
+**Produits et prix créés le 10/09/2026 en LIVE** (compte Major ECN `acct_1RbKygFAa1EUmjlQ`, via le MCP Stripe) : les identifiants ci-dessus sont définitifs.
+
+Marche à suivre :
+
+1. Poser `STRIPE_PRICE_APPRO_MIR` et `STRIPE_PRICE_APPRO_MIR_PLUS` dans
+   **Project Settings → Environment Variables** (Production) et redéployer.
+   Tant qu'elles manquent, le checkout Approfondi MIR refuse la session avant
+   tout paiement (fail-safe, cf. `src/app/api/stripe/checkout/route.ts`).
+2. Relancer `/api/admin/stripe-catalogue?apply=1` (section 10) pour pousser
+   les descriptions produit.
+
+---
+
 ## 11. Codes de réduction
 
 Page admin : **Configuration → Codes de réduction** (`/admin/codes-promo`).

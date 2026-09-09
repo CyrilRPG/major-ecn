@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { reponseModele } from '@/lib/qcm/grade';
+import { VariantesAcceptees } from './variantes-acceptees';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, X, PenLine } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -97,8 +99,9 @@ export function QrocItem({
                 {outcome === 'correct' ? 'Bonne réponse' : 'Réponse attendue'}
               </p>
               <p className="mt-0.5 text-xs text-(--color-ink-soft) leading-snug font-medium">
-                {reponseAttendue.split('|').map((a) => a.trim()).join(' ou ')}
+                {reponseModele(reponseAttendue)}
               </p>
+              <VariantesAcceptees reponseAttendue={reponseAttendue} className="mt-0.5 text-[11px] font-normal text-(--color-ink-muted)" />
             </div>
           </motion.div>
         )}

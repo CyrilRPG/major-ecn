@@ -32,6 +32,8 @@ export const PAGE_FORMULES_PAR_SPECIALITE: Record<string, string> = {
   'Odontologie': '/specialites/odontologie-chirurgie-dentaire',
   'Orthopédie': '/specialites/chirurgie-orthopedique-et-traumatologie',
   'Anesthésie-réanimation': '/specialites/anesthesie-reanimation',
+  // Pas de page dédiée : le bloc de formules de Tarifs (ancre `#formules`).
+  'Médecine intensive et réanimation': '/tarifs',
 };
 
 /** Étape 2 → 3 : où envoyer le candidat après le choix de sa spécialité. */

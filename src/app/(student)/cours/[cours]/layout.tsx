@@ -12,6 +12,7 @@ import { hiddenBlocksVisibility, parseHiddenBlocks } from '@/lib/student/blocs';
 import { estTitreRevisions } from '@/lib/videos/revisions';
 import { videoVisible, supportVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
 import { scopeOffers } from '@/lib/auth/permissions';
+import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
 
 /** Ligne `videos` telle que sélectionnée ci-dessous (types générés incomplets). */
 type CourseVideoRow = {
@@ -44,7 +45,7 @@ export default async function CoursLayout({
     .from('cours')
     .select(`
       id, titre, matiere_id, access_type, hidden_blocks,
-      matieres(nom, access_type, semestres(label)),
+      matieres(nom, access_type, semestres(label, faculte_id)),
       videos(id, titre, type, storage_path, bunny_video_id, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)),
       fiches(storage_path),
       flashcards(id),
@@ -175,27 +176,17 @@ export default async function CoursLayout({
   // `supportsAll` est déjà filtré par la visibilité propre de chaque support.
   const supports = supportsAll;
 
-  const cp = c.course_progress?.[0];
-  const [{ count: qcmCount }, { count: flashCount }] = await Promise.all([
-    supabase
-      .from('qcm_attempts')
-      .select('id, qcm_questions!inner(qcm_series!inner(cours_id))', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-      .eq('qcm_questions.qcm_series.cours_id', coursId),
-    supabase
-      .from('flashcard_reviews')
-      .select('id, flashcards!inner(cours_id)', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-      .eq('flashcards.cours_id', coursId),
-  ]);
-
-  let done = 0;
-  let total = 0;
-  if (!access || access.video) { total++; if (cp?.video_watched) done++; }
-  if (!access || access.fiche) { total++; if (cp?.fiche_read) done++; }
-  total++; if ((qcmCount ?? 0) > 0) done++;
-  if (!access || access.flashcards) { total++; if ((flashCount ?? 0) > 0) done++; }
-  const mastery = total > 0 ? Math.round((done / total) * 100) : 0;
+  // Bague de maîtrise : LA formule commune (lib/progress), la même que la
+  // liste des items et le navigateur — questions accessibles pour la
+  // voie/formule de l'élève (85 %) + couverture fiche/flashcards/vidéo (15 %).
+  const progression = await chargerProgressionCours({
+    userId: user.id,
+    faculteId: c.matieres.semestres.faculte_id,
+    scope,
+    staff: isAdmin,
+    cours: [c],
+  });
+  const mastery = progression.get(coursId)?.progression ?? 0;
 
   // Mode Découverte : l'onglet "Cours vidéo" devient un cadenas qui ouvre
   // LockedContentModal au lieu de naviguer vers /video.

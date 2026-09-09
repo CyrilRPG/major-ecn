@@ -13,16 +13,19 @@ import {
   addVideoAction, addVideoSupportAction, deleteVideoAction, listStudentsAction,
   moveVideoAction, moveVideoSupportAction, removeVideoSupportAction, renameVideoAction,
   renameVideoSupportAction, replaceVideoLinkAction, updateVideoAudienceAction,
-  updateVideoSupportAudienceAction,
+  updateVideoRubriqueAction, updateVideoSupportAudienceAction,
   type AddResult, type StudentLite, type VideoSupportDoc, type VideoType,
 } from '@/app/admin/videos/actions';
 import { resumeAudience, VIDEO_OFFERS, VOIES } from '@/lib/videos/audience';
+import { rubriqueParDefaut } from '@/lib/videos/rubriques';
 
 export type ManagedVideo = {
   id: string;
   titre: string;
   bunny_video_id: string | null;
   order_index: number;
+  /** Rubrique affichée à l'élève (null = libellé par défaut du type). */
+  rubrique: string | null;
   voies: string[];
   offers: string[];
   denied_user_ids: string[];
@@ -47,6 +50,8 @@ type BatchSeance = {
   tempId: string;
   titre: string;
   lien: string;
+  /** Saisie libre ; vide ⇒ libellé par défaut du type. */
+  rubrique: string;
   voies: string[];
   offers: string[];
   deniedUserIds: string[];
@@ -61,6 +66,8 @@ type BatchSeance = {
 type BatchChanges = {
   rename?: string;
   replaceLink?: string;
+  /** `null` ⇒ retour au libellé par défaut ; absent ⇒ inchangée. */
+  rubrique?: string | null;
   audience?: { voies: string[]; offers: string[]; deniedUserIds: string[]; allowedUserIds: string[] };
   supportRenames?: { supportId: string; titre: string }[];
   supportAudiences?: { supportId: string; differentes: boolean; voies: string[]; offers: string[] }[];
@@ -414,7 +421,7 @@ export function VideoManager({
   videos: ManagedVideo[];
   onChanged?: () => void;
   onAdd?: (input: {
-    type: VideoType; titre: string; lien: string; position: number | null;
+    type: VideoType; titre: string; lien: string; position: number | null; rubrique: string | null;
     voies: string[]; offers: string[]; deniedUserIds: string[]; allowedUserIds: string[];
   }) => Promise<AddResult>;
   notice?: string;
@@ -456,6 +463,7 @@ export function VideoManager({
       tempId: crypto.randomUUID(),
       titre: '',
       lien: '',
+      rubrique: '',
       voies: ['interne', 'externe'],
       offers: OFFRES_PAR_DEFAUT[type],
       deniedUserIds: [],
@@ -501,14 +509,15 @@ export function VideoManager({
       const s = seances[i];
       setSaveProgress({ current, total, label: `Création de « ${s.titre} »…` });
 
+      const rubrique = s.rubrique.trim() || null;
       const res = onAdd
         ? await onAdd({
-            type, titre: s.titre, lien: s.lien, position: null,
+            type, titre: s.titre, lien: s.lien, position: null, rubrique,
             voies: s.voies, offers: s.offers,
             deniedUserIds: s.deniedUserIds, allowedUserIds: s.allowedUserIds,
           })
         : await addVideoAction({
-            coursId, type, titre: s.titre, lien: s.lien, position: null,
+            coursId, type, titre: s.titre, lien: s.lien, position: null, rubrique,
             voies: s.voies, offers: s.offers,
             deniedUserIds: s.deniedUserIds, allowedUserIds: s.allowedUserIds,
           });
@@ -654,6 +663,11 @@ export function VideoManager({
                   <p className="mt-0.5 truncate text-[11px] font-medium text-(--color-primary-deep)">
                     {resumeAudience(v)}
                   </p>
+                  {v.rubrique && (
+                    <p className="mt-0.5 truncate text-[11px] text-(--color-ink-muted)">
+                      Rubrique : {v.rubrique}
+                    </p>
+                  )}
                 </div>
                 <button
                   type="button"
@@ -681,6 +695,7 @@ export function VideoManager({
               {editing === v.id && (
                 <VideoEditPanel
                   video={v}
+                  type={type}
                   pending={pending}
                   onSaveAll={(changes) =>
                     run(async () => {
@@ -690,6 +705,10 @@ export function VideoManager({
                       }
                       if (changes.replaceLink) {
                         const r = await replaceVideoLinkAction({ videoId: v.id, lien: changes.replaceLink });
+                        if ('error' in r) return r;
+                      }
+                      if (changes.rubrique !== undefined) {
+                        const r = await updateVideoRubriqueAction({ videoId: v.id, rubrique: changes.rubrique });
                         if ('error' in r) return r;
                       }
                       if (changes.audience) {
@@ -949,6 +968,14 @@ function BatchSeanceCard({
             </div>
           </div>
 
+          {/* Rubrique (titre de section côté élève) */}
+          <RubriqueField
+            type={type}
+            value={seance.rubrique}
+            disabled={disabled}
+            onChange={(r) => onUpdate({ rubrique: r })}
+          />
+
           {/* Audience */}
           <AudiencePicker
             voies={seance.voies}
@@ -1074,6 +1101,45 @@ function BatchSeanceCard({
 }
 
 /* ------------------------------------------------------------------ */
+/*  RubriqueField — titre de section affiché à l'élève                 */
+/* ------------------------------------------------------------------ */
+
+function RubriqueField({
+  type,
+  value,
+  disabled,
+  onChange,
+  compact = false,
+}: {
+  type: VideoType;
+  value: string;
+  disabled: boolean;
+  onChange: (value: string) => void;
+  compact?: boolean;
+}) {
+  return (
+    <div>
+      <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+        Rubrique (affichée à l&apos;élève)
+      </label>
+      <input
+        type="text"
+        value={value}
+        disabled={disabled}
+        maxLength={120}
+        placeholder={rubriqueParDefaut(type)}
+        onChange={(e) => onChange(e.target.value)}
+        className={`w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 text-sm focus:border-[#7C3AED] focus:outline-none focus:ring-1 focus:ring-[#7C3AED] ${compact ? 'py-1.5' : 'py-2'}`}
+      />
+      <p className="mt-1 text-[11px] text-(--color-ink-muted)">
+        Regroupe les vidéos sous un titre de section dans l&apos;espace élève (ex. : Dernier tour de révision).
+        Laissez vide pour le libellé par défaut : « {rubriqueParDefaut(type)} ».
+      </p>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /*  VideoEditPanel — édition d'une vidéo existante                     */
 /* ------------------------------------------------------------------ */
 
@@ -1086,6 +1152,7 @@ type SupportEditState = {
 
 function VideoEditPanel({
   video,
+  type,
   pending,
   onSaveAll,
   onAddSupports,
@@ -1094,6 +1161,7 @@ function VideoEditPanel({
   studentPickerProps,
 }: {
   video: ManagedVideo;
+  type: VideoType;
   pending: boolean;
   onSaveAll: (changes: BatchChanges) => void;
   onAddSupports: (files: File[]) => void;
@@ -1105,6 +1173,7 @@ function VideoEditPanel({
 }) {
   const [titre, setTitre] = useState(video.titre);
   const [lien, setLien] = useState('');
+  const [rubrique, setRubrique] = useState(video.rubrique ?? '');
   const [voies, setVoies] = useState<string[]>(video.voies);
   const [offers, setOffers] = useState<string[]>(video.offers);
   const [denied, setDenied] = useState<string[]>(video.denied_user_ids);
@@ -1145,6 +1214,7 @@ function VideoEditPanel({
   const isDirty = useMemo(() => {
     if (titre.trim() !== video.titre) return true;
     if (lien.trim()) return true;
+    if ((rubrique.trim() || null) !== (video.rubrique ?? null)) return true;
     if (!memeListe(voies, video.voies)) return true;
     if (!memeListe(offers, video.offers)) return true;
     if (!memeListe(denied, video.denied_user_ids)) return true;
@@ -1161,12 +1231,14 @@ function VideoEditPanel({
     }
     return false;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [titre, lien, voies, offers, denied, allowed, supportEdits, video]);
+  }, [titre, lien, rubrique, voies, offers, denied, allowed, supportEdits, video]);
 
   function handleSaveAll() {
     const changes: BatchChanges = {};
     if (titre.trim() && titre.trim() !== video.titre) changes.rename = titre.trim();
     if (lien.trim()) changes.replaceLink = lien.trim();
+    const rubriqueSaisie = rubrique.trim() || null;
+    if (rubriqueSaisie !== (video.rubrique ?? null)) changes.rubrique = rubriqueSaisie;
     const audienceChanged =
       !memeListe(voies, video.voies) || !memeListe(offers, video.offers)
       || !memeListe(denied, video.denied_user_ids) || !memeListe(allowed, video.allowed_user_ids);
@@ -1223,6 +1295,14 @@ function VideoEditPanel({
           className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 font-mono text-sm"
         />
       </div>
+
+      <RubriqueField
+        type={type}
+        value={rubrique}
+        disabled={pending}
+        onChange={setRubrique}
+        compact
+      />
 
       <div>
         <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">

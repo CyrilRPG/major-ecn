@@ -10,6 +10,7 @@ import { lienPaiement } from '@/lib/tunnel-inscription';
 import { AncreTunnel } from './ancre-tunnel';
 import { AccompagnementTarifs } from './accompagnement-humain';
 import { DrapeauOrigine } from './drapeau-origine';
+import { EtablissementSanteBanner } from './etablissement-sante-banner';
 
 /**
  * Page Tarifs — reprise des maquettes templates/tarifs/BLOC 1 → 3.
@@ -929,6 +930,7 @@ export function TarifsPageContent({ specialite }: { specialite?: string }) {
       <div className="pb-4" style={{ background: '#FFFFFF' }}>
         <div className="pt-16">
           <ComparatifSection />
+          <EtablissementSanteBanner largeur="site" />
           <FaqTarifs />
           <LaureatsSection />
         </div>

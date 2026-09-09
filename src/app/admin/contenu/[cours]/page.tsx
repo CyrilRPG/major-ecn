@@ -84,8 +84,19 @@ function HorsPerimetre({ titre }: { titre: string | null }) {
   );
 }
 
-export default async function AdminCoursPage({ params }: { params: Promise<{ cours: string }> }) {
+/** Onglets de la page : `?tab=` n'accepte que ces valeurs. */
+const ONGLETS = ['video', 'fiche', 'qcm', 'flashcards', 'interrogations', 'affichage'] as const;
+type Onglet = (typeof ONGLETS)[number];
+
+export default async function AdminCoursPage({
+  params, searchParams,
+}: {
+  params: Promise<{ cours: string }>;
+  /** `?tab=qcm&serie=<id>` : lien « Vue d'ensemble de la série » du lecteur (mode édition). */
+  searchParams: Promise<{ tab?: string; serie?: string }>;
+}) {
   const { cours: coursId } = await params;
+  const { tab: tabParam, serie: serieInitiale } = await searchParams;
   const { scope } = await requireContentEditor();
   // Helpers per content type (admin = tout autorisé)
   const allow = (t: ContentType): { read: boolean; write: boolean } =>
@@ -202,6 +213,21 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
     ((vignetteRows ?? []) as Array<{ id: string; vignette: string | null }>).map((r) => [r.id, r.vignette])
   );
 
+  // Onglet ouvert : `?tab=` s'il désigne un onglet visible pour ce compte,
+  // sinon le premier onglet lisible.
+  const ongletsVisibles: Onglet[] = [
+    ...(can.video.read ? (['video'] as const) : []),
+    ...(can.fiche.read ? (['fiche'] as const) : []),
+    ...(canQcmFamilyRead || can.annale.read ? (['qcm'] as const) : []),
+    ...(can.flashcards.read ? (['flashcards'] as const) : []),
+    ...(canQcmFamilyRead ? (['interrogations'] as const) : []),
+    ...(isAdmin ? (['affichage'] as const) : []),
+  ];
+  const ongletDemande = ONGLETS.find((t) => t === tabParam);
+  const ongletInitial: Onglet = ongletDemande && ongletsVisibles.includes(ongletDemande)
+    ? ongletDemande
+    : can.video.read ? 'video' : can.fiche.read ? 'fiche' : canQcmFamilyRead || can.annale.read ? 'qcm' : 'flashcards';
+
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
       <Button asChild variant="ghost" size="sm" className="mb-6">
@@ -218,7 +244,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
         {c.description && <p className="mt-2 text-(--color-ink-soft) max-w-2xl">{c.description}</p>}
       </header>
 
-      <Tabs defaultValue={can.video.read ? 'video' : can.fiche.read ? 'fiche' : canQcmFamilyRead || can.annale.read ? 'qcm' : 'flashcards'}>
+      <Tabs defaultValue={ongletInitial}>
         <TabsList>
           {can.video.read && <TabsTrigger value="video"><PlayCircle className="h-4 w-4 mr-1.5" /> Vidéos</TabsTrigger>}
           {can.fiche.read && <TabsTrigger value="fiche"><FileText className="h-4 w-4 mr-1.5" /> Fiche</TabsTrigger>}
@@ -399,6 +425,7 @@ export default async function AdminCoursPage({ params }: { params: Promise<{ cou
             <div className="mt-4">
               <QcmSeriesManager
                 coursId={coursId}
+                serieInitiale={serieInitiale ?? null}
                 series={qcmSeries.map((s) => ({
                   id: s.id,
                   label: s.label,

@@ -11,7 +11,8 @@ import { QcmItem } from '@/components/qcm/qcm-item';
 import { RichText } from '@/components/qcm/rich-text';
 import { RichTextZoom } from '@/components/qcm/image-zoom';
 import { sanitizeBlockHtml } from '@/lib/flashcards/rich-text';
-import { gradeQuestion, type ItemOutcome } from '@/lib/qcm/grade';
+import { gradeQuestion, type ItemOutcome, reponseModele } from '@/lib/qcm/grade';
+import { VariantesAcceptees } from '@/components/qcm/variantes-acceptees';
 import { cn } from '@/lib/utils';
 import { saveSpecialtyEvaluation } from './actions';
 
@@ -155,9 +156,10 @@ export function SpecialtyEvaluation({
                   {cq.reponse_attendue && (
                     <p className="text-(--color-ink)">
                       <span className="font-semibold text-[#00695C]">Réponse attendue : </span>
-                      {cq.reponse_attendue.split('|').map((a) => a.trim()).join(' ou ')}
+                      {reponseModele(cq.reponse_attendue)}
                     </p>
                   )}
+                  <VariantesAcceptees reponseAttendue={cq.reponse_attendue} />
                   {cq.correction_generale && (
                     <div className="mt-1.5 text-(--color-ink-soft)"><RichText html={cq.correction_generale} /></div>
                   )}
@@ -376,9 +378,10 @@ export function SpecialtyEvaluation({
               {q.reponse_attendue && (
                 <p className="mt-2 text-sm leading-relaxed text-(--color-ink)">
                   <span className="font-semibold">Réponse attendue : </span>
-                  {q.reponse_attendue.split('|').map((a) => a.trim()).join(' ou ')}
+                  {reponseModele(q.reponse_attendue)}
                 </p>
               )}
+              <VariantesAcceptees reponseAttendue={q.reponse_attendue} />
               {q.correction_generale && (
                 <div className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)">
                   <RichText html={q.correction_generale} />

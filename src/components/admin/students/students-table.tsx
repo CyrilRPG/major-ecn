@@ -90,7 +90,11 @@ const COLLEGE_TO_SPECIALTY: Record<string, string> = {
   'col-psychiatrie': 'Psychiatrie',
   'col-gynecologie': 'Gynécologie-obstétrique',
   'col-orthopedie': 'Orthopédie',
-  'col-odontologie': 'Odontologie',
+  'col-anesthesie-reanimation': 'Anesthésie-réanimation',
+  // Collège réellement vendu (miroir de Major Odontologie) — `col-odontologie`
+  // n'existe pas côté Major ECN.
+  'col-ecn-odontologie': 'Odontologie',
+  'col-medecine-intensive-reanimation': 'Médecine intensive et réanimation',
 };
 
 function specialtyFromColleges(colleges: string[]): string {

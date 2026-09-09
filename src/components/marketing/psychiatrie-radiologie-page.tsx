@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Reveal } from './reveal';
 import { AccompagnementSpecialite } from './accompagnement-humain';
 import { AncreTunnel } from './ancre-tunnel';
+import { EtablissementSanteBanner } from './etablissement-sante-banner';
 import {
   FORMULE_APPROFONDIE,
   FORMULE_ESSENTIELLE,
@@ -1012,6 +1013,8 @@ function Formules({ psy }: { psy: boolean }) {
           </div>
         </Reveal>
       </div>
+
+      <EtablissementSanteBanner largeur="specialite" />
     </section>
   );
 }

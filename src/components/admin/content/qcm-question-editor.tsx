@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useTransition } from 'react';
 import Image from 'next/image';
 import { Loader2, Plus, Trash2, Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import {
@@ -12,6 +13,7 @@ import {
 import { FlashcardRichField } from './flashcard-rich-field';
 import { upsertQcmQuestionAction, uploadQcmImageAction, updateSerieVignetteAction } from '@/app/admin/contenu/[cours]/qcm-actions';
 import { flashcardHasContent } from '@/lib/flashcards/rich-text';
+import { composerReponseAttendue, reponseModele, variantesAcceptees } from '@/lib/qcm/grade';
 
 export type QcmItemDraft = {
   lettre: 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K';
@@ -68,12 +70,23 @@ export function QcmQuestionEditor({
   const [vignetteEnabled, setVignetteEnabled] = useState(!!initialVignette);
   const [vignette, setVignette] = useState(initialVignette ?? '');
   const [atEnd, setAtEnd] = useState(false); // false = insérer ici, true = à la fin
+  // QROC : le format stocké reste « modèle|variante|variante » ; l'éditeur le
+  // présente en deux champs (réponse affichée à l'élève / formulations
+  // acceptées par l'auto-correction, une par ligne) et le recompose à chaque frappe.
+  const [qrocModele, setQrocModele] = useState(() => reponseModele(initial?.reponse_attendue));
+  const [qrocVariantes, setQrocVariantes] = useState(() => variantesAcceptees(initial?.reponse_attendue).join('\n'));
   const [pending, start] = useTransition();
   const [err, setErr] = useState<string | null>(null);
 
   const isCreate = !draft.id;
   const showPositionChoice = isCreate && !!insertAnchor;
   const isQroc = draft.format === 'qroc';
+
+  const setQroc = (modele: string, variantes: string) => {
+    setQrocModele(modele);
+    setQrocVariantes(variantes);
+    setDraft((d) => ({ ...d, reponse_attendue: composerReponseAttendue(modele, variantes.split('\n')) }));
+  };
 
   useEffect(() => {
     if (open) {
@@ -86,6 +99,8 @@ export function QcmQuestionEditor({
             items: initial.items.map((i) => ({ ...i, images: i.images ?? [] })),
           }
         : defaultDraft());
+      setQrocModele(reponseModele(initial?.reponse_attendue));
+      setQrocVariantes(variantesAcceptees(initial?.reponse_attendue).join('\n'));
       setVignetteEnabled(!!initialVignette);
       setVignette(initialVignette ?? '');
       setAtEnd(false);
@@ -238,17 +253,29 @@ export function QcmQuestionEditor({
 
           {/* QROC : réponse attendue */}
           {isQroc && (
-            <div className="space-y-1.5">
-              <Label>Réponse attendue</Label>
-              <Textarea
-                rows={3}
-                value={draft.reponse_attendue}
-                onChange={(e) => setDraft((d) => ({ ...d, reponse_attendue: e.target.value }))}
-                placeholder="Ex : Embolie pulmonaire | EP"
-              />
-              <p className="text-[11px] text-(--color-ink-muted)">
-                Réponse-modèle affichée à l&apos;étudiant. Séparez les variantes acceptées par «&nbsp;|&nbsp;» (ex.&nbsp;: «&nbsp;Embolie pulmonaire | EP&nbsp;»).
-              </p>
+            <div className="space-y-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="qroc-modele">Réponse modèle (affichée à l&apos;élève)</Label>
+                <Input
+                  id="qroc-modele"
+                  value={qrocModele}
+                  onChange={(e) => setQroc(e.target.value, qrocVariantes)}
+                  placeholder="Ex : Embolie pulmonaire"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="qroc-variantes">Autres formulations acceptées, une par ligne (auto-correction)</Label>
+                <Textarea
+                  id="qroc-variantes"
+                  rows={3}
+                  value={qrocVariantes}
+                  onChange={(e) => setQroc(qrocModele, e.target.value)}
+                  placeholder={'EP\nembolie pulmonaire aiguë'}
+                />
+                <p className="text-[11px] text-(--color-ink-muted)">
+                  Reconnues comme justes par l&apos;auto-correction ; l&apos;élève ne voit que la réponse modèle, puis ces formulations en ligne discrète.
+                </p>
+              </div>
             </div>
           )}
 

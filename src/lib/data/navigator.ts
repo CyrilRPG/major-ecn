@@ -3,6 +3,7 @@ import { cache } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import type { Profile } from '@/lib/auth/get-profile';
 import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
+import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
 
 export { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
@@ -10,7 +11,7 @@ import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 export type NavCours = {
   id: string;
   titre: string;
-  progress: number; // 0..100 weighted
+  progress: number; // 0..100 — formule commune, cf. lib/progress/course-progress.ts
   importance: number; // 0..5 étoiles (réglé par l'admin)
   hasFiche: boolean;
   hasVideo: boolean;
@@ -98,27 +99,17 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
   const qcmSet = new Set((qcmRes.data ?? []).map((r) => r.cours_id));
   const flashSet = new Set((flashRes.data ?? []).map((r) => r.cours_id));
 
-  // User completion data for QCM and flashcards
-  const [qcmAttempts, flashReviews] = coursIds.length
-    ? await Promise.all([
-        supabase
-          .from('qcm_attempts')
-          .select('id, question_id, qcm_questions!inner(serie_id, qcm_series!inner(cours_id))')
-          .eq('user_id', profile.id)
-          .in('qcm_questions.qcm_series.cours_id', coursIds),
-        supabase
-          .from('flashcard_reviews')
-          .select('id, flashcard_id, flashcards!inner(cours_id)')
-          .eq('user_id', profile.id)
-          .in('flashcards.cours_id', coursIds),
-      ])
-    : [{ data: [] as { qcm_questions: { qcm_series: { cours_id: string } } }[] },
-       { data: [] as { flashcards: { cours_id: string } }[] }];
-
-  const qcmHitSet = new Set<string>();
-  for (const a of qcmAttempts.data ?? []) qcmHitSet.add((a as unknown as { qcm_questions: { qcm_series: { cours_id: string } } }).qcm_questions.qcm_series.cours_id);
-  const flashHitSet = new Set<string>();
-  for (const r of flashReviews.data ?? []) flashHitSet.add((r as unknown as { flashcards: { cours_id: string } }).flashcards.cours_id);
+  // Progression de chaque item : LA formule commune (lib/progress), la même
+  // que la bague de l'item et la liste des items — questions accessibles pour
+  // la voie/formule de l'élève (85 %) + couverture fiche/flashcards/vidéo (15 %).
+  const isAdmin = profile.role === 'admin';
+  const progression = await chargerProgressionCours({
+    userId: profile.id,
+    faculteId: EDN_FACULTE_ID,
+    scope,
+    staff: isAdmin,
+    cours: colleges.flatMap((m) => m.cours ?? []),
+  });
 
   // Un sous-collège hérite de l'accès de son collège parent : accorder
   // « Médecine générale » ouvre automatiquement ses sous-collèges
@@ -133,34 +124,22 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
   // navigateur l'affichait alors que la page du cours, elle, redirigeait.
   // Même dérogation que `/cours/[cours]` et `/matieres/[matiere]` :
   // l'administration parcourt l'espace élève sans restriction.
-  const isAdmin = profile.role === 'admin';
   const buildCours = (m: (typeof colleges)[number]) =>
     [...(m.cours ?? [])]
       .filter((c) =>
         isAdmin
         || canAccessCours(scope, grantedCollegeId(m), c.id, c.access_type ?? 'all'))
       .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
-      .map((c) => {
-        const cp = c.course_progress?.[0];
-        const hasVideo = videoSet.has(c.id);
-        const qcmDone = qcmHitSet.has(c.id) ? 1 : 0;
-        const ficheDone = cp?.fiche_read ? 1 : 0;
-        const flashDone = flashHitSet.has(c.id) ? 1 : 0;
-        const videoDone = cp?.video_watched ? 1 : 0;
-        const progress = hasVideo
-          ? qcmDone * 60 + ficheDone * 10 + flashDone * 15 + videoDone * 15
-          : qcmDone * 70 + ficheDone * 10 + flashDone * 20;
-        return {
-          id: c.id,
-          titre: c.titre,
-          progress,
-          importance: c.importance ?? 0,
-          hasFiche: ficheSet.has(c.id),
-          hasVideo,
-          hasQcm: qcmSet.has(c.id),
-          hasFlashcards: flashSet.has(c.id),
-        };
-      });
+      .map((c) => ({
+        id: c.id,
+        titre: c.titre,
+        progress: progression.get(c.id)?.progression ?? 0,
+        importance: c.importance ?? 0,
+        hasFiche: ficheSet.has(c.id),
+        hasVideo: videoSet.has(c.id),
+        hasQcm: qcmSet.has(c.id),
+        hasFlashcards: flashSet.has(c.id),
+      }));
 
   const childMap = new Map<string, typeof colleges>();
   for (const m of colleges) {

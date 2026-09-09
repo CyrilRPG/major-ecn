@@ -1,6 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { reponseModele } from '@/lib/qcm/grade';
+import { VariantesAcceptees } from '@/components/qcm/variantes-acceptees';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -288,7 +290,10 @@ export function ParcoursRunner({
         {((q.format === 'qcm' && a.validated) || (q.format === 'qroc' && a.revealed)) && (
           <div className="mt-3 rounded-xl border border-[#E9D8A6] bg-[#FFFBEB] p-3.5">
             {q.format === 'qroc' && q.reponseAttendue && (
-              <p className="mb-1 text-sm"><span className="font-bold text-[#7A5B00]">Réponse attendue : </span>{q.reponseAttendue}</p>
+              <>
+                <p className="mb-1 text-sm"><span className="font-bold text-[#7A5B00]">Réponse attendue : </span>{reponseModele(q.reponseAttendue)}</p>
+                <VariantesAcceptees reponseAttendue={q.reponseAttendue} className="mb-1 mt-0 text-[#8A6D1F]" />
+              </>
             )}
             {q.explicationHtml
               ? <Rich html={q.explicationHtml} className="text-[13.5px]" />

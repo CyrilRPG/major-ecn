@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { reponseModele } from '@/lib/qcm/grade';
+import { VariantesAcceptees } from '@/components/qcm/variantes-acceptees';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, Loader2, Sparkles, XCircle } from 'lucide-react';
@@ -202,7 +204,8 @@ export function ExamResults({
                   {q.reponse_attendue && (
                     <div className="rounded-lg border border-[#00695C]/30 bg-[#E0F2F1]/50 px-3 py-2 text-sm">
                       <p className="text-[11px] font-bold uppercase tracking-wide text-[#00695C]">Réponse attendue</p>
-                      <p className="mt-0.5 text-(--color-ink)">{String(q.reponse_attendue).split('|').map((s: string) => s.trim()).join(' ou ')}</p>
+                      <p className="mt-0.5 text-(--color-ink)">{reponseModele(String(q.reponse_attendue))}</p>
+                      <VariantesAcceptees reponseAttendue={String(q.reponse_attendue)} />
                     </div>
                   )}
                   {/* Auto-évaluation (mode self) */}

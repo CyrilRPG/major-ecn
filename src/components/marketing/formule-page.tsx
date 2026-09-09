@@ -21,6 +21,7 @@ import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
 import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty, specialtyByName } from '@/lib/data/enrollable-colleges';
 import { deSpecialite } from '@/lib/stripe/copy';
 import { DrapeauOrigine } from './drapeau-origine';
+import { EtablissementSanteBanner } from './etablissement-sante-banner';
 
 const VARIANT_TO_FORMULE_ID: Record<'essentielle' | 'intensive' | 'approfondi', FormuleId> = {
   essentielle: 'essentielle',
@@ -411,6 +412,8 @@ export function FormulePageContent({ variant, specialite }: { variant: Variant; 
             ))}
           </div>
         </div>
+
+        <EtablissementSanteBanner largeur="site" />
       </section>
 
       {/* TESTIMONIALS */}

@@ -41,7 +41,10 @@ const COLLEGE_TO_SPECIALTY: Record<string, string> = {
   'col-gynecologie': 'Gynécologie-obstétrique',
   'col-orthopedie': 'Orthopédie',
   'col-anesthesie-reanimation': 'Anesthésie-réanimation',
-  'col-odontologie': 'Odontologie',
+  // Collège réellement vendu (miroir de Major Odontologie) — `col-odontologie`
+  // n'existe pas côté Major ECN.
+  'col-ecn-odontologie': 'Odontologie',
+  'col-medecine-intensive-reanimation': 'Médecine intensive et réanimation',
 };
 
 function raw(scope: unknown): RawScope {

@@ -4,14 +4,16 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock, Eye, Pencil, Star, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock, Eye, LayoutList, Pencil, Star, ThumbsDown, ThumbsUp } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QcmItem, type QcmItemView } from './qcm-item';
 import { QrocItem, type QrocOutcome } from './qroc-item';
 import { RichTextZoom, ZoomableImage } from './image-zoom';
-import { gradeQuestion, gradeQroc, type ItemOutcome } from '@/lib/qcm/grade';
+import { SerieIndexPanel } from './serie-index-panel';
+import { gradeQuestion, gradeQroc, type ItemOutcome, reponseModele } from '@/lib/qcm/grade';
+import { VariantesAcceptees } from './variantes-acceptees';
 import { sanitizeFlashcardHtml, sanitizeBlockHtml } from '@/lib/flashcards/rich-text';
 import { createClient } from '@/lib/supabase/client';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
@@ -139,7 +141,7 @@ export function QcmSession({
   }, []);
 
   useEffect(() => {
-    if (!totalSeconds) return;
+    if (!totalSeconds || editable) return;
     if (elapsed < totalSeconds) return;
     const finish = async () => {
       const correctCount = Object.values(questionCorrect).filter(Boolean).length;
@@ -242,7 +244,7 @@ export function QcmSession({
       setQrocOutcomes((prev) => ({ ...prev, [q.id]: isCorrect ? 'correct' : 'wrong' }));
       setQuestionCorrect((prev) => ({ ...prev, [q.id]: isCorrect }));
 
-      enregistrerTentative({
+      if (!editable) enregistrerTentative({
         session_id: sessionId,
         question_id: q.id,
         selected_items: [],
@@ -263,7 +265,7 @@ export function QcmSession({
       setValidated((prev) => ({ ...prev, [q.id]: outcomes }));
       setQuestionCorrect((prev) => ({ ...prev, [q.id]: isQuestionCorrect }));
 
-      enregistrerTentative({
+      if (!editable) enregistrerTentative({
         session_id: sessionId,
         question_id: q.id,
         selected_items: Array.from(sel),
@@ -292,7 +294,7 @@ export function QcmSession({
     setQuestionCorrect((prev) => ({ ...prev, [q.id]: isCorrect }));
 
     const timeSpent = Math.round((Date.now() - perQuestionStart) / 1000);
-    enregistrerTentative({
+    if (!editable) enregistrerTentative({
       session_id: sessionId,
       question_id: q.id,
       selected_items: [],
@@ -303,11 +305,18 @@ export function QcmSession({
     setSubmitting(false);
   };
 
+  // Mode édition : navigation libre et bidirectionnelle, sans clôture de
+  // session (le professeur parcourt ses cas cliniques ; aucune tentative ni
+  // score n'est écrit — cf. `enregistrerTentative` conditionné ci-dessus).
+  const goTo = (i: number) => setIndex(Math.min(Math.max(0, i), total - 1));
+  const prev = () => goTo(index - 1);
+
   const next = async () => {
     if (index < total - 1) {
       setIndex((i) => i + 1);
       return;
     }
+    if (editable) return;
     const correctCount = Object.values(questionCorrect).filter(Boolean).length;
     await cloturerSession(sessionId, correctCount, total);
     router.push(`/cours/${coursId}/resultats/${sessionId}`);
@@ -321,8 +330,27 @@ export function QcmSession({
 
   const progressPct = useMemo(() => (index / total) * 100, [index, total]);
 
+  // Mode édition : le lecteur garde sa largeur de lecture, l'index de la série
+  // prend une colonne à droite (≥ sm) ou un tiroir repliable au-dessus (mobile).
+  const vueEnsembleHref = serieId ? `/admin/contenu/${coursId}?tab=qcm&serie=${serieId}` : null;
+
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col px-4 py-4 sm:px-6">
+    <div
+      className={cn(
+        'mx-auto w-full px-4 py-4 sm:px-6',
+        editable ? 'max-w-6xl sm:grid sm:grid-cols-[minmax(0,1fr)_17rem] sm:items-start sm:gap-6' : 'max-w-3xl',
+      )}
+    >
+      {editable && (
+        <SerieIndexPanel
+          questions={questions}
+          vignette={vignette}
+          index={index}
+          onSelect={goTo}
+          className="mb-3 sm:sticky sm:top-4 sm:order-2 sm:mb-0"
+        />
+      )}
+    <div className={cn('flex min-w-0 flex-col', editable && 'sm:order-1')}>
       <div className="mb-2 flex items-center justify-between gap-3">
         <Button asChild variant="ghost" size="sm">
           <Link href={backHref}>
@@ -330,6 +358,15 @@ export function QcmSession({
             Quitter
           </Link>
         </Button>
+        {editable && vueEnsembleHref && (
+          <Link
+            href={vueEnsembleHref}
+            className="inline-flex min-w-0 items-center gap-1 truncate text-xs font-semibold text-(--color-primary-deep) underline-offset-2 hover:underline"
+            title="Ouvrir la série dans le panneau d’administration"
+          >
+            <LayoutList className="h-3.5 w-3.5 shrink-0" /> Vue d’ensemble de la série
+          </Link>
+        )}
         <div
           className={cn(
             'inline-flex items-center gap-1.5 text-xs',
@@ -352,8 +389,13 @@ export function QcmSession({
         <span className="truncate">
           <span className="font-semibold text-(--color-ink)">{serieKind === 'seance' ? 'Séance du prof' : serieKind === 'annale' ? 'Annale' : 'Série'}</span> · {serieLabel}
         </span>
-        <span className="shrink-0">
-          Q<span className="font-semibold text-(--color-ink)">{index + 1}</span>/{total}
+        <span className="flex shrink-0 items-center gap-2">
+          {editable && (
+            <span className="rounded-full bg-(--color-warning)/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-(--color-warning)">
+              Mode édition
+            </span>
+          )}
+          <span>Q<span className="font-semibold text-(--color-ink)">{index + 1}</span>/{total}</span>
         </span>
       </div>
       <Progress value={progressPct} className="mb-3" />
@@ -535,13 +577,14 @@ export function QcmSession({
               {!isSeance && q.reponse_attendue && (
                 <p className="mt-2 text-sm leading-relaxed text-(--color-ink)">
                   <span className="font-semibold">Réponse attendue : </span>
-                  {q.reponse_attendue.split('|').map((a) => a.trim()).join(' ou ')}
+                  {reponseModele(q.reponse_attendue)}
                 </p>
               )}
+              {!isSeance && <VariantesAcceptees reponseAttendue={q.reponse_attendue} />}
               {(q.correction_generale || (isSeance && q.reponse_attendue)) && (
                 <div
                   className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink) [&_img]:my-2 [&_img]:max-h-56 [&_img]:rounded-lg"
-                  dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(q.correction_generale || q.reponse_attendue || '') }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(q.correction_generale || reponseModele(q.reponse_attendue)) }}
                 />
               )}
               {q.commentaire_enseignant && (
@@ -631,6 +674,65 @@ export function QcmSession({
         </div>
       )}
 
+      {editable ? (
+        /* Mode édition : la réponse reste prévisualisable (Valider / Révéler /
+           Bon-Faux, sans enregistrement), et la navigation est libre :
+           Précédent / Suivant toujours disponibles, sélecteur de question,
+           jamais de clôture de session en fin de série. */
+        <div ref={bottomActionsRef} className="mt-4 flex flex-col gap-3 pb-6">
+          {(isSeanceQroc ? !selfGrade : !isValidated) && (
+            <div className="flex items-center justify-end gap-3">
+              {isSeanceQroc ? (
+                !isRevealed ? (
+                  <Button onClick={revealSeanceAnswer} variant="outline" size="sm" className="border-[#7C3AED]/40 text-[#5B21B6] hover:bg-[#F3EAFF]">
+                    <Eye className="h-4 w-4" />
+                    Prévisualiser la correction
+                  </Button>
+                ) : (
+                  <>
+                    <Button onClick={() => selfGradeSeance('faux')} variant="outline" size="sm" className="border-red-300 text-red-600 hover:bg-red-50" disabled={submitting}>
+                      <ThumbsDown className="h-4 w-4" />
+                      Faux
+                    </Button>
+                    <Button onClick={() => selfGradeSeance('bon')} variant="outline" size="sm" className="border-[#2E8B57]/50 text-[#1F6B43] hover:bg-[#2E8B57]/10" disabled={submitting}>
+                      <ThumbsUp className="h-4 w-4" />
+                      Bon
+                    </Button>
+                  </>
+                )
+              ) : (
+                <Button onClick={validate} variant="outline" size="sm" disabled={!canValidate || submitting}>
+                  Prévisualiser la correction
+                </Button>
+              )}
+            </div>
+          )}
+          <div className="flex items-center justify-between gap-2 rounded-xl border border-(--color-border) bg-(--color-surface) p-2">
+            <Button type="button" variant="outline" size="sm" onClick={prev} disabled={index === 0}>
+              <ArrowLeft />
+              Précédent
+            </Button>
+            <label className="sr-only" htmlFor="qcm-editeur-question">Aller à la question</label>
+            <select
+              id="qcm-editeur-question"
+              value={index}
+              onChange={(e) => goTo(Number(e.target.value))}
+              className="h-9 min-w-0 rounded-lg border border-(--color-border) bg-white px-2 text-sm font-semibold text-(--color-ink) focus:border-(--color-primary) focus:outline-none"
+            >
+              {questions.map((qq, i) => (
+                <option key={qq.id} value={i}>Question {i + 1} / {total}</option>
+              ))}
+            </select>
+            <Button type="button" variant="outline" size="sm" onClick={next} disabled={index >= total - 1}>
+              Suivant
+              <ArrowRight />
+            </Button>
+          </div>
+          <p className="text-center text-[11px] text-(--color-ink-muted)">
+            Mode édition : navigation libre, aucune tentative ni score n’est enregistré.
+          </p>
+        </div>
+      ) : (
       <div ref={bottomActionsRef} className="mt-4 flex items-center justify-end gap-3 pb-6">
         {isSeanceQroc ? (
           !isRevealed ? (
@@ -666,6 +768,7 @@ export function QcmSession({
           </Button>
         )}
       </div>
+      )}
 
       {/* Dialog d'édition prof (vue étudiant → édition directe) */}
       {editable && serieId && (
@@ -687,6 +790,7 @@ export function QcmSession({
           />
         </>
       )}
+    </div>
     </div>
   );
 }

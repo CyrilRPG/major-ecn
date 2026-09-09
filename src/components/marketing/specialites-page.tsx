@@ -102,8 +102,11 @@ const SPECIALITIES: Speciality[] = [
     description: "Programme oncologique couvrant les cancers fréquents, les protocoles de chimiothérapie et d'immunothérapie, les soins de support et l'organisation des RCP." },
   { slug: "medecine-interne", name: "Médecine interne polyvalente", family: "Médecine", Icon: Compass, accent: ACCENTS.navy,
     description: "Préparation transversale sur les maladies systémiques, les pathologies auto-immunes, la fièvre prolongée et l'altération de l'état général avec démarche diagnostique rigoureuse." },
-  { slug: "reanimation-medicale", name: "Réanimation médicale", family: "Médecine", Icon: Activity, accent: ACCENTS.red,
-    description: "Préparation à la médecine intensive : sepsis, SDRA, ventilation mécanique, états de choc et défaillances multi-organes selon les recommandations SRLF actualisées." },
+  // Remplace l'ancienne carte « Réanimation médicale » (même contenu, intitulé
+  // officiel de la spécialité). Le nom doit être EXACTEMENT celui du registre
+  // `ENROLLABLE_SPECIALTIES` : c'est lui qui rend la carte inscriptible.
+  { slug: "medecine-intensive-reanimation", name: "Médecine intensive et réanimation", family: "Médecine", Icon: Activity, accent: ACCENTS.red,
+    description: "Préparation aux EVC en médecine intensive-réanimation, au format QCM : sepsis, SDRA, ventilation mécanique, états de choc et défaillances multi-organes selon les recommandations SRLF actualisées." },
   { slug: "geriatrie", name: "Gériatrie", family: "Médecine", Icon: Users, accent: ACCENTS.orange,
     description: "Programme gériatrique sur l'évaluation gériatrique standardisée, les chutes, la fragilité, les démences et la polymédication en parcours hospitaliers et ambulatoires." },
   { slug: "medecine-physique-et-de-readaptation", name: "Médecine physique et de réadaptation", family: "Médecine", Icon: Footprints, accent: ACCENTS.teal,

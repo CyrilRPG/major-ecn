@@ -33,7 +33,7 @@ import { purchaseScopeNotice, voieLabel } from '@/lib/stripe/copy';
 import { installmentCancelAt, lastChargeDate } from '@/lib/stripe/installments';
 import { siteUrl } from '@/lib/email/send';
 import { verifyTurnstile, clientIp } from '@/lib/turnstile';
-import { collegeIdForSpecialty, specialtyByName } from '@/lib/data/enrollable-colleges';
+import { collegeIdForSpecialty, specialtyByName, voieImposeePourSpecialite } from '@/lib/data/enrollable-colleges';
 import { decodeSignaturePng, storeInscriptionSignature, attachSessionToSignature } from '@/lib/signatures/inscription';
 import { RENONCIATION_RETRACTATION } from '@/lib/legal/consents';
 
@@ -196,6 +196,10 @@ export async function POST(req: Request) {
       ? null
       : (collegeIdForSpecialty(body.specialty) ?? 'col-medecine-generale');
   const specialtyName = approfondiTier ? approfondiTier.specialtyName : (body.specialty ?? '');
+  // Voie de concours retenue : celle qu'impose la spécialité quand elle est
+  // vendue dans un seul format (MIR = QCM seulement → voie interne), sinon
+  // celle choisie par l'étudiant. Le client ne peut pas contourner l'imposition.
+  const voie = voieImposeePourSpecialite(specialtyName) ?? body.voie;
 
   // Rappel du périmètre acheté sur la page Stripe : l'étudiant doit y relire la
   // spécialité ET la voie de concours qu'il vient de choisir. La fiche produit
@@ -207,7 +211,7 @@ export async function POST(req: Request) {
   const scopeNotice = purchaseScopeNotice({
     offerLabel,
     specialtyName,
-    voie: body.voie,
+    voie,
     coverageLabel: approfondiTier?.coverageLabel ?? null,
   });
   // Stripe refuse un `custom_text.submit.message` de plus de 1 200 caractères :
@@ -218,7 +222,7 @@ export async function POST(req: Request) {
     .slice(0, 1200);
   // Libellé du périmètre repris dans les descriptions internes (paiement /
   // abonnement) : c'est ce que l'équipe relit dans le dashboard Stripe.
-  const scopeSuffix = [specialtyName, voieLabel(body.voie)].filter(Boolean).join(', ');
+  const scopeSuffix = [specialtyName, voieLabel(voie)].filter(Boolean).join(', ');
 
   // La signature est rangée AVANT l'ouverture du paiement : une signature
   // perdue ne serait plus rattrapable une fois la carte débitée. Si le
@@ -232,7 +236,7 @@ export async function POST(req: Request) {
       phone: body.phone ?? null,
       formule: formule.name,
       specialty: specialtyName,
-      voie: body.voie || null,
+      voie: voie || null,
       installments,
       signedAt: new Date().toISOString(),
       clause: RENONCIATION_RETRACTATION,
@@ -259,7 +263,7 @@ export async function POST(req: Request) {
       specialty: specialtyName,
       college_id: collegeId ?? '',
       content_pending: contentPending ? '1' : '',
-      voie: body.voie ?? '',
+      voie: voie ?? '',
       installments: String(installments),
       source: 'major-ecn-tarifs',
       // Traçabilité des consentements (horodatés) — auditable depuis Stripe

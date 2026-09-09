@@ -8,7 +8,8 @@ import { Progress } from '@/components/ui/progress';
 import { QcmItem } from '@/components/qcm/qcm-item';
 import { RichText } from '@/components/qcm/rich-text';
 import { RichTextZoom, ZoomableImage } from '@/components/qcm/image-zoom';
-import { gradeQuestion, type ItemOutcome } from '@/lib/qcm/grade';
+import { gradeQuestion, type ItemOutcome, reponseModele } from '@/lib/qcm/grade';
+import { VariantesAcceptees } from '@/components/qcm/variantes-acceptees';
 import { sanitizeBlockHtml } from '@/lib/flashcards/rich-text';
 import { createClient } from '@/lib/supabase/client';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
@@ -209,9 +210,10 @@ export function TargetedSession({ questions, backHref }: { questions: TQuestion[
               {q.reponse_attendue && (
                 <p className="mt-2 text-sm leading-relaxed text-(--color-ink)">
                   <span className="font-semibold">Réponse attendue : </span>
-                  {q.reponse_attendue.split('|').map((a) => a.trim()).join(' ou ')}
+                  {reponseModele(q.reponse_attendue)}
                 </p>
               )}
+              <VariantesAcceptees reponseAttendue={q.reponse_attendue} />
               {q.correction_generale && (
                 <div className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-(--color-ink)"><RichText html={q.correction_generale} /></div>
               )}

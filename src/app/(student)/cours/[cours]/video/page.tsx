@@ -12,10 +12,14 @@ import { bunnyEmbedUrl } from '@/lib/bunny';
 import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { videoVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
+import { grouperParRubrique, rubriqueCommune, rubriqueDeVideo } from '@/lib/videos/rubriques';
 
 type CoursVideo = {
   id: string;
   titre: string;
+  type: string | null;
+  rubrique: string | null;
+  order_index: number | null;
   bunny_video_id: string | null;
   storage_path: string | null;
   voies: string[] | null;
@@ -59,7 +63,7 @@ export default async function CoursVideoPage({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any)
       .from('videos')
-      .select('id, titre, bunny_video_id, storage_path, voies, offers, denied_user_ids, allowed_user_ids')
+      .select('id, titre, type, rubrique, order_index, bunny_video_id, storage_path, voies, offers, denied_user_ids, allowed_user_ids')
       .eq('cours_id', coursId)
       .eq('type', 'cours')
       .order('order_index', { ascending: true })
@@ -136,35 +140,53 @@ export default async function CoursVideoPage({
   // Plusieurs vidéos et aucune choisie : on présente la liste plutôt que
   // d'empiler les lecteurs.
   if (!onlyVideoId && allVideos.length > 1) {
+    // Rubriques : une seule commune à toutes les vidéos ⇒ elle devient le titre
+    // de la page ; plusieurs ⇒ un sous-groupe par rubrique, dans l'ordre décidé
+    // (Préparation intensive d'abord), pour que l'élève sache quoi travailler
+    // et dans quel ordre.
+    const commune = rubriqueCommune(allVideos);
+    const groupes = grouperParRubrique(allVideos);
+    const carte = (v: CoursVideo, i: number) => (
+      <li key={v.id}>
+        <Link
+          href={`/cours/${coursId}/video?v=${v.id}${embedQs}`}
+          className="flex items-center gap-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3 transition-colors hover:bg-(--color-sand-100)"
+        >
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-(--color-primary-soft) text-(--color-primary-deep)">
+            <PlayCircle className="h-4 w-4" />
+          </span>
+          <span className="min-w-0">
+            <span className="block truncate text-sm font-bold text-(--color-ink)">
+              {v.titre?.trim() || `Cours vidéo ${i + 1}`}
+            </span>
+            <span className="mt-0.5 block text-xs text-(--color-ink-soft)">
+              Disponible — cliquez pour lancer la vidéo.
+            </span>
+          </span>
+        </Link>
+      </li>
+    );
     return (
       <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-primary-deep)">
           {c.matieres?.nom} · Cours vidéo
         </p>
-        <h1 className="mt-1 text-2xl font-bold tracking-tight text-(--color-ink)">Cours vidéo</h1>
+        <h1 className="mt-1 text-2xl font-bold tracking-tight text-(--color-ink)">{commune ?? 'Cours vidéo'}</h1>
         <p className="mt-1 text-sm text-(--color-ink-soft)">Choisissez la vidéo à regarder.</p>
-        <ul className="mt-6 space-y-3">
-          {allVideos.map((v, i) => (
-            <li key={v.id}>
-              <Link
-                href={`/cours/${coursId}/video?v=${v.id}${embedQs}`}
-                className="flex items-center gap-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3 transition-colors hover:bg-(--color-sand-100)"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-(--color-primary-soft) text-(--color-primary-deep)">
-                  <PlayCircle className="h-4 w-4" />
-                </span>
-                <span className="min-w-0">
-                  <span className="block truncate text-sm font-bold text-(--color-ink)">
-                    {v.titre?.trim() || `Cours vidéo ${i + 1}`}
-                  </span>
-                  <span className="mt-0.5 block text-xs text-(--color-ink-soft)">
-                    Disponible — cliquez pour lancer la vidéo.
-                  </span>
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        {commune ? (
+          <ul className="mt-6 space-y-3">{allVideos.map(carte)}</ul>
+        ) : (
+          <div className="mt-6 space-y-8">
+            {groupes.map((g) => (
+              <section key={g.rubrique} aria-label={g.rubrique}>
+                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-ink-soft)">
+                  {g.rubrique}
+                </h2>
+                <ul className="space-y-3">{g.videos.map(carte)}</ul>
+              </section>
+            ))}
+          </div>
+        )}
       </div>
     );
   }
@@ -188,9 +210,14 @@ export default async function CoursVideoPage({
       {gate}
       {allVideos.length > 1 && (
         <div className="mb-4 flex items-center justify-between gap-3">
-          <h1 className="min-w-0 truncate text-lg font-bold tracking-tight text-(--color-ink)">
-            {video.titre}
-          </h1>
+          <div className="min-w-0">
+            <p className="truncate text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-primary-deep)">
+              {rubriqueDeVideo(video)}
+            </p>
+            <h1 className="truncate text-lg font-bold tracking-tight text-(--color-ink)">
+              {video.titre}
+            </h1>
+          </div>
           <Link
             href={`/cours/${coursId}/video${embed ? `?embed=${encodeURIComponent(embed)}` : ''}`}
             className="shrink-0 text-xs font-semibold text-(--color-ink-soft) underline underline-offset-2 hover:text-(--color-ink)"

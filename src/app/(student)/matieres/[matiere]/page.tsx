@@ -10,6 +10,7 @@ import {
   parseScope,
 } from '@/lib/auth/permissions';
 import { normalizeSpecialtyStatus } from '@/lib/pedago/status';
+import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
 
 export default async function MatierePage({ params }: { params: Promise<{ matiere: string }> }) {
   const { matiere } = await params;
@@ -42,84 +43,23 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
     isAdmin
     || canAccessCours(scope, matiere, c.id, (c as { access_type?: 'all' | 'specific' }).access_type ?? 'all')
   );
-  const coursIds = cours.map((c) => c.id);
-  const [{ data: attempts }, { data: reviews }, { data: qcmTotalRows }] = coursIds.length
-    ? await Promise.all([
-        supabase
-          .from('qcm_attempts')
-          // on ajoute le type de série pour ne compter QUE les vraies séries QCM
-          // (pas les annales/séances) dans la progression.
-          .select('id, question_id, qcm_questions!inner(serie_id, qcm_series!inner(cours_id, type))')
-          .eq('user_id', user.id)
-          .in('qcm_questions.qcm_series.cours_id', coursIds),
-        supabase
-          .from('flashcard_reviews')
-          .select('id, flashcard_id, flashcards!inner(cours_id)')
-          .eq('user_id', user.id)
-          .in('flashcards.cours_id', coursIds),
-        // Nombre total de questions de type QCM par cours (dénominateur).
-        supabase
-          .from('qcm_questions')
-          .select('id, qcm_series!inner(cours_id, type)')
-          .eq('qcm_series.type', 'qcm')
-          .in('qcm_series.cours_id', coursIds),
-      ])
-    : [
-        { data: [] as unknown as { question_id: string; qcm_questions: { qcm_series: { cours_id: string; type: string } } }[] },
-        { data: [] as unknown as { flashcards: { cours_id: string } }[] },
-        { data: [] as unknown as { id: string; qcm_series: { cours_id: string; type: string } }[] },
-      ];
-
-  const coursFlashHit = new Set<string>();
-  for (const r of reviews ?? []) coursFlashHit.add(r.flashcards.cours_id);
-
-  // Progression QCM = questions QCM DISTINCTES tentées / questions QCM totales.
-  // (On dédoublonne par question_id pour ne pas gonfler avec les re-tentatives,
-  //  et on exclut les annales du numérateur comme du dénominateur.)
-  const qcmDoneByCourse = new Map<string, Set<string>>();
-  for (const a of (attempts ?? []) as unknown as { question_id: string; qcm_questions: { qcm_series: { cours_id: string; type: string } } }[]) {
-    const cid = a.qcm_questions?.qcm_series?.cours_id;
-    if (!cid || a.qcm_questions?.qcm_series?.type !== 'qcm') continue;
-    if (!qcmDoneByCourse.has(cid)) qcmDoneByCourse.set(cid, new Set());
-    qcmDoneByCourse.get(cid)!.add(a.question_id);
-  }
-  const qcmTotalByCourse = new Map<string, number>();
-  for (const row of (qcmTotalRows ?? []) as unknown as { qcm_series: { cours_id: string } }[]) {
-    const cid = row.qcm_series?.cours_id;
-    if (!cid) continue;
-    qcmTotalByCourse.set(cid, (qcmTotalByCourse.get(cid) ?? 0) + 1);
-  }
-
-  const { data: videoRows } = coursIds.length
-    ? await supabase.from('videos').select('cours_id').not('storage_path', 'is', null).in('cours_id', coursIds)
-    : { data: [] as { cours_id: string }[] };
-  const videoAvailSet = new Set((videoRows ?? []).map((r) => r.cours_id));
+  // Progression : LA formule commune (lib/progress) — questions accessibles
+  // pour la voie/formule de l'élève (85 %) + couverture fiche/flashcards/vidéo
+  // (15 %). Même chiffre que la bague de l'item et le navigateur.
+  const progression = await chargerProgressionCours({
+    userId: user.id,
+    faculteId: m.semestres.faculte_id,
+    scope,
+    staff: isAdmin,
+    cours,
+  });
 
   const Icon = iconFromKey(m.icon_key);
 
   const coursRows: IndexRow[] = cours.map((c, idx) => {
     const p = c.course_progress?.[0];
     const hasContent = (c.qcm_series?.length ?? 0) > 0 || (c.flashcards?.length ?? 0) > 0;
-    const hasVideo = videoAvailSet.has(c.id);
-    const ficheDone = p?.fiche_read ? 1 : 0;
-    const flashDone = coursFlashHit.has(c.id) ? 1 : 0;
-    const videoDone = p?.video_watched ? 1 : 0;
-    // Progression fiable = ratio de QCM faits (majoritaire, 85 %). Le reste
-    // (fiche + flashcards + vidéo) ne pèse que 15 %. Pour un cours SANS QCM, on
-    // retombe sur une couverture simple fiche/flashcards/vidéo.
-    const qcmTotal = qcmTotalByCourse.get(c.id) ?? 0;
-    const qcmDoneCount = qcmDoneByCourse.get(c.id)?.size ?? 0;
-    let progress: number;
-    if (qcmTotal > 0) {
-      const qcmRatio = Math.min(1, qcmDoneCount / qcmTotal); // 0..1
-      const otherSteps = hasVideo ? 3 : 2; // fiche + flashcards (+ vidéo)
-      const otherDone = ficheDone + flashDone + (hasVideo ? videoDone : 0);
-      const otherRatio = otherSteps > 0 ? otherDone / otherSteps : 0;
-      progress = Math.round(qcmRatio * 85 + otherRatio * 15);
-    } else {
-      const steps = hasVideo ? 3 : 2;
-      progress = Math.round(((ficheDone + flashDone + (hasVideo ? videoDone : 0)) / steps) * 100);
-    }
+    const progress = progression.get(c.id)?.progression ?? 0;
     return {
       id: c.id,
       href: `/cours/${c.id}`,
@@ -167,7 +107,7 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
   // est « Validation en attente » (spec section 9).
   const isSpecialtyFinished = cours.length > 0 && cours.every((c) => {
     const p = c.course_progress?.[0];
-    return !!p?.video_watched || !!p?.fiche_read || (qcmDoneByCourse.get(c.id)?.size ?? 0) > 0;
+    return !!p?.video_watched || !!p?.fiche_read || (progression.get(c.id)?.input.questionsFaites ?? 0) > 0;
   });
   const awaitingValidation = isSpecialtyFinished && !evalStatus;
 

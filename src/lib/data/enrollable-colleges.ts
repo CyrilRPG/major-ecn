@@ -20,6 +20,11 @@ export type EnrollableSpecialty = {
   /** Contenus pas encore publiés : la formule est achetable au même prix, mais
    *  le compte est créé SANS accès et l'étudiant en est averti avant de payer. */
   contentPending?: boolean;
+  /** Voie de concours imposée par la spécialité : le tunnel ne propose pas le
+   *  choix et le checkout / provisioning forcent cette voie quoi qu'envoie le
+   *  client. `'interne'` = format QCM uniquement (le collège ne porte aucune
+   *  série QROC). */
+  voieImposee?: 'interne';
 };
 
 export const ENROLLABLE_SPECIALTIES: EnrollableSpecialty[] = [
@@ -27,8 +32,10 @@ export const ENROLLABLE_SPECIALTIES: EnrollableSpecialty[] = [
   { collegeId: 'col-cardiologie', name: 'Cardiologie' },
   { collegeId: 'col-pediatrie', name: 'Pédiatrie' },
   // Le collège `col-mir` est commercialisé sous le nom « Médecine d'urgence »
-  // (cf. APPROFONDI_SPECIALTIES). L'ancien libellé reste reconnu.
-  { collegeId: 'col-mir', name: 'Médecine d’urgence', legacyNames: ['Médecine Intensive-Réanimation'] },
+  // (cf. APPROFONDI_SPECIALTIES). Son ancien libellé « Médecine
+  // Intensive-Réanimation » résout désormais vers la spécialité MIR (fin de
+  // tableau), copie physique de ce collège vendue sous son propre nom.
+  { collegeId: 'col-mir', name: 'Médecine d’urgence' },
   { collegeId: 'col-pneumologie', name: 'Pneumologie' },
   { collegeId: 'col-geriatrie', name: 'Gériatrie' },
   { collegeId: 'col-neurologie', name: 'Neurologie' },
@@ -45,6 +52,16 @@ export const ENROLLABLE_SPECIALTIES: EnrollableSpecialty[] = [
   // Contenus en ligne : `col-ecn-odontologie` (302 items, 302 fiches, 1 208 séries
   // QCM/QROC, plus de 3 000 flashcards) — vérifié le 2026-09-08.
   { collegeId: 'col-ecn-odontologie', name: 'Odontologie' },
+  // Copie physique de `col-mir` (scripts/dupliquer-medecine-urgence-vers-mir.mjs),
+  // vendue comme spécialité distincte au format QCM seulement : la voie interne
+  // est imposée, le collège ne porte aucune série QROC. Ajoutée EN FIN de
+  // tableau : la palette de l'agenda (`suivi/colors.ts`) est indexée sur l'ordre.
+  {
+    collegeId: 'col-medecine-intensive-reanimation',
+    name: 'Médecine intensive et réanimation',
+    legacyNames: ['Médecine Intensive-Réanimation', 'MIR'],
+    voieImposee: 'interne',
+  },
 ];
 
 export const ENROLLABLE_SPECIALTY_NAMES = ENROLLABLE_SPECIALTIES.map((s) => s.name);
@@ -74,4 +91,11 @@ export function collegeIdForSpecialty(name: string | null | undefined): string |
 /** true si la spécialité est vendue avant la mise en ligne de ses contenus. */
 export function isContentPendingSpecialty(name: string | null | undefined): boolean {
   return specialtyByName(name)?.contentPending === true;
+}
+
+/** Voie de concours imposée par la spécialité (`'interne'` pour une spécialité
+ *  vendue en QCM seulement), `null` quand l'étudiant choisit sa voie. Source
+ *  unique pour le formulaire, l'API checkout et le provisioning. */
+export function voieImposeePourSpecialite(name: string | null | undefined): 'interne' | null {
+  return specialtyByName(name)?.voieImposee ?? null;
 }

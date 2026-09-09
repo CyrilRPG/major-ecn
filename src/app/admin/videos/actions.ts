@@ -13,6 +13,7 @@ import { revisionsTitre } from '@/lib/videos/revisions';
 import {
   normaliserOffres, normaliserVoies, resumeAudience, VIDEO_OFFERS,
 } from '@/lib/videos/audience';
+import { normaliserRubrique, rubriqueParDefaut } from '@/lib/videos/rubriques';
 import { logAudit } from '@/lib/audit/log';
 
 /**
@@ -101,12 +102,12 @@ async function guardVideo(videoId: string) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data } = await (admin as any)
     .from('videos')
-    .select('id, cours_id, titre, type, order_index, support_path')
+    .select('id, cours_id, titre, type, rubrique, order_index, support_path')
     .eq('id', videoId)
     .maybeSingle();
   if (!data) return { error: 'Vidéo introuvable.' as const };
   const video = data as {
-    id: string; cours_id: string; titre: string; type: VideoType;
+    id: string; cours_id: string; titre: string; type: VideoType; rubrique: string | null;
     order_index: number; support_path: string | null;
   };
   const ctx = await guard(video.cours_id);
@@ -146,6 +147,8 @@ export type VideoLibraryVideo = {
   titre: string;
   bunny_video_id: string | null;
   order_index: number;
+  /** Intitulé de rubrique affiché à l'élève (NULL = libellé par défaut du type). */
+  rubrique: string | null;
   /** Voies de concours concernées (les deux = aucune restriction). */
   voies: string[];
   /** Formules ayant accès à cette vidéo. */
@@ -221,7 +224,7 @@ export async function listVideosAction(
 
   const { data, error } = await ctx.a
     .from('videos')
-    .select('id, titre, bunny_video_id, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)')
+    .select('id, titre, bunny_video_id, order_index, rubrique, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)')
     .eq('cours_id', coursId)
     .eq('type', type)
     .order('order_index', { ascending: true })
@@ -233,6 +236,7 @@ export async function listVideosAction(
       titre: v.titre,
       bunny_video_id: v.bunny_video_id,
       order_index: v.order_index,
+      rubrique: normaliserRubrique(v.rubrique),
       voies: normaliserVoies(v.voies),
       offers: normaliserOffres(v.offers),
       denied_user_ids: (v.denied_user_ids ?? []).filter((x): x is string => typeof x === 'string'),
@@ -293,6 +297,8 @@ export async function addVideoAction(input: {
   titre: string;
   lien: string;
   position?: number | null;
+  /** Rubrique affichée à l'élève ; vide ⇒ libellé par défaut du type. */
+  rubrique?: string | null;
   voies?: string[];
   offers?: string[];
   deniedUserIds?: string[];
@@ -340,13 +346,14 @@ function validerAudience(
 async function insertVideo(
   ctx: Ctx,
   input: {
-    type: VideoType; titre: string; lien: string; position?: number | null;
+    type: VideoType; titre: string; lien: string; position?: number | null; rubrique?: string | null;
     voies?: string[]; offers?: string[]; deniedUserIds?: string[]; allowedUserIds?: string[];
   },
 ): Promise<AddResult> {
   const coursId = ctx.cours.id;
   const titre = input.titre.trim().slice(0, 200);
   if (!titre) return { error: 'Donnez un titre à la vidéo.' };
+  const rubrique = normaliserRubrique(input.rubrique);
   const bunnyId = extractBunnyVideoId(input.lien);
   if (!bunnyId) {
     return { error: 'Lien Bunny.net non reconnu. Collez le lien de la vidéo (ou son identifiant).' };
@@ -377,6 +384,7 @@ async function insertVideo(
       titre,
       bunny_video_id: bunnyId,
       type: input.type,
+      rubrique,
       order_index: insertAt,
       voies: audience.voies,
       offers: audience.offers,
@@ -406,10 +414,11 @@ async function insertVideo(
     matiereNom: ctx.cours.matiereNom,
     description: `Ajout de « ${titre} » (${LABEL[input.type]}) en position ${insertAt + 1}`
       + ` — ${resumeAudience(audience)}`
+      + (rubrique ? ` — rubrique « ${rubrique} »` : '')
       + (deniedUserIds.length > 0 ? ` — ${deniedUserIds.length} élève(s) exclu(s)` : '')
       + (allowedUserIds.length > 0 ? ` — ${allowedUserIds.length} élève(s) autorisé(s)` : ''),
     diff: {
-      bunny_video_id: bunnyId, type: input.type, order_index: insertAt,
+      bunny_video_id: bunnyId, type: input.type, rubrique, order_index: insertAt,
       voies: audience.voies, offers: audience.offers,
       denied_user_ids: deniedUserIds, allowed_user_ids: allowedUserIds,
     },
@@ -432,6 +441,7 @@ export async function addVideoToRevisionsAction(input: {
   titre: string;
   lien: string;
   position?: number | null;
+  rubrique?: string | null;
   voies?: string[];
   offers?: string[];
   deniedUserIds?: string[];
@@ -552,6 +562,43 @@ export async function renameVideoAction(input: {
     matiereNom: ctx.cours.matiereNom,
     description: `Renommage : « ${ctx.video.titre} » → « ${titre} »`,
     diff: { from: ctx.video.titre, to: titre },
+  });
+
+  refresh(ctx.cours.id);
+  return { ok: true };
+}
+
+/**
+ * Change la rubrique d'une vidéo (titre de section dans l'espace élève).
+ * Vide ⇒ retour au libellé par défaut du type.
+ */
+export async function updateVideoRubriqueAction(input: {
+  videoId: string;
+  rubrique: string | null;
+}): Promise<{ ok: true } | { error: string }> {
+  const ctx = await guardVideo(input.videoId);
+  if ('error' in ctx) return ctx;
+  const rubrique = normaliserRubrique(input.rubrique);
+  const avant = normaliserRubrique(ctx.video.rubrique);
+  if (rubrique === avant) return { ok: true };
+
+  const { error } = await ctx.a
+    .from('videos')
+    .update({ rubrique, updated_at: new Date().toISOString() })
+    .eq('id', input.videoId);
+  if (error) return { error: error.message };
+
+  const libelle = (r: string | null) => r ?? `${rubriqueParDefaut(ctx.video.type)} (par défaut)`;
+  await logAudit({
+    actor: ctx.profile,
+    action: 'update',
+    entity: 'video',
+    entityId: input.videoId,
+    coursId: ctx.cours.id,
+    coursTitre: ctx.cours.titre,
+    matiereNom: ctx.cours.matiereNom,
+    description: `Rubrique de « ${ctx.video.titre} » : « ${libelle(avant)} » → « ${libelle(rubrique)} »`,
+    diff: { from: avant, to: rubrique },
   });
 
   refresh(ctx.cours.id);

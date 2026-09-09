@@ -98,6 +98,17 @@ const PROFESSIONS: { value: string; Icon: IconCmp }[] = [
   { value: 'Autre professionnel de santé', Icon: BriefcaseMedical },
 ];
 
+/** Objet de la demande : placé EN TÊTE du sujet envoyé à /api/contact. */
+const OBJETS = ['Demande d’information', 'Devis établissement de santé', 'Autre'] as const;
+type Objet = (typeof OBJETS)[number];
+const OBJET_DEVIS: Objet = 'Devis établissement de santé';
+const OBJET_DEFAUT: Objet = 'Demande d’information';
+
+/** `?motif=etablissement` (bandeau « Prise en charge établissement de santé ») → objet « Devis ». */
+function objetDepuisMotif(motif?: string): Objet {
+  return motif === 'etablissement' ? OBJET_DEVIS : OBJET_DEFAUT;
+}
+
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
 /** Lit un fichier et renvoie son contenu encodé en base64 (sans préfixe data URI). */
@@ -110,10 +121,11 @@ function toBase64(file: File): Promise<string> {
   });
 }
 
-export function ContactForm() {
+export function ContactForm({ motifInitial }: { motifInitial?: string } = {}) {
   const [status, setStatus] = useState<Status>('idle');
   const [errMsg, setErrMsg] = useState('');
   const [files, setFiles] = useState<File[]>([]);
+  const [objet, setObjet] = useState<Objet>(() => objetDepuisMotif(motifInitial));
   const [profession, setProfession] = useState('');
   const [profOpen, setProfOpen] = useState(false);
   const [captchaToken, setCaptchaToken] = useState('');
@@ -155,7 +167,7 @@ export function ContactForm() {
         name: `${firstName} ${lastName}`.trim(),
         email: String(fd.get('email') ?? '').trim(),
         phone: String(fd.get('phone') ?? '').trim(),
-        subject: [specialite, profession].filter(Boolean).join(' · ') || 'Demande de contact',
+        subject: [objet, specialite, profession].filter(Boolean).join(' · ') || 'Demande de contact',
         message: String(fd.get('message') ?? '').trim(),
         company: String(fd.get('company') ?? ''),
         turnstileToken: captchaToken,
@@ -260,6 +272,25 @@ export function ContactForm() {
             <Phone className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: INK_MUTED }} />
             <input id="ct-phone" name="phone" type="tel" required maxLength={40} placeholder="+33 6 12 34 56 78" className={`${inputCls} pl-9`} style={inputStyle} />
           </div>
+        </div>
+        <div className="sm:col-span-2">
+          <label htmlFor="ct-objet" className="block text-[12.5px] font-bold" style={{ color: NAVY }}>Objet</label>
+          <select
+            id="ct-objet"
+            name="objet"
+            required
+            value={objet}
+            onChange={(e) => setObjet(e.currentTarget.value as Objet)}
+            className={`mt-1.5 ${inputCls} appearance-none`}
+            style={inputStyle}
+          >
+            {OBJETS.map((o) => <option key={o} value={o}>{o}</option>)}
+          </select>
+          {objet === OBJET_DEVIS && (
+            <p className="mt-1.5 text-[11.5px]" style={{ color: INK_MUTED }}>
+              Indiquez l’établissement, le service et le nombre de candidats.
+            </p>
+          )}
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="ct-spe" className="block text-[12.5px] font-bold" style={{ color: NAVY }}>Spécialité visée</label>

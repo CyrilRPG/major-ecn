@@ -25,6 +25,7 @@ import { sendEmail, siteUrl, INTERNAL_NOTIFY_EMAILS, CONTRACT_COPY_EMAILS } from
 import { purchaseConfirmationEmail, purchaseNotificationEmail } from '@/lib/email/templates';
 import { FORMULES, type FormuleId } from '@/lib/stripe';
 import { getApprofondiTier } from '@/lib/stripe/approfondi';
+import { voieImposeePourSpecialite } from '@/lib/data/enrollable-colleges';
 import { highestOffer, type Offer } from '@/types/domain';
 import { applyGeriatrieMgBonus } from '@/lib/auth/geriatrie-mg-bonus';
 import { trouverCompteAuthParEmail } from '@/lib/auth/admin-users';
@@ -219,6 +220,12 @@ export async function provisionStudentAccount(
 
   const approfondiTier = getApprofondiTier(input.approfondiVariant);
 
+  // Voie de concours retenue. Une spécialité vendue en QCM seulement (MIR)
+  // impose la voie interne : on l'applique ici aussi, quelle que soit la
+  // metadata Stripe reçue — le checkout la force déjà, mais une session
+  // rejouée ou forgée ne doit pas ouvrir la voie externe sur ce collège.
+  const voie = voieImposeePourSpecialite(approfondiTier?.specialtyName ?? input.specialty) ?? input.voie;
+
   // Certaines offres Approfondi sont vendues AVANT la mise en ligne des contenus
   // (ex. Odontologie) : l'étudiant est prévenu au moment de payer, le
   // compte est créé mais n'ouvre AUCUN collège. On sort donc avant toute
@@ -347,7 +354,7 @@ export async function provisionStudentAccount(
     // Normalise 'externe'/'interne' — les formulaires peuvent envoyer le libellé
     // 'Voie externe'/'Voie interne'. La RLS (current_voie) attend la forme courte.
     // On conserve la voie existante si le nouvel achat n'en précise pas.
-    paid_voie: normalizeVoie(input.voie) ?? (typeof prevScope.paid_voie === 'string' ? prevScope.paid_voie : null),
+    paid_voie: normalizeVoie(voie) ?? (typeof prevScope.paid_voie === 'string' ? prevScope.paid_voie : null),
     paid_at: new Date().toISOString(),
   };
   log('scope-merged', {
@@ -480,7 +487,7 @@ export async function provisionStudentAccount(
       amountEuros: amountEurosTotal,
       installments: input.installments ?? 1,
       specialty: input.specialty ?? 'Médecine générale',
-      voie: input.voie || null,
+      voie: voie || null,
     });
     const n = await sendEmail({
       to: INTERNAL_NOTIFY_EMAILS,
@@ -561,7 +568,7 @@ export async function provisionStudentAccount(
         formuleId: input.formuleId,
         formuleLabel: approfondiTier ? `Programme ${approfondiTier.tierLabel}` : formule.name,
         specialty: approfondiTier?.specialtyName ?? input.specialty ?? null,
-        voie: input.voie ?? null,
+        voie: voie ?? null,
         coverageLabel: approfondiTier?.coverageLabel ?? null,
         amountEuros: amountEurosTotal,
         installments: input.installments ?? 1,

@@ -11,6 +11,7 @@ import {
   BORDER, Eyebrow, INK_SOFT, JAKARTA, MANROPE, NAVY, Reveal,
   SectionTitle,
 } from './home-ui';
+import { EtablissementSanteBanner } from '../etablissement-sante-banner';
 
 /* ============================================================
    BLOC 7 — TROIS FORMULES, UN MÊME OBJECTIF : VOTRE RÉUSSITE
@@ -404,6 +405,8 @@ export function FormulesSection() {
           </div>
         </Reveal>
       </div>
+
+      <EtablissementSanteBanner largeur="site" />
     </section>
   );
 }

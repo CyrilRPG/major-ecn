@@ -1,7 +1,7 @@
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { AgendaWeek, type UserEvent, type PlatformEvent } from '@/components/student/agenda-week';
-import { parseScope } from '@/lib/auth/permissions';
+import { parseScope, scopeOffers } from '@/lib/auth/permissions';
 
 export const metadata = { title: 'Agenda' };
 
@@ -32,6 +32,9 @@ export default async function AgendaPage() {
 
   // Filtrage côté serveur selon les permissions de l'étudiant
   const scope = parseScope(profile.permission_scope);
+  // Multi-formules : une élève Approfondie + Intensive doit voir les événements
+  // de CHACUNE de ses formules (union), pas seulement de la formule principale.
+  const offresEleve = scopeOffers(scope);
   const platformEvents: PlatformEvent[] = ((platformData ?? []) as Array<{
     id: string; title: string; date: string; start_time: string | null; end_time: string | null;
     college: string | null; intervenant: string | null; zoom_url: string | null; notes: string | null;
@@ -39,7 +42,7 @@ export default async function AgendaPage() {
     voies: string[] | null;
   }>).filter((e) => {
     const offers = e.required_offers ?? ['essentiel', 'intensif', 'approfondi'];
-    if (!offers.includes(scope.offer)) return false;
+    if (!offresEleve.some((o) => offers.includes(o))) return false;
     // Voie de concours : si l'évènement cible une/des voie(s) et que l'étudiant a
     // une voie définie hors de cette liste, il ne le voit pas. Voie inconnue
     // (null) ou liste vide → pas de restriction.

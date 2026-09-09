@@ -10,6 +10,7 @@ import { ACCROCHE_FORMULE } from '@/lib/formules-accroches';
 import { lienPaiement } from '@/lib/tunnel-inscription';
 import { AncreTunnel } from './ancre-tunnel';
 import { DrapeauOrigine } from './drapeau-origine';
+import { EtablissementSanteBanner } from './etablissement-sante-banner';
 
 /**
  * Page spécialité — EVC Anesthésie-Réanimation.
@@ -1113,6 +1114,8 @@ function Formules({ specialite }: { specialite?: string }) {
           </div>
         </Reveal>
       </div>
+
+      <EtablissementSanteBanner largeur="specialite" />
     </section>
   );
 }

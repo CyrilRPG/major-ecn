@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
+import { reponseModele } from '@/lib/qcm/grade';
+import { questionAUneImage } from '@/lib/qcm/images';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, ChevronRight, ClipboardList, FileText, Loader2, Pencil, Plus, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, ClipboardList, FileText, ImageIcon, Loader2, Pencil, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -27,15 +29,28 @@ export type QcmSerieFull = {
 };
 
 export function QcmSeriesManager({
-  coursId, series,
-}: { coursId: string; series: QcmSerieFull[] }) {
+  coursId, series, serieInitiale = null,
+}: {
+  coursId: string;
+  series: QcmSerieFull[];
+  /** Série à déplier (et faire défiler) à l'ouverture — `?serie=<id>`, lien
+   *  « Vue d'ensemble de la série » du lecteur en mode édition. */
+  serieInitiale?: string | null;
+}) {
   const router = useRouter();
   const [createOpen, setCreateOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState<{ serieId: string; q?: QcmQuestionDraft } | null>(null);
   const [addingQuestion, setAddingQuestion] = useState<{ serieId: string; anchor: { questionId: string; position: number } } | null>(null);
   const [editingVignette, setEditingVignette] = useState<{ serieId: string; current: string | null } | null>(null);
-  const [openSerie, setOpenSerie] = useState<Set<string>>(new Set());
+  const [openSerie, setOpenSerie] = useState<Set<string>>(
+    () => new Set(serieInitiale && series.some((s) => s.id === serieInitiale) ? [serieInitiale] : []),
+  );
   const [pending, start] = useTransition();
+
+  useEffect(() => {
+    if (!serieInitiale) return;
+    document.getElementById(`serie-${serieInitiale}`)?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }, [serieInitiale]);
 
   const toggle = (id: string) => {
     setOpenSerie((s) => {
@@ -78,7 +93,7 @@ export function QcmSeriesManager({
           {series.map((s) => {
             const open = openSerie.has(s.id);
             return (
-              <li key={s.id} className="rounded-xl border border-(--color-border) bg-(--color-surface)">
+              <li key={s.id} id={`serie-${s.id}`} className="scroll-mt-4 rounded-xl border border-(--color-border) bg-(--color-surface)">
                 <div className="flex items-center gap-2 px-3 py-2">
                   <button
                     type="button"
@@ -131,11 +146,20 @@ export function QcmSeriesManager({
                             {flashcardPlainText(q.enonce)}
                             <span className="ml-2 inline-flex items-center gap-1 text-[10px] text-(--color-ink-muted)">
                               {q.format === 'qroc'
-                                ? `QROC${q.reponse_attendue ? ` · ${flashcardPlainText(q.reponse_attendue).slice(0, 40)}` : ''}`
+                                ? `QROC${q.reponse_attendue ? ` · ${flashcardPlainText(reponseModele(q.reponse_attendue)).slice(0, 40)}` : ''}`
                                 : `${q.items.length} items · ${q.items.filter((it) => it.is_correct).length} vrais`}
-                              {(q.images?.length ?? 0) > 0 && ` · ${q.images.length} image${q.images.length > 1 ? 's' : ''}`}
                               {q.correction_generale && ' · corrigé'}
                             </span>
+                            {/* Même détection que l'index du lecteur : images de la
+                                question, d'un item, ou <img dans l'énoncé / le corrigé / la vignette. */}
+                            {questionAUneImage(q, s.vignette) && (
+                              <span
+                                title="Cette question comporte une image (question, item, énoncé, corrigé ou vignette)"
+                                className="ml-2 inline-flex items-center gap-0.5 rounded-full border border-(--color-border) px-1.5 py-px align-middle text-[10px] font-semibold text-(--color-ink-soft)"
+                              >
+                                <ImageIcon className="h-3 w-3" /> image
+                              </span>
+                            )}
                           </p>
                           {q.id && (
                             <Button

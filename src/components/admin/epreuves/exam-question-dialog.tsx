@@ -5,6 +5,7 @@ import { Loader2, Plus, Save, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { upsertExamQuestion } from '@/app/admin/epreuves-blanches/actions';
+import { composerReponseAttendue, reponseModele, variantesAcceptees } from '@/lib/qcm/grade';
 import type { CollegeOption, ExamQuestionData } from './exam-editor';
 
 const inputCls = 'w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-ink) outline-none focus:border-(--color-primary)';
@@ -30,7 +31,9 @@ export function ExamQuestionDialog({
   const [collegeId, setCollegeId] = useState(initial?.college_id ?? '');
   const [points, setPoints] = useState<string>((initial?.points ?? 1).toString());
   const [correction, setCorrection] = useState(initial?.correction_generale ?? '');
-  const [reponse, setReponse] = useState(initial?.reponse_attendue ?? '');
+  // QROC : format stocké « modèle|variante|variante », présenté en deux champs.
+  const [reponseModeleQroc, setReponseModeleQroc] = useState(() => reponseModele(initial?.reponse_attendue));
+  const [variantesQroc, setVariantesQroc] = useState(() => variantesAcceptees(initial?.reponse_attendue).join('\n'));
   // Critères de correction IA (QROC)
   const [keywords, setKeywords] = useState<Keyword[]>(
     (initial?.keywords ?? []).map((k) => ({ label: k.label, points: k.points, mandatory: !!k.mandatory })),
@@ -67,7 +70,7 @@ export function ExamQuestionDialog({
         points: Number(points) || (format === 'qcm' ? 1 : 1),
         college_id: collegeId || null,
         items: format === 'qcm' ? items.filter((it) => it.enonce.trim()) : [],
-        reponse_attendue: format === 'qroc' ? reponse : null,
+        reponse_attendue: format === 'qroc' ? composerReponseAttendue(reponseModeleQroc, variantesQroc.split('\n')) : null,
         keywords: showAi ? keywords.filter((k) => k.label.trim()) : [],
         zero_if_missing: showAi ? splitLines(zeroIfMissing) : [],
         major_errors: showAi ? splitLines(majorErrors) : [],
@@ -127,10 +130,17 @@ export function ExamQuestionDialog({
               )}
             </div>
           ) : (
-            <label className="block">
-              <span className="mb-1 block text-xs font-semibold text-(--color-ink)">Réponse(s) attendue(s) — variantes séparées par « | »</span>
-              <input value={reponse} onChange={(e) => setReponse(e.target.value)} className={inputCls} placeholder="spirométrie|EFR|explorations fonctionnelles respiratoires" />
-            </label>
+            <div className="space-y-3">
+              <label className="block">
+                <span className="mb-1 block text-xs font-semibold text-(--color-ink)">Réponse modèle (affichée à l’élève)</span>
+                <input value={reponseModeleQroc} onChange={(e) => setReponseModeleQroc(e.target.value)} className={inputCls} placeholder="spirométrie" />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-xs font-semibold text-(--color-ink)">Autres formulations acceptées, une par ligne (auto-correction)</span>
+                <textarea rows={3} value={variantesQroc} onChange={(e) => setVariantesQroc(e.target.value)} className={inputCls} placeholder={'EFR\nexplorations fonctionnelles respiratoires'} />
+                <span className="mt-1 block text-[11px] text-(--color-ink-soft)">Reconnues comme justes ; l’élève ne voit que la réponse modèle.</span>
+              </label>
+            </div>
           )}
 
           {showAi && (

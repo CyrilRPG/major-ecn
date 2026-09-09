@@ -17,6 +17,7 @@ import { ProfWelcome } from '@/components/professor/prof-welcome';
 import { startOfUtcIsoWeek, sumTrackedSeconds, type StudyTimeRow } from '@/lib/student/study-time';
 import { getMaintienStats, getStudiedSpecialties } from '@/lib/pedago/maintien';
 import { sessionSizesFor } from '@/lib/pedago/status';
+import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
 
 export const metadata = { title: 'Accueil' };
 
@@ -183,44 +184,37 @@ async function Dashboard({
     (m.cours ?? []).filter((c) => canAccessCours(scope, m.id, c.id)).map((c) => c.id),
   );
 
-  /* ---- Total QCM/QROC accessibles (dénominateur « QCM/QROC réalisés ») ----
-     Somme locale des comptes par cours → aucune requête séquentielle. Source
-     préférée : le cache global (P4) ; repli sur les champs du RPC par-élève.
-     VOIE-AWARE : la voie externe ne compte que les questions QROC (kind='qroc'),
-     la voie interne les QCM/DP (non-qroc), sinon tout. */
-  const qcmCounts = cachedTotals.qcm_counts.length > 0 ? cachedTotals.qcm_counts : stats.qcm_counts;
-  const qcmCountByCours = new Map(qcmCounts.map((q) => [q.cours_id, q.n]));
-  const qrocCountByCours = new Map(qcmCounts.map((q) => [q.cours_id, q.n_qroc ?? 0]));
-  // Nombre de questions ACCESSIBLES pour un cours selon la voie.
-  const accessibleCount = (id: string) => {
-    const total = qcmCountByCours.get(id) ?? 0;
-    const qroc = qrocCountByCours.get(id) ?? 0;
-    if (scope.voie === 'externe') return qroc;
-    if (scope.voie === 'interne') return Math.max(0, total - qroc);
-    return total;
-  };
+  /* ---- Progression par cours : LA formule commune (lib/progress) ----
+     Questions accessibles pour la voie/formule de l'élève (mêmes règles que
+     l'onglet DP · QI : QROC pour la voie externe, QCM/DP pour l'interne,
+     annales et « Révisions » exemptées) et questions distinctes faites parmi
+     elles. Même chiffre par item que le navigateur et la bague de l'item. */
+  const progression = await chargerProgressionCours({
+    userId,
+    faculteId: EDN_FACULTE_ID,
+    scope,
+    cours: colleges.flatMap((m) => m.cours ?? []),
+  });
+  // Nombre de questions ACCESSIBLES pour un cours (dénominateur « QCM/QROC réalisés »).
+  const accessibleCount = (id: string) => progression.get(id)?.input.questionsAccessibles ?? 0;
   const itemsTotal = accessibleCoursIds.reduce((s, id) => s + accessibleCount(id), 0);
 
   /* ---- Agrégats par cours (attempts / correct / flashcards) ---- */
   const aggByCours = new Map(stats.per_cours.map((p) => [p.cours_id, p]));
   const coursWithFc = new Set(stats.per_cours.filter((p) => p.has_fc).map((p) => p.cours_id));
-  // Nombre de QCM DISTINCTS faits par cours (dédoublonné, séries QCM only).
-  const qcmDoneByCours = new Map(stats.per_cours.map((p) => [p.cours_id, p.distinct_done ?? 0]));
 
-  /* ---- Progression globale = QCM faits / QCM totaux (majoritaire) ----
-     Rebasée sur le nombre de questions QCM distinctes réellement tentées
-     rapporté au total de QCM accessibles (fiable, ne « monte » plus dès le
-     1er QCM). La lecture fiches/vidéos/flashcards n'y contribue plus que
-     marginalement pour ne pas figer un cours 100 % QCM. */
+  /* ---- Progression globale = questions faites / questions accessibles ----
+     Rebasée sur le nombre de questions distinctes réellement tentées rapporté
+     au total accessible (fiable, ne « monte » plus dès le 1er QCM). */
   const globalQcmDone = accessibleCoursIds.reduce(
-    (s, id) => s + Math.min(qcmDoneByCours.get(id) ?? 0, accessibleCount(id)), 0,
+    (s, id) => s + (progression.get(id)?.input.questionsFaites ?? 0), 0,
   );
   const globalProgress = itemsTotal > 0 ? Math.round((globalQcmDone / itemsTotal) * 100) : 0;
 
   /* ---- Statistiques attempts ----
-     « QCM réalisés » = questions QCM DISTINCTES tentées (pas les re-tentatives ni
-     les annales) → le ratio X/total reste cohérent (≤ 100 %). */
-  const totalAttempts = t.attempts_distinct ?? t.attempts_total;
+     « QCM/QROC réalisés » = questions DISTINCTES tentées sur le périmètre
+     accessible (pas les re-tentatives) → le ratio X/total reste ≤ 100 %. */
+  const totalAttempts = globalQcmDone;
   const sessionsCount = t.sessions_total;
 
   /* ---- Temps de révision (mesuré par le heartbeat plateforme) ---- */
@@ -250,14 +244,9 @@ async function Dashboard({
     }
   }
   const coursScored = [...perCours.values()].map((c) => {
-    // Avancement fiable = QCM distincts faits / QCM totaux (85 %) + couverture
-    // fiche/vidéo/flashcards (15 %). Pour un cours sans QCM, couverture seule.
-    const qcmTotal = accessibleCount(c.id);
-    const qcmDone = Math.min(qcmDoneByCours.get(c.id) ?? 0, qcmTotal);
-    const coverageRatio = ((c.videoDone ? 1 : 0) + (c.ficheDone ? 1 : 0) + (c.hasFc ? 1 : 0)) / 3;
-    const value = qcmTotal > 0
-      ? Math.round(Math.min(1, qcmDone / qcmTotal) * 85 + coverageRatio * 15)
-      : Math.round(coverageRatio * 100);
+    // Avancement = formule commune (questions accessibles faites 85 % +
+    // couverture fiche/flashcards/vidéo 15 %), cf. lib/progress.
+    const value = progression.get(c.id)?.progression ?? 0;
     return { id: c.id, titre: c.titre, matiereNom: c.matiereNom, value, attempts: c.attempts };
   });
 

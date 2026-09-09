@@ -18,8 +18,8 @@ import {
 } from 'lucide-react';
 import type { FormuleId } from '@/lib/stripe';
 import { createClient } from '@/lib/supabase/client';
-import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty, specialtyByName } from '@/lib/data/enrollable-colleges';
-import { CONTENT_PENDING_NOTICE } from '@/lib/stripe/approfondi';
+import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty, specialtyByName, voieImposeePourSpecialite } from '@/lib/data/enrollable-colleges';
+import { CONTENT_PENDING_NOTICE, getApprofondiTier } from '@/lib/stripe/approfondi';
 import { TurnstileWidget } from './turnstile-widget';
 import { SignaturePad } from '@/components/student/signature-pad';
 import { RENONCIATION_RETRACTATION, MENTION_SIGNATURE } from '@/lib/legal/consents';
@@ -78,10 +78,6 @@ export function CheckoutButton({
   // Parcours Approfondi : la spécialité est portée par l'offre choisie en amont
   // (catalogue Approfondi) → on masque le sélecteur de spécialité interne.
   const isApprofondiFlow = !!approfondiVariant;
-  // Voie de concours (interne / externe) demandée pour toutes les formules
-  // payantes : elle détermine l'accès aux séries de Médecine générale
-  // (interne → pas de QROC ; externe → pas de QCM/DP hors « Révisions »).
-  const needsVoie = formuleId === 'intensive' || formuleId === 'essentielle' || formuleId === 'programme-approfondi';
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -94,6 +90,20 @@ export function CheckoutButton({
     specialtyByName(initialSpecialty)?.name ?? SPECIALTIES[0],
   );
   const [voie, setVoie] = useState<string>('');
+  // Spécialité réellement achetée : celle de l'offre Approfondi en parcours
+  // Approfondi, sinon celle du sélecteur.
+  const specialtyPurchased = isApprofondiFlow
+    ? (getApprofondiTier(approfondiVariant)?.specialtyName ?? '')
+    : specialty;
+  // Spécialité vendue dans un seul format (MIR = QCM seulement) : la voie est
+  // imposée par le registre, le choix n'est pas proposé et c'est cette voie
+  // qui part au checkout — le serveur la force de son côté également.
+  const voieImposee = voieImposeePourSpecialite(specialtyPurchased);
+  // Voie de concours (interne / externe) demandée pour toutes les formules
+  // payantes : elle détermine l'accès aux séries de Médecine générale
+  // (interne → pas de QROC ; externe → pas de QCM/DP hors « Révisions »).
+  const needsVoie = !voieImposee
+    && (formuleId === 'intensive' || formuleId === 'essentielle' || formuleId === 'programme-approfondi');
   const [installments, setInstallments] = useState<1 | 3 | 4>(1);
   // Deux cases, toutes deux obligatoires (demande de Cyril, 03/09/2026) :
   //  - CGU + CGS ;
@@ -289,7 +299,7 @@ export function CheckoutButton({
           lastName,
           phone,
           specialty,
-          voie: needsVoie ? voie : '',
+          voie: voieImposee ?? (needsVoie ? voie : ''),
           installments,
           consents: {
             // Trois cases côté UI (CGU + CGS, puis CP, puis renonciation au
@@ -434,6 +444,24 @@ export function CheckoutButton({
             </div>
           )}
         </>
+      )}
+      {/* Spécialité vendue en QCM seulement : la voie interne est imposée,
+          l'étudiant doit le lire AVANT de payer (repris sur la page Stripe). */}
+      {voieImposee && (
+        <div
+          className="flex items-start gap-2.5 rounded-xl border px-3.5 py-3"
+          style={{ borderColor: '#E5E9F0', background: '#F7F8FB' }}
+        >
+          <GitFork className="mt-px h-4 w-4 shrink-0" style={{ color: '#52607A' }} />
+          <div>
+            <p className="text-[13px] font-extrabold" style={{ color: '#0F1F4D' }}>
+              Voie interne (QCM)
+            </p>
+            <p className="mt-0.5 text-[12.5px] leading-snug" style={{ color: '#5B6478' }}>
+              Cette spécialité est proposée au format QCM uniquement : la voie de concours interne s’applique à votre inscription.
+            </p>
+          </div>
+        </div>
       )}
       {/* Voie interne / externe — Formules Intensive et Essentielle.
           Le parcours pédagogique diffère selon le format de concours
