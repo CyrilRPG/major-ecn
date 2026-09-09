@@ -46,7 +46,7 @@ export function TextArea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
 export function SelectInput(props: SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <span className="relative block">
-      <select {...props} className={`${base} appearance-none pr-10 ${props.className ?? ''}`} style={{ ...baseStyle, ...props.style }}>
+      <select {...props} className={`${base} appearance-none pr-10 [&_option]:bg-inherit [&_option]:text-inherit ${props.className ?? ''}`} style={{ ...baseStyle, colorScheme: 'dark', ...props.style }}>
         {props.children}
       </select>
       <svg aria-hidden className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2" viewBox="0 0 16 16" style={{ color: ARENA.textMuted }}>

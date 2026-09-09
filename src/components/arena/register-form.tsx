@@ -118,7 +118,7 @@ export function RegisterForm({
         </Field>
         <Field label="Spécialité" htmlFor="r-spe" required>
           <SelectInput id="r-spe" required value={specialty} onChange={(e) => setSpecialty(e.target.value)}>
-            {specialties.map((s) => <option key={s} value={s} style={{ color: '#111' }}>{s}</option>)}
+            {specialties.map((s) => <option key={s} value={s}>{s}</option>)}
           </SelectInput>
         </Field>
       </div>

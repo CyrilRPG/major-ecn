@@ -44,7 +44,7 @@ export function ReportDialog({ slug, questionId, questionLabel, alreadyReported 
       <p className="text-sm font-bold" style={{ fontFamily: BODY }}>Signalement — {questionLabel}</p>
       <Field label="Motif" htmlFor={`rep-motif-${questionId}`}>
         <SelectInput id={`rep-motif-${questionId}`} value={motif} onChange={(e) => setMotif(e.target.value)}>
-          {Object.entries(REPORT_MOTIFS).map(([k, v]) => <option key={k} value={k} style={{ color: '#111' }}>{v}</option>)}
+          {Object.entries(REPORT_MOTIFS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </SelectInput>
       </Field>
       <Field label="Précisions (facultatif)" htmlFor={`rep-c-${questionId}`}>
