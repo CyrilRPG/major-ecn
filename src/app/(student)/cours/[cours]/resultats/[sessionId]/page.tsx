@@ -31,7 +31,7 @@ export default async function ResultsPage({
   const admin = createAdminClient();
   const { data: serie, error: serieError } = await admin
     .from('qcm_series')
-    .select('id, label, type, cours_id')
+    .select(`${SERIE_ACCESS_COLUMNS}, cours_id, qcm_questions(format)` as 'id, label, type, cours_id')
     .eq('id', session.serie_id)
     .maybeSingle();
   if (serieError) throw serieError;
@@ -46,6 +46,10 @@ export default async function ResultsPage({
   if (!c || !c.matieres?.semestres) notFound();
   if (profile.role !== 'admin' && !canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
 
+  const accessCtx = await buildQcmAccessContext(profile, c.matiere_id);
+  const accessSerie = serie as unknown as SerieAccessRow & { qcm_questions?: { format: string }[] };
+  const canReadContent = canStudentReadSerie(accessSerie, accessCtx, (accessSerie.qcm_questions ?? []).map((q) => q.format));
+
   const { data: attempts } = await supabase
     .from('qcm_attempts')
     .select('id, is_correct, time_spent_seconds, question_id')
@@ -53,7 +57,9 @@ export default async function ResultsPage({
     .order('attempted_at');
 
   // Énoncés des questions ratées : lecture service-role (cf. commentaire ci-dessus).
-  const failedIds = (attempts ?? []).filter((a) => !a.is_correct).map((a) => a.question_id);
+  // Les scores et l'historique restent disponibles après un retrait. Les
+  // énoncés et liens de reprise suivent en revanche les droits actuels.
+  const failedIds = canReadContent ? (attempts ?? []).filter((a) => !a.is_correct).map((a) => a.question_id) : [];
   // `images` : sans les documents de l'énoncé (ECG, radiographies), le rappel
   // d'une question ratée est illisible — « Vous faites réaliser l'ECG suivant ».
   const { data: failedQuestions } = failedIds.length > 0
@@ -86,7 +92,7 @@ export default async function ResultsPage({
   const previous = beforeCurrent.length > 0 ? beforeCurrent[beforeCurrent.length - 1] : null;
 
   const isAnnale = serie.type === 'annale';
-  const retryHref = `/cours/${coursId}${isAnnale ? '/annales' : '/qcm'}/${session.serie_id}`;
+  const retryHref = canReadContent ? `/cours/${coursId}${isAnnale ? '/annales' : '/qcm'}/${session.serie_id}` : undefined;
   const reviewBase = `/cours/${coursId}/resultats/${sessionId}/revoir`;
 
   // --- Série suivante logic ---
@@ -100,7 +106,6 @@ export default async function ResultsPage({
     .eq('cours_id', coursId)
     .eq('type', serieType)
     .order('order_index');
-  const accessCtx = await buildQcmAccessContext(profile, c.matiere_id);
   const allSeries = ((rawAllSeries ?? []) as unknown as (SerieAccessRow & {
     order_index: number;
     qcm_questions?: { format: string }[] | null;
@@ -142,8 +147,8 @@ export default async function ResultsPage({
       failed={failed}
       coursHref={`/cours/${coursId}`}
       retryHref={retryHref}
-      reviewWrongHref={isAnnale ? `${reviewBase}?filter=wrong` : undefined}
-      reviewAllHref={isAnnale ? `${reviewBase}?filter=all` : undefined}
+      reviewWrongHref={canReadContent && isAnnale ? `${reviewBase}?filter=wrong` : undefined}
+      reviewAllHref={canReadContent && isAnnale ? `${reviewBase}?filter=all` : undefined}
       nextSerieHref={nextSerieHref}
       allSeriesDone={allSeriesDone}
       seriesListHref={seriesListHref}

@@ -41,7 +41,7 @@ export function QcmResults({
   history: Historical[];
   failed: FailedQuestion[];
   coursHref: string;
-  retryHref: string;
+  retryHref?: string;
   reviewWrongHref?: string;
   reviewAllHref?: string;
   nextSerieHref?: string | null;
@@ -196,12 +196,12 @@ export function QcmResults({
                 <p className="text-xs uppercase tracking-wider text-(--color-ink-soft) font-medium">Questions à retravailler</p>
                 <h2 className="text-lg font-semibold mt-0.5">{failed.length} question{failed.length > 1 ? 's' : ''}</h2>
               </div>
-              <Button asChild variant="primary" size="sm">
+              {retryHref && <Button asChild variant="primary" size="sm">
                 <Link href={retryHref}>
                   <RefreshCw />
                   Refaire uniquement les erreurs
                 </Link>
-              </Button>
+              </Button>}
             </div>
             <ul className="space-y-2">
               {failed.map((q) => (

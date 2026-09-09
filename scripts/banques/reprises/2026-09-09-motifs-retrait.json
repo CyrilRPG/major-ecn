@@ -1,0 +1,2633 @@
+[
+  {
+    "id": "97c64e79-5428-45c6-926d-886146893588",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "0008d6c1-93da-4c6b-9192-0435f0612a53",
+        "enonce": "?"
+      },
+      {
+        "questionId": "9046cdfd-13e3-43a8-baa6-fcd9e5a94f7c",
+        "enonce": "?"
+      },
+      {
+        "questionId": "aaf3bf6a-1601-4058-8d89-226e07a58296",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "f2866da1-a0bf-4e8b-a0d8-4d9f93ad7a03",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "01f4ee74-d1cc-4ea1-9768-f2ab5cd8f7de",
+        "enonce": "?"
+      },
+      {
+        "questionId": "28c35810-bab1-40e8-98a3-d6b9eced3323",
+        "enonce": "?"
+      },
+      {
+        "questionId": "83fdfd90-8d0d-4826-97b3-e5fceff75b55",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "256fc8ae-d312-454e-b644-d7ebaa606aa9",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "066ed228-2329-4b04-9246-cc7897700e20",
+        "enonce": "?"
+      },
+      {
+        "questionId": "30e51b1d-540b-4cf6-91df-0a1ef2c65619",
+        "enonce": "?"
+      },
+      {
+        "questionId": "4bee01fc-2230-4138-a1eb-e4bf0d702c3f",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "43ee7944-eed7-4e0f-9404-54500195381a",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "0b1f8214-fb1a-4e55-9753-6a4821db03b6",
+        "enonce": "?"
+      },
+      {
+        "questionId": "1eedf820-4739-4299-a4ea-fcb9ae069e5a",
+        "enonce": "?"
+      },
+      {
+        "questionId": "70fab4ce-b9cc-48eb-9561-96a0c78b883a",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "18d13357-df3c-4811-b163-ad3a80fa5f45",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "12e58b96-5320-4d9c-9daa-77a32b2ada4f",
+        "enonce": "?"
+      },
+      {
+        "questionId": "4b86cedc-5224-4e6e-af6f-becf95275007",
+        "enonce": "?"
+      },
+      {
+        "questionId": "55fddded-e658-431e-99e8-1fc2bf32090b",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "f33e40d6-a8aa-443c-9a3d-8d38162a4a8f",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "20e39873-1dd7-4eb9-a707-a8d35ae1436e",
+        "enonce": "?"
+      },
+      {
+        "questionId": "2293e17a-f56c-44bf-8af2-c264e864dcf6",
+        "enonce": "?"
+      },
+      {
+        "questionId": "2fb87142-c4d1-4a4d-aa27-79b4513da02a",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "2a88233e-6fbb-4ccb-8e72-b385ced580a8",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "2440b161-1c11-45e7-b7c0-a05fdc506f31",
+        "enonce": "?"
+      },
+      {
+        "questionId": "42099d33-bc16-42cb-805b-54f74cac8f3f",
+        "enonce": "?"
+      },
+      {
+        "questionId": "4c59d1e3-d6a1-4afd-973c-ffa8b2e93f4b",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "c1c0d7f3-cd63-4b47-b866-089f5812e3e9",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "25ee331a-0a75-45dd-8a36-9913944fe8ec",
+        "enonce": "?"
+      },
+      {
+        "questionId": "3d186bfd-7cbf-4418-a491-4a2f2be2a537",
+        "enonce": "?"
+      },
+      {
+        "questionId": "453c2168-6aea-494b-8cc6-7456c12d377d",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "2b05e380-be59-4cc3-a1ac-4e5e2e6a432c",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "2a3abbe0-a387-4cd0-a35d-5d144d524300",
+        "enonce": "?"
+      },
+      {
+        "questionId": "553ef75d-4386-4723-a997-987becc400a1",
+        "enonce": "?"
+      },
+      {
+        "questionId": "5aacc313-5617-4697-a2df-10456f7bdce9",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "e927a083-80f9-4376-a9f0-3dda8b85b94d",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "2c20bb68-2ad7-489b-a250-32f8db13e55c",
+        "enonce": "?"
+      },
+      {
+        "questionId": "3731c970-1807-4b15-a962-5057be70fc57",
+        "enonce": "?"
+      },
+      {
+        "questionId": "aa6f97ab-c104-459c-9e35-ed7ead1fd782",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "e00bf000-1876-4b07-8633-5e117565f95b",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "2c532373-151b-477d-9c70-b3526176f2c7",
+        "enonce": "?"
+      },
+      {
+        "questionId": "3f44430c-a171-46bc-a8f5-e769a3bc6850",
+        "enonce": "?"
+      },
+      {
+        "questionId": "5e8a6780-df3f-4b02-bcf2-c4a9229ae0e1",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "82605488-d3d9-4f90-84d6-cc41256edfe4",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "331c0afb-57c4-4880-85be-d4b9aa1b7bc7",
+        "enonce": "?"
+      },
+      {
+        "questionId": "443a9970-3323-437f-9b45-26798d428780",
+        "enonce": "?"
+      },
+      {
+        "questionId": "a7cf86f1-8cd2-4444-b4ba-b2c4e902dd25",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "e85411f1-ce7e-4f2d-9e67-523d6e9fb014",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "34f25a24-786f-4300-8b94-06bd50af80c9",
+        "enonce": "?"
+      },
+      {
+        "questionId": "c52e78d8-45c8-4dba-bb40-f8d4be76f53f",
+        "enonce": "?"
+      },
+      {
+        "questionId": "cca8010a-661d-4401-8b79-1d2526e12f5f",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "46b4bd72-b502-4d7d-84b1-675eda344bb5",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "398b7054-1be4-408d-93c8-b544cab7e657",
+        "enonce": "?"
+      },
+      {
+        "questionId": "a8cd332b-b3a5-49f2-9fe6-8cd9f0151b2e",
+        "enonce": "?"
+      },
+      {
+        "questionId": "bdc8ecfe-353d-4fbd-85e1-58e2e376c1fb",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "ff1fc6a3-95fd-4437-86df-c14089e48dde",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "405f57dc-a5aa-44b9-b4be-d588ec870d96",
+        "enonce": "?"
+      },
+      {
+        "questionId": "46caf634-b59d-43b0-9fa5-dfe94e5d6ce5",
+        "enonce": "?"
+      },
+      {
+        "questionId": "5e50b05f-4e09-4f64-85bc-2d2f5c3a8ab8",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "51121127-d929-49d3-8253-78cfeeab546b",
+    "reason": "Dossier incomplet : des étapes ne contiennent plus aucune question après retrait des phrases de remplissage.",
+    "evidence": [
+      {
+        "questionId": "5b322288-ef99-4f1e-bad0-1153c754d7c8",
+        "enonce": "?"
+      },
+      {
+        "questionId": "5e199fe1-2152-4120-9fc8-61eca088611b",
+        "enonce": "?"
+      },
+      {
+        "questionId": "644cb7d0-4d50-4a0d-89ef-3b1446eeedc5",
+        "enonce": "?"
+      }
+    ]
+  },
+  {
+    "id": "056c6e36-60f2-4798-b289-f843dbf6da2e",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 6 — Parcours fonctionnel"
+      },
+      {
+        "itemId": "9fa2fbc2-2ca1-4c92-b674-317025b63467",
+        "enonce": "Ce distracteur sert de guide pour les ostéotomes qui préparent le plateau pour le passage de la quille.",
+        "justification": "Conforme au corpus source."
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 6 — Parcours fonctionnel"
+      }
+    ]
+  },
+  {
+    "id": "11e2fe1b-6b66-4106-9d0a-92f70ea81981",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "itemId": "8ba469ae-61cb-4c8f-af5e-c253a2190d6e",
+        "enonce": "Il mesure environ mm de long et a comme particularité ces 45◦permettant d’effectuer un angle de d’augmenter le mouvement de force de l’extensor pol…",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      },
+      {
+        "itemId": "5509b0bd-0652-4b3d-a76d-af6f8ac168aa",
+        "enonce": "Ce compartiment mesure environ mm de long, et mm de large.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      }
+    ]
+  },
+  {
+    "id": "11e947eb-2ab9-4985-b935-7fda93281765",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      }
+    ]
+  },
+  {
+    "id": "154100fc-662e-400a-8586-8f760ffe6f00",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "itemId": "a48c2c02-d146-41a1-a7c7-d2f89e176c5f",
+        "enonce": "Ce distracteur sert de guide pour les ostéotomes qui préparent le plateau pour le passage de la quille.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      }
+    ]
+  },
+  {
+    "id": "1bb3147e-ee50-4b85-84ad-585359db790f",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      }
+    ]
+  },
+  {
+    "id": "1e34290a-475e-4492-8479-c4fcabfad761",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "DP 6 — Parcours fonctionnel"
+      },
+      {
+        "itemId": "73669be7-3e79-4c70-844f-743d8fea116b",
+        "enonce": "Les flexor digitorum superGaines ficialis se terminent sur la base de la phalange intermédiaire (P2) des doigts longs.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      },
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "DP 6 — Parcours fonctionnel"
+      }
+    ]
+  },
+  {
+    "id": "20d8fc5f-37eb-4446-a977-543e5fae06b2",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      }
+    ]
+  },
+  {
+    "id": "25973677-876a-4893-bf4c-76a6bfb099fc",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "itemId": "ee05a5d2-e786-4208-846d-9909f1b8d9ed",
+        "enonce": "Les flexor digitorum superGaines ficialis se terminent sur la base de la phalange intermédiaire (P2) des doigts longs.",
+        "justification": "Conforme au corpus source."
+      },
+      {
+        "itemId": "5b77eafb-cd2b-4c7a-8e69-4d4c89d1bda4",
+        "enonce": "Ce compartiment mesure environ mm de long, et mm de large.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      }
+    ]
+  },
+  {
+    "id": "399b9e3a-b581-4bcb-8d5f-e9b6e9b226a4",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "QCM — Synovectomie"
+      }
+    ]
+  },
+  {
+    "id": "4ca33e07-2f4f-44a7-81a8-783c572b03b3",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 2 — Parcours fonctionnel"
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 2 — Parcours fonctionnel"
+      }
+    ]
+  },
+  {
+    "id": "4f76a9fb-8167-43b4-8a26-3e40a17f3dc9",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "DP 2 — Parcours fonctionnel"
+      },
+      {
+        "itemId": "786923d3-3260-4988-9214-d19f2f775ee9",
+        "enonce": "Ce compartiment mesure environ mm de long, et mm de large.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      },
+      {
+        "itemId": "bc5ea185-34b1-4b63-b18b-524b28d80d89",
+        "enonce": "Elle appalisse et brillante dans les zones de haute contrainte et est organisée en replis ou frange au niveau des zones d’activité mécarestreintes.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      }
+    ]
+  },
+  {
+    "id": "4fcc6768-f309-48fd-8b5c-772076838489",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 7 — Parcours fonctionnel"
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 7 — Parcours fonctionnel"
+      }
+    ]
+  },
+  {
+    "id": "5ee8d8db-76ad-4509-87d2-4f17ec259635",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "DP 3 — Parcours fonctionnel"
+      },
+      {
+        "itemId": "2c66f8b7-dc16-4143-a137-2fe38c97865e",
+        "enonce": "Ce compartiment mesure environ mm de long, et mm de large.",
+        "justification": "Conforme au corpus source."
+      },
+      {
+        "itemId": "d3699ce1-b047-420b-b0fa-3ce81245f6bd",
+        "enonce": "Le récessus distal de le leur gaine synoviale se termine à environ mm en proximal des articulations carpométacarpiennes.",
+        "justification": "Conforme au corpus source."
+      }
+    ]
+  },
+  {
+    "id": "62b6772b-e038-4ed1-865d-e227c7399edb",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      }
+    ]
+  },
+  {
+    "id": "6409829e-0ecf-4a76-b046-155e087bc305",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "itemId": "82452eb0-9e7f-4a22-8ac1-8cae3df4d94d",
+        "enonce": "Elle appalisse et brillante dans les zones de haute contrainte et est organisée en replis ou frange au niveau des zones d’activité mécarestreintes.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      },
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "QCM — Synovectomie"
+      }
+    ]
+  },
+  {
+    "id": "66edc8e1-d606-47e3-b31e-d068d4b6b5e0",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "itemId": "acda9080-0ca8-4680-bb62-73d9b8a89aee",
+        "enonce": "Ce compartiment mesure environ mm de long, et mm de large.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      },
+      {
+        "itemId": "d372f2c0-70a4-4d2a-bf6d-dddaa5637ed1",
+        "enonce": "Elle appalisse et brillante dans les zones de haute contrainte et est organisée en replis ou frange au niveau des zones d’activité mécarestreintes.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      }
+    ]
+  },
+  {
+    "id": "6ee5e29f-e7d8-4872-83e9-89e0b051103e",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 5 — Parcours fonctionnel"
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 5 — Parcours fonctionnel"
+      }
+    ]
+  },
+  {
+    "id": "6f82fd0a-f300-4b66-a298-269f7f898ff8",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "itemId": "901fd852-95b5-44ed-a0cd-31aba5a4ecf2",
+        "enonce": "Il contient l’extensor digitorum et l’extensor indicis proprius et mesure environ mm de long et mm de large.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      },
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "QCM — Synovectomie"
+      }
+    ]
+  },
+  {
+    "id": "6fd01fa6-7e6e-400d-b7b7-f54d8ae857c9",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      }
+    ]
+  },
+  {
+    "id": "7285da15-45c2-4191-88ee-21664ddd5fa8",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "QCM — Synovectomie"
+      }
+    ]
+  },
+  {
+    "id": "853678ad-519c-4552-bcac-3dd2f788c68f",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 4 — Parcours fonctionnel"
+      },
+      {
+        "itemId": "09b2b7d7-a910-4b12-8ae2-4849d02d8613",
+        "enonce": "Ce distracteur sert de guide pour les ostéotomes qui préparent le plateau pour le passage de la quille.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 4 — Parcours fonctionnel"
+      }
+    ]
+  },
+  {
+    "id": "86b709f7-61c8-49a5-9752-4689a02540f6",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 3 — Parcours fonctionnel"
+      },
+      {
+        "itemId": "21fe6023-b45f-423c-a70a-5aeab0a194cd",
+        "enonce": "Ce distracteur sert de guide pour les ostéotomes qui préparent le plateau pour le passage de la quille.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 3 — Parcours fonctionnel"
+      }
+    ]
+  },
+  {
+    "id": "885c4db8-81a2-4e70-a5cd-fe1da088689a",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      }
+    ]
+  },
+  {
+    "id": "8d56ef94-e769-42d1-88c2-a189161a8869",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "itemId": "c55a0c15-2226-445e-9412-2fac09607869",
+        "enonce": "Il contient l’extensor digitorum et l’extensor indicis proprius et mesure environ mm de long et mm de large.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      },
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "QCM — Synovectomie"
+      }
+    ]
+  },
+  {
+    "id": "984cf9dc-e8fb-42ed-9cd6-7219cd353ed2",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "DP 4 — Parcours fonctionnel"
+      },
+      {
+        "itemId": "f776f134-4827-4994-b77c-a8c6a10576ee",
+        "enonce": "Il mesure environ mm de long et a comme particularité ces 45◦permettant d’effectuer un angle de d’augmenter le mouvement de force de l’extensor pol…",
+        "justification": "Conforme au corpus source."
+      },
+      {
+        "itemId": "5e03c555-9b8f-441f-a15a-d2ef03fff168",
+        "enonce": "Il contient l’extensor digitorum et l’extensor indicis proprius et mesure environ mm de long et mm de large.",
+        "justification": "Conforme au corpus source."
+      }
+    ]
+  },
+  {
+    "id": "b2403d4d-4821-4f90-a510-27fda27f76b5",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "DP 7 — Parcours fonctionnel"
+      },
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "DP 7 — Parcours fonctionnel"
+      }
+    ]
+  },
+  {
+    "id": "b3877df5-83ad-40c0-916c-7153f86580ae",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "DP 8 — Parcours fonctionnel"
+      },
+      {
+        "itemId": "339c1e92-ef8c-4279-8913-814e7feb6647",
+        "enonce": "Les flexor digitorum superGaines ficialis se terminent sur la base de la phalange intermédiaire (P2) des doigts longs.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      },
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "DP 8 — Parcours fonctionnel"
+      }
+    ]
+  },
+  {
+    "id": "b9be4bd1-c8e7-4d59-b2c3-4db49025869e",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "DP 5 — Parcours fonctionnel"
+      },
+      {
+        "itemId": "dd5e64ec-49f4-4b90-b260-8ed9a7fde7a1",
+        "enonce": "Elle appalisse et brillante dans les zones de haute contrainte et est organisée en replis ou frange au niveau des zones d’activité mécarestreintes.",
+        "justification": "Conforme au corpus source."
+      },
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "DP 5 — Parcours fonctionnel"
+      }
+    ]
+  },
+  {
+    "id": "c4080cdf-a97f-4568-8d0f-220bafa4fecc",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "DP 1 — Parcours fonctionnel"
+      },
+      {
+        "itemId": "a002d3a8-f562-470c-aafc-eedd46564780",
+        "enonce": "Il contient l’extensor digitorum et l’extensor indicis proprius et mesure environ mm de long et mm de large.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      },
+      {
+        "cours": "Synovectomie des fléchisseurs et des extenseurs de la main et du poignet",
+        "label": "DP 1 — Parcours fonctionnel"
+      }
+    ]
+  },
+  {
+    "id": "c95b9b47-b3f4-4934-ad1a-ad5c75a18a70",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 1 — Parcours fonctionnel"
+      },
+      {
+        "itemId": "1c06791a-1311-477b-a869-cb30716923f6",
+        "enonce": "Ce distracteur sert de guide pour les ostéotomes qui préparent le plateau pour le passage de la quille.",
+        "justification": "Cette proposition ne correspond pas au point évalué dans le corpus."
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 1 — Parcours fonctionnel"
+      }
+    ]
+  },
+  {
+    "id": "d329a4d3-970e-49a3-85f6-c838636250e0",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "QCM — Synovectomie"
+      }
+    ]
+  },
+  {
+    "id": "e4a1ed6d-db81-4f48-8509-424160161a64",
+    "reason": "Propositions extraites de fragments tronqués et mélangés ; consignes et corrigés non exploitables.",
+    "evidence": [
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 8 — Parcours fonctionnel"
+      },
+      {
+        "cours": "Technique de pose des prothèses de disque lombaire",
+        "label": "DP 8 — Parcours fonctionnel"
+      }
+    ]
+  },
+  {
+    "id": "0fcd7572-3bae-4618-9dc0-a8afa92a40f7",
+    "reason": "Import dégradé : fragments de questions/corrections ou propositions de fabrication mêlés au contenu.",
+    "evidence": [
+      {
+        "itemId": "6d5b16f1-5dd7-4a6d-bcb9-fa94119fdb8e",
+        "enonce": "Les antibiotiques sont indiqués chez tous les patients en exacerbation",
+        "justification": "En l’absence d’hypersomnolence diurne, vous ne retenez pas ici le diagnostic de syndrome d’apnée du sommeil, obstructif ou central Antigénurie pneumocoque Une enquête autour d’elle par le CLAT n’est pas nécessaire Une échographie trans thoracique Recherche SAPL ECG Vous montez la dose de son traitement de fond actuel Vous augmentez le débit d’oxygène Il faudra très probablement réaliser une chirurgie d’hémostase chez ce patient Réponse(s) : A Correction détaillée : distracteur, c’est un traitement d’exception, avec une forte mortalité. On ne peut vous demander de la choisir comme option thérapeutique, qui plus est sans scanner. Concernant l’hémoptysie il faut se rappeler des caractéristiques cliniques qui doivent la faire distinguer des diagnostics différentiels que sont l’épistaxis et l’hématémèse. Voici une liste exhaustive de caractéristiques cliniques qui peuvent vous servir : -\tSang rouge vif, spumeux, aéré : effort de toux => par bouche +/- nez -\tProdromes ou signes accompagnement : angoisse, chaleur rétrosternale, chatouillement laryngé, gout métallique bouche -\tCraquement ou gargouillement : peuvent localiser côté de l’hémoptysie -\tTardivement queue de l’hémoptysie = expectoration crachats sanglants de plus en plus foncés => noirâtres Les signes de gravité sont la tolérance respiratoire et les paramètres vitaux. Les saignements artériels pulmonaires sont plus graves mais ne représentent que 10% des hémoptysies tandis que les saignements aretériels bronchiques 90%. Il faut connaître quelques étiologies : idiopathique, cancer bronchique, bronchectasies, pneumopathies nécrosantes, tuberculose, infections aspergillaires, l’embolie pulmonaire… L’examen essentiel dans la prise en charge est le scanner thoracique injecté au temps artériel pulmonaire et artériel bronchique. Il permet de localiser le saignement, en déterminer l’étiologie, indiquer une prise en charge percutanée. La fibroscopie a une indication plus accessoire à la phase aigue, elle permet surtout dans un second temps de participer au bilan étiologique, par exemple documenter histologiquement la masse qui était à l’origine du saignement. La terlipressine est un vasoconstricteur puissant qui permet de diminuer sinon d’interrompre le saignement, il est contre indiqué en cas d’antécédent d’AVC ou d’infarctus et expose au risque d’hyponatrémie (ayant des effets analogues à la vasopressine). Le traitement le plus important est l’embolisation d’une artère bronchique ou la vaso-occlusion d’une artère pulmonaire. Il interrompt plus de 70% des saignements lorsqu’il est indiqué. ___ QI 10 : Un patient de 33 ans est adressé par son médecin traitant aux urgences pour une dyspnée et une fièvre. ATCD : pas de suivi médical Intoxication intraveineuse aux opiacés, tabagisme important actif, sans domicile fixe avec une très mauvaise hygiène de vie. Son état bucco-dentaire est inquiétant. Il présente des difficultés respiratoires associées à une toux et des expectorations purulentes depuis 4 jours. Constantes : SaO2 89% en air ambiant, PA 126/76 mmHg, FC 101 bpm, 39,1°C Il existe une abolition du murmure vésiculaire en base gauche. L’examen neurologique, digestif et cardiovasculaire vous semble normal. Que faites-vous à ce stade ? Antigénurie légionnelle Réponse(s) : BC Il s’agit ici d’un épanchement pleural fébrile, une ponction exploratrice à la recherche d’argument pour un épanchement parapneumonique compliqué est une urgence. devant une suspicion de pleuropneumopathie infectieuse les explorations microbiologiques doivent être les mêmes que pour une pneumopathie aigue communautaire, il faut juste ajouter la ponction pleurale au bilan Devant un épanchement pleural et des signes de pneumopathies infectieuse il faut suspecter une pleuropneumopathie infectieuse. La ponction est une urgence, elle permet d’établir la nature du liquide. 1. Est-ce un exsudat ? (il sera normalement neutrophilique) 2. Si oui l’épanchement parapneumonique est-il compliqué ou non compliqué ? ___"
+      },
+      {
+        "itemId": "6d5b16f1-5dd7-4a6d-bcb9-fa94119fdb8e",
+        "enonce": "Les antibiotiques sont indiqués chez tous les patients en exacerbation",
+        "justification": "En l’absence d’hypersomnolence diurne, vous ne retenez pas ici le diagnostic de syndrome d’apnée du sommeil, obstructif ou central Antigénurie pneumocoque Une enquête autour d’elle par le CLAT n’est pas nécessaire Une échographie trans thoracique Recherche SAPL ECG Vous montez la dose de son traitement de fond actuel Vous augmentez le débit d’oxygène Il faudra très probablement réaliser une chirurgie d’hémostase chez ce patient Réponse(s) : A Correction détaillée : distracteur, c’est un traitement d’exception, avec une forte mortalité. On ne peut vous demander de la choisir comme option thérapeutique, qui plus est sans scanner. Concernant l’hémoptysie il faut se rappeler des caractéristiques cliniques qui doivent la faire distinguer des diagnostics différentiels que sont l’épistaxis et l’hématémèse. Voici une liste exhaustive de caractéristiques cliniques qui peuvent vous servir : -\tSang rouge vif, spumeux, aéré : effort de toux => par bouche +/- nez -\tProdromes ou signes accompagnement : angoisse, chaleur rétrosternale, chatouillement laryngé, gout métallique bouche -\tCraquement ou gargouillement : peuvent localiser côté de l’hémoptysie -\tTardivement queue de l’hémoptysie = expectoration crachats sanglants de plus en plus foncés => noirâtres Les signes de gravité sont la tolérance respiratoire et les paramètres vitaux. Les saignements artériels pulmonaires sont plus graves mais ne représentent que 10% des hémoptysies tandis que les saignements aretériels bronchiques 90%. Il faut connaître quelques étiologies : idiopathique, cancer bronchique, bronchectasies, pneumopathies nécrosantes, tuberculose, infections aspergillaires, l’embolie pulmonaire… L’examen essentiel dans la prise en charge est le scanner thoracique injecté au temps artériel pulmonaire et artériel bronchique. Il permet de localiser le saignement, en déterminer l’étiologie, indiquer une prise en charge percutanée. La fibroscopie a une indication plus accessoire à la phase aigue, elle permet surtout dans un second temps de participer au bilan étiologique, par exemple documenter histologiquement la masse qui était à l’origine du saignement. La terlipressine est un vasoconstricteur puissant qui permet de diminuer sinon d’interrompre le saignement, il est contre indiqué en cas d’antécédent d’AVC ou d’infarctus et expose au risque d’hyponatrémie (ayant des effets analogues à la vasopressine). Le traitement le plus important est l’embolisation d’une artère bronchique ou la vaso-occlusion d’une artère pulmonaire. Il interrompt plus de 70% des saignements lorsqu’il est indiqué. ___ QI 10 : Un patient de 33 ans est adressé par son médecin traitant aux urgences pour une dyspnée et une fièvre. ATCD : pas de suivi médical Intoxication intraveineuse aux opiacés, tabagisme important actif, sans domicile fixe avec une très mauvaise hygiène de vie. Son état bucco-dentaire est inquiétant. Il présente des difficultés respiratoires associées à une toux et des expectorations purulentes depuis 4 jours. Constantes : SaO2 89% en air ambiant, PA 126/76 mmHg, FC 101 bpm, 39,1°C Il existe une abolition du murmure vésiculaire en base gauche. L’examen neurologique, digestif et cardiovasculaire vous semble normal. Que faites-vous à ce stade ? Antigénurie légionnelle Réponse(s) : BC Il s’agit ici d’un épanchement pleural fébrile, une ponction exploratrice à la recherche d’argument pour un épanchement parapneumonique compliqué est une urgence. devant une suspicion de pleuropneumopathie infectieuse les explorations microbiologiques doivent être les mêmes que pour une pneumopathie aigue communautaire, il faut juste ajouter la ponction pleurale au bilan Devant un épanchement pleural et des signes de pneumopathies infectieuse il faut suspecter une pleuropneumopathie infectieuse. La ponction est une urgence, elle permet d’établir la nature du liquide. 1. Est-ce un exsudat ? (il sera normalement neutrophilique) 2. Si oui l’épanchement parapneumonique est-il compliqué ou non compliqué ? ___"
+      }
+    ]
+  },
+  {
+    "id": "b4d0d19d-aef4-4acc-a96a-4c8c8b97cc90",
+    "reason": "Consigne tronquée : le sujet de la seule proposition exacte (« Elle ») a disparu.",
+    "evidence": [
+      {
+        "id": "e04fe8ea-e716-4380-b3ee-9581cd40fea8",
+        "serie_id": "b4d0d19d-aef4-4acc-a96a-4c8c8b97cc90",
+        "label": "QCM — Transpédiculaire",
+        "enonce": "Lors de la planification opératoire, quelles précautions sont indiquées lorsqu’un problème de quel énoncé est correct est identifié ?",
+        "reasons": [
+          "gabarit emboîté"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "8785dbe0-5bf2-4304-8255-92aa63412431",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "5abb05e5-ca76-4553-b125-de90d5cbab9e",
+        "enonce": "Bronchite virale aiguë",
+        "justification": "Pas une urgence vitale ; les urgences citées dans la fiche sont SCA, EP, dissection, tamponnade, rupture œsophage, PNO.\nNe fait pas mal en général"
+      }
+    ]
+  },
+  {
+    "id": "fb6961a1-b035-45f8-8138-bae6885bbf14",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "f7edfa4f-1f35-4f54-aba8-7ff761fc5850",
+        "enonce": "Le recours immédiat au corset est indiqué.",
+        "justification": "La source ne mentionne pas de traitement immédiat par corset pour une scoliose < 15° ; une surveillance est d'abord indiquée."
+      }
+    ]
+  },
+  {
+    "id": "b9d8d118-af9c-4473-b075-35f92608de46",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "617243b0-80d5-46b3-bae3-4e3b1fb1a649",
+        "enonce": "Le sexe de l'enfant.",
+        "justification": "Le sexe de l'enfant n'est pas cité comme facteur pronostique dans la source."
+      }
+    ]
+  },
+  {
+    "id": "570be54c-c60b-4fea-92a4-fb21ddd1706d",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "3d89f676-8b7a-4bb7-ab95-6587eaac4eab",
+        "enonce": "Sexe féminin.",
+        "justification": "Le sexe féminin est un élément épidémiologique (sex-ratio 4F/1G) mais n'est pas listé comme facteur de risque vrai dans la source."
+      },
+      {
+        "itemId": "9b358dea-9ecb-4910-b6f8-1ad27ca77db3",
+        "enonce": "Premier enfant.",
+        "justification": "La parité n'est pas listée comme facteur de risque vrai de LCH dans la source."
+      },
+      {
+        "itemId": "51a8411a-e10d-4aa4-959c-c332f557b9a9",
+        "enonce": "IRM des hanches.",
+        "justification": "L'IRM n'est pas citée comme examen de première intention dans la source pour le dépistage de la LCH néonatale."
+      }
+    ]
+  },
+  {
+    "id": "0c4babff-dbe5-4cba-bcbf-7deba7e9c6e0",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "044f0ef4-4c66-462f-a6ad-e152ce65909a",
+        "enonce": "La rééducation est inefficace en dessous de 3 ans.",
+        "justification": "La source ne fixe pas de limite inférieure d'âge pour la rééducation ; elle insiste sur la précocité (avant 6 ans)."
+      }
+    ]
+  },
+  {
+    "id": "f52ef7c3-a744-4366-9687-a795504b5ab0",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "a9253143-9824-447f-a667-5369795135aa",
+        "enonce": "Fond d'œil systématique.",
+        "justification": "Le fond d'œil n'est pas mentionné dans la source comme examen systématique de l'examen clinique dans ce contexte."
+      }
+    ]
+  },
+  {
+    "id": "1e4a8c27-b361-467d-82b9-797a2dd27f9a",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "02e63014-3733-4447-8d61-0b1c4492c4d1",
+        "enonce": "Bilan orthoptique.",
+        "justification": "Le bilan orthoptique n'est pas mentionné dans la source comme exploration de première intention devant une régression développementale."
+      }
+    ]
+  },
+  {
+    "id": "61998847-cd29-4fb9-885c-f155b38d06ac",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "82f831ee-977b-4b9e-bc02-63010991806f",
+        "enonce": "La protection hospitalière (urgences pédiatriques, réanimation néonatale)",
+        "justification": "La protection hospitalière n'est pas citée comme l'une des trois catégories d'institutions de protection de l'enfance dans la source."
+      },
+      {
+        "itemId": "da8bca67-a7e0-45b4-bfba-a3dcbde8a5c6",
+        "enonce": "Les résultats des tests de Guthrie néonataux",
+        "justification": "Les résultats des tests de Guthrie ne sont pas mentionnés dans la source comme étant destinés à la PMI."
+      },
+      {
+        "itemId": "8fc238ac-748c-4ad8-b2c4-960c3f61810c",
+        "enonce": "Les signalements de toutes maladies infectieuses pédiatriques",
+        "justification": "Ce rôle de signalement des maladies infectieuses n'est pas attribué à la PMI dans la source."
+      }
+    ]
+  },
+  {
+    "id": "f1eab0d2-44a2-4608-94dd-c53313f52cd3",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "330d372f-0e0b-425a-b2b4-17f100ecb1a3",
+        "enonce": "Éviter un déficit intellectuel systématique lié à la surdité.",
+        "justification": "La source ne mentionne pas de déficit intellectuel systématique ; elle parle de retentissement sur le langage et le développement psychoaffectif."
+      }
+    ]
+  },
+  {
+    "id": "3572f353-ba32-4832-87bf-e7e26b885a97",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "3690b5f2-6a5a-425a-b317-4303ad6c8893",
+        "enonce": "Évaluation des performances scolaires par tests standardisés annuels",
+        "justification": "Cet axe n'est pas inclus dans les cinq axes de surveillance évolutive décrits dans la source."
+      }
+    ]
+  },
+  {
+    "id": "6fc0f4a8-9fac-4c6b-8369-9f4ba717b54d",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "9c20d000-5f91-426d-97de-678032626308",
+        "enonce": "Consommation excessive de produits laitiers",
+        "justification": "La consommation de produits laitiers n'est pas mentionnée comme facteur de risque de saturnisme dans la source."
+      }
+    ]
+  },
+  {
+    "id": "c42af8aa-7276-446e-afe0-f8289939640c",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "e3a25628-4b63-4a6f-93ac-6d854693c09e",
+        "enonce": "Dépistage d'une dépression maternelle",
+        "justification": "La dépression maternelle n'est pas le dépistage spécifiquement mis en avant lors de l'examen du 24e mois dans la source."
+      }
+    ]
+  },
+  {
+    "id": "146a8932-e963-4fc5-9a09-ba7aa3ff6b36",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "2ae3de1c-ac2e-426d-9eba-637ce2e7fb53",
+        "enonce": "La prématurité de Clément comme antécédent aggravant le risque d'accident",
+        "justification": "Aucun antécédent de prématurité n'est mentionné pour Clément, et la prématurité n'est pas citée dans la source comme facteur de risque d'accident de la vie courante."
+      }
+    ]
+  },
+  {
+    "id": "d7d17b9a-ccc7-4959-8f65-7202ed9c5296",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "e7a84300-e253-4e44-8ee5-e269ba600b7f",
+        "enonce": "Traumatismes crâniens par accident de la voie publique",
+        "justification": "Ce mécanisme n'est pas listé parmi les principales causes de décès accidentel entre 1 et 4 ans dans la source."
+      },
+      {
+        "itemId": "55812966-e959-48fd-b9f0-e8d07f6682a9",
+        "enonce": "Rang cadet dans une fratrie nombreuse",
+        "justification": "La source ne mentionne pas le rang dans la fratrie comme facteur de risque d'accident spécifique lié à l'entourage."
+      },
+      {
+        "itemId": "822e9f84-8f44-41ad-b01c-5d3b18f7ef78",
+        "enonce": "Pratique sportive intensive des parents",
+        "justification": "La pratique sportive des parents n'est pas identifiée comme facteur de risque d'accidents dans la source."
+      }
+    ]
+  },
+  {
+    "id": "0d440ee6-6b41-4de2-a9ab-26a88a0aa265",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "700a7dca-0040-43e9-bc89-31e3dc982393",
+        "enonce": "Risque accru de malformations chromosomiques",
+        "justification": "Les malformations chromosomiques ne sont pas citées dans la source comme conséquence spécifique de la précarité."
+      },
+      {
+        "itemId": "bff8478b-6b87-4a8b-a8eb-2ee2c05761aa",
+        "enonce": "Taux de césarienne plus élevé",
+        "justification": "Le taux de césarienne n'est pas mentionné dans la source comme conséquence des inégalités sociales de santé."
+      },
+      {
+        "itemId": "59c31028-ff81-4dd3-baa4-dc3ff88b4e36",
+        "enonce": "La carence en vitamine C est la carence la plus fréquente",
+        "justification": "La source cite les carences en fer et vitamine D comme fréquentes, sans mentionner la vitamine C."
+      }
+    ]
+  },
+  {
+    "id": "5198b567-8379-4d67-9e1e-fd0a88a392e2",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "16df9d28-9a7a-4e32-a511-e2b55a5147d1",
+        "enonce": "Antibiothérapie prophylactique systématique dès l'éruption dentaire",
+        "justification": "L'antibiothérapie prophylactique n'est pas mentionnée dans la source comme mesure de prévention carieuse."
+      }
+    ]
+  },
+  {
+    "id": "01fd9e5a-6e47-4cb3-bfff-7a9d5411b365",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "3976f8cc-7604-4f5f-b654-b2e2b6bea5fb",
+        "enonce": "La présence d'une carence en vitamine D par dosage systématique de la 25-OH-vitamine D",
+        "justification": "Le dosage systématique de la vitamine D n'est pas mentionné comme examen systématique lors du bilan de la 4e année dans la source."
+      }
+    ]
+  },
+  {
+    "id": "8879430a-b366-4da8-b5b7-d08bcf59914f",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "a5108f29-b070-4d72-be54-096673808915",
+        "enonce": "Risque accru de leucémie lymphoblastique par exposition aux moisissures",
+        "justification": "La leucémie lymphoblastique n'est pas citée dans la source parmi les risques liés à la précarité ou aux moisissures."
+      },
+      {
+        "itemId": "ec0d2d3a-6cb3-46c0-b6f7-0c447f8ab15e",
+        "enonce": "Le génotype HLA de l'enfant pour évaluer sa susceptibilité aux infections",
+        "justification": "Le génotypage HLA n'est pas mentionné dans la source comme outil de repérage des ISS."
+      }
+    ]
+  },
+  {
+    "id": "189654d3-bbc0-4b95-9cde-d34eac349d0f",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "b816508a-7293-4fae-8d6c-e9e1df40b301",
+        "enonce": "Une consommation excessive de café",
+        "justification": "La source indique qu'il ne faut pas limiter la consommation de café ; le café n'est pas cité comme cause d'HTA secondaire."
+      }
+    ]
+  },
+  {
+    "id": "d46ac91f-f5ed-4cd5-a627-fa6f1facc043",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "fcfd79b1-f884-4496-96eb-878e2d41cbef",
+        "enonce": "L'association IEC + ARA2 est recommandée en première intention",
+        "justification": "Il ne faut jamais associer IEC et ARA2, c'est explicitement interdit dans la source."
+      }
+    ]
+  },
+  {
+    "id": "6a2ddcae-4762-4299-827e-f1f6709fb9e9",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "8b507760-2066-4b9b-80ce-4d0c18ed7f41",
+        "enonce": "L'obstruction dynamique des cardiomyopathies obstructives fait partie des obstacles au niveau valvulaire aortique",
+        "justification": "L'obstruction dynamique des cardiomyopathies obstructives est citée comme obstacle non localisé au niveau de la valve aortique (en amont), et n'est pas abordée dans le chapitre du RA."
+      }
+    ]
+  },
+  {
+    "id": "2cba028b-4769-4432-837a-4ff7be8839eb",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "04c2f303-3214-47cf-86c1-51ea62ed4bdc",
+        "enonce": "La thrombose veineuse profonde distale est une indication courante",
+        "justification": "Faux : la source ne cite que l'IDM, l'AVC et l'EP grave comme indications des thrombolytiques."
+      }
+    ]
+  },
+  {
+    "id": "becb789f-066a-4419-9ca5-8bc15bf66837",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "63a68811-72bb-4b41-84b7-6c2ceda1e957",
+        "enonce": "Un pic de croissance staturale à l’adolescence",
+        "justification": "Le pic de croissance staturale à l’adolescence n’est pas retenu comme signe prédictif d’obésité future dans la source."
+      }
+    ]
+  },
+  {
+    "id": "a1228b4d-4303-49dc-b911-32ed188a293f",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "3a30b2fc-7af3-45ff-a3f2-207578b3de7b",
+        "enonce": "L’HTA de l’enfant obèse est toujours symptomatique.",
+        "justification": "La source ne mentionne pas que l’HTA soit toujours symptomatique chez l’enfant obèse."
+      },
+      {
+        "itemId": "2bbbed1c-59fe-4ae7-bb10-5e3d80728641",
+        "enonce": "Ulcère gastrique",
+        "justification": "L’ulcère gastrique n’est pas mentionné comme complication digestive de l’obésité pédiatrique dans la source."
+      },
+      {
+        "itemId": "6c1d851e-f65e-41ea-b924-ede024dc5746",
+        "enonce": "Trouble du comportement alimentaire systématique",
+        "justification": "Bien que des troubles du comportement alimentaire puissent exister, ils ne sont pas listés comme une complication systématique ; la source mentionne surtout la souffrance psychologique et la discrimination sociale."
+      }
+    ]
+  },
+  {
+    "id": "c9a02e4b-6d10-4a50-b8ef-2a30eb8badc6",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "6491685b-04d4-436a-81ad-7618d14df3b8",
+        "enonce": "L'âge supérieur à 60 ans",
+        "justification": "L'âge n'est pas listé parmi les facteurs favorisants d'ulcère gastroduodénal dans la fiche (les facteurs sont : antécédent d'ulcère, tabac, H. pylori, anticoagulants, AINS, aspirine, corticoïdes)."
+      }
+    ]
+  },
+  {
+    "id": "a6b7196a-b899-4114-ac85-e5e99d60574c",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "96781286-0bd1-4e6c-a7f5-96147d8f9d56",
+        "enonce": "Fibrinogène et D-dimères",
+        "justification": "Le fibrinogène et les D-dimères ne font pas partie du bilan préthérapeutique cité dans la fiche (ionogramme, NFS, bilan hépatique, TP, TCA)."
+      }
+    ]
+  },
+  {
+    "id": "8bab9198-14d4-4cfa-b109-5c7c198f344d",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "fd52df32-7063-4ade-b02c-d081e142f924",
+        "enonce": "La dysthyroïdie est un facteur déclenchant classique",
+        "justification": "La dysthyroïdie n'est pas citée parmi les facteurs déclenchants dans la fiche (TRIM-AIS : poussée HTA, TdR, SCA, inotrope négatif, rupture traitement, transfusion, majoration apports sodés, infection, anémie)."
+      },
+      {
+        "itemId": "2e188b6d-4520-4916-9b21-5973d01f177c",
+        "enonce": "La prise d'AINS",
+        "justification": "Les AINS ne sont pas cités parmi les facteurs déclenchants dans la fiche."
+      }
+    ]
+  },
+  {
+    "id": "4c740428-b0ec-48e3-b0fe-d036885f1944",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "cba5be7c-525d-45e4-949c-c9d091a6ce61",
+        "enonce": "Les chémorécepteurs médullaires sensibles au pH du LCR",
+        "justification": "Les chémorécepteurs médullaires ne sont pas cités comme principal stimulus ventilatoire chez le BPCO hypercapnique dans la fiche."
+      }
+    ]
+  },
+  {
+    "id": "d7cfce6d-5cac-4b0c-af32-6c181031c95d",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "297b4498-39aa-4575-ab37-153b3e402b52",
+        "enonce": "Pseudomonas aeruginosa",
+        "justification": "Pseudomonas aeruginosa n'est pas cite dans la fiche parmi les germes principaux des exacerbations infectieuses de BPCO."
+      },
+      {
+        "itemId": "ccc82962-8bc6-423c-8708-d7e30dbea28c",
+        "enonce": "Staphylococcus aureus",
+        "justification": "Staphylococcus aureus n'est pas cite dans la fiche parmi les germes principaux des exacerbations infectieuses de BPCO."
+      }
+    ]
+  },
+  {
+    "id": "1690d7a3-067f-49e6-a4cc-611a1fe8b201",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "24bed328-fd5c-40f2-84e2-600e0cad9e72",
+        "enonce": "Scanner abdominal systématique",
+        "justification": "Le scanner abdominal ne fait pas partie des examens complémentaires en urgence cités dans la fiche."
+      },
+      {
+        "itemId": "f37c3199-3670-432d-8059-6c75b58aad6c",
+        "enonce": "Les hémocultures sont systématiques dans toute exacerbation de BPCO",
+        "justification": "Les hémocultures systématiques ne sont pas citées dans les examens complémentaires en urgence de la fiche."
+      },
+      {
+        "itemId": "32151286-3b55-4426-b880-c48b34e60da5",
+        "enonce": "La sérologie des germes atypiques est le premier examen microbiologique à réaliser",
+        "justification": "La sérologie des germes atypiques n'est pas citée dans les examens microbiologiques de la fiche."
+      }
+    ]
+  },
+  {
+    "id": "9353492c-faaa-424b-a890-c753f7930c74",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "69baee0d-4258-4be7-bd29-cfb1f7e45737",
+        "enonce": "Un bronchospasme reflexe induit par l'oxygene",
+        "justification": "Le bronchospasme reflexe induit par l'oxygene n'est pas cite parmi les mecanismes d'hypercapnie induite par l'O2 dans la fiche."
+      },
+      {
+        "itemId": "501d4297-34b1-4aa8-86c8-eb1a5a1deff2",
+        "enonce": "Une toxicite directe de l'oxygene sur la membrane alveolaire",
+        "justification": "La toxicite directe de l'oxygene sur la membrane alveolaire n'est pas citee dans la fiche parmi les mecanismes d'hypercapnie induite par l'O2 chez le BPCO."
+      }
+    ]
+  },
+  {
+    "id": "81730bf7-9afc-49dc-9543-abb368a3fe20",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "7a037724-2e56-40fc-8ae5-3b740cd50eb5",
+        "enonce": "La prise de bronchodilatateurs inhales",
+        "justification": "La prise de bronchodilatateurs n'est pas citee comme facteur de risque d'EP dans la fiche."
+      },
+      {
+        "itemId": "ec5a3238-415a-45d8-8e54-4c75b4765da6",
+        "enonce": "Le tabagisme actif",
+        "justification": "Le tabagisme n'est pas cite specifiquement comme facteur de risque d'EP dans la fiche concernant les exacerbations de BPCO."
+      },
+      {
+        "itemId": "14fb2a84-70a2-4fd3-bfbe-a553651f0d78",
+        "enonce": "Une crise d'asthme",
+        "justification": "La crise d'asthme n'est pas citee dans la fiche comme facteur declenchant ni diagnostic differentiel de l'exacerbation de BPCO."
+      }
+    ]
+  },
+  {
+    "id": "39bc37ab-8842-43c2-98fd-3f6ac10ef140",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "140fa58f-34e8-4304-a590-30f70266e78f",
+        "enonce": "Des convulsions generalisees",
+        "justification": "Les convulsions ne sont pas citees dans la fiche parmi les signes neurologiques de gravite de l'exacerbation de BPCO."
+      },
+      {
+        "itemId": "980c3610-7253-4802-9355-d83f1578382f",
+        "enonce": "Une mydriase bilaterale",
+        "justification": "La mydriase bilateale n'est pas citee parmi les signes neurologiques de gravite de l'exacerbation de BPCO dans la fiche."
+      }
+    ]
+  },
+  {
+    "id": "c9edfe30-c194-4d02-bdf2-b6b472d79d4b",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "e7d0e5d3-1acc-48fb-8d16-63de045b7a83",
+        "enonce": "Le pneumothorax iatrogene",
+        "justification": "Le pneumothorax iatrogene n'est pas mentionne dans la fiche parmi les risques a prevenir lors de l'oxygenotherapie."
+      }
+    ]
+  },
+  {
+    "id": "3939a681-e49d-4b8d-bc23-c6a96ddefd6a",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "df3f64e6-62a8-4e19-967b-80ecd7bf6961",
+        "enonce": "Insuffisance rénale aiguë",
+        "justification": "L'insuffisance rénale aiguë ne figure pas parmi les événements déclenchants cités dans la fiche."
+      }
+    ]
+  },
+  {
+    "id": "51004bea-4164-4312-9cdc-f2e2ff213db2",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "8335e819-ab0b-4766-8419-7b8b8647e0c3",
+        "enonce": "Antécédent d'asthme dans l'enfance uniquement",
+        "justification": "L'antécédent d'asthme dans l'enfance ne figure pas parmi les éléments d'anamnèse évocateurs de BPCO non connue dans la fiche."
+      }
+    ]
+  },
+  {
+    "id": "57d57ebf-5535-44f2-a646-96b59dc55279",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "48698806-5eff-4f24-b33c-3c71c4fe82a7",
+        "enonce": "Sibilants diffus",
+        "justification": "Les sibilants diffus sont un signe d'obstruction bronchique mais ne figurent pas parmi les signes respiratoires de gravité cités dans la fiche."
+      },
+      {
+        "itemId": "42f1cdd5-2b2d-45b0-b5b4-21384b316fef",
+        "enonce": "Convulsions tonico-cloniques généralisées",
+        "justification": "Les convulsions ne sont pas citées parmi les signes neurologiques de gravité dans la fiche."
+      },
+      {
+        "itemId": "9d989f95-d9bb-439d-9243-5b761bd9e1ab",
+        "enonce": "La bradycardie régulière est le signe cardiovasculaire de gravité le plus précoce",
+        "justification": "La bradycardie n'est pas citée parmi les signes cardiovasculaires de gravité dans la fiche."
+      }
+    ]
+  },
+  {
+    "id": "ccda5a02-4573-40b1-8c00-f7a50b55c107",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "8e85caf8-92b8-4e49-b3f8-529f5e345e30",
+        "enonce": "L'angor stable",
+        "justification": "L'angor stable n'est pas cite dans la fiche parmi les facteurs declenchants d'exacerbation de BPCO."
+      },
+      {
+        "itemId": "2eaca529-497e-4271-aacf-cc6f02aaad15",
+        "enonce": "L'hypertension arterielle essentielle",
+        "justification": "L'hypertension arterielle essentielle n'est pas citee parmi les facteurs declenchants d'exacerbation dans la fiche."
+      }
+    ]
+  },
+  {
+    "id": "afb6de53-8283-4e3e-b443-81fe632fcf39",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "15b0f9da-f9fa-495f-912c-63f326bbc442",
+        "enonce": "La douleur thoracique en coup de poignard",
+        "justification": "La douleur thoracique est un symptome du pneumothorax mais n'est pas citee parmi les signes de gravite de l'exacerbation dans la fiche."
+      },
+      {
+        "itemId": "80589eb0-a81f-4434-aad0-3fdb86d39132",
+        "enonce": "L'echographie pleurale en salle d'attente",
+        "justification": "L'echographie pleurale n'est pas citee dans la fiche comme examen complementaire en urgence de l'exacerbation de BPCO."
+      }
+    ]
+  },
+  {
+    "id": "ac100c6e-cefb-4681-9e61-c6c88e766a1e",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "0fdc1174-0f64-4835-b83f-7d4b9934f8f4",
+        "enonce": "Un filtre antibacterien",
+        "justification": "Le filtre antibacterien n'est pas mentionne dans la fiche comme dispositif a associer au BAVU."
+      },
+      {
+        "itemId": "149e36e1-cab9-40c2-9aa2-705ea7669a54",
+        "enonce": "La pression arterielle doit etre superieure a 90 mmHg de systolique",
+        "justification": "Ce prerequis n'est pas mentionne dans la fiche concernant l'administration efficace d'oxygene."
+      },
+      {
+        "itemId": "9ba1c024-9916-4973-a012-0782cfa42aaf",
+        "enonce": "Le patient doit etre en decubitus dorsal strict",
+        "justification": "La position du patient n'est pas mentionnee dans la fiche comme prerequis a l'administration d'oxygene."
+      }
+    ]
+  },
+  {
+    "id": "113e864f-8dbf-4203-816d-9e1983bcd498",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "f72bf23d-1532-405d-bd31-858dc20f3529",
+        "enonce": "Rouge pour l'air comprime",
+        "justification": "La couleur rouge n'est pas mentionnee dans la fiche. La prise d'air est de couleur noire."
+      }
+    ]
+  },
+  {
+    "id": "e37775a7-df6f-4c84-9411-44f7dcf86ca1",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "7d794e81-8ec9-4705-a8ec-b0a5e93c5b83",
+        "enonce": "Mettre en place des lunettes nasales avant un MHC",
+        "justification": "Les lunettes nasales ne sont pas adaptees en detresse respiratoire aigue, mais ce n'est pas liste parmi les 4 erreurs specifiques de la fiche."
+      }
+    ]
+  },
+  {
+    "id": "7261bf09-d4bf-42c5-a570-c0a077f1e6b0",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "2d551899-498c-44be-a95b-c00e8ef0e995",
+        "enonce": "Les lunettes nasales sont contre-indiquees en cas d'obstruction nasale",
+        "justification": "La fiche ne mentionne pas de contre-indication formelle en cas d'obstruction nasale, mais les lunettes sont inefficaces car l'O2 ne peut atteindre les voies aeriennes en cas de ventilation buccale exclusive."
+      }
+    ]
+  },
+  {
+    "id": "62aa8861-1e71-49a3-a437-418a0b61b2b8",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "eeaa5cd6-cf1f-4fce-aee9-23abd348d99a",
+        "enonce": "Paracetamol",
+        "justification": "Le paracetamol n'est pas mentionne parmi les medicaments pancreatotoxiques dans la fiche."
+      },
+      {
+        "itemId": "55e011b6-21e4-400c-b272-ad3f24fe4904",
+        "enonce": "Inhibiteurs de la pompe a protons",
+        "justification": "Les IPP ne sont pas mentionnes parmi les medicaments pancreatotoxiques dans la fiche."
+      },
+      {
+        "itemId": "e6989600-026c-499b-abb9-a6c06a81c051",
+        "enonce": "Infection a Helicobacter pylori",
+        "justification": "L'infection a Helicobacter pylori n'est pas mentionnee comme cause de PA dans la fiche."
+      }
+    ]
+  },
+  {
+    "id": "b3997afc-d9bb-4dda-a575-2bf0abff1714",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "c82e7160-e95d-4ca6-abe7-84029658f83e",
+        "enonce": "Colique nephretique gauche",
+        "justification": "La colique nephretique n'est pas mentionnee dans les diagnostics differentiels de la PA dans la fiche."
+      },
+      {
+        "itemId": "6c85b6a6-7df3-49cf-bd62-99a67eb99219",
+        "enonce": "Embolie pulmonaire",
+        "justification": "L'embolie pulmonaire n'est pas mentionnee dans la fiche parmi les diagnostics differentiels de la pancreatite aigue."
+      }
+    ]
+  },
+  {
+    "id": "9d87c841-6a56-4b5c-b27e-98ab70f88a88",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "8fad7bfa-f2c1-41cf-aa16-c6a5305ad4a4",
+        "enonce": "Defaillance neurologique",
+        "justification": "La defaillance neurologique n'est pas mentionnee dans la fiche parmi les defaillances d'organe de la PA severe."
+      }
+    ]
+  },
+  {
+    "id": "c808f56b-a8b7-45c6-9621-0212559b3bfc",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "d4e256dd-bfe6-4c3b-aa9b-e96864c41d23",
+        "enonce": "Pasteurella multocida",
+        "justification": "Pasteurella multocida est un germe classique des morsures de chien (cellulite, arthrite) mais ne fait pas partie des étiologies du purpura fulminans mentionnées dans la fiche."
+      }
+    ]
+  },
+  {
+    "id": "c8b16ae2-cadb-4ef4-9a06-3cd78768eea0",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "cbb7d836-06e1-48ff-bc18-e89b455365f7",
+        "enonce": "Le remplissage doit etre realise avec des hydroxyethylamidons en premiere intention",
+        "justification": "Le remplissage est realise avec du NaCl 0,9% selon la fiche. Les hydroxyethylamidons ne sont pas mentionnes."
+      }
+    ]
+  },
+  {
+    "id": "bce7ab7d-2d2a-4572-a04b-866519dc21aa",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "97a9f056-6e80-451e-bb11-a2719faabc7a",
+        "enonce": "Le diabète équilibré sans complication est le principal terrain à risque",
+        "justification": "Faux. Les terrains fragiles mentionnés dans la fiche sont la grossesse, l'immunodépression et le geste urinaire récent. Le diabète n'est pas cité comme terrain principal."
+      }
+    ]
+  },
+  {
+    "id": "e9bdf3b2-a8f0-46d7-ae10-f9613e465247",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "31ed42ca-2cfe-4224-866c-4c3bcfbddb6f",
+        "enonce": "Le remplissage doit etre realise avec des colloides en premiere intention",
+        "justification": "Le remplissage se fait avec du NaCl 0,9% (cristalloides) selon la fiche. Les colloides ne sont pas mentionnes en premiere intention."
+      }
+    ]
+  },
+  {
+    "id": "128b92d3-8168-4bd3-aadc-7e98bb2e034f",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "e8771dab-b593-47bd-8cac-ca22fdf42b73",
+        "enonce": "Le système Lewis",
+        "justification": "Le système Lewis n'est pas mentionné parmi les systèmes de groupes sanguins de la fiche (seuls Kell, Duffy, Kidd sont cités)."
+      }
+    ]
+  },
+  {
+    "id": "5da257dd-be0d-41dc-bf29-96dc0a7bc7f7",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "77b12092-7fbe-43de-a2ed-763d060857a7",
+        "enonce": "Les troubles digestifs excluent formellement une infection urinaire",
+        "justification": "Les troubles digestifs n'excluent pas une infection urinaire. Ils constituent justement le piège diagnostique décrit dans la fiche, pouvant détourner d'une PNA."
+      }
+    ]
+  },
+  {
+    "id": "579c2420-1417-4da7-8c8c-53c30a2a74c0",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "b07b56c9-11b0-49ac-9998-447974369c1b",
+        "enonce": "L'hypothyroïdie est la cause locorégionale la plus fréquente.",
+        "justification": "L'hypothyroïdie n'est pas citée dans les causes de la source."
+      }
+    ]
+  },
+  {
+    "id": "1e2d6213-bf87-4ce4-b021-65c205430e32",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "d87540cc-be09-4586-8c35-84c97ceba16a",
+        "enonce": "Une biopsie cutanée est systématique.",
+        "justification": "La biopsie cutanée systématique n'est pas mentionnée dans la source."
+      }
+    ]
+  },
+  {
+    "id": "71235e77-5127-4c39-836b-34ff279a782a",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "9a296a2f-b696-4756-89b1-e3db506c7b7d",
+        "enonce": "La thrombopénie gestationnelle nécessite un traitement immunosuppresseur systématique.",
+        "justification": "Elle est d'évolution spontanément favorable, sans traitement mentionné dans la source."
+      }
+    ]
+  },
+  {
+    "id": "87723911-f212-4291-93fe-b8079c2716da",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "b3b8fac5-2bec-450b-90b7-36497d14801c",
+        "enonce": "Corticothérapie systémique en première intention.",
+        "justification": "La corticothérapie n'est pas un traitement des œdèmes de rétention hydrosodée dans la source."
+      }
+    ]
+  },
+  {
+    "id": "f9148104-2730-4adb-849d-1b82c54b7771",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "49eb11d6-2794-4200-bbe7-36c166e1c8b5",
+        "enonce": "Purpura annulaire migrateur.",
+        "justification": "Cet aspect n'est pas décrit dans la source."
+      },
+      {
+        "itemId": "0313183f-615b-438c-a698-0263d71d66d4",
+        "enonce": "Purpura réticulé livédoïde spécifique.",
+        "justification": "Cet aspect n'est pas mentionné dans la source."
+      }
+    ]
+  },
+  {
+    "id": "f0baebaa-84b9-4f3c-a54a-41961eb6ede4",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "65dfe9ac-bbb5-4a8b-bc81-38ecd7daf7e3",
+        "enonce": "Une chimiothérapie est indiquée d'emblée.",
+        "justification": "Rien dans la source ne justifie une chimiothérapie ; l'évolution est bénigne."
+      }
+    ]
+  },
+  {
+    "id": "ba34f75b-5d73-41cb-a024-2642ad2386fe",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "74347164-1c79-47a2-b15b-a2bc75a7aab6",
+        "enonce": "Scintigraphie osseuse systématique d'emblée",
+        "justification": "La scintigraphie osseuse systématique n'est pas citée dans la source."
+      }
+    ]
+  },
+  {
+    "id": "42da1d24-e3d2-4a45-b670-58190738fe25",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "672cfafb-ca14-45b2-bc30-f4dd03cad638",
+        "enonce": "Procalcitonine systématique",
+        "justification": "La procalcitonine ne figure pas dans la liste de première ligne de la source."
+      }
+    ]
+  },
+  {
+    "id": "0bd8a7d5-3dee-45b3-89fc-ab414d2109ad",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "d619ccd3-958e-40e4-801b-68d5e20495c4",
+        "enonce": "Le paracétamol est un facteur aggravant reconnu de l'HTA.",
+        "justification": "Le paracétamol n'est pas cité parmi les médicaments aggravant l'HTA dans la source."
+      }
+    ]
+  },
+  {
+    "id": "4ef61274-01fc-4d68-a9b3-1e65df68b8e2",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "856f05af-a0e1-454f-aac6-375f3059f3f7",
+        "enonce": "La recherche du profit personnel est une valeur professionnelle fondamentale.",
+        "justification": "La source ne cite jamais le profit comme valeur fondamentale."
+      }
+    ]
+  },
+  {
+    "id": "cec25561-6141-4bd3-802f-83b2cafa2ddf",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "aace6188-0133-40d0-9302-57a2974b5573",
+        "enonce": "Une transfusion récente est le principal facteur recherché.",
+        "justification": "La source ne cite pas la transfusion pour la toxoplasmose."
+      }
+    ]
+  },
+  {
+    "id": "42e99d73-3cd8-4257-a28c-53ed26f904d0",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "de1fb56a-43ab-46c0-8125-b1c7feaf3c7f",
+        "enonce": "Une simple carence en fer",
+        "justification": "La carence en fer n'est pas citée parmi les différentiels non psychiatriques ou toxiques du trouble délirant persistant dans la source."
+      },
+      {
+        "itemId": "2acaa1be-c324-4076-ba9d-329733976ebf",
+        "enonce": "Une ponction lombaire systématique",
+        "justification": "La ponction lombaire n'est pas mentionnée dans le bilan d'élimination du trouble délirant persistant dans la source."
+      }
+    ]
+  },
+  {
+    "id": "d513ca6a-1684-4876-992c-dfc5fdd1173b",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "f78dadf2-1dc6-4e05-bfac-c921fd503ef7",
+        "enonce": "Trouble de stress post-traumatique isolé",
+        "justification": "Le trouble de stress post-traumatique n'est pas cité parmi les différentiels psychiatriques du trouble délirant persistant dans la source."
+      }
+    ]
+  },
+  {
+    "id": "fd90ade4-afa5-4282-ad9b-df7d83d25727",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "cb51a082-5430-4f81-806b-050ce3cd32c5",
+        "enonce": "Un niveau socio-économique élevé",
+        "justification": "Un niveau socio-économique élevé n'est pas cité parmi les facteurs de risque du trouble délirant persistant dans la source."
+      }
+    ]
+  },
+  {
+    "id": "c225e9ae-7c7c-40f5-a029-57980cea4924",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "76663169-6e8c-4cdc-8871-4961fac45c97",
+        "enonce": "Trouble du spectre autistique",
+        "justification": "Le trouble du spectre autistique n'est pas mentionné parmi les différentiels du trouble délirant persistant dans la source."
+      }
+    ]
+  },
+  {
+    "id": "94a0bb9d-e85c-4541-a759-95e958dec461",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "fe159738-9155-4a87-9c51-a944bcfd4892",
+        "enonce": "L'insuffisance rénale chronique",
+        "justification": "L'insuffisance rénale chronique n'est pas citée dans la source parmi les indications non psychiatriques de la psychothérapie."
+      },
+      {
+        "itemId": "e666bb44-393f-431d-a00e-39b299dc2e78",
+        "enonce": "L'hypertension artérielle essentielle",
+        "justification": "L'hypertension artérielle essentielle n'est pas mentionnée dans la source comme indication non psychiatrique de la psychothérapie."
+      }
+    ]
+  },
+  {
+    "id": "4e95445b-d020-48c8-aaae-3ccdffccf392",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "4538f631-dd64-413e-af90-e50a268d9363",
+        "enonce": "La maladie d'Alzheimer",
+        "justification": "La maladie d'Alzheimer n'est pas citée parmi les troubles débutant à l'adolescence dans la source."
+      }
+    ]
+  },
+  {
+    "id": "4422bbde-d9dd-4326-88e0-bbdf517b44a9",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "350c53f7-6bac-40e6-88cf-110245f6d449",
+        "enonce": "Une hypocalcemie profonde specifique du syndrome",
+        "justification": "L'hypocalcemie profonde n'est pas un element decrit du bilan biologique du SMN dans la source."
+      }
+    ]
+  },
+  {
+    "id": "ebe50dab-205a-431c-bceb-ca09b166f5a6",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "f44b8a83-24ec-413d-bc1a-6087894ca1af",
+        "enonce": "Hypertension arterielle equilibree",
+        "justification": "L'HTA equilibree ne figure pas parmi les contre-indications des hypnotiques dans la source."
+      }
+    ]
+  },
+  {
+    "id": "f4e4823e-b113-4042-900a-b6cfdfd2d5c8",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "30784132-efbc-475e-86f1-132578b545b1",
+        "enonce": "Avant 2005, la loi excluait explicitement les fonctions psychiques du champ du handicap",
+        "justification": "La source n'affirme pas une exclusion explicite antérieure ; elle indique seulement que la loi de 2005 a apporté cette précision reconnaissant le handicap psychique."
+      }
+    ]
+  },
+  {
+    "id": "05aa4fde-5fda-42c5-b9ce-25a76110905a",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "a127017f-12f5-48ae-a10f-96ee32fe3884",
+        "enonce": "Elle exclut toute plainte douloureuse physique concomitante",
+        "justification": "Rien dans la source n'indique une exclusion : les plaintes douloureuses physiques sont fréquentes dans l'EDC (75 % en ambulatoire)."
+      }
+    ]
+  },
+  {
+    "id": "abf04701-f34a-43f9-a122-d5c94d89d608",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "e921b7c1-4ae5-4a1a-b2e6-9f3d2fd7a1f4",
+        "enonce": "Une échographie cardiaque transthoracique systématique",
+        "justification": "Faux : l'échographie cardiaque transthoracique n'est pas citée par la source parmi les examens à discuter."
+      }
+    ]
+  },
+  {
+    "id": "3ad25ab7-3f99-4033-890c-59e59227b010",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "4c977176-7be6-45bf-9312-7b8863043e8a",
+        "enonce": "L'âge maternel inférieur à 20 ans est un facteur de risque reconnu dans le cours",
+        "justification": "L'âge maternel jeune n'est pas cité parmi les facteurs de risque d'infection urinaire dans la source."
+      }
+    ]
+  },
+  {
+    "id": "2cbd587d-7040-4e22-be61-bc928b884f0e",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "87489e97-e47c-419b-a844-d0848d70a415",
+        "enonce": "La vaccination antigrippale saisonnière",
+        "justification": "La vaccination antigrippale n'est pas citée par la source parmi les techniques relevant de la bioéthique."
+      }
+    ]
+  },
+  {
+    "id": "beb651ef-dfd2-4545-97ea-044a99093213",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "9441b122-5bdd-48ed-90b2-23e86be1aed8",
+        "enonce": "Le paracétamol à dose thérapeutique",
+        "justification": "Le paracétamol n'est pas cité par la source parmi les substances chimiques à risque pour l'enfant à naître."
+      }
+    ]
+  },
+  {
+    "id": "748ca0d1-1dbc-4915-9316-cbc61a80316d",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "094cd2d7-17ca-40a5-87ce-9694fa411a90",
+        "enonce": "Toute activité en position assise à un bureau",
+        "justification": "Le travail de bureau en position assise ne figure pas parmi les travaux strictement interdits énumérés par la source."
+      }
+    ]
+  },
+  {
+    "id": "8fe3668a-e55f-48c5-a44f-8f7e6f014c4d",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "691d512d-aab9-4fbb-b594-f34789d33980",
+        "enonce": "Un âge maternel jeune au moment du DG.",
+        "justification": "L'âge maternel jeune ne figure pas parmi les facteurs associés à un risque plus élevé de DT2 ultérieur cités par la source."
+      }
+    ]
+  },
+  {
+    "id": "9cd88388-48e5-497c-8522-8736cb899a54",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "d2217f1a-2b14-49a5-bde1-c7111998e1fa",
+        "enonce": "L'hypertension artérielle isolée",
+        "justification": "L'hypertension artérielle isolée n'est pas citée dans la source parmi les pathologies favorisant les difficultés sexuelles."
+      }
+    ]
+  },
+  {
+    "id": "55e3b6b0-466b-42a6-a8f5-e0ff6adf4487",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "2d013da9-e735-4861-aa80-ef1778ee9393",
+        "enonce": "L'hypothyroïdie traitée",
+        "justification": "L'hypothyroïdie n'est pas citée dans la source comme pathologie maternelle favorisant la PE."
+      }
+    ]
+  },
+  {
+    "id": "aade8df4-61f0-44c7-badf-94d84cff3da7",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "6eb641eb-031c-4c6d-a14a-737782a252eb",
+        "enonce": "La maladie de Parkinson",
+        "justification": "La maladie de Parkinson n'est pas citée parmi les étiologies du syndrome du canal carpien dans la source."
+      },
+      {
+        "itemId": "ced8fd24-1025-435c-81bb-c627f0fd0fce",
+        "enonce": "L'hyperparathyroïdie primitive",
+        "justification": "L'hyperparathyroïdie n'est pas citée parmi les causes endocriniennes du syndrome du canal carpien dans la source."
+      }
+    ]
+  },
+  {
+    "id": "18b8ecd6-b5f6-4090-928f-dacdf807517e",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "0c0b48eb-dd64-43a3-b599-42fa1c02e12d",
+        "enonce": "Une radiographie du poignet de face et de profil",
+        "justification": "La radiographie n'est pas citée comme examen indispensable avant chirurgie du canal carpien idiopathique dans la source."
+      },
+      {
+        "itemId": "72fe1881-349f-4af8-9857-db4bba693428",
+        "enonce": "Un bilan biologique à la recherche d'une cause endocrinienne (TSH, glycémie)",
+        "justification": "Un bilan étiologique peut être utile mais n'est pas cité comme examen indispensable systématique dans la source pour ce cas idiopathique."
+      }
+    ]
+  },
+  {
+    "id": "a0012010-0d01-4000-8000-00000000b010",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "3bc05f73-44c5-464b-a49f-a346630c1bd6",
+        "enonce": "Le laser DIAGNOdent pour la détection de caries",
+        "justification": "Le DIAGNOdent n'est pas cite dans le chapitre parmi les outils complémentaires."
+      },
+      {
+        "itemId": "3c19e336-b29c-4e08-9c36-b5ec33c5a8af",
+        "enonce": "Un curetage sous anesthésie générale est systématiquement requis",
+        "justification": "L'anesthésie générale n'est pas mentionnée dans le chapitre pour la gestion des lésions modérées actives."
+      },
+      {
+        "itemId": "ef666b8d-669d-47a6-9a3f-bef6e3fa918c",
+        "enonce": "Hydroxyapatite",
+        "justification": "L'hydroxyapatite n'est pas citée dans le chapitre comme poudre d'air-abrasion."
+      }
+    ]
+  },
+  {
+    "id": "b3a8047b-baaa-4a40-8275-55b1c6ee90b5",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "271ceeeb-8f68-481c-bed5-f2f3fccb0068",
+        "enonce": "Absence totale de douleur en charge",
+        "justification": "Ce critère n'est pas spécifiquement mentionné dans la source comme prérequis à la reprise de la course."
+      }
+    ]
+  },
+  {
+    "id": "2a2ad1a2-bb64-4d4e-8a47-dce938597e64",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "6cc3a18c-cfaa-4407-84a8-eda729270a7e",
+        "enonce": "Hyperlaxité ligamentaire constitutionnelle",
+        "justification": "L'hyperlaxité constitutionnelle n'est pas mentionnée comme facteur favorisant spécifique des laxités médiales isolées dans le corpus."
+      }
+    ]
+  },
+  {
+    "id": "a0014094-0d01-4000-8000-00000000b010",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "be61ce30-b130-4bb0-aaf4-05bc230c3681",
+        "enonce": "une hypoesthésie labio-mentonnière",
+        "justification": "Cette constatation ne figure pas dans la liste du niveau fonctionnel donnée par le chapitre."
+      },
+      {
+        "itemId": "1d22ae7e-da48-4f87-95cf-47136cdde62b",
+        "enonce": "des seules dents antagonistes",
+        "justification": "Les dents antagonistes ne figurent pas dans le champ des réserves défini par le chapitre."
+      }
+    ]
+  },
+  {
+    "id": "a0014112-0d01-4000-8000-00000000b010",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "fec56eb4-62d6-4938-97cd-21b504f55203",
+        "enonce": "Le taux d'hémoglobine glyquée est le marqueur retenu",
+        "justification": "Faux. L'hémoglobine glyquée n'est pas citée dans le chapitre."
+      },
+      {
+        "itemId": "6d66b872-5a62-40e3-a0eb-8e9ea9a44b14",
+        "enonce": "Un SAHOS résiduel après adéno-amygdalectomie impose une reprise chirurgicale",
+        "justification": "Faux. Le chapitre ne prévoit pas de reprise : c'est l'association de l'expansion maxillaire rapide et de l'amygdalectomie qui donne les meilleurs résultats."
+      }
+    ]
+  },
+  {
+    "id": "a0012021-0d01-4000-8000-00000000b010",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "826c8abd-713a-49fd-858c-229da18903e7",
+        "enonce": "Le diabète de type 2.",
+        "justification": "Le diabète de type 2 n'est pas cite parmi les maladies systémiques associées à des résorptions dans le chapitre."
+      }
+    ]
+  },
+  {
+    "id": "a0011023-0d01-4000-8000-00000000b010",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "1939c3ea-1283-47ae-8e01-c0bffd568ddb",
+        "enonce": "Les neuroleptiques constituent la troisième famille utilisée",
+        "justification": "Les neuroleptiques ne sont pas mentionnés dans le chapitre."
+      },
+      {
+        "itemId": "0dc474fd-2cef-4587-8ce4-291d4aa0982b",
+        "enonce": "L'alprazolam existe en comprime de 1 mg",
+        "justification": "Le chapitre ne mentionne que les comprimes de 0,25 mg et 0,5 mg pour l'alprazolam."
+      },
+      {
+        "itemId": "530a6892-1ab4-43b7-aced-d170b5188ec2",
+        "enonce": "Le zopiclone a également une action antiallergique",
+        "justification": "Le zopiclone n'a pas d'action antiallergique mentionnée dans le chapitre."
+      }
+    ]
+  },
+  {
+    "id": "4495b3eb-5f6d-5a3b-ae28-312bce67e1ee",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "bf801073-34f5-5fd3-9ca3-fb4ef47a1359",
+        "enonce": "Les dysfonctions cognitives ne surviennent qu'a fortes doses",
+        "justification": "Le chapitre ne précise pas que les dysfonctions cognitives ne surviennent qu'a fortes doses. Il mentionne le risque de manière générale chez le sujet âge."
+      },
+      {
+        "itemId": "bdc81d50-15d4-5f0a-bad8-6d5541694ca4",
+        "enonce": "L'asthme est une contre-indication de l'hydroxyzine",
+        "justification": "L'asthme n'est pas mentionne parmi les contre-indications de l'hydroxyzine dans le chapitre."
+      },
+      {
+        "itemId": "4348647b-73cb-597a-b969-2e64a22b1001",
+        "enonce": "L'alprazolam existe en comprime de 1 mg",
+        "justification": "Le chapitre ne mentionne que les comprimes de 0,25 mg et 0,5 mg pour l'alprazolam."
+      }
+    ]
+  },
+  {
+    "id": "d47955aa-0d37-50ae-a39b-bf32ec3dea14",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "d0bcd2d6-28fb-5585-9e2e-44fad4ce21f1",
+        "enonce": "Le paracétamol peut être une alternative antalgique",
+        "justification": "Le chapitre ne mentionne pas le paracétamol comme alternative chez la femme enceinte. Cette information n'est pas dans la source."
+      }
+    ]
+  },
+  {
+    "id": "e3b66dde-f6b1-570e-b45d-681e223eba87",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "9931467f-3aa0-51ed-9c83-9d087c64dca8",
+        "enonce": "Le cordon ombilical est la source la plus utilisée",
+        "justification": "Le texte ne dit pas que c'est la source la plus utilisée. Il mentionne trois sources possibles sans en hiérarchiser la fréquence."
+      }
+    ]
+  },
+  {
+    "id": "b8b508f7-301d-5794-b25d-3386b1577289",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "ecd48adf-9f18-5fdf-a2d5-a64d9062a35f",
+        "enonce": "Elle est plus fréquente que la non-ostéointégration chirurgicale",
+        "justification": "Le chapitre ne précise pas de hiérarchie de fréquence entre les deux."
+      }
+    ]
+  },
+  {
+    "id": "a0011021-0d01-4000-8000-00000000b010",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "e92cfbe0-c808-4211-9033-9f907e01bde9",
+        "enonce": "Le paracétamol peut être une alternative antalgique",
+        "justification": "Le chapitre ne mentionne pas le paracétamol comme alternative chez la femme enceinte. Cette information n'est pas dans la source."
+      }
+    ]
+  },
+  {
+    "id": "a0011024-0d01-4000-8000-00000000b010",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "080b8089-b9bd-43a8-b744-4ee6890bf60c",
+        "enonce": "Le cordon ombilical est la source la plus utilisée",
+        "justification": "Le texte ne dit pas que c'est la source la plus utilisée. Il mentionne trois sources possibles sans en hiérarchiser la fréquence."
+      }
+    ]
+  },
+  {
+    "id": "a0011041-0d01-4000-8000-00000000b010",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "adca9f97-f109-4420-aa84-d0b1c6da3e85",
+        "enonce": "Elle est plus fréquente que la non-ostéointégration chirurgicale",
+        "justification": "Le chapitre ne précise pas de hiérarchie de fréquence entre les deux."
+      }
+    ]
+  },
+  {
+    "id": "a0011057-0d01-4000-8000-00000000b010",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "7803b298-5237-4c48-91f6-ffd854848771",
+        "enonce": "La cryotherapie est le traitement de référence",
+        "justification": "La cryotherapie n'est pas mentionnée comme traitement des leucoplasies dans le chapitre."
+      }
+    ]
+  },
+  {
+    "id": "a0012001-0d01-4000-8000-00000000b010",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "708787d0-c495-407c-88bb-6b83d1277db4",
+        "enonce": "Le niveau socio-économique du patient",
+        "justification": "Le niveau socio-économique n'est pas cite parmi les éléments de faisabilité dans le chapitre."
+      },
+      {
+        "itemId": "1573ccf1-557b-46fd-b370-a139a206a0cc",
+        "enonce": "Financier",
+        "justification": "La complexité financière n'est pas citée parmi les ordres de complexité dans le chapitre."
+      },
+      {
+        "itemId": "5370a025-c124-48c7-a5c9-06a207cb5ac6",
+        "enonce": "Juridique",
+        "justification": "La complexité juridique n'est pas citée parmi les ordres de complexité dans le chapitre."
+      }
+    ]
+  },
+  {
+    "id": "a0012004-0d01-4000-8000-00000000b010",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "c5041997-9364-40cb-8df6-a4297ac1eb76",
+        "enonce": "Les soins conservateurs sont possibles uniquement après arrêt des anticoagulants",
+        "justification": "Le chapitre ne mentionne pas la nécessité d'arrêter les anticoagulants pour les soins conservateurs."
+      },
+      {
+        "itemId": "5de2f5da-40f4-425c-8f24-fa1f0595d11a",
+        "enonce": "Ostéonécrose aseptique",
+        "justification": "L'ostéonécrose aseptique n'est pas mentionnée dans le chapitre."
+      },
+      {
+        "itemId": "6a4f736e-f655-4143-87e4-9ca6f125d9fc",
+        "enonce": "Âge du patient",
+        "justification": "L'âge du patient n'est pas cité parmi les facteurs influençant le risque d'ostéonécrose dans le chapitre."
+      }
+    ]
+  },
+  {
+    "id": "a0012003-0d01-4000-8000-00000000b010",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "f4e9d6ba-9b71-4fac-9e8b-d67488dee799",
+        "enonce": "Un palais ogival",
+        "justification": "Le palais ogival n'est pas cite parmi les facteurs de risque de traumatismes dans le chapitre."
+      }
+    ]
+  },
+  {
+    "id": "de932ac6-8968-5cf6-8acd-603d2f236105",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "6680ec3e-dd87-599d-909e-f13bb4e01046",
+        "enonce": "La cryotherapie est le traitement de référence",
+        "justification": "La cryotherapie n'est pas mentionnée comme traitement des leucoplasies dans le chapitre."
+      }
+    ]
+  },
+  {
+    "id": "bee3652b-a2e3-5ce5-a840-41705e6c3b1d",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "2b65cc15-d1f1-5c12-8cc1-13b5f8d21dd9",
+        "enonce": "Consommation de tabac",
+        "justification": "La consommation de tabac n'est pas citée parmi les éléments d'évaluation du risque érosif dans le chapitre."
+      },
+      {
+        "itemId": "f96f7892-72fa-5722-8a00-806ea6a7a045",
+        "enonce": "Juridique",
+        "justification": "La complexité juridique n'est pas citée parmi les ordres de complexité dans le chapitre."
+      },
+      {
+        "itemId": "a0de72d5-db3c-587a-9e3a-fff53f63a77e",
+        "enonce": "Présence d'un pacemaker",
+        "justification": "Le pacemaker n'est pas mentionne comme raison de complexité en endodontie dans le chapitre."
+      }
+    ]
+  },
+  {
+    "id": "35c6b0b8-3c61-54b7-a44f-2d265ebe0f86",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "114678dd-5482-5b58-a00f-84dc5f752ba0",
+        "enonce": "85 %",
+        "justification": "85 % n'est pas mentionné dans le chapitre."
+      },
+      {
+        "itemId": "181de774-702a-5109-9d93-6a9ee97e0b23",
+        "enonce": "Âge du patient",
+        "justification": "L'âge du patient n'est pas cité parmi les facteurs influençant le risque d'ostéonécrose dans le chapitre."
+      },
+      {
+        "itemId": "8902428c-e43b-5f6e-8906-ae335fa55c2a",
+        "enonce": "Prolapsus de la valve mitrale",
+        "justification": "Le prolapsus de la valve mitrale n'est pas cité parmi les cardiopathies à haut risque d'EI dans le chapitre."
+      }
+    ]
+  },
+  {
+    "id": "23892d49-048c-5783-969d-1885a3fa0bb6",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "cdee0727-709c-5a5f-8772-d750ec67e60d",
+        "enonce": "Le laser DIAGNOdent pour la détection de caries",
+        "justification": "Le DIAGNOdent n'est pas cite dans le chapitre parmi les outils complémentaires."
+      },
+      {
+        "itemId": "a92f8066-40c8-579f-9ccb-b53edd6e42b2",
+        "enonce": "Clinpro XT Varnish (3M)",
+        "justification": "Le Clinpro XT Varnish n'est pas cite dans le chapitre."
+      },
+      {
+        "itemId": "7ae9cb0c-9269-5433-8048-70534d1efb76",
+        "enonce": "Glycine",
+        "justification": "La glycine n'est pas citée dans le chapitre comme poudre d'air-abrasion."
+      }
+    ]
+  },
+  {
+    "id": "24c2dece-0582-521f-b061-6cbdde9983f1",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "b088e9bb-188f-532a-b6bd-351bf29aee5a",
+        "enonce": "Le diabète de type 2.",
+        "justification": "Le diabète de type 2 n'est pas cite parmi les maladies systémiques associées à des résorptions dans le chapitre."
+      }
+    ]
+  },
+  {
+    "id": "cf808477-8828-5b1b-bd8c-1f3ef7c6bee5",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "653c4ab4-6118-5473-98f5-4d2c06161f50",
+        "enonce": "Le taux d'hémoglobine glyquée est le marqueur retenu",
+        "justification": "Faux. L'hémoglobine glyquée n'est pas citée dans le chapitre."
+      },
+      {
+        "itemId": "ef54e90b-4dfe-5a9c-81f5-b1f3633cf0a9",
+        "enonce": "Un SAHOS résiduel après adéno-amygdalectomie impose une reprise chirurgicale",
+        "justification": "Faux. Le chapitre ne prévoit pas de reprise : c'est l'association de l'expansion maxillaire rapide et de l'amygdalectomie qui donne les meilleurs résultats."
+      }
+    ]
+  },
+  {
+    "id": "a45035c9-995f-5717-bece-a7c0284d0f31",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "644facee-0c47-52c9-98db-64c4847fb835",
+        "enonce": "une hypoesthésie labio-mentonnière",
+        "justification": "Cette constatation ne figure pas dans la liste du niveau fonctionnel donnée par le chapitre."
+      },
+      {
+        "itemId": "a1502857-d5a5-5a04-8b4b-2b5126847cac",
+        "enonce": "des seules dents antagonistes",
+        "justification": "Les dents antagonistes ne figurent pas dans le champ des réserves défini par le chapitre."
+      }
+    ]
+  },
+  {
+    "id": "a15acffc-a43e-51d4-9f88-ba299cc236b9",
+    "reason": "Corrigé fondé sur une absence de mention dans le document, sans justification suffisante du verdict médical.",
+    "evidence": [
+      {
+        "itemId": "83a7e892-e373-5586-89ef-68bd9c87b70e",
+        "enonce": "Un palais ogival",
+        "justification": "Le palais ogival n'est pas cite parmi les facteurs de risque de traumatismes dans le chapitre."
+      }
+    ]
+  },
+  {
+    "id": "ce2a0c9f-deb0-46c6-9687-7bbfdc273e37",
+    "reason": "Sujet médical disparu de la consigne ; propositions pronominales sans référent.",
+    "evidence": [
+      {
+        "questionId": "3370c484-4b3a-4b14-b738-02a1a865965e",
+        "enonce": "Lors de la planification opératoire, quels éléments permettent de caractériser un problème de quel énoncé est correct ?",
+        "correction": null
+      }
+    ]
+  },
+  {
+    "id": "d6106142-35c3-44bf-8057-cc594cae7981",
+    "reason": "Contradiction explicite entre consigne, grille de réponses et explication ; corrigé non certifiable en l’état.",
+    "evidence": [
+      {
+        "questionId": "98789981-46ca-4eb6-8354-a27d2246b799",
+        "enonce": "Vous entendez un souffle à l'auscultation cardiaque lors de votre évaluation clinique systématique.\n\nParmi les propositions suivantes concernant les souffles cardiaques, quelles sont les 2 orientant vers un souffle d'insuffisance aortique ?",
+        "correction": "Réponse de la source : B – D – E (la question demande 2 items mais 3 sont indiqués corrects). Le souffle d'insuffisance aortique est diastolique, de durée variable ; il débute avec le 2e bruit, va decrescendo durant la diastole et se termine avant le 1er bruit ; il prédomine au foyer aortique et irradie le long du bord gauche du sternum ; il est mieux perçu penché en avant, assis ou debout. Holodiastolique si IA importante, proto-mésodiastolique si IA moindre."
+      }
+    ]
+  },
+  {
+    "id": "cb5471bf-4d74-4ebc-8f16-52f3027460e6",
+    "reason": "Sujet médical disparu de la consigne ; propositions pronominales sans référent.",
+    "evidence": [
+      {
+        "questionId": "e3f72979-d367-436a-82c0-f1cc6c83a034",
+        "enonce": "Lors de la planification opératoire, quelles données orientent la stratégie devant un problème de quelles propositions sont compatibles avec le corpus ?",
+        "correction": null
+      }
+    ]
+  },
+  {
+    "id": "657f7538-1fe2-4590-8b67-fdb30ecaddf1",
+    "reason": "Sujet médical disparu de la consigne ; propositions pronominales sans référent.",
+    "evidence": [
+      {
+        "questionId": "ed60fafe-d76d-4f41-9586-c8033f20d3fe",
+        "enonce": "Lors de la planification opératoire, quels éléments doivent être contrôlés face au problème de quel énoncé est correct ?",
+        "correction": null
+      }
+    ]
+  },
+  {
+    "id": "23cfcd54-c7df-4b54-827b-506eb712b780",
+    "reason": "Verdict fondé uniquement sur ce que connaît une source non identifiée ; affirmation temporelle non vérifiable.",
+    "evidence": [
+      {
+        "itemId": "27ab6855-b647-42d0-a468-cbd6fe73355b",
+        "justification": "La source ne connaît aucun robot vraiment autonome applique au rachis."
+      }
+    ]
+  },
+  {
+    "id": "d653bb26-24c0-4548-a67a-ede7026dd47f",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "20f7c550-6179-4fe6-8913-7def0eb6a4dd",
+        "enonce": "Lors de la planification opératoire, quelles options de prise en charge sont adaptées à un problème de quel énoncé est correct ?"
+      }
+    ]
+  },
+  {
+    "id": "9af9c4c2-96b4-4dbe-93bd-467af3a86b7b",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "32c2403f-0fda-43f0-8e3b-b49ed7145005",
+        "enonce": "En consultation préopératoire pour prothèses unicompartimentales de genou, quels éléments doivent être retenus pour la préparation fémorale au compartiment externe:"
+      }
+    ]
+  },
+  {
+    "id": "16dc3f6b-5a55-4f2f-a300-f3d5b96ee955",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "3493f157-7bf6-49e0-8f26-f18d3708bc5f",
+        "enonce": "Au temps initial, quel élément guide la décision concernant Dans la situation clinique de ce dossier patient, Particularité rétrograde huméral ?"
+      }
+    ]
+  },
+  {
+    "id": "088299d1-26ee-44ca-9c5a-fd95de9c3f9a",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "4bcea3bf-b222-409d-aa7d-c9066773e215",
+        "enonce": "Concernant dans la décision thérapeutique analysée dans le chapitre, dans la décision clinique ou technique décrite dans le chapitre, Où réaliser l’épiphysiodèse, quelles propositions sont exactes ?"
+      }
+    ]
+  },
+  {
+    "id": "14f3d0f1-f8f0-4a36-bb69-3e37769272e3",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "5219008a-086f-45ea-b914-0245d6115bf1",
+        "enonce": "Au temps initial, quel élément guide la décision concernant Dans la situation clinique de ce dossier patient, Progression du guide ?"
+      }
+    ]
+  },
+  {
+    "id": "51d26f3f-3a5e-4f44-9b4c-11b80683dc30",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "5e70c162-4048-4131-b797-6ddfd47bb7ff",
+        "enonce": "En consultation préopératoire pour prothèses unicompartimentales de genou, quels éléments doivent être retenus pour la laxité de la convexité de la déformation:"
+      }
+    ]
+  },
+  {
+    "id": "19c7f937-31f2-492f-9220-e375166b6536",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "7f6efb53-81cd-44ef-8fcd-125fe7c21f7e",
+        "enonce": "En consultation préopératoire pour chirurgie itérative du LCA, quels éléments doivent être retenus pour l'arthrolyse postérieure à ciel ouvert en cas de raideur mixte après plastie du LCA comprend:"
+      }
+    ]
+  },
+  {
+    "id": "f91e736b-9340-434a-bc80-81fac0767ea9",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "7fcb989a-061c-408b-ad33-04583a917d4d",
+        "enonce": "Concernant dans la décision d’appareillage de cette scoliose, but du traitement orthopédique, quelles propositions sont exactes ?"
+      }
+    ]
+  },
+  {
+    "id": "86b6d3c4-868a-44a9-a623-46496b7881d3",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "92bffe7b-fa72-4f58-8e2f-4c73cb46433c",
+        "enonce": "Lors de la planification opératoire, quelles options de prise en charge sont adaptées à un problème de quelle attitude est conforme au corpus ?"
+      }
+    ]
+  },
+  {
+    "id": "794afea6-ed59-4f79-b795-ced51b55f0ef",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "94e69747-9085-48aa-a1f6-14073f323641",
+        "enonce": "Au temps initial, quel élément guide la décision concernant Dans la situation clinique de ce dossier patient, Effet des trous oblongs ?"
+      }
+    ]
+  },
+  {
+    "id": "90e264be-b934-47dd-b3e3-c691fbf2ea79",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "96ae1f4f-01ac-4540-917a-5905046a5bb5",
+        "enonce": "Au temps initial, quel élément guide la décision concernant Dans la situation clinique de ce dossier patient, But du vissage épiphysaire préalable ?"
+      }
+    ]
+  },
+  {
+    "id": "e989c1b2-575a-44dc-9f5e-6f996c764923",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "9d85cb3f-0bfb-436f-b166-dd47a4d85470",
+        "enonce": "Au temps initial, quel élément guide la décision concernant Dans la situation clinique de ce dossier patient, Enclouage non alésé ?"
+      }
+    ]
+  },
+  {
+    "id": "e7442d84-bf0e-4308-9a87-b050d7c13af9",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "a502ba54-9c46-40d1-ae16-a9a130d1f459",
+        "enonce": "Le compte rendu précise qu’il s’agit d’une bradycardie dose-vitesse-dépendante, sans signe d’hypersensibilité. Quels éléments doivent être retenus pour une future administration ?"
+      }
+    ]
+  },
+  {
+    "id": "730739f8-5875-474b-893e-2967a4096c16",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "a51ab57c-afe6-4c9d-83cc-d4978a4a337b",
+        "enonce": "Concernant dans l’algorithme lésionnel du genou, quelles propositions sont exactes ?"
+      }
+    ]
+  },
+  {
+    "id": "1edbd151-d8f4-4072-a9f3-54389a289fb9",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "ab173f03-b892-4a68-8eff-10931500a0c2",
+        "enonce": "Au temps initial, quel élément guide la décision concernant Dans la situation clinique de ce dossier patient, Complications non spécifiques ?"
+      }
+    ]
+  },
+  {
+    "id": "35dfa6e6-7a3a-419f-8f7a-e06cba3be4c2",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "ad209b95-1e7a-4735-8d0f-4debe18dc760",
+        "enonce": "Au bloc opératoire pour matériel d’ostéosynthèse : vis et plaques, chez un patient pris en charge pour matériel d’ostéosynthèse : vis et plaques, quelle attitude pédagogique est adaptée ?"
+      }
+    ]
+  },
+  {
+    "id": "70aebd9d-1c0c-482f-92fa-8a0c7755ff7c",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "b58619a3-1ad1-4269-812f-57ebf9bcd1a9",
+        "enonce": "En consultation préopératoire pour chirurgie itérative du LCA, quels éléments doivent être retenus pour l'effet saut à l'élastique (bungee effect) dans la chirurgie du LCA est dû à:"
+      }
+    ]
+  },
+  {
+    "id": "7d8c5cbf-d596-48f3-9438-5dbfa7592eba",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "c2bb83c7-b123-406c-a096-d7476c5e5768",
+        "enonce": "Au temps initial, quel élément guide la décision concernant Dans la situation clinique de ce dossier patient, Douleur de saillie de clou ?"
+      }
+    ]
+  },
+  {
+    "id": "bd2e9030-75b0-4e83-8304-d088fd4a5e8d",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "c7506d46-ac4a-49d5-bf3e-577594892f60",
+        "enonce": "Au temps initial, quel élément guide la décision concernant Dans la situation clinique de ce dossier patient, Clou tibial trop long ?"
+      }
+    ]
+  },
+  {
+    "id": "107fb6e6-af6f-4788-82b1-de0f1ce66b91",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "ce6cc947-0826-4cdb-9490-a5c176d27cf5",
+        "enonce": "Concernant après implantation de chondrocytes, quelles propositions sont exactes ?"
+      }
+    ]
+  },
+  {
+    "id": "c1d304cc-416a-4301-b4cf-ab55c7397b96",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "d073362a-74fd-4ed8-a1c0-9aa77b75b519",
+        "enonce": "Lors de la planification opératoire, quels choix permettent de répondre au problème de quel énoncé est correct ?"
+      }
+    ]
+  },
+  {
+    "id": "6223f466-add1-4fab-95ef-b89e5918902d",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "e14de2fc-214e-47f6-b904-b122d1a14e48",
+        "enonce": "Concernant dans un cal vicieux mixte, la stratégie doit, quelles propositions sont exactes ?"
+      }
+    ]
+  },
+  {
+    "id": "8828189b-20ee-4724-83b6-4d572dc919fe",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "e315eecd-144b-439b-a8e9-a2cdc9b83fa6",
+        "enonce": "Concernant dans la stratégie de reconstruction, le lavage-débridement, quelles propositions sont exactes ?"
+      }
+    ]
+  },
+  {
+    "id": "6f9d443d-e378-4db6-9533-14b472df6879",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "e94531e8-dc22-477c-ae3d-0a2d1db7efb3",
+        "enonce": "Concernant dans la décision de malformation du membre supérieur, la radialisation se distingue de la centralisation car elle, quelles propositions sont exactes ?"
+      }
+    ]
+  },
+  {
+    "id": "40caed4e-24c0-4d8a-b56b-25c28a0c70d5",
+    "reason": "Consignes encore dégradées ou emboîtées après confrontation aux sauvegardes ; dossier non exploitable sans réécriture de fond.",
+    "evidence": [
+      {
+        "questionId": "eb084eb3-2dd9-4605-ac5b-15070b4ffb51",
+        "enonce": "Lors de la prise en charge orthopédique, quelles options de prise en charge sont adaptées à un problème de quelle attitude pédagogique est adaptée ?"
+      }
+    ]
+  }
+]

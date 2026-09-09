@@ -1,17 +1,35 @@
-# Constats hors du périmètre des annales
+# Finalisation des autres banques de QCM — 9 septembre 2026
 
-Le contrôle exploratoire du 9 septembre 2026 a révélé des problèmes préexistants dans d'autres banques de QCM. Ils sont distincts des 26 questions d'annales de la conversation transmise. Une clarification du périmètre a été proposée pendant la finalisation.
+L'utilisateur a autorisé l'extension de la reprise aux autres banques de QCM. Le lot final a été appliqué en production : **26 437 opérations en place**, dont **277 retraits de séries complètes** et **26 160 lignes de contenu corrigées**. Les dossiers dont l'énoncé ou le corrigé ne pouvait pas être rétabli de façon fiable restent exclus de la publication.
 
-## Constats établis
+## Contenu repris
 
-- Après les sept justifications déjà corrigées, 38 justifications contiennent encore la formule « la source ne… ». Certaines n'expliquent pas pourquoi la proposition est fausse, par exemple « La source ne demande pas de concordance » à propos d'une allogreffe ostéochondrale.
-- Des banques d'orthopédie contiennent des justifications telles que « Vrai — bloc 71 de l'extrait » ou « Cette proposition relève d'un autre point de la fiche source ».
-- Des questions comportent des introductions répétées et des fragments d'extraction incohérents : par exemple une question de resurfaçage de hanche se termine par « mmctm aucun forgé ».
+- 8 360 lignes de questions : énoncés restaurés, introductions répétées et remarques de fabrication retirées, attributions génériques corrigées. Les restaurations s'appuient notamment sur les sauvegardes du même cours et de la même vignette, rapprochées par le contenu et les réponses des propositions.
+- 17 365 justifications : retrait des commentaires de fabrication ou reformulation des attributions génériques, en conservant l'explication autonome lorsqu'elle existe.
+- 435 lignes de séries : libellés répétés et mentions éditoriales dans les vignettes corrigés.
+- 277 séries retirées en entier : 88 dans le premier lot, puis 189 dans le lot complémentaire. Motifs : énoncés irrécupérables, questions ou choix manquants, QROC sans corrigé, mélange de questions, grille contradictoire ou verdict reposant uniquement sur l'absence de mention dans un document.
 
-Une recherche volontairement large a ramené 5 868 propositions. Ce nombre **n'est pas un décompte de questions défectueuses** : il inclut des occurrences médicales légitimes du mot « source » et des références pédagogiques utilisables. Les lignes et leur contexte sont conservés dans le fichier de travail ignoré `tmp/annales-finalisation/editorial-restant.json`.
+Les identifiants, propositions, bonnes réponses et images n'ont pas été remplacés. Les valeurs chiffrées des énoncés et les images intégrées ont été contrôlées lors de la préparation du plan. Les mots « source », « document » ou « extraction » restent présents lorsqu'ils ont un sens médical ou désignent un document utile.
 
-## Reprise à mener si ce périmètre est retenu
+Cette intervention corrige les défauts établis lors de l'audit éditorial et structurel ; elle ne constitue pas une certification médicale indépendante de chaque réponse de l'ensemble du catalogue.
 
-Relire par dossier, vérifier les corrigés et les références médicales, restaurer les énoncés à partir des documents d'origine et retirer uniquement les séries dont le défaut est établi. Une suppression globale de mots comme « source », « document » ou « extraction » serait inadaptée et pourrait altérer les explications médicales.
+## Publication et historique
 
-Le correctif d'accès des annales n'efface aucune de ces banques ni aucun historique étudiant. Ces constats n'ont pas été transformés en avertissements dans l'espace élève.
+Le retrait utilise `allowed_offers = []`, déjà protégé par la règle restrictive en base. Les contenus restent disponibles à l'administration. Aucun avertissement de fabrication ou de contenu en chantier n'est ajouté à l'espace élève.
+
+Les anciennes pages de résultats conservent les scores et l'historique, mais ne chargent plus les énoncés ni les liens de reprise d'une série devenue inaccessible. La page de révision vérifie les droits actuels avant de charger les questions, y compris lorsqu'une ancienne session appartient à l'élève.
+
+Contrôle des UUID avant/après : les **74 084 tentatives et 17 591 sessions** de l'instantané initial sont toutes conservées. Les **71 tentatives et 23 sessions** relevées avant le premier retrait sont également présentes. Les nouvelles tentatives survenues pendant l'intervention sont autorisées et ne sont pas interprétées comme une divergence.
+
+## Vérifications et traçabilité
+
+- TypeScript complet et ESLint ciblé : réussis dans le worktree isolé de vérification.
+- 16 tests des règles d'accès et 10 tests de publication/nettoyage : réussis.
+- API réelle sur 12 profils étudiants (3 états de voie × 4 offres) : 277 séries retirées et leurs questions inaccessibles ; annale complète témoin accessible ; lecture administrative conservée.
+- Plan exact versionné : `scripts/banques/reprises/2026-09-09-finalisation.json`.
+- Motifs complémentaires : `scripts/banques/reprises/2026-09-09-motifs-retrait.json` ; premier retrait : `2026-09-09-retraits.json`.
+- Sauvegardes intégrales avant écriture, résultats de contrôle et historique : répertoire local ignoré `tmp/banques-reprise/` ; aucun identifiant d'authentification n'est versionné.
+
+Le script applique uniquement les champs autorisés, compare toutes les valeurs avant écriture, contrôle les écritures concurrentes, puis relit les données. Une interruption liée à l'actualisation automatique d'un horodatage parent a été traitée sans forcer de valeur : la reprise a vérifié l'absence de changement de contenu et appliqué uniquement les 549 opérations encore en attente.
+
+Le contrôle d'import de `_ins-chapter.mjs` refuse désormais les principaux défauts structurels et remarques de fabrication identifiés, sans interdire les consignes QCM ordinaires telles que « Concernant… ».

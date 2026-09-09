@@ -10,6 +10,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { createClient } from '@supabase/supabase-js';
 import { config as dotenv } from 'dotenv';
+import { validateBankSeries } from './scripts/banques/qualite-publication.mjs';
 
 dotenv({ path: '.env.local' });
 const args = process.argv.slice(2);
@@ -39,7 +40,7 @@ const series = Array.isArray(doc.series) ? doc.series : [];
 const flashcards = Array.isArray(doc.flashcards) ? doc.flashcards : [];
 const qcm = series.filter((serie) => /^QCM/i.test(serie.label || ''));
 const dp = series.filter((serie) => /^DP\b/i.test(serie.label || ''));
-const errors = [];
+const errors = validateBankSeries(series);
 const textOnly = (value) => String(value || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 const normalized = (value) => textOnly(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const bannedQuestionTemplates = /temps technique décrit dans le corpus|parmi les propositions suivantes[, ]+laquelle|quel repère technique|quelle conduite est correcte concernant|^concernant\b|quelle proposition est exacte|\bquel principe\b|\bquel repère\b|[\u00ab\u00bb]/i;
@@ -78,7 +79,9 @@ for (const serie of series) {
     if ((question.items || []).length !== 5) errors.push(`« ${serie.label} » Q${index + 1} : 5 items requis`);
     if (!(question.items || []).some((item) => item.is_correct)) errors.push(`« ${serie.label} » Q${index + 1} : aucune réponse juste`);
     const questionText = textOnly(question.enonce || '');
-    if (bannedQuestionTemplates.test(questionText) || bannedExamplePrompt.test(questionText) || bannedStudentScaffolding.test(questionText)) errors.push(`« ${serie.label} » Q${index + 1} : énoncé générique, de gabarit ou fondé sur un exemple`);
+    // « Concernant… » et les consignes QCM usuelles sont valides. Leur ancien
+    // rejet encourageait l'ajout répété de préambules artificiels.
+    if (bannedStudentScaffolding.test(questionText)) errors.push(`« ${serie.label} » Q${index + 1} : charpente de génération visible`);
     if (isDp && index >= 1 && !questionText) errors.push(`« ${serie.label} » Q${index + 1} : étape clinique vide`);
   }
 }

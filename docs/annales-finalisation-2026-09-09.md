@@ -63,7 +63,7 @@ Ces deux migrations sont appliquées et inscrites dans l'historique Supabase. Le
 
 ## Périmètre du nettoyage
 
-La présente livraison finalise les annales de la conversation transmise. Elle ne certifie pas l'ensemble des autres banques de QCM. Un contrôle exploratoire a trouvé d'autres remarques sur les sources et des énoncés dégradés hors annales, notamment en orthopédie ; ce chantier distinct est décrit dans `docs/anomalies-hors-annales-2026-09-09.md`. Aucun remplacement automatique ni retrait massif de ces banques n'a été effectué.
+La présente livraison finalise les annales de la conversation transmise. L'utilisateur a ensuite autorisé l'extension aux autres banques de QCM : la reprise éditoriale et les retraits complémentaires sont décrits dans `docs/anomalies-hors-annales-2026-09-09.md`. Ces contrôles ne constituent pas une certification médicale indépendante de toutes les réponses du catalogue.
 
 ## Sources de contrôle
 

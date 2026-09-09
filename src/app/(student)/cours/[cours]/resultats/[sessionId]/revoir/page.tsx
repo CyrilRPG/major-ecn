@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { QcmReviewer } from '@/components/qcm/qcm-reviewer';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { buildQcmAccessContext, canStudentReadSerie, SERIE_ACCESS_COLUMNS, type SerieAccessRow } from '@/lib/data/qcm-access';
 
 export default async function ReviewPage({
   params,
@@ -34,7 +35,7 @@ export default async function ReviewPage({
   const admin = createAdminClient();
   const { data: serie, error: serieError } = await admin
     .from('qcm_series')
-    .select('id, label, type, cours_id')
+    .select(`${SERIE_ACCESS_COLUMNS}, cours_id, qcm_questions(format)` as 'id, label, type, cours_id')
     .eq('id', session.serie_id)
     .maybeSingle();
   if (serieError) throw serieError;
@@ -48,6 +49,12 @@ export default async function ReviewPage({
   if (coursError) throw coursError;
   if (!c) notFound();
   if (profile.role !== 'admin' && !canAccessCollege(parseScope(profile.permission_scope), c.matiere_id)) redirect('/facultes');
+
+  // Le client administratif contourne la RLS : vérifier les droits actuels
+  // avant de charger les énoncés, même lorsque l'élève possède une ancienne session.
+  const accessSerie = serie as unknown as SerieAccessRow & { qcm_questions?: { format: string }[] };
+  const accessCtx = await buildQcmAccessContext(profile, c.matiere_id);
+  if (!canStudentReadSerie(accessSerie, accessCtx, (accessSerie.qcm_questions ?? []).map((q) => q.format))) notFound();
 
   const { data: attempts } = await supabase
     .from('qcm_attempts')

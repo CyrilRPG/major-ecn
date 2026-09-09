@@ -1,0 +1,1097 @@
+{
+  "hostname": "mrrgfnirpwsknuyiwcqy.supabase.co",
+  "date": "2026-09-09",
+  "operations": [
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "55a71c12-dc60-4f75-ab06-cb793a9bfaf7",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "ca4436b9-df1b-4c86-a04c-a63bede8ea5b",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "4840f687-73de-4dfd-9505-39d22e3b4d22",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "ac23661b-c808-4777-bd35-2d8ec4f0c7cf",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "b8250838-4a30-47d1-a410-169fc0bd9fa7",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "9803478b-4b16-4fb5-9080-05f76caf0314",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "b70e01fd-30c0-4fc4-91ce-000167e0a384",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "96cb8e26-00ae-4b30-8b1c-88848fc82866",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "f0d80083-ea06-40d0-943e-b6cb4cf632b5",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "495148a2-b39f-4f42-9c78-6497d25a3972",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "87b9c393-64e6-4c8d-bafb-73c97af42beb",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "8a5c2569-6a75-44cb-a115-3badf288d6d2",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "5349ad27-d65b-4feb-9dec-a11307014caf",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "59c28377-033c-42a6-bdb9-b5f39c790ccb",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "9dca67fe-413f-4f97-aa45-70f3e4c05dfb",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "8cb1e4bd-3128-4c06-8b05-2b8b9014a234",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "0fdda0f6-8f85-4a4e-ab02-7914245b427f",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "81462c32-04fb-4421-ae1e-b0ae01c3793c",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "62273cdd-28f2-4982-bd7b-2810c20491f3",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "2b209982-e8bf-4619-93ee-5c71b3cb764c",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "ba7c634a-c012-4289-81d6-7d8fa6ae282b",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "4c17079a-1e2b-4097-be5a-cd34da7add5e",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "cca1d034-fb74-4afc-b8c3-a5533efe3609",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "d3943917-7ac4-4cdf-8fe9-5638c7adf74d",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "5f19bb0d-1d86-4c82-a287-cf3055ed6614",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "d5b4733f-569f-4810-8283-5c2d87e08e14",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "07f594f0-85c0-4d37-9314-ca72e2a79603",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "e8867a10-9f62-4dfc-87c5-beed29fec76c",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "20d80731-04e7-4565-b68c-d3ee8f90df20",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "6e8def87-cd76-4956-9370-e077db8f77ea",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "ff3f3952-9ce9-432d-be19-43c8fe8f10c9",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "a34b38e8-e392-4966-b585-ab37fe5cff2f",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "d8cc25a9-1518-4fa3-80f6-0d3595275840",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "bedde6ba-f185-49b0-8f76-651b1ef5403b",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "11f63e7a-0143-412c-8748-b70214e12823",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "5e16d283-af06-4614-9a19-0ca1cb7edfcf",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "45243850-0735-40a1-bd63-a39db4c77784",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "edb7639e-01a5-457f-b6f9-a53bc173b2b8",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "4b5142a9-d197-4d0b-864a-6762bdd3ae29",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "2521c75b-f771-490a-8332-6f4256893cf3",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "51bd664c-623f-4ce4-81b2-051a8591adee",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "1e33ba1f-c8c4-44a6-8112-bb049ed56775",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "f281226b-dd1e-4d86-bb6b-e1986def692f",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "5543402d-46ce-4b95-8dcb-b2c0d334f536",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "2ab18212-b66f-4205-b336-e0d0104e9f16",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "94233d71-93e2-45ff-be87-e67a62b644b3",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "794bc702-69a6-4783-ac7b-95d6a9fbc45d",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "ca724f01-4745-4bcd-8fb0-b061b906f503",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "45f74a6a-fe2e-47cd-befc-ea05aa793500",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "37f39d3f-9720-40b8-9519-97d48a7f2dcd",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "419e48cd-bcf4-474b-9262-af1858f67358",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "a5f34267-6eb4-40ef-98fa-4bc4670f7cf6",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "4b7dc312-9d09-4622-bf2d-1861dbb1a877",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "7f216634-bd66-47ac-bd42-a2953326592f",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "7fde12c7-fc56-49bf-953d-bfa32847ef0f",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "e72401ec-221c-4016-8a8f-ad59d317ece9",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "3383325c-d1b3-469a-b191-605381292e76",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "f906cb3b-7502-460c-a467-7663e70f7376",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "31b90d99-34f7-484f-b4bc-bfdfe27edee8",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "92822add-365d-4eea-9287-314faad7d5a8",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "9aa28bac-e90a-42ee-907b-c8746ab78bad",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "4bfc9a55-7860-4f47-b22a-1ed68240a0a0",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "00841951-7401-4968-8343-da167a411105",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "8e0a004e-171d-4ffe-9b04-50bd6d8a1841",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "21008bbf-ae80-4508-84d0-1d1c79485b9a",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "6a2ddc52-00f5-4208-88f1-1a8ad99d0694",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "7c3ea013-37a1-440b-8036-146b4444ea41",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "bcb903a7-b9ea-49ef-a538-678f2a10676b",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "4f0284c9-8efe-4dc4-acfd-0ae858725dd4",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "972ac236-5aab-46bd-a029-3ddbf1c34977",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "2f47f2cb-ade9-43af-abff-3ed5979d543d",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "00168619-3520-4373-8475-a45aadbfd817",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "915559dd-a513-43c7-8594-4a0016d8298e",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "9554e114-eb76-4eae-9bc1-e1e4a7a3f7b8",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "096fe03c-6ee0-4b1e-81ce-411bfa69ba87",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "3757b9d0-e9db-412d-b05d-f53859397c8d",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "f38fb1da-2bc1-4fae-9ba4-4154e3023836",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "0e2a5a50-d2f6-4227-9988-eeb84c9dc192",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "6ffcf90a-cb11-48ab-9cf4-d11e77886355",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "68b17188-f689-4c9f-9a12-d252d1a78b3f",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Questions issues de fragments ou de gabarits répétitifs sans consigne exploitable ni corrigé pédagogique ; éléments exacts dans le relevé de contrôle."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "e0530dff-062e-42eb-8af8-0a0793024093",
+      "before": {
+        "allowed_offers": [
+          "decouverte",
+          "essentiel",
+          "intensif",
+          "approfondi"
+        ]
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Question rédactionnelle sans énoncé ou sans corrigé distinct ; import incomplet."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "e521b8d7-91c8-48e3-9c80-0cec7800bf87",
+      "before": {
+        "allowed_offers": [
+          "decouverte",
+          "essentiel",
+          "intensif",
+          "approfondi"
+        ]
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Question rédactionnelle sans énoncé ou sans corrigé distinct ; import incomplet."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "d1e93b8e-25ed-4576-968f-8b6301929ded",
+      "before": {
+        "allowed_offers": [
+          "decouverte",
+          "essentiel",
+          "intensif",
+          "approfondi"
+        ]
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Question rédactionnelle sans énoncé ou sans corrigé distinct ; import incomplet."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "af00790d-5260-47c4-8d5c-7d6cdd2ad16e",
+      "before": {
+        "allowed_offers": [
+          "decouverte",
+          "essentiel",
+          "intensif",
+          "approfondi"
+        ]
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Question rédactionnelle sans énoncé ou sans corrigé distinct ; import incomplet."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "5ea314d9-2132-4963-87cc-dc65cdc1ead9",
+      "before": {
+        "allowed_offers": [
+          "decouverte",
+          "essentiel",
+          "intensif",
+          "approfondi"
+        ]
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Question rédactionnelle sans énoncé ou sans corrigé distinct ; import incomplet."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "ea3d34c4-5cc0-4e5b-b36b-bf4d5411e570",
+      "before": {
+        "allowed_offers": [
+          "decouverte",
+          "essentiel",
+          "intensif",
+          "approfondi"
+        ]
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Question rédactionnelle sans énoncé ou sans corrigé distinct ; import incomplet."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "c533c12d-02d8-4e15-9a23-f6c05e516597",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "QCM sans propositions ou sans bonne réponse."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "c840739b-41f4-4af6-9767-400567d626fc",
+      "before": {
+        "allowed_offers": [
+          "decouverte",
+          "essentiel",
+          "intensif",
+          "approfondi"
+        ]
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Question rédactionnelle sans énoncé ou sans corrigé distinct ; import incomplet."
+    }
+  ]
+}
