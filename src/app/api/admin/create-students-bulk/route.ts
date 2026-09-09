@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { indexerComptesAuthParEmail } from '@/lib/auth/admin-users';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { z } from 'zod';
@@ -69,14 +70,10 @@ export async function POST(req: Request) {
   const failed: { email: string; reason: string }[] = [];
 
   // Index des comptes existants (pour l'écrasement des comptes Découverte).
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: existingList } = await (admin as any).auth.admin.listUsers({ page: 1, perPage: 500 });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const byEmail = new Map<string, any>();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  for (const u of (existingList?.users ?? []) as any[]) {
-    if (u.email) byEmail.set(u.email.toLowerCase(), u);
-  }
+  // Construit sur TOUTES les pages : l'index bâti sur les 500 comptes les
+  // plus récents faisait passer un ancien compte pour inexistant, et la
+  // création échouait ensuite sur « user already registered ».
+  const byEmail = await indexerComptesAuthParEmail();
 
   for (const email of uniq) {
     try {

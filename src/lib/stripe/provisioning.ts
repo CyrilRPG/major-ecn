@@ -27,6 +27,7 @@ import { FORMULES, type FormuleId } from '@/lib/stripe';
 import { getApprofondiTier } from '@/lib/stripe/approfondi';
 import { highestOffer, type Offer } from '@/types/domain';
 import { applyGeriatrieMgBonus } from '@/lib/auth/geriatrie-mg-bonus';
+import { trouverCompteAuthParEmail } from '@/lib/auth/admin-users';
 import { buildContractAttachments } from '@/lib/legal/contract-pdf';
 import { downloadSignature } from '@/lib/signatures/inscription';
 
@@ -154,11 +155,10 @@ export async function provisionStudentAccount(
 
   const offerForFormule = MAP_OFFER[input.formuleId];
 
-  // 1) Existe-t-il déjà un user avec cet email ?
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: existing } = await (admin as any).auth.admin.listUsers({ page: 1, perPage: 500 });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const found = existing?.users?.find((u: any) => u.email?.toLowerCase() === input.email.toLowerCase());
+  // 1) Existe-t-il déjà un user avec cet email ? Recherche filtrée côté GoTrue :
+  //    le balayage des 500 comptes les plus récents rendait invisibles tous les
+  //    comptes plus anciens (cf. `trouverCompteAuthParEmail`).
+  const found = await trouverCompteAuthParEmail(input.email);
 
   let userId: string;
   let isNew = false;
@@ -179,12 +179,25 @@ export async function provisionStudentAccount(
       },
     });
     if (cErr || !created?.user) {
-      log('user-create-error', { msg: cErr?.message });
-      return { ok: false, error: cErr?.message ?? 'Échec de la création du user' };
+      // « User already registered » : le compte existe mais la recherche ne l'a
+      // pas vu (filtre indisponible, course entre le webhook et /merci…). On
+      // le retrouve et on poursuit la mise à niveau au lieu d'abandonner un
+      // achat déjà payé — c'est cet abandon qui, le 09/09/2026, a laissé une
+      // élève en Découverte après avoir réglé une formule intensive.
+      const secours = /already\s*(been\s*)?registered|already exists|duplicate/i.test(cErr?.message ?? '')
+        ? await trouverCompteAuthParEmail(input.email)
+        : null;
+      if (!secours) {
+        log('user-create-error', { msg: cErr?.message });
+        return { ok: false, error: cErr?.message ?? 'Échec de la création du user' };
+      }
+      userId = secours.id;
+      log('user-existing-apres-echec-creation', { userId, msg: cErr?.message });
+    } else {
+      userId = created.user.id;
+      isNew = true;
+      log('user-created', { userId });
     }
-    userId = created.user.id;
-    isNew = true;
-    log('user-created', { userId });
   }
 
   // 3) Récupère le profil existant pour préserver les données d'un compte

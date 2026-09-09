@@ -27,6 +27,7 @@
  */
 
 import { NextResponse } from 'next/server';
+import { trouverCompteAuthParEmail } from '@/lib/auth/admin-users';
 import { z } from 'zod';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, siteUrl, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
@@ -160,16 +161,9 @@ export async function POST(req: Request) {
     },
   };
 
-  // 1) Recherche d'un user existant avec cet email
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: existing } = await (admin as any).auth.admin.listUsers({
-    page: 1,
-    perPage: 500,
-  });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const found = existing?.users?.find(
-    (u: { email?: string }) => u.email?.toLowerCase() === email.toLowerCase(),
-  );
+  // 1) Recherche d'un user existant avec cet email — filtrée côté GoTrue, le
+  //    balayage des 500 comptes les plus récents laissait passer les anciens.
+  const found = await trouverCompteAuthParEmail(email);
 
   let userId: string;
   let isNew = false;

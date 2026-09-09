@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { trouverCompteAuthParEmail } from '@/lib/auth/admin-users';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { AddStudentSchema } from '@/lib/schemas/student';
@@ -53,10 +54,9 @@ export async function POST(req: Request) {
   //      L'élève garde le même compte auth (et son éventuel mot de passe), mais
   //      bascule sur l'offre payante choisie par l'admin.
   //    - Compte payant existant → on refuse (comme avant).
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: existingList } = await (admin as any).auth.admin.listUsers({ page: 1, perPage: 500 });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const existingUser = existingList?.users?.find((u: any) => u.email?.toLowerCase() === email.toLowerCase());
+  // Recherche filtrée côté GoTrue : le balayage des 500 comptes les plus
+  // récents rendait invisibles tous les comptes plus anciens.
+  const existingUser = await trouverCompteAuthParEmail(email);
 
   let userId: string;
 

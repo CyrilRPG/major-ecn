@@ -19,6 +19,7 @@
  * "Renvoyer l'email d'activation" dans /admin/eleves.
  */
 import { NextResponse } from 'next/server';
+import { trouverCompteAuthParEmail } from '@/lib/auth/admin-users';
 import type Stripe from 'stripe';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -226,10 +227,9 @@ export async function GET(req: Request) {
 
     // Step 4 — user Supabase
     const admin = createAdminClient();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: listed } = await (admin as any).auth.admin.listUsers({ page: 1, perPage: 500 });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const existing = listed?.users?.find((u: any) => u.email?.toLowerCase() === email.toLowerCase());
+    // Recherche filtrée : sinon le diagnostic annonce « user absent » pour tout
+    // compte plus ancien que les 500 derniers, et envoie sur une fausse piste.
+    const existing = await trouverCompteAuthParEmail(email);
     steps.push({
       name: 'supabase-user',
       ok: !!existing,
