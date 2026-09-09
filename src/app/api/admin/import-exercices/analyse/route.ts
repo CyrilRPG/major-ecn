@@ -43,6 +43,7 @@ import {
   type Lot, type ExerciseImportResult, type CorrectionsResult,
 } from '@/lib/ai/exercise-import-schema';
 import { preparerDocument, contenuDuLot, type DocumentPrepare, type ImportFormat } from '@/lib/ai/exercise-import-documents';
+import { lireVeritePdf, confronterALaSource, dedoublonnerParTexte } from '@/lib/ai/exercise-import-verite';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -268,12 +269,41 @@ export async function POST(req: Request) {
 
     // ── Fini : fusion, corrigé, validation ─────────────────────────────────
     let fusion = fusionnerLots(p.plan.lots.map((l) => ({ ordre: l.coeurDebut, label: libelle(l), result: p.partiels[cle(l)] })));
+
+    // Dédoublonnage de secours par le texte : la fusion se fie au numéro de
+    // source, que les lots ne numérotent pas toujours pareil (« Sujet 1 - Q1 »
+    // ici, « Session 3 – Sujet 1 – Q1 » là). Douze doublons étaient passés sur
+    // l'import Pédiatrie du 08/09/2026.
+    {
+      const { questions, retirees } = dedoublonnerParTexte(fusion.questions);
+      if (retirees > 0) {
+        fusion = { ...fusion, questions, warnings: [...fusion.warnings, `${retirees} exercice(s) rendus en double par deux lots voisins, fusionné(s) sur le texte.`] };
+      }
+    }
     if (p.plan.strategie === 'corrige-separe') {
       const corrections: CorrectionsResult = {
         corrections: p.plan.lotsCorrige.flatMap((l) => p.partielsCorrige[cle(l)]?.corrections ?? []),
         warnings: p.plan.lotsCorrige.flatMap((l) => (p.partielsCorrige[cle(l)]?.warnings ?? []).map((w) => `${libelle(l)} : ${w}`)),
       };
       fusion = appliquerCorrections(fusion, corrections);
+    }
+    // Confrontation au document : dans ces supports le corrigé est porté par la
+    // COULEUR (vert = proposition exacte). Il prime sur la lecture du modèle,
+    // qui inversait 8,6 % des propositions sur l'import du 08/09/2026. La même
+    // passe signale les exercices posés sur une page illustrée et rendus sans
+    // document.
+    if (format === 'pdf') {
+      try {
+        const brutSujet = await telecharger(row.sujet_path, 'sujet');
+        const verite = await lireVeritePdf(brutSujet);
+        const bilan = confronterALaSource(fusion.questions, verite);
+        fusion.warnings = [...fusion.warnings, ...bilan.avertissements];
+        if (verite.colore && bilan.corriges === 0) {
+          fusion.warnings = [...fusion.warnings, 'Corrigé vérifié sur la couleur du document : aucun écart.'];
+        }
+      } catch (e) {
+        fusion.warnings = [...fusion.warnings, `Le corrigé du document n'a pas pu être vérifié automatiquement : ${e instanceof Error ? e.message : 'erreur inconnue'}.`];
+      }
     }
     fusion.warnings = [...p.avertissementsDocs, ...fusion.warnings];
     if (fusion.questions.length === 0) {
