@@ -32,8 +32,8 @@ test('les blocs (vignettes) échappent aussi les comparaisons', () => {
 
 test('les balises de mise en forme autorisées sont conservées', () => {
   assert.equal(
-    sanitizeFlashcardHtml('<b>gras</b> <i>ital</i> <sub>2</sub> <sup>3</sup><br>'),
-    '<b>gras</b> <i>ital</i> <sub>2</sub> <sup>3</sup><br>',
+    sanitizeFlashcardHtml('<b>gras</b> <i>ital</i><br><sub>2</sub> <sup>3</sup>'),
+    '<b>gras</b> <i>ital</i><br><sub>2</sub> <sup>3</sup>',
   );
   assert.equal(
     sanitizeFlashcardHtml('<span style="color:#B45309">ambre</span>'),
@@ -60,6 +60,8 @@ test('aucune injection ne passe', () => {
   }
 });
 
-test('le texte des balises interdites est conservé', () => {
-  assert.equal(sanitizeFlashcardHtml('texte <div class="x">bloc</div> fin'), 'texte bloc fin');
+test('le texte des blocs est conservé avec son retour à la ligne', () => {
+  assert.equal(sanitizeFlashcardHtml('texte <div class="x">bloc</div> fin'), 'texte <br>bloc fin');
+  assert.equal(sanitizeFlashcardHtml('<div>Premier paragraphe</div><div>Deuxième paragraphe</div>'), 'Premier paragraphe<br>Deuxième paragraphe');
+  assert.equal(sanitizeFlashcardHtml('<br>texte<br><br>'), 'texte');
 });

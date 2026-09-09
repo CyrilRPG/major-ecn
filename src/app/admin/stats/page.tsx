@@ -6,8 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { KpiCard } from '@/components/admin/stats/kpi-card';
 import { ActivityArea, SuccessRateBar, TopCoursesBar } from '@/components/admin/stats/charts';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { initials } from '@/lib/utils';
+import { DrawnAvatar } from '@/components/avatar/drawn-avatar';
+import { effectiveSeed } from '@/lib/avatar';
 import { Badge } from '@/components/ui/badge';
 import { startOfUtcIsoWeek, sumTrackedSeconds, type StudyTimeRow } from '@/lib/student/study-time';
 
@@ -19,8 +19,11 @@ export default async function AdminStatsPage() {
   await requireAdmin();
   const supabase = await createClient();
 
-  const sevenDaysAgo = new Date(Date.now() - 7 * 86400_000).toISOString();
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 86400_000);
+  // Le composant serveur lit une horloge unique pour toutes les statistiques de la requête.
+  // eslint-disable-next-line react-hooks/purity
+  const now = Date.now();
+  const sevenDaysAgo = new Date(now - 7 * 86400_000).toISOString();
+  const thirtyDaysAgo = new Date(now - 30 * 86400_000);
   const weekStart = startOfUtcIsoWeek();
   // Seuil hebdomadaire d'engagement : 30 min / semaine (objectif minimal réaliste pour
   // un étudiant en préparation EVC). En dessous, on alerte l'admin.
@@ -40,7 +43,7 @@ export default async function AdminStatsPage() {
       .from('qcm_attempts')
       .select('id, user_id, is_correct, attempted_at, qcm_questions!inner(serie_id, qcm_series!inner(cours_id, cours!inner(id, titre, matieres!inner(id, nom))))'),
     supabase.from('qcm_sessions').select('id, user_id, started_at').gte('started_at', thirtyDaysAgo.toISOString()),
-    supabase.from('profiles').select('id, first_name, last_name, promotion, permission_scope, email').eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID),
+    supabase.from('profiles').select('id, avatar_seed, first_name, last_name, promotion, permission_scope, email').eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID),
     // Source canonique du compteur affiché aux élèves. L'ancien calcul ne
     // regardait que le temps renseigné sur les QCM (+ un forfait flashcard),
     // ce qui affichait 0 min malgré des heures de fiches et vidéos enregistrées.
@@ -64,7 +67,7 @@ export default async function AdminStatsPage() {
     qcm_questions: { qcm_series: { cours_id: string; cours: { id: string; titre: string; matieres: { id: string; nom: string } } } };
   }>) {
     const at = new Date(a.attempted_at);
-    if (at.getTime() >= Date.now() - 7 * 86400_000) activeUsers7d.add(a.user_id);
+    if (at.getTime() >= now - 7 * 86400_000) activeUsers7d.add(a.user_id);
     attemptsTotal++;
     if (a.is_correct) attemptsCorrect++;
     const cours = a.qcm_questions.qcm_series.cours;
@@ -89,13 +92,13 @@ export default async function AdminStatsPage() {
   // Activity area (30j)
   const days: { label: string; value: number }[] = [];
   for (let i = 29; i >= 0; i--) {
-    const d = new Date(Date.now() - i * 86400_000);
+    const d = new Date(now - i * 86400_000);
     days.push({ label: d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }), value: 0 });
   }
   const dayIndex = (d: string) => {
     const target = isoDayKey(new Date(d));
     return days.findIndex((x, i) => {
-      const cur = new Date(Date.now() - (29 - i) * 86400_000);
+      const cur = new Date(now - (29 - i) * 86400_000);
       return isoDayKey(cur) === target;
     });
   };
@@ -126,6 +129,7 @@ export default async function AdminStatsPage() {
       const sec = weeklySeconds.get(p.id) ?? 0;
       return {
         id: p.id,
+        avatarSeed: effectiveSeed(p.id, p.avatar_seed),
         name: `${p.first_name ?? ''} ${p.last_name ?? ''}`.trim() || 'Sans nom',
         email: p.email as string | null,
         promotion: p.promotion as string | null,
@@ -140,6 +144,7 @@ export default async function AdminStatsPage() {
       const p = (profiles ?? []).find((pr) => pr.id === userId);
       return {
         id: userId,
+        avatarSeed: effectiveSeed(userId, p?.avatar_seed),
         name: `${p?.first_name ?? ''} ${p?.last_name ?? ''}`.trim() || 'Sans nom',
         promotion: p?.promotion,
         attempts: s.total,
@@ -224,7 +229,7 @@ export default async function AdminStatsPage() {
                   <TableRow key={u.id}>
                     <TableCell>
                       <div className="flex items-center gap-2.5">
-                        <Avatar className="h-8 w-8"><AvatarFallback>{initials(u.name.split(' ')[0], u.name.split(' ').slice(-1)[0])}</AvatarFallback></Avatar>
+                        <DrawnAvatar seed={u.avatarSeed} size={32} />
                         <span className="font-medium">{u.name}</span>
                       </div>
                     </TableCell>
@@ -264,7 +269,7 @@ export default async function AdminStatsPage() {
                   <TableRow key={u.id}>
                     <TableCell>
                       <div className="flex items-center gap-2.5">
-                        <Avatar className="h-8 w-8"><AvatarFallback>{initials(u.name.split(' ')[0], u.name.split(' ').slice(-1)[0])}</AvatarFallback></Avatar>
+                        <DrawnAvatar seed={u.avatarSeed} size={32} />
                         <span className="font-medium">{u.name}</span>
                       </div>
                     </TableCell>

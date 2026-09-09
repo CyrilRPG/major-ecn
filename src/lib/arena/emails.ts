@@ -126,16 +126,17 @@ export function validatedEmail(t: TournamentRow, p: ParticipantRow, opts: { m1Op
 export function roundReminderEmail(t: TournamentRow, p: ParticipantRow, kind: 'j7' | 'j1', round: { number: number; theme: string; opens_at: Date; closes_at: Date }): Mail {
   const urls = arenaUrls(t);
   const open = parisAndLocalLabel(round.opens_at, p.timezone, true);
+  const close = parisAndLocalLabel(round.closes_at, p.timezone, true);
   const subject = kind === 'j7'
     ? `Manche ${round.number} dans 7 jours — ${round.theme || t.specialty}`
     : `Demain : manche ${round.number} — ${round.theme || t.specialty}`;
   const html = shell(t, p, kind === 'j7' ? `Manche ${round.number} : rendez-vous dans une semaine` : `Manche ${round.number} : c’est demain`, [
     para(`Bonjour ${p.first_name},`),
-    box(`<p style="margin:0;font-weight:700;color:${NAVY}">Ouverture : ${esc(open)}</p><p style="margin:6px 0 0;color:#374151">La manche reste ouverte 24 h. ${t.questions_per_round} questions chronométrées une par une (${t.seconds_per_question ?? DEFAULT_SECONDS_PER_QUESTION} s chacune), une seule tentative.</p>${round.theme ? `<p style="margin:6px 0 0;color:#374151">Thème : ${esc(round.theme)}</p>` : ''}`),
+    box(`<p style="margin:0;font-weight:700;color:${NAVY}">Ouverture : ${esc(open)}</p><p style="margin:6px 0 0;color:#374151">Clôture : ${esc(close)}. Questions chronométrées une par une, une seule tentative. Retrouvez le nombre de questions et les durées sur l’écran de la manche.</p>${round.theme ? `<p style="margin:6px 0 0;color:#374151">Thème : ${esc(round.theme)}</p>` : ''}`),
     para(WARNING_CONNECTION),
     button('Voir mon espace', urls.space),
   ].join(''));
-  const text = `Bonjour ${p.first_name},\n\nManche ${round.number}${round.theme ? ` — ${round.theme}` : ''}\nOuverture : ${open}\nLa manche reste ouverte 24 h. ${t.questions_per_round} questions chronométrées une par une (${t.seconds_per_question ?? DEFAULT_SECONDS_PER_QUESTION} s chacune), une seule tentative.\n\n${WARNING_CONNECTION}\n\nMon espace : ${urls.space}`;
+  const text = `Bonjour ${p.first_name},\n\nManche ${round.number}${round.theme ? ` — ${round.theme}` : ''}\nOuverture : ${open}\nClôture : ${close}. Questions chronométrées une par une, une seule tentative. Le nombre de questions et les durées sont indiqués sur l’écran de la manche.\n\n${WARNING_CONNECTION}\n\nMon espace : ${urls.space}`;
   return { subject, html, text };
 }
 
@@ -156,8 +157,8 @@ export function relanceEmail(t: TournamentRow, p: ParticipantRow, round: { numbe
   const subject = `Manche ${round.number} : il reste ${remaining}`;
   const html = shell(t, p, `Il reste ${remaining} pour jouer la manche ${round.number}`, [
     para(`Bonjour ${p.first_name},`),
-    para(`Vous n’avez pas encore joué la manche ${round.number}. La manche se termine dans ${remaining} : passé ce délai, elle comptera pour zéro dans votre score cumulé.`),
-    para(`Chaque question est chronométrée séparément (${t.seconds_per_question ?? DEFAULT_SECONDS_PER_QUESTION} s). Si vous commencez trop près de la clôture, votre temps sera limité au temps restant.`),
+    para(`Vous n’avez pas encore joué la manche ${round.number}. La manche se termine dans ${remaining}. La participation aux trois manches est nécessaire pour figurer au classement général.`),
+    para(`Chaque question est chronométrée séparément (${t.seconds_per_question ?? DEFAULT_SECONDS_PER_QUESTION} s par défaut ; une durée spécifique peut être indiquée). Si vous commencez trop près de la clôture, votre temps sera limité au temps restant.`),
     button('Jouer maintenant', urls.round(round.number)),
   ].join(''));
   return { subject, html, text: `Bonjour ${p.first_name},\n\nVous n'avez pas encore joué la manche ${round.number}. Elle se termine dans ${remaining}.\n\nJouer : ${urls.round(round.number)}` };
@@ -177,7 +178,7 @@ export function resultsEmail(
     lines.push(box(`<p style="margin:0;font-weight:700;color:${NAVY}">Score de la manche ${r.number} : ${fr(r.score as number)} / ${fr(r.max)}</p><p style="margin:6px 0 0;color:#374151">Score cumulé : ${fr(r.cumulScore)} / ${fr(r.cumulMax)}${r.rank !== null ? ` — rang ${r.rank}` : ''}</p>`));
     if (r.rank === null) lines.push(para(UNDER_THRESHOLD_MESSAGE));
   } else {
-    lines.push(para(`Vous n’avez pas joué la manche ${r.number}. Elle compte pour zéro dans le score cumulé, mais le classement final reste accessible avec deux manches jouées sur trois.`));
+    lines.push(para(`Vous n’avez pas joué la manche ${r.number}. Le classement général nécessite les trois manches. Vos résultats, vos rangs de manche et vos corrections restent disponibles pour les manches disputées.`));
   }
   lines.push(para('Les corrections détaillées de la manche sont disponibles : réponses attendues, explications, pièges de l’énoncé et erreurs les plus fréquentes.'));
   lines.push(button('Consulter les corrections', urls.corrections(r.number)));
@@ -203,7 +204,7 @@ export function inviteEmail(t: TournamentRow, from: ParticipantRow | null, landi
   const who = from ? `${from.first_name} vous invite` : 'Un confrère vous invite';
   const subject = `${who} au tournoi EVC Arena ${t.specialty}`;
   const html = shell(t, null, `${who} à entrer dans l’arène`, [
-    para(`Le tournoi EVC Arena ${t.specialty} de Major ECN : trois manches de ${t.questions_per_round} questions chronométrées une par une, une seule tentative, un classement cumulé entre médecins candidats aux EVC.`),
+    para(`Le tournoi EVC Arena ${t.specialty} de Major ECN : trois manches de QCM chronométrés, une seule tentative, un classement cumulé entre médecins candidats aux EVC. Le format de chaque manche est indiqué sur la page du tournoi.`),
     message ? box(`<p style="margin:0;color:#374151;font-style:italic">${esc(message)}</p>`) : '',
     button('Découvrir le tournoi', landingUrl),
     para(WARNING_NATURE),
@@ -266,6 +267,9 @@ export type SendArenaInput = {
 export type SendArenaResult = { ok: true; id: string } | { ok: false; skipped?: boolean; error: string };
 
 export async function sendArenaEmail(input: SendArenaInput): Promise<SendArenaResult> {
+  if (process.env.EMAIL_DRY_RUN === '1' && process.env.NODE_ENV !== 'production') {
+    return { ok: false, error: 'Les emails sont en mode simulation. Activez le service d’envoi pour utiliser cette action.' };
+  }
   const db = arenaDb();
   if (input.participant && (input.participant.blocked_at || input.participant.anonymized_at)) {
     return { ok: false, skipped: true, error: 'Participant bloqué ou anonymisé.' };

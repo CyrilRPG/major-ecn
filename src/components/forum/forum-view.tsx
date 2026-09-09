@@ -9,19 +9,22 @@ import {
   Pencil, Reply, Search, Send, Sparkles, Stethoscope, Unlock, Users,
 } from 'lucide-react';
 import { Markdown } from '@/components/ui/markdown';
+import { DrawnAvatar } from '@/components/avatar/drawn-avatar';
 import { ForumQuestionForm } from '@/components/student/forum-question-form';
 import {
   addReplyAction, postProfessorAnswerAction, toggleQuestionPublicAction,
 } from '@/app/(student)/forum/actions';
 
 export type ForumCollege = { id: string; nom: string; cours: { id: string; titre: string }[] };
-export type ForumAnswer = { id: string; body: string; created_at: string; professor_name: string };
+export type ForumAnswer = { id: string; body: string; created_at: string; professor_name: string; professor_id?: string | null; avatar_seed?: string | null };
 export type ForumReply = {
   id: string;
   body: string;
   created_at: string;
   author_role: 'student' | 'professor' | 'admin';
   author_name: string;
+  author_id?: string | null;
+  avatar_seed?: string | null;
 };
 export type ForumQuestionRow = {
   id: string;
@@ -30,6 +33,7 @@ export type ForumQuestionRow = {
   created_at: string;
   student_id: string;
   student_pseudo: string;
+  student_avatar_seed?: string | null;
   cours_id?: string | null;
   cours_titre: string | null;
   matiere_id: string | null;
@@ -518,7 +522,7 @@ function QuestionCard({
         aria-expanded={open}
       >
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#FDE7E9,#FFEAD9)] text-sm font-bold text-(--color-primary)">
-          {initials(q.student_pseudo)}
+          {q.student_avatar_seed ? <DrawnAvatar seed={q.student_avatar_seed} size={40} title={`Avatar de ${q.student_pseudo}`} /> : <Users className="h-5 w-5" />}
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2 text-xs">
@@ -660,7 +664,7 @@ function ThreadMessage({ item }: { item: ThreadItem }) {
       >
         <div className="flex gap-3.5 sm:gap-4">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#E7F6EC,#F1E8FD)] text-[#16793C]">
-            <GraduationCap className="h-5 w-5" />
+            {a.avatar_seed ? <DrawnAvatar seed={a.avatar_seed} size={40} title={`Avatar de ${a.professor_name}`} /> : <GraduationCap className="h-5 w-5" />}
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2 text-xs">
@@ -694,7 +698,7 @@ function ThreadMessage({ item }: { item: ThreadItem }) {
             ? 'bg-[linear-gradient(135deg,#FEF3E2,#F1E8FD)] text-[#B26A00]'
             : 'bg-[linear-gradient(135deg,#FDE7E9,#FFEAD9)] text-(--color-primary)'
         }`}>
-          {initials(r.author_name)}
+          {r.avatar_seed ? <DrawnAvatar seed={r.avatar_seed} size={36} title={`Avatar de ${r.author_name}`} /> : <Users className="h-5 w-5" />}
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2 text-xs">
@@ -879,8 +883,4 @@ function ago(iso: string): string {
   const d = Math.round(h / 24);
   if (d < 7) return d === 1 ? 'hier' : `il y a ${d} j`;
   return new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
-}
-
-function initials(s: string): string {
-  return s.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]?.toUpperCase()).join('') || '?';
 }

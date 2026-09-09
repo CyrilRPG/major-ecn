@@ -117,8 +117,8 @@ function RoundCard({ t, r, slug, count, started }: { t: TournamentRow; r: RoundR
             <Button type="button" variant="ghost" size="sm" onClick={fillWindow} title="Ouverture + 24 h">+24 h</Button>
           </div>
         </div>
-        <div className="space-y-1.5"><Label htmlFor={`du-${r.id}`}>Durée (min)</Label><Input id={`du-${r.id}`} type="number" min={1} max={240} value={form.duration} placeholder={String(t.round_duration_minutes)} onChange={(e) => setForm((f) => ({ ...f, duration: e.target.value }))} /></div>
-        <div className="space-y-1.5"><Label htmlFor={`de-${r.id}`}>Publication des résultats (min après clôture)</Label><Input id={`de-${r.id}`} type="number" min={0} value={form.delay} onChange={(e) => setForm((f) => ({ ...f, delay: Number(e.target.value) || 0 }))} /></div>
+        <div className="space-y-1.5"><Label htmlFor={`du-${r.id}`}>Ancienne durée (min)</Label><Input id={`du-${r.id}`} type="number" value={form.duration} readOnly /><p className="text-xs text-(--color-ink-muted)">Le temps actuel est la somme des durées des questions.</p></div>
+        <div className="space-y-1.5"><Label htmlFor={`de-${r.id}`}>Publication des résultats (min après clôture)</Label><Input id={`de-${r.id}`} type="number" min={0} value={form.delay} onChange={(e) => setForm((f) => ({ ...f, delay: Number(e.target.value) || 0 }))} /><p className="text-xs text-(--color-ink-muted)">Le délai minimum du tournoi reste applicable.</p></div>
       </div>
 
       <details className="mt-4">

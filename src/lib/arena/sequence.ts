@@ -1,6 +1,7 @@
 import 'server-only';
 import { arenaDb, arenaLog, computeTournamentStandings, effectiveBareme, listAttemptsForRounds, listParticipants, listTournaments, loadTournamentSnapshot, roundMaxScore, type TournamentSnapshot } from './db';
 import { finalizeAttempt } from './grading';
+import { publishArenaRound } from './rank-history-db';
 import { relanceEmail, resultsEmail, roundOpeningEmail, roundReminderEmail, sendArenaEmail } from './emails';
 import { correctionsPdfSignedUrl } from './pdf-url';
 import { remainingLabel, toDate } from './time';
@@ -74,7 +75,7 @@ async function sweepTournament(t: TournamentRow, now: Date, report: SweepReport)
 
   // Statut effectif journalisé
   if (snap.status !== t.status) {
-    await db.from('arena_tournaments').update({ status: snap.status }).eq('id', t.id);
+    await db.from('arena_tournaments').update({ status: snap.status }).eq('id', t.id).throwOnError();
     await arenaLog({ tournamentId: t.id, kind: 'status', oldValue: t.status, newValue: snap.status, actorLabel: 'cron', details: 'Transition automatique pilotée par les dates.' });
     report.transitions.push(`${t.slug}: ${t.status} → ${snap.status}`);
   }
@@ -86,20 +87,23 @@ async function sweepTournament(t: TournamentRow, now: Date, report: SweepReport)
     const closes = toDate(r.closes_at);
     if (!opens || !closes) continue;
     if (now >= opens && !r.bareme_locked_at) {
-      await db.from('arena_rounds').update({ bareme_snapshot: t.bareme, bareme_locked_at: now.toISOString() }).eq('id', r.id);
+      await db.from('arena_rounds').update({ bareme_snapshot: t.bareme, bareme_locked_at: now.toISOString() }).eq('id', r.id).throwOnError();
       await arenaLog({ tournamentId: t.id, roundId: r.id, kind: 'bareme_locked', newValue: t.bareme, actorLabel: 'cron', details: `Barème verrouillé à l’ouverture de la manche ${r.number}.` });
       report.transitions.push(`${t.slug}: barème M${r.number} verrouillé`);
       changed = true;
     }
-    const delay = (t.email_sequence.results_delay_minutes ?? 0) * 60_000;
+    const delay = Math.max(t.email_sequence.results_delay_minutes ?? 0, r.results_publish_delay_minutes ?? 0) * 60_000;
     if (now.getTime() >= closes.getTime() + delay && !r.results_published_at) {
       // Toute tentative encore ouverte est close avant publication.
       const open = await listAttemptsForRounds([r.id], true);
       for (const a of open) if (a.status === 'in_progress') await finalizeAttempt(a.id, 'expired', now);
-      await db.from('arena_rounds').update({ results_published_at: now.toISOString() }).eq('id', r.id);
+      await publishArenaRound(r.id, now);
       await arenaLog({ tournamentId: t.id, roundId: r.id, kind: 'results_published', actorLabel: 'cron', details: `Résultats de la manche ${r.number} publiés.` });
       report.transitions.push(`${t.slug}: résultats M${r.number} publiés`);
       changed = true;
+    } else if (r.results_published_at && !r.ranking_snapshot_at) {
+      // Upgrade existing tournaments: preserve a labelled reconstruction once.
+      await publishArenaRound(r.id, now);
     }
   }
   if (changed) snap = await loadTournamentSnapshot(t, now);
@@ -198,5 +202,5 @@ export async function anonymizeParticipant(p: ParticipantRow, reason: 'retention
     acquisition_source: reason === 'request' ? p.acquisition_source : null,
     consent_marketing: false,
     anonymized_at: new Date().toISOString(),
-  }).eq('id', p.id);
+  }).eq('id', p.id).throwOnError();
 }

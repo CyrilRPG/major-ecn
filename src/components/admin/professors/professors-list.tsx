@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from 'react';
 import { Search } from 'lucide-react';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { DrawnAvatar } from '@/components/avatar/drawn-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { initials } from '@/lib/utils';
+import { effectiveSeed } from '@/lib/avatar';
 import { DeleteAccountButton } from '@/components/admin/delete-account-button';
 import { ToggleActiveButton } from '@/components/admin/toggle-active-button';
 import { EditProfileDialog } from '@/components/admin/edit-profile-dialog';
@@ -13,6 +13,7 @@ import { ImpersonateAction } from '@/components/admin/students/impersonate-actio
 
 export type ProfessorRow = {
   id: string;
+  avatar_seed: string | null;
   first_name: string | null;
   last_name: string | null;
   email: string | null;
@@ -77,9 +78,7 @@ export function ProfessorsList({
             return (
               <li key={p.id} className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
                 <div className="flex flex-wrap items-start gap-4">
-                  <Avatar className="h-11 w-11 shrink-0">
-                    <AvatarFallback>{initials(p.first_name, p.last_name)}</AvatarFallback>
-                  </Avatar>
+                  <DrawnAvatar seed={effectiveSeed(p.id, p.avatar_seed)} size={44} />
                   <div className="min-w-0 flex-1">
                     <p className="font-medium text-(--color-ink)">{p.first_name} {p.last_name}</p>
                     <p className="truncate font-mono text-xs text-(--color-ink-soft)">{p.email}</p>

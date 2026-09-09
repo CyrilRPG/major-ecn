@@ -46,18 +46,19 @@ export const COMMERCIAL_AFTER_M3 = 'Vous souhaitez poursuivre votre préparation
  * durée, ces deux valeurs viennent du tournoi : une règle publique fausse
  * serait pire que pas de règle du tout.
  */
-export function publicRules(t: { questions_per_round: number; seconds_per_question?: number | null }): string[] {
+export function publicRules(t: { questions_per_round: number; seconds_per_question?: number | null; threshold_pct?: number }): string[] {
   const secondes = t.seconds_per_question ?? DEFAULT_SECONDS_PER_QUESTION;
   return [
-  'Trois manches, dates annoncées à l’avance. Chaque manche est ouverte 24 h.',
-  `${t.questions_per_round} questions, ${secondes} s par question, une seule tentative. Chaque question est chronométrée séparément : le temps écoulé, on passe à la suivante. Thème et barème annoncés à l’avance.`,
+  'Trois manches. Les dates et heures d’ouverture et de clôture de chaque manche figurent dans le calendrier du tournoi.',
+  `Format prévu : ${t.questions_per_round} questions par manche. Durée par défaut : ${secondes} s par question ; une durée spécifique peut être indiquée pour certaines questions. Une seule tentative. Chaque question est chronométrée séparément : le temps écoulé, on passe à la suivante. Le nombre effectif de questions, le thème et le barème figurent sur l’écran de la manche.`,
   'Corrections après clôture.',
   'Classement cumulatif, provisoire après M1 et M2, final après M3.',
-  'Au moins deux manches pour figurer au classement final.',
+  'Votre personnage est conservé pendant toute l’Arena. Son habillage dépend uniquement du classement cumulé actuel : 1er Or / Prestige, 2e Argent, 3e Bronze, tous les autres Standard. Il peut monter ou redescendre après chaque publication ; vos positions précédentes restent dans votre palmarès personnel.',
+  'Classement général établi sur les participants ayant disputé les trois manches.',
   'Inscription possible en cours de tournoi, y compris pendant une manche ouverte : le temps de jeu est alors limité au temps restant avant la clôture.',
   'Égalité départagée par points, puis réponses parfaites, puis temps moyen par manche.',
-  'Sous 50 % de score cumulé, aucun rang affiché et aucune apparition dans le classement public ; le seuil est réévalué après chaque manche sur le score cumulé du moment.',
-  'Aucun effectif total affiché.',
+  `Sous ${t.threshold_pct ?? 50} % de score cumulé, aucun rang affiché et aucune apparition dans le classement public ; le seuil est réévalué après chaque manche sur le score cumulé du moment.`,
+  'Les rangs de manche sont affichés sans effectif sur votre espace. L’effectif général peut accompagner votre rang final selon le paramétrage du tournoi. Il reste visible sur la page publique Meilleurs scores.',
   'EVC Arena est un entraînement ludique, pas un concours blanc.',
   ];
 }

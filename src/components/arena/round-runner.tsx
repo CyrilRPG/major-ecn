@@ -2,15 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { Check, Clock3, Lock, WifiOff } from 'lucide-react';
-import { answerQuestion, expireAttempt, expireQuestion } from '@/app/(arena)/arena/[slug]/actions';
-import { ZoomableImage } from '@/components/qcm/image-zoom';
+import { Clock3, WifiOff } from 'lucide-react';
+import { answerQuestion, expireAttempt, expireQuestion, setQuestionMarked } from '@/app/(arena)/arena/[slug]/actions';
 import type { PublicQuestion } from '@/lib/arena/types';
 import { clockLabel } from '@/lib/arena/time';
-import { Helmet } from './arena-logo';
-import { ArenaButton, ARENA, BODY, CAPS, DISPLAY, HEADLINE } from './arena-ui';
-import { FormError } from './form-ui';
+import { QuestionView } from './question-view';
+import { ArenaButton, ARENA, BODY, CAPS, HEADLINE } from './arena-ui';
 import { Ring } from './ring';
 
 /**
@@ -25,10 +22,9 @@ import { Ring } from './ring';
  * désélectionne la première), QRP limitée à n avec le message « Cochez
  * exactement n propositions ».
  */
-const TYPE_LABEL: Record<PublicQuestion['type'], string> = { QRM: 'Réponses multiples', QRU: 'Réponse unique', QRP: 'Nombre de réponses précisé' };
 
 export function RoundRunner({
-  attemptId, deadlineIso, startedIso, lastValidatedIso, questions, answeredIds, baremeLabel, roundNumber, roundTheme, preview,
+  attemptId, deadlineIso, startedIso, lastValidatedIso, questions, answeredIds, markedIds, baremeLabel, roundNumber, roundTotal, roundTheme, preview,
 }: {
   attemptId: string;
   /** Échéance de la tentative entière : clôture de manche, filet de sécurité. */
@@ -40,8 +36,10 @@ export function RoundRunner({
   lastValidatedIso: string | null;
   questions: PublicQuestion[];
   answeredIds: string[];
+  markedIds: string[];
   baremeLabel: Record<'QRM' | 'QRU' | 'QRP', string>;
   roundNumber: number;
+  roundTotal: number;
   roundTheme: string;
   preview: boolean;
 }) {
@@ -55,6 +53,17 @@ export function RoundRunner({
   const [expired, setExpired] = useState(false);
   const [pending, start] = useTransition();
   const expiring = useRef(false);
+  const [confirmedOnce, setConfirmedOnce] = useState(false);
+  const [marked, setMarked] = useState<Set<string>>(() => new Set(markedIds));
+  const [markPending, setMarkPending] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      try {
+        setConfirmedOnce(sessionStorage.getItem('arena-confirmed-' + attemptId) === '1');
+      } catch { /* A blocked storage must never prevent participation. */ }
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, [attemptId]);
   /** Début de la question affichée. Repris du serveur au chargement, puis
    *  recalé à chaque validation : chaque question repart avec son plein temps. */
   const [questionStart, setQuestionStart] = useState<number>(
@@ -91,8 +100,10 @@ export function RoundRunner({
         setRemaining(0);
         if (!expiring.current) {
           expiring.current = true;
-          setExpired(true);
-          expireAttempt(attemptId).catch(() => undefined);
+          expireAttempt(attemptId).then(r => {
+            if (r.ok && r.expired) setExpired(true);
+            else { expiring.current = false; if (!r.ok) setError(r.error); }
+          }).catch(() => { expiring.current = false; setOffline(true); });
         }
         return;
       }
@@ -106,7 +117,7 @@ export function RoundRunner({
             setSelected([]);
             setError(null);
             setAnswered((prev) => new Set([...prev, id]));
-            setQuestionStart(Date.now());
+            setQuestionStart(r.lastValidatedAt ? new Date(r.lastValidatedAt).getTime() : Date.now());
             if (r.finished) finish();
           })
           .catch(() => { expiringQuestion.current = null; });
@@ -176,7 +187,6 @@ export function RoundRunner({
     });
   };
   const canValidate = current.type === 'QRP' ? selected.length === n : current.type === 'QRU' ? selected.length === 1 : true;
-  const isLast = index === questions.length - 1;
 
   const validate = () => {
     setError(null);
@@ -193,97 +203,37 @@ export function RoundRunner({
         if (/clôtur|termin/i.test(r.error)) finish();
         return;
       }
+      setConfirmedOnce(true);
+      try { sessionStorage.setItem('arena-confirmed-' + attemptId, '1'); } catch { /* optional persistence */ }
       setSelected([]);
       setAnswered((prev) => new Set([...prev, current.id]));
-      setQuestionStart(Date.now());
+      setQuestionStart(r.lastValidatedAt ? new Date(r.lastValidatedAt).getTime() : Date.now());
       expiringQuestion.current = null;
       if (r.finished) finish();
     });
   };
 
   return (
-    <div className="relative overflow-hidden rounded-[1.6rem]" style={{ background: '#0D1219', boxShadow: `0 0 0 1px ${ARENA.lineStrong}, 0 50px 100px -40px rgba(0,0,0,0.95)` }}>
-      {preview && (
-        <div className="px-4 py-2 text-center text-[11px] font-bold uppercase tracking-[0.16em]" style={{ background: 'rgba(245,179,43,0.12)', color: ARENA.preview, borderBottom: '1px solid rgba(245,179,43,0.25)', fontFamily: BODY }}>
-          Mode prévisualisation — aucun score n’est enregistré
-        </div>
-      )}
-
-      {/* En-tête : logo · anneau · question n / N */}
-      <div className="flex items-center justify-between gap-3 px-5 pt-5 sm:px-8">
-        <span className="inline-flex items-center gap-2">
-          <Helmet size={30} />
-          <span className="hidden text-[18px] leading-none sm:inline" style={{ fontFamily: HEADLINE, letterSpacing: '0.04em' }}>EVC <span style={{ color: ARENA.red }}>ARENA</span></span>
-        </span>
-        <Ring progress={progress} size={86} stroke={6} urgent={urgent}>
-          <span className="text-[20px] leading-none" style={{ fontFamily: HEADLINE, letterSpacing: '0.04em', color: urgent ? ARENA.redSoft : ARENA.text, textShadow: urgent ? '0 0 16px rgba(228,0,43,0.7)' : 'none' }} aria-live="off">{clock}</span>
-        </Ring>
-        <span className="text-right">
-          <span className="block text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Question</span>
-          <span className="block text-[26px] leading-none" style={{ fontFamily: HEADLINE, letterSpacing: '0.04em' }}>{index + 1} <span style={{ color: ARENA.textMuted }}>/ {questions.length}</span></span>
-          <span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Progression</span>
-        </span>
-      </div>
-      <div className="mt-3 flex gap-1 px-5 sm:px-8">
-        {questions.map((q, i) => (
-          <span key={q.id} className="h-1 flex-1 rounded-full" style={{ background: answered.has(q.id) ? ARENA.red : i === index ? ARENA.redSoft : 'rgba(255,255,255,0.10)' }} />
-        ))}
-      </div>
-
-      <motion.div key={current.id} initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.18, ease: 'easeOut' }} className="px-5 pb-6 pt-6 sm:px-8 sm:pb-8">
-        {roundTheme && <p className="text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Manche {roundNumber} · {roundTheme}</p>}
-        {current.vignette && (
-          <div className="mt-3 rounded-lg px-4 py-3 text-[14px] leading-relaxed" style={{ background: ARENA.raised, boxShadow: `inset 0 0 0 1px ${ARENA.line}`, color: ARENA.textSoft, fontFamily: BODY, whiteSpace: 'pre-line' }}>
-            {current.vignette}
-          </div>
-        )}
-        <p className="mt-3 text-[17px] font-semibold leading-snug sm:text-[19px]" style={{ fontFamily: BODY, color: ARENA.text, whiteSpace: 'pre-line' }}>{current.enonce}</p>
-        <p className="mt-2 text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: ARENA.redSoft, fontFamily: BODY }}>
-          {TYPE_LABEL[current.type]}{n !== null ? ` · cochez exactement ${n} proposition${n > 1 ? 's' : ''}` : ''} · {current.type} · {baremeLabel[current.type]}{current.weight !== 1 ? ` · coefficient ${current.weight}` : ''}
-        </p>
-        {current.images.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-3">
-            {current.images.map((src) => (
-              <span key={src} className="relative block h-48 w-48 overflow-hidden rounded-lg bg-white sm:h-64 sm:w-64"><ZoomableImage src={src} sizes="256px" /></span>
-            ))}
-          </div>
-        )}
-
-        <ul className="mt-5 space-y-2.5">
-          {current.items.map((it) => {
-            const on = selected.includes(it.lettre);
-            return (
-              <li key={it.lettre}>
-                <button
-                  type="button"
-                  onClick={() => toggle(it.lettre)}
-                  aria-pressed={on}
-                  disabled={pending}
-                  className="flex w-full items-center gap-4 rounded-lg px-4 py-3.5 text-left transition-[background-color,box-shadow] duration-150"
-                  style={{ background: on ? 'rgba(46,204,113,0.14)' : ARENA.raised, boxShadow: on ? `inset 0 0 0 1.5px ${ARENA.ok}` : `inset 0 0 0 1px ${ARENA.line}` }}
-                >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-[14px] font-bold" style={{ background: on ? ARENA.ok : 'rgba(255,255,255,0.06)', color: on ? '#04140A' : ARENA.textSoft, fontFamily: DISPLAY }}>
-                    {on ? <Check className="h-4 w-4" strokeWidth={3} /> : it.lettre}
-                  </span>
-                  <span className="text-[14.5px] leading-snug" style={{ color: on ? ARENA.text : ARENA.textSoft, fontFamily: BODY }}>{it.enonce}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-
-        <div className="mt-6 space-y-3">
-          <FormError>{error}</FormError>
-          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="flex items-center gap-2 text-[12px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>
-              <Lock className="h-3.5 w-3.5" /> Validation irréversible — aucun retour en arrière. Sauvegarde immédiate.
-            </p>
-            <ArenaButton onClick={validate} disabled={!canValidate || pending} className="w-full sm:w-auto">
-              {pending ? 'Enregistrement…' : isLast ? 'Valider & terminer' : 'Valider & suivante'}
-            </ArenaButton>
-          </div>
-        </div>
-      </motion.div>
+    <div className="relative">
+      <QuestionView key={current.id}
+        question={current} roundNumber={roundNumber} roundTotal={roundTotal} roundTheme={roundTheme}
+        questionIndex={index} questionTotal={questions.length} clock={clock} progress={progress} urgent={urgent}
+        selected={selected} pending={pending} canValidate={canValidate} confirmationRequired={!confirmedOnce}
+        baremeLabel={baremeLabel[current.type]} error={error} onToggle={toggle} onValidate={validate}
+        marked={marked.has(current.id)} markPending={markPending} onMark={async () => {
+          if (markPending) return;
+          const id = current.id;
+          const value = !marked.has(id);
+          setMarkPending(true);
+          try {
+            const r = await setQuestionMarked(attemptId, id, value);
+            if (!r.ok) { setError(r.error); return; }
+            setMarked(previous => { const next = new Set(previous); if (value) next.add(id); else next.delete(id); return next; });
+          } catch { setError('Le marquage n’a pas été enregistré. Réessayez.'); }
+          finally { setMarkPending(false); }
+        }}
+      />
+      {preview && <p className="ae-result-extra">Mode prévisualisation — aucun score n’est enregistré</p>}
 
       {/* Connexion perdue (maquette 13) */}
       {offline && (

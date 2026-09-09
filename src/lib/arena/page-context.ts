@@ -1,9 +1,10 @@
 import 'server-only';
 import { notFound } from 'next/navigation';
 import { registrationOpen, visibleSnapshot, type StaffInfo } from './access';
-import { currentParticipant, type TournamentSnapshot } from './db';
+import { computeTournamentStandings, currentParticipant, type TournamentSnapshot } from './db';
 import type { ShellNav } from '@/components/arena/arena-shell';
 import type { ParticipantRow } from './types';
+import { roundState } from './time';
 
 /**
  * Contexte commun des pages publiques d'un tournoi : instantané (tournoi,
@@ -23,6 +24,7 @@ export async function loadArenaPage(slug: string, opts: { preview?: boolean } = 
   if (!v) notFound();
   const { snap, staff } = v;
   const participant = await currentParticipant(snap.tournament.id);
+  const rank = participant ? (await computeTournamentStandings(snap)).standings.find(s => s.participantId === participant.id)?.rank ?? null : null;
   const open = registrationOpen(snap);
   return {
     snap,
@@ -33,10 +35,18 @@ export async function loadArenaPage(slug: string, opts: { preview?: boolean } = 
       slug,
       title: snap.tournament.title,
       editionLabel: snap.tournament.edition_label,
-      participant: participant ? { pseudo: participant.pseudo } : null,
+      participant: participant ? { pseudo: participant.pseudo, avatar_seed: participant.avatar_seed, rank } : null,
       registrationOpen: open,
       leaderboardEnabled: snap.tournament.leaderboard_enabled,
       staffPreview: Boolean(opts.preview && staff),
+      updates: snap.rounds.flatMap(r => {
+        const base = `/arena/${slug}`;
+        if (r.results_published_at) return [{ title: `Résultats de la manche ${r.number}`, detail: 'Résultats et corrections publiés.', href: `${base}/manche/${r.number}/corrections` }];
+        const state = roundState(r);
+        const date = state === 'open' ? r.closes_at : r.opens_at;
+        if (!date || state === 'closed') return [];
+        return [{ title: `Manche ${r.number} — ${state === 'open' ? 'ouverte' : 'à venir'}`, detail: `${state === 'open' ? 'Clôture' : 'Ouverture'} le ${new Date(date).toLocaleString('fr-FR', { timeZone: 'Europe/Paris' })} (heure de Paris).`, href: `${base}/manche/${r.number}` }];
+      }),
     },
   };
 }

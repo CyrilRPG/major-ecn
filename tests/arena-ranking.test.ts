@@ -55,7 +55,7 @@ test('égalité parfaite : même rang, puis saut', () => {
   assert.deepEqual(s.map((r) => r.rank), [1, 1, 3]);
 });
 
-test('temps moyen : les manches tronquées sont exclues du temps mais comptées dans les points', () => {
+test('temps moyen : temps cumulé divisé par toutes les manches disputées', () => {
   const s = computeStandings(
     rounds,
     [A('a', 'r1', 10, 0, 420, true), A('a', 'r2', 10, 0, 500), A('b', 'r1', 10, 0, 480), A('b', 'r2', 10, 0, 480)],
@@ -63,22 +63,21 @@ test('temps moyen : les manches tronquées sont exclues du temps mais comptées 
     opts,
   );
   const a = s.find((x) => x.participantId === 'a')!;
-  assert.equal(a.meanTime, 500, 'seule la manche non tronquée compte');
+  assert.equal(a.meanTime, 460, 'les deux manches disputées comptent');
   assert.equal(a.totalScore, 20);
-  assert.equal(a.rank, 2);
-  // Un participant dont toutes les manches sont tronquées passe derrière les temps calculables
+  assert.equal(a.rank, 1);
   const t = computeStandings([rounds[0]], [A('a', 'r1', 10, 0, 300, true), A('b', 'r1', 10, 0, 700)], [P('a'), P('b')], opts);
-  assert.deepEqual(t.map((r) => [r.participantId, r.rank]), [['b', 1], ['a', 2]]);
+  assert.deepEqual(t.map((r) => [r.participantId, r.rank]), [['a', 1], ['b', 2]]);
 });
 
-test('classement final : au moins deux manches, sinon aucun rang', () => {
+test('classement final : les trois manches sont obligatoires, même avec un ancien paramètre à deux', () => {
   const all = rounds.map((r) => ({ ...r, counted: true }));
   const s = computeStandings(all, [A('a', 'r1', 12, 0, 500), A('a', 'r2', 12, 0, 500), A('b', 'r1', 36, 0, 500)], [P('a'), P('b')], { ...opts, isFinal: true });
   const b = s.find((x) => x.participantId === 'b')!;
   assert.equal(b.pct, 100);
   assert.equal(b.rank, null);
   assert.equal(b.reason, 'not_enough_rounds');
-  assert.equal(s.find((x) => x.participantId === 'a')!.rank, 1);
+  assert.equal(s.find((x) => x.participantId === 'a')!.rank, null);
 });
 
 test('exclus retirés, meilleurs scores bornés et sans effectif', () => {

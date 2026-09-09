@@ -72,7 +72,7 @@ export type TokenLookup =
 /** Lecture sans effet de bord (page d'atterrissage du lien de confirmation). */
 export async function lookupConfirmationToken(token: string): Promise<TokenLookup> {
   if (!token) return { status: 'unknown' };
-  const { data } = await arenaDb().from('arena_participants').select('*').eq('confirmation_token_hash', hashToken(token)).maybeSingle();
+  const { data } = await arenaDb().from('arena_participants').select('*').eq('confirmation_token_hash', hashToken(token)).maybeSingle().throwOnError();
   const p = data as ParticipantRow | null;
   if (!p) return { status: 'unknown' };
   if (p.blocked_at) return { status: 'blocked' };
@@ -84,7 +84,7 @@ export async function lookupConfirmationToken(token: string): Promise<TokenLooku
 /** Lecture sans effet de bord (page d'atterrissage du lien de connexion). */
 export async function lookupLoginToken(token: string): Promise<TokenLookup> {
   if (!token) return { status: 'unknown' };
-  const { data } = await arenaDb().from('arena_participants').select('*').eq('login_token_hash', hashToken(token)).maybeSingle();
+  const { data } = await arenaDb().from('arena_participants').select('*').eq('login_token_hash', hashToken(token)).maybeSingle().throwOnError();
   const p = data as ParticipantRow | null;
   if (!p) return { status: 'unknown' };
   if (!p.login_token_expires_at || new Date(p.login_token_expires_at).getTime() < Date.now()) return { status: 'expired' };
@@ -101,11 +101,12 @@ export async function consumeConfirmationToken(token: string): Promise<{ ok: tru
   const { participant: p, tournament: t } = found;
   const first = !p.email_confirmed_at;
   const db = arenaDb();
-  await db.from('arena_participants').update({
+  const { data: consumed } = await db.from('arena_participants').update({
     email_confirmed_at: p.email_confirmed_at ?? new Date().toISOString(),
     confirmation_token_hash: null,
     last_login_at: new Date().toISOString(),
-  }).eq('id', p.id);
+  }).eq('id', p.id).eq('confirmation_token_hash', hashToken(token)).select('id').maybeSingle().throwOnError();
+  if (!consumed) return { ok: false, status: 'unknown' };
   if (first) {
     await arenaLog({ tournamentId: t.id, kind: 'participant_confirmed', details: `Adresse confirmée pour ${p.pseudo}.` });
     if (t.email_sequence.validated.enabled) {
@@ -124,12 +125,13 @@ export async function consumeLoginToken(token: string): Promise<{ ok: true; slug
   const found = await lookupLoginToken(token);
   if (found.status !== 'ok') return { ok: false, status: found.status };
   const { participant: p, tournament: t } = found;
-  await arenaDb().from('arena_participants').update({
+  const { data: consumed } = await arenaDb().from('arena_participants').update({
     login_token_hash: null,
     login_token_expires_at: null,
     email_confirmed_at: p.email_confirmed_at ?? new Date().toISOString(),
     last_login_at: new Date().toISOString(),
-  }).eq('id', p.id);
+  }).eq('id', p.id).eq('login_token_hash', hashToken(token)).select('id').maybeSingle().throwOnError();
+  if (!consumed) return { ok: false, status: 'unknown' };
   await setSessionCookie(p.id, t.id);
   return { ok: true, slug: t.slug };
 }

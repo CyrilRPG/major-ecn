@@ -17,7 +17,7 @@ export function ReportDialog({ slug, questionId, questionLabel, alreadyReported 
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
 
-  if (done) return <p className="text-xs" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Signalement transmis — merci. Un accusé de réception vous a été envoyé.</p>;
+  if (done) return <p className="text-xs" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Signalement enregistré et transmis à l’équipe pédagogique — merci.</p>;
 
   if (!open) {
     return (

@@ -108,8 +108,8 @@ export function roundState(r: RoundWindow, now: Date = new Date()): RoundState {
 
 /**
  * Échéance d'une tentative (§2.4) : durée effective = min(temps alloué,
- * temps restant avant clôture). `truncated` signale une fenêtre réduite,
- * exclue du calcul du temps moyen (§6.13).
+ * temps restant avant clôture). `truncated` signale une fenêtre réduite.
+ * Toute manche disputée reste incluse dans le calcul du temps moyen.
  *
  * Le temps alloué est désormais la SOMME des durées des questions de la
  * manche (`roundTotalSeconds`), et non plus une durée de manche unique.

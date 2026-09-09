@@ -11,8 +11,9 @@ export type ParticipantView = {
   id: string; pseudo: string; first_name: string; last_name: string; email: string; specialty: string;
   confirmed: boolean; marketing: boolean; blocked: boolean; anonymized: boolean; source: string | null; invited: boolean;
   created_at: string; last_login_at: string | null;
-  rounds: { number: number; attemptId: string | null; status: string | null; score: number | null; truncated: boolean }[];
+  rounds: { number: number; attemptId: string | null; status: string | null; score: number | null; truncated: boolean; rank: number | null; effectifManche: number }[];
   totalScore: number; rank: number | null;
+  effectifGeneral: number; reason: string | null; isFinal: boolean;
 };
 
 const fmt = (iso: string | null) => (iso ? new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' }).format(new Date(iso)) : '—');
@@ -88,10 +89,11 @@ export function ParticipantsTable({ tournamentId, rows }: { tournamentId: string
                         {r.status !== 'in_progress' && <button className="ml-1 text-(--color-ink-muted) hover:text-(--color-danger)" title="Réinitialiser la tentative (incident)" onClick={() => { const reason = prompt('Motif de réinitialisation :'); if (reason) run(() => resetAttempt(r.attemptId as string, reason)); }}><RotateCcw className="inline h-3 w-3" /></button>}
                       </span>
                     ) : '—'}
+                    <span className="block text-(--color-ink-muted)">Rang : {r.rank ?? '—'} · effectif de manche : {r.effectifManche}</span>
                   </td>
                 ))}
                 <td className="px-3 py-2 font-semibold">{p.totalScore.toLocaleString('fr-FR')}</td>
-                <td className="px-3 py-2">{p.rank ?? <span className="text-xs text-(--color-ink-muted)">sous seuil</span>}</td>
+                <td className="px-3 py-2">{p.rank ?? <span className="text-xs text-(--color-ink-muted)">{p.reason === 'not_enough_rounds' ? '3 manches requises' : p.reason === 'under_threshold' ? 'sous seuil' : 'non classé'}</span>}{p.isFinal && <span className="block text-xs text-(--color-ink-muted)">Effectif général : {p.effectifGeneral}</span>}</td>
                 <td className="px-3 py-2">
                   <div className="flex justify-end gap-1">
                     {!p.confirmed && !p.anonymized && <Button variant="ghost" size="sm" title="Renvoyer la confirmation" disabled={pending} onClick={() => run(() => resendConfirmationAdmin(p.id))}><MailCheck className="h-4 w-4" /></Button>}

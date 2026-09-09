@@ -2,17 +2,26 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 import { ArenaPage, Notice, Panel } from '@/components/arena/arena-shell';
-import { BigScore, Container, Eyebrow } from '@/components/arena/arena-ui';
+import { BigScore, Container } from '@/components/arena/arena-ui';
 import { buttonClass, buttonStyle } from '@/components/arena/tokens';
 import { Countdown, LocalTime } from '@/components/arena/countdown';
 import { InviteBox } from '@/components/arena/invite-box';
 import { SpaceSettings } from '@/components/arena/space-settings';
-import { Stadium } from '@/components/arena/stadium';
+import { ProfileDetails } from '@/components/arena/profile-details';
+import { RoundLobby } from '@/components/arena/round-lobby';
+import { TournamentFinal } from '@/components/arena/tournament-final';
+import { tournamentFinalSummary } from '@/lib/arena/final-summary';
+import { AvatarRankHistory } from '@/components/arena/avatar-rank-history';
+import { participantRankHistory } from '@/lib/arena/rank-history-db';
+import { qrpNs } from '@/lib/arena/types';
+import { StartRoundButton } from '@/components/arena/start-round-button';
 import { ARENA, BODY, CAPS, HEADLINE, TABULAR } from '@/components/arena/tokens';
-import { computeTournamentStandings, effectiveBareme, listAttemptsForRounds, roundMaxScore } from '@/lib/arena/db';
+import { arenaDb, computeTournamentStandings, effectiveBareme, listAnswers, listAttemptsForRounds, roundDuration, roundMaxScore } from '@/lib/arena/db';
+import { questionMaxUnit } from '@/lib/arena/scoring';
+import { performanceAnalysis } from '@/lib/arena/result-summary';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
-import { UNDER_THRESHOLD_MESSAGE } from '@/lib/arena/texts';
-import { clockLabel, roundState } from '@/lib/arena/time';
+import { UNDER_THRESHOLD_MESSAGE, buttonTruncated, warningTruncated } from '@/lib/arena/texts';
+import { clockLabel, minutesLabel, roundState } from '@/lib/arena/time';
 import { siteUrl } from '@/lib/email/send';
 
 export const dynamic = 'force-dynamic';
@@ -42,30 +51,47 @@ export default async function SpacePage({ params, searchParams }: Params) {
   const attempts = (await listAttemptsForRounds(ctx.snap.rounds.map((r) => r.id))).filter((a) => a.participant_id === p.id);
   const standings = await computeTournamentStandings(ctx.snap);
   const me = standings.standings.find((s) => s.participantId === p.id) ?? null;
+  const rankHistory = await participantRankHistory(p.id);
+  if (standings.isFinal) {
+    const playedAttempts = attempts.filter(a => me?.perRound[a.round_id]);
+    const answers = (await Promise.all(playedAttempts.map(a => listAnswers(a.id)))).flat();
+    const byQuestion = new Map(answers.map(a => [a.question_id, a]));
+    const analysis = performanceAnalysis(ctx.snap.rounds.filter(r => me?.perRound[r.id]).flatMap(r =>
+      (ctx.snap.questionsByRound.get(r.id) ?? []).filter(q => !q.neutralized_at).map(q => ({ type: q.type, score: Number(byQuestion.get(q.id)?.score ?? 0), max: questionMaxUnit(q, effectiveBareme(t, r)) * q.weight }))));
+    const summary = tournamentFinalSummary({
+      participantId: p.id, edition: t.edition_label, afficherEffectifGeneral: t.afficher_effectif_general,
+      rankings: standings, history: rankHistory, thresholdPct: t.threshold_pct,
+      analysis,
+      rounds: ctx.snap.rounds.map(r => {
+        const questions = (ctx.snap.questionsByRound.get(r.id) ?? []).filter(q => !q.neutralized_at);
+        return { id: r.id, number: r.number, date: r.opens_at, theme: r.theme, questionCount: questions.length, max: roundMaxScore(questions, effectiveBareme(t, r)) };
+      }),
+    });
+    return <ArenaPage nav={ctx.nav} immersive>
+      <TournamentFinal summary={summary} base={base} leaderboardEnabled={t.leaderboard_enabled} />
+      <ProfileDetails>
+        <AvatarRankHistory seed={p.avatar_seed} pseudo={p.pseudo} rank={me?.rank ?? null} entries={rankHistory} final general={summary.general} />
+        <SpaceSettings slug={slug} pseudo={p.pseudo} avatarSeed={p.avatar_seed} rank={me?.rank} marketing={p.consent_marketing && !p.marketing_unsubscribed_at} canChangePseudo={attempts.length === 0} email={p.email} />
+      </ProfileDetails>
+    </ArenaPage>;
+  }
   const cumulMax = standings.countedRounds.reduce((a, r) => a + roundMaxScore(ctx.snap.questionsByRound.get(r.id) ?? [], effectiveBareme(t, r)), 0);
   const inviteUrl = `${siteUrl()}/arena/${slug}?i=${p.invite_code}&utm_source=invitation`;
   const openRound = ctx.snap.rounds.find((r) => roundState(r, now) === 'open') ?? null;
+  const featured = openRound ?? ctx.snap.rounds.find((r) => roundState(r, now) === 'upcoming') ?? ctx.snap.rounds.at(-1);
+  const featuredRemaining = featured?.closes_at ? Math.max(0, Math.floor((new Date(featured.closes_at).getTime() - now.getTime()) / 1000)) : Infinity;
+  const featuredTruncated = featured && roundState(featured, now) === 'open' && featuredRemaining < roundDuration(t, featured, ctx.snap.questionsByRound.get(featured.id)) * 60;
+  const featuredAttempt = featured ? attempts.find((a) => a.round_id === featured.id) : null;
+  const featuredQuestions = featured ? (ctx.snap.questionsByRound.get(featured.id) ?? []).filter((q) => !q.neutralized_at) : [];
+  const { count: participantCount } = await arenaDb().from('arena_participants').select('id', { count: 'exact', head: true }).eq('tournament_id', t.id).not('email_confirmed_at', 'is', null).is('blocked_at', null).is('anonymized_at', null);
   const lastCounted = standings.countedRounds.length ? Math.max(...standings.countedRounds.map((r) => r.number)) : null;
 
   return (
-    <ArenaPage nav={ctx.nav}>
-      <Stadium photo="seatsRed" darken={0.78} tint={0.15} position="center 45%" className="py-10 sm:py-14">
-        <Container>
-          {bienvenue && <div className="mb-6"><Notice tone="ok">Votre adresse est confirmée : vous êtes officiellement dans l’arène sous le pseudonyme « {p.pseudo} ».</Notice></div>}
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <Eyebrow>Mon espace · {t.specialty}</Eyebrow>
-              <h1 className="mt-3 text-[2.4rem] leading-[0.95] sm:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Bonjour <span style={{ color: ARENA.red }}>{p.first_name}.</span></h1>
-              <p className="mt-2 text-[13.5px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Pseudonyme public : <strong style={{ color: ARENA.text }}>{p.pseudo}</strong></p>
-            </div>
-            {openRound && (
-              <Link href={`${base}/manche/${openRound.number}`} className={buttonClass('primary', 'lg')} style={buttonStyle('primary')}>
-                Jouer la manche {openRound.number} <ArrowRight className="h-5 w-5" />
-              </Link>
-            )}
-          </div>
-        </Container>
-      </Stadium>
+    <ArenaPage nav={ctx.nav} immersive>
+      {featured && <RoundLobby slug={slug} round={featured} rounds={ctx.snap.rounds} participant={ctx.nav.participant}
+        questionCount={featuredQuestions.length} duration={roundDuration(t, featured, featuredQuestions)} bareme={effectiveBareme(t, featured)} ns={qrpNs(featuredQuestions)} participantCount={participantCount ?? 0} nowIso={now.toISOString()}
+        notices={<div className="space-y-3">{bienvenue && <Notice tone="ok">Votre adresse est confirmée : vous êtes officiellement dans l’arène sous le pseudonyme « {p.pseudo} ».</Notice>}{featuredTruncated && !featuredAttempt && <Notice tone="amber">{warningTruncated(minutesLabel(featuredRemaining))}</Notice>}</div>}
+      >{featuredAttempt ? <Link className="ae-button" href={base + '/manche/' + featured.number}>{featuredAttempt.status === 'in_progress' ? 'Reprendre la manche' : 'Voir mes résultats'}<ArrowRight aria-hidden /></Link> : roundState(featured, now) === 'open' && featuredQuestions.length > 0 ? <StartRoundButton slug={slug} roundNumber={featured.number} preview={false} immersive label={featuredTruncated ? buttonTruncated(Math.max(1, Math.floor(featuredRemaining / 60))) : 'Entrer dans l’arène — manche ' + featured.number} /> : <Link className="ae-button" href={base + '/manche/' + featured.number}>Voir la manche {featured.number}<ArrowRight aria-hidden /></Link>}</RoundLobby>}
 
       <Container className="py-8 sm:py-12">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
@@ -155,9 +181,13 @@ export default async function SpacePage({ params, searchParams }: Params) {
             </Panel>
 
             <Panel>
+              <AvatarRankHistory seed={p.avatar_seed} pseudo={p.pseudo} rank={me?.rank ?? null} entries={rankHistory} />
+            </Panel>
+
+            <Panel>
               <h2 id="compte" className="text-[1.4rem] leading-none" style={{ ...CAPS, color: ARENA.text }}>Mon compte</h2>
               <div className="mt-5">
-                <SpaceSettings slug={slug} pseudo={p.pseudo} avatarSeed={p.avatar_seed} marketing={p.consent_marketing && !p.marketing_unsubscribed_at} canChangePseudo={attempts.length === 0} email={p.email} />
+                <SpaceSettings slug={slug} pseudo={p.pseudo} avatarSeed={p.avatar_seed} rank={me?.rank} marketing={p.consent_marketing && !p.marketing_unsubscribed_at} canChangePseudo={attempts.length === 0} email={p.email} />
               </div>
             </Panel>
           </div>

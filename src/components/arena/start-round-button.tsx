@@ -1,15 +1,65 @@
-'use client';
+"use client";
 
-import { useState, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
-import { RotateCcw } from 'lucide-react';
-import { restartPreview, startAttempt } from '@/app/(arena)/arena/[slug]/actions';
-import { ArenaButton } from './arena-ui';
-import { FormError } from './form-ui';
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowRight, Play, RotateCcw } from "lucide-react";
+import {
+  restartPreview,
+  startAttempt,
+} from "@/app/(arena)/arena/[slug]/actions";
+import { ArenaButton } from "./arena-ui";
+import { FormError } from "./form-ui";
 
-export function StartRoundButton({ slug, roundNumber, label, preview }: { slug: string; roundNumber: number; label: string; preview: boolean }) {
+export function StartRoundButton({
+  slug,
+  roundNumber,
+  label,
+  preview,
+  immersive = false,
+}: {
+  slug: string;
+  roundNumber: number;
+  label: string;
+  preview: boolean;
+  immersive?: boolean;
+}) {
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
+  const begin = () => {
+    setError(null);
+    start(async () => {
+      try {
+        const r = await startAttempt(slug, roundNumber, preview);
+        if (!r.ok) {
+          setError(r.error);
+          return;
+        }
+        window.location.assign(
+          `/arena/${slug}/manche/${roundNumber}${preview ? "?preview=1" : ""}`,
+        );
+      } catch {
+        setError(
+          "La manche n’a pas pu démarrer. Vérifiez votre connexion puis réessayez.",
+        );
+      }
+    });
+  };
+  if (immersive)
+    return (
+      <div>
+        <FormError>{error}</FormError>
+        <button
+          type="button"
+          className="ae-button"
+          disabled={pending}
+          onClick={begin}
+        >
+          <Play aria-hidden />
+          {pending ? "Démarrage…" : label}
+          <ArrowRight aria-hidden />
+        </button>
+      </div>
+    );
   return (
     <div className="space-y-3">
       <FormError>{error}</FormError>
@@ -17,28 +67,34 @@ export function StartRoundButton({ slug, roundNumber, label, preview }: { slug: 
         size="lg"
         disabled={pending}
         className="w-full"
-        onClick={() => {
-          setError(null);
-          start(async () => {
-            const r = await startAttempt(slug, roundNumber, preview);
-            if (!r.ok) { setError(r.error); return; }
-            // Rechargement complet : garantit l'écran de passation immédiatement (router.refresh()
-            // pouvait laisser l'écran d'accueil affiché plusieurs secondes en recette).
-            window.location.assign(window.location.pathname + window.location.search);
-          });
-        }}
+        onClick={begin}
       >
-        {pending ? 'Démarrage…' : label}
+        {pending ? "Démarrage…" : label}
       </ArenaButton>
     </div>
   );
 }
 
-export function RestartPreviewButton({ slug, roundNumber }: { slug: string; roundNumber: number }) {
+export function RestartPreviewButton({
+  slug,
+  roundNumber,
+}: {
+  slug: string;
+  roundNumber: number;
+}) {
   const router = useRouter();
   const [pending, start] = useTransition();
   return (
-    <ArenaButton variant="ghost" disabled={pending} onClick={() => start(async () => { await restartPreview(slug, roundNumber); router.refresh(); })}>
+    <ArenaButton
+      variant="ghost"
+      disabled={pending}
+      onClick={() =>
+        start(async () => {
+          await restartPreview(slug, roundNumber);
+          router.refresh();
+        })
+      }
+    >
       <RotateCcw className="h-4 w-4" /> Rejouer la prévisualisation
     </ArenaButton>
   );

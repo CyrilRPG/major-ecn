@@ -33,7 +33,7 @@ export function integrityCheck(snap: TournamentSnapshot): IntegrityReport {
   if (!t.slug || !/^[a-z0-9-]{3,60}$/.test(t.slug)) problems.push('URL (slug) invalide : lettres minuscules, chiffres et tirets.');
   if (!t.title.trim()) problems.push('Titre manquant.');
   if (!t.specialty.trim()) problems.push('Spécialité manquante.');
-  if (snap.rounds.length === 0) problems.push('Aucune manche.');
+  if (snap.rounds.length !== 3) problems.push('Le tournoi doit comporter exactement trois manches.');
   const perRound = snap.rounds.map((r) => {
     const qs = (snap.questionsByRound.get(r.id) ?? []).filter((q) => !q.neutralized_at);
     const issues: string[] = [];

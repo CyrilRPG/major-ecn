@@ -68,7 +68,7 @@ export async function finalizeAttempt(attemptId: string, reason: 'submitted' | '
     if (!g) continue;
     await db.from('arena_answers').update({
       score: g.score, max_score: g.max, discordances: g.discordances, is_perfect: g.is_perfect, rule_triggered: g.rule_triggered,
-    }).eq('id', a.id);
+    }).eq('id', a.id).throwOnError();
   }
 
   const started = new Date(attempt.started_at).getTime();
@@ -91,14 +91,14 @@ export async function finalizeAttempt(attemptId: string, reason: 'submitted' | '
     })
     .eq('id', attempt.id)
     .select('*')
-    .single();
+    .single().throwOnError();
   return (data as AttemptRow) ?? null;
 }
 
 /** Recalcule toutes les tentatives closes d'une manche (neutralisation, barème modifié). */
 export async function recomputeRound(roundId: string): Promise<number> {
   const db = arenaDb();
-  const { data } = await db.from('arena_attempts').select('id').eq('round_id', roundId).neq('status', 'in_progress');
+  const { data } = await db.from('arena_attempts').select('id').eq('round_id', roundId).neq('status', 'in_progress').throwOnError();
   let n = 0;
   for (const row of (data ?? []) as { id: string }[]) {
     await finalizeAttempt(row.id, 'submitted');

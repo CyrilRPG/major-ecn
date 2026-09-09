@@ -73,6 +73,7 @@ export type TournamentRow = {
   intro_text: string;
   og_image_path: string | null;
   leaderboard_enabled: boolean;
+  afficher_effectif_general: boolean;
   leaderboard_size: number;
   threshold_pct: number;
   min_rounds_final: number;
@@ -102,6 +103,7 @@ export type RoundRow = {
   bareme_snapshot: Bareme | null;
   bareme_locked_at: string | null;
   results_published_at: string | null;
+  ranking_snapshot_at?: string | null;
   results_publish_delay_minutes: number;
   corrections_intro: string;
   corrections_methodo: string;

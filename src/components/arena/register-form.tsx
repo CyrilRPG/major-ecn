@@ -142,7 +142,8 @@ export function RegisterForm({
       </div>
 
       <div>
-        <p className="mb-2 text-[12px] font-semibold" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Avatar <span style={{ color: ARENA.textMuted }}>(facultatif)</span></p>
+        <p className="mb-2 text-[12px] font-semibold" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Votre personnage pour toute l’Arena</p>
+        <p className="mb-4 text-xs leading-relaxed" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Choisissez votre avatar avant de vous inscrire. Vous conserverez ce personnage ; son habillage Or, Argent, Bronze ou Standard dépendra uniquement de votre classement cumulé actuel.</p>
         <div role="radiogroup" aria-label="Choisir un avatar" className="grid grid-cols-6 gap-2 sm:grid-cols-8 sm:gap-2.5">
           {AVATARS_PLANCHE.map((a) => {
             const on = a.id === seed;

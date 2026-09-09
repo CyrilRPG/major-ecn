@@ -1,26 +1,17 @@
 'use client';
 
-/**
- * Sélecteur d'avatar « dessin » : aperçu en grand, grille de propositions
- * aléatoires (régénérables) et enregistrement de la graine choisie.
- */
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Check, Loader2, RefreshCw } from 'lucide-react';
 import { DrawnAvatar } from '@/components/avatar/drawn-avatar';
-import { randomAvatarSeed } from '@/lib/avatar';
-
-function freshOptions(n: number): string[] {
-  return Array.from({ length: n }, () => randomAvatarSeed());
-}
+import { PLATFORM_AVATARS, randomAvatarSeed } from '@/lib/avatar';
 
 export function AvatarPicker({ initialSeed }: { initialSeed: string }) {
+  const router = useRouter();
   const [current, setCurrent] = useState(initialSeed);
   const [selected, setSelected] = useState(initialSeed);
-  const [options, setOptions] = useState<string[]>(() => freshOptions(11));
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
-
-  const choices = [current, ...options.filter((o) => o !== current)].slice(0, 12);
 
   async function save() {
     if (selected === current) return;
@@ -35,6 +26,7 @@ export function AvatarPicker({ initialSeed }: { initialSeed: string }) {
       if (res.ok) {
         setCurrent(selected);
         setMsg('Avatar enregistré.');
+        router.refresh();
       } else {
         const j = (await res.json().catch(() => ({}))) as { error?: string };
         setMsg(j.error ?? 'Échec de l’enregistrement.');
@@ -57,17 +49,20 @@ export function AvatarPicker({ initialSeed }: { initialSeed: string }) {
 
       <div className="flex-1">
         <div className="grid grid-cols-6 gap-2 sm:grid-cols-8">
-          {choices.map((seed) => {
+          {PLATFORM_AVATARS.map(({ id: seed, label }) => {
             const active = seed === selected;
             return (
               <button
                 key={seed}
                 type="button"
                 onClick={() => setSelected(seed)}
+                disabled={saving}
                 className={`relative rounded-xl border-2 p-0.5 transition ${
                   active ? 'border-(--color-primary)' : 'border-transparent hover:border-(--color-border)'
                 }`}
-                aria-label="Choisir cet avatar"
+                aria-label={`Choisir : ${label}`}
+                aria-pressed={active}
+                title={label}
               >
                 <DrawnAvatar seed={seed} size={44} className="rounded-lg" />
                 {active && (
@@ -80,13 +75,14 @@ export function AvatarPicker({ initialSeed }: { initialSeed: string }) {
           })}
         </div>
 
-        <div className="mt-3 flex items-center gap-2">
+        <div className="mt-3 flex flex-wrap items-center gap-2">
           <button
             type="button"
-            onClick={() => setOptions(freshOptions(11))}
+            onClick={() => { setSelected(randomAvatarSeed()); setMsg(null); }}
+            disabled={saving}
             className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) px-3 py-1.5 text-xs font-bold text-(--color-ink) hover:bg-(--color-sand-100)"
           >
-            <RefreshCw className="h-3.5 w-3.5" /> Régénérer
+            <RefreshCw className="h-3.5 w-3.5" /> Choisir au hasard
           </button>
           <button
             type="button"
@@ -97,7 +93,7 @@ export function AvatarPicker({ initialSeed }: { initialSeed: string }) {
             {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
             Enregistrer
           </button>
-          {msg && <span className="text-xs text-(--color-ink-soft)">{msg}</span>}
+          <span role="status" className="text-xs text-(--color-ink-soft)">{msg}</span>
         </div>
       </div>
     </div>

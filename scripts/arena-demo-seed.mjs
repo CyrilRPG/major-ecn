@@ -12,6 +12,7 @@
  */
 import { createClient } from '@supabase/supabase-js';
 import fs from 'node:fs';
+import { completeDemoRounds } from './arena-demo-bank.mjs';
 
 const env = Object.fromEntries(
   fs.readFileSync('.env.local', 'utf8').split(/\r?\n/)
@@ -326,6 +327,12 @@ const ROUNDS = [
 /* Insertion                                                            */
 /* ------------------------------------------------------------------ */
 
+// Prepare and validate the full 20-question content before any database mutation.
+await completeDemoRounds(db, ROUNDS);
+if (process.argv.includes('--check')) {
+  console.log(ROUNDS.map(r => ({ manche:r.number, questions:r.questions.length, importees:r.questions.filter(q=>q.source_question_id).length })));
+  process.exit(0);
+}
 const existing = await db.from('arena_tournaments').select('id').eq('slug', SLUG).maybeSingle();
 if (existing.data) {
   await db.from('arena_tournaments').delete().eq('id', existing.data.id);
@@ -341,7 +348,8 @@ const { data: t, error: tErr } = await db.from('arena_tournaments').insert({
   status: 'registration_open',
   indexable: false,
   meta_title: 'EVC Arena Médecine interne — tournoi de QCM Major ECN',
-  meta_description: 'Trois manches de 12 QCM en 12 minutes, une seule tentative, classement cumulé entre médecins candidats aux EVC. Entraînement ludique, gratuit.',
+  meta_description: 'Trois manches de 20 questions, 60 secondes par question, une seule tentative, classement cumulé entre médecins candidats aux EVC. Entraînement ludique, gratuit.',
+  questions_per_round: 20, round_duration_minutes: 20, min_rounds_final: 3, afficher_effectif_general: false,
   intro_text: 'Tournoi de démonstration : trois manches de médecine interne pour vérifier chaque écran du dispositif avant la première édition. Les questions sont des questions d’entraînement.',
   bareme: { QRM: { mode: 'cng' }, QRU: { mode: 'cng' }, QRP: { mode: 'cng' } },
   email_sequence: { validated: { enabled: true }, j7: { enabled: false }, j1: { enabled: true }, opening: { enabled: true }, relance: { enabled: true }, results: { enabled: true }, results_delay_minutes: 0 },
@@ -357,7 +365,7 @@ for (const r of ROUNDS) {
   if (rErr) throw rErr;
   const rows = r.questions.map((q, i) => ({
     round_id: round.id, order_index: i, type: q.type, expected_count: q.type === 'QRP' ? q.n : null, weight: q.weight ?? 1,
-    enonce: q.enonce, vignette: q.vignette ?? null, images: [], items: q.items,
+    enonce: q.enonce, vignette: q.vignette ?? null, images: q.images ?? [], items: q.items, source_question_id: q.source_question_id ?? null,
     explanation: q.explanation, pieges: q.pieges, erreurs_frequentes: q.erreurs, references_text: q.refs,
   }));
   const { error: qErr } = await db.from('arena_questions').insert(rows);

@@ -66,7 +66,7 @@ export default async function ProfessorsPage() {
 
   const [{ data: profs }, { data: fac }] = await Promise.all([
     admin.from('profiles')
-      .select('id, first_name, last_name, email, phone, address, pseudo, cv_url, certificat_scolarite_url, carte_pro_url, permission_scope, created_at, is_active, can_download')
+      .select('id, avatar_seed, first_name, last_name, email, phone, address, pseudo, cv_url, certificat_scolarite_url, carte_pro_url, permission_scope, created_at, is_active, can_download')
       .eq('role', 'professor').eq('faculte_id', EDN_FACULTE_ID)
       .order('last_name'),
     admin.from('facultes')
@@ -110,6 +110,7 @@ export default async function ProfessorsPage() {
   );
 
   const rows = (profs ?? []) as unknown as Array<{
+    avatar_seed: string | null;
     id: string; first_name: string | null; last_name: string | null;
     email: string | null; phone: string | null;
     address: string | null; pseudo: string | null;
@@ -147,6 +148,7 @@ export default async function ProfessorsPage() {
           coursByCollege={coursByCollege}
           rows={rows.map<ProfessorRow>((p) => ({
             id: p.id,
+            avatar_seed: p.avatar_seed,
             first_name: p.first_name,
             last_name: p.last_name,
             email: p.email,

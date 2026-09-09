@@ -1,3 +1,4 @@
+import { MarkedQuestion } from '@/components/arena/marked-question';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { Check, Download, X } from 'lucide-react';
@@ -6,7 +7,7 @@ import { Container, Eyebrow } from '@/components/arena/arena-ui';
 import { ARENA, BODY, CAPS, DISPLAY, TABULAR } from '@/components/arena/tokens';
 import { ReportDialog } from '@/components/arena/report-dialog';
 import { ZoomableImage } from '@/components/qcm/image-zoom';
-import { effectiveBareme, getAttempt, getPreviewAttempt, listAnswers, listReportsForParticipant } from '@/lib/arena/db';
+import { effectiveBareme, getAttempt, getPreviewAttempt, listAnswers, listQuestionMarks, listReportsForParticipant } from '@/lib/arena/db';
 import { gradeOne } from '@/lib/arena/grading';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
 import { correctionsPdfSignedUrl } from '@/lib/arena/pdf-url';
@@ -49,8 +50,8 @@ export default async function CorrectionsPage({ params, searchParams }: Params) 
   const closed = roundState(round) === 'closed';
   if (!preview && (!closed || !round.results_published_at)) {
     return (
-      <ArenaPage nav={nav}>
-        <Container className="max-w-3xl py-12"><Notice>Les corrections de la manche {number} sont publiées après sa clôture.</Notice></Container>
+      <ArenaPage nav={nav} immersive>
+        <Container className="ae-document max-w-3xl py-12"><Notice>Les corrections de la manche {number} sont publiées après sa clôture.</Notice></Container>
       </ArenaPage>
     );
   }
@@ -59,13 +60,14 @@ export default async function CorrectionsPage({ params, searchParams }: Params) 
   const bareme = effectiveBareme(t, round);
   const attempt = preview ? await getPreviewAttempt(round.id, ctx.staff!.id) : await getAttempt(round.id, ctx.participant!.id);
   const answers = attempt ? await listAnswers(attempt.id) : [];
+  const marks = new Set(attempt ? await listQuestionMarks(attempt.id) : []);
   const reports = ctx.participant ? await listReportsForParticipant(ctx.participant.id) : [];
   const isLast = number === Math.max(...ctx.snap.rounds.map((r) => r.number));
   const pdfUrl = round.corrections_pdf_path ? await correctionsPdfSignedUrl(round.corrections_pdf_path, 3600) : null;
 
   return (
-    <ArenaPage nav={nav}>
-      <Container className="max-w-3xl py-10 sm:py-14">
+    <ArenaPage nav={nav} immersive>
+      <Container className="ae-document max-w-3xl py-10 sm:py-14">
         <Eyebrow>Corrections · manche {number}{round.theme ? ` · ${round.theme}` : ''}</Eyebrow>
         <h1 className="mt-4 text-[2.4rem] leading-[0.95] sm:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Les corrections détaillées.</h1>
         {round.corrections_intro && <p className="mt-4 text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY, whiteSpace: 'pre-line' }}>{round.corrections_intro}</p>}
@@ -96,6 +98,7 @@ export default async function CorrectionsPage({ params, searchParams }: Params) 
             const expected = q.items.filter((it) => it.is_correct).map((it) => it.lettre).join(' + ') || '—';
             return (
               <li key={q.id} className="rounded-[1.25rem] p-5 sm:p-7" style={{ background: ARENA.surface, boxShadow: `inset 0 0 0 1px ${ARENA.line}` }}>
+                {marks.has(q.id) && <MarkedQuestion />}
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <p className="text-[11px] font-extrabold uppercase tracking-[0.16em]" style={{ color: ARENA.redSoft, fontFamily: BODY }}>
                     Question {i + 1} · {q.type}{q.type === 'QRP' ? ` · n = ${q.expected_count ?? q.items.filter((it) => it.is_correct).length}` : ''}{q.weight !== 1 ? ` · coefficient ${q.weight}` : ''}

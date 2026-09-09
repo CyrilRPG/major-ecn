@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { ARENA, BODY, HEADLINE, TABULAR } from './arena-ui';
 import { browserTimezone, parisAndLocalLabel, remainingLabel } from '@/lib/arena/time';
 
@@ -13,6 +14,8 @@ export function Countdown({
   target, label, big = false, onZero,
 }: { target: string; label: string; big?: boolean; onZero?: () => void }) {
   const [now, setNow] = useState<number | null>(null);
+  const router = useRouter();
+  const refreshedTarget = useRef<string | null>(null);
   useEffect(() => {
     const tick = () => setNow(Date.now());
     const first = window.setTimeout(tick, 0);
@@ -22,9 +25,10 @@ export function Countdown({
   const targetMs = new Date(target).getTime();
   const diff = now === null ? null : Math.max(0, targetMs - now);
   useEffect(() => {
-    if (diff === 0 && onZero) onZero();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [diff === 0]);
+    if (diff !== 0 || refreshedTarget.current === target) return;
+    refreshedTarget.current = target;
+    if (onZero) onZero(); else router.refresh();
+  }, [diff, onZero, router, target]);
 
   const cell = (v: number | null) => (v === null ? '--' : v.toString().padStart(2, '0'));
   const s = diff === null ? null : Math.floor(diff / 1000);

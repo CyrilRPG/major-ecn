@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server';
 import { getBearerUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { isPlatformAvatar, PLATFORM_AVATARS, platformAvatarUrl, effectiveSeed } from '@/lib/avatar';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -29,7 +30,7 @@ export async function GET(req: Request) {
   const { auth, response } = await mobileAuth(req);
   if (!auth) return response!;
   // Certaines colonnes de personnalisation sont récentes dans les types générés.
-  const db = auth.supabase as any;
+  const db = createAdminClient() as any;
   const { data, error } = await db
     .from('profiles')
     .select('id, first_name, last_name, email, phone, promotion, permission_scope, access_end, role, pseudo, avatar_seed, trial_until, evc_session:evc_sessions(default_access_end)')
@@ -37,7 +38,12 @@ export async function GET(req: Request) {
     .maybeSingle();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   if (!data) return NextResponse.json({ error: 'Profil introuvable' }, { status: 404 });
-  return NextResponse.json({ profile: data });
+  const seed = effectiveSeed(data.id, data.avatar_seed);
+  const absoluteAvatarUrl = (id: string) => new URL(platformAvatarUrl(id), req.url).href;
+  return NextResponse.json({
+    profile: { ...data, avatar_seed: seed, avatar_url: absoluteAvatarUrl(seed) },
+    avatars: PLATFORM_AVATARS.map((avatar) => ({ ...avatar, url: absoluteAvatarUrl(avatar.id) })),
+  });
 }
 
 export async function PATCH(req: Request) {
@@ -93,11 +99,12 @@ export async function POST(req: Request) {
   }
 
   if (body.action === 'avatar') {
-    const seed = (body.seed ?? '').trim().slice(0, 64);
-    if (!seed) return NextResponse.json({ error: 'Identifiant d’avatar manquant.' }, { status: 400 });
-    const { error } = await db.from('profiles').update({ avatar_seed: seed }).eq('id', auth.user.id);
+    const seed = body.seed;
+    if (!isPlatformAvatar(seed)) return NextResponse.json({ error: 'Choisissez un avatar du catalogue Major ECN.' }, { status: 400 });
+    const { data, error } = await createAdminClient().from('profiles').update({ avatar_seed: seed }).eq('id', auth.user.id).select('avatar_seed').maybeSingle();
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ ok: true, seed });
+    if (!data) return NextResponse.json({ error: 'Profil introuvable' }, { status: 404 });
+    return NextResponse.json({ ok: true, seed: data.avatar_seed });
   }
 
   return NextResponse.json({ error: 'Action inconnue' }, { status: 400 });

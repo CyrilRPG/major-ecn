@@ -1,6 +1,8 @@
+import { ArenaBars as ChartNoAxesColumnIncreasing, ArenaTarget as Target } from './experience-icons';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { UserRound } from 'lucide-react';
+import { Trophy, UserRound } from 'lucide-react';
+import { ExperienceNavigation } from './experience-navigation';
 import { ArenaWordmark } from './arena-logo';
 import { ArenaTabBar } from './arena-tabbar';
 import { Container } from './arena-ui';
@@ -19,10 +21,11 @@ export type ShellNav = {
   title: string;
   editionLabel?: string;
   /** Participant connecté ? → « Mon espace », sinon « S’inscrire ». */
-  participant: { pseudo: string } | null;
+  participant: { pseudo: string; avatar_seed?: string; rank?: number | null } | null;
   registrationOpen: boolean;
   leaderboardEnabled: boolean;
   staffPreview?: boolean;
+  updates?: { title: string; detail: string; href: string }[];
 };
 
 /* Pictogrammes des réseaux (lucide-react n'embarque plus les marques). */
@@ -126,7 +129,17 @@ export function ArenaFooter({ slug }: { slug: string }) {
   );
 }
 
-export function ArenaPage({ nav, children, bare = false }: { nav: ShellNav; children: ReactNode; bare?: boolean }) {
+export function ArenaPage({ nav, children, bare = false, immersive = false }: { nav: ShellNav; children: ReactNode; bare?: boolean; immersive?: boolean }) {
+  if (immersive) return <div className="arena-experience">
+    <ExperienceNavigation nav={nav} />
+    <main className="arena-experience-main">{children}</main>
+    <footer className="arena-experience-footer">
+      <Link href={`/arena/${nav.slug}`} className="arena-footer-signature">EVC ARENA<br />BY MAJOR ECN</Link>
+      <div className="arena-values"><span><Trophy aria-hidden />Apprendre</span><span><ChartNoAxesColumnIncreasing aria-hidden />S’évaluer</span><span><Target aria-hidden />Progresser</span></div>
+      <p className="arena-footer-motto">LA RIGUEUR<br />AU SERVICE<br />DE VOTRE RÉUSSITE</p>
+    </footer>
+    {!bare && <div className="arena-experience-legal"><p>{WARNING_NATURE}</p><nav aria-label="Informations légales"><Link href="/mentions-legales">Mentions légales</Link><Link href="/confidentialite">Confidentialité</Link><Link href="/contact">Contact</Link></nav></div>}
+  </div>;
   const tabs = Boolean(nav.participant) && !bare;
   return (
     <>

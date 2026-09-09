@@ -1,0 +1,32 @@
+.arena-avatar {
+  position: relative;
+  display: inline-block;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  flex: 0 0 auto;
+  border-radius: 50%;
+  vertical-align: middle;
+  isolation: isolate;
+}
+.arena-avatar__portrait {
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.arena-avatar .arena-avatar__portrait > * { display: block; width: 100%; height: 100%; }
+.arena-avatar--standard { box-shadow: 0 0 0 1.5px #8cb3d5; }
+.arena-avatar__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.arena-avatar--gold {
+  box-shadow: 0 0 0 1px #ffe389, 0 0 14px #ffd56277, 0 0 30px #9a14384d;
+}
+.arena-avatar--silver { box-shadow: 0 0 9px #d9e3f240; }
+.arena-avatar--bronze { box-shadow: 0 0 7px #c8864933; }

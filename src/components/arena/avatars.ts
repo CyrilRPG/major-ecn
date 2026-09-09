@@ -17,6 +17,14 @@
 
 export type AvatarPlanche = { id: string; label: string };
 
+/** Portrait du catalogue existant, utilisé uniquement pour les illustrations. */
+export const DEFAULT_ARENA_AVATAR = 'medecin-01';
+
+/** Compatibilité avec le portrait de maquette retiré ; les autres choix restent inchangés. */
+export function resolveArenaAvatarSeed(seed: string): string {
+  return seed === 'medecin-arena' ? DEFAULT_ARENA_AVATAR : seed;
+}
+
 export const AVATARS_PLANCHE: AvatarPlanche[] = [
   { id: 'casque', label: 'Casque spartiate' },
   { id: 'medecin-01', label: 'Médecin en blouse, chignon' },

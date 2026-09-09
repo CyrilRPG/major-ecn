@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { DrawnAvatar } from '@/components/avatar/drawn-avatar';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -18,7 +18,7 @@ import { EditStudentDialog } from './edit-student-dialog';
 import { EmargementsDialog } from './emargements-dialog';
 import { SignatureInscriptionDialog } from './signature-inscription-dialog';
 import { BulkEmailDialog } from './bulk-email-dialog';
-import { initials } from '@/lib/utils';
+import { effectiveSeed } from '@/lib/avatar';
 import { parseScope, offerLabel } from '@/lib/auth/permissions';
 import type { Offer } from '@/types/domain';
 import { DeleteAccountButton } from '@/components/admin/delete-account-button';
@@ -28,6 +28,7 @@ import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 
 export type Student = {
   id: string;
+  avatar_seed: string | null;
   first_name: string | null;
   last_name: string | null;
   email: string | null;
@@ -451,9 +452,7 @@ export function StudentsTable({
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-3 min-w-0">
-                      <Avatar className="h-9 w-9 shrink-0">
-                        <AvatarFallback>{initials(s.first_name, s.last_name)}</AvatarFallback>
-                      </Avatar>
+                      <DrawnAvatar seed={effectiveSeed(s.id, s.avatar_seed)} size={36} />
                       <div className="min-w-0 flex-1">
                         <p className="flex items-center gap-1.5 truncate font-medium">
                           <span className="truncate">{s.first_name} {s.last_name}</span>

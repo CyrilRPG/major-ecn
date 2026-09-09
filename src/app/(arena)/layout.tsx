@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Bebas_Neue, Inter, Oswald } from 'next/font/google';
+import '@/components/arena/experience.css';
+import '@/components/arena/avatar-progression.css';
 
 /**
  * Segment EVC Arena — page mère du tournoi de QCM (cahier des charges §13).

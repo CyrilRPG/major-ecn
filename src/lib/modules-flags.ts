@@ -11,7 +11,7 @@
  */
 
 /** EVC Arena : landing, inscription, espace participant et manches ouverts au public. */
-export const ARENA_PUBLIC_ENABLED = false;
+export const ARENA_PUBLIC_ENABLED = true;
 
 /**
  * Suivi individuel côté élève : rubrique « Mes rendez-vous » dans l'espace

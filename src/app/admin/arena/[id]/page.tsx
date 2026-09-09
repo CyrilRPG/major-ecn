@@ -15,6 +15,7 @@ import { EmailsPanel, type EmailLogView } from '@/components/admin/arena/emails-
 import { PdfPanel } from '@/components/admin/arena/pdf-panel';
 import { ArenaDashboard, type DashboardData } from '@/components/admin/arena/dashboard';
 import { roundState } from '@/lib/arena/time';
+import { GENERAL_RANKING_NOTICE } from '@/lib/arena/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -84,8 +85,9 @@ export default async function TournamentAdminPage({ params, searchParams }: { pa
       id: p.id, pseudo: p.pseudo, first_name: p.first_name, last_name: p.last_name, email: p.email, specialty: p.specialty,
       confirmed: Boolean(p.email_confirmed_at), marketing: p.consent_marketing && !p.marketing_unsubscribed_at, blocked: Boolean(p.blocked_at), anonymized: Boolean(p.anonymized_at),
       source: p.acquisition_source, invited: Boolean(p.invited_by), created_at: p.created_at, last_login_at: p.last_login_at,
-      rounds: snap.rounds.map((r) => { const a = attempts.find((x) => x.round_id === r.id && x.participant_id === p.id); return { number: r.number, attemptId: a?.id ?? null, status: a?.status ?? null, score: a ? Number(a.score ?? 0) : null, truncated: a?.truncated ?? false }; }),
+      rounds: snap.rounds.map((r) => { const a = attempts.find((x) => x.round_id === r.id && x.participant_id === p.id); return { number: r.number, attemptId: a?.id ?? null, status: a?.status ?? null, score: a ? Number(a.score ?? 0) : null, truncated: a?.truncated ?? false, rank: standings.byRound[r.id]?.standings.find(s => s.participantId === p.id)?.rank ?? null, effectifManche: standings.byRound[r.id]?.effectifManche ?? 0 }; }),
       totalScore: st?.totalScore ?? 0, rank: st?.rank ?? null,
+      effectifGeneral: standings.effectifGeneral, reason: st?.reason ?? null, isFinal: standings.isFinal,
     };
   });
 
@@ -142,7 +144,9 @@ export default async function TournamentAdminPage({ params, searchParams }: { pa
           <div className="flex flex-wrap gap-4 text-sm">
             <span><b>{participants.length}</b> inscrits</span>
             <span><b>{confirmed.length}</b> confirmés ({pct(confirmed.length, participants.length)})</span>
-            {kpiRounds.map((k) => <span key={k.number}><b>{k.done}</b> M{k.number}</span>)}
+            {snap.rounds.map((r) => <span key={r.number}>Effectif M{r.number} : <b>{standings.byRound[r.id]?.effectifManche ?? 0}</b></span>)}
+            <span>Effectif général (3 manches) : <b>{standings.effectifGeneral}</b></span>
+            {standings.isFinal && <p className="w-full text-xs text-(--color-ink-muted)">{GENERAL_RANKING_NOTICE}</p>}
           </div>
         </div>
         <nav className="mt-4 flex flex-wrap gap-1">

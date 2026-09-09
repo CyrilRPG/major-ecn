@@ -1,9 +1,11 @@
 import 'server-only';
+import { cache } from 'react';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { readSession } from './session';
 import { sanitizeBareme, scoreQuestion, type Bareme } from './scoring';
-import { computeStandings, type RankingAttempt, type RankingRound, type Standing } from './ranking';
+import { computeArenaRankings, type ArenaRankings, type RankingAttempt, type RankingRound } from './ranking';
+import { ARENA_QUESTIONS_PER_ROUND, ARENA_ROUNDS } from './format';
 import { effectiveStatus, type TournamentStatus } from './time';
 import {
   defaultEmailSequence, DEFAULT_SECONDS_PER_QUESTION,
@@ -28,31 +30,34 @@ export function normalizeTournament(row: Record<string, unknown>): TournamentRow
     email_sequence: defaultEmailSequence(row.email_sequence),
     texts: (row.texts && typeof row.texts === 'object' ? row.texts : {}) as Record<string, string>,
     threshold_pct: Number(row.threshold_pct ?? 50),
+    afficher_effectif_general: row.afficher_effectif_general === true,
+    min_rounds_final: ARENA_ROUNDS,
+    questions_per_round: Number(row.questions_per_round ?? ARENA_QUESTIONS_PER_ROUND),
   };
 }
 
 export async function getTournamentBySlug(slug: string): Promise<TournamentRow | null> {
-  const { data } = await arenaDb().from('arena_tournaments').select('*').eq('slug', slug).maybeSingle();
+  const { data } = await arenaDb().from('arena_tournaments').select('*').eq('slug', slug).maybeSingle().throwOnError();
   return data ? normalizeTournament(data) : null;
 }
 
 export async function getTournament(id: string): Promise<TournamentRow | null> {
-  const { data } = await arenaDb().from('arena_tournaments').select('*').eq('id', id).maybeSingle();
+  const { data } = await arenaDb().from('arena_tournaments').select('*').eq('id', id).maybeSingle().throwOnError();
   return data ? normalizeTournament(data) : null;
 }
 
 export async function listTournaments(): Promise<TournamentRow[]> {
-  const { data } = await arenaDb().from('arena_tournaments').select('*').order('created_at', { ascending: false });
+  const { data } = await arenaDb().from('arena_tournaments').select('*').order('created_at', { ascending: false }).throwOnError();
   return ((data ?? []) as Record<string, unknown>[]).map(normalizeTournament);
 }
 
 export async function listRounds(tournamentId: string): Promise<RoundRow[]> {
-  const { data } = await arenaDb().from('arena_rounds').select('*').eq('tournament_id', tournamentId).order('number');
+  const { data } = await arenaDb().from('arena_rounds').select('*').eq('tournament_id', tournamentId).order('number').throwOnError();
   return (data ?? []) as RoundRow[];
 }
 
 export async function getRound(id: string): Promise<RoundRow | null> {
-  const { data } = await arenaDb().from('arena_rounds').select('*').eq('id', id).maybeSingle();
+  const { data } = await arenaDb().from('arena_rounds').select('*').eq('id', id).maybeSingle().throwOnError();
   return (data as RoundRow) ?? null;
 }
 
@@ -66,28 +71,28 @@ function normalizeQuestion(q: Record<string, unknown>): QuestionRow {
 }
 
 export async function listQuestions(roundId: string): Promise<QuestionRow[]> {
-  const { data } = await arenaDb().from('arena_questions').select('*').eq('round_id', roundId).order('order_index');
+  const { data } = await arenaDb().from('arena_questions').select('*').eq('round_id', roundId).order('order_index').throwOnError();
   return ((data ?? []) as Record<string, unknown>[]).map(normalizeQuestion);
 }
 
 export async function listQuestionsForRounds(roundIds: string[]): Promise<QuestionRow[]> {
   if (roundIds.length === 0) return [];
-  const { data } = await arenaDb().from('arena_questions').select('*').in('round_id', roundIds).order('order_index');
+  const { data } = await arenaDb().from('arena_questions').select('*').in('round_id', roundIds).order('order_index').throwOnError();
   return ((data ?? []) as Record<string, unknown>[]).map(normalizeQuestion);
 }
 
 export async function getQuestion(id: string): Promise<QuestionRow | null> {
-  const { data } = await arenaDb().from('arena_questions').select('*').eq('id', id).maybeSingle();
+  const { data } = await arenaDb().from('arena_questions').select('*').eq('id', id).maybeSingle().throwOnError();
   return data ? normalizeQuestion(data) : null;
 }
 
 export async function getParticipant(id: string): Promise<ParticipantRow | null> {
-  const { data } = await arenaDb().from('arena_participants').select('*').eq('id', id).maybeSingle();
+  const { data } = await arenaDb().from('arena_participants').select('*').eq('id', id).maybeSingle().throwOnError();
   return (data as ParticipantRow) ?? null;
 }
 
 export async function findParticipantByEmail(tournamentId: string, email: string): Promise<ParticipantRow | null> {
-  const { data } = await arenaDb().from('arena_participants').select('*').eq('tournament_id', tournamentId).eq('email', email).maybeSingle();
+  const { data } = await arenaDb().from('arena_participants').select('*').eq('tournament_id', tournamentId).eq('email', email).maybeSingle().throwOnError();
   return (data as ParticipantRow) ?? null;
 }
 
@@ -107,27 +112,32 @@ export async function listAttemptsForRounds(roundIds: string[], includePreview =
 }
 
 export async function getAttempt(roundId: string, participantId: string): Promise<AttemptRow | null> {
-  const { data } = await arenaDb().from('arena_attempts').select('*').eq('round_id', roundId).eq('participant_id', participantId).maybeSingle();
+  const { data } = await arenaDb().from('arena_attempts').select('*').eq('round_id', roundId).eq('participant_id', participantId).maybeSingle().throwOnError();
   return (data as AttemptRow) ?? null;
 }
 
 export async function getAttemptById(id: string): Promise<AttemptRow | null> {
-  const { data } = await arenaDb().from('arena_attempts').select('*').eq('id', id).maybeSingle();
+  const { data } = await arenaDb().from('arena_attempts').select('*').eq('id', id).maybeSingle().throwOnError();
   return (data as AttemptRow) ?? null;
 }
 
 export async function getPreviewAttempt(roundId: string, userId: string): Promise<AttemptRow | null> {
-  const { data } = await arenaDb().from('arena_attempts').select('*').eq('round_id', roundId).eq('preview_user_id', userId).eq('is_preview', true).maybeSingle();
+  const { data } = await arenaDb().from('arena_attempts').select('*').eq('round_id', roundId).eq('preview_user_id', userId).eq('is_preview', true).maybeSingle().throwOnError();
   return (data as AttemptRow) ?? null;
 }
 
 export async function listAnswers(attemptId: string): Promise<AnswerRow[]> {
-  const { data } = await arenaDb().from('arena_answers').select('*').eq('attempt_id', attemptId).order('validated_at');
+  const { data } = await arenaDb().from('arena_answers').select('*').eq('attempt_id', attemptId).order('validated_at').throwOnError();
   return (data ?? []) as AnswerRow[];
 }
 
+export async function listQuestionMarks(attemptId: string): Promise<string[]> {
+  const { data } = await arenaDb().from('arena_question_marks').select('question_id').eq('attempt_id', attemptId).throwOnError();
+  return (data ?? []).map((row: { question_id: string }) => row.question_id);
+}
+
 export async function listReportsForParticipant(participantId: string): Promise<ReportRow[]> {
-  const { data } = await arenaDb().from('arena_reports').select('*').eq('participant_id', participantId);
+  const { data } = await arenaDb().from('arena_reports').select('*').eq('participant_id', participantId).throwOnError();
   return (data ?? []) as ReportRow[];
 }
 
@@ -169,7 +179,8 @@ export function effectiveBareme(t: TournamentRow, r: RoundRow): Bareme {
 /** Durée héritée d'une manche entière (min). Ne sert plus à chronométrer une
  *  tentative — le minutage est désormais par question — mais reste affichée
  *  sur les tournois antérieurs au 08/09/2026 et sert de repère éditorial. */
-export function roundDuration(t: TournamentRow, r: RoundRow): number {
+export function roundDuration(t: TournamentRow, r: RoundRow, questions?: readonly QuestionRow[]): number {
+  if (questions?.length) return roundTotalSeconds(t, questions.filter(q => !q.neutralized_at)) / 60;
   return r.duration_minutes ?? t.round_duration_minutes;
 }
 
@@ -226,7 +237,7 @@ export async function loadTournamentSnapshot(t: TournamentRow, now = new Date())
   return { tournament: t, rounds, questionsByRound, status: eff.status, openRound: eff.openRound };
 }
 
-export async function computeTournamentStandings(snap: TournamentSnapshot): Promise<{ standings: Standing[]; isFinal: boolean; countedRounds: RoundRow[] }> {
+export const computeTournamentStandings = cache(async function computeTournamentStandings(snap: TournamentSnapshot, participantCutoff?: string): Promise<ArenaRankings & { isFinal: boolean; countedRounds: RoundRow[] }> {
   const { tournament: t, rounds } = snap;
   const rankingRounds: RankingRound[] = rounds.map((r) => ({
     id: r.id,
@@ -236,7 +247,7 @@ export async function computeTournamentStandings(snap: TournamentSnapshot): Prom
   }));
   const publishedRounds = rounds.filter((r) => r.results_published_at);
   const isFinal = rounds.length > 0 && publishedRounds.length === rounds.length;
-  const attempts = await listAttemptsForRounds(publishedRounds.map((r) => r.id));
+  const attempts = await listAttemptsForRounds(rounds.map((r) => r.id));
   // Une manche sans aucun participant est ignorée dans le cumul (§10).
   const withAttempts = new Set(attempts.filter((a) => a.status !== 'in_progress').map((a) => a.round_id));
   const countedRounds = publishedRounds.filter((r) => withAttempts.has(r.id));
@@ -252,19 +263,20 @@ export async function computeTournamentStandings(snap: TournamentSnapshot): Prom
       durationSeconds: a.duration_seconds ?? 0,
       truncated: a.truncated,
     }));
-  const standings = computeStandings(
+  const rankings = computeArenaRankings(
     rankingRounds,
     rankingAttempts,
     participants.map((p) => ({
       id: p.id,
       pseudo: p.pseudo,
       avatarSeed: p.avatar_seed,
-      excluded: Boolean(p.blocked_at || p.anonymized_at || !p.email_confirmed_at),
+      excluded: Boolean(p.blocked_at || p.anonymized_at || !p.email_confirmed_at ||
+        (participantCutoff && (new Date(p.created_at) > new Date(participantCutoff) || new Date(p.email_confirmed_at) > new Date(participantCutoff)))),
     })),
     { thresholdPct: t.threshold_pct, minRoundsFinal: t.min_rounds_final, isFinal },
   );
-  return { standings, isFinal, countedRounds };
-}
+  return { ...rankings, isFinal, countedRounds };
+});
 
 /* ------------------------------------------------------------------ */
 /* Participant courant                                                 */

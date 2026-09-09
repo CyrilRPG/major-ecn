@@ -1,23 +1,63 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { estAvatarPlanche } from '@/components/arena/avatars';
-import { z } from 'zod';
-import { siteUrl } from '@/lib/email/send';
-import { currentStaff, registrationOpen, visibleSnapshot, visibleTournament } from '@/lib/arena/access';
+import { unstable_rethrow } from "next/navigation";
+
+import { revalidatePath } from "next/cache";
+import { estAvatarPlanche } from "@/components/arena/avatars";
+import { z } from "zod";
+import { siteUrl } from "@/lib/email/send";
 import {
-  arenaDb, arenaLog, currentParticipant, effectiveBareme, findParticipantByEmail, getAttempt, getAttemptById, getPreviewAttempt,
-  getQuestion, getRound, getTournament, listAnswers, listQuestions, questionSeconds, roundTotalSeconds,
-} from '@/lib/arena/db';
-import { confirmationEmail, deletedEmail, inviteEmail, reportAckEmail, sendArenaEmail } from '@/lib/arena/emails';
-import { issueConfirmationLink, issueLoginLink } from '@/lib/arena/auth-links';
-import { finalizeAttempt, gradeOne } from '@/lib/arena/grading';
-import type { Bareme } from '@/lib/arena/scoring';
-import { anonymizeParticipant } from '@/lib/arena/sequence';
-import { clearSessionCookie, newToken } from '@/lib/arena/session';
-import { attemptDeadline, questionDeadline, roundState, toDate } from '@/lib/arena/time';
-import { CONSENT_VERSION, pseudoForbidden } from '@/lib/arena/texts';
-import { isValidPseudo, normalizeEmail, pseudoKey, randomAvatarSeed, type AttemptRow, type QuestionRow, type TournamentRow } from '@/lib/arena/types';
+  currentStaff,
+  registrationOpen,
+  visibleSnapshot,
+  visibleTournament,
+} from "@/lib/arena/access";
+import {
+  arenaDb,
+  arenaLog,
+  currentParticipant,
+  effectiveBareme,
+  findParticipantByEmail,
+  getAttempt,
+  getAttemptById,
+  getPreviewAttempt,
+  getQuestion,
+  getRound,
+  getTournament,
+  listAnswers,
+  listQuestions,
+  questionSeconds,
+  roundTotalSeconds,
+} from "@/lib/arena/db";
+import {
+  confirmationEmail,
+  deletedEmail,
+  inviteEmail,
+  reportAckEmail,
+  sendArenaEmail,
+} from "@/lib/arena/emails";
+import { issueConfirmationLink, issueLoginLink } from "@/lib/arena/auth-links";
+import { finalizeAttempt, gradeOne } from "@/lib/arena/grading";
+import { attemptProgress } from "@/lib/arena/attempt-progress";
+import type { Bareme } from "@/lib/arena/scoring";
+import { anonymizeParticipant } from "@/lib/arena/sequence";
+import { clearSessionCookie, newToken } from "@/lib/arena/session";
+import {
+  attemptDeadline,
+  questionDeadline,
+  roundState,
+  toDate,
+} from "@/lib/arena/time";
+import { CONSENT_VERSION, pseudoForbidden } from "@/lib/arena/texts";
+import {
+  isValidPseudo,
+  normalizeEmail,
+  pseudoKey,
+  randomAvatarSeed,
+  type AttemptRow,
+  type QuestionRow,
+  type TournamentRow,
+} from "@/lib/arena/types";
 
 /**
  * EVC Arena — actions serveur du parcours participant (§3, §8, §10).
@@ -36,9 +76,10 @@ function err(error: string): Err {
 }
 
 function inviteCode(): string {
-  const alphabet = '23456789abcdefghjkmnpqrstuvwxyz';
-  let s = '';
-  for (let i = 0; i < 8; i++) s += alphabet[Math.floor(Math.random() * alphabet.length)];
+  const alphabet = "23456789abcdefghjkmnpqrstuvwxyz";
+  let s = "";
+  for (let i = 0; i < 8; i++)
+    s += alphabet[Math.floor(Math.random() * alphabet.length)];
   return s;
 }
 
@@ -47,13 +88,19 @@ function inviteCode(): string {
 /* ------------------------------------------------------------------ */
 
 const RegisterSchema = z.object({
-  firstName: z.string().trim().min(1, 'Prénom requis').max(80),
-  lastName: z.string().trim().min(1, 'Nom requis').max(80),
-  email: z.string().trim().email('Adresse email invalide').max(160),
-  specialty: z.string().trim().min(1, 'Spécialité requise').max(120),
-  pseudo: z.string().trim().min(3, 'Pseudonyme : 3 caractères minimum').max(24, 'Pseudonyme : 24 caractères maximum'),
+  firstName: z.string().trim().min(1, "Prénom requis").max(80),
+  lastName: z.string().trim().min(1, "Nom requis").max(80),
+  email: z.string().trim().email("Adresse email invalide").max(160),
+  specialty: z.string().trim().min(1, "Spécialité requise").max(120),
+  pseudo: z
+    .string()
+    .trim()
+    .min(3, "Pseudonyme : 3 caractères minimum")
+    .max(24, "Pseudonyme : 24 caractères maximum"),
   avatarSeed: z.string().trim().min(1).max(32),
-  consentTournament: z.literal(true, { message: 'Le consentement au traitement des données est obligatoire.' }),
+  consentTournament: z.literal(true, {
+    message: "Le consentement au traitement des données est obligatoire.",
+  }),
   consentMarketing: z.boolean().default(false),
   timezone: z.string().trim().max(64).nullable().optional(),
   source: z.string().trim().max(64).nullable().optional(),
@@ -63,50 +110,92 @@ const RegisterSchema = z.object({
 
 export type RegisterInput = z.input<typeof RegisterSchema>;
 
-export type RegisterResult = Ok<{ participantId: string; alreadyConfirmed: boolean; alreadyPending?: boolean; pseudo?: string }> | Err;
+export type RegisterResult =
+  | Ok<{
+      participantId: string;
+      alreadyConfirmed: boolean;
+      alreadyPending?: boolean;
+      pseudo?: string;
+    }>
+  | Err;
 
-export async function registerParticipant(slug: string, raw: RegisterInput): Promise<RegisterResult> {
+export async function registerParticipant(
+  slug: string,
+  raw: RegisterInput,
+): Promise<RegisterResult> {
   const parsed = RegisterSchema.safeParse(raw);
-  if (!parsed.success) return err(parsed.error.issues[0]?.message ?? 'Formulaire invalide.');
+  if (!parsed.success)
+    return err(parsed.error.issues[0]?.message ?? "Formulaire invalide.");
   const input = parsed.data;
   const v = await visibleSnapshot(slug);
-  if (!v) return err('Tournoi introuvable.');
-  if (!registrationOpen(v.snap) && !v.staff) return err('Les inscriptions sont closes.');
+  if (!v) return err("Tournoi introuvable.");
+  if (!registrationOpen(v.snap) && !v.staff)
+    return err("Les inscriptions sont closes.");
   const t = v.snap.tournament;
 
-  if (!isValidPseudo(input.pseudo)) return err('Pseudonyme invalide : lettres, chiffres, espaces, tirets et points uniquement.');
-  if (pseudoForbidden(input.pseudo)) return err('Ce pseudonyme n’est pas autorisé.');
+  if (!isValidPseudo(input.pseudo))
+    return err(
+      "Pseudonyme invalide : lettres, chiffres, espaces, tirets et points uniquement.",
+    );
+  if (pseudoForbidden(input.pseudo))
+    return err("Ce pseudonyme n’est pas autorisé.");
+  if (!estAvatarPlanche(input.avatarSeed))
+    return err("Choisissez un avatar de la plateforme.");
 
   const email = normalizeEmail(input.email);
   const db = arenaDb();
   const existing = await findParticipantByEmail(t.id, email);
   if (existing && !existing.anonymized_at) {
-    if (existing.blocked_at) return err('Ce compte a été suspendu par l’organisation. Contactez Major ECN.');
+    if (existing.blocked_at)
+      return err(
+        "Ce compte a été suspendu par l’organisation. Contactez Major ECN.",
+      );
     if (existing.email_confirmed_at) {
       // Adresse déjà inscrite et confirmée : on envoie un lien de connexion, l'écran l'explique (§3.2 — un seul compte par adresse).
       const r = await issueLoginLink(t, existing);
       if (!r.ok) return r;
-      return { ok: true, participantId: existing.id, alreadyConfirmed: true, pseudo: existing.pseudo };
+      return {
+        ok: true,
+        participantId: existing.id,
+        alreadyConfirmed: true,
+        pseudo: existing.pseudo,
+      };
     }
     // Inscription enregistrée mais jamais confirmée : nouveau lien de confirmation (un par minute).
     const r = await issueConfirmationLink(t, existing);
     if (!r.ok) return r;
-    return { ok: true, participantId: existing.id, alreadyConfirmed: false, alreadyPending: true, pseudo: existing.pseudo };
+    return {
+      ok: true,
+      participantId: existing.id,
+      alreadyConfirmed: false,
+      alreadyPending: true,
+      pseudo: existing.pseudo,
+    };
   }
 
   const key = pseudoKey(input.pseudo);
-  const { data: clash } = await db.from('arena_participants').select('id').eq('tournament_id', t.id).eq('pseudo_key', key).maybeSingle();
-  if (clash) return err('Ce pseudonyme est déjà pris dans ce tournoi.');
+  const { data: clash } = await db
+    .from("arena_participants")
+    .select("id")
+    .eq("tournament_id", t.id)
+    .eq("pseudo_key", key)
+    .maybeSingle();
+  if (clash) return err("Ce pseudonyme est déjà pris dans ce tournoi.");
 
   let invitedBy: string | null = null;
   if (input.inviteCode) {
-    const { data: inviter } = await db.from('arena_participants').select('id').eq('tournament_id', t.id).eq('invite_code', input.inviteCode).maybeSingle();
+    const { data: inviter } = await db
+      .from("arena_participants")
+      .select("id")
+      .eq("tournament_id", t.id)
+      .eq("invite_code", input.inviteCode)
+      .maybeSingle();
     invitedBy = inviter?.id ?? null;
   }
 
   const { token, hash } = newToken();
   const { data: created, error } = await db
-    .from('arena_participants')
+    .from("arena_participants")
     .insert({
       tournament_id: t.id,
       first_name: input.firstName,
@@ -122,52 +211,96 @@ export async function registerParticipant(slug: string, raw: RegisterInput): Pro
       consent_tournament_at: new Date().toISOString(),
       consent_tournament_version: CONSENT_VERSION,
       consent_marketing: input.consentMarketing,
-      consent_marketing_at: input.consentMarketing ? new Date().toISOString() : null,
-      consent_marketing_version: input.consentMarketing ? CONSENT_VERSION : null,
-      acquisition_source: invitedBy ? 'invitation' : input.source ?? null,
+      consent_marketing_at: input.consentMarketing
+        ? new Date().toISOString()
+        : null,
+      consent_marketing_version: input.consentMarketing
+        ? CONSENT_VERSION
+        : null,
+      acquisition_source: invitedBy ? "invitation" : (input.source ?? null),
       utm: input.utm ?? null,
       invited_by: invitedBy,
       invite_code: inviteCode(),
     })
-    .select('*')
+    .select("*")
     .single();
   if (error || !created) {
-    if (String(error?.code) === '23505') return err('Ce pseudonyme ou cette adresse est déjà utilisé.');
-    return err(error?.message ?? 'Inscription impossible.');
+    if (String(error?.code) === "23505")
+      return err("Ce pseudonyme ou cette adresse est déjà utilisé.");
+    return err(error?.message ?? "Inscription impossible.");
   }
 
   const url = `${siteUrl()}/arena/confirmer?t=${encodeURIComponent(token)}`;
-  const sent = await sendArenaEmail({ tournament: t, participant: created, to: email, kind: 'confirmation', mail: confirmationEmail(t, created, url) });
+  const sent = await sendArenaEmail({
+    tournament: t,
+    participant: created,
+    to: email,
+    kind: "confirmation",
+    mail: confirmationEmail(t, created, url),
+  });
   if (!sent.ok && !sent.skipped) {
-    console.error('[arena] email de confirmation', sent.error);
-    return err('Votre inscription est enregistrée mais l’email de confirmation n’a pas pu partir. Réessayez dans un instant depuis la page de connexion, ou contactez Major ECN.');
+    console.error("[arena] email de confirmation", sent.error);
+    return err(
+      "Votre inscription est enregistrée mais l’email de confirmation n’a pas pu partir. Réessayez dans un instant depuis la page de connexion, ou contactez Major ECN.",
+    );
   }
   return { ok: true, participantId: created.id, alreadyConfirmed: false };
 }
 
-export async function resendConfirmation(slug: string, rawEmail: string): Promise<Ok | Err> {
-  const v = await visibleTournament(slug);
-  if (!v) return err('Tournoi introuvable.');
-  const email = normalizeEmail(rawEmail);
-  const p = await findParticipantByEmail(v.tournament.id, email);
-  // Réponse identique que le compte existe ou non : aucune énumération d'adresses.
-  if (!p || p.anonymized_at || p.blocked_at) return { ok: true };
-  // Adresse déjà confirmée : c'est un lien de connexion qu'il faut.
-  const r = p.email_confirmed_at ? await issueLoginLink(v.tournament, p) : await issueConfirmationLink(v.tournament, p);
-  if (!r.ok) return r;
-  if (r.throttled) return err('Un email vient d’être envoyé. Patientez une minute avant de redemander.');
-  return { ok: true };
+export async function resendConfirmation(
+  slug: string,
+  rawEmail: string,
+): Promise<Ok | Err> {
+  try {
+    const v = await visibleTournament(slug);
+    if (!v) return err("Tournoi introuvable.");
+    const email = normalizeEmail(rawEmail);
+    const p = await findParticipantByEmail(v.tournament.id, email);
+    // Réponse identique que le compte existe ou non : aucune énumération d'adresses.
+    if (!p || p.anonymized_at || p.blocked_at) return { ok: true };
+    // Adresse déjà confirmée : c'est un lien de connexion qu'il faut.
+    const r = p.email_confirmed_at
+      ? await issueLoginLink(v.tournament, p)
+      : await issueConfirmationLink(v.tournament, p);
+    if (!r.ok) return r;
+    if (r.throttled)
+      return err(
+        "Un email vient d’être envoyé. Patientez une minute avant de redemander.",
+      );
+    return { ok: true };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("[arena] action échouée", error);
+    return {
+      ok: false,
+      error: "L’action n’a pas pu être effectuée. Réessayez.",
+    };
+  }
 }
 
-export async function requestLoginLink(slug: string, rawEmail: string): Promise<Ok | Err> {
-  const v = await visibleTournament(slug);
-  if (!v) return err('Tournoi introuvable.');
-  const email = normalizeEmail(rawEmail);
-  const p = await findParticipantByEmail(v.tournament.id, email);
-  if (!p || p.anonymized_at || p.blocked_at) return { ok: true };
-  const r = p.email_confirmed_at ? await issueLoginLink(v.tournament, p) : await issueConfirmationLink(v.tournament, p);
-  if (!r.ok) return r;
-  return { ok: true };
+export async function requestLoginLink(
+  slug: string,
+  rawEmail: string,
+): Promise<Ok | Err> {
+  try {
+    const v = await visibleTournament(slug);
+    if (!v) return err("Tournoi introuvable.");
+    const email = normalizeEmail(rawEmail);
+    const p = await findParticipantByEmail(v.tournament.id, email);
+    if (!p || p.anonymized_at || p.blocked_at) return { ok: true };
+    const r = p.email_confirmed_at
+      ? await issueLoginLink(v.tournament, p)
+      : await issueConfirmationLink(v.tournament, p);
+    if (!r.ok) return r;
+    return { ok: true };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("[arena] action échouée", error);
+    return {
+      ok: false,
+      error: "L’action n’a pas pu être effectuée. Réessayez.",
+    };
+  }
 }
 
 export async function logoutArena(): Promise<void> {
@@ -178,101 +311,186 @@ export async function logoutArena(): Promise<void> {
 /* Manche : démarrage, réponses, expiration                             */
 /* ------------------------------------------------------------------ */
 
-type Actor = { kind: 'participant'; id: string } | { kind: 'preview'; userId: string };
+type Actor =
+  | { kind: "participant"; id: string }
+  | { kind: "preview"; userId: string };
 
-async function resolveActor(tournamentId: string, preview: boolean): Promise<Actor | null> {
+async function resolveActor(
+  tournamentId: string,
+  preview: boolean,
+): Promise<Actor | null> {
   if (preview) {
     const staff = await currentStaff();
-    return staff ? { kind: 'preview', userId: staff.id } : null;
+    return staff ? { kind: "preview", userId: staff.id } : null;
   }
   const p = await currentParticipant(tournamentId);
-  return p ? { kind: 'participant', id: p.id } : null;
+  return p ? { kind: "participant", id: p.id } : null;
 }
 
 export type StartResult = Ok<{ attemptId: string }> | Err;
 
-export async function startAttempt(slug: string, roundNumber: number, preview = false): Promise<StartResult> {
+export async function startAttempt(
+  slug: string,
+  roundNumber: number,
+  preview = false,
+): Promise<StartResult> {
   const v = await visibleSnapshot(slug);
-  if (!v) return err('Tournoi introuvable.');
+  if (!v) return err("Tournoi introuvable.");
   const t = v.snap.tournament;
   const round = v.snap.rounds.find((r) => r.number === roundNumber);
-  if (!round) return err('Manche introuvable.');
+  if (!round) return err("Manche introuvable.");
   const actor = await resolveActor(t.id, preview);
-  if (!actor) return err(preview ? 'Prévisualisation réservée au personnel.' : 'Session expirée : reconnectez-vous.');
+  if (!actor)
+    return err(
+      preview
+        ? "Prévisualisation réservée au personnel."
+        : "Session expirée : reconnectez-vous.",
+    );
 
   const now = new Date();
   const state = roundState(round, now);
-  if (actor.kind === 'participant' && state !== 'open') return err(state === 'upcoming' ? 'La manche n’est pas encore ouverte.' : 'La manche est clôturée.');
+  if (actor.kind === "participant" && state !== "open")
+    return err(
+      state === "upcoming"
+        ? "La manche n’est pas encore ouverte."
+        : "La manche est clôturée.",
+    );
 
-  const questions = (v.snap.questionsByRound.get(round.id) ?? []).filter((q) => !q.neutralized_at);
-  if (questions.length === 0) return err('Cette manche ne contient aucune question.');
+  const questions = (v.snap.questionsByRound.get(round.id) ?? []).filter(
+    (q) => !q.neutralized_at,
+  );
+  if (questions.length === 0)
+    return err("Cette manche ne contient aucune question.");
 
-  const existing = actor.kind === 'participant' ? await getAttempt(round.id, actor.id) : await getPreviewAttempt(round.id, actor.userId);
+  const existing =
+    actor.kind === "participant"
+      ? await getAttempt(round.id, actor.id)
+      : await getPreviewAttempt(round.id, actor.userId);
   if (existing) {
-    if (existing.status !== 'in_progress') return err('Vous avez déjà joué cette manche : une seule tentative par manche.');
+    if (existing.status !== "in_progress")
+      return err(
+        "Vous avez déjà joué cette manche : une seule tentative par manche.",
+      );
     return { ok: true, attemptId: existing.id };
   }
 
-  const closes = actor.kind === 'participant' ? toDate(round.closes_at) : null;
+  const closes = actor.kind === "participant" ? toDate(round.closes_at) : null;
   // Temps alloué = somme des durées propres à chaque question (§3.4).
-  const { deadline, truncated } = attemptDeadline(now, roundTotalSeconds(t, questions), closes);
+  const { deadline, truncated } = attemptDeadline(
+    now,
+    roundTotalSeconds(t, questions),
+    closes,
+  );
   const { data, error } = await arenaDb()
-    .from('arena_attempts')
+    .from("arena_attempts")
     .insert({
       round_id: round.id,
-      participant_id: actor.kind === 'participant' ? actor.id : null,
-      is_preview: actor.kind === 'preview',
-      preview_user_id: actor.kind === 'preview' ? actor.userId : null,
+      participant_id: actor.kind === "participant" ? actor.id : null,
+      is_preview: actor.kind === "preview",
+      preview_user_id: actor.kind === "preview" ? actor.userId : null,
       started_at: now.toISOString(),
       deadline_at: deadline.toISOString(),
       truncated,
       question_order: questions.map((q) => q.id),
     })
-    .select('id')
+    .select("id")
     .single();
   if (error || !data) {
     // Course entre deux clics : la tentative existe déjà.
-    const again = actor.kind === 'participant' ? await getAttempt(round.id, actor.id) : await getPreviewAttempt(round.id, actor.userId);
+    const again =
+      actor.kind === "participant"
+        ? await getAttempt(round.id, actor.id)
+        : await getPreviewAttempt(round.id, actor.userId);
     if (again) return { ok: true, attemptId: again.id };
-    return err(error?.message ?? 'Impossible de démarrer la manche.');
+    return err(error?.message ?? "Impossible de démarrer la manche.");
   }
   revalidatePath(`/arena/${slug}/manche/${roundNumber}`);
   return { ok: true, attemptId: data.id };
 }
 
-async function ownedAttempt(attemptId: string): Promise<{ attempt: AttemptRow; slug: string } | Err> {
+async function ownedAttempt(
+  attemptId: string,
+): Promise<{ attempt: AttemptRow; slug: string } | Err> {
   const attempt = await getAttemptById(attemptId);
-  if (!attempt) return err('Tentative introuvable.');
+  if (!attempt) return err("Tentative introuvable.");
   const round = await getRound(attempt.round_id);
-  if (!round) return err('Manche introuvable.');
-  const { data: t } = await arenaDb().from('arena_tournaments').select('id, slug').eq('id', round.tournament_id).maybeSingle();
-  if (!t) return err('Tournoi introuvable.');
+  if (!round) return err("Manche introuvable.");
+  const { data: t } = await arenaDb()
+    .from("arena_tournaments")
+    .select("id, slug")
+    .eq("id", round.tournament_id)
+    .maybeSingle();
+  if (!t) return err("Tournoi introuvable.");
   const actor = await resolveActor(t.id, attempt.is_preview);
-  if (!actor) return err('Session expirée : reconnectez-vous.');
-  const owns = actor.kind === 'participant' ? attempt.participant_id === actor.id : attempt.preview_user_id === actor.userId;
-  if (!owns) return err('Cette tentative ne vous appartient pas.');
+  if (!actor) return err("Session expirée : reconnectez-vous.");
+  const owns =
+    actor.kind === "participant"
+      ? attempt.participant_id === actor.id
+      : attempt.preview_user_id === actor.userId;
+  if (!owns) return err("Cette tentative ne vous appartient pas.");
   return { attempt, slug: t.slug };
 }
 
-export type AnswerResult = Ok<{ finished: boolean; answeredCount: number; expired?: boolean }> | Err;
+export type AnswerResult =
+  | Ok<{
+      finished: boolean;
+      answeredCount: number;
+      expired?: boolean;
+      lastValidatedAt?: string | null;
+    }>
+  | Err;
+
+async function savedAnswerResult(
+  attempt: AttemptRow,
+  expired = false,
+): Promise<AnswerResult> {
+  const progress = attemptProgress(
+    attempt.question_order,
+    await listAnswers(attempt.id),
+  );
+  if (progress.finished) await finalizeAttempt(attempt.id, "submitted");
+  return {
+    ok: true,
+    finished: progress.finished,
+    answeredCount: progress.answeredIds.length,
+    lastValidatedAt: progress.lastValidatedAt,
+    expired,
+  };
+}
 
 /** Validation irréversible d'une question (§3.4) ; la dernière clôt la manche. */
-export async function answerQuestion(attemptId: string, questionId: string, selectedRaw: string[]): Promise<AnswerResult> {
+export async function answerQuestion(
+  attemptId: string,
+  questionId: string,
+  selectedRaw: string[],
+): Promise<AnswerResult> {
   const owned = await ownedAttempt(attemptId);
-  if ('ok' in owned) return owned;
+  if ("ok" in owned) return owned;
   const { attempt } = owned;
-  if (attempt.status !== 'in_progress') return err('Cette manche est terminée.');
+  const progress = attemptProgress(
+    attempt.question_order,
+    await listAnswers(attempt.id),
+  );
+  if (progress.answeredIds.includes(questionId))
+    return savedAnswerResult(attempt);
+  if (attempt.status !== "in_progress")
+    return err("Cette manche est terminée.");
+  if (progress.nextId !== questionId)
+    return err(
+      "Validez la question en cours avant de continuer. Rechargez la page pour vous resynchroniser.",
+    );
   const now = Date.now();
   if (now > new Date(attempt.deadline_at).getTime() + ANSWER_GRACE_MS) {
-    await finalizeAttempt(attempt.id, 'expired');
-    return err('Temps écoulé : la manche a été clôturée automatiquement.');
+    await finalizeAttempt(attempt.id, "expired");
+    return err("Temps écoulé : la manche a été clôturée automatiquement.");
   }
-  if (!attempt.question_order.includes(questionId)) return err('Question inconnue pour cette manche.');
+  if (!attempt.question_order.includes(questionId))
+    return err("Question inconnue pour cette manche.");
   const q = await getQuestion(questionId);
-  if (!q) return err('Question introuvable.');
+  if (!q) return err("Question introuvable.");
   const round = await getRound(attempt.round_id);
   const t = round ? await getTournament(round.tournament_id) : null;
-  if (!round || !t) return err('Manche introuvable.');
+  if (!round || !t) return err("Manche introuvable.");
   const bareme = effectiveBareme(t, round);
 
   // Chaque question a sa propre échéance. Passée celle-ci, les cases cochées
@@ -285,15 +503,19 @@ export async function answerQuestion(attemptId: string, questionId: string, sele
   }
 
   const valid = new Set(q.items.map((i) => i.lettre));
-  const selected = [...new Set(selectedRaw.map((l) => String(l).trim().toUpperCase()))].filter((l) => valid.has(l));
-  if (q.type === 'QRU' && selected.length > 1) return err('Une QRU n’admet qu’une seule proposition.');
-  if (q.type === 'QRP') {
+  const selected = [
+    ...new Set(selectedRaw.map((l) => String(l).trim().toUpperCase())),
+  ].filter((l) => valid.has(l));
+  if (q.type === "QRU" && selected.length > 1)
+    return err("Une QRU n’admet qu’une seule proposition.");
+  if (q.type === "QRP") {
     const n = q.expected_count ?? q.items.filter((i) => i.is_correct).length;
-    if (selected.length !== n) return err(`Cochez exactement ${n} proposition${n > 1 ? 's' : ''}.`);
+    if (selected.length !== n)
+      return err(`Cochez exactement ${n} proposition${n > 1 ? "s" : ""}.`);
   }
 
   const g = gradeOne(q, selected, bareme);
-  const { error } = await arenaDb().from('arena_answers').insert({
+  const { error } = await arenaDb().from("arena_answers").insert({
     attempt_id: attempt.id,
     question_id: q.id,
     selected,
@@ -303,18 +525,22 @@ export async function answerQuestion(attemptId: string, questionId: string, sele
     is_perfect: g.is_perfect,
     rule_triggered: g.rule_triggered,
   });
-  if (error && String(error.code) !== '23505') return err(error.message);
+  if (error && String(error.code) !== "23505") return err(error.message);
 
-  const answers = await listAnswers(attempt.id);
-  const finished = attempt.question_order.every((id) => answers.some((a) => a.question_id === id));
-  if (finished) await finalizeAttempt(attempt.id, 'submitted');
-  return { ok: true, finished, answeredCount: answers.length };
+  return savedAnswerResult(attempt);
 }
 
 /** Heure limite de la question en cours : la précédente validation fait foi. */
-async function deadlineDeLaQuestion(attempt: AttemptRow, t: TournamentRow, q: QuestionRow): Promise<Date> {
+async function deadlineDeLaQuestion(
+  attempt: AttemptRow,
+  t: TournamentRow,
+  q: QuestionRow,
+): Promise<Date> {
   const answers = await listAnswers(attempt.id);
-  const dernier = answers.reduce<number>((max, a) => Math.max(max, new Date(a.validated_at).getTime()), 0);
+  const dernier = answers.reduce<number>(
+    (max, a) => Math.max(max, new Date(a.validated_at).getTime()),
+    0,
+  );
   return questionDeadline({
     startedAt: new Date(attempt.started_at),
     lastValidatedAt: dernier ? new Date(dernier) : null,
@@ -326,9 +552,13 @@ async function deadlineDeLaQuestion(attempt: AttemptRow, t: TournamentRow, q: Qu
 /** Écrit une réponse VIDE pour une question dont le temps est écoulé, et clôt
  *  la manche si c'était la dernière. Le barème s'applique normalement à une
  *  absence de réponse — aucune pénalité inventée ici. */
-async function enregistrerSansReponse(attempt: AttemptRow, q: QuestionRow, bareme: Bareme): Promise<AnswerResult> {
+async function enregistrerSansReponse(
+  attempt: AttemptRow,
+  q: QuestionRow,
+  bareme: Bareme,
+): Promise<AnswerResult> {
   const g = gradeOne(q, [], bareme);
-  const { error } = await arenaDb().from('arena_answers').insert({
+  const { error } = await arenaDb().from("arena_answers").insert({
     attempt_id: attempt.id,
     question_id: q.id,
     selected: [],
@@ -338,11 +568,8 @@ async function enregistrerSansReponse(attempt: AttemptRow, q: QuestionRow, barem
     is_perfect: g.is_perfect,
     rule_triggered: g.rule_triggered,
   });
-  if (error && String(error.code) !== '23505') return err(error.message);
-  const answers = await listAnswers(attempt.id);
-  const finished = attempt.question_order.every((id) => answers.some((a) => a.question_id === id));
-  if (finished) await finalizeAttempt(attempt.id, 'submitted');
-  return { ok: true, finished, answeredCount: answers.length, expired: true };
+  if (error && String(error.code) !== "23505") return err(error.message);
+  return savedAnswerResult(attempt, true);
 }
 
 /**
@@ -352,181 +579,436 @@ async function enregistrerSansReponse(attempt: AttemptRow, q: QuestionRow, barem
  * question, et un client en retard ne prolonge rien. Tant que l'échéance n'est
  * pas atteinte, on ne fait rien et le client se resynchronise.
  */
-export async function expireQuestion(attemptId: string, questionId: string): Promise<AnswerResult> {
+export async function expireQuestion(
+  attemptId: string,
+  questionId: string,
+): Promise<AnswerResult> {
   const owned = await ownedAttempt(attemptId);
-  if ('ok' in owned) return owned;
+  if ("ok" in owned) return owned;
   const { attempt } = owned;
-  if (attempt.status !== 'in_progress') return err('Cette manche est terminée.');
-  if (!attempt.question_order.includes(questionId)) return err('Question inconnue pour cette manche.');
+  const progress = attemptProgress(
+    attempt.question_order,
+    await listAnswers(attempt.id),
+  );
+  if (progress.answeredIds.includes(questionId))
+    return savedAnswerResult(attempt, true);
+  if (attempt.status !== "in_progress")
+    return err("Cette manche est terminée.");
+  if (progress.nextId !== questionId)
+    return err(
+      "Cette question n’est pas la question en cours. Rechargez la page.",
+    );
+  if (!attempt.question_order.includes(questionId))
+    return err("Question inconnue pour cette manche.");
   const q = await getQuestion(questionId);
-  if (!q) return err('Question introuvable.');
+  if (!q) return err("Question introuvable.");
   const round = await getRound(attempt.round_id);
   const t = round ? await getTournament(round.tournament_id) : null;
-  if (!round || !t) return err('Manche introuvable.');
+  if (!round || !t) return err("Manche introuvable.");
   const echeance = await deadlineDeLaQuestion(attempt, t, q);
   if (Date.now() < echeance.getTime()) {
     const answers = await listAnswers(attempt.id);
-    return { ok: true, finished: false, answeredCount: answers.length, expired: false };
+    return {
+      ok: true,
+      finished: false,
+      answeredCount: answers.length,
+      expired: false,
+    };
   }
   return enregistrerSansReponse(attempt, q, effectiveBareme(t, round));
 }
 
 /** Appelé par le client à l'expiration du chronomètre ; le serveur reste seul juge de l'heure. */
-export async function expireAttempt(attemptId: string): Promise<Ok<{ expired: boolean }> | Err> {
-  const owned = await ownedAttempt(attemptId);
-  if ('ok' in owned) return owned;
-  const { attempt } = owned;
-  if (attempt.status !== 'in_progress') return { ok: true, expired: true };
-  if (Date.now() < new Date(attempt.deadline_at).getTime()) return { ok: true, expired: false };
-  await finalizeAttempt(attempt.id, 'expired');
-  return { ok: true, expired: true };
+export async function expireAttempt(
+  attemptId: string,
+): Promise<Ok<{ expired: boolean }> | Err> {
+  try {
+    const owned = await ownedAttempt(attemptId);
+    if ("ok" in owned) return owned;
+    const { attempt } = owned;
+    if (attempt.status !== "in_progress") return { ok: true, expired: true };
+    if (Date.now() < new Date(attempt.deadline_at).getTime())
+      return { ok: true, expired: false };
+    await finalizeAttempt(attempt.id, "expired");
+    return { ok: true, expired: true };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("[arena] action échouée", error);
+    return {
+      ok: false,
+      error: "L’action n’a pas pu être effectuée. Réessayez.",
+    };
+  }
+}
+
+export async function setQuestionMarked(
+  attemptId: string,
+  questionId: string,
+  marked: boolean,
+): Promise<Ok | Err> {
+  try {
+    const owned = await ownedAttempt(attemptId);
+    if ("ok" in owned) return owned;
+    if (!owned.attempt.question_order.includes(questionId))
+      return err("Question inconnue pour cette manche.");
+    const query = arenaDb().from("arena_question_marks");
+    const { error } = marked
+      ? await query.upsert(
+          { attempt_id: attemptId, question_id: questionId },
+          { onConflict: "attempt_id,question_id", ignoreDuplicates: true },
+        )
+      : await query
+          .delete()
+          .eq("attempt_id", attemptId)
+          .eq("question_id", questionId);
+    if (error) return err("Le marquage n’a pas pu être enregistré. Réessayez.");
+    return { ok: true };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("[arena] action échouée", error);
+    return {
+      ok: false,
+      error: "L’action n’a pas pu être effectuée. Réessayez.",
+    };
+  }
 }
 
 /** Prévisualisation (§15.2) : rejouable à volonté — la tentative staff est effacée. */
-export async function restartPreview(slug: string, roundNumber: number): Promise<Ok | Err> {
-  const staff = await currentStaff();
-  if (!staff) return err('Réservé au personnel.');
-  const v = await visibleSnapshot(slug);
-  if (!v) return err('Tournoi introuvable.');
-  const round = v.snap.rounds.find((r) => r.number === roundNumber);
-  if (!round) return err('Manche introuvable.');
-  await arenaDb().from('arena_attempts').delete().eq('round_id', round.id).eq('preview_user_id', staff.id).eq('is_preview', true);
-  revalidatePath(`/arena/${slug}/manche/${roundNumber}`);
-  return { ok: true };
+export async function restartPreview(
+  slug: string,
+  roundNumber: number,
+): Promise<Ok | Err> {
+  try {
+    const staff = await currentStaff();
+    if (!staff) return err("Réservé au personnel.");
+    const v = await visibleSnapshot(slug);
+    if (!v) return err("Tournoi introuvable.");
+    const round = v.snap.rounds.find((r) => r.number === roundNumber);
+    if (!round) return err("Manche introuvable.");
+    const { error } = await arenaDb()
+      .from("arena_attempts")
+      .delete()
+      .eq("round_id", round.id)
+      .eq("preview_user_id", staff.id)
+      .eq("is_preview", true);
+    if (error)
+      return err("Impossible de recommencer la prévisualisation. Réessayez.");
+    revalidatePath(`/arena/${slug}/manche/${roundNumber}`);
+    return { ok: true };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("[arena] action échouée", error);
+    return {
+      ok: false,
+      error: "L’action n’a pas pu être effectuée. Réessayez.",
+    };
+  }
 }
 
 /* ------------------------------------------------------------------ */
 /* Espace participant                                                  */
 /* ------------------------------------------------------------------ */
 
-export async function sendInvites(slug: string, rawEmails: string[], message: string | null): Promise<Ok<{ sent: number }> | Err> {
-  const v = await visibleTournament(slug);
-  if (!v) return err('Tournoi introuvable.');
-  const p = await currentParticipant(v.tournament.id);
-  if (!p) return err('Session expirée.');
-  const emails = [...new Set(rawEmails.map(normalizeEmail).filter((e) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)))].slice(0, 10);
-  if (emails.length === 0) return err('Indiquez au moins une adresse email valide.');
-  const { count } = await arenaDb().from('arena_emails').select('id', { count: 'exact', head: true }).eq('participant_id', p.id).eq('kind', 'invite').gte('sent_at', new Date(Date.now() - 86_400_000).toISOString());
-  if ((count ?? 0) + emails.length > 30) return err('Limite de 30 invitations par jour atteinte.');
-  const landing = `${siteUrl()}/arena/${v.tournament.slug}?i=${p.invite_code}&utm_source=invitation`;
-  let sent = 0;
-  for (const to of emails) {
-    const r = await sendArenaEmail({ tournament: v.tournament, participant: p, to, kind: 'invite', mail: inviteEmail(v.tournament, p, landing, message?.trim().slice(0, 300) || null) });
-    if (r.ok) sent++;
+export async function sendInvites(
+  slug: string,
+  rawEmails: string[],
+  message: string | null,
+): Promise<Ok<{ sent: number }> | Err> {
+  try {
+    const v = await visibleTournament(slug);
+    if (!v) return err("Tournoi introuvable.");
+    const p = await currentParticipant(v.tournament.id);
+    if (!p) return err("Session expirée.");
+    const emails = [
+      ...new Set(
+        rawEmails
+          .map(normalizeEmail)
+          .filter((e) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)),
+      ),
+    ].slice(0, 10);
+    if (emails.length === 0)
+      return err("Indiquez au moins une adresse email valide.");
+    const { count } = await arenaDb()
+      .from("arena_emails")
+      .select("id", { count: "exact", head: true })
+      .eq("participant_id", p.id)
+      .eq("kind", "invite")
+      .gte("sent_at", new Date(Date.now() - 86_400_000).toISOString());
+    if ((count ?? 0) + emails.length > 30)
+      return err("Limite de 30 invitations par jour atteinte.");
+    const landing = `${siteUrl()}/arena/${v.tournament.slug}?i=${p.invite_code}&utm_source=invitation`;
+    let sent = 0;
+    for (const to of emails) {
+      const r = await sendArenaEmail({
+        tournament: v.tournament,
+        participant: p,
+        to,
+        kind: "invite",
+        mail: inviteEmail(
+          v.tournament,
+          p,
+          landing,
+          message?.trim().slice(0, 300) || null,
+        ),
+      });
+      if (r.ok) sent++;
+    }
+    if (sent === 0)
+      return err("Aucune invitation n’a pu être envoyée. Réessayez plus tard.");
+    return { ok: true, sent };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("[arena] action échouée", error);
+    return {
+      ok: false,
+      error: "L’action n’a pas pu être effectuée. Réessayez.",
+    };
   }
-  return { ok: true, sent };
 }
 
 const ReportSchema = z.object({
   questionId: z.string().uuid(),
-  motif: z.enum(['erreur_medicale', 'enonce_ambigu', 'reponse_contestable', 'recommandation_obsolete', 'autre']),
-  comment: z.string().trim().max(2000).default(''),
+  motif: z.enum([
+    "erreur_medicale",
+    "enonce_ambigu",
+    "reponse_contestable",
+    "recommandation_obsolete",
+    "autre",
+  ]),
+  comment: z.string().trim().max(2000).default(""),
   reference: z.string().trim().max(300).nullable().optional(),
 });
 
-export async function submitReport(slug: string, raw: z.input<typeof ReportSchema>): Promise<Ok | Err> {
-  const parsed = ReportSchema.safeParse(raw);
-  if (!parsed.success) return err('Signalement invalide.');
-  const v = await visibleSnapshot(slug);
-  if (!v) return err('Tournoi introuvable.');
-  const p = await currentParticipant(v.snap.tournament.id);
-  if (!p) return err('Session expirée.');
-  const q = await getQuestion(parsed.data.questionId);
-  const round = q ? v.snap.rounds.find((r) => r.id === q.round_id) : null;
-  if (!q || !round) return err('Question introuvable.');
-  // Jamais pendant la manche : uniquement à la consultation des corrections (§10.1).
-  if (roundState(round) !== 'closed') return err('Le signalement est possible à la consultation des corrections, après la clôture de la manche.');
-  const db = arenaDb();
-  const { error } = await db.from('arena_reports').insert({
-    question_id: q.id, participant_id: p.id, motif: parsed.data.motif, comment: parsed.data.comment, reference: parsed.data.reference ?? null,
-  });
-  if (error) {
-    if (String(error.code) === '23505') return err('Vous avez déjà signalé cette question.');
-    return err(error.message);
+export async function submitReport(
+  slug: string,
+  raw: z.input<typeof ReportSchema>,
+): Promise<Ok | Err> {
+  try {
+    const parsed = ReportSchema.safeParse(raw);
+    if (!parsed.success) return err("Signalement invalide.");
+    const v = await visibleSnapshot(slug);
+    if (!v) return err("Tournoi introuvable.");
+    const p = await currentParticipant(v.snap.tournament.id);
+    if (!p) return err("Session expirée.");
+    const q = await getQuestion(parsed.data.questionId);
+    const round = q ? v.snap.rounds.find((r) => r.id === q.round_id) : null;
+    if (!q || !round) return err("Question introuvable.");
+    // Jamais pendant la manche : uniquement à la consultation des corrections (§10.1).
+    if (roundState(round) !== "closed")
+      return err(
+        "Le signalement est possible à la consultation des corrections, après la clôture de la manche.",
+      );
+    const db = arenaDb();
+    const { error } = await db.from("arena_reports").insert({
+      question_id: q.id,
+      participant_id: p.id,
+      motif: parsed.data.motif,
+      comment: parsed.data.comment,
+      reference: parsed.data.reference ?? null,
+    });
+    if (error) {
+      if (String(error.code) === "23505")
+        return err("Vous avez déjà signalé cette question.");
+      return err(error.message);
+    }
+    const questions = await listQuestions(round.id);
+    const index = questions.findIndex((x) => x.id === q.id) + 1;
+    await sendArenaEmail({
+      tournament: v.snap.tournament,
+      participant: p,
+      to: p.email,
+      kind: "report_ack",
+      mail: reportAckEmail(v.snap.tournament, p, round.number, index),
+      roundId: round.id,
+    });
+    return { ok: true };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("[arena] action échouée", error);
+    return {
+      ok: false,
+      error: "L’action n’a pas pu être effectuée. Réessayez.",
+    };
   }
-  const questions = await listQuestions(round.id);
-  const index = questions.findIndex((x) => x.id === q.id) + 1;
-  await sendArenaEmail({ tournament: v.snap.tournament, participant: p, to: p.email, kind: 'report_ack', mail: reportAckEmail(v.snap.tournament, p, round.number, index), roundId: round.id });
-  return { ok: true };
 }
 
 /**
- * Choix d'un médaillon de la planche (§3.1 : l'avatar est public dans le
- * classement). L'identifiant est vérifié contre le catalogue : on n'écrit pas
- * en base une valeur venue du navigateur.
+ * Endpoint conservé pour les anciens clients. L'identité choisie à
+ * l'inscription est désormais fixe ; les distinctions sont des overlays.
  */
-export async function choisirAvatar(slug: string, avatarId: string): Promise<Ok<{ seed: string }> | Err> {
-  const v = await visibleTournament(slug);
-  if (!v) return err('Tournoi introuvable.');
-  const p = await currentParticipant(v.tournament.id);
-  if (!p) return err('Session expirée.');
-  if (!estAvatarPlanche(avatarId)) return err('Avatar inconnu.');
-  await arenaDb().from('arena_participants').update({ avatar_seed: avatarId }).eq('id', p.id);
-  revalidatePath(`/arena/${slug}/espace`);
-  return { ok: true, seed: avatarId };
+export async function choisirAvatar(
+  slug: string,
+  avatarId: string,
+): Promise<Ok<{ seed: string }> | Err> {
+  try {
+    const v = await visibleTournament(slug);
+    if (!v) return err("Tournoi introuvable.");
+    const p = await currentParticipant(v.tournament.id);
+    if (!p) return err("Session expirée.");
+    if (!estAvatarPlanche(avatarId)) return err("Avatar inconnu.");
+    if (avatarId !== p.avatar_seed)
+      return err(
+        "Votre personnage est conservé pendant toute l’Arena. Seul son habillage évolue selon votre classement cumulé.",
+      );
+    return { ok: true, seed: p.avatar_seed };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("[arena] action échouée", error);
+    return {
+      ok: false,
+      error: "L’action n’a pas pu être effectuée. Réessayez.",
+    };
+  }
 }
 
-export async function changePseudo(slug: string, rawPseudo: string): Promise<Ok | Err> {
-  const v = await visibleSnapshot(slug);
-  if (!v) return err('Tournoi introuvable.');
-  const p = await currentParticipant(v.snap.tournament.id);
-  if (!p) return err('Session expirée.');
-  const pseudo = rawPseudo.trim();
-  if (!isValidPseudo(pseudo)) return err('Pseudonyme invalide.');
-  if (pseudoForbidden(pseudo)) return err('Ce pseudonyme n’est pas autorisé.');
-  const { count } = await arenaDb().from('arena_attempts').select('id', { count: 'exact', head: true }).eq('participant_id', p.id);
-  if ((count ?? 0) > 0) return err('Le pseudonyme ne peut plus changer une fois la première manche jouée.');
-  const { error } = await arenaDb().from('arena_participants').update({ pseudo, pseudo_key: pseudoKey(pseudo) }).eq('id', p.id);
-  if (error) return err(String(error.code) === '23505' ? 'Ce pseudonyme est déjà pris.' : error.message);
-  revalidatePath(`/arena/${slug}/espace`);
-  return { ok: true };
+export async function changePseudo(
+  slug: string,
+  rawPseudo: string,
+): Promise<Ok | Err> {
+  try {
+    const v = await visibleSnapshot(slug);
+    if (!v) return err("Tournoi introuvable.");
+    const p = await currentParticipant(v.snap.tournament.id);
+    if (!p) return err("Session expirée.");
+    const pseudo = rawPseudo.trim();
+    if (!isValidPseudo(pseudo)) return err("Pseudonyme invalide.");
+    if (pseudoForbidden(pseudo))
+      return err("Ce pseudonyme n’est pas autorisé.");
+    const { count } = await arenaDb()
+      .from("arena_attempts")
+      .select("id", { count: "exact", head: true })
+      .eq("participant_id", p.id);
+    if ((count ?? 0) > 0)
+      return err(
+        "Le pseudonyme ne peut plus changer une fois la première manche jouée.",
+      );
+    const { error } = await arenaDb()
+      .from("arena_participants")
+      .update({ pseudo, pseudo_key: pseudoKey(pseudo) })
+      .eq("id", p.id);
+    if (error)
+      return err(
+        String(error.code) === "23505"
+          ? "Ce pseudonyme est déjà pris."
+          : error.message,
+      );
+    revalidatePath(`/arena/${slug}/espace`);
+    return { ok: true };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("[arena] action échouée", error);
+    return {
+      ok: false,
+      error: "L’action n’a pas pu être effectuée. Réessayez.",
+    };
+  }
 }
 
-export async function setMarketingConsent(slug: string, value: boolean): Promise<Ok | Err> {
-  const v = await visibleTournament(slug);
-  if (!v) return err('Tournoi introuvable.');
-  const p = await currentParticipant(v.tournament.id);
-  if (!p) return err('Session expirée.');
-  await arenaDb().from('arena_participants').update({
-    consent_marketing: value,
-    consent_marketing_at: value ? new Date().toISOString() : p.consent_marketing_at,
-    consent_marketing_version: value ? CONSENT_VERSION : p.consent_marketing_version,
-    marketing_unsubscribed_at: value ? null : new Date().toISOString(),
-  }).eq('id', p.id);
-  revalidatePath(`/arena/${slug}/espace`);
-  return { ok: true };
+export async function setMarketingConsent(
+  slug: string,
+  value: boolean,
+): Promise<Ok | Err> {
+  try {
+    const v = await visibleTournament(slug);
+    if (!v) return err("Tournoi introuvable.");
+    const p = await currentParticipant(v.tournament.id);
+    if (!p) return err("Session expirée.");
+    const { error } = await arenaDb()
+      .from("arena_participants")
+      .update({
+        consent_marketing: value,
+        consent_marketing_at: value
+          ? new Date().toISOString()
+          : p.consent_marketing_at,
+        consent_marketing_version: value
+          ? CONSENT_VERSION
+          : p.consent_marketing_version,
+        marketing_unsubscribed_at: value ? null : new Date().toISOString(),
+      })
+      .eq("id", p.id);
+    if (error)
+      return err("Votre préférence n’a pas été enregistrée. Réessayez.");
+    revalidatePath(`/arena/${slug}/espace`);
+    return { ok: true };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("[arena] action échouée", error);
+    return {
+      ok: false,
+      error: "L’action n’a pas pu être effectuée. Réessayez.",
+    };
+  }
 }
 
 /** Suppression du compte et des données à la demande (§3.1). */
 export async function deleteMyAccount(slug: string): Promise<Ok | Err> {
-  const v = await visibleTournament(slug);
-  if (!v) return err('Tournoi introuvable.');
-  const p = await currentParticipant(v.tournament.id);
-  if (!p) return err('Session expirée.');
-  const mail = deletedEmail(v.tournament, p.first_name);
-  await sendArenaEmail({ tournament: v.tournament, participant: p, to: p.email, kind: 'deleted', mail });
-  await anonymizeParticipant(p, 'request');
-  await arenaLog({ tournamentId: v.tournament.id, kind: 'participant_deleted', details: `Suppression à la demande du participant ${p.pseudo}.` });
-  await clearSessionCookie();
-  return { ok: true };
+  try {
+    const v = await visibleTournament(slug);
+    if (!v) return err("Tournoi introuvable.");
+    const p = await currentParticipant(v.tournament.id);
+    if (!p) return err("Session expirée.");
+    const mail = deletedEmail(v.tournament, p.first_name);
+    await anonymizeParticipant(p, "request");
+    await sendArenaEmail({
+      tournament: v.tournament,
+      participant: p,
+      to: p.email,
+      kind: "deleted",
+      mail,
+    });
+    await arenaLog({
+      tournamentId: v.tournament.id,
+      kind: "participant_deleted",
+      details: `Suppression à la demande du participant ${p.pseudo}.`,
+    });
+    await clearSessionCookie();
+    return { ok: true };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("[arena] action échouée", error);
+    return {
+      ok: false,
+      error: "L’action n’a pas pu être effectuée. Réessayez.",
+    };
+  }
 }
-
 
 /* ------------------------------------------------------------------ */
 /* Vérification du pseudonyme en direct (maquette « modération »)      */
 /* ------------------------------------------------------------------ */
 
-export type PseudoCheck = { status: 'ok' | 'short' | 'invalid' | 'forbidden' | 'taken'; message: string };
+export type PseudoCheck = {
+  status: "ok" | "short" | "invalid" | "forbidden" | "taken";
+  message: string;
+};
 
 /** Filtre automatique (§3.3) + disponibilité dans le tournoi, sans effet de bord. */
-export async function checkPseudo(slug: string, rawPseudo: string): Promise<PseudoCheck> {
-  const pseudo = String(rawPseudo ?? '').trim();
-  if (pseudo.length < 3) return { status: 'short', message: '3 caractères minimum.' };
-  if (pseudo.length > 24) return { status: 'invalid', message: '24 caractères maximum.' };
-  if (!isValidPseudo(pseudo) || pseudoForbidden(pseudo)) return { status: 'forbidden', message: 'Ce pseudonyme contient un mot ou un format non autorisé.' };
+export async function checkPseudo(
+  slug: string,
+  rawPseudo: string,
+): Promise<PseudoCheck> {
+  const pseudo = String(rawPseudo ?? "").trim();
+  if (pseudo.length < 3)
+    return { status: "short", message: "3 caractères minimum." };
+  if (pseudo.length > 24)
+    return { status: "invalid", message: "24 caractères maximum." };
+  if (!isValidPseudo(pseudo) || pseudoForbidden(pseudo))
+    return {
+      status: "forbidden",
+      message: "Ce pseudonyme contient un mot ou un format non autorisé.",
+    };
   const v = await visibleSnapshot(slug);
-  if (!v) return { status: 'invalid', message: 'Tournoi introuvable.' };
-  const { data } = await arenaDb().from('arena_participants').select('id').eq('tournament_id', v.snap.tournament.id).eq('pseudo_key', pseudoKey(pseudo)).maybeSingle();
-  if (data) return { status: 'taken', message: 'Ce pseudonyme est déjà pris dans ce tournoi.' };
-  return { status: 'ok', message: 'Ce pseudonyme est disponible.' };
+  if (!v) return { status: "invalid", message: "Tournoi introuvable." };
+  const { data } = await arenaDb()
+    .from("arena_participants")
+    .select("id")
+    .eq("tournament_id", v.snap.tournament.id)
+    .eq("pseudo_key", pseudoKey(pseudo))
+    .maybeSingle();
+  if (data)
+    return {
+      status: "taken",
+      message: "Ce pseudonyme est déjà pris dans ce tournoi.",
+    };
+  return { status: "ok", message: "Ce pseudonyme est disponible." };
 }

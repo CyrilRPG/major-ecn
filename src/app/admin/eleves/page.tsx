@@ -41,7 +41,7 @@ export default async function ElevesPage() {
   const [{ data: students }, { data: fac }, { data: evcSessions }, { data: activite }, offers] = await Promise.all([
     supabase
       .from('profiles')
-      .select('id, first_name, last_name, email, phone, address, pseudo, promotion, permission_scope, role, is_active, created_at, can_download, download_colleges, evc_session_id, access_start, access_end')
+      .select('id, avatar_seed, first_name, last_name, email, phone, address, pseudo, promotion, permission_scope, role, is_active, created_at, can_download, download_colleges, evc_session_id, access_start, access_end')
       .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID)
       // Tri décroissant par date d'inscription (les plus récents en premier).
       .order('created_at', { ascending: false, nullsFirst: false }),

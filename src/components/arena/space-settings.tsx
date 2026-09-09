@@ -4,22 +4,19 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Trash2 } from 'lucide-react';
 import { ArenaAvatar } from '@/components/arena/arena-avatar';
-import { changePseudo, choisirAvatar, deleteMyAccount, logoutArena, setMarketingConsent } from '@/app/(arena)/arena/[slug]/actions';
-import { AVATARS_PLANCHE } from '@/components/arena/avatars';
+import { changePseudo, deleteMyAccount, logoutArena, setMarketingConsent } from '@/app/(arena)/arena/[slug]/actions';
 import { CONSENT_MARKETING } from '@/lib/arena/texts';
 import { ArenaButton, ARENA, BODY, DISPLAY } from './arena-ui';
 import { CheckRow, Field, FormError, TextInput } from './form-ui';
 
 /** Réglages de l'espace participant : avatar, pseudonyme (avant la 1re manche), consentement n° 2, suppression du compte (§3.1). */
 export function SpaceSettings({
-  slug, pseudo, avatarSeed, marketing, canChangePseudo, email,
-}: { slug: string; pseudo: string; avatarSeed: string; marketing: boolean; canChangePseudo: boolean; email: string }) {
+  slug, pseudo, avatarSeed, rank, marketing, canChangePseudo, email,
+}: { slug: string; pseudo: string; avatarSeed: string; rank?: number | null; marketing: boolean; canChangePseudo: boolean; email: string }) {
   const router = useRouter();
-  const [seed, setSeed] = useState(avatarSeed);
   const [newPseudo, setNewPseudo] = useState(pseudo);
   const [consent, setConsent] = useState(marketing);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [choixOuvert, setChoixOuvert] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [pending, start] = useTransition();
@@ -27,45 +24,13 @@ export function SpaceSettings({
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-4">
-        <span className="rounded-full" style={{ boxShadow: `0 0 0 2px ${ARENA.lineStrong}` }}><ArenaAvatar seed={seed} size={64} title={pseudo} /></span>
+        <ArenaAvatar seed={avatarSeed} rank={rank} size={72} title={pseudo} />
         <div>
           <p className="text-lg font-extrabold" style={{ fontFamily: DISPLAY }}>{pseudo}</p>
           <p className="text-xs" style={{ color: ARENA.textMuted, fontFamily: BODY }}>{email}</p>
-          <button
-            type="button"
-            className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold"
-            style={{ color: ARENA.textSoft, fontFamily: BODY }}
-            aria-expanded={choixOuvert}
-            onClick={() => setChoixOuvert((v) => !v)}
-          >
-            Changer d’avatar
-          </button>
+          <p className="mt-2 text-xs leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Votre personnage reste le même pendant toute l’Arena. Son habillage suit votre rang au classement cumulé.</p>
         </div>
       </div>
-
-      {choixOuvert && (
-        <div role="radiogroup" aria-label="Choisir un avatar" className="grid grid-cols-6 gap-2 sm:grid-cols-8 sm:gap-2.5">
-          {AVATARS_PLANCHE.map((a) => {
-            const on = a.id === seed;
-            return (
-              <button
-                key={a.id}
-                type="button"
-                role="radio"
-                aria-checked={on}
-                title={a.label}
-                aria-label={a.label}
-                disabled={pending}
-                onClick={() => start(async () => { const r = await choisirAvatar(slug, a.id); if (r.ok) setSeed(r.seed); else setError(r.error); })}
-                className="rounded-full p-0.5 transition-transform hover:scale-105"
-                style={{ boxShadow: on ? `0 0 0 2.5px ${ARENA.red}, 0 0 20px rgba(228,0,43,0.5)` : `0 0 0 1.5px ${ARENA.lineStrong}` }}
-              >
-                <ArenaAvatar seed={a.id} size={44} title={a.label} />
-              </button>
-            );
-          })}
-        </div>
-      )}
 
       {canChangePseudo && (
         <form

@@ -4,10 +4,10 @@ import { ARENA, BODY, HEADLINE, LIGHT } from '../tokens';
 import { Reveal } from './fx';
 
 /** Section claire « 01 · 02 · 03 » du modèle : inscription, manche, corrections et classement. */
-export function LandingSteps({ questions, secondsPerQuestion }: { questions: number; secondsPerQuestion: number }) {
+export function LandingSteps({ questions, secondsPerQuestion }: { questions: number | string; secondsPerQuestion: number }) {
   const steps = [
     { n: '01', icon: FilePenLine, title: 'Je m’inscris à la manche', text: 'Je rejoins la manche le jour J en quelques clics, sous pseudonyme.' },
-    { n: '02', icon: Timer, title: `Je réponds à ${questions} questions, ${secondsPerQuestion} s chacune`, text: 'Chaque question a son propre chronomètre : le temps écoulé, on passe à la suivante. Une seule tentative.' },
+    { n: '02', icon: Timer, title: `Je réponds à ${questions} questions`, text: `Durée par défaut : ${secondsPerQuestion} s par question. Chaque question a son propre chronomètre : le temps écoulé, on passe à la suivante. Une seule tentative.` },
     { n: '03', icon: BarChart3, title: 'Je reçois mes corrections et mon classement', text: 'Je comprends mes erreurs, je découvre mon classement anonymisé et je suis ma progression.' },
   ];
   return (

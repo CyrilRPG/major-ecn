@@ -1,3 +1,5 @@
+import { ARENA_ROUNDS, meanRoundSeconds } from './format';
+
 /**
  * EVC Arena — classement cumulatif (cahier des charges §2.2, §6.13, §7).
  *
@@ -11,13 +13,10 @@
  *    publiés ; un participant absent d'une manche y compte 0 (pénalité
  *    mécanique, §2.2) ;
  *  - droit au rang : score cumulé ≥ seuil (50 % par défaut), recalculé à chaque
- *    manche (§7.1) ; au classement final, au moins `minRoundsFinal` manches ;
+ *    manche (§7.1) ; au classement général final, les trois manches ;
  *  - départage (§6.13) : points, puis réponses parfaites, puis temps moyen par
- *    manche (le plus faible l'emporte), calculé sur les manches non tronquées ;
- *    un participant dont toutes les manches sont tronquées est classé après les
- *    participants à égalité dont le temps est calculable ;
- *  - aucun effectif n'est jamais exposé par ce module : les écrans n'affichent
- *    que le rang et les entrées des Meilleurs scores.
+ *    manche (le plus faible l'emporte), temps cumulé / manches disputées ;
+ *  - les effectifs de manche et général sont calculés séparément.
  */
 
 export type RankingRound = {
@@ -57,7 +56,8 @@ export type Standing = {
   /** Score cumulé en pourcentage du maximum cumulé (0 si aucune manche comptée). */
   pct: number;
   perfectCount: number;
-  /** Temps moyen par manche non tronquée, en secondes ; null si aucune. */
+  totalDurationSeconds: number;
+  /** Temps cumulé / manches disputées, arrondi à la seconde ; null si aucune. */
   meanTime: number | null;
   /** Rang affiché, ou null si le participant n'a pas droit au rang. */
   rank: number | null;
@@ -94,7 +94,7 @@ export function computeStandings(
   const standings: Standing[] = [];
   for (const p of participants) {
     if (p.excluded) continue;
-    const list = byParticipant.get(p.id) ?? [];
+    const list = [...new Map((byParticipant.get(p.id) ?? []).map(a => [a.roundId, a])).values()];
     const perRound: Standing['perRound'] = {};
     for (const r of counted) {
       const a = list.find((x) => x.roundId === r.id);
@@ -102,14 +102,14 @@ export function computeStandings(
     }
     const totalScore = round3(list.reduce((s, a) => s + a.score, 0));
     const perfectCount = list.reduce((s, a) => s + a.perfectCount, 0);
-    const timed = list.filter((a) => !a.truncated);
-    const meanTime = timed.length ? Math.round(timed.reduce((s, a) => s + a.durationSeconds, 0) / timed.length) : null;
+    const totalDurationSeconds = list.reduce((s, a) => s + a.durationSeconds, 0);
+    const meanTime = meanRoundSeconds(totalDurationSeconds, list.length);
     const pct = totalMax > 0 ? round3((totalScore / totalMax) * 100) : 0;
 
     let reason: Standing['reason'] = null;
     if (list.length === 0) reason = 'no_round';
+    else if (opts.isFinal && (rounds.length !== ARENA_ROUNDS || list.length !== ARENA_ROUNDS)) reason = 'not_enough_rounds';
     else if (pct < opts.thresholdPct) reason = 'under_threshold';
-    else if (opts.isFinal && list.length < opts.minRoundsFinal) reason = 'not_enough_rounds';
 
     standings.push({
       participantId: p.id,
@@ -120,6 +120,7 @@ export function computeStandings(
       totalMax: round3(totalMax),
       pct,
       perfectCount,
+      totalDurationSeconds,
       meanTime,
       rank: null,
       reason,
@@ -155,12 +156,29 @@ export function compareStandings(a: Standing, b: Standing): number {
 
 export type LeaderboardRow = { rank: number; pseudo: string; avatarSeed: string; totalScore: number; roundsPlayed: number; me: boolean };
 
-/** « Meilleurs scores » (§7.2) : au plus `size` entrées, uniquement les participants ayant droit au rang. */
-export function leaderboardRows(standings: readonly Standing[], size: number, meId: string | null = null): LeaderboardRow[] {
+/** Public list is complete by default; landing excerpts may request a limit. */
+export function leaderboardRows(standings: readonly Standing[], size: number = Infinity, meId: string | null = null): LeaderboardRow[] {
   return standings
     .filter((s) => s.rank !== null)
     .slice(0, Math.max(1, size))
     .map((s) => ({ rank: s.rank as number, pseudo: s.pseudo, avatarSeed: s.avatarSeed, totalScore: s.totalScore, roundsPlayed: s.roundsPlayed, me: s.participantId === meId }));
+}
+
+export type ArenaRankings = {
+  standings: Standing[];
+  effectifGeneral: number;
+  byRound: Record<string, { standings: Standing[]; effectifManche: number }>;
+};
+
+/** Effectifs count participation, independently of the score threshold. */
+export function computeArenaRankings(rounds: readonly RankingRound[], attempts: readonly RankingAttempt[], participants: readonly RankingParticipant[], opts: RankingOptions): ArenaRankings {
+  const standings = computeStandings(rounds, attempts, participants, opts);
+  const effectifGeneral = rounds.length === ARENA_ROUNDS ? participants.filter(p => !p.excluded && rounds.every(r => attempts.some(a => a.participantId === p.id && a.roundId === r.id))).length : 0;
+  const byRound = Object.fromEntries(rounds.map(r => {
+    const rows = computeStandings([{ ...r, counted: true }], attempts, participants, { ...opts, isFinal: false }).filter(s => s.roundsPlayed > 0);
+    return [r.id, { standings: rows, effectifManche: rows.length }];
+  }));
+  return { standings, effectifGeneral, byRound };
 }
 
 function round3(v: number): number {

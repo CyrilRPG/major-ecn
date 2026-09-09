@@ -39,6 +39,8 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
   const { snap, participant, nav } = ctx;
   const t = snap.tournament;
   const rounds = snap.rounds;
+  const questionCounts = rounds.map(r => (snap.questionsByRound.get(r.id) ?? []).filter(q => !q.neutralized_at).length);
+  const formatQuestions = new Set(questionCounts).size > 1 ? questionCounts.join(' / ') : questionCounts[0] ?? t.questions_per_round;
   const now = new Date();
   const base = `/arena/${slug}`;
   const inviteQuery = sp.i ? `?i=${encodeURIComponent(sp.i)}` : '';
@@ -56,7 +58,7 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
 
   const primary = participant
     ? openRound ? { href: `${base}/manche/${openRound.number}`, label: `Je joue la manche ${openRound.number}` } : { href: `${base}/espace`, label: 'Ouvrir mon espace' }
-    : ctx.registrationOpen ? { href: registerHref, label: openRound ? `Je participe à la manche ${openRound.number}` : 'Je m’inscris au tournoi' } : { href: `${base}/classement`, label: 'Voir le classement final' };
+    : ctx.registrationOpen ? { href: registerHref, label: openRound ? `Je participe à la manche ${openRound.number}` : 'Je m’inscris au tournoi' } : t.leaderboard_enabled ? { href: `${base}/classement`, label: 'Voir les classements' } : { href: `${base}/regles`, label: 'Consulter les règles du tournoi' };
 
   const standings = t.leaderboard_enabled ? await computeTournamentStandings(snap) : null;
   const board = standings ? leaderboardRows(standings.standings, t.leaderboard_size, participant?.id ?? null) : [];
@@ -82,7 +84,7 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
       <LandingHero
         specialty={t.specialty}
         rounds={rounds.length || 3}
-        questions={t.questions_per_round}
+        questions={formatQuestions}
         secondsPerQuestion={t.seconds_per_question}
         minRounds={t.min_rounds_final}
         state={heroState}
@@ -91,7 +93,7 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
         registrationOpen={ctx.registrationOpen && !participant}
       />
 
-      <LandingSteps questions={t.questions_per_round} secondsPerQuestion={t.seconds_per_question} />
+      <LandingSteps questions={formatQuestions} secondsPerQuestion={t.seconds_per_question} />
 
       <LandingRounds
         rounds={roundCards}
@@ -102,6 +104,7 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
         totalMax={totalMax}
         boardEmpty={lastCounted ? 'Aucun participant n’atteint encore le seuil du classement.' : 'Le tableau s’allumera après la publication des résultats de la première manche.'}
         leaderboardEnabled={t.leaderboard_enabled}
+        general={standings?.isFinal} effectif={standings?.isFinal ? standings.effectifGeneral : undefined}
       />
 
       <LandingCorrections specialty={t.specialty} href={`${base}/regles`} />

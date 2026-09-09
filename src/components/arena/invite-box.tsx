@@ -8,7 +8,7 @@ import { Field, FormError, TextArea, TextInput } from './form-ui';
 
 /**
  * « Inviter un collègue » (§8, maquette 14) : lien personnalisé avec copie,
- * partage WhatsApp (prioritaire), Telegram, email, Messenger, copie du lien.
+ * partage WhatsApp, Telegram, email, partage natif et copie du lien.
  * Le lien porte le code d'invitation (source d'acquisition).
  */
 export function InviteBox({ slug, inviteUrl, specialty, questions, secondsPerQuestion }: { slug: string; inviteUrl: string; specialty: string; questions: number; secondsPerQuestion: number }) {
@@ -19,11 +19,10 @@ export function InviteBox({ slug, inviteUrl, specialty, questions, secondsPerQue
   const [copied, setCopied] = useState(false);
   const [pending, start] = useTransition();
 
-  const text = `Je participe au tournoi EVC Arena ${specialty} de Major ECN : 3 manches de ${questions} QCM, ${secondsPerQuestion} s par question, une seule tentative. Rejoins-moi : ${inviteUrl}`;
+  const text = `Je participe au tournoi EVC Arena ${specialty} de Major ECN : 3 manches de QCM, une seule tentative. Format prévu : ${questions} questions par manche et ${secondsPerQuestion} s par défaut par question. Le détail de chaque manche est disponible sur le tournoi. Rejoins-moi : ${inviteUrl}`;
   const wa = `https://wa.me/?text=${encodeURIComponent(text)}`;
   const tg = `https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent(text)}`;
   const mailto = `mailto:?subject=${encodeURIComponent('Rejoins-moi sur EVC Arena')}&body=${encodeURIComponent(text)}`;
-  const messenger = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(inviteUrl)}&app_id=0&redirect_uri=${encodeURIComponent(inviteUrl)}`;
 
   const copy = async () => {
     try {
@@ -32,7 +31,14 @@ export function InviteBox({ slug, inviteUrl, specialty, questions, secondsPerQue
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
       setCopied(false);
+      setError('La copie automatique est indisponible. Sélectionnez et copiez le lien affiché ci-dessus.');
     }
+  };
+
+  const share = async () => {
+    if (!navigator.share) return copy();
+    try { await navigator.share({ title: 'EVC Arena', text, url: inviteUrl }); }
+    catch (e) { if (!(e instanceof DOMException && e.name === 'AbortError')) await copy(); }
   };
 
   const tile = 'flex min-w-0 flex-col items-center gap-2 rounded-xl px-1 py-3 text-[9px] font-semibold uppercase tracking-[0.08em] transition-colors hover:bg-white/[0.06] sm:text-[11px] sm:tracking-[0.12em]';
@@ -52,7 +58,7 @@ export function InviteBox({ slug, inviteUrl, specialty, questions, secondsPerQue
         <a href={wa} target="_blank" rel="noreferrer" className={tile} style={tileStyle}><span className={icon} style={{ background: '#25D366', color: '#fff' }}><MessageCircle className="h-5 w-5" /></span>WhatsApp</a>
         <a href={tg} target="_blank" rel="noreferrer" className={tile} style={tileStyle}><span className={icon} style={{ background: '#2AABEE', color: '#fff' }}><Send className="h-5 w-5" /></span>Telegram</a>
         <a href={mailto} className={tile} style={tileStyle}><span className={icon} style={{ background: ARENA.red, color: '#fff' }}><Mail className="h-5 w-5" /></span>Email</a>
-        <a href={messenger} target="_blank" rel="noreferrer" className={tile} style={tileStyle}><span className={icon} style={{ background: '#0084FF', color: '#fff' }}><Share2 className="h-5 w-5" /></span>Messenger</a>
+        <button type="button" onClick={share} className={tile} style={tileStyle}><span className={icon} style={{ background: '#0084FF', color: '#fff' }}><Share2 className="h-5 w-5" /></span>Partager</button>
         <button type="button" onClick={copy} className={tile} style={tileStyle}><span className={icon} style={{ background: ARENA.raised2, color: ARENA.text, boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}` }}><Link2 className="h-5 w-5" /></span>{copied ? 'Copié' : 'Lien'}</button>
       </div>
 

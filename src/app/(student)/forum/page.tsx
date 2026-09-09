@@ -1,5 +1,6 @@
 import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
 import { canRead, canWrite } from '@/lib/schemas/professor';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
@@ -70,7 +71,7 @@ export default async function ForumPage({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let query: any = (supabase as any)
     .from('forum_questions')
-    .select('id, body, ai_context, created_at, student_id, student_pseudo, cours_id, cours_titre, matiere_nom, matiere_id, is_public, status, forum_answers(id, body, created_at, professor_name), forum_replies(id, body, created_at, author_role, author_name)')
+    .select('id, body, ai_context, created_at, student_id, student_pseudo, cours_id, cours_titre, matiere_nom, matiere_id, is_public, status, forum_answers(id, body, created_at, professor_id, professor_name), forum_replies(id, body, created_at, author_id, author_role, author_name)')
     .order('created_at', { ascending: false })
     .limit(500);
 
@@ -122,6 +123,28 @@ export default async function ForumPage({
   } else if (sp.filter === 'private') {
     rows = rows.filter((r) => !r.is_public);
   }
+
+  // Seulement les avatars des auteurs de messages déjà autorisés par la RLS.
+  // Aucun autre champ de profil n'est exposé aux lecteurs du forum.
+  const authorIds = [...new Set(rows.flatMap(row => [
+    row.student_id,
+    ...(row.forum_answers ?? []).map(answer => answer.professor_id),
+    ...(row.forum_replies ?? []).map(reply => reply.author_id),
+  ]).filter((id): id is string => !!id))];
+  const admin = createAdminClient();
+  const avatarMap = new Map<string, string | null>();
+  for (let offset = 0; offset < authorIds.length; offset += 200) {
+    const { data: avatars, error } = await admin.from('profiles')
+      .select('id, avatar_seed').in('id', authorIds.slice(offset, offset + 200));
+    if (error) throw error;
+    for (const avatar of avatars ?? []) avatarMap.set(avatar.id, avatar.avatar_seed);
+  }
+  rows = rows.map(row => ({
+    ...row,
+    student_avatar_seed: avatarMap.get(row.student_id),
+    forum_answers: row.forum_answers.map(answer => ({ ...answer, avatar_seed: avatarMap.get(answer.professor_id ?? '') })),
+    forum_replies: row.forum_replies?.map(reply => ({ ...reply, avatar_seed: avatarMap.get(reply.author_id ?? '') })),
+  }));
 
   // Liste des matières représentées (pour les chips)
   const matieres = Array.from(

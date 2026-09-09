@@ -43,7 +43,7 @@ const UNITS = ['jours', 'heures', 'minutes', 'secondes'];
 export function LandingHero({
   specialty, rounds, questions, secondsPerQuestion, minRounds, state, primary, secondary, registrationOpen,
 }: {
-  specialty: string; rounds: number; questions: number;
+  specialty: string; rounds: number; questions: number | string;
   /** Temps alloué à CHAQUE question (§3.4). */
   secondsPerQuestion: number;
   minRounds: number;
@@ -55,9 +55,9 @@ export function LandingHero({
   const shadow = '0 6px 24px rgba(0,0,0,0.7)';
 
   const stats = [
-    { n: rounds, label: 'manches', text: 'ouvertes 24 h chacune' },
+    { n: rounds, label: 'manches', text: 'dates dans le calendrier' },
     { n: questions, label: 'questions', text: 'QRM · QRU · QRP' },
-    { n: secondsPerQuestion, label: 'secondes par question', text: 'chronomètre côté serveur' },
+    { n: secondsPerQuestion, label: 'secondes par défaut', text: 'durée indiquée à chaque question' },
   ];
   const promises = [
     'Une seule tentative par manche',
@@ -87,7 +87,7 @@ export function LandingHero({
           </p>
           <GoldRule align="center" width={140} className="mt-3" />
           <p className="mt-3 text-[12px] sm:text-[14px]" style={{ ...CAPS, color: ARENA.text, letterSpacing: '0.16em', fontWeight: 500, textShadow: shadow }}>
-            {rounds} manches · {questions} questions · {secondsPerQuestion} s par question
+            {rounds} manches · {questions} questions · {secondsPerQuestion} s par défaut
           </p>
           <p className="text-[12px] sm:text-[14px]" style={{ ...CAPS, color: ARENA.goldSoft, letterSpacing: '0.16em', fontWeight: 500, textShadow: shadow }}>
             Une seule tentative · un classement cumulé
@@ -143,7 +143,7 @@ export function LandingHero({
                   </div>
                 </>
               )}
-              {state.kind === 'finished' && <p className="text-[1.3rem] leading-tight" style={{ ...CAPS, color: ARENA.text }}>Tournoi terminé · classement final publié</p>}
+              {state.kind === 'finished' && <p className="text-[1.3rem] leading-tight" style={{ ...CAPS, color: ARENA.text }}>Tournoi terminé</p>}
               {state.kind === 'unscheduled' && <p className="text-[1.1rem] leading-tight" style={{ ...CAPS, color: ARENA.textSoft, fontWeight: 500 }}>Dates des manches annoncées prochainement</p>}
 
               <Link href={primary.href} className={`${buttonClass('primary', 'lg')} mt-6 w-full`} style={buttonStyle('primary')}>

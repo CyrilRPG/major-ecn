@@ -22,7 +22,7 @@ export function Ring({
           cx={size / 2} cy={size / 2} r={r} fill="none"
           stroke={urgent ? ARENA.redSoft : color} strokeWidth={stroke} strokeLinecap="round"
           strokeDasharray={c} strokeDashoffset={c * (1 - p)}
-          style={{ transition: 'stroke-dashoffset 0.5s linear, stroke 0.3s', filter: urgent ? 'drop-shadow(0 0 8px rgba(228,0,43,0.8))' : 'drop-shadow(0 0 6px rgba(228,0,43,0.45))' }}
+          style={{ transition: 'stroke-dashoffset 0.5s linear, stroke 0.3s', filter: urgent ? 'drop-shadow(0 0 8px rgba(228,0,43,0.8))' : 'none' }}
         />
       </svg>
       <div className="relative z-10 flex flex-col items-center justify-center text-center">{children}</div>
