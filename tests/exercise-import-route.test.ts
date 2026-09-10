@@ -78,10 +78,10 @@ function documentColore(): VeritePdf {
 /* ─────────── Facturation ─────────── */
 
 test('la facturation retient le maximum de l’estimation et du coût réel majoré (× 1,1 × 5), en centimes', () => {
-  assert.equal(PRICE_MULTIPLIER, 5);
+  assert.equal(PRICE_MULTIPLIER, 3);
   assert.equal(facturerImportCents(500, 0.2), 500);              // 0,2 × 1,1 × 5 = 1,10 € < 5 €
   assert.equal(facturerImportCents(500, 3), 1650);               // 3 × 1,1 × 5 = 16,50 €
-  assert.equal(facturerImportCents(500, 1.234567), Math.ceil(1.234567 * 1.1 * 5 * 100));
+  assert.equal(facturerImportCents(500, 1.234567), Math.ceil(1.234567 * 1.1 * 3 * 100));
   assert.equal(facturerImportCents(500, 0), 500);
   assert.equal(facturerImportCents(Number.NaN, Number.NaN), 0);
 });

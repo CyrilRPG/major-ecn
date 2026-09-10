@@ -48,8 +48,8 @@ import { appliquer, rattacherImages, type BlocQuestion, type Confiance } from '.
 
 /* ─────────── Facturation ─────────── */
 
-/** Marge de la plateforme sur le coût fournisseur (× 5). */
-export const PRICE_MULTIPLIER = 5;
+/** Marge de la plateforme sur le coût fournisseur (× 3). */
+export const PRICE_MULTIPLIER = 3;
 /** Marge de sécurité sur le coût réel (change, arrondis de facturation Anthropic). */
 const MARGE_COUT_REEL = 1.1;
 
@@ -57,7 +57,7 @@ const MARGE_COUT_REEL = 1.1;
  * Montant facturé pour un import : le PLUS ÉLEVÉ de l'estimation faite avant
  * l'analyse (`estimateExerciseImportCents`, sur la taille des fichiers) et du
  * coût réel constaté (USD, jetons réellement consommés, relance comprise)
- * majoré de 10 % puis multiplié par la marge de la plateforme (× 5), en
+ * majoré de 10 % puis multiplié par la marge de la plateforme (× 3), en
  * centimes arrondis au centime supérieur. L'estimation reste un plancher :
  * elle a été affichée à l'administrateur avant qu'il ne lance l'analyse.
  */
