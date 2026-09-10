@@ -145,7 +145,7 @@ export function correctionsHtml(t: TournamentRow, r: RoundRow, questions: Questi
   /* Une question peut s'étendre sur deux pages (la première question laissait
      une page blanche derrière le titre « Questions ») ; seules ses briques
      internes restent insécables. */
-  .baremes { break-inside: avoid; }
+  .baremes, .keep { break-inside: avoid; }
   h2 { break-after: avoid; }
   .q { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 10px; margin: 0 0 12px; }
   .q-head, .vignette, .enonce, .items li, .expected, .callout, .block, .images { break-inside: avoid; }
@@ -201,8 +201,8 @@ ${synthese.length ? `<div class="callout synthese"><h5>L’essentiel de la manch
 ${r.corrections_methodo ? `<div class="callout methodo"><h5>Méthode${r.theme ? ` · ${esc(r.theme)}` : ''}</h5>${para(r.corrections_methodo)}</div>` : ''}
 ${r.corrections_errors ? `<div class="callout"><h5>Erreurs les plus fréquentes sur la manche</h5>${para(r.corrections_errors)}</div>` : ''}
 
-<h2>Barème appliqué<small>${r.bareme_locked_at ? 'Barème verrouillé à l’ouverture de la manche.' : 'Barème du tournoi.'}</small></h2>
-<div class="baremes">${baremeHtml}</div>
+<div class="keep"><h2>Barème appliqué<small>${r.bareme_locked_at ? 'Barème verrouillé à l’ouverture de la manche.' : 'Barème du tournoi.'}</small></h2>
+<div class="baremes">${baremeHtml}</div></div>
 
 <h2>Questions<small>${actives.length} question${actives.length > 1 ? 's' : ''}${neutralisees.length ? ` · ${neutralisees.length} neutralisée${neutralisees.length > 1 ? 's' : ''} (retirée${neutralisees.length > 1 ? 's' : ''} du barème)` : ''}</small></h2>
 ${qHtml}

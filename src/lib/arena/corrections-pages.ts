@@ -118,15 +118,14 @@ export async function readCorrectionPage(tournamentId: string, roundNumber: numb
 let policeEnregistree: string | null = null;
 /**
  * Police du filigrane : la fonction Vercel n'a aucune police système (le texte
- * serait invisible). On enregistre la Liberation Sans livrée par pdfjs-dist
- * (déjà tracée pour le rendu des pages).
+ * serait invisible). On enregistre la Liberation Sans Bold (licence OFL)
+ * embarquée dans le dépôt (src/lib/arena/fonts, tracée par next.config pour
+ * la route des pages).
  */
 async function policeFiligrane(GlobalFonts: { registerFromPath(path: string, alias?: string): unknown }): Promise<string> {
   if (policeEnregistree !== null) return policeEnregistree;
   try {
-    const require = createRequire(import.meta.url);
-    const racine = path.dirname(require.resolve('pdfjs-dist/package.json'));
-    const ok = Boolean(GlobalFonts.registerFromPath(path.join(racine, 'standard_fonts', 'LiberationSans-Bold.ttf'), 'ArenaWatermark'));
+    const ok = Boolean(GlobalFonts.registerFromPath(path.join(process.cwd(), 'src', 'lib', 'arena', 'fonts', 'LiberationSans-Bold.ttf'), 'ArenaWatermark'));
     policeEnregistree = ok ? 'ArenaWatermark' : '';
   } catch {
     policeEnregistree = '';
