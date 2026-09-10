@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Manrope } from 'next/font/google';
 import { ArrowLeft, ArrowRight, CalendarDays, ShieldCheck } from 'lucide-react';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
+import { ExperienceNavigation } from '@/components/arena/experience-navigation';
 
 export const dynamic = 'force-dynamic';
 
@@ -68,6 +69,8 @@ export default async function RulesPage({ params }: Params) {
   const season = new Date(seasonDate).toLocaleDateString('fr-FR', { year: 'numeric', timeZone: 'Europe/Paris' });
 
   return (
+    <>
+    <ExperienceNavigation nav={ctx.nav} />
     <main className={`ar-page ${rulesBody.variable}`}>
       <Link href={base} className="ar-back"><ArrowLeft aria-hidden strokeWidth={2} />Retour à l’Arena</Link>
 
@@ -114,5 +117,6 @@ export default async function RulesPage({ params }: Params) {
         <span className="ar-footer-rule" aria-hidden />
       </footer>
     </main>
+    </>
   );
 }

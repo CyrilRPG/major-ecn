@@ -22,13 +22,14 @@ const ERRORS: Record<string, string> = {
  * lien invalide ou expiré, compte suspendu, « mot de passe oublié » (il n'y a
  * pas de mot de passe), adresse déjà inscrite (renvoi depuis l'inscription).
  */
-export default async function ArenaLoginPage({ searchParams }: { searchParams: Promise<{ erreur?: string; info?: string; deja?: string; e?: string }> }) {
-  const { erreur, info, deja, e } = await searchParams;
+export default async function ArenaLoginPage({ searchParams }: { searchParams: Promise<{ erreur?: string; info?: string; deja?: string; e?: string; tournoi?: string }> }) {
+  const { erreur, info, deja, e, tournoi } = await searchParams;
   const space = await activeArenaSpace();
   if (space && erreur !== 'bloque' && deja !== '1') redirect(space);
   const alreadyRegistered = deja === '1';
   return (
     <AuthCard
+      slug={tournoi}
       title={alreadyRegistered ? 'Vous êtes déjà inscrit' : 'Connexion'}
       lead={alreadyRegistered
         ? <>Votre inscription existe déjà. Retrouvez le lien reçu dans votre messagerie et cliquez sur « Ouvrir mon espace ». Vous pouvez aussi demander un nouvel accès ci-dessous.</>

@@ -47,6 +47,7 @@ export default async function LoginLandingPage({ searchParams }: { searchParams:
   return (
     <AuthCard
       title="Bienvenue dans l’arène"
+      slug={tournament.slug}
       lead={<>
         Bonjour {p.first_name}, votre lien de connexion est valide.
         <span className="mt-2 block text-[12.5px]" style={{ color: ARENA.textMuted }}>{tournament.title} · pseudonyme « {p.pseudo} »</span>

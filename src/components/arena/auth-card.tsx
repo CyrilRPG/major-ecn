@@ -1,24 +1,19 @@
-import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { ArenaLogoStack, ArenaWordmark } from './arena-logo';
+import { ArenaLogoStack } from './arena-logo';
+import { ArenaNavigation } from './arena-navigation';
 import { ArenaFooter } from './arena-shell';
-import { Container } from './arena-ui';
 import { Stadium } from './stadium';
 import { ARENA, BODY, CAPS } from './tokens';
 
 /**
  * Coque des pages d'accès sans tournoi dans l'URL (connexion, atterrissage
  * des liens de confirmation et de connexion, mot de passe oublié) : barre
- * haute minimale, carte centrée sur l'arène, pied de page.
+ * haute commune, carte centrée sur l'arène, pied de page.
  */
-export function AuthCard({ title, lead, children, wide = false }: { title: string; lead?: ReactNode; children: ReactNode; wide?: boolean }) {
+export function AuthCard({ title, lead, children, wide = false, slug }: { title: string; lead?: ReactNode; children: ReactNode; wide?: boolean; slug?: string }) {
   return (
     <>
-      <header className="relative z-20" style={{ borderBottom: `1px solid ${ARENA.line}`, background: 'rgba(11,15,20,0.9)' }}>
-        <Container className="flex h-[4.5rem] items-center justify-between">
-          <Link href="/arena" aria-label="EVC Arena — accueil"><ArenaWordmark compact /></Link>
-        </Container>
-      </header>
+      <ArenaNavigation slug={slug} />
       <main className="flex-1">
         <Stadium photo="heroArena" darken={0.48} tint={0.1} gold={0.2} animate position="center 30%" className="flex min-h-[calc(100svh-4.5rem)] items-center py-12">
           <div className={`mx-auto w-full px-4 sm:px-6 ${wide ? 'max-w-3xl' : 'max-w-2xl'}`}>

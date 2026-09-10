@@ -1,0 +1,87 @@
+/* One header for public pages, access forms and the participant experience. */
+.arena-experience-header {
+  --ae-gold: #ffca4c;
+  --ae-border: #29404c;
+  --ae-muted: #bec6ce;
+  position: relative;
+  z-index: 30;
+  display: flex;
+  align-items: stretch;
+  flex-shrink: 0;
+  width: 100%;
+  height: 80px;
+  color: #f5f5f6;
+  background: rgba(0, 14, 23, .98);
+  border-bottom: 1px solid #40505a;
+  font-family: var(--font-inter), sans-serif;
+}
+.arena-experience-header * { box-sizing: border-box; }
+.arena-experience-header :is(a, summary):focus-visible { outline: 3px solid var(--ae-gold); outline-offset: -4px; }
+.arena-experience-brand { position: relative; display: flex; align-items: center; flex: 0 0 21%; padding-left: 2.5%; min-width: 235px; }
+.arena-experience-brand::after { content: ''; position: absolute; right: 12px; height: 100%; border-right: 1px solid #77736e; transform: skewX(-18deg); }
+.ae-reference-wordmark {
+  display: block;
+  flex-shrink: 0;
+  width: 225px;
+  height: 66px;
+  background: url('/arena/reference-interface-2026.png') -67px -9px / 1599px 984px no-repeat;
+  transform-origin: left center;
+}
+.arena-experience-nav { display: flex; align-items: stretch; flex: 1; min-width: 0; gap: clamp(0px, calc((100vw - 1400px) * .04), 30px); }
+.arena-experience-nav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  padding: 4px clamp(12px, 1.5vw, 23px) 0;
+  border-bottom: 6px solid transparent;
+  text-transform: uppercase;
+  font-family: var(--font-oswald), sans-serif;
+  font-weight: 500;
+  font-size: clamp(12px, 1vw, 14px);
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.arena-experience-nav a svg { flex-shrink: 0; width: 28px; height: 28px; stroke-width: 1.65; }
+.arena-experience-nav a[aria-current] { color: var(--ae-gold); border-bottom-color: var(--ae-gold); }
+.arena-experience-nav a:hover { color: var(--ae-gold); }
+.arena-experience-account { display: flex; align-items: center; gap: 22px; padding: 0 clamp(18px, 3vw, 65px) 0 22px; border-left: 1px solid #54565a; }
+.arena-profile-link { display: flex; align-items: center; gap: 14px; min-width: 0; font-size: 16px; font-weight: 600; }
+.arena-profile-link > span:not([role='img']) { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.arena-profile-link > span[role='img'] { display: block; }
+.arena-profile-link > svg { margin-left: 15px; flex-shrink: 0; }
+.arena-notifications summary { display: flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; list-style: none; cursor: pointer; color: var(--ae-gold); }
+.arena-notifications summary::-webkit-details-marker { display: none; }
+.arena-notifications summary > svg { width: 28px; height: 28px; }
+.arena-account-popover { position: absolute; right: 28px; top: calc(100% + 5px); width: 310px; max-width: calc(100vw - 32px); padding: 22px; border: 1px solid var(--ae-border); border-radius: 14px; background: #00131f; box-shadow: 0 15px 50px #0009; font-size: 14px; }
+.arena-account-popover p { margin: 10px 0; color: var(--ae-muted); }
+.arena-account-popover a { color: var(--ae-gold); }
+.arena-account-popover small { display: block; margin-top: 4px; line-height: 1.5; }
+.arena-preview-strip { position: absolute; top: 100%; left: 0; right: 0; text-align: center; background: #322615; color: #ffda7f; font-size: 11px; letter-spacing: .05em; padding: 4px; z-index: 2; }
+@media (max-width: 1280px) {
+  .arena-experience-brand { min-width: 210px; }
+  .ae-reference-wordmark { transform: scale(.8); margin-right: -45px; }
+  .arena-experience-account { gap: 12px; padding-inline: 14px; }
+  .arena-profile-link > span:not([role='img']) { display: none; }
+  .arena-profile-link > svg { margin-left: 0; }
+  .arena-experience-nav a { padding-inline: 12px; }
+  .arena-experience-nav a svg { width: 24px; height: 24px; }
+}
+@media (max-width: 1000px) {
+  .arena-experience-header { height: 130px; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 66px 64px; }
+  .arena-experience-brand { min-width: 0; grid-column: 1; grid-row: 1; padding-left: 18px; }
+  .arena-experience-brand::after { display: none; }
+  .arena-experience-account { grid-column: 2; grid-row: 1; border: 0; gap: 10px; padding: 0 18px 0 8px; }
+  .arena-profile-link .arena-avatar { --avatar-size: 40px !important; }
+  .arena-profile-link > svg { display: none; }
+  .arena-notifications summary > svg { width: 24px; height: 24px; }
+  .arena-experience-nav { grid-column: 1 / -1; grid-row: 2; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); height: 64px; gap: 0; border-top: 1px solid #1f333f; }
+  .arena-experience-nav a { flex-direction: column; gap: 4px; padding: 7px 2px 5px; border-bottom-width: 3px; font-size: 11px; line-height: 1.2; letter-spacing: .03em; text-align: center; white-space: normal; }
+  .arena-experience-nav a svg { width: 21px; height: 21px; }
+  .arena-account-popover { right: 16px; }
+}
+@media (max-width: 380px) {
+  .arena-experience-brand { padding-left: 12px; }
+  .arena-experience-account { padding-right: 12px; gap: 4px; }
+  .arena-experience-nav a { font-size: 10px; }
+}

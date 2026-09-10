@@ -1,33 +1,23 @@
 import { ArenaBars as ChartNoAxesColumnIncreasing, ArenaTarget as Target } from './experience-icons';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { Trophy, UserRound } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import { ExperienceNavigation } from './experience-navigation';
 import { ArenaWordmark } from './arena-logo';
 import { ArenaOriflammes, LaurelIcon, OriflammeEvcArena } from './arena-oriflammes';
-import { ArenaTabBar } from './arena-tabbar';
+import type { ArenaNavigation } from '@/lib/arena/navigation';
 import { Container } from './arena-ui';
-import { ARENA, BODY, DISPLAY } from './tokens';
+import { ARENA, BODY } from './tokens';
 import { WARNING_NATURE } from '@/lib/arena/texts';
 
 /**
  * Coque des pages publiques EVC Arena (modèle client) : barre haute (casque +
  * wordmark, navigation Accueil · Règles · Calendrier · Meilleurs scores, icône
- * profil, bouton), barre d'onglets mobile pour les participants et pied de
+ * profil), même navigation sur mobile et pied de
  * page avec l'avertissement obligatoire (§9). Composant serveur.
  */
 
-export type ShellNav = {
-  slug: string;
-  title: string;
-  editionLabel?: string;
-  /** Participant connecté ? → « Mon espace », sinon « S’inscrire ». */
-  participant: { pseudo: string; avatar_seed?: string; rank?: number | null } | null;
-  registrationOpen: boolean;
-  leaderboardEnabled: boolean;
-  staffPreview?: boolean;
-  updates?: { title: string; detail: string; href: string }[];
-};
+export type ShellNav = ArenaNavigation;
 
 /* Pictogrammes des réseaux (lucide-react n'embarque plus les marques). */
 const Linkedin = ({ className }: { className?: string }) => (
@@ -45,57 +35,8 @@ export function Wordmark({ small }: { small?: boolean }) {
   return <ArenaWordmark compact={small} />;
 }
 
-const navLink = 'text-[12.5px] font-semibold uppercase tracking-[0.14em] transition-colors hover:text-white';
-
 export function ArenaTopBar({ nav }: { nav: ShellNav }) {
-  const base = `/arena/${nav.slug}`;
-  return (
-    <header className="relative z-20" style={{ background: 'rgba(9,13,19,0.96)', borderBottom: `1px solid ${ARENA.line}`, backdropFilter: 'blur(10px)' }}>
-      <Container className="flex h-[4.5rem] items-center justify-between gap-4">
-        <Link href={base} className="flex min-w-0 items-center" aria-label={`${nav.title} — accueil`}>
-          <ArenaWordmark compact />
-        </Link>
-        <nav className="hidden items-center gap-7 lg:flex" style={{ color: ARENA.textSoft, fontFamily: DISPLAY }}>
-          <Link href={base} className={navLink}>Accueil</Link>
-          <Link href={`${base}/regles`} className={navLink}>Règles</Link>
-          <Link href={`${base}#manches`} className={navLink}>Calendrier</Link>
-          {nav.leaderboardEnabled && <Link href={`${base}/classement`} className={navLink}>Meilleurs scores</Link>}
-        </nav>
-        <div className="flex items-center gap-4" style={{ fontFamily: DISPLAY }}>
-          <Link href={nav.participant ? `${base}/espace#compte` : '/arena/connexion'} aria-label={nav.participant ? 'Mon compte' : 'Connexion'} className="hidden h-9 w-9 items-center justify-center rounded-full sm:flex" style={{ color: ARENA.textSoft, boxShadow: `inset 0 0 0 1px ${ARENA.line}` }}>
-            <UserRound className="h-4.5 w-4.5" />
-          </Link>
-          {nav.participant ? (
-            <Link
-              href={`${base}/espace`}
-              className="inline-flex items-center rounded-full px-5 py-2.5 text-[12.5px] font-semibold uppercase tracking-[0.14em] text-white"
-              style={{ background: `linear-gradient(180deg, ${ARENA.redSoft} 0%, ${ARENA.red} 45%, ${ARENA.redDeep} 100%)`, boxShadow: '0 10px 26px -12px rgba(228,0,43,0.7)' }}
-            >
-              Mon espace
-            </Link>
-          ) : nav.registrationOpen ? (
-            <Link
-              href={`${base}/inscription`}
-              className="inline-flex items-center rounded-full px-5 py-2.5 text-[12.5px] font-semibold uppercase tracking-[0.14em] text-white"
-              style={{ background: `linear-gradient(180deg, ${ARENA.redSoft} 0%, ${ARENA.red} 45%, ${ARENA.redDeep} 100%)`, boxShadow: '0 10px 26px -12px rgba(228,0,43,0.7)' }}
-            >
-              S’inscrire
-            </Link>
-          ) : (
-            <Link href="/arena/connexion" className={navLink} style={{ color: ARENA.textSoft }}>Connexion</Link>
-          )}
-        </div>
-      </Container>
-      {nav.staffPreview && (
-        <div
-          className="px-4 py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.16em]"
-          style={{ background: 'rgba(245,179,43,0.14)', color: ARENA.preview, borderBottom: '1px solid rgba(245,179,43,0.3)', fontFamily: BODY }}
-        >
-          Mode prévisualisation — aucun score n’est enregistré
-        </div>
-      )}
-    </header>
-  );
+  return <ExperienceNavigation nav={nav} />;
 }
 
 export function ArenaFooter({ slug }: { slug: string }) {
@@ -150,13 +91,12 @@ export function ArenaPage({ nav, children, bare = false, immersive = false }: { 
     </footer>
     {!bare && <div className="arena-experience-legal"><p>{WARNING_NATURE}</p><nav aria-label="Informations légales"><Link href="/mentions-legales">Mentions légales</Link><Link href="/confidentialite">Confidentialité</Link><Link href="/contact">Contact</Link></nav></div>}
   </div>;
-  const tabs = Boolean(nav.participant) && !bare;
+
   return (
     <>
       <ArenaTopBar nav={nav} />
-      <main className={`flex-1 ${tabs ? 'pb-20 sm:pb-0' : ''}`}>{children}</main>
+      <main className="flex-1">{children}</main>
       {!bare && <ArenaFooter slug={nav.slug} />}
-      {tabs && <ArenaTabBar base={`/arena/${nav.slug}`} leaderboard={nav.leaderboardEnabled} />}
     </>
   );
 }

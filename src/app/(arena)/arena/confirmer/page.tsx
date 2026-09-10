@@ -45,6 +45,7 @@ export default async function ConfirmLandingPage({ searchParams }: { searchParam
   return (
     <AuthCard
       title={already ? 'Adresse déjà confirmée' : 'Confirmez votre adresse'}
+      slug={tournament.slug}
       lead={<>
         {already ? 'Votre adresse est déjà confirmée.' : <>Bonjour {p.first_name}, confirmez votre adresse <strong className="break-words [overflow-wrap:anywhere]" style={{ color: ARENA.text }}>{p.email}</strong> pour ouvrir votre espace.</>}
         <span className="mt-2 block text-[12.5px]" style={{ color: ARENA.textMuted }}>{tournament.title} · pseudonyme « {p.pseudo} »</span>

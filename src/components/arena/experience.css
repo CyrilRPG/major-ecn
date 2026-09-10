@@ -23,147 +23,6 @@
   outline: 3px solid #ffca4c;
   outline-offset: 5px;
 }
-.arena-experience-header {
-  height: 80px;
-  display: flex;
-  align-items: stretch;
-  position: relative;
-  z-index: 30;
-  background: rgba(0, 14, 23, 0.98);
-  border-bottom: 1px solid #40505a;
-  flex-shrink: 0;
-}
-.arena-experience-brand {
-  flex: 0 0 23%;
-  padding-left: 4.7%;
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-.arena-experience-brand::after {
-  content: "";
-  position: absolute;
-  right: 12px;
-  height: 100%;
-  border-right: 1px solid #77736e;
-  transform: skewX(-18deg);
-}
-.arena-experience-brand > span {
-  gap: 15px;
-}
-.arena-experience-brand img {
-  width: 47px !important;
-  height: 62px !important;
-  object-fit: contain;
-}
-.arena-experience-brand span span span:first-child {
-  font-size: 36px !important;
-}
-.arena-experience-brand span span span:last-child {
-  font-size: 10px !important;
-  letter-spacing: 0.38em !important;
-}
-.arena-experience-nav {
-  display: flex;
-  align-items: stretch;
-  gap: 16px;
-  flex: 1;
-  min-width: 0;
-}
-.arena-experience-nav a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 4px 23px 0;
-  border-bottom: 6px solid transparent;
-  text-transform: uppercase;
-  font-family: var(--font-oswald), sans-serif;
-  letter-spacing: 1px;
-  font-weight: 500;
-  font-size: 14px;
-  white-space: nowrap;
-}
-.arena-experience-nav a svg {
-  width: 28px;
-  height: 28px;
-  stroke-width: 1.65;
-}
-.arena-experience-nav a[aria-current] {
-  color: var(--ae-gold);
-  border-bottom-color: var(--ae-gold);
-}
-.arena-experience-nav a:hover {
-  color: var(--ae-gold);
-}
-.arena-experience-account {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  padding: 0 4.5% 0 28px;
-  border-left: 1px solid #54565a;
-}
-.arena-profile-link {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-size: 16px;
-  font-weight: 600;
-}
-.arena-profile-link img {
-  width: 50px;
-  height: 50px;
-}
-.arena-profile-link > span[role="img"] { display: block; }
-.arena-account-popover small { display: block; margin-top: 4px; line-height: 1.5; }
-.arena-profile-link > svg {
-  margin-left: 15px;
-}
-.arena-notifications summary {
-  list-style: none;
-  cursor: pointer;
-  color: var(--ae-gold);
-  display: flex;
-}
-.arena-notifications summary::-webkit-details-marker {
-  display: none;
-}
-.arena-notifications summary > svg {
-  width: 28px;
-  height: 28px;
-}
-.arena-account-popover {
-  position: absolute;
-  right: 28px;
-  top: 85px;
-  width: 310px;
-  padding: 22px;
-  border: 1px solid var(--ae-border);
-  border-radius: 14px;
-  background: #00131f;
-  box-shadow: 0 15px 50px #0009;
-  font-size: 14px;
-}
-.arena-account-popover p {
-  margin: 10px 0;
-  color: var(--ae-muted);
-}
-.arena-account-popover a {
-  color: var(--ae-gold);
-}
-.arena-preview-strip {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  text-align: center;
-  background: #322615;
-  color: #ffda7f;
-  font-size: 11px;
-  letter-spacing: 0.05em;
-  padding: 4px;
-  z-index: 2;
-}
 .arena-experience-main {
   flex: 1;
 }
@@ -1398,12 +1257,6 @@
   font-size: 14px;
 }
 @media (min-width: 1700px) {
-  .arena-experience-nav {
-    gap: 30px;
-  }
-  .arena-experience-header {
-    padding-right: 2%;
-  }
   .ae-lobby {
     padding-top: 70px;
   }
@@ -1412,22 +1265,6 @@
   }
 }
 @media (max-width: 1400px) {
-  .arena-experience-nav {
-    gap: 0;
-  }
-  .arena-experience-nav a {
-    padding-inline: 18px;
-    font-size: 12px;
-    gap: 10px;
-  }
-  .arena-experience-account {
-    gap: 24px;
-    padding-inline: 25px;
-  }
-  .arena-profile-link {
-    gap: 10px;
-    font-size: 14px;
-  }
   .ae-lobby-heading h1 {
     font-size: 33px;
   }
@@ -1513,39 +1350,6 @@
   }
 }
 @media (max-width: 1100px) {
-  .arena-experience-brand {
-    flex-basis: 23%;
-    padding-left: 3%;
-  }
-  .arena-experience-brand span span span:first-child {
-    font-size: 28px !important;
-  }
-  .arena-experience-brand img {
-    width: 34px !important;
-    height: 48px !important;
-  }
-  .arena-experience-nav a {
-    padding-inline: 12px;
-    font-size: 11px;
-  }
-  .arena-experience-nav a svg {
-    width: 23px;
-  }
-  .arena-experience-account {
-    padding-inline: 18px;
-    gap: 18px;
-  }
-  .arena-profile-link > span {
-    display: none;
-  }
-  .arena-profile-link > svg {
-    margin: 0;
-  }
-  .arena-profile-link img,
-  .arena-profile-link > svg:first-child {
-    width: 42px;
-    height: 42px;
-  }
   .ae-lobby {
     padding-top: 42px;
   }
@@ -1700,58 +1504,6 @@
   }
 }
 @media (max-width: 760px) {
-  .arena-experience-header {
-    height: 116px;
-    flex-wrap: wrap;
-  }
-  .arena-experience-brand {
-    height: 66px;
-    flex: 1;
-    padding-left: 18px;
-  }
-  .arena-experience-brand::after {
-    display: none;
-  }
-  .arena-experience-brand > span {
-    gap: 10px;
-  }
-  .arena-experience-brand span span span:first-child {
-    font-size: 29px !important;
-  }
-  .arena-experience-brand span span span:last-child {
-    font-size: 8px !important;
-  }
-  .arena-experience-account {
-    height: 66px;
-    border: 0;
-    padding-right: 18px;
-    gap: 20px;
-  }
-  .arena-notifications summary > svg {
-    width: 23px;
-  }
-  .arena-profile-link > svg:last-child {
-    display: none;
-  }
-  .arena-experience-nav {
-    order: 3;
-    flex: 0 0 100%;
-    height: 50px;
-    overflow: auto;
-    justify-content: space-around;
-    border-top: 1px solid #1f333f;
-  }
-  .arena-experience-nav a {
-    gap: 7px;
-    padding: 4px 11px 0;
-    font-size: 11px;
-    letter-spacing: 0.03em;
-    border-bottom-width: 3px;
-  }
-  .arena-experience-nav a svg {
-    width: 20px;
-    height: 20px;
-  }
   .arena-experience-footer {
     display: flex;
     flex-wrap: wrap;
@@ -2283,14 +2035,6 @@
 }
 
 /* Reference sprites retain the exact supplied wordmark pixels. */
-.ae-reference-wordmark {
-  width: 225px;
-  height: 66px;
-  flex-shrink: 0;
-  background: url("/arena/reference-interface-2026.png") -67px -9px/1599px 984px
-    no-repeat;
-  display: block !important;
-}
 .ae-lobby-profile > span[role="img"] {
   max-width: none;
 }
@@ -2334,10 +2078,6 @@
   font-size: 18px;
 }
 @media (max-width: 1400px) {
-  .ae-reference-wordmark {
-    transform: scale(0.92);
-    transform-origin: left center;
-  }
   .ae-answer-stats p:not(.ae-kicker) {
     font-size: 12px;
   }
@@ -2352,11 +2092,6 @@
   }
 }
 @media (max-width: 1100px) {
-  .ae-reference-wordmark {
-    transform: scale(0.76);
-    width: 225px;
-    margin-right: -54px;
-  }
   .ae-result-actions .ae-button {
     font-size: 14px;
   }
@@ -2365,18 +2100,11 @@
   }
 }
 @media (max-width: 760px) {
-  .ae-reference-wordmark {
-    transform: scale(0.8);
-    margin-right: -45px;
-  }
   .ae-lobby-profile > span[role="img"] {
     width: 65px !important;
     height: 65px !important;
     transform: none;
     grid-row: 1/4;
-  }
-  .arena-profile-link > span[role="img"] {
-    display: block;
   }
   .ae-result-actions small {
     font-size: 12px;
@@ -2455,47 +2183,6 @@
   margin-top: 18px;
 }
 @media (max-width: 760px) {
-  .arena-experience-header {
-    height: 130px;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-rows: 66px 64px;
-  }
-  .arena-experience-brand {
-    min-width: 0;
-    grid-column: 1;
-    grid-row: 1;
-  }
-  .arena-experience-account {
-    grid-column: 2;
-    grid-row: 1;
-    gap: 12px;
-    padding-left: 8px;
-  }
-  .arena-profile-link .arena-avatar {
-    --avatar-size: 40px !important;
-  }
-  .arena-experience-nav {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    height: 64px;
-    overflow: visible;
-  }
-  .arena-experience-nav a {
-    flex-direction: column;
-    gap: 4px;
-    padding: 7px 2px 5px;
-    font-size: 9px;
-    line-height: 1.2;
-    text-align: center;
-    white-space: normal;
-  }
-  .arena-experience-nav a svg {
-    width: 21px;
-    height: 21px;
-  }
   .ae-missed .ae-next-details {
     margin-top: 20px;
     margin-bottom: 20px;

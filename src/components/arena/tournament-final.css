@@ -1242,9 +1242,3 @@
 .af-panel {
   background: linear-gradient(115deg, #001019, #02141d);
 }
-@media (min-width: 761px) and (max-width: 1100px) {
-  .arena-experience:has(.af-final) .arena-profile-link > .arena-avatar {
-    display: block;
-    --avatar-size: 34px !important;
-  }
-}

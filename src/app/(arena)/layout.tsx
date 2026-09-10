@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Bebas_Neue, Inter, Oswald } from 'next/font/google';
 import '@/components/arena/experience.css';
+import '@/components/arena/arena-navigation.css';
 import '@/components/arena/avatar-progression.css';
 import '@/components/arena/arena-scene.css';
 import { ArenaBackdrop } from '@/components/arena/arena-backdrop';

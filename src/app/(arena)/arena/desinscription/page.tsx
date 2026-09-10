@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { arenaDb, getParticipant } from '@/lib/arena/db';
 import { verifySignedLinkToken } from '@/lib/arena/session';
-import { ArenaFooter, Panel, Wordmark } from '@/components/arena/arena-shell';
+import { ArenaFooter, Panel } from '@/components/arena/arena-shell';
+import { ArenaNavigation } from '@/components/arena/arena-navigation';
 import { Container } from '@/components/arena/arena-ui';
 import { ARENA, BODY, CAPS } from '@/components/arena/tokens';
 
@@ -30,9 +31,7 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
   }
   return (
     <>
-      <header className="relative z-20" style={{ borderBottom: `1px solid ${ARENA.line}` }}>
-        <Container className="flex h-[4.25rem] items-center"><Link href="/arena"><Wordmark /></Link></Container>
-      </header>
+      <ArenaNavigation slug={slug ?? undefined} />
       <main className="flex-1">
         <Container className="max-w-lg py-14">
           <h1 className="text-3xl font-extrabold" style={{ ...CAPS, color: ARENA.text }}>
