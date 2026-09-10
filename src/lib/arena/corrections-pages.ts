@@ -121,12 +121,12 @@ let policeEnregistree: string | null = null;
  * serait invisible). On enregistre la Liberation Sans livrée par pdfjs-dist
  * (déjà tracée pour le rendu des pages).
  */
-async function policeFiligrane(GlobalFonts: { registerFromPath(path: string, alias?: string): boolean }): Promise<string> {
+async function policeFiligrane(GlobalFonts: { registerFromPath(path: string, alias?: string): unknown }): Promise<string> {
   if (policeEnregistree !== null) return policeEnregistree;
   try {
     const require = createRequire(import.meta.url);
     const racine = path.dirname(require.resolve('pdfjs-dist/package.json'));
-    const ok = GlobalFonts.registerFromPath(path.join(racine, 'standard_fonts', 'LiberationSans-Bold.ttf'), 'ArenaWatermark');
+    const ok = Boolean(GlobalFonts.registerFromPath(path.join(racine, 'standard_fonts', 'LiberationSans-Bold.ttf'), 'ArenaWatermark'));
     policeEnregistree = ok ? 'ArenaWatermark' : '';
   } catch {
     policeEnregistree = '';
