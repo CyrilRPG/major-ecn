@@ -499,6 +499,12 @@ export function confronterALaSource(questions: QuestionModele[], verite: VeriteP
   for (const { im, is } of paires) modeleParDocument.set(is, questions[im]);
   const aUneImage = (q: QuestionModele) => (q.images ?? []).length > 0 || (q.items ?? []).some((i) => (i.images ?? []).length > 0);
   const dejaSignalees = new Set<QuestionModele>();
+  // Pages dont une image est déjà rattachée à une question du rendu : le
+  // rattachement par position (module images) est plus fiable que l'attribution
+  // « dernière question commencée » de la lecture — p. 80 du tour de révision
+  // Pédiatrie, les courbes de croissance appartiennent au sujet qui les SUIT.
+  const pagesAvecImageModele = new Set<number>();
+  for (const q of questions) if (aUneImage(q)) for (const pg of (q.source_pages ?? []) as number[]) pagesAvecImageModele.add(pg);
   let documentsAttendus = 0;
   for (const im of verite.images) {
     if (im.questionIndex === null) {
@@ -509,7 +515,7 @@ export function confronterALaSource(questions: QuestionModele[], verite: VeriteP
     }
     const qs = verite.questions[im.questionIndex];
     const q = modeleParDocument.get(im.questionIndex);
-    if (!q || aUneImage(q) || dejaSignalees.has(q)) continue;
+    if (!q || aUneImage(q) || dejaSignalees.has(q) || pagesAvecImageModele.has(im.page)) continue;
     dejaSignalees.add(q);
     documentsAttendus++; c.imagesSansDocument++;
     ecart({ gravite: 'a_relire', code: 'image_sans_document', page: im.page, numeroImprime: qs.numeroImprime, question_client_id: idDe(q), nature: 'document manquant', valeurDocument: `image ${im.l}×${im.h} p.${im.page}`, valeurModele: 'aucune image',
