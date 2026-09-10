@@ -66,6 +66,12 @@ async function ouvrir(bytes: Uint8Array): Promise<{ doc: DocumentPdf; OPS: Recor
   // Import dynamique : pdf.js ne doit pas peser sur les routes qui ne
   // l'utilisent pas. Copie du tampon : pdf.js peut le détacher, et l'appelant
   // relit parfois le même document (corrigé, plages).
+  // Le worker est chargé EN PREMIER : il se déclare dans `globalThis.pdfjsWorker`
+  // et pdf.js l'utilise alors directement, sans `import(workerSrc)` par chemin.
+  // Sinon, une fois bundlé par Turbopack sur Vercel, ce chemin
+  // (« …/chunks/pdf.worker.mjs ») n'existe pas : « Setting up fake worker
+  // failed » — constaté sur l'import de test du 10/09/2026.
+  await import('pdfjs-dist/legacy/build/pdf.worker.mjs');
   const mod = (await import('pdfjs-dist/legacy/build/pdf.mjs')) as unknown as ModulePdfJs;
   const doc = await mod.getDocument({ data: new Uint8Array(bytes), useSystemFonts: true, verbosity: 0 }).promise;
   return { doc, OPS: mod.OPS };

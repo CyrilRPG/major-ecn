@@ -137,6 +137,8 @@ export async function extraireImagesPdf(buffer: Uint8Array | ArrayBuffer, option
   g.DOMMatrix ??= canvasLib.DOMMatrix;
   g.ImageData ??= canvasLib.ImageData;
   g.Path2D ??= canvasLib.Path2D;
+  // Worker chargé en premier (globalThis.pdfjsWorker), cf. exercise-import-verite.ts.
+  await import('pdfjs-dist/legacy/build/pdf.worker.mjs');
   const { getDocument, OPS } = await import('pdfjs-dist/legacy/build/pdf.mjs');
 
   /** Fabrique de canvas de pdf.js (canvas temporaires des images, masques, motifs). */
