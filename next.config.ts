@@ -115,10 +115,12 @@ const nextConfig: NextConfig = {
   // le SDK chromium-min par le bundler Turbopack (qui sinon tente de tracer
   // tout l'arbre de deps).
   // Extraction des images des PDF d'exercices (src/lib/ai/exercise-import-images.ts) :
-  // `@napi-rs/canvas` est un module natif (.node) et pdf.js le charge lui-même
-  // par `require("@napi-rs/canvas")` ; l'un comme l'autre doivent rester des
-  // paquets externes chargés depuis node_modules, pas passer par le bundler.
-  serverExternalPackages: ["@sparticuz/chromium-min", "puppeteer-core", "pdfjs-dist", "@napi-rs/canvas"],
+  // `@napi-rs/canvas` est un module natif (.node) : paquet externe, chargé
+  // depuis node_modules. En revanche pdfjs-dist DOIT rester bundlé : déclaré
+  // externe, son worker (`legacy/build/pdf.worker.mjs`, chargé par import()
+  // dynamique) n'est pas tracé par Vercel et la lecture du document échoue en
+  // production (« Setting up fake worker failed », import de test du 10/09/2026).
+  serverExternalPackages: ["@sparticuz/chromium-min", "puppeteer-core", "@napi-rs/canvas"],
   // Vercel ne bundle pas les fichiers hors src/public par défaut.
   // On force l'inclusion des PDFs d'annales pour que la route watermark
   // puisse les lire en runtime (process.cwd()/data/medgen-annales).
