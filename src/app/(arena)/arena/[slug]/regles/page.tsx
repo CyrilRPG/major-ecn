@@ -1,12 +1,9 @@
-import { ArenaPage, Panel } from '@/components/arena/arena-shell';
-import { AvatarDistinctions } from '@/components/arena/avatar-distinctions';
-import { Container, Eyebrow } from '@/components/arena/arena-ui';
-import { ARENA, BODY, CAPS, DISPLAY, TABULAR } from '@/components/arena/tokens';
-import { effectiveBareme } from '@/lib/arena/db';
-import { describeBareme } from '@/lib/arena/scoring';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowLeft, ArrowRight, BarChart3, CalendarDays, ClipboardList, ShieldCheck, Timer, Trophy, UserRound } from 'lucide-react';
+import { ArenaOriflammes, LaurelIcon, OriflammeEvcArena } from '@/components/arena/arena-oriflammes';
+import { PHOTOS } from '@/components/arena/tokens';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
-import { publicRules, WARNING_CONNECTION, WARNING_NATURE } from '@/lib/arena/texts';
-import { qrpNs } from '@/lib/arena/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,84 +12,90 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params) {
   const { slug } = await params;
   const ctx = await loadArenaPage(slug);
-  return arenaMetadata(ctx.snap, { title: 'Règles' });
+  return arenaMetadata(ctx.snap, { title: 'Les règles de l’Arena' });
 }
 
-/** Règles publiques (§19), barème par manche (§6.12), seuil et départage expliqués (§7.1 — « Comment est calculé le classement ? »). */
+/**
+ * « Les règles de l'Arena » — reproduction de la maquette client (portrait
+ * 1024 × 1536) : lien de retour, deux oriflammes suspendues au bord supérieur
+ * (HTML/SVG, hors de la photo de fond), hero (sur-titre, titre, pilule,
+ * accroche), casque spartiate à droite, six cartes numérotées, encart
+ * d'avertissement, bouton d'inscription, lien vers le calendrier et pied de
+ * page. Textes repris tels quels. Le fond unique vient du layout Arena.
+ */
+const CARDS = [
+  { n: '01', icon: CalendarDays, title: '3 manches', text: 'Le tournoi se déroule en trois manches aux dates indiquées dans le calendrier. Chaque manche est accessible pendant une durée limitée.' },
+  { n: '02', icon: Timer, title: 'Une seule tentative', text: 'Une seule tentative par manche. Les questions sont chronométrées individuellement et le passage à la suivante est automatique lorsque le temps est écoulé. Le nombre de questions et la durée sont indiqués avant le lancement de chaque manche.' },
+  { n: '03', icon: ClipboardList, title: 'Corrections après clôture', text: 'À la fermeture de chaque manche, vous accédez à vos résultats et aux corrections détaillées.' },
+  { n: '04', icon: BarChart3, title: 'Classement cumulatif', text: 'Vos performances se cumulent au fil des manches. Le classement évolue jusqu’au classement final.', id: 'classement' },
+  { n: '05', icon: Trophy, title: 'Participer au classement final', text: 'Pour pouvoir intégrer le classement général final, participez aux trois manches.' },
+  { n: '06', icon: UserRound, title: 'Avatar et distinctions', text: 'Votre avatar évolue au fil de l’Arena en fonction de vos performances et de votre classement.' },
+] as const;
+
 export default async function RulesPage({ params }: Params) {
   const { slug } = await params;
   const ctx = await loadArenaPage(slug);
-  const t = ctx.snap.tournament;
+  const base = `/arena/${slug}`;
+  // Même bouton pour tous ; un participant connecté est conduit à son espace.
+  const registerHref = ctx.participant ? `${base}/espace` : ctx.registrationOpen ? `${base}/inscription` : base;
+
   return (
-    <ArenaPage nav={ctx.nav} immersive>
-      <Container className="ae-document max-w-3xl py-12 sm:py-16">
-        <Eyebrow>Règles publiques</Eyebrow>
-        <h1 className="mt-4 text-[2.4rem] leading-[0.95] sm:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Les règles de l’arène.</h1>
+    <div className="ar-page">
+      <Link href={base} className="ar-back"><ArrowLeft aria-hidden strokeWidth={2} />Retour à l’Arena</Link>
 
-        <ol className="mt-10 space-y-3">
-          {publicRules(t).map((r: string, i: number) => (
-            <li key={i} className="flex gap-4 text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-              <span className="shrink-0 pt-0.5 text-sm" style={{ ...TABULAR, color: ARENA.redSoft }}>{(i + 1).toString().padStart(2, '0')}</span>
-              <span>{r}</span>
-            </li>
-          ))}
-        </ol>
-
-        <h2 id="classement" className="mt-14 text-[1.7rem] leading-none" style={{ ...CAPS, color: ARENA.text }}>Comment est calculé le classement ?</h2>
-        <div className="mt-4 space-y-3 text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-          <p>Le score cumulé additionne vos scores de manche. Une manche non jouée compte pour zéro. Le rang s’affiche lorsque votre score cumulé atteint <strong style={{ color: ARENA.text }}>{t.threshold_pct.toLocaleString('fr-FR')} %</strong> du maximum cumulé des manches déjà publiées : ce droit est réévalué après chaque manche, dans les deux sens.</p>
-          <p>Au classement général, il faut avoir disputé les <strong style={{ color: ARENA.text }}>trois manches</strong>. Les égalités sont départagées par le total de points, puis le nombre de réponses parfaites (score maximal prévu par le barème, sans règle indispensable ou inacceptable déclenchée), puis le temps moyen par manche, le plus faible l’emportant. Le temps moyen est le temps cumulé divisé par le nombre de manches disputées, arrondi à la seconde la plus proche.</p>
-          <p>Le classement public, « Meilleurs scores », affiche la liste complète des participants ayant droit au rang, avec son effectif. Classement général établi sur les participants ayant disputé les trois manches.</p>
+      <section className="ar-hero">
+        <ArenaOriflammes
+          left={<OriflammeEvcArena />}
+          right={
+            <>
+              <LaurelIcon className="arena-oriflamme-icon" />
+              <span className="arena-oriflamme-rule" />
+              <p className="arena-oriflamme-text"><span>Plus qu’un</span><span>entraînement,</span><span>une communauté</span><span>d’excellence</span></p>
+            </>
+          }
+        />
+        <div className="ar-hero-copy">
+          <p className="ar-kicker">Règles du tournoi</p>
+          <h1 className="ar-title">Les règles<br />de l’Arena</h1>
+          <p className="ar-pill"><CalendarDays aria-hidden strokeWidth={1.8} />Inscription ouverte · Saison 2026</p>
+          <p className="ar-lead">Un entraînement pour progresser,<br />se challenger et se mesurer aux autres.</p>
+          <span className="ar-lead-rule" aria-hidden />
         </div>
-
-        <h2 className="mt-14 text-[1.7rem] leading-none" style={{ ...CAPS, color: ARENA.text }}>Votre avatar et vos distinctions</h2>
-        <div className="mt-4 space-y-3 text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-          <p>Vous conservez le personnage choisi à l’inscription pendant toute l’Arena. Son apparence dépend exclusivement de votre rang au classement cumulé actuel : <strong>1er = Or / Prestige, 2e = Argent, 3e = Bronze, à partir de la 4e place = Standard</strong>. Avant votre premier classement ou si vous n’avez pas droit au rang, l’avatar reste Standard.</p>
-          <p>L’habillage est réévalué après chaque publication, à la hausse comme à la baisse. Jouer une manche supplémentaire ne confère aucun niveau. Les participants à égalité parfaite partagent le même rang et le même habillage.</p>
-          <p>Votre palmarès personnel conserve les positions obtenues à chaque publication, même si votre rang actuel baisse. Dans le classement public, seuls le rang, l’avatar, le pseudonyme et le score cumulé sont affichés. Votre identité réelle reste privée.</p>
+        <div className="ar-helmet" aria-hidden>
+          <Image src={PHOTOS.helmet} alt="" width={880} height={1186} priority sizes="(max-width: 640px) 130px, (max-width: 1024px) 170px, 220px" />
         </div>
+      </section>
 
-        <AvatarDistinctions seed={ctx.participant?.avatar_seed} />
+      <ol className="ar-grid" aria-label="Règles du tournoi">
+        {CARDS.map((c) => (
+          <li key={c.n} className="ar-card" id={'id' in c ? c.id : undefined}>
+            <div className="ar-card-head">
+              <span className="ar-badge">{c.n}</span>
+              <c.icon className="ar-card-icon" strokeWidth={1.5} aria-hidden />
+            </div>
+            <h2>{c.title}</h2>
+            <p>{c.text}</p>
+          </li>
+        ))}
+      </ol>
 
-        <h2 className="mt-14 text-[1.7rem] leading-none" style={{ ...CAPS, color: ARENA.text }}>Barème par manche</h2>
-        <p className="mt-2 text-sm" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Généré depuis le paramétrage de chaque manche. Le barème est verrouillé à l’ouverture de la manche.</p>
-        <div className="mt-6 space-y-6">
-          {ctx.snap.rounds.map((r) => {
-            const b = effectiveBareme(t, r);
-            const ns = qrpNs(ctx.snap.questionsByRound.get(r.id) ?? []);
-            return (
-              <Panel key={r.id}>
-                <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: ARENA.redSoft, fontFamily: BODY }}>Manche {r.number}{r.theme ? ` · ${r.theme}` : ''}{r.bareme_locked_at ? ' · barème verrouillé' : ''}</p>
-                <div className="mt-4 grid gap-6 md:grid-cols-3">
-                  {(['QRM', 'QRU', 'QRP'] as const).map((k) => {
-                    const d = describeBareme(k, b, ns);
-                    return (
-                      <div key={k}>
-                        <p className="text-lg font-extrabold" style={{ fontFamily: DISPLAY }}>{k} <span className="text-xs font-bold" style={{ color: ARENA.textMuted, fontFamily: BODY }}>{d.title}</span></p>
-                        <dl className="mt-2">
-                          {d.lines.map((l) => (
-                            <div key={l.situation} className="flex justify-between gap-3 py-1.5 text-[13px]" style={{ borderTop: `1px solid ${ARENA.line}`, fontFamily: BODY }}>
-                              <dt style={{ color: ARENA.textSoft }}>{l.situation}</dt>
-                              <dd className="shrink-0" style={{ ...TABULAR, color: ARENA.text }}>{l.points}</dd>
-                            </div>
-                          ))}
-                        </dl>
-                        {d.notes.map((n) => <p key={n} className="mt-2 text-xs" style={{ color: ARENA.textMuted, fontFamily: BODY }}>{n}</p>)}
-                      </div>
-                    );
-                  })}
-                </div>
-              </Panel>
-            );
-          })}
-        </div>
+      <div className="ar-warning" role="note">
+        <ShieldCheck strokeWidth={1.5} aria-hidden />
+        <p>EVC Arena est un entraînement ludique, inspiré des formats d’épreuves des EVC. Il ne s’agit pas d’un concours blanc et les résultats obtenus ne préjugent pas de vos chances de réussite aux épreuves officielles.</p>
+      </div>
 
-        <h2 className="mt-14 text-[1.7rem] leading-none" style={{ ...CAPS, color: ARENA.text }}>Avertissements</h2>
-        <div className="mt-4 space-y-3 text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-          <p>{WARNING_NATURE}</p>
-          <p>{WARNING_CONNECTION}</p>
-        </div>
-      </Container>
-    </ArenaPage>
+      <div className="ar-cta">
+        <Link href={registerHref} className="ar-button">S’inscrire gratuitement <ArrowRight aria-hidden strokeWidth={2.2} /></Link>
+        <Link href={`${base}#manches`} className="ar-calendar">Voir le calendrier des manches</Link>
+      </div>
+
+      <footer className="ar-footer">
+        <span>Major ECN</span>
+        <span className="ar-footer-rule" aria-hidden />
+        <LaurelIcon className="ar-footer-emblem" />
+        <span className="ar-footer-rule" aria-hidden />
+        <span>L’excellence pour votre avenir</span>
+      </footer>
+    </div>
   );
 }

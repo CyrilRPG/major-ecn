@@ -140,7 +140,19 @@ export default async function RoundPage({ params, searchParams }: Params) {
     const restart = preview ? (
       <RestartPreviewButton slug={slug} roundNumber={number} />
     ) : undefined;
-    const shared = { round, total, base, next, correctionsAvailable, preview };
+    const leaderboardHref =
+      !preview && t.leaderboard_enabled && round.results_published_at
+        ? `${base}/classement?manche=${number}`
+        : null;
+    const shared = {
+      round,
+      total,
+      base,
+      next,
+      correctionsAvailable,
+      leaderboardHref,
+      preview,
+    };
     if (a.status === "expired" && answers.length === 0)
       return (
         <ArenaPage nav={nav} immersive>

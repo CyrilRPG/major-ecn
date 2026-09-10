@@ -34,7 +34,6 @@ import {
   validatedEmail,
 } from "@/lib/arena/emails";
 import { finalizeAttempt, recomputeRound } from "@/lib/arena/grading";
-import { correctionsPdfSignedUrl } from "@/lib/arena/pdf-url";
 import { sanitizeBareme } from "@/lib/arena/scoring";
 import { anonymizeParticipant } from "@/lib/arena/sequence";
 import { publishArenaRound } from "@/lib/arena/rank-history-db";
@@ -1014,10 +1013,6 @@ export async function sendSequenceEmailNow(
     const attempts = await listAttemptsForRounds([round.id]);
     const standings =
       kind === "results" ? await computeTournamentStandings(snap) : null;
-    const pdfUrl =
-      kind === "results" && round.corrections_pdf_path
-        ? await correctionsPdfSignedUrl(round.corrections_pdf_path)
-        : null;
     let sent = 0,
       skipped = 0,
       errors = 0;
@@ -1090,7 +1085,6 @@ export async function sendSequenceEmailNow(
                 theme: next.theme,
               }
             : null,
-          pdfUrl,
         });
       }
       const dedupeKey =

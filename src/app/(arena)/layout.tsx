@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Bebas_Neue, Inter, Oswald } from 'next/font/google';
 import '@/components/arena/experience.css';
 import '@/components/arena/avatar-progression.css';
+import '@/components/arena/arena-scene.css';
+import { ArenaBackdrop } from '@/components/arena/arena-backdrop';
 
 /**
  * Segment EVC Arena — page mère du tournoi de QCM (cahier des charges §13).
@@ -35,6 +37,10 @@ export default function ArenaLayout({ children }: { children: React.ReactNode })
         className={`arena-root ${oswald.variable} ${bebas.variable} ${inter.variable} relative isolate flex min-h-screen flex-col overflow-x-hidden bg-[#0B0F14] text-[#F2F3F5] antialiased`}
         style={{ fontFamily: "var(--font-inter), 'Inter', system-ui, sans-serif" }}
       >
+        {/* Fond unique de l'arène (une seule photo, fixe au défilement sur
+            bureau) : monté ici une fois pour toutes les pages, aucune section
+            ne pose plus sa propre image. */}
+        <ArenaBackdrop />
         {children}
       </div>
     </>

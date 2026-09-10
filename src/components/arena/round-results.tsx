@@ -27,7 +27,10 @@ export type RoundResultsProps = {
   total: number;
   base: string;
   next: NextRound | null;
+  /** Correction détaillée consultable (manche close + résultats publiés, ou prévisualisation). */
   correctionsAvailable: boolean;
+  /** Classement de la manche (null si le classement public est désactivé ou non publié). */
+  leaderboardHref?: string | null;
   preview?: boolean;
   children?: ReactNode;
 };
@@ -161,7 +164,7 @@ export function MissedRound({
           >
             <FileText className="ae-gold" aria-hidden />
             <span>
-              Voir les corrections
+              Voir ma correction détaillée
               <br />
               de la manche {round.number}
             </span>
@@ -169,9 +172,9 @@ export function MissedRound({
         ) : (
           <span className="ae-button ae-button-outline ae-disabled-action">
             <FileText aria-hidden />
-            Corrections disponibles
+            Correction détaillée disponible
             <br />
-            après publication
+            après la clôture
           </span>
         )}
       </div>
@@ -198,6 +201,7 @@ export function RoundResults({
   base,
   next,
   correctionsAvailable,
+  leaderboardHref = null,
   preview,
   score,
   max,
@@ -247,8 +251,8 @@ export function RoundResults({
           </h2>
           <p>
             {correctionsAvailable
-              ? "Les corrections détaillées sont désormais disponibles."
-              : "Les corrections détaillées seront disponibles à la clôture de la manche."}
+              ? "Votre correction détaillée est disponible dans votre espace."
+              : "Votre correction détaillée sera disponible dans votre espace à la clôture de la manche."}
           </p>
         </div>
       </div>
@@ -337,7 +341,7 @@ export function RoundResults({
             <h3>{weakTheme ?? "Poursuivez votre préparation"}</h3>
             <p>
               {weakTheme
-                ? "Consultez les corrections pour cibler vos révisions."
+                ? "Consultez votre correction détaillée pour cibler vos révisions."
                 : "Analysez vos réponses en détail et préparez la prochaine manche."}
             </p>
           </div>
@@ -351,7 +355,7 @@ export function RoundResults({
           >
             <FileText aria-hidden />
             <span>
-              Voir les corrections<small>Analysez vos réponses en détail</small>
+              Voir ma correction détaillée<small>Vos réponses face aux réponses attendues</small>
             </span>
             <ArrowRight aria-hidden />
           </Link>
@@ -359,9 +363,18 @@ export function RoundResults({
           <div className="ae-button ae-button-outline ae-disabled-action">
             <FileText aria-hidden />
             <span>
-              Les corrections<small>Disponibles après publication</small>
+              Correction détaillée<small>Disponible après la clôture</small>
             </span>
           </div>
+        )}
+        {leaderboardHref && (
+          <Link className="ae-button ae-button-outline" href={leaderboardHref}>
+            <ChartNoAxesColumnIncreasing aria-hidden />
+            <span>
+              Voir le classement<small>Classement de la manche {round.number}</small>
+            </span>
+            <ArrowRight aria-hidden />
+          </Link>
         )}
         <Link
           className="ae-button"

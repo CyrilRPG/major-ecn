@@ -11,19 +11,10 @@
   display: flex;
   flex-direction: column;
   color: #f5f5f6;
-  background: #001019;
+  /* Fond transparent : la photo de l'arène est portée UNE fois par la couche
+     fixe du layout (arena-backdrop.tsx), plus par chaque page. */
+  background: transparent;
   font-family: var(--font-inter), sans-serif;
-}
-.arena-experience::before {
-  content: "";
-  position: absolute;
-  inset: 80px 0 0;
-  z-index: -1;
-  background:
-    linear-gradient(0deg, rgba(0, 13, 22, 0.25), transparent 40%),
-    url("/arena/colosseum-2026.png") center top/100%
-      max(920px, calc(100svh - 80px)) no-repeat;
-  pointer-events: none;
 }
 .arena-experience * {
   box-sizing: border-box;
@@ -1709,12 +1700,6 @@
   }
 }
 @media (max-width: 760px) {
-  .arena-experience::before {
-    inset: 66px 0 0;
-    background-size: auto 850px;
-    background-position: center top;
-    opacity: 0.7;
-  }
   .arena-experience-header {
     height: 116px;
     flex-wrap: wrap;
@@ -2297,20 +2282,7 @@
   }
 }
 
-/* Reference sprites retain the exact supplied wordmark and portrait pixels. */
-.arena-experience::before {
-  inset: 0;
-  background-image:
-    radial-gradient(
-      ellipse 45% 30% at 50% 37%,
-      rgba(0, 13, 23, 0.94) 0%,
-      rgba(0, 13, 23, 0.64) 55%,
-      transparent 100%
-    ),
-    linear-gradient(0deg, rgba(0, 13, 22, 0.45), transparent 45%),
-    url("/arena/colosseum-2026.png");
-  background-size: 100% max(984px, 100svh);
-}
+/* Reference sprites retain the exact supplied wordmark pixels. */
 .ae-reference-wordmark {
   width: 225px;
   height: 66px;
@@ -2417,10 +2389,6 @@
   }
   .ae-answer-stats p:not(.ae-kicker) {
     font-size: 13px;
-  }
-  .arena-experience::before {
-    background-size: auto 850px;
-    background-position: center top;
   }
   .ae-result-header > span > span:nth-child(2) > span {
     font-size: 30px !important;
@@ -2603,10 +2571,7 @@
   }
 }
 
-/* Opaque panels prevent the sampled edge artwork from showing through UI. */
+/* Opaque panels keep the lobby readable over the arena photo. */
 .ae-lobby .ae-panel {
   background: #00131e;
-}
-.arena-experience:has(.ae-lobby)::after {
-  height: min(805px, calc(100vw * 0.5534 - 80px));
 }

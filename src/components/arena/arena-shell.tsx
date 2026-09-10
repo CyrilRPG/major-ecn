@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { Trophy, UserRound } from 'lucide-react';
 import { ExperienceNavigation } from './experience-navigation';
 import { ArenaWordmark } from './arena-logo';
+import { ArenaOriflammes, LaurelIcon, OriflammeEvcArena } from './arena-oriflammes';
 import { ArenaTabBar } from './arena-tabbar';
 import { Container } from './arena-ui';
 import { ARENA, BODY, DISPLAY } from './tokens';
@@ -132,7 +133,16 @@ export function ArenaFooter({ slug }: { slug: string }) {
 export function ArenaPage({ nav, children, bare = false, immersive = false }: { nav: ShellNav; children: ReactNode; bare?: boolean; immersive?: boolean }) {
   if (immersive) return <div className="arena-experience">
     <ExperienceNavigation nav={nav} />
-    <main className="arena-experience-main">{children}</main>
+    <main className="arena-experience-main">
+      {/* Oriflammes autrefois incrustées dans la photo de fond ; n'apparaissent
+          que sur l'écran d'accueil du participant (`:has(.ae-lobby)`, ≥ 1100 px),
+          derrière son contenu, textes inchangés. */}
+      <ArenaOriflammes
+        left={<OriflammeEvcArena />}
+        right={<><LaurelIcon className="arena-oriflamme-icon" /><p className="arena-oriflamme-text"><span>Saison</span></p><p className="arena-oriflamme-wordmark"><span>2026</span></p><span className="arena-oriflamme-rule" /></>}
+      />
+      {children}
+    </main>
     <footer className="arena-experience-footer">
       <Link href={`/arena/${nav.slug}`} className="arena-footer-signature">EVC ARENA<br />BY MAJOR ECN</Link>
       <div className="arena-values"><span><Trophy aria-hidden />Apprendre</span><span><ChartNoAxesColumnIncreasing aria-hidden />S’évaluer</span><span><Target aria-hidden />Progresser</span></div>

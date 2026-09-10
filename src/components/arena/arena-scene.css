@@ -1,0 +1,560 @@
+/* ============================================================
+   Scène de l'arène : fond unique (arena-backdrop.tsx), oriflammes
+   (arena-oriflammes.tsx) et page « Les règles de l'Arena ».
+   Importé une fois par src/app/(arena)/layout.tsx.
+   ============================================================ */
+
+/* ---------- Fond unique ---------- */
+.arena-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: #0b0f14;
+}
+.arena-backdrop-photo {
+  position: absolute;
+  inset: 0 0 -10% 0; /* réserve pour la parallaxe (translateY ≤ 10 %) */
+  background: url("/arena/colosseum-plate.jpg") center top / cover no-repeat;
+  will-change: transform;
+}
+.arena-backdrop-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(6, 10, 20, 0.55) 0%,
+    rgba(6, 10, 20, 0.62) 45%,
+    rgba(6, 10, 20, 0.8) 100%
+  );
+}
+@media (max-width: 1023.98px), (pointer: coarse) {
+  .arena-backdrop {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: max(100svh, 760px);
+  }
+  .arena-backdrop-photo {
+    inset: 0;
+    background-image: url("/arena/colosseum-plate-1080.jpg");
+    will-change: auto;
+    transform: none !important;
+  }
+  .arena-backdrop-veil {
+    background: linear-gradient(
+      180deg,
+      rgba(6, 10, 20, 0.55) 0%,
+      rgba(6, 10, 20, 0.7) 55%,
+      rgba(11, 15, 20, 0.96) 88%,
+      #0b0f14 100%
+    );
+  }
+}
+
+/* ---------- Oriflammes ---------- */
+.arena-oriflammes {
+  --oriflamme-w: clamp(108px, 12vw, 132px);
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.arena-oriflamme {
+  position: absolute;
+  top: 0;
+  width: var(--oriflamme-w);
+  aspect-ratio: 123 / 380;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.55));
+  color: #e8c46a;
+}
+.arena-oriflamme-left {
+  left: 2%;
+}
+.arena-oriflamme-right {
+  right: 2%;
+}
+.arena-oriflamme-cloth {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.arena-oriflamme-content {
+  position: absolute;
+  inset: 0 0 12% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 10% 8% 0;
+  text-align: center;
+}
+.arena-oriflamme-icon {
+  width: 42%;
+  height: auto;
+  margin-bottom: 8%;
+}
+.arena-oriflamme-wordmark {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-oswald), "Oswald", "Arial Narrow", Impact, sans-serif;
+  font-weight: 700;
+  font-size: clamp(28px, 3.3vw, 34px);
+  line-height: 0.98;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.arena-oriflamme-rule {
+  display: block;
+  width: 30%;
+  height: 2px;
+  margin: 10% 0;
+  background: linear-gradient(90deg, rgba(232, 196, 106, 0), #e8c46a 25%, #e8c46a 75%, rgba(232, 196, 106, 0));
+}
+.arena-oriflamme-motto,
+.arena-oriflamme-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-family: var(--font-oswald), "Oswald", "Arial Narrow", Impact, sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.35;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.arena-oriflamme-text {
+  letter-spacing: 0.12em;
+}
+@media (max-width: 899.98px) {
+  .arena-oriflammes {
+    display: none;
+  }
+}
+
+/* Pages immersives : les bannières qui étaient incrustées dans la photo
+   réapparaissent en HTML, sur le seul écran qui leur réservait la place. */
+.arena-experience-main {
+  position: relative;
+}
+.arena-experience-main > .arena-oriflammes {
+  display: none;
+  --oriflamme-w: clamp(96px, 10.8vw, 150px);
+  /* Sous le contenu du lobby (contexte d'empilement de .arena-experience,
+     isolé), au-dessus de la couche fixe du fond ; aucun z-index posé sur les
+     enfants de <main>, pour ne pas piéger les boîtes de dialogue fixes. */
+  z-index: -1;
+}
+@media (min-width: 1100px) {
+  .arena-experience-main:has(.ae-lobby) > .arena-oriflammes {
+    display: block;
+  }
+  .arena-experience-main:has(.ae-lobby) > .arena-oriflammes .arena-oriflamme {
+    /* proportions des bannières qui étaient incrustées dans la photo (172 × 470) */
+    aspect-ratio: 172 / 470;
+  }
+  .arena-experience-main:has(.ae-lobby) > .arena-oriflammes .arena-oriflamme-left {
+    left: 1.2%;
+  }
+  .arena-experience-main:has(.ae-lobby) > .arena-oriflammes .arena-oriflamme-right {
+    right: 1.2%;
+  }
+  /* La carte de la manche recouvre le bas de la bannière droite (comme dans
+     la photo d'origine) : son contenu se tient dans la moitié haute. */
+  .arena-experience-main:has(.ae-lobby) > .arena-oriflammes .arena-oriflamme-content {
+    justify-content: flex-start;
+    padding-top: 14%;
+  }
+}
+
+/* ---------- Page « Les règles de l'Arena » ---------- */
+.ar-page {
+  --ar-gold: #e8c46a;
+  --ar-red: #c8102e;
+  --ar-card: rgba(11, 18, 32, 0.88);
+  --ar-line: rgba(255, 255, 255, 0.08);
+  --ar-display: var(--font-oswald), "Oswald", "Arial Narrow", Impact, sans-serif;
+  --ar-body: var(--font-inter), "Inter", Roboto, system-ui, sans-serif;
+  position: relative;
+  z-index: 0;
+  min-height: 100svh;
+  padding: 0 3% 40px; /* 1536 px de haut à 1024 × 1536, sans ascenseur */
+  color: #fff;
+  font-family: var(--ar-body);
+}
+.ar-back {
+  position: absolute;
+  top: 22px;
+  left: 3%;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.92;
+}
+.ar-back:hover {
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.ar-back svg {
+  width: 16px;
+  height: 16px;
+}
+.ar-hero {
+  position: relative;
+  min-height: 475px; /* ≥ hauteur des oriflammes (≤ 408 px) + marge : aucune carte ne les recouvre */
+  margin: 0 -3.1%; /* les oriflammes se placent par rapport à la page entière */
+  padding: 120px 3.1% 0;
+}
+.ar-hero-copy {
+  position: relative;
+  z-index: 2;
+  margin-left: 16.4%; /* 19 % de la largeur de page, hors marge de 3 % */
+  width: 39%; /* jusqu'à 58 % : l'accroche tient sur deux lignes, le casque commence à 60 % */
+  min-width: 0;
+}
+.ar-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--ar-display);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ar-gold);
+}
+.ar-kicker::before {
+  content: "";
+  width: 22px;
+  height: 2px;
+  background: var(--ar-red);
+}
+.ar-title {
+  margin: 12px 0 0;
+  font-family: var(--ar-display);
+  font-weight: 700;
+  font-size: 68px;
+  line-height: 0.94;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+.ar-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  padding: 9px 16px;
+  border: 1px solid var(--ar-gold);
+  border-radius: 8px;
+  background: rgba(8, 12, 22, 0.62);
+  font-family: var(--ar-display);
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ar-gold);
+  white-space: nowrap;
+}
+.ar-pill svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.ar-lead {
+  margin: 18px 0 0;
+  font-size: 19px;
+  line-height: 1.4;
+  color: #fff;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+.ar-lead-rule {
+  display: block;
+  width: 80px;
+  height: 2px;
+  margin-top: 14px;
+  background: var(--ar-gold);
+}
+.ar-helmet {
+  position: absolute;
+  top: 140px;
+  left: 60%;
+  z-index: 2;
+  width: 26%;
+  height: 290px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  pointer-events: none;
+}
+.ar-helmet img {
+  width: auto;
+  height: 290px;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.65));
+}
+.ar-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+.ar-card {
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid var(--ar-line);
+  border-radius: 16px;
+  background: var(--ar-card);
+  box-shadow: 0 24px 50px -30px rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+}
+.ar-card-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.ar-badge {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border: 2px solid var(--ar-red);
+  border-radius: 50%;
+  background: #0b1220;
+  font-family: var(--ar-display);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+.ar-card-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  color: var(--ar-gold);
+}
+.ar-card h2 {
+  margin: 18px 0 0;
+  font-family: var(--ar-display);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ar-gold);
+}
+.ar-card p {
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #ece8df;
+}
+.ar-warning {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-top: 32px;
+  padding: 28px;
+  border: 1px solid var(--ar-line);
+  border-radius: 16px;
+  background: var(--ar-card);
+  box-shadow: 0 24px 50px -30px rgba(0, 0, 0, 0.85);
+}
+.ar-warning svg {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  color: var(--ar-gold);
+}
+.ar-warning p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #fff;
+}
+.ar-cta {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+.ar-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: min(440px, 100%);
+  min-height: 62px;
+  padding: 0 32px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #c8102e 0%, #8e0d1a 100%);
+  box-shadow:
+    0 18px 40px -14px rgba(200, 16, 46, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  font-family: var(--ar-display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+  transition:
+    transform 0.15s,
+    filter 0.15s;
+}
+.ar-button:hover {
+  filter: brightness(1.08);
+}
+.ar-button:active {
+  transform: translateY(1px);
+}
+.ar-button svg {
+  width: 24px;
+  height: 24px;
+}
+.ar-calendar {
+  margin-top: 30px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--ar-gold);
+  font-size: 15px;
+  color: var(--ar-gold);
+  text-decoration: none;
+}
+.ar-calendar:hover {
+  color: #fff;
+  border-color: #fff;
+}
+.ar-footer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-top: 90px;
+  font-family: var(--ar-display);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #b8a97c;
+}
+.ar-footer-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(232, 196, 106, 0.1), rgba(232, 196, 106, 0.6));
+}
+.ar-footer-rule + .ar-footer-rule,
+.ar-footer-emblem + .ar-footer-rule {
+  background: linear-gradient(90deg, rgba(232, 196, 106, 0.6), rgba(232, 196, 106, 0.1));
+}
+.ar-footer-emblem {
+  width: 30px;
+  height: 30px;
+  color: var(--ar-gold);
+}
+.ar-page :is(a, button):focus-visible {
+  outline: 3px solid var(--ar-gold);
+  outline-offset: 4px;
+}
+
+@media (max-width: 1023.98px) {
+  .ar-hero {
+    min-height: 0;
+    padding-top: 90px;
+  }
+  .ar-hero-copy {
+    margin-left: 0;
+    width: 100%;
+    max-width: 640px;
+  }
+  .ar-title {
+    font-size: 56px;
+  }
+  .ar-helmet {
+    position: static;
+    width: 100%;
+    height: auto;
+    margin-top: 24px;
+    justify-content: center;
+  }
+  .ar-helmet img {
+    height: 220px;
+  }
+  .ar-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 28px;
+  }
+}
+@media (max-width: 639.98px) {
+  .ar-page {
+    padding-inline: 16px;
+  }
+  .ar-back {
+    left: 16px;
+  }
+  .ar-hero {
+    margin-inline: -16px;
+    padding-inline: 16px;
+    padding-top: 78px;
+  }
+  .ar-title {
+    font-size: 42px;
+  }
+  .ar-pill {
+    white-space: normal;
+    font-size: 13px;
+  }
+  .ar-lead {
+    font-size: 17px;
+  }
+  .ar-helmet img {
+    height: 170px;
+  }
+  .ar-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .ar-card,
+  .ar-warning {
+    padding: 22px;
+  }
+  .ar-warning {
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .ar-button {
+    font-size: 18px;
+    padding-inline: 20px;
+  }
+  .ar-footer {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 56px;
+    text-align: center;
+  }
+  .ar-footer-rule {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arena-backdrop-photo {
+    transform: none !important;
+  }
+}

@@ -155,12 +155,20 @@ La neutralisation est aussi possible directement depuis l'onglet Questions (icô
 
 ### 2.7 Après chaque manche
 
-- Les corrections sont consultables en ligne par chaque participant (même s'il n'a pas
-  joué la manche) : réponses attendues, explications, pièges, erreurs fréquentes,
-  encadré méthodo, références.
-- Onglet **PDF corrections** : **Générer depuis le contenu** (PDF produit par la
-  plateforme) ou **Téléverser un PDF fourni** par Major ECN. Le PDF est joint par lien
-  dans l'email de résultats.
+- La **correction détaillée** est consultable par chaque participant (même s'il n'a pas
+  joué la manche) dans une visionneuse intégrée à son espace, après clôture de la
+  manche et publication des résultats : réponses attendues, explications, pièges,
+  erreurs fréquentes, encadré méthodo, références, en regard de ses réponses.
+  Parcours : Mon espace → manche → Résultats → « Voir ma correction détaillée »
+  (également depuis le classement de la manche). Filigrane nominatif (nom ou pseudo ·
+  identifiant court · EVC Arena – Major ECN), pas de bouton Télécharger, copie et
+  impression désactivées. Aucun fichier ni lien de fichier n'est transmis aux
+  participants ; l'email de résultats annonce simplement la disponibilité et renvoie
+  vers l'espace.
+- Onglet **PDF corrections** (usage interne uniquement) : **Générer depuis le contenu**
+  (PDF produit par la plateforme) ou **Téléverser un PDF fourni** par Major ECN. Ce PDF
+  reste dans le bucket privé `arena`, consultable par le personnel via « Voir » ; il
+  n'est jamais joint ni lié dans les emails ni proposé aux participants.
 - Après la dernière manche uniquement, la mention commerciale « Vous souhaitez
   poursuivre votre préparation ? » apparaît.
 

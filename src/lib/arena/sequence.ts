@@ -3,7 +3,6 @@ import { arenaDb, arenaLog, computeTournamentStandings, effectiveBareme, listAtt
 import { finalizeAttempt } from './grading';
 import { publishArenaRound } from './rank-history-db';
 import { relanceEmail, resultsEmail, roundOpeningEmail, roundReminderEmail, sendArenaEmail } from './emails';
-import { correctionsPdfSignedUrl } from './pdf-url';
 import { remainingLabel, toDate } from './time';
 import type { AttemptRow, ParticipantRow, RoundRow, TournamentRow } from './types';
 
@@ -156,7 +155,7 @@ async function sendDueEmails(snap: TournamentSnapshot, now: Date, report: SweepR
         const st = standings.standings.find((s) => s.participantId === p.id);
         const mine = attempts.find((a) => a.round_id === r.id && a.participant_id === p.id) as AttemptRow | undefined;
         const nextRound = snap.rounds.find((x) => x.number === r.number + 1) ?? null;
-        const pdfUrl = r.corrections_pdf_path ? await correctionsPdfSignedUrl(r.corrections_pdf_path) : null;
+        // Jamais de PDF ni de lien de fichier : la correction détaillée se consulte dans l'espace.
         await send(p, 'results', r, resultsEmail(t, p, {
           number: r.number,
           theme: r.theme,
@@ -167,7 +166,6 @@ async function sendDueEmails(snap: TournamentSnapshot, now: Date, report: SweepR
           rank: st?.rank ?? null,
           isLast: r.number === Math.max(...snap.rounds.map((x) => x.number)),
           next: nextRound ? { number: nextRound.number, opens_at: toDate(nextRound.opens_at), theme: nextRound.theme } : null,
-          pdfUrl,
         }));
       }
     }

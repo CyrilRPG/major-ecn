@@ -66,7 +66,8 @@ export function PdfPanel({ rounds }: { rounds: RoundRow[] }) {
           <div>
             <p className="text-sm font-bold">Manche {r.number}{r.theme ? ` · ${r.theme}` : ''}</p>
             <p className="text-xs text-(--color-ink-soft)">
-              {r.corrections_pdf_path ? `${r.corrections_pdf_source === 'uploaded' ? 'PDF fourni' : 'PDF généré'} le ${r.corrections_pdf_generated_at ? new Date(r.corrections_pdf_generated_at).toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }) : ''}` : 'Aucun PDF (les corrections restent consultables en ligne).'}
+              {r.corrections_pdf_path ? `${r.corrections_pdf_source === 'uploaded' ? 'PDF fourni' : 'PDF généré'} le ${r.corrections_pdf_generated_at ? new Date(r.corrections_pdf_generated_at).toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }) : ''} — usage interne uniquement.` : 'Aucun PDF — usage interne uniquement.'}
+              {' '}Les participants consultent leur correction détaillée dans la visionneuse de leur espace (filigrane nominatif, sans téléchargement) ; aucun fichier n’est joint aux emails.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">

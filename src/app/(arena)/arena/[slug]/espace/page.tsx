@@ -20,6 +20,7 @@ import { arenaDb, computeTournamentStandings, effectiveBareme, listAnswers, list
 import { questionMaxUnit } from '@/lib/arena/scoring';
 import { performanceAnalysis } from '@/lib/arena/result-summary';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
+import { correctionsAccess } from '@/lib/arena/corrections-access';
 import { UNDER_THRESHOLD_MESSAGE, buttonTruncated, warningTruncated } from '@/lib/arena/texts';
 import { clockLabel, minutesLabel, roundState } from '@/lib/arena/time';
 import { siteUrl } from '@/lib/email/send';
@@ -123,10 +124,11 @@ export default async function SpacePage({ params, searchParams }: Params) {
                       <>
                         <BigScore value={fr(Number(a.score ?? 0))} max={fr(max)} color={ARENA.text} size="md" />
                         <span className="text-[13px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>temps {clockLabel(a.duration_seconds ?? 0)}{a.truncated ? ' (fenêtre réduite)' : ''}</span>
-                        {r.results_published_at ? (
-                          <Link href={`${base}/manche/${r.number}/corrections`} className="text-[13px] font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft, fontFamily: BODY }}>Corrections</Link>
+                        <Link href={`${base}/manche/${r.number}`} className="text-[13px] font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Résultats</Link>
+                        {correctionsAccess({ round: r, tournamentId: t.id, participant: p, now }).allowed ? (
+                          <Link href={`${base}/manche/${r.number}/corrections`} className="text-[13px] font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft, fontFamily: BODY }}>Voir ma correction détaillée</Link>
                         ) : (
-                          <span className="text-[12px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Corrections après la clôture</span>
+                          <span className="text-[12px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Correction détaillée après la clôture</span>
                         )}
                       </>
                     ) : a ? (
@@ -141,7 +143,7 @@ export default async function SpacePage({ params, searchParams }: Params) {
                     ) : st === 'closed' ? (
                       <p className="text-[13px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
                         Manche non jouée (compte pour zéro).{' '}
-                        {r.results_published_at && <Link href={`${base}/manche/${r.number}/corrections`} className="font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft }}>Voir les corrections</Link>}
+                        {correctionsAccess({ round: r, tournamentId: t.id, participant: p, now }).allowed && <Link href={`${base}/manche/${r.number}/corrections`} className="font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft }}>Voir ma correction détaillée</Link>}
                       </p>
                     ) : (
                       <p className="text-[13px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>En attente de programmation.</p>

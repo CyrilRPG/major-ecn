@@ -1,18 +1,19 @@
 import { MarkedQuestion } from '@/components/arena/marked-question';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { Check, Download, X } from 'lucide-react';
+import { ArrowLeft, Check, ListOrdered, X } from 'lucide-react';
 import { ArenaPage, Notice, Panel } from '@/components/arena/arena-shell';
 import { Container, Eyebrow } from '@/components/arena/arena-ui';
 import { ARENA, BODY, CAPS, DISPLAY, TABULAR } from '@/components/arena/tokens';
+import { CorrectionPrintNotice, CorrectionViewer } from '@/components/arena/correction-viewer';
 import { ReportDialog } from '@/components/arena/report-dialog';
 import { ZoomableImage } from '@/components/qcm/image-zoom';
+import { correctionsAccess, correctionsDenialMessage } from '@/lib/arena/corrections-access';
 import { effectiveBareme, getAttempt, getPreviewAttempt, listAnswers, listQuestionMarks, listReportsForParticipant } from '@/lib/arena/db';
 import { gradeOne } from '@/lib/arena/grading';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
-import { correctionsPdfSignedUrl } from '@/lib/arena/pdf-url';
 import { COMMERCIAL_AFTER_M3 } from '@/lib/arena/texts';
-import { roundState } from '@/lib/arena/time';
+import { staffWatermarkLabel, watermarkLabel } from '@/lib/arena/watermark';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,16 +22,21 @@ type Params = { params: Promise<{ slug: string; n: string }>; searchParams: Prom
 export async function generateMetadata({ params }: Params) {
   const { slug, n } = await params;
   const ctx = await loadArenaPage(slug);
-  return arenaMetadata(ctx.snap, { title: `Corrections de la manche ${n}`, noindex: true });
+  return arenaMetadata(ctx.snap, { title: `Correction détaillée de la manche ${n}`, noindex: true });
 }
 
 const fr = (v: number) => v.toLocaleString('fr-FR', { maximumFractionDigits: 2 });
 
 /**
- * Corrections (§12) : réponses attendues, explication, pièges, erreurs les
- * plus fréquentes (qualitatif, sans effectif), encadré méthodo, références.
- * Accessibles après clôture, même sans avoir joué. Signalement possible sur
- * chaque question (§10.1). Ton commercial uniquement après la dernière manche.
+ * « Correction détaillée » (§12) : réponses attendues, explication, pièges,
+ * erreurs les plus fréquentes (qualitatif, sans effectif), encadré méthodo,
+ * références, confrontées aux réponses du participant. Accessible après
+ * clôture et publication, même sans avoir joué, définitivement associée à la
+ * manche (Mon espace → manche → résultats → correction détaillée). Rendue en
+ * HTML natif dans une visionneuse intégrée : jamais de fichier ni de lien de
+ * téléchargement, filigrane nominatif, copie et impression désactivées.
+ * Signalement possible sur chaque question (§10.1). Ton commercial uniquement
+ * après la dernière manche.
  */
 export default async function CorrectionsPage({ params, searchParams }: Params) {
   const { slug, n } = await params;
@@ -47,11 +53,14 @@ export default async function CorrectionsPage({ params, searchParams }: Params) 
   const base = `/arena/${slug}`;
   const nav = ctx.nav;
 
-  const closed = roundState(round) === 'closed';
-  if (!preview && (!closed || !round.results_published_at)) {
+  const access = correctionsAccess({ round, tournamentId: t.id, participant: ctx.participant, staffPreview: preview });
+  if (!access.allowed) {
     return (
       <ArenaPage nav={nav} immersive>
-        <Container className="ae-document max-w-3xl py-12"><Notice>Les corrections de la manche {number} sont publiées après sa clôture.</Notice></Container>
+        <Container className="ae-document max-w-3xl py-12">
+          <Notice>{correctionsDenialMessage(access.reason, number)}</Notice>
+          <p className="mt-6"><Link href={`${base}/manche/${number}`} className="ae-button ae-button-outline"><ArrowLeft aria-hidden /> Résultats de la manche {number}</Link></p>
+        </Container>
       </ArenaPage>
     );
   }
@@ -63,22 +72,33 @@ export default async function CorrectionsPage({ params, searchParams }: Params) 
   const marks = new Set(attempt ? await listQuestionMarks(attempt.id) : []);
   const reports = ctx.participant ? await listReportsForParticipant(ctx.participant.id) : [];
   const isLast = number === Math.max(...ctx.snap.rounds.map((r) => r.number));
-  const pdfUrl = round.corrections_pdf_path ? await correctionsPdfSignedUrl(round.corrections_pdf_path, 3600) : null;
+  const watermark = ctx.participant ? watermarkLabel(ctx.participant) : staffWatermarkLabel(ctx.staff?.label ?? 'Personnel');
+  const leaderboardHref = t.leaderboard_enabled && round.results_published_at ? `${base}/classement?manche=${number}` : null;
+  const resultsHref = `${base}/manche/${number}${preview ? '?preview=1' : ''}`;
 
   return (
     <ArenaPage nav={nav} immersive>
+      <CorrectionPrintNotice />
       <Container className="ae-document max-w-3xl py-10 sm:py-14">
-        <Eyebrow>Corrections · manche {number}{round.theme ? ` · ${round.theme}` : ''}</Eyebrow>
-        <h1 className="mt-4 text-[2.4rem] leading-[0.95] sm:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Les corrections détaillées.</h1>
+        <nav aria-label="Fil d’Ariane" className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>
+          <Link href={`${base}/espace`} className="underline-offset-4 hover:underline">Mon espace</Link>
+          <span aria-hidden>›</span>
+          <Link href={resultsHref} className="underline-offset-4 hover:underline">Manche {number} · résultats</Link>
+          <span aria-hidden>›</span>
+          <span style={{ color: ARENA.textSoft }}>Correction détaillée</span>
+        </nav>
+        <Eyebrow>Correction détaillée · manche {number}{round.theme ? ` · ${round.theme}` : ''}</Eyebrow>
+        <h1 className="mt-4 text-[2.4rem] leading-[0.95] sm:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Ma correction détaillée.</h1>
         {round.corrections_intro && <p className="mt-4 text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY, whiteSpace: 'pre-line' }}>{round.corrections_intro}</p>}
-        {pdfUrl && (
-          <a href={pdfUrl} className="mt-5 inline-flex items-center gap-2 text-sm font-bold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft, fontFamily: BODY }}>
-            <Download className="h-4 w-4" /> Télécharger le PDF des corrections
-          </a>
-        )}
+        <div className="mt-5 flex flex-wrap gap-3">
+          <Link href={resultsHref} className="ae-button ae-button-outline"><ArrowLeft aria-hidden /> Mes résultats</Link>
+          {leaderboardHref && <Link href={leaderboardHref} className="ae-button ae-button-outline"><ListOrdered aria-hidden /> Classement de la manche</Link>}
+        </div>
 
+        <div className="mt-8">
+        <CorrectionViewer watermark={watermark}>
         {round.corrections_methodo && (
-          <Panel className="mt-8" accent>
+          <Panel accent>
             <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: ARENA.redSoft, fontFamily: BODY }}>Méthode · {round.theme || `manche ${number}`}</p>
             <p className="mt-3 text-[15px] leading-relaxed" style={{ fontFamily: BODY, whiteSpace: 'pre-line' }}>{round.corrections_methodo}</p>
           </Panel>
@@ -171,12 +191,18 @@ export default async function CorrectionsPage({ params, searchParams }: Params) 
           </Panel>
         )}
 
+        </CorrectionViewer>
+        </div>
+
         {isLast && !preview && (
           <p className="mt-10 text-sm" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
             {COMMERCIAL_AFTER_M3} <Link href="/" className="font-bold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft }}>major-ecn.fr</Link>
           </p>
         )}
-        <p className="mt-8"><Link href={`${base}/espace`} className="text-sm font-bold underline-offset-4 hover:underline" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Retour à mon espace</Link></p>
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <Link href={resultsHref} className="ae-button ae-button-outline"><ArrowLeft aria-hidden /> Résultats de la manche {number}</Link>
+          <Link href={`${base}/espace`} className="text-sm font-bold underline-offset-4 hover:underline" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Retour à mon espace</Link>
+        </div>
       </Container>
     </ArenaPage>
   );

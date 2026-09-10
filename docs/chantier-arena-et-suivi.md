@@ -78,7 +78,12 @@ brouillon, module de suivi réservé à l'administration) jusqu'à validation du
       banque), barèmes + prévisualisation, participants + export, suivi/KPI, signalements,
       emails, PDF, journal, prévisualisation candidat (`?preview=1`)
 - [x] Cron `arena-sweep` (5 min) + `vercel.json`
-- [x] PDF corrections (généré ou fourni)
+- [x] PDF corrections (généré ou fourni) — usage interne uniquement depuis le 10/09/2026
+- [x] « Correction détaillée » intégrée (10/09/2026) : visionneuse HTML native `components/arena/correction-viewer.tsx`
+      (filigrane nominatif `lib/arena/watermark.ts`, copie/impression/menu contextuel désactivés), droits purs
+      `lib/arena/corrections-access.ts` (manche close + résultats publiés + participant du tournoi), accès depuis
+      résultats de manche, classement (`?manche=n`), espace et `/corrections` ; plus aucun lien de fichier ni PDF
+      dans l'email de résultats (bouton « Ouvrir mon espace EVC Arena ») ; recette `tmp/_qa-corrections-fixture.mjs`
 - [x] Fichier SQL consolidé `supabase/APPLIQUER_ARENA_SUIVI.sql` + sonde `tmp/_probe-arena-suivi.mjs`
 - [x] Migration appliquée sur Supabase le 07/09/2026 (CLI `supabase db query --linked`, jeton fourni par le client) ; sonde au vert
 - [x] Recette de bout en bout le 07/09/2026 : création admin → intégrité → statuts → inscription → confirmation → manche jouée → clôture par le cron → résultats, rang, corrections, signalement → neutralisation + recalcul, export CSV. Données de recette supprimées ensuite.

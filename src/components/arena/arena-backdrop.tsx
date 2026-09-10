@@ -3,143 +3,66 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Fond de l'arène — canvas 2D léger (aucune dépendance) : sol en perspective
- * qui défile lentement vers le spectateur, anneaux concentriques au point de
- * fuite et projecteur rouge qui balaie la piste comme dans un stade.
+ * Fond unique de l'arène — une seule photographie de l'amphithéâtre aux
+ * torches (`/arena/colosseum-plate.jpg`, plaque sans bannière : les
+ * oriflammes sont des éléments HTML, voir arena-oriflammes.tsx), montée UNE
+ * fois par le layout Arena dans une couche fixe derrière tout le contenu.
  *
- * Choix délibéré du 2D plutôt que d'un moteur 3D : rendu identique sur
- * mobile à connexion dégradée (§16), aucune bibliothèque de 600 Ko, et l'effet
- * reste sobre (§13 : transitions rapides et sobres, aucune animation
- * infantile). Respecte prefers-reduced-motion (image fixe) et s'arrête quand
- * le canvas sort de l'écran.
+ * Avant, chaque section posait sa propre photo (raccords visibles, image
+ * répétée verticalement) et les pages immersives collaient la photo en haut
+ * puis un aplat en dessous. Désormais l'architecture reste derrière pendant
+ * tout le défilement, avec un voile nuit commun pour la lisibilité des cartes.
+ *
+ * Bureau (≥ 1024 px, pointeur fin) : couche fixe + parallaxe très légère
+ * (translateY ≤ 10 %, rAF, coupée sous prefers-reduced-motion). Mobile /
+ * tablette : couche statique en tête de page (variante 1080 px), sans
+ * position fixe ni parallaxe. Les règles CSS vivent dans arena-scene.css.
  */
-export function ArenaBackdrop({ className }: { className?: string }) {
-  const ref = useRef<HTMLCanvasElement>(null);
+export function ArenaBackdrop() {
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const el = ref.current;
+    if (!el) return;
+    const mq = window.matchMedia('(min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
     let raf = 0;
-    let visible = true;
-    let w = 0;
-    let h = 0;
 
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = canvas.clientWidth;
-      h = canvas.clientHeight;
-      canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-
-    const draw = (t: number) => {
-      const time = reduced ? 0 : t / 1000;
-      ctx.clearRect(0, 0, w, h);
-      const vx = w / 2;
-      const vy = h * 0.46; // ligne d'horizon
-      const floor = h - vy;
-
-      // Halo d'horizon
-      const halo = ctx.createRadialGradient(vx, vy, 0, vx, vy, Math.max(w, h) * 0.55);
-      halo.addColorStop(0, 'rgba(228,0,43,0.20)');
-      halo.addColorStop(0.35, 'rgba(228,0,43,0.06)');
-      halo.addColorStop(1, 'rgba(228,0,43,0)');
-      ctx.fillStyle = halo;
-      ctx.fillRect(0, 0, w, h);
-
-      // Projecteur : cône rouge qui balaie la piste
-      const angle = Math.sin(time * 0.16) * 0.55;
-      ctx.save();
-      ctx.translate(vx, vy);
-      ctx.rotate(angle);
-      const cone = ctx.createLinearGradient(0, 0, 0, floor * 1.3);
-      cone.addColorStop(0, 'rgba(228,0,43,0.16)');
-      cone.addColorStop(0.6, 'rgba(228,0,43,0.05)');
-      cone.addColorStop(1, 'rgba(228,0,43,0)');
-      ctx.fillStyle = cone;
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.lineTo(-floor * 0.75, floor * 1.3);
-      ctx.lineTo(floor * 0.75, floor * 1.3);
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-
-      // Sol : lignes de fuite
-      ctx.lineWidth = 1;
-      const lanes = 16;
-      for (let i = -lanes; i <= lanes; i++) {
-        const x = vx + (i / lanes) * w * 1.6;
-        const a = 0.09 - Math.abs(i / lanes) * 0.06;
-        ctx.strokeStyle = `rgba(255,255,255,${a.toFixed(3)})`;
-        ctx.beginPath();
-        ctx.moveTo(vx, vy);
-        ctx.lineTo(x, h);
-        ctx.stroke();
-      }
-
-      // Sol : lignes transversales qui avancent vers le spectateur
-      const rows = 14;
-      const scroll = (time * 0.06) % 1;
-      for (let k = 0; k < rows; k++) {
-        const p = ((k + scroll) % rows) / rows;
-        const y = vy + floor * p * p;
-        const a = 0.02 + p * 0.10;
-        ctx.strokeStyle = `rgba(255,255,255,${a.toFixed(3)})`;
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(w, y);
-        ctx.stroke();
-      }
-
-      // Ligne d'horizon et anneaux du centre de l'arène
-      ctx.strokeStyle = 'rgba(228,0,43,0.45)';
-      ctx.beginPath();
-      ctx.moveTo(0, vy);
-      ctx.lineTo(w, vy);
-      ctx.stroke();
-      const rings = [70, 170, 320, 540];
-      rings.forEach((r, i) => {
-        ctx.strokeStyle = `rgba(242,86,103,${(0.18 - i * 0.035).toFixed(3)})`;
-        ctx.beginPath();
-        ctx.ellipse(vx, vy, r, r * 0.32, 0, 0, Math.PI * 2);
-        ctx.stroke();
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        // La couche déborde de 10 % en bas (inset bottom -10 %) : on ne dépasse jamais cette réserve.
+        const max = el.offsetHeight * 0.1;
+        const y = Math.min(max, window.scrollY * 0.08);
+        el.style.transform = `translate3d(0, ${(-y).toFixed(1)}px, 0)`;
       });
-
-      if (!reduced && visible) raf = requestAnimationFrame(draw);
     };
 
-    const start = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(draw);
+    const apply = () => {
+      if (mq.matches) {
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      } else {
+        window.removeEventListener('scroll', onScroll);
+        cancelAnimationFrame(raf);
+        raf = 0;
+        el.style.transform = '';
+      }
     };
 
-    resize();
-    start();
-
-    const ro = new ResizeObserver(() => {
-      resize();
-      if (reduced) draw(0);
-    });
-    ro.observe(canvas);
-
-    const io = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      if (visible) start();
-    });
-    io.observe(canvas);
-
+    apply();
+    mq.addEventListener('change', apply);
     return () => {
+      mq.removeEventListener('change', apply);
+      window.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(raf);
-      ro.disconnect();
-      io.disconnect();
     };
   }, []);
 
-  return <canvas ref={ref} aria-hidden className={className} />;
+  return (
+    <div className="arena-backdrop" aria-hidden>
+      <div ref={ref} className="arena-backdrop-photo" />
+      <div className="arena-backdrop-veil" />
+    </div>
+  );
 }

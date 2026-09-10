@@ -164,25 +164,31 @@ export function relanceEmail(t: TournamentRow, p: ParticipantRow, round: { numbe
   return { subject, html, text: `Bonjour ${p.first_name},\n\nVous n'avez pas encore joué la manche ${round.number}. Elle se termine dans ${remaining}.\n\nJouer : ${urls.round(round.number)}` };
 }
 
+/**
+ * Résultats de manche (§11). La correction détaillée n'est JAMAIS jointe ni
+ * liée sous forme de fichier : l'email annonce sa disponibilité dans l'espace
+ * EVC Arena (visionneuse intégrée, filigrane nominatif) et renvoie vers
+ * l'espace personnel ; la connexion passe par le lien de connexion habituel.
+ */
 export function resultsEmail(
   t: TournamentRow,
   p: ParticipantRow,
-  r: { number: number; theme: string; score: number | null; max: number; cumulScore: number; cumulMax: number; rank: number | null; isLast: boolean; next: { number: number; opens_at: Date | null; theme: string } | null; pdfUrl: string | null },
+  r: { number: number; theme: string; score: number | null; max: number; cumulScore: number; cumulMax: number; rank: number | null; isLast: boolean; next: { number: number; opens_at: Date | null; theme: string } | null },
 ): Mail {
   const urls = arenaUrls(t);
   const fr = (v: number) => v.toLocaleString('fr-FR', { maximumFractionDigits: 2 });
-  const subject = `Résultats de la manche ${r.number} — corrections disponibles`;
+  const subject = `Résultats de la manche ${r.number} — votre correction détaillée est disponible`;
   const played = r.score !== null;
   const lines: string[] = [para(`Bonjour ${p.first_name},`)];
   if (played) {
     lines.push(box(`<p style="margin:0;font-weight:700;color:${NAVY}">Score de la manche ${r.number} : ${fr(r.score as number)} / ${fr(r.max)}</p><p style="margin:6px 0 0;color:#374151">Score cumulé : ${fr(r.cumulScore)} / ${fr(r.cumulMax)}${r.rank !== null ? ` — rang ${r.rank}` : ''}</p>`));
     if (r.rank === null) lines.push(para(UNDER_THRESHOLD_MESSAGE));
   } else {
-    lines.push(para(`Vous n’avez pas joué la manche ${r.number}. Le classement général nécessite les trois manches. Vos résultats, vos rangs de manche et vos corrections restent disponibles pour les manches disputées.`));
+    lines.push(para(`Vous n’avez pas joué la manche ${r.number}. Le classement général nécessite les trois manches. Vos résultats, vos rangs de manche et vos corrections détaillées restent disponibles pour les manches disputées.`));
   }
-  lines.push(para('Les corrections détaillées de la manche sont disponibles : réponses attendues, explications, pièges de l’énoncé et erreurs les plus fréquentes.'));
-  lines.push(button('Consulter les corrections', urls.corrections(r.number)));
-  if (r.pdfUrl) lines.push(para(`Version PDF : ${r.pdfUrl}`));
+  lines.push(para(`Votre correction détaillée de la manche ${r.number} est maintenant disponible dans votre espace EVC Arena : réponses attendues, explications, pièges de l’énoncé et erreurs les plus fréquentes, en regard de vos réponses.`));
+  lines.push(para(`Elle reste consultable à tout moment depuis votre espace : Mon espace → Manche ${r.number} → Résultats → Correction détaillée.`));
+  lines.push(button('Ouvrir mon espace EVC Arena', urls.space));
   if (r.next) {
     lines.push(box(`<p style="margin:0;font-weight:700;color:${NAVY}">Prochaine manche : M${r.next.number}${r.next.opens_at ? ` — ${esc(parisAndLocalLabel(r.next.opens_at, p.timezone, true))}` : ''}</p>${r.next.theme ? `<p style="margin:6px 0 0;color:#374151">Thème : ${esc(r.next.theme)}</p>` : ''}`));
   }
@@ -192,8 +198,7 @@ export function resultsEmail(
     `Bonjour ${p.first_name},`,
     played ? `Score de la manche ${r.number} : ${fr(r.score as number)} / ${fr(r.max)}\nScore cumulé : ${fr(r.cumulScore)} / ${fr(r.cumulMax)}${r.rank !== null ? ` — rang ${r.rank}` : ''}` : `Vous n'avez pas joué la manche ${r.number}.`,
     r.rank === null && played ? UNDER_THRESHOLD_MESSAGE : '',
-    `Corrections : ${urls.corrections(r.number)}`,
-    r.pdfUrl ? `PDF : ${r.pdfUrl}` : '',
+    `Votre correction détaillée de la manche ${r.number} est maintenant disponible dans votre espace EVC Arena (Mon espace → Manche ${r.number} → Résultats → Correction détaillée).\nOuvrir mon espace : ${urls.space}`,
     r.next ? `Prochaine manche : M${r.next.number}${r.next.opens_at ? ` — ${parisAndLocalLabel(r.next.opens_at, p.timezone, true)}` : ''}` : '',
     r.isLast ? `${COMMERCIAL_AFTER_M3} ${siteUrl()}` : '',
   ].filter(Boolean).join('\n\n');

@@ -83,6 +83,10 @@ export const PHOTOS = {
   heroArena: '/arena/hero-arena.jpg',
   /** Casque spartiate détouré (logo, visuel fourni par le client). */
   helmet: '/arena/helmet.png',
+  /** Fond unique de toutes les pages Arena : amphithéâtre aux torches, plaque sans bannière (arena-backdrop.tsx). */
+  colosseum: '/arena/colosseum-plate.jpg',
+  /** Variante 1080 px pour mobile / tablette (couche statique). */
+  colosseumMobile: '/arena/colosseum-plate-1080.jpg',
 } as const;
 
 /* Styles de lien-bouton (pour <Link>) — ici et non dans arena-ui.tsx : une

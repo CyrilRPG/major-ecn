@@ -5,7 +5,9 @@ import { Leaderboard } from '@/components/arena/leaderboard';
 import { computeTournamentStandings, effectiveBareme, roundMaxScore } from '@/lib/arena/db';
 import { leaderboardRows } from '@/lib/arena/ranking';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
+import { correctionsAccess } from '@/lib/arena/corrections-access';
 import Link from 'next/link';
+import { ArrowRight, FileText } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,6 +33,10 @@ export default async function LeaderboardPage({ params, searchParams }: Params) 
   const totalMax = (round ? [round] : standings.countedRounds).reduce((a, r) => a + roundMaxScore(ctx.snap.questionsByRound.get(r.id) ?? [], effectiveBareme(t, r)), 0);
   const effectif = cohort?.effectifManche ?? (standings.isFinal ? standings.effectifGeneral : standings.standings.filter(s => s.roundsPlayed > 0).length);
   const last = standings.countedRounds.length ? Math.max(...standings.countedRounds.map((r) => r.number)) : null;
+  // Depuis le classement, le participant rejoint sa correction détaillée (manche close + résultats publiés).
+  const correctionRounds = ctx.participant
+    ? (round ? [round] : standings.countedRounds).filter((r) => correctionsAccess({ round: r, tournamentId: t.id, participant: ctx.participant }).allowed)
+    : [];
 
   return (
     <ArenaPage nav={ctx.nav} immersive>
@@ -55,6 +61,23 @@ export default async function LeaderboardPage({ params, searchParams }: Params) 
             />
           )}
         </div>
+        {correctionRounds.length > 0 && (
+          <section aria-labelledby="mes-corrections" className="mt-8 rounded-2xl p-5 sm:p-7" style={{ background: ARENA.surface, boxShadow: `inset 0 0 0 1px ${ARENA.line}` }}>
+            <p id="mes-corrections" className="text-[11px]" style={{ ...CAPS, color: ARENA.redSoft, letterSpacing: '0.24em' }}>Ma correction détaillée</p>
+            <p className="mt-2 text-[13.5px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
+              Vos réponses face aux réponses attendues, avec les explications, les pièges et les erreurs les plus fréquentes. Consultable à tout moment dans votre espace.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              {correctionRounds.map((r) => (
+                <Link key={r.id} className="ae-button ae-button-outline" href={`/arena/${slug}/manche/${r.number}/corrections`}>
+                  <FileText aria-hidden />
+                  <span>Voir ma correction détaillée{correctionRounds.length > 1 || !round ? ` · manche ${r.number}` : ''}</span>
+                  <ArrowRight aria-hidden />
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </Container>
     </ArenaPage>
   );
