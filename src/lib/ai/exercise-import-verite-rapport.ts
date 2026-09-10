@@ -232,6 +232,57 @@ const lettresJustes = (items: Array<{ lettre: string; juste?: boolean; is_correc
  * et rend le rapport. Modifie `questions` sur place (réparations, `warnings`).
  * Ne lève jamais.
  */
+/**
+ * Ordonne les questions du modèle par première page source (tri stable). Les
+ * lots de relance sont fusionnés APRÈS les lots d'origine : sans ce tri, une
+ * question rejouée (p. 68) se retrouve après celles de la p. 131, et
+ * l'alignement global — qui suppose les deux suites dans l'ordre du document —
+ * la déclare « sans source » tandis que sa jumelle du document reste
+ * « manquante » (import de test du 10/09/2026 : 8 manquantes pour 8 rejouées).
+ * Une question sans page hérite de la page de la précédente.
+ */
+export function trierParPage<T extends QuestionModele>(questions: T[]): T[] {
+  let derniere = 0;
+  const cles = questions.map((q, i) => {
+    const pages = (q.source_pages ?? []).filter((n) => Number.isFinite(n) && n > 0);
+    if (pages.length) derniere = Math.min(...pages);
+    return { i, page: derniere };
+  });
+  return cles.sort((a, b) => a.page - b.page || a.i - b.i).map((c) => questions[c.i]);
+}
+
+/**
+ * Filet après l'alignement global : une question du document restée sans
+ * paire et une question du modèle restée sans source, situées sur la même
+ * page et de libellé très proche, sont appariées. Couvre les cas où l'ordre
+ * des deux suites diverge localement (relance, lot scindé, numérotation
+ * reprise à 1 à chaque sujet).
+ */
+export function completerAppariementsParPage(
+  paires: Array<{ im: number; is: number; score: number }>,
+  modele: QuestionModele[],
+  source: QuestionSource[],
+  seuil = 0.75,
+): Array<{ im: number; is: number; score: number }> {
+  const im = new Set(paires.map((p) => p.im)); const is = new Set(paires.map((p) => p.is));
+  const ajoutees: Array<{ im: number; is: number; score: number }> = [];
+  for (let ks = 0; ks < source.length; ks++) {
+    if (is.has(ks)) continue;
+    const qs = source[ks];
+    const pagesDoc = new Set([qs.page, ...(qs.pages ?? [])]);
+    let meilleurIm = -1; let meilleurScore = 0;
+    for (let km = 0; km < modele.length; km++) {
+      if (im.has(km)) continue;
+      const q = modele[km];
+      if (!(q.source_pages ?? []).some((pg) => pagesDoc.has(pg))) continue;
+      const score = ressemblance(derniereLigne(q.enonce), qs.enonce);
+      if (score >= seuil && score > meilleurScore) { meilleurIm = km; meilleurScore = score; }
+    }
+    if (meilleurIm >= 0) { ajoutees.push({ im: meilleurIm, is: ks, score: meilleurScore }); im.add(meilleurIm); is.add(ks); }
+  }
+  return [...paires, ...ajoutees].sort((a, b) => a.is - b.is);
+}
+
 export function confronterALaSource(questions: QuestionModele[], verite: VeritePdf, options: OptionsConfrontation = {}): Confrontation {
   const reparer = options.reparer ?? true;
   const seuilSur = options.seuilSur ?? SEUIL_SUR;
@@ -297,7 +348,7 @@ export function confronterALaSource(questions: QuestionModele[], verite: VeriteP
   // ── Alignement et comparaison ──
   const modeleApparie = new Set<number>(); const documentApparie = new Set<number>();
   const vignetteDe = (qs: QuestionSource) => (qs.sujetIndex !== null ? verite.sujets[qs.sujetIndex]?.vignette ?? '' : '');
-  const paires = verite.questions.length ? aligner(questions, verite.questions) : [];
+  const paires = verite.questions.length ? completerAppariementsParPage(aligner(questions, verite.questions), questions, verite.questions) : [];
   // Pour (b) : les questions du modèle déjà propres, par sujet du document.
   const propresParSujet = new Map<number, QuestionModele[]>();
   for (const { im, is, score } of paires) {
@@ -527,8 +578,14 @@ export function dedoublonnerParTexte<T extends QuestionModele>(questions: T[]): 
     // Un doublon de recouvrement est proche dans l'ordre : on ne compare qu'au
     // voisinage, sinon deux questions légitimement identiques de dossiers
     // différents seraient fusionnées.
+    // …et il partage au moins une page source avec son original : deux
+    // questions de dossiers différents peuvent avoir le même libellé et des
+    // propositions voisines (« Quelle en est la physiopathologie ? » p. 66 et
+    // p. 68 du tour de révision Pédiatrie) sans être un doublon.
+    const pagesQ = new Set((q.source_pages ?? []).filter((n) => Number.isFinite(n)));
+    const memePage = (g: T) => pagesQ.size === 0 || !(g.source_pages ?? []).length || (g.source_pages ?? []).some((n) => pagesQ.has(n));
     const voisins = garder.slice(-12);
-    const jumeau = voisins.find((g) => ressemblance(libelle, derniereLigne(g.enonce)) >= 0.85
+    const jumeau = voisins.find((g) => memePage(g) && ressemblance(libelle, derniereLigne(g.enonce)) >= 0.85
       && ressemblance(propositions, (g.items ?? []).map((i) => i.enonce).join(' | ')) >= 0.85);
     if (!jumeau) { garder.push(q); continue; }
     retirees++;

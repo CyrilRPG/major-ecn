@@ -42,7 +42,7 @@ import type {
   Alerte, CorrectionsResult, ExerciseImportResult, ImportedImage, ImportedQuestion, ImportVoie, Lot,
 } from './exercise-import-schema';
 import { appliquerCorrections, fusionnerLots, validate } from './exercise-import-schema';
-import { confronterALaSource, dedoublonnerParTexte, type Appariement, type Ecart, type RapportFiabilite, type Reparation } from './exercise-import-verite-rapport';
+import { confronterALaSource, dedoublonnerParTexte, trierParPage, type Appariement, type Ecart, type RapportFiabilite, type Reparation } from './exercise-import-verite-rapport';
 import type { ReperePage, StatutVerite, VeritePdf } from './exercise-import-verite-lecture';
 import { appliquer, rattacherImages, type BlocQuestion, type Confiance } from './exercise-import-images-regles';
 
@@ -364,7 +364,9 @@ export function assemblerEtVerifier(e: EntreesVerification): Verification {
   }
   let fusion = fusionnerLots(lots);
   {
-    const { questions, retirees } = dedoublonnerParTexte(fusion.questions);
+    // Ordre du document AVANT le dédoublonnage : les questions rejouées par une
+    // relance retrouvent leur place, et leurs doublons deviennent voisins.
+    const { questions, retirees } = dedoublonnerParTexte(trierParPage(fusion.questions));
     if (retirees > 0) fusion = { ...fusion, questions, warnings: [...fusion.warnings, `${retirees} exercice(s) rendus en double par deux lots voisins, fusionné(s) sur le texte.`] };
   }
   if (e.plan.strategie === 'corrige-separe') {
