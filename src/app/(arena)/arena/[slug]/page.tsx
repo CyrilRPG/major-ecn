@@ -9,6 +9,8 @@ import { ArenaFxStyles, GoldEyebrow, Reveal } from '@/components/arena/landing/f
 import { LandingHero, type HeroState } from '@/components/arena/landing/hero';
 import { LandingRounds, type RoundCard } from '@/components/arena/landing/rounds';
 import { LandingSteps } from '@/components/arena/landing/steps';
+import { TournamentPicker } from '@/components/arena/landing/tournament-picker';
+import { loadTournamentCards } from '@/lib/arena/cards-data';
 import { computeTournamentStandings, effectiveBareme, roundMaxScore } from '@/lib/arena/db';
 import { leaderboardRows } from '@/lib/arena/ranking';
 import { describeBareme } from '@/lib/arena/scoring';
@@ -82,7 +84,7 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
   return (
     <ArenaPage nav={nav}>
       {/* Landing du tournoi : l'image d'origine (médecin au Colisée) remplace la plaque commune. */}
-      <ArenaBackdropPhoto src={PHOTOS.heroArena} />
+      <ArenaBackdropPhoto src={PHOTOS.heroArena} srcMobile={PHOTOS.heroArenaMobile} veil="light" />
       <ArenaFxStyles />
       <LandingHero
         specialty={t.specialty}
@@ -95,6 +97,11 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
         secondary={participant ? { href: `${base}/espace`, label: 'Ouvrir mon espace' } : { href: `${base}/regles`, label: 'Lire les règles' }}
         registrationOpen={ctx.registrationOpen && !participant}
       />
+
+      {/* « Choisissez votre tournoi » (maquette client du 10/09/2026) : les
+          autres arènes ouvertes ou à venir, juste sous le hero ; le reste de la
+          page est inchangé. */}
+      <TournamentPicker groups={await loadTournamentCards(now)} currentSlug={slug} calendarHref={`${base}#manches`} source={`arena:${slug}`} />
 
       <LandingSteps questions={formatQuestions} secondsPerQuestion={t.seconds_per_question} />
 

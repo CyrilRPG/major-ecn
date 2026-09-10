@@ -79,8 +79,14 @@ export const PHOTOS = {
   seatsRedPortrait: '/arena/seats-red-portrait.jpg',
   amphitheatre: '/arena/amphitheatre.jpg',
   lightsFog: '/arena/lights-fog.jpg',
-  /** Hero de la landing (visuel fourni par le client, 07/09/2026). */
+  /** Hero de la landing (visuel fourni par le client, 07/09/2026 ; 2560 px depuis le PNG source, 10/09/2026). */
   heroArena: '/arena/hero-arena.jpg',
+  /** Variante 1080 px du hero pour la couche statique mobile / tablette. */
+  heroArenaMobile: '/arena/hero-arena-1080.jpg',
+  /** Décor de la page « Les règles de l'Arena » (scène client du 10/09/2026, 1536 × 2304). */
+  rulesScene: '/arena/rules-scene-2026.jpg',
+  /** Couronne de lauriers dorée détourée (extraite de la bannière client, 485 × 412, fond transparent). */
+  laurel: '/arena/laurel-gold.png',
   /** Casque spartiate détouré (logo, visuel fourni par le client). */
   helmet: '/arena/helmet.png',
   /** Fond unique de toutes les pages Arena : amphithéâtre aux torches, plaque sans bannière (arena-backdrop.tsx). */

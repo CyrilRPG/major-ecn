@@ -37,6 +37,8 @@ const QROC_RATE_EUR = 0.005;
 // Générations IA facturées au forfait, par génération réussie.
 const GEN_INTERRO_EUR = 0.3;
 const GEN_EPREUVE_EUR = 1.3;
+/** Corrigé EVC Arena rédigé par IA (BILLING_EUR.arena_corrections). */
+const GEN_ARENA_EUR = 1;
 
 // Import d'un article de blog par IA (mise en page premium + optimisation SEO).
 const ARTICLE_EUR = 2.5;
@@ -106,14 +108,14 @@ function remisePct(montant: number): number {
 
 export function FacturationDashboard({
   lines, aiResponses, tarifs, epreuves = { exams: 0, qroc: 0 },
-  generations = { interrogations: 0, epreuves: 0 },
+  generations = { interrogations: 0, epreuves: 0, arena: 0 },
   exerciseImports = [],
   articles = [],
 }: {
   lines: CourseLine[]; aiResponses: number; tarifs: Tarifs;
   epreuves?: { exams: number; qroc: number };
   /** Générations IA réussies, facturées au forfait. */
-  generations?: { interrogations: number; epreuves: number };
+  generations?: { interrogations: number; epreuves: number; /** Corrigés EVC Arena rédigés par IA (1 € pièce). */ arena?: number };
   exerciseImports?: ExerciseImportBillingLine[];
   /** Articles de blog importés par IA, facturés 2,50 € pièce. */
   articles?: ArticleBillingLine[];
@@ -123,14 +125,14 @@ export function FacturationDashboard({
   const data = useMemo(() => {
     const epreuvesTotal = epreuves.exams * EPREUVE_FIXED_EUR + epreuves.qroc * QROC_RATE_EUR;
     const generationsTotal =
-      generations.interrogations * GEN_INTERRO_EUR + generations.epreuves * GEN_EPREUVE_EUR;
+      generations.interrogations * GEN_INTERRO_EUR + generations.epreuves * GEN_EPREUVE_EUR + (generations.arena ?? 0) * GEN_ARENA_EUR;
     const counts = {
       fiche: lines.filter((l) => l.fichePrice > 0).length,
       qcm: lines.filter((l) => l.qcmPrice > 0).length + MANUAL_QCM_LINES.length,
       flash: lines.filter((l) => l.flashPrice > 0).length,
       ia: aiResponses,
       epreuves: epreuves.exams,
-      generations: generations.interrogations + generations.epreuves,
+      generations: generations.interrogations + generations.epreuves + (generations.arena ?? 0),
       imports: exerciseImports.length,
       articles: articles.length,
     };
@@ -490,6 +492,10 @@ export function FacturationDashboard({
               <Row
                 label={`Épreuves blanches générées — ${generations.epreuves} × 1,30 €`}
                 value={eur(generations.epreuves * GEN_EPREUVE_EUR)}
+              />
+              <Row
+                label={`Corrigés EVC Arena rédigés par IA — ${generations.arena ?? 0} × 1 €`}
+                value={eur((generations.arena ?? 0) * GEN_ARENA_EUR)}
               />
               <div className="border-t border-(--color-border) pt-1.5">
                 <Row label="Total" value={eur(data.totals.generations)} strong />

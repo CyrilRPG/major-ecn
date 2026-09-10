@@ -1,8 +1,10 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Manrope } from 'next/font/google';
 import { ArrowLeft, ArrowRight, CalendarDays, ShieldCheck } from 'lucide-react';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
 import { ExperienceNavigation } from '@/components/arena/experience-navigation';
+import { PHOTOS } from '@/components/arena/tokens';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,12 +19,13 @@ export async function generateMetadata({ params }: Params) {
 }
 
 /**
- * « Les règles de l'Arena » — reproduction de la maquette client (portrait
- * 1024 × 1536) : lien de retour, deux oriflammes suspendues au bord supérieur
- * (décor de la maquette), hero (sur-titre, titre, pilule,
- * accroche), casque spartiate à droite, six cartes numérotées, encart
- * d'avertissement, bouton d'inscription, lien vers le calendrier et pied de
- * page. Le statut et les destinations des liens suivent le tournoi réel.
+ * « Les règles de l'Arena » — sur la scène fournie par le client le
+ * 10/09/2026 (`rules-scene-2026.jpg` : oriflammes, casque sur son socle, sol
+ * réfléchissant) : lien de retour, hero (sur-titre, titre, pilule, accroche)
+ * à gauche du casque, puis, sur le sol de l'arène, six cartes numérotées
+ * moins larges que la scène, encart d'avertissement, bouton d'inscription,
+ * lien vers le calendrier et pied de page (couronne de lauriers détourée).
+ * Le statut et les destinations des liens suivent le tournoi réel.
  */
 const CARDS = [
   { n: '01', title: '3 manches', lines: ['Le tournoi se déroule en trois', 'manches aux dates indiquées', 'dans le calendrier. Chaque', 'manche est accessible pendant', 'une durée limitée.'] },
@@ -42,19 +45,6 @@ function RulesIcon({ number }: { number: (typeof CARDS)[number]['n'] }) {
     {number === '04' && <g strokeWidth="3.5"><path d="M4 50H53" /><path d="M8 50V37H14V50M21 50V25H27V50M34 50V10H40V50M47 50V3H53V50" /></g>}
     {number === '05' && <><path d="M13 6H43V16C43 28 37 34 28 37C19 34 13 28 13 16Z" fill="currentColor" strokeWidth="2" /><path d="M12 9H6V17C6 25 10 29 18 30M44 9H50V17C50 25 46 29 38 30" strokeWidth="3" /><path d="M25 35H31V44L38 48V52H18V48L25 44Z" fill="currentColor" strokeWidth="2" /></>}
     {number === '06' && <><circle cx="28" cy="16" r="12" /><path d="M8 50C8 26 48 26 48 50Z" /></>}
-  </svg>;
-}
-
-function RulesLaurel() {
-  const leaves = [[31, 17, 44], [23, 26, 30], [18, 37, 15], [17, 48, 0], [20, 60, -20], [25, 70, -35], [33, 79, -48], [42, 85, -65]];
-  return <svg className="ar-footer-emblem" viewBox="0 0 100 100" fill="currentColor" aria-hidden>
-    {[false, true].map(mirror => <g key={String(mirror)} transform={mirror ? 'translate(100 0) scale(-1 1)' : undefined}>
-      <path d="M52 91C13 83 6 36 35 9" fill="none" stroke="currentColor" strokeWidth="1.4" />
-      {leaves.map(([x, y, angle], i) => <g key={i} transform={`translate(${x} ${y}) rotate(${angle})`}>
-        <path d="M0 5C-10 0-11-7-9-12C-2-9 1-3 0 5Z" />
-        <path d="M1 6C2-3 7-7 12-7C12 0 8 4 1 6Z" />
-      </g>)}
-    </g>)}
   </svg>;
 }
 
@@ -111,7 +101,7 @@ export default async function RulesPage({ params }: Params) {
         <span className="ar-footer-rule" aria-hidden />
         <span>Major ECN</span>
         <span className="ar-footer-rule" aria-hidden />
-        <RulesLaurel />
+        <Image src={PHOTOS.laurel} alt="" width={485} height={412} sizes="84px" className="ar-footer-emblem" />
         <span className="ar-footer-rule" aria-hidden />
         <span className="ar-footer-tagline">L’excellence pour votre avenir</span>
         <span className="ar-footer-rule" aria-hidden />

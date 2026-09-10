@@ -8,7 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { publishRoundResults, updateRound } from '@/app/admin/arena/actions';
+import { roundState } from '@/lib/arena/time';
 import type { RoundRow, TournamentRow } from '@/lib/arena/types';
+import { ArenaCard, ArenaProgress, SectionLabel, StatusPill } from './admin-ui';
 
 /**
  * Manches (§2.1, §12) : dates libres et indépendantes, durée, délai de
@@ -45,6 +47,11 @@ function fromParisLocal(local: string): string | null {
   utc = guess - offset(utc);
   return new Date(utc).toISOString();
 }
+
+/** Affichage court d'une date en heure de Paris. */
+const fmtParis = (iso: string) => new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' }).format(new Date(iso));
+const STATE_LABEL = { unscheduled: 'À dater', upcoming: 'À venir', open: 'Ouverte', closed: 'Clôturée' } as const;
+const STATE_TONE = { unscheduled: 'muted', upcoming: 'blue', open: 'red', closed: 'gold' } as const;
 
 export function RoundsEditor({ t, rounds, slug, questionCounts, hasAttempts }: { t: TournamentRow; rounds: RoundRow[]; slug: string; questionCounts: Record<string, number>; hasAttempts: Record<string, boolean> }) {
   return (
@@ -90,24 +97,38 @@ function RoundCard({ t, r, slug, count, started }: { t: TournamentRow; r: RoundR
     setForm((f) => ({ ...f, closes: toParisLocal(new Date(o.getTime() + 24 * 3600 * 1000).toISOString()) }));
   };
 
-  return (
-    <section className="rounded-(--radius-card) border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft)">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h3 className="text-base font-bold text-(--color-ink)">Manche {r.number}</h3>
-          <p className="text-xs text-(--color-ink-soft)">
-            {count} / {t.questions_per_round} questions · {r.bareme_locked_at ? 'barème verrouillé' : 'barème du tournoi'} · {r.results_published_at ? 'résultats publiés' : 'résultats non publiés'}{started ? ' · a des participants' : ''}
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Link href={`/arena/${slug}/manche/${r.number}?preview=1`} target="_blank"><Button variant="outline" size="sm">Prévisualiser en candidat ↗</Button></Link>
-          {r.closes_at && new Date(r.closes_at) < new Date() && !r.results_published_at && (
-            <Button size="sm" disabled={pending} onClick={() => start(async () => { const res = await publishRoundResults(r.id); if (!res.ok) setError(res.error); router.refresh(); })}>Publier les résultats maintenant</Button>
-          )}
-        </div>
-      </div>
+  const state = roundState(r);
 
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  return (
+    <ArenaCard
+      number={`M${r.number}`}
+      title={<>Manche {r.number}{form.theme ? <span className="text-(--color-ink-soft)"> · {form.theme}</span> : null}</>}
+      description={
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <StatusPill tone={STATE_TONE[state]}>{STATE_LABEL[state]}</StatusPill>
+          <span>{r.opens_at && r.closes_at ? `${fmtParis(r.opens_at)} → ${fmtParis(r.closes_at)}` : 'dates à renseigner'}</span>
+          <span>· {r.bareme_locked_at ? 'barème verrouillé' : 'barème du tournoi'}</span>
+          <span>· {r.results_published_at ? 'résultats publiés' : 'résultats non publiés'}</span>
+          {started && <span className="font-semibold text-(--color-danger)">· a des participants</span>}
+        </span>
+      }
+      aside={
+        <div className="flex flex-col items-end gap-2">
+          <div className="w-44">
+            <p className="text-right text-xs text-(--color-ink-soft)"><b className={count === t.questions_per_round ? 'text-emerald-700' : 'text-(--color-ink)'}>{count}</b> / {t.questions_per_round} questions</p>
+            <ArenaProgress value={count} max={t.questions_per_round} className="mt-1" />
+          </div>
+          <div className="flex flex-wrap justify-end gap-2">
+            <Link href={`/arena/${slug}/manche/${r.number}?preview=1`} target="_blank"><Button variant="outline" size="sm">Prévisualiser en candidat ↗</Button></Link>
+            {r.closes_at && new Date(r.closes_at) < new Date() && !r.results_published_at && (
+              <Button size="sm" disabled={pending} onClick={() => start(async () => { const res = await publishRoundResults(r.id); if (!res.ok) setError(res.error); router.refresh(); })}>Publier les résultats maintenant</Button>
+            )}
+          </div>
+        </div>
+      }
+    >
+      <SectionLabel hint="heure de Paris, stockée en UTC">Thème et fenêtre de jeu</SectionLabel>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-1.5 lg:col-span-2"><Label htmlFor={`th-${r.id}`}>Thème</Label><Input id={`th-${r.id}`} value={form.theme} onChange={(e) => setForm((f) => ({ ...f, theme: e.target.value }))} placeholder="Vascularites et maladies systémiques" /></div>
         <div className="space-y-1.5"><Label htmlFor={`op-${r.id}`}>Ouverture (heure de Paris)</Label><Input id={`op-${r.id}`} type="datetime-local" value={form.opens} onChange={(e) => setForm((f) => ({ ...f, opens: e.target.value }))} /></div>
         <div className="space-y-1.5">
@@ -121,8 +142,8 @@ function RoundCard({ t, r, slug, count, started }: { t: TournamentRow; r: RoundR
         <div className="space-y-1.5"><Label htmlFor={`de-${r.id}`}>Publication des résultats (min après clôture)</Label><Input id={`de-${r.id}`} type="number" min={0} value={form.delay} onChange={(e) => setForm((f) => ({ ...f, delay: Number(e.target.value) || 0 }))} /><p className="text-xs text-(--color-ink-muted)">Le délai minimum du tournoi reste applicable.</p></div>
       </div>
 
-      <details className="mt-4">
-        <summary className="cursor-pointer text-sm font-semibold text-(--color-ink)">Contenu des corrections (§12.1)</summary>
+      <details className="mt-5 rounded-(--radius-button) border border-(--color-border) bg-(--color-surface-soft) p-3">
+        <summary className="cursor-pointer text-sm font-semibold text-(--color-ink)">Contenu des corrections (§12.1) — introduction, encadré méthodologique, erreurs fréquentes, références</summary>
         <div className="mt-3 grid gap-4">
           <div className="space-y-1.5"><Label htmlFor={`ci-${r.id}`}>Introduction</Label><Textarea id={`ci-${r.id}`} rows={2} value={form.intro} onChange={(e) => setForm((f) => ({ ...f, intro: e.target.value }))} /></div>
           <div className="space-y-1.5"><Label htmlFor={`cm-${r.id}`}>Encadré méthodologique sur le thème</Label><Textarea id={`cm-${r.id}`} rows={4} value={form.methodo} onChange={(e) => setForm((f) => ({ ...f, methodo: e.target.value }))} /></div>
@@ -142,6 +163,6 @@ function RoundCard({ t, r, slug, count, started }: { t: TournamentRow; r: RoundR
         <Button onClick={save} disabled={pending}>{pending ? 'Enregistrement…' : 'Enregistrer la manche'}</Button>
         {msg && <span className="text-sm font-semibold text-emerald-700">{msg}</span>}
       </div>
-    </section>
+    </ArenaCard>
   );
 }

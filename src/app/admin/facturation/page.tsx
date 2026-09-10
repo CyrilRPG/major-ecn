@@ -14,7 +14,7 @@ export default async function AdminFacturationPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
 
-  const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes, articlesRes, odontoRes] = await Promise.all([
+  const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes, articlesRes, odontoRes, genArenaRes] = await Promise.all([
     a.rpc('admin_facturation_lines', { p_faculte_id: EDN_FACULTE_ID }),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', 'assistant_chat').eq('status', 'success'),
     // Épreuves blanches : facturées 1 c / épreuve + 0,5 c / QROC.
@@ -29,10 +29,12 @@ export default async function AdminFacturationPage() {
     // Collège Odontologie et ses sous-collèges : la RPC renvoie le nom du
     // sous-collège, la facture les regroupe sous le collège parent.
     a.from('matieres').select('id, nom').or(`id.eq.${ODONTOLOGIE_COLLEGE_ID},parent_matiere_id.eq.${ODONTOLOGIE_COLLEGE_ID}`),
+    // EVC Arena : corrigés de manche rédigés par IA, forfait 1 € par document.
+    a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.arenaCorrections).eq('status', 'success'),
   ]);
   const examsCount = examCountRes.count ?? 0;
   const qrocCount = qrocCountRes.count ?? 0;
-  const generations = { epreuves: genExamRes.count ?? 0, interrogations: genInterroRes.count ?? 0 };
+  const generations = { epreuves: genExamRes.count ?? 0, interrogations: genInterroRes.count ?? 0, arena: genArenaRes.count ?? 0 };
   const odontoMatieres = (odontoRes.data ?? []) as { id: string; nom: string }[];
   const odontoNom = odontoMatieres.find((m) => m.id === ODONTOLOGIE_COLLEGE_ID)?.nom ?? 'Odontologie';
   const odontoSousColleges = new Set(odontoMatieres.filter((m) => m.id !== ODONTOLOGIE_COLLEGE_ID).map((m) => m.nom));

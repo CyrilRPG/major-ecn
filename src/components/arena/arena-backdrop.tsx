@@ -73,15 +73,23 @@ export function ArenaBackdrop() {
  * l'image d'origine de la médecin au Colisée (`hero-arena.jpg`) tandis que les
  * autres pages Arena restent sur la plaque du colisée.
  */
-export function ArenaBackdropPhoto({ src, srcMobile }: { src: string; srcMobile?: string }) {
+export function ArenaBackdropPhoto({ src, srcMobile, veil = 'default' }: { src: string; srcMobile?: string; /** `light` : voile très léger (photo claire, lisibilité par ombres portées). */ veil?: 'default' | 'light' }) {
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty('--arena-photo', `url("${src}")`);
     root.style.setProperty('--arena-photo-mobile', `url("${srcMobile ?? src}")`);
+    if (veil === 'light') {
+      root.style.setProperty('--arena-veil-a', 'rgba(6, 10, 20, 0.12)');
+      root.style.setProperty('--arena-veil-b', 'rgba(6, 10, 20, 0.2)');
+      root.style.setProperty('--arena-veil-c', 'rgba(6, 10, 20, 0.55)');
+    }
     return () => {
       root.style.removeProperty('--arena-photo');
       root.style.removeProperty('--arena-photo-mobile');
+      root.style.removeProperty('--arena-veil-a');
+      root.style.removeProperty('--arena-veil-b');
+      root.style.removeProperty('--arena-veil-c');
     };
-  }, [src, srcMobile]);
+  }, [src, srcMobile, veil]);
   return null;
 }

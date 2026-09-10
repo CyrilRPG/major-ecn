@@ -20,14 +20,17 @@
   background: var(--arena-photo, url("/arena/colosseum-plate.jpg")) center top / cover no-repeat;
   will-change: transform;
 }
+/* Voile nuit : trois arrêts surchargeables par page (ArenaBackdropPhoto veil="light"
+   sur la landing : la photo de la médecin au Colisée reste claire, la lisibilité
+   vient des ombres portées du texte et de la carte de manche, pas d'un filtre noir). */
 .arena-backdrop-veil {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(6, 10, 20, 0.55) 0%,
-    rgba(6, 10, 20, 0.62) 45%,
-    rgba(6, 10, 20, 0.8) 100%
+    var(--arena-veil-a, rgba(6, 10, 20, 0.55)) 0%,
+    var(--arena-veil-b, rgba(6, 10, 20, 0.62)) 45%,
+    var(--arena-veil-c, rgba(6, 10, 20, 0.8)) 100%
   );
 }
 @media (max-width: 1023.98px), (pointer: coarse) {
@@ -45,8 +48,8 @@
   .arena-backdrop-veil {
     background: linear-gradient(
       180deg,
-      rgba(6, 10, 20, 0.55) 0%,
-      rgba(6, 10, 20, 0.7) 55%,
+      var(--arena-veil-a, rgba(6, 10, 20, 0.55)) 0%,
+      var(--arena-veil-b, rgba(6, 10, 20, 0.7)) 55%,
       rgba(11, 15, 20, 0.96) 88%,
       #0b0f14 100%
     );
@@ -99,17 +102,25 @@
 .ar-page {
   --ar-gold: #ffc653;
   --ar-red: #ff0033;
-  --ar-width: 100vw;
+  /* Largeur de référence du décor : plafonnée pour que la scène (1536 × 2304)
+     ne soit jamais étirée au-delà de sa définition. */
+  --ar-width: min(100vw, 1600px);
   --ar-gutter: clamp(24px, 3.03vw, 38px);
+  /* Les blocs de contenu sont moins larges que la scène : l'architecture et le
+     sol de l'arène restent visibles sur les côtés et en bas de page. */
+  --ar-content: min(1040px, 100%);
   --ar-display: var(--font-oswald), 'Oswald', 'Arial Narrow', Impact, sans-serif;
   --ar-condensed: var(--font-bebas), 'Bebas Neue', Impact, sans-serif;
   position: relative;
   isolation: isolate;
   width: 100%;
-  min-height: 1536px;
+  min-height: 100svh;
   margin-inline: auto;
-  padding: 0 var(--ar-gutter) 36px;
-  background: #00121c url('/arena/rules-scene-2026.png') center top / 100% auto no-repeat;
+  padding: 0 var(--ar-gutter) calc(var(--ar-width) * .05 + 24px);
+  /* Scène client du 10/09/2026 (casque sur son socle, bannières, sol réfléchissant),
+     affichée à sa largeur naturelle depuis le haut ; sous la scène, la couleur du
+     sol prolonge l'image quand la page est plus haute qu'elle. */
+  background: #050608 url('/arena/rules-scene-2026.jpg') center top / min(100%, 1600px) auto no-repeat;
   color: #f5f6f7;
   font-family: var(--font-arena-rules-body), var(--font-inter), 'Inter', system-ui, sans-serif;
 }
@@ -129,8 +140,10 @@
 .ar-back:hover { text-decoration: underline; text-underline-offset: 5px; }
 .ar-hero {
   position: relative;
-  height: calc(var(--ar-width) * .46289);
-  min-height: 474px;
+  /* Le hero couvre le casque et son socle (jusqu'à 65 % de la hauteur de la
+     scène) : les cartes commencent sur le sol, sans recouvrir le décor. */
+  height: calc(var(--ar-width) * .9);
+  min-height: 560px;
   margin-inline: calc(-1 * var(--ar-gutter));
   overflow: hidden;
 }
@@ -180,6 +193,8 @@
 .ar-grid {
   position: relative;
   z-index: 2;
+  width: var(--ar-content);
+  margin-inline: auto;
   display: grid;
   grid-template-columns: minmax(0, 1.028fr) minmax(0, 1fr) minmax(0, 1.028fr);
   gap: 15px 14px;
@@ -195,7 +210,7 @@
   border-radius: 16px;
   background: linear-gradient(115deg, #00131ef5, #00141efa);
 }
-.ar-card:nth-child(-n+3) { min-height: 343px; }
+.ar-card:nth-child(-n+3) { min-height: 300px; }
 .ar-card-head { display: flex; align-items: center; gap: 38px; height: 56px; }
 .ar-badge {
   display: grid;
@@ -215,20 +230,22 @@
   letter-spacing: .1px;
   text-transform: uppercase;
 }
-.ar-card:nth-child(3) h2 { font-size: 23px; letter-spacing: -.6px; white-space: nowrap; }
-.ar-card:nth-child(5) h2 { font-size: 20px; letter-spacing: -.5px; white-space: nowrap; }
+.ar-card:nth-child(3) h2 { font-size: 23px; letter-spacing: -.6px; }
+.ar-card:nth-child(5) h2 { font-size: 21px; letter-spacing: -.5px; }
 .ar-card:nth-child(n+4) h2 { margin-top: 24px; }
 .ar-card p { margin: 10px 0 0; font-size: 17.5px; line-height: 26px; letter-spacing: -.1px; }
 .ar-card:nth-child(2) p { font-size: clamp(16px, 1.6vw, 17px); line-height: 24.5px; letter-spacing: -.3px; }
 .ar-card:nth-child(3) p, .ar-card:nth-child(4) p { font-size: 17px; }
-.ar-copy-line { display: block; white-space: nowrap; }
+/* Les blocs étant plus étroits que la maquette, le texte se replie naturellement. */
+.ar-copy-line { display: inline; white-space: normal; }
 .ar-warning {
   display: grid;
   grid-template-columns: 94px minmax(0, 1fr);
   align-items: center;
   gap: 26px;
+  width: var(--ar-content);
   min-height: 114px;
-  margin-top: 23px;
+  margin: 23px auto 0;
   padding: 23px 26px 14px;
   border: 1px solid #c89c49;
   border-radius: 15px;
@@ -261,6 +278,8 @@
 .ar-calendar { margin-top: 20px; padding-bottom: 5px; border-bottom: 1.5px solid var(--ar-gold); font-size: 16px; line-height: 24px; text-decoration: none; }
 .ar-calendar:hover { color: var(--ar-gold); }
 .ar-footer {
+  width: var(--ar-content);
+  margin-inline: auto;
   display: grid;
   grid-template-columns: 1.5fr auto .7fr 72px .34fr auto .6fr;
   align-items: center;
@@ -274,7 +293,8 @@
 }
 .ar-footer-tagline { font-size: 10.5px; letter-spacing: 2.7px; }
 .ar-footer-rule { height: 1px; background: #999b9980; }
-.ar-footer-emblem { width: 72px; height: 64px; color: var(--ar-gold); }
+/* Couronne de lauriers : image détourée extraite de la bannière client (laurel-gold.png). */
+.ar-footer-emblem { width: 84px; height: auto; filter: drop-shadow(0 4px 10px #000a); }
 .ar-page a:focus-visible { outline: 3px solid var(--ar-gold); outline-offset: 6px; }
 @media (min-width: 1100px) {
   .ar-hero-copy { top: calc(var(--ar-width) * .12); }
@@ -282,9 +302,9 @@
   .ar-card p { font-size: 18px; line-height: 27px; }
 }
 @media (max-width: 1023.98px) {
-  .ar-page { min-height: 100svh; --ar-gutter: 24px; background-size: auto 1536px; }
+  .ar-page { min-height: 100svh; --ar-gutter: 24px; background-image: url('/arena/rules-scene-2026-1024.jpg'); background-size: 100% auto; }
   .ar-back { left: 24px; top: 24px; }
-  .ar-hero { min-height: 440px; }
+  .ar-hero { height: calc(var(--ar-width) * .95); min-height: 440px; }
   .ar-hero-copy { top: 104px; left: 6%; width: 70%; }
   .ar-title { font-size: 68px; }
   .ar-lead { font-size: 17px; line-height: 27px; }
@@ -292,7 +312,6 @@
   .ar-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ar-card:nth-child(n) { min-height: 285px; }
   .ar-card:nth-child(n) h2 { white-space: normal; }
-  .ar-copy-line { display: inline; white-space: normal; }
   .ar-footer { grid-template-columns: 1fr auto 1fr; gap: 12px; text-align: center; }
   .ar-footer-emblem { grid-column: 2; grid-row: 1; justify-self: center; }
   .ar-footer > span:not(.ar-footer-rule) { grid-column: 1 / -1; }
@@ -301,7 +320,7 @@
 @media (max-width: 600px) {
   .ar-page { --ar-gutter: 18px; background-position: center top; padding-bottom: 30px; }
   .ar-back { left: 20px; font-size: 15px; }
-  .ar-hero { min-height: 450px; }
+  .ar-hero { height: auto; min-height: calc(100vw * 1.1); }
   .ar-hero-copy { top: 90px; left: 22px; right: 22px; width: auto; }
   .ar-kicker { margin-left: 0; font-size: 12px; gap: 10px; }
   .ar-title { font-size: clamp(50px, 11.8vw, 64px); line-height: .98; margin-top: 18px; }

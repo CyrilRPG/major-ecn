@@ -5,6 +5,7 @@ import { unstable_rethrow } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { ensureArenaAdmin, logAdmin } from "@/lib/arena/admin";
 import { arenaDb, getRound } from "@/lib/arena/db";
+import { removeCorrectionPages } from "@/lib/arena/corrections-pages";
 import { ARENA_BUCKET } from "@/lib/arena/pdf-url";
 
 /**
@@ -64,9 +65,13 @@ export async function attachCorrectionsPdf(
         corrections_pdf_path: path,
         corrections_pdf_source: "uploaded",
         corrections_pdf_generated_at: new Date().toISOString(),
+        // Les pages du corrigé précédent ne correspondent plus : le rendu est
+        // relancé par le panneau (route pdf, mode "pages") juste après.
+        corrections_pages: 0,
       })
       .eq("id", roundId)
       .throwOnError();
+    await removeCorrectionPages(round.tournament_id, round.number, round.corrections_pages ?? 0);
     await logAdmin(actor, {
       tournamentId: round.tournament_id,
       roundId,
@@ -96,9 +101,11 @@ export async function removeCorrectionsPdf(roundId: string): Promise<Ok | Err> {
         corrections_pdf_path: null,
         corrections_pdf_source: null,
         corrections_pdf_generated_at: null,
+        corrections_pages: 0,
       })
       .eq("id", roundId)
       .throwOnError();
+    await removeCorrectionPages(round.tournament_id, round.number, round.corrections_pages ?? 0);
     await logAdmin(actor, {
       tournamentId: round.tournament_id,
       roundId,

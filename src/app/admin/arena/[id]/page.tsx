@@ -4,7 +4,7 @@ import { requireAdmin } from '@/lib/auth/require-role';
 import { integrityCheck } from '@/lib/arena/admin';
 import { arenaDb, computeTournamentStandings, getTournament, listAttemptsForRounds, listParticipants, loadTournamentSnapshot } from '@/lib/arena/db';
 import { STATUS_LABEL } from '@/lib/arena/time';
-import { qrpNs, type ReportRow } from '@/lib/arena/types';
+import { qrpNs, questionIssues, type ReportRow } from '@/lib/arena/types';
 import { SettingsForm } from '@/components/admin/arena/settings-form';
 import { RoundsEditor } from '@/components/admin/arena/rounds-editor';
 import { QuestionsManager } from '@/components/admin/arena/questions-manager';
@@ -14,26 +14,34 @@ import { ReportsPanel, type ReportView } from '@/components/admin/arena/reports-
 import { EmailsPanel, type EmailLogView } from '@/components/admin/arena/emails-panel';
 import { PdfPanel } from '@/components/admin/arena/pdf-panel';
 import { ArenaDashboard, type DashboardData } from '@/components/admin/arena/dashboard';
+import { ArenaAdminShell, type StepDef, type TabDef } from '@/components/admin/arena/admin-shell';
+import { ArenaCard } from '@/components/admin/arena/admin-ui';
 import { roundState } from '@/lib/arena/time';
 import { GENERAL_RANKING_NOTICE } from '@/lib/arena/format';
 
 export const dynamic = 'force-dynamic';
 
-const TABS = [
-  ['parametres', 'Paramètres'], ['manches', 'Manches'], ['questions', 'Questions'], ['baremes', 'Barèmes'],
-  ['participants', 'Participants'], ['suivi', 'Suivi'], ['signalements', 'Signalements'], ['emails', 'Emails'], ['pdf', 'PDF corrections'], ['journal', 'Journal'],
+/** Étapes du parcours guidé (liens vers les onglets) puis onglets d'exploitation. */
+const STEP_TABS = [
+  ['parametres', 'Paramètres'], ['manches', 'Manches'], ['questions', 'Questions'], ['corriges', 'Corrigés'], ['publication', 'Publication'],
 ] as const;
-type Tab = (typeof TABS)[number][0];
+const OTHER_TABS = [
+  ['baremes', 'Barèmes'], ['participants', 'Participants'], ['suivi', 'Suivi'], ['signalements', 'Signalements'], ['emails', 'Emails'], ['journal', 'Journal'],
+] as const;
+type Tab = (typeof STEP_TABS)[number][0] | (typeof OTHER_TABS)[number][0];
+/** Anciens noms d'onglet encore acceptés. */
+const TAB_ALIAS: Record<string, Tab> = { pdf: 'corriges' };
 
 const fmt = (iso: string | null) => (iso ? new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' }).format(new Date(iso)) : '—');
 const pct = (a: number, b: number) => (b > 0 ? `${Math.round((a / b) * 100)} %` : '—');
 
-/** Tableau de bord d'un tournoi (§15) avec statut explicite, onglets par domaine. */
+/** Tableau de bord d'un tournoi (§15) : parcours guidé de préparation, onglets d'exploitation. */
 export default async function TournamentAdminPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ onglet?: string }> }) {
   await requireAdmin();
   const { id } = await params;
   const { onglet } = await searchParams;
-  const tab: Tab = (TABS.some(([k]) => k === onglet) ? onglet : 'parametres') as Tab;
+  const wanted = onglet ? TAB_ALIAS[onglet] ?? onglet : 'parametres';
+  const tab: Tab = ([...STEP_TABS, ...OTHER_TABS].some(([k]) => k === wanted) ? wanted : 'parametres') as Tab;
   const t = await getTournament(id);
   if (!t) notFound();
   const snap = await loadTournamentSnapshot(t);
@@ -57,6 +65,50 @@ export default async function TournamentAdminPage({ params, searchParams }: { pa
     hasAttempts[r.id] = attempts.some((a) => a.round_id === r.id);
     questionCounts[r.id] = (snap.questionsByRound.get(r.id) ?? []).filter((q) => !q.neutralized_at).length;
   }
+
+  /* Provenance « IA » des questions copiées depuis la banque : celles dont la
+     série source a été publiée par l'outil d'import d'exercices. */
+  let aiSourceIds: string[] = [];
+  if (tab === 'questions') {
+    const sourceIds = [...snap.questionsByRound.values()].flat().map((q) => q.source_question_id).filter((x): x is string => Boolean(x));
+    if (sourceIds.length) {
+      const [{ data: srcQs }, { data: pubs }] = await Promise.all([
+        db.from('qcm_questions').select('id, serie_id').in('id', sourceIds),
+        db.from('exercise_imports').select('published_serie_id').eq('status', 'published').not('published_serie_id', 'is', null),
+      ]);
+      const aiSeries = new Set(((pubs ?? []) as { published_serie_id: string }[]).map((p) => p.published_serie_id));
+      aiSourceIds = ((srcQs ?? []) as { id: string; serie_id: string }[]).filter((q) => aiSeries.has(q.serie_id)).map((q) => q.id);
+    }
+  }
+
+  /* Parcours guidé : état de chaque étape, calculé côté serveur. */
+  const slugOk = /^[a-z0-9-]{3,60}$/.test(t.slug);
+  const paramsOk = Boolean(t.title.trim() && t.specialty.trim() && slugOk);
+  const datedRounds = snap.rounds.filter((r) => r.opens_at && r.closes_at).length;
+  const roundsOk = snap.rounds.length === 3 && datedRounds === 3;
+  const perRound = snap.rounds.map((r) => {
+    const qs = (snap.questionsByRound.get(r.id) ?? []).filter((q) => !q.neutralized_at);
+    return { number: r.number, count: qs.length, ok: qs.length === t.questions_per_round && qs.every((q) => questionIssues(q).length === 0) };
+  });
+  const questionsOk = snap.rounds.length > 0 && perRound.every((r) => r.ok);
+  const pdfCount = snap.rounds.filter((r) => r.corrections_pdf_path).length;
+  const pdfOk = snap.rounds.length > 0 && pdfCount === snap.rounds.length;
+  const publishedOk = t.status !== 'draft';
+  const doneFlags: Record<(typeof STEP_TABS)[number][0], boolean> = { parametres: paramsOk, manches: roundsOk, questions: questionsOk, corriges: pdfOk, publication: publishedOk };
+  const subLabels: Record<(typeof STEP_TABS)[number][0], string> = {
+    parametres: paramsOk ? `${t.specialty} · /arena/${t.slug}` : [!t.title.trim() && 'titre', !t.specialty.trim() && 'spécialité', !slugOk && 'URL'].filter(Boolean).join(', ') + ' à corriger',
+    manches: snap.rounds.length !== 3 ? `${snap.rounds.length} manche(s) sur 3` : datedRounds === 3 ? '3 manches datées' : `${datedRounds} manche${datedRounds > 1 ? 's' : ''} datée${datedRounds > 1 ? 's' : ''} sur 3`,
+    questions: perRound.length ? perRound.map((r) => `M${r.number} ${r.count}/${t.questions_per_round}`).join(' · ') : 'aucune manche',
+    corriges: `${pdfCount} corrigé${pdfCount > 1 ? 's' : ''} sur ${snap.rounds.length}`,
+    publication: STATUS_LABEL[snap.status] + (snap.openRound ? ` (M${snap.openRound})` : ''),
+  };
+  const firstTodo = STEP_TABS.find(([k]) => !doneFlags[k])?.[0] ?? null;
+  const steps: StepDef[] = STEP_TABS.map(([k, label]) => ({
+    key: k, label, sub: subLabels[k], href: `/admin/arena/${t.id}?onglet=${k}`, active: tab === k,
+    state: doneFlags[k] ? 'done' : k === firstTodo ? 'current' : 'todo',
+  }));
+  const openReports = ((reportsRes.data ?? []) as ReportRow[]).filter((r) => r.status === 'open').length;
+  const tabs: TabDef[] = OTHER_TABS.map(([k, label]) => ({ key: k, label, href: `/admin/arena/${t.id}?onglet=${k}`, active: tab === k, badge: k === 'signalements' ? openReports : undefined }));
 
   /* KPI (§4, §15.4) */
   const playedBy = (roundId: string) => new Set(attempts.filter((a) => a.round_id === roundId && a.status !== 'in_progress').map((a) => a.participant_id as string));
@@ -132,33 +184,29 @@ export default async function TournamentAdminPage({ params, searchParams }: { pa
     leaderboardHref: `/arena/${t.slug}/classement`,
   };
 
-  return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-6 lg:px-8">
-      <header className="mb-6 border-b border-(--color-border) pb-5">
-        <p className="text-xs"><Link href="/admin/arena" className="text-(--color-ink-soft) hover:underline">EVC Arena</Link> / {t.title}</p>
-        <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-bold text-(--color-ink)">{t.title} <span className="ml-2 rounded-full bg-(--color-surface-sunken) px-2.5 py-1 text-xs font-bold">{STATUS_LABEL[snap.status]}{snap.openRound ? ` (M${snap.openRound})` : ''}</span></h1>
-            <p className="text-sm text-(--color-ink-soft)">{t.specialty}{t.edition_label ? ` · ${t.edition_label}` : ''} · <Link href={`/arena/${t.slug}`} target="_blank" className="text-(--color-primary) hover:underline">/arena/{t.slug} ↗</Link>{!integrity.ok && <span className="ml-2 font-semibold text-(--color-danger)">· intégrité à corriger</span>}</p>
-          </div>
-          <div className="flex flex-wrap gap-4 text-sm">
-            <span><b>{participants.length}</b> inscrits</span>
-            <span><b>{confirmed.length}</b> confirmés ({pct(confirmed.length, participants.length)})</span>
-            {snap.rounds.map((r) => <span key={r.number}>Effectif M{r.number} : <b>{standings.byRound[r.id]?.effectifManche ?? 0}</b></span>)}
-            <span>Effectif général (3 manches) : <b>{standings.effectifGeneral}</b></span>
-            {standings.isFinal && <p className="w-full text-xs text-(--color-ink-muted)">{GENERAL_RANKING_NOTICE}</p>}
-          </div>
-        </div>
-        <nav className="mt-4 flex flex-wrap gap-1">
-          {TABS.map(([k, label]) => (
-            <Link key={k} href={`/admin/arena/${t.id}?onglet=${k}`} className={`rounded-(--radius-button) px-3 py-1.5 text-sm font-semibold ${tab === k ? 'bg-(--color-primary) text-white' : 'text-(--color-ink-soft) hover:bg-(--color-surface-sunken)'}`}>
-              {label}{k === 'signalements' && reportViews.some((r) => r.status === 'open') ? ` (${reportViews.filter((r) => r.status === 'open').length})` : ''}
-            </Link>
-          ))}
-        </nav>
-      </header>
+  /* Le tableau de bord (inscriptions, participation) n'a de sens qu'une fois le tournoi visible du public. */
+  const showDashboard = t.status !== 'draft' || participants.length > 0;
 
-      <ArenaDashboard d={dashboard} />
+  return (
+    <ArenaAdminShell
+      title={t.title}
+      eyebrow="Tournoi"
+      breadcrumb={[{ href: '/admin/arena', label: 'EVC Arena' }]}
+      subtitle={<>{t.specialty}{t.edition_label ? ` · ${t.edition_label}` : ''} · <span className="font-mono text-xs">/arena/{t.slug}</span></>}
+      status={{ key: snap.status, label: `${STATUS_LABEL[snap.status]}${snap.openRound ? ` · M${snap.openRound}` : ''}` }}
+      landingHref={`/arena/${t.slug}`}
+      notice={!integrity.ok && t.status === 'draft' ? 'Intégrité à corriger avant la programmation — détail dans l’onglet Paramètres.' : !integrity.ok ? 'Intégrité à corriger.' : undefined}
+      stats={[
+        { label: 'Inscrits', value: participants.length },
+        { label: 'Confirmés', value: `${confirmed.length}` },
+        ...snap.rounds.map((r) => ({ label: `Effectif M${r.number}`, value: standings.byRound[r.id]?.effectifManche ?? 0 })),
+        { label: 'Général', value: standings.effectifGeneral },
+      ]}
+      steps={steps}
+      tabs={tabs}
+    >
+      {standings.isFinal && <p className="mb-4 text-xs text-(--color-ink-muted)">{GENERAL_RANKING_NOTICE}</p>}
+      {showDashboard && <ArenaDashboard d={dashboard} />}
 
       {tab === 'parametres' && <SettingsForm t={t} integrity={integrity} effectiveStatus={snap.status} />}
 
@@ -167,9 +215,39 @@ export default async function TournamentAdminPage({ params, searchParams }: { pa
       {tab === 'questions' && (
         <div className="space-y-6">
           {snap.rounds.map((r) => (
-            <QuestionsManager key={r.id} round={r} questions={snap.questionsByRound.get(r.id) ?? []} expected={t.questions_per_round} started={hasAttempts[r.id]} specialtyId={t.specialty_id} defaultSeconds={t.seconds_per_question} />
+            <QuestionsManager key={r.id} round={r} questions={snap.questionsByRound.get(r.id) ?? []} expected={t.questions_per_round} started={hasAttempts[r.id]} specialtyId={t.specialty_id} defaultSeconds={t.seconds_per_question} aiSourceIds={aiSourceIds} />
           ))}
         </div>
+      )}
+
+      {tab === 'corriges' && <PdfPanel rounds={snap.rounds} questionCounts={questionCounts} />}
+
+      {tab === 'publication' && (
+        <ArenaCard number="5" title="Publication" description="Le passage Brouillon → Programmé exige un contrôle d'intégrité complet ; les transitions se font dans l'onglet Paramètres.">
+          <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {STEP_TABS.filter(([k]) => k !== 'publication').map(([k, label]) => (
+              <li key={k} className={`rounded-(--radius-button) border p-3 ${doneFlags[k] ? 'border-emerald-200 bg-emerald-50/60' : 'border-amber-200 bg-amber-50/60'}`}>
+                <p className="text-sm font-bold text-(--color-ink)">{doneFlags[k] ? '✓' : '○'} {label}</p>
+                <p className="mt-0.5 text-xs text-(--color-ink-soft)">{subLabels[k]}</p>
+                <Link href={`/admin/arena/${t.id}?onglet=${k}`} className="mt-2 inline-block text-xs font-semibold text-(--color-primary) underline-offset-4 hover:underline">Ouvrir →</Link>
+              </li>
+            ))}
+          </ol>
+          {integrity.problems.length > 0 && (
+            <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-(--color-danger)">{integrity.problems.map((p) => <li key={p}>{p}</li>)}</ul>
+          )}
+          {integrity.perRound.some((r) => r.issues.length) && (
+            <div className="mt-3 space-y-2 text-sm">
+              {integrity.perRound.filter((r) => r.issues.length).map((r) => (
+                <div key={r.number}><p className="font-semibold text-(--color-ink)">Manche {r.number}</p><ul className="list-disc pl-5 text-(--color-danger)">{r.issues.slice(0, 8).map((i) => <li key={i}>{i}</li>)}{r.issues.length > 8 && <li className="text-(--color-ink-muted)">… et {r.issues.length - 8} autre(s)</li>}</ul></div>
+              ))}
+            </div>
+          )}
+          <div className="mt-5 flex flex-wrap items-center gap-3">
+            <p className="text-sm text-(--color-ink)">Statut actuel : <b>{STATUS_LABEL[snap.status]}</b>{integrity.ok && t.status === 'draft' ? ' — prêt à être programmé.' : ''}</p>
+            <Link href={`/admin/arena/${t.id}?onglet=parametres`} className="rounded-(--radius-button) bg-(--color-primary) px-4 py-2 text-sm font-semibold text-white">Gérer le statut dans Paramètres</Link>
+          </div>
+        </ArenaCard>
       )}
 
       {tab === 'baremes' && <BaremeEditor tournamentId={t.id} initial={t.bareme} templates={templates} rounds={snap.rounds} qrpNs={allQrpNs} />}
@@ -205,8 +283,6 @@ export default async function TournamentAdminPage({ params, searchParams }: { pa
 
       {tab === 'emails' && <EmailsPanel tournamentId={t.id} sequence={t.email_sequence} rounds={snap.rounds.map((r) => ({ number: r.number, theme: r.theme }))} log={emailLog} />}
 
-      {tab === 'pdf' && <PdfPanel rounds={snap.rounds} />}
-
       {tab === 'journal' && (
         <section className="overflow-x-auto rounded-(--radius-card) border border-(--color-border) bg-(--color-surface) shadow-(--shadow-soft)">
           <table className="w-full text-sm">
@@ -225,6 +301,6 @@ export default async function TournamentAdminPage({ params, searchParams }: { pa
           </table>
         </section>
       )}
-    </main>
+    </ArenaAdminShell>
   );
 }

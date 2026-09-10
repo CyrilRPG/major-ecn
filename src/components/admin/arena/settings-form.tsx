@@ -10,6 +10,7 @@ import { deleteDraftTournament, setTournamentStatus, updateTournamentSettings } 
 import { STATUS_LABEL, type TournamentStatus } from '@/lib/arena/time';
 import { SEQUENCE_KINDS, SEQUENCE_LABEL, type EmailSequence, type TournamentRow } from '@/lib/arena/types';
 import type { IntegrityReport } from '@/lib/arena/admin';
+import { CoverField } from './cover-field';
 
 function Field({ label, id, children, hint }: { label: string; id: string; children: React.ReactNode; hint?: string }) {
   return (
@@ -132,6 +133,10 @@ export function SettingsForm({ t, integrity, effectiveStatus }: { t: TournamentR
         </div>
         <div className="mt-4">
           <Field label="Texte d’introduction (landing)" id="s-intro"><Textarea id="s-intro" rows={3} value={form.intro_text} onChange={(e) => set('intro_text', e.target.value)} /></Field>
+        </div>
+        <div className="mt-5 rounded-(--radius-button) border border-(--color-border) bg-(--color-surface-soft) p-4">
+          <p className="mb-3 text-sm font-semibold text-(--color-ink)">Visuel du tournoi <span className="font-normal text-(--color-ink-muted)">— carte « Choisissez votre tournoi »</span></p>
+          <CoverField tournamentId={t.id} specialty={form.specialty} specialtyId={form.specialty_id} coverPath={t.cover_image_path ?? null} />
         </div>
         <label className="mt-4 flex items-center gap-2 text-sm">
           <input type="checkbox" checked={form.indexable} onChange={(e) => set('indexable', e.target.checked)} />

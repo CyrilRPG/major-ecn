@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState, useTransition } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AlertCircle, CheckCircle2, ChevronDown, CircleDollarSign, Eye, Loader2, RotateCw, Send, UploadCloud, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,8 +10,15 @@ import { cancelExerciseImportAction, estimateExerciseImportAction, prepareExerci
 import { createClient } from '@/lib/supabase/client';
 import { fetchAuthentifie } from '@/lib/auth/fresh-token';
 import { ImportRelecture, VERDICTS, type ResultatImport } from '@/components/admin/exercise-import-relecture';
+import { importSerieFromBank } from '@/app/admin/arena/questions-actions';
 
 export type ImportCollege = { id: string; name: string; parentId: string | null; courses: { id: string; title: string }[] };
+/**
+ * Accroche EVC Arena (`/admin/import-exercices?arena=<manche>`) : l'outil est
+ * inchangé ; une fois la série publiée, elle est copiée dans la manche et
+ * l'admin est ramené à l'onglet Questions du tournoi.
+ */
+export type ImportArenaContext = { roundId: string; tournamentId: string; tournamentTitle: string; roundNumber: number; specialtyId: string | null };
 export type ImportHistoryRow = {
   id: string; title: string; voie: 'interne' | 'externe'; format: string; status: string; estimatedPriceCents: number; billedPriceCents: number | null;
   result: ResultatImport | null; warnings: string[]; error: string | null; createdAt: string; courseTitle: string; collegeName: string; serieId: string | null;
@@ -71,10 +79,12 @@ function messageErreur(e: unknown): string {
   return 'Une erreur inattendue est survenue.';
 }
 
-export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCollege[]; history: ImportHistoryRow[] }) {
+export function ExerciseImportWizard({ colleges, history, arena }: { colleges: ImportCollege[]; history: ImportHistoryRow[]; arena?: ImportArenaContext }) {
   const router = useRouter();
   const [voie, setVoie] = useState<'interne' | 'externe' | null>(null);
-  const [collegeId, setCollegeId] = useState('');
+  // Collège présélectionné sur la spécialité du tournoi quand on vient d'EVC Arena.
+  const [collegeId, setCollegeId] = useState(() => (arena?.specialtyId && colleges.some((c) => c.id === arena.specialtyId) ? arena.specialtyId : ''));
+  const [copieArena, setCopieArena] = useState<string | null>(null);
   const [coursId, setCoursId] = useState('');
   const [offers, setOffers] = useState<string[]>(['essentiel', 'intensif', 'approfondi']);
   const [format, setFormat] = useState<Format>('pdf');
@@ -169,6 +179,25 @@ export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCo
   const toggleOffer = (offer: string) => setOffers((prev) => prev.includes(offer) ? prev.filter((x) => x !== offer) : [...prev, offer]);
 
   /**
+   * EVC Arena : copie la série publiée dans la manche cible puis ramène à
+   * l'onglet Questions du tournoi. En cas d'échec, l'erreur s'affiche ici et
+   * la ligne « Publié » garde son bouton « Copier dans la manche ».
+   */
+  const copierVersManche = async (serieId: string) => {
+    if (!arena) return;
+    setCopieArena(serieId);
+    try {
+      const c = await importSerieFromBank(arena.roundId, serieId);
+      if (!c.ok) { setError(c.error); router.refresh(); return; }
+      router.push(`/admin/arena/${arena.tournamentId}?onglet=questions`);
+    } catch (e) {
+      setError(messageErreur(e));
+    } finally {
+      setCopieArena(null);
+    }
+  };
+
+  /**
    * Enchaîne les appels à la route d'analyse jusqu'à `done`. Chaque appel
    * traite autant de lots que son délai le permet et persiste l'avancement :
    * un document de plusieurs centaines de pages passe donc en plusieurs
@@ -194,6 +223,15 @@ export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCo
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
+      {arena && (
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-xl px-4 py-3 text-sm text-[#F2F3F5]" style={{ background: '#0B0F14', boxShadow: 'inset 0 0 0 1px rgba(212,169,74,0.45)' }} data-testid="bandeau-arena">
+          <p>
+            <span className="mr-2 text-[11px] font-bold uppercase tracking-[0.18em]" style={{ color: '#D4A94A' }}>Import pour EVC Arena</span>
+            <b>{arena.tournamentTitle}</b> · manche {arena.roundNumber} : la série publiée sera copiée dans la manche.
+          </p>
+          <Link href={`/admin/arena/${arena.tournamentId}?onglet=questions`} className="text-xs font-semibold underline-offset-4 hover:underline" style={{ color: '#E8C878' }}>Retour au tournoi</Link>
+        </div>
+      )}
       <header className="mb-6 flex flex-col justify-between gap-3 border-b border-(--color-border) pb-5 sm:flex-row sm:items-end">
         <div><p className="text-xs font-medium text-(--color-ink-muted)">Administration · Pédagogie</p><h1 className="mt-1 text-2xl font-semibold tracking-tight text-(--color-ink)">Import d’exercices</h1><p className="mt-1 text-sm text-(--color-ink-soft)">Analysez un sujet et son corrigé, vérifiez le résultat, puis publiez-le pour les étudiants ciblés.</p></div>
         <span className="inline-flex items-center gap-2 rounded-full bg-[#EEF6FF] px-3 py-1.5 text-xs font-semibold text-[#1E4D8B]"><CheckCircle2 className="h-4 w-4" /> Publication après validation</span>
@@ -239,7 +277,8 @@ export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCo
           <span className="text-sm font-semibold tabular-nums text-(--color-ink)" title={row.billedPriceCents != null ? `Facturé (estimation ${money(row.estimatedPriceCents)})` : 'Estimation'}>{money(row.billedPriceCents ?? row.estimatedPriceCents)}</span>
           <div className="flex gap-2">
             <Button size="sm" variant="outline" onClick={() => setSelected(row)} disabled={!row.result?.questions?.length && !row.result?.questions_ecartees?.length}><Eye /> {row.status === 'ready' ? 'Relire' : 'Détails'}</Button>
-            {row.status === 'ready' && <Button size="sm" onClick={() => { if (!publiable) { setSelected(row); return; } start(async () => { try { const r = await publishExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); router.refresh(); } }); }} disabled={pending || !publiable} title={!publiable ? `${f?.alertesBloquantes ?? ''} alerte(s) bloquante(s) à traiter dans la relecture` : undefined}>Publier</Button>}
+            {row.status === 'ready' && <Button size="sm" onClick={() => { if (!publiable) { setSelected(row); return; } start(async () => { try { const r = await publishExerciseImportAction(row.id); if (!r.ok) setError(r.error); else if (arena && r.serieId) await copierVersManche(r.serieId); else router.refresh(); } catch (e) { setError(messageErreur(e)); router.refresh(); } }); }} disabled={pending || !publiable} title={!publiable ? `${f?.alertesBloquantes ?? ''} alerte(s) bloquante(s) à traiter dans la relecture` : undefined}>Publier</Button>}
+            {arena && row.status === 'published' && row.serieId && <Button size="sm" variant="outline" onClick={() => { const id = row.serieId; if (id) start(() => copierVersManche(id)); }} disabled={pending || copieArena === row.serieId}>{copieArena === row.serieId ? 'Copie…' : `Copier dans la manche ${arena.roundNumber}`}</Button>}
             {(row.status === 'failed' || row.status === 'processing') && <Button size="sm" variant="outline" onClick={() => relancer(row.id)} disabled={pending}><RotateCw className="h-4 w-4" /> {row.status === 'failed' ? 'Relancer' : 'Reprendre'}</Button>}
             {!['published','cancelled'].includes(row.status) && <Button size="sm" variant="ghost" onClick={() => start(async () => { try { const r = await cancelExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); } })} disabled={pending} aria-label="Annuler l’import"><X /></Button>}
           </div>

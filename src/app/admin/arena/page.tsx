@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { arenaDb, listTournaments } from '@/lib/arena/db';
 import { effectiveStatus, STATUS_LABEL } from '@/lib/arena/time';
 import { TournamentList, type TournamentListRow } from '@/components/admin/arena/tournament-list';
+import { ArenaAdminShell } from '@/components/admin/arena/admin-shell';
 import { ENROLLABLE_SPECIALTIES } from '@/lib/data/enrollable-colleges';
 
 export const dynamic = 'force-dynamic';
@@ -27,24 +27,27 @@ export default async function ArenaAdminPage() {
     return {
       id: t.id, slug: t.slug, title: t.title, specialty: t.specialty, edition: t.edition_label,
       status: eff.status, statusLabel: STATUS_LABEL[eff.status], openRound: eff.openRound,
-      rounds: rs.length, firstOpen: rs[0]?.opens_at ?? null, registered: ps.length, confirmed: ps.filter((p) => p.email_confirmed_at).length,
-      indexable: t.indexable,
+      rounds: rs.length, datedRounds: rs.filter((r) => r.opens_at && r.closes_at).length, firstOpen: rs[0]?.opens_at ?? null, registered: ps.length, confirmed: ps.filter((p) => p.email_confirmed_at).length,
+      indexable: t.indexable, questionsPerRound: t.questions_per_round,
     };
   });
   const specialties = ENROLLABLE_SPECIALTIES.map((s) => ({ id: s.collegeId, name: s.name }));
+  const live = rows.filter((r) => r.status === 'round_open' || r.status === 'registration_open' || r.status === 'round_closed').length;
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-6 lg:px-8">
-      <header className="mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-(--color-border) pb-5">
-        <div>
-          <h1 className="text-2xl font-bold text-(--color-ink)">EVC Arena</h1>
-          <p className="mt-1 text-sm text-(--color-ink-soft)">
-            Tournois de QCM par spécialité : trois manches, douze questions chronométrées une par une, une seule tentative. Rien n’est visible du public tant qu’un tournoi est en brouillon ou programmé.
-          </p>
-        </div>
-        <Link href="/arena" className="text-sm font-semibold text-(--color-primary) underline-offset-4 hover:underline" target="_blank">Ouvrir le hub public ↗</Link>
-      </header>
+    <ArenaAdminShell
+      title="Tournois"
+      eyebrow="Administration"
+      subtitle="Tournois de QCM par spécialité : trois manches de vingt questions chronométrées une par une, une seule tentative. Rien n’est visible du public tant qu’un tournoi est en brouillon ou programmé."
+      landingHref="/arena"
+      landingLabel="Ouvrir le hub public"
+      stats={[
+        { label: 'Tournois', value: rows.length },
+        { label: 'En ligne', value: live },
+        { label: 'Brouillons', value: rows.filter((r) => r.status === 'draft').length },
+      ]}
+    >
       <TournamentList rows={rows} specialties={specialties} />
-    </main>
+    </ArenaAdminShell>
   );
 }

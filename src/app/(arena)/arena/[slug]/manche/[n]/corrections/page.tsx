@@ -6,6 +6,7 @@ import { ArenaPage, Notice, Panel } from '@/components/arena/arena-shell';
 import { Container, Eyebrow } from '@/components/arena/arena-ui';
 import { ARENA, BODY, CAPS, DISPLAY, TABULAR } from '@/components/arena/tokens';
 import { CorrectionPrintNotice, CorrectionViewer } from '@/components/arena/correction-viewer';
+import { CorrectionPages } from '@/components/arena/correction-pages';
 import { ReportDialog } from '@/components/arena/report-dialog';
 import { ZoomableImage } from '@/components/qcm/image-zoom';
 import { correctionsAccess, correctionsDenialMessage } from '@/lib/arena/corrections-access';
@@ -75,6 +76,10 @@ export default async function CorrectionsPage({ params, searchParams }: Params) 
   const watermark = ctx.participant ? watermarkLabel(ctx.participant) : staffWatermarkLabel(ctx.staff?.label ?? 'Personnel');
   const leaderboardHref = t.leaderboard_enabled && round.results_published_at ? `${base}/classement?manche=${number}` : null;
   const resultsHref = `${base}/manche/${number}${preview ? '?preview=1' : ''}`;
+  // Corrigé déposé ou généré par l'équipe : ses pages remplacent la mise en
+  // page HTML des textes de la base ; les réponses du participant restent
+  // rappelées question par question (avec signalement).
+  const hasPdf = (round.corrections_pages ?? 0) > 0;
 
   return (
     <ArenaPage nav={nav} immersive>
@@ -97,20 +102,46 @@ export default async function CorrectionsPage({ params, searchParams }: Params) 
 
         <div className="mt-8">
         <CorrectionViewer watermark={watermark}>
-        {round.corrections_methodo && (
+        {hasPdf && (
+          <>
+            <CorrectionPages roundId={round.id} pages={round.corrections_pages} />
+            {attempt && answers.length > 0 && (
+              <div className="mt-10">
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Mes réponses question par question</p>
+                <ol className="mt-3 divide-y" style={{ borderColor: ARENA.line }}>
+                  {questions.map((q, i) => {
+                    const mine = answers.find((a) => a.question_id === q.id);
+                    const graded = mine ? gradeOne(q, mine.selected, bareme) : null;
+                    const expected = q.items.filter((it) => it.is_correct).map((it) => it.lettre).join(' + ') || '—';
+                    return (
+                      <li key={q.id} className="flex flex-wrap items-center gap-x-4 gap-y-1 py-2.5 text-[13.5px]" style={{ fontFamily: BODY, borderColor: ARENA.line }}>
+                        <span className="w-8 shrink-0 font-extrabold" style={{ fontFamily: DISPLAY, color: ARENA.redSoft }}>{i + 1}</span>
+                        <span style={{ color: ARENA.textSoft }}>Attendu <b style={{ color: ARENA.text }}>{expected}</b></span>
+                        <span style={{ color: ARENA.textSoft }}>Ma réponse <b style={{ color: ARENA.text }}>{mine && mine.selected.length ? [...mine.selected].sort().join(' + ') : '—'}</b></span>
+                        {q.neutralized_at ? <span className="text-[10px] font-extrabold uppercase tracking-[0.12em]" style={{ color: ARENA.preview }}>Neutralisée</span> : graded ? <span style={{ ...TABULAR, color: graded.is_perfect ? ARENA.text : ARENA.textSoft }}>{fr(graded.score)} / {fr(graded.max)}</span> : null}
+                        {ctx.participant && !q.neutralized_at && <span className="ml-auto"><ReportDialog slug={slug} questionId={q.id} questionLabel={`question ${i + 1}`} alreadyReported={reports.some((r) => r.question_id === q.id)} /></span>}
+                      </li>
+                    );
+                  })}
+                </ol>
+              </div>
+            )}
+          </>
+        )}
+        {!hasPdf && round.corrections_methodo && (
           <Panel accent>
             <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: ARENA.redSoft, fontFamily: BODY }}>Méthode · {round.theme || `manche ${number}`}</p>
             <p className="mt-3 text-[15px] leading-relaxed" style={{ fontFamily: BODY, whiteSpace: 'pre-line' }}>{round.corrections_methodo}</p>
           </Panel>
         )}
-        {round.corrections_errors && (
+        {!hasPdf && round.corrections_errors && (
           <Panel className="mt-4">
             <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Erreurs les plus fréquentes sur la manche</p>
             <p className="mt-3 text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY, whiteSpace: 'pre-line' }}>{round.corrections_errors}</p>
           </Panel>
         )}
 
-        <ol className="mt-10 space-y-6">
+        {!hasPdf && <ol className="mt-10 space-y-6">
           {questions.map((q, i) => {
             const mine = answers.find((a) => a.question_id === q.id);
             const graded = mine ? gradeOne(q, mine.selected, bareme) : null;
@@ -182,9 +213,9 @@ export default async function CorrectionsPage({ params, searchParams }: Params) 
               </li>
             );
           })}
-        </ol>
+        </ol>}
 
-        {round.corrections_references && (
+        {!hasPdf && round.corrections_references && (
           <Panel className="mt-8">
             <p className="text-[11px] font-extrabold uppercase tracking-[0.2em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Références et recommandations mobilisées</p>
             <p className="mt-3 text-[14px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY, whiteSpace: 'pre-line' }}>{round.corrections_references}</p>

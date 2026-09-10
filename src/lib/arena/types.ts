@@ -72,6 +72,8 @@ export type TournamentRow = {
   meta_description: string | null;
   intro_text: string;
   og_image_path: string | null;
+  /** Visuel de la carte du tournoi (bucket public `arena-public`) ; null = visuel de la spécialité. */
+  cover_image_path: string | null;
   leaderboard_enabled: boolean;
   afficher_effectif_general: boolean;
   leaderboard_size: number;
@@ -110,8 +112,11 @@ export type RoundRow = {
   corrections_errors: string;
   corrections_references: string;
   corrections_pdf_path: string | null;
-  corrections_pdf_source: 'generated' | 'uploaded' | null;
+  /** 'uploaded' = corrigé PDF déposé par Major ECN ; 'ai' = rédigé par IA depuis les corrigés de la base (1 €) ; 'generated' = mise en page sans IA. */
+  corrections_pdf_source: 'generated' | 'uploaded' | 'ai' | null;
   corrections_pdf_generated_at: string | null;
+  /** Pages PNG rendues à partir du corrigé PDF (bucket privé `arena`) ; 0 = aucune. */
+  corrections_pages: number;
   created_at: string;
   updated_at: string;
 };

@@ -71,6 +71,9 @@ export const BILLING_EUR = {
   exam_generation: 1.3,
   /** Import d'un article de blog par IA (mise en page + SEO), par article généré. */
   article: 2.5,
+  /** EVC Arena : corrigé PDF d'une manche rédigé par IA à partir des corrigés
+   *  de la base (aucune correction inventée), par document généré. */
+  arena_corrections: 1,
 } as const;
 
 /** Discriminant `ai_generations.feature` des générations facturées au forfait. */
@@ -78,6 +81,7 @@ export const GEN_FEATURE = {
   interrogation: 'interrogation_generation',
   epreuve: 'exam_generation',
   article: 'blog_article_generation',
+  arenaCorrections: 'arena_corrections_generation',
 } as const;
 
 /**
