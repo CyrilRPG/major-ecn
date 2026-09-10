@@ -18,6 +18,8 @@
  * dédoublonne par sécurité.
  */
 
+import { noteDuModele } from './exercise-import-verite-texte';
+
 /* ─────────── Schéma JSON (sorties structurées) ─────────── */
 
 /**
@@ -158,9 +160,26 @@ export type ImportedQuestion = {
   warnings: string[];
 };
 
+/** Gravité d'une alerte : `bloquant` empêche la publication en l'état. */
+export type GraviteAlerte = 'bloquant' | 'a_relire' | 'info';
+
+/**
+ * Alerte structurée, parallèle aux `warnings` texte (conservés pour la
+ * compatibilité). `question_client_id` désigne la question concernée quand
+ * il y en a une.
+ */
+export type Alerte = {
+  gravite: GraviteAlerte;
+  code: string;
+  message: string;
+  question_client_id?: string;
+};
+
 export type ExerciseImportResult = {
   questions: ImportedQuestion[];
   warnings: string[];
+  /** Alertes structurées, renseignées par `validate` (absentes des lots bruts). */
+  alertes?: Alerte[];
 };
 
 export type ImportedCorrection = {
@@ -363,33 +382,100 @@ export function normaliserLettre(brute: string): string | null {
 }
 
 /**
+ * Écart du rapport de fiabilité (`confronterALaSource`) tel que `validate`
+ * en a besoin : forme structurelle, pour ne pas dépendre du module de
+ * confrontation.
+ */
+export type EcartFiabilite = {
+  gravite: GraviteAlerte;
+  code: string;
+  message: string;
+  question_client_id: string | null;
+};
+
+export type OptionsValidation = {
+  /** Écarts du rapport de fiabilité, remontés en alertes (« propositions manquantes » notamment). */
+  ecarts?: EcartFiabilite[];
+};
+
+/**
  * Contrôle chaque question et ÉCARTE celles qui sont inexploitables, au lieu
  * d'interrompre tout l'import à la première. Chaque écart est consigné dans
- * les avertissements, visibles dans le détail de l'import.
+ * les avertissements, visibles dans le détail de l'import, et doublé d'une
+ * alerte structurée (`alertes`) avec sa gravité.
+ *
+ * Contrôles ajoutés le 10/09/2026 : une note de fabrication du modèle
+ * (« [contexte manquant] », « d'après le corpus »…) dans un champ destiné aux
+ * élèves est BLOQUANTE ; une liste de propositions que le rapport de
+ * fiabilité dit tronquée l'est aussi.
  */
-export function validate(result: ExerciseImportResult, voie: ImportVoie): ExerciseImportResult {
+export function validate(result: ExerciseImportResult, voie: ImportVoie, options: OptionsValidation = {}): ExerciseImportResult {
   const wanted = voie === 'interne' ? 'qcm' : 'qroc';
   const seen = new Set<string>();
   const avertissements = [...(result.warnings ?? [])];
+  const alertes: Alerte[] = [];
   const gardees: ImportedQuestion[] = [];
+  const ecartsParQuestion = new Map<string, EcartFiabilite[]>();
+  for (const e of options.ecarts ?? []) {
+    if (!e.question_client_id) { alertes.push({ gravite: e.gravite, code: e.code, message: e.message }); continue; }
+    const l = ecartsParQuestion.get(e.question_client_id) ?? []; l.push(e); ecartsParQuestion.set(e.question_client_id, l);
+  }
 
   result.questions.forEach((q, index) => {
     const repere = `question ${index + 1}` + (q.enonce?.trim() ? ` (« ${q.enonce.trim().slice(0, 60)}… »)` : '');
-    const ecarter = (raison: string) => avertissements.push(`${repere} écartée : ${raison}`);
+    const ecarter = (raison: string) => {
+      avertissements.push(`${repere} écartée : ${raison}`);
+      alertes.push({ gravite: 'info', code: 'question_ecartee', message: `${repere} écartée : ${raison}`, ...(q.client_id ? { question_client_id: q.client_id } : {}) });
+    };
 
     if (q.format !== wanted) { ecarter(`elle n'est pas au format ${wanted}`); return; }
     if (!q.enonce?.trim()) { ecarter('énoncé vide'); return; }
 
+    const idInitial = q.client_id;
     q.client_id ||= crypto.randomUUID();
     if (seen.has(q.client_id)) q.client_id = crypto.randomUUID();
     seen.add(q.client_id);
     q.warnings = q.warnings ?? [];
     q.items = q.items ?? [];
+    const alerter = (gravite: GraviteAlerte, code: string, message: string) => {
+      // Un même écart ne compte qu'une fois par question (le rapport de
+      // fiabilité et les contrôles ci-dessous peuvent relever la même note).
+      if (alertes.some((a) => a.code === code && a.question_client_id === q.client_id)) return;
+      alertes.push({ gravite, code, message, question_client_id: q.client_id });
+    };
+    // Les écarts du rapport ont été produits avant `validate` : ils portent
+    // l'identifiant initial de la question (réattribué ci-dessus s'il doublait).
+    for (const e of ecartsParQuestion.get(idInitial ?? '') ?? []) alerter(e.gravite, e.code, e.message);
+
+    // Notes de fabrication : le modèle avoue qu'il n'a pas recopié le
+    // document, ou commente sa propre extraction. Un élève ne doit jamais
+    // lire cela : bloquant.
+    const champs: Array<[string, string]> = [
+      ['énoncé', q.enonce],
+      ...q.items.flatMap((i): Array<[string, string]> => [[`proposition ${i.lettre}`, i.enonce], [`justification ${i.lettre}`, i.justification ?? '']]),
+      ['corrigé général', q.correction_generale ?? ''],
+      ['réponse attendue', q.reponse_attendue ?? ''],
+    ];
+    for (const [ou, texte] of champs) {
+      const note = noteDuModele(texte);
+      if (!note) continue;
+      const message = `${repere} : note de fabrication du modèle dans ${ou} (« ${note.slice(0, 60)} ») — à corriger avant publication.`;
+      avertissements.push(message);
+      alerter('bloquant', 'note_du_modele', message);
+      if (!q.warnings.some((w) => w.startsWith('Note du modèle'))) q.warnings.push(`Note du modèle à la place du contenu (${ou}) : « ${note.slice(0, 60)} ».`);
+      break;
+    }
 
     if (q.format === 'qcm') {
       if (q.items.length < 2) { ecarter(`${q.items.length} proposition(s), il en faut au moins deux`); return; }
       if (q.items.length > LETTRES.length) { ecarter(`${q.items.length} propositions, le maximum est ${LETTRES.length}`); return; }
       if (!q.items.some((i) => i.is_correct)) { ecarter('aucune proposition n’est marquée exacte'); return; }
+
+      // Propositions manquantes attestées par le document (rapport de
+      // fiabilité) : bloquant, sauf si elles ont déjà été complétées (l'écart
+      // est alors « à relire », déjà remonté ci-dessus).
+      const tronquee = (ecartsParQuestion.get(idInitial ?? '') ?? []).find((e) => e.code === 'propositions_tronquees' && e.gravite === 'bloquant');
+      if (tronquee) avertissements.push(`${repere} : propositions manquantes par rapport au document — ${tronquee.message}`);
 
       // Une liste de propositions coupée par un saut de page peut n'être
       // extraite qu'à moitié : la suite (« c) … d) … e) … ») ouvre la page
@@ -398,9 +484,10 @@ export function validate(result: ExerciseImportResult, voie: ImportVoie): Exerci
       // trois dernières propositions manquaient, toutes exactes pour l'une).
       // On n'écarte pas — un QCM à trois propositions existe — mais on le dit,
       // pour que l'administrateur vérifie avant de publier.
-      if (q.items.length < 4) {
+      if (q.items.length < 4 && !tronquee) {
         q.warnings.push(`Seulement ${q.items.length} propositions extraites : vérifiez que la liste n’est pas coupée par un saut de page dans la source.`);
         avertissements.push(`${repere} : ${q.items.length} propositions seulement — liste peut-être coupée par un saut de page.`);
+        alerter('a_relire', 'propositions_peu_nombreuses', `${repere} : ${q.items.length} propositions seulement — liste peut-être coupée par un saut de page.`);
       }
 
       // Lettres : on normalise, et si le compte n'y est pas on relettre dans
@@ -416,6 +503,7 @@ export function validate(result: ExerciseImportResult, voie: ImportVoie): Exerci
       }
     } else if (!q.reponse_attendue?.trim()) {
       q.warnings.push('Réponse attendue absente de la source.');
+      alerter('a_relire', 'reponse_attendue_absente', `${repere} : réponse attendue absente de la source.`);
     }
 
     gardees.push(q);
@@ -426,5 +514,7 @@ export function validate(result: ExerciseImportResult, voie: ImportVoie): Exerci
   if (gardees.length === 0 && result.questions.length > 0) {
     throw new Error(`Aucun des ${result.questions.length} exercices extraits n'est exploitable. ${avertissements.slice(0, 3).join(' ')}`);
   }
-  return { questions: gardees, warnings: avertissements };
+  const bloquants = alertes.filter((a) => a.gravite === 'bloquant').length;
+  if (bloquants > 0) avertissements.unshift(`${bloquants} alerte(s) bloquante(s) : à corriger avant publication.`);
+  return { questions: gardees, warnings: avertissements, alertes };
 }

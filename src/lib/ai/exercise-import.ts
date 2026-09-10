@@ -8,6 +8,7 @@ import {
 import type { ContenuLot } from './exercise-import-documents';
 import { usageToUsd } from './cost';
 import type { AnthropicUsage } from './anthropic';
+import { PRICE_MULTIPLIER } from './exercise-import-pipeline';
 
 /**
  * Import d'exercices — appel du modèle, UN lot à la fois.
@@ -28,7 +29,19 @@ import type { AnthropicUsage } from './anthropic';
  * le plan de lots et la fusion.
  */
 
-export const EXERCISE_IMPORT_MODEL = process.env.EXERCISE_IMPORT_MODEL?.trim() || 'claude-sonnet-5';
+/**
+ * Modèle d'extraction. Opus 5 par défaut depuis le 10/09/2026 : l'import est
+ * un travail de transcription exhaustive où chaque oubli coûte la confiance du
+ * client ; le surcoût (5 $/25 $ par million de jetons contre 2 $/10 $ pour
+ * Sonnet 5) est négligeable devant une relecture manuelle. Surchargeable par
+ * `EXERCISE_IMPORT_MODEL` ; l'effort de raisonnement par `EXERCISE_IMPORT_EFFORT`
+ * (`high` par défaut — `xhigh` ou `max` pour un document difficile).
+ */
+export const EXERCISE_IMPORT_MODEL = process.env.EXERCISE_IMPORT_MODEL?.trim() || 'claude-opus-5';
+const EFFORTS = ['low', 'medium', 'high', 'xhigh', 'max'] as const;
+export type Effort = (typeof EFFORTS)[number];
+const effortEnv = process.env.EXERCISE_IMPORT_EFFORT?.trim();
+export const EXERCISE_IMPORT_EFFORT: Effort = (EFFORTS as readonly string[]).includes(effortEnv ?? '') ? (effortEnv as Effort) : 'high';
 export const EXERCISE_IMPORT_MAX_FILE_BYTES = 25 * 1024 * 1024;
 /** Budget de sortie par lot. Huit pages d'annales tiennent très en deçà ;
  *  au-delà, le lot est scindé en deux et rejoué (cf. route). */
@@ -36,7 +49,6 @@ const MAX_TOKENS_LOT = 32_000;
 /** Délai d'un appel : la route Vercel a 300 s, il faut garder de la marge
  *  pour lire le stockage et écrire le résultat. */
 const DELAI_APPEL_MS = 210_000;
-const PRICE_MULTIPLIER = 5;
 
 export type ImportFormat = 'pdf' | 'docx' | 'txt';
 export type ImportMode = 'combined' | 'paired';
@@ -45,14 +57,16 @@ export type ImportOffer = 'decouverte' | 'essentiel' | 'intensif' | 'approfondi'
 /**
  * Estimation avant toute requête payante, à partir de la seule taille des
  * fichiers (le nombre de pages n'est connu qu'après téléversement).
- * Repère : un PDF d'annales pèse ~50 Ko par page ; une page coûte ~0,02 $ en
- * entrée + sortie avec Sonnet 5. Le multiplicateur couvre la marge de la
- * plateforme ; le montant est en euros, arrondi au centime.
+ * Repère : un PDF d'annales pèse ~50 Ko par page ; une page coûte ~0,05 $ en
+ * entrée + sortie avec Opus 5 (effort élevé). Le multiplicateur couvre la marge de la
+ * plateforme ; le montant est en euros, arrondi au centime. C'est un PLANCHER :
+ * le montant facturé à la fin est `facturerImportCents` (coût réel + 10 %,
+ * même marge) s'il est plus élevé — cf. `exercise-import-pipeline.ts`.
  */
 export function estimateExerciseImportCents(files: Array<{ size: number }>): number {
   const bytes = files.reduce((sum, f) => sum + f.size, 0);
   const pagesEstimees = Math.max(1, bytes / 50_000);
-  const providerEstimateEur = Math.max(0.05, pagesEstimees * 0.02);
+  const providerEstimateEur = Math.max(0.1, pagesEstimees * 0.05);
   return Math.ceil(providerEstimateEur * PRICE_MULTIPLIER * 100);
 }
 
@@ -150,6 +164,8 @@ async function appelStructure<T>(args: {
   content: Bloc[];
   schema: Record<string, unknown>;
   lot: Lot;
+  /** Effort de raisonnement de cet appel (défaut : `EXERCISE_IMPORT_EFFORT` ; `xhigh` pour une relance). */
+  effort?: Effort;
 }): Promise<{ data: T; usage: AppelUsage }> {
   const c = getClient();
   const abort = new AbortController();
@@ -160,7 +176,7 @@ async function appelStructure<T>(args: {
       max_tokens: MAX_TOKENS_LOT,
       system: args.system,
       messages: [{ role: 'user', content: args.content }],
-      output_config: { effort: 'medium', format: { type: 'json_schema', schema: args.schema } },
+      output_config: { effort: args.effort ?? EXERCISE_IMPORT_EFFORT, format: { type: 'json_schema', schema: args.schema } },
     }, { signal: abort.signal });
     const message = await stream.finalMessage();
 
@@ -214,6 +230,10 @@ export async function extraireLot(args: {
   corrige?: ContenuLot | null;
   lot: Lot;
   nbPagesTotal: number;
+  /** Effort de raisonnement (relance : `xhigh`). */
+  effort?: Effort;
+  /** Consigne ajoutée à la fin du message (relance : numéros attendus). */
+  consigneSupplementaire?: string;
 }): Promise<{ result: ExerciseImportResult; usage: AppelUsage }> {
   const content: Bloc[] = [];
   if (args.corrige) {
@@ -221,13 +241,15 @@ export async function extraireLot(args: {
     content.push({ type: 'text', text: 'Le document ci-dessus est le CORRIGÉ complet. Le document suivant est un extrait du SUJET : associe chaque corrigé à sa question par son numéro.' });
   }
   content.push(blocDocument(args.contenu, `Sujet — pages ${args.lot.debut} à ${args.lot.fin}`));
-  content.push({ type: 'text', text: consigneLot(args.lot, args.nbPagesTotal, 'tous les exercices') });
+  const consigne = consigneLot(args.lot, args.nbPagesTotal, 'tous les exercices');
+  content.push({ type: 'text', text: args.consigneSupplementaire ? `${consigne}\n\n${args.consigneSupplementaire}` : consigne });
 
   const { data, usage } = await appelStructure<ExerciseImportResult>({
     system: systemExtraction(args.voie, args.mode),
     content,
     schema: outputSchema as unknown as Record<string, unknown>,
     lot: args.lot,
+    effort: args.effort,
   });
   return {
     result: { questions: Array.isArray(data.questions) ? data.questions : [], warnings: Array.isArray(data.warnings) ? data.warnings : [] },

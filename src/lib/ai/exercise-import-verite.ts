@@ -1,5 +1,3 @@
-import 'server-only';
-
 /**
  * Vérité déterministe d'un PDF d'exercices — le garde-fou du modèle.
  *
@@ -13,285 +11,247 @@ import 'server-only';
  * dont des propositions justes comptées fausses. Un élève y apprenait le
  * contraire de la bonne réponse.
  *
- * On extrait donc, sans navigateur (pdf.js suffit : `setFillRGBColor` puis
- * `showText` dans la liste d'opérateurs), le texte de chaque page AVEC sa
- * couleur, et on reconstruit les questions et leurs propositions. Le corrigé
- * ainsi obtenu prime sur celui du modèle : il vient du document, pas d'une
- * lecture.
+ * CE FICHIER est l'adaptateur pdf.js (build « legacy », le seul qui tourne en
+ * Node sans navigateur) : il lit chaque page en LIGNES (`getTextContent` :
+ * texte, x, y) et en COULEURS (`getOperatorList` : `setFillRGBColor` puis
+ * `showText`), apparie les deux flux caractère par caractère, relève les
+ * images avec leur position, puis confie la structure à la couche pure
+ * `exercise-import-verite-lecture.ts`. La confrontation au rendu du modèle
+ * et le rapport de fiabilité vivent dans `exercise-import-verite-rapport.ts`.
  *
- * La même passe relève les pages qui portent une image : une question posée sur
- * une page illustrée et rendue sans document est une extraction incomplète
- * (12 documents cliniques perdus sur le même import — courbes, radiographies,
- * ECG, examen direct du LCR).
+ * Pas de `import 'server-only'` ici : le module doit rester exécutable sous
+ * Node (tests, sonde `tmp/`), et il ne touche à aucun secret.
  *
- * Le texte extrait ainsi porte les artefacts de ligature de la police du
- * support (« diagnosKc », « reproduc+on », « plaqueces ») : il sert à COMPARER
- * et à décider, jamais à être affiché tel quel aux élèves.
+ * Le texte extrait porte les artefacts de ligature de la police du support
+ * (« diagnosKc », « reproduc+on », « plaqueces ») : il sert à COMPARER et à
+ * décider ; il n'est affiché aux élèves qu'après nettoyage, et en le signalant.
+ *
+ * Mesure du 10/09/2026 : 131 pages (support Pédiatrie, 10 Mo, 354 questions,
+ * 1 770 propositions, 12 figures) lues en ~4 s sur un poste de travail, la
+ * confrontation à 354 questions du modèle en ~0,3 s — loin du délai Vercel,
+ * mais `lireVeritePdf` accepte une plage de pages et `fusionnerVerites`
+ * recolle les morceaux (propositions coupées à la frontière comprises) si un
+ * document bien plus gros l'exigeait.
  */
 
-/** Couleur des propositions exactes dans les supports Major ECN. */
-export const VERT_CORRIGE = '#00b050';
-/** En-tête bleu et pied de page rouge : hors contenu. */
-const HORS_CONTENU = new Set(['#2f5496', '#ff0000', '#365f91', '#113367', '#c0c0c0']);
+import {
+  analyserPages, composerCorrigeSepare, fusionnerVerites, veriteEnErreur,
+  COULEUR_INCONNUE,
+  type CorrigeSepare, type ImageLue, type LigneLue, type PageLue, type ReperePage, type VeritePdf,
+} from './exercise-import-verite-lecture';
+import type { CorrectionsResult } from './exercise-import-schema';
+import { composer, type Matrice } from './exercise-import-images-regles';
 
-export type PropositionSource = { lettre: string; texte: string; juste: boolean };
-export type QuestionSource = { numero: number; page: number; enonce: string; items: PropositionSource[] };
-export type VeritePdf = {
-  /** Le document code-t-il son corrigé par la couleur ? */
-  colore: boolean;
-  questions: QuestionSource[];
-  /** Pages portant au moins une image (numérotation du document). */
-  pagesAvecImage: Set<number>;
+export * from './exercise-import-verite-texte';
+export * from './exercise-import-verite-lecture';
+export * from './exercise-import-verite-rapport';
+
+export type OptionsLecture = {
+  /** Plage de pages à lire (1-based, inclusive). Tout le document par défaut. */
+  pages?: [number, number];
 };
 
-/** Normalisation de comparaison : artefacts de ligature neutralisés. */
-export function normaliserPourComparaison(s: string): string {
-  return (s ?? '')
-    .replace(/K/g, 'ti').replace(/\+/g, 'ti').replace(/&/g, 'ti')
-    .replace(/ﬁ/g, 'fi').replace(/ﬂ/g, 'fl').replace(/ﬀ/g, 'ff')
-    .normalize('NFD').replace(/[̀-ͯ]/g, '')
-    .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+type Glyphe = { unicode?: string };
+type OpsPdf = { fnArray: number[]; argsArray: unknown[][] };
+type PagePdf = {
+  getOperatorList(): Promise<OpsPdf>;
+  getTextContent(): Promise<{ items: Array<{ str?: string; transform?: number[]; hasEOL?: boolean }> }>;
+  getViewport?(args: { scale: number }): { transform?: number[] };
+  cleanup?(): void;
+};
+type DocumentPdf = { numPages: number; getPage(n: number): Promise<PagePdf>; destroy?(): Promise<void> };
+type ModulePdfJs = { getDocument(args: Record<string, unknown>): { promise: Promise<DocumentPdf> }; OPS: Record<string, number> };
+
+async function ouvrir(bytes: Uint8Array): Promise<{ doc: DocumentPdf; OPS: Record<string, number> }> {
+  // Import dynamique : pdf.js ne doit pas peser sur les routes qui ne
+  // l'utilisent pas. Copie du tampon : pdf.js peut le détacher, et l'appelant
+  // relit parfois le même document (corrigé, plages).
+  const mod = (await import('pdfjs-dist/legacy/build/pdf.mjs')) as unknown as ModulePdfJs;
+  const doc = await mod.getDocument({ data: new Uint8Array(bytes), useSystemFonts: true, verbosity: 0 }).promise;
+  return { doc, OPS: mod.OPS };
 }
 
-const jetons = (s: string) => new Set(normaliserPourComparaison(s).split(' ').filter((w) => w.length >= 4));
+/** NFKC : « ﬁ » → « fi », « µ » (micro) → « μ » (mu) ; les deux flux se comparent alors caractère à caractère. */
+const canon = (s: string) => s.normalize('NFKC');
 
-/** Recouvrement de vocabulaire, tolérant aux textes courts. */
-export function ressemblance(a: string, b: string): number {
-  const na = normaliserPourComparaison(a).replace(/ /g, '');
-  const nb = normaliserPourComparaison(b).replace(/ /g, '');
-  if (!na || !nb) return 0;
-  if (na === nb) return 1;
-  if (na.includes(nb) || nb.includes(na)) return 0.95;
-  const ja = jetons(a); const jb = jetons(b);
-  if (!ja.size || !jb.size) {
-    let i = 0; while (i < Math.min(na.length, nb.length) && na[i] === nb[i]) i++;
-    return i / Math.max(na.length, nb.length);
+/**
+ * Lit une page : lignes de texte (texte, x, y) avec une couleur par caractère,
+ * et images avec leur position verticale.
+ */
+async function lirePage(page: PagePdf, OPS: Record<string, number>, numero: number): Promise<PageLue> {
+  const ops = await page.getOperatorList();
+  // ── Flux coloré : chaque caractère non blanc avec sa couleur, dans l'ordre de peinture ──
+  const flux: Array<{ ch: string; couleur: string }> = [];
+  const images: ImageLue[] = [];
+  let couleur = '#000000';
+  // Matrice courante (espace PDF, origine en bas), composée sur la pile
+  // q/Q comme le fait `exercise-import-images-regles` : un PDF qui pose une
+  // image par PLUSIEURS `cm` successifs (translation puis échelle, pdf-lib,
+  // certains exports) n'était situé que par le dernier — une image de
+  // 120 pt se retrouvait « entre y = 0 et y = 1 ».
+  let ctm: Matrice = [1, 0, 0, 1, 0, 0];
+  const pile: Matrice[] = [];
+  for (let i = 0; i < ops.fnArray.length; i++) {
+    const fn = ops.fnArray[i]; const args = (ops.argsArray[i] ?? []) as unknown[];
+    if (fn === OPS.setFillRGBColor) {
+      const c = args[0];
+      if (typeof c === 'string') couleur = c.toLowerCase();
+    } else if (fn === OPS.save) {
+      pile.push(ctm);
+    } else if (fn === OPS.restore) {
+      ctm = pile.pop() ?? [1, 0, 0, 1, 0, 0];
+    } else if (fn === OPS.transform) {
+      const m = args.map(Number);
+      if (m.length === 6 && m.every((v) => Number.isFinite(v))) ctm = composer(ctm, m as Matrice);
+    } else if (fn === OPS.showText) {
+      const glyphes = (args[0] ?? []) as Glyphe[];
+      for (const g of glyphes) {
+        const u = typeof g?.unicode === 'string' ? canon(g.unicode) : '';
+        for (const ch of u) if (/\S/.test(ch)) flux.push({ ch, couleur });
+      }
+    } else if (fn === OPS.paintImageXObject || fn === OPS.paintInlineImageXObject) {
+      // `paintImageXObject` reçoit [nom, largeur, hauteur] ; l'image inline
+      // porte sa géométrie sur l'objet. La `transform` qui précède donne la
+      // position sur la page (sans rotation : y de f à f + d).
+      const inline = args[0] as { width?: number; height?: number } | undefined;
+      const l = Number(args[1] ?? inline?.width); const h = Number(args[2] ?? inline?.height);
+      if (!Number.isFinite(l) || !Number.isFinite(h)) continue;
+      let yBas: number | null = null; let yHaut: number | null = null;
+      if (Math.abs(ctm[1]) < 1e-6 && Math.abs(ctm[2]) < 1e-6) {
+        yBas = Math.min(ctm[5], ctm[5] + ctm[3]); yHaut = Math.max(ctm[5], ctm[5] + ctm[3]);
+      }
+      images.push({ l, h, yBas, yHaut });
+    }
   }
-  let c = 0; for (const w of ja) if (jb.has(w)) c++;
-  return c / Math.min(ja.size, jb.size);
+
+  // ── Lignes : items de `getTextContent` groupés par ordonnée, couleurs appariées au flux ──
+  const tc = await page.getTextContent();
+  const lignes: LigneLue[] = [];
+  let courante: LigneLue | null = null;
+  let curseur = 0;
+  let derniere = '#000000';
+  for (const it of tc.items) {
+    if (typeof it.str !== 'string' || it.str === '') continue;
+    const y = it.transform?.[5] ?? null; const x = it.transform?.[4] ?? null;
+    if (!courante || courante.y === null || y === null || Math.abs(courante.y - y) > 2) {
+      courante = { texte: '', couleurs: [], x, y };
+      lignes.push(courante);
+    }
+    const str = canon(it.str);
+    for (let k = 0; k < str.length; k++) {
+      const ch = str[k];
+      if (!/\S/.test(ch)) { courante.texte += ch; courante.couleurs.push(derniere); continue; }
+      let c = COULEUR_INCONNUE;
+      if (curseur < flux.length && flux[curseur].ch === ch) { c = flux[curseur].couleur; curseur++; }
+      else {
+        // Désynchronisation (glyphe rendu autrement par les deux flux) : on
+        // cherche la suite de l'item un peu plus loin, sinon la couleur de ce
+        // caractère reste inconnue et le curseur ne bouge pas.
+        const attendu = str.slice(k).replace(/\s+/g, '').slice(0, 8);
+        const trouve = attendu.length >= 4 ? chercher(flux, curseur, attendu) : -1;
+        if (trouve >= 0) { curseur = trouve; c = flux[curseur].couleur; curseur++; }
+      }
+      if (c !== COULEUR_INCONNUE) derniere = c;
+      courante.texte += ch; courante.couleurs.push(c);
+    }
+  }
+  // Matrice de vue : le repère des images (origine en haut) se déduit du
+  // repère du texte (origine en bas) par cette matrice, quelle que soit la
+  // taille de page ou le décalage de la MediaBox (cf. `versRepereHaut`).
+  const t = page.getViewport?.({ scale: 1 })?.transform;
+  const repere = Array.isArray(t) && t.length === 6 && t.every((v) => Number.isFinite(v)) ? (t as ReperePage) : undefined;
+  page.cleanup?.();
+  return { page: numero, lignes, images, ...(repere ? { repere } : {}) };
+}
+
+/** Position de `attendu` dans le flux à partir de `de` (fenêtre bornée), -1 sinon. */
+function chercher(flux: Array<{ ch: string }>, de: number, attendu: string): number {
+  const fin = Math.min(flux.length - attendu.length, de + 400);
+  for (let i = de; i <= fin; i++) {
+    let k = 0; while (k < attendu.length && flux[i + k].ch === attendu[k]) k++;
+    if (k === attendu.length) return i;
+  }
+  return -1;
 }
 
 /**
- * Lit le PDF et rend sa vérité : texte coloré, questions, propositions,
- * corrigé par la couleur, pages illustrées. Ne lève jamais : un document
- * illisible rend simplement `colore: false` et aucune question, ce qui laisse
- * le pipeline se comporter comme avant.
+ * Lit les pages d'un PDF (toutes, ou une plage) sous forme de `PageLue[]`.
+ * Lève en cas de document illisible : `lireVeritePdf` capture et explique.
+ * Exposée pour les traitements qui ont besoin des lignes brutes (images,
+ * corrigé séparé) sans refaire la lecture.
  */
-export async function lireVeritePdf(bytes: Uint8Array): Promise<VeritePdf> {
-  const vide: VeritePdf = { colore: false, questions: [], pagesAvecImage: new Set() };
+export async function lirePagesPdf(bytes: Uint8Array, options: OptionsLecture = {}): Promise<{ pages: PageLue[]; nbPagesDocument: number; pagesLues: [number, number] }> {
+  const { doc, OPS } = await ouvrir(bytes);
   try {
-    // Import dynamique : pdf.js ne doit pas peser sur les routes qui ne
-    // l'utilisent pas, et son build « legacy » est le seul qui tourne en Node.
-    const { getDocument, OPS } = await import('pdfjs-dist/legacy/build/pdf.mjs');
-    const doc = await getDocument({ data: bytes, useSystemFonts: true }).promise;
-
-    const questions: QuestionSource[] = [];
-    /** Toutes les images peintes, avec leur page et leur géométrie. */
-    const dessins: Array<{ page: number; l: number; h: number }> = [];
-    let volumeVert = 0;
-    let courante: QuestionSource | null = null;
-
-    for (let p = 1; p <= doc.numPages; p++) {
-      const page = await doc.getPage(p);
-      const ops = await page.getOperatorList();
-      let couleur = '#000000';
-      let texte = '';
-      const couleurs: string[] = [];
-      for (let i = 0; i < ops.fnArray.length; i++) {
-        const fn = ops.fnArray[i];
-        const args = ops.argsArray[i] as unknown[];
-        if (fn === OPS.setFillRGBColor) {
-          const c = args[0];
-          if (typeof c === 'string') couleur = c.toLowerCase();
-        } else if (fn === OPS.showText) {
-          if (HORS_CONTENU.has(couleur)) continue;
-          const glyphes = (args[0] ?? []) as Array<{ unicode?: string }>;
-          const t = glyphes.map((g) => g?.unicode ?? '').join('');
-          texte += t;
-          for (let k = 0; k < t.length; k++) couleurs.push(couleur);
-          if (couleur === VERT_CORRIGE) volumeVert += t.trim().length;
-        } else if (fn === OPS.paintImageXObject || fn === OPS.paintInlineImageXObject) {
-          // `paintImageXObject` reçoit [nom, largeur, hauteur] : la géométrie
-          // suffit à écarter le décor sans décoder l'image.
-          const l = Number(args[1]); const h = Number(args[2]);
-          if (Number.isFinite(l) && Number.isFinite(h)) dessins.push({ page: p, l, h });
-        }
-      }
-
-      // Repères : « 12/ » ouvre une question, « c) » une proposition.
-      type Repere = { type: 'q' | 'i'; debut: number; pos: number; num?: number; lettre?: string };
-      const reperes: Repere[] = [];
-      for (const m of texte.matchAll(/(?:^|[\s»])(\d{1,2})\/\s/g)) reperes.push({ type: 'q', debut: m.index!, pos: m.index! + m[0].length, num: Number(m[1]) });
-      for (const m of texte.matchAll(/(?:^|[\s»])([a-k])\)\s/g)) reperes.push({ type: 'i', debut: m.index!, pos: m.index! + m[0].length, lettre: m[1] });
-      reperes.sort((a, b) => a.debut - b.debut);
-
-      for (let k = 0; k < reperes.length; k++) {
-        const r = reperes[k];
-        const fin = k + 1 < reperes.length ? reperes[k + 1].debut : texte.length;
-        const contenu = texte.slice(r.pos, fin).replace(/\s+/g, ' ').trim();
-        if (r.type === 'q') {
-          courante = { numero: r.num!, page: p, enonce: contenu, items: [] };
-          questions.push(courante);
-        } else if (courante) {
-          let vert = 0; let autre = 0;
-          for (let i = r.pos; i < fin; i++) {
-            if (!/\S/.test(texte[i])) continue;
-            if (couleurs[i] === VERT_CORRIGE) vert++; else autre++;
-          }
-          courante.items.push({ lettre: r.lettre!.toUpperCase(), texte: contenu, juste: vert > autre });
-        }
-      }
-    }
-
-    // Décor contre document. Un bandeau d'en-tête, un filigrane ou un filet
-    // reviennent à l'identique sur presque toutes les pages : c'est la
-    // GÉOMÉTRIE répétée qui les trahit. Sans ce tri, les 137 pages du support
-    // Pédiatrie étaient « illustrées » et l'avertissement devenait inutilisable.
-    const pagesParGeometrie = new Map<string, Set<number>>();
-    for (const d of dessins) {
-      const cle = `${d.l}x${d.h}`;
-      const set = pagesParGeometrie.get(cle) ?? new Set<number>();
-      set.add(d.page); pagesParGeometrie.set(cle, set);
-    }
-    const seuilDecor = Math.max(3, Math.ceil(doc.numPages * 0.4));
-    const pagesAvecImage = new Set<number>();
-    for (const d of dessins) {
-      if (d.h <= 2 || d.l <= 2) continue;                                   // filet
-      if (d.l < 90 && d.h < 90) continue;                                   // puce, pictogramme
-      if ((pagesParGeometrie.get(`${d.l}x${d.h}`)?.size ?? 0) >= seuilDecor) continue; // décor
-      pagesAvecImage.add(d.page);
-    }
-
-    // Un document « coloré » a du vert sur une part notable de son texte : en
-    // dessous, c'est une couleur d'accent et non un corrigé.
-    const colore = volumeVert > 200 && questions.some((q) => q.items.some((i) => i.juste));
-    return { colore, questions, pagesAvecImage };
-  } catch {
-    return vide;
+    const de = Math.max(1, Math.floor(options.pages?.[0] ?? 1));
+    const a = Math.min(doc.numPages, Math.floor(options.pages?.[1] ?? doc.numPages));
+    if (de > a) throw new Error(`Plage de pages invalide : ${de}-${a} sur ${doc.numPages}.`);
+    const pages: PageLue[] = [];
+    for (let p = de; p <= a; p++) pages.push(await lirePage(await doc.getPage(p), OPS, p));
+    return { pages, nbPagesDocument: doc.numPages, pagesLues: [de, a] };
+  } finally {
+    await doc.destroy?.().catch(() => undefined);
   }
 }
 
-/* ============================================================
-   Confrontation du rendu du modèle à la vérité du document.
-   ============================================================ */
-
-type ItemModele = { lettre: string; enonce: string; is_correct: boolean; justification?: string; images?: unknown[] };
-type QuestionModele = { enonce: string; format: string; items?: ItemModele[]; source_pages?: number[]; warnings?: string[]; images?: unknown[] };
-
 /**
- * Aligne les questions du modèle sur celles du document (programmation
- * dynamique : les deux suites gardent l'ordre de lecture, un appariement
- * glouton croiserait les dossiers — « Que faites-vous ? » revient des dizaines
- * de fois dans un même support).
- */
-function aligner(modele: QuestionModele[], source: QuestionSource[]): Array<[number, number]> {
-  const n = modele.length; const m = source.length;
-  if (!n || !m) return [];
-  const jq = modele.map((q) => jetons(String(q.enonce).split('\n').filter(Boolean).pop() ?? ''));
-  const ji = modele.map((q) => (q.items ?? []).map((i) => jetons(i.enonce)));
-  const sq = source.map((q) => jetons(q.enonce));
-  const si = source.map((q) => q.items.map((i) => jetons(i.texte)));
-  const rec = (a: Set<string>, b: Set<string>) => { if (!a.size || !b.size) return 0; let c = 0; for (const w of a) if (b.has(w)) c++; return c / Math.min(a.size, b.size); };
-  const score = (i: number, j: number) => {
-    const q = rec(jq[i], sq[j]);
-    const k = Math.min(ji[i].length, si[j].length);
-    let s = 0; for (let x = 0; x < k; x++) s += rec(ji[i][x], si[j][x]);
-    return 0.45 * q + 0.55 * (k ? s / k : 0);
-  };
-  const GAP = -0.35;
-  const M: Float64Array[] = Array.from({ length: n + 1 }, () => new Float64Array(m + 1));
-  const P: Uint8Array[] = Array.from({ length: n + 1 }, () => new Uint8Array(m + 1));
-  for (let i = 1; i <= n; i++) { M[i][0] = M[i - 1][0] + GAP; P[i][0] = 1; }
-  for (let j = 1; j <= m; j++) { M[0][j] = M[0][j - 1] + GAP; P[0][j] = 2; }
-  for (let i = 1; i <= n; i++) for (let j = 1; j <= m; j++) {
-    const d = M[i - 1][j - 1] + score(i - 1, j - 1);
-    const h = M[i - 1][j] + GAP; const v = M[i][j - 1] + GAP;
-    if (d >= h && d >= v) { M[i][j] = d; P[i][j] = 0; } else if (h >= v) { M[i][j] = h; P[i][j] = 1; } else { M[i][j] = v; P[i][j] = 2; }
-  }
-  const paires: Array<[number, number]> = [];
-  let i = n; let j = m;
-  while (i > 0 || j > 0) {
-    const p = i > 0 && j > 0 ? P[i][j] : (i > 0 ? 1 : 2);
-    if (p === 0) { if (score(i - 1, j - 1) >= 0.35) paires.push([i - 1, j - 1]); i--; j--; }
-    else if (p === 1) i--; else j--;
-  }
-  return paires.reverse();
-}
-
-export type Confrontation = { corriges: number; documentsAttendus: number; avertissements: string[] };
-
-/**
- * Impose au résultat du modèle ce que dit le document :
- *  - le corrigé vient de la couleur (quand le support est coloré) ;
- *  - une question posée sur une page illustrée sans document est signalée ;
- *  - une note du modèle à la place du contexte est signalée.
- * Modifie `questions` sur place et rend le compte-rendu.
- */
-export function confronterALaSource(questions: QuestionModele[], verite: VeritePdf): Confrontation {
-  const avertissements: string[] = [];
-  let corriges = 0; let documentsAttendus = 0;
-
-  for (const q of questions) {
-    if (/\[contexte manquant|non disponible dans cet extrait|non fourni/i.test(String(q.enonce))) {
-      q.warnings = [...(q.warnings ?? []), 'Le contexte clinique manque : l’énoncé porte une note d’extraction au lieu de la vignette.'];
-      avertissements.push(`Énoncé incomplet (note d’extraction) : « ${String(q.enonce).slice(0, 70)}… »`);
-    }
-  }
-
-  if (verite.colore && verite.questions.length) {
-    for (const [im, is] of aligner(questions, verite.questions)) {
-      const qm = questions[im]; const qs = verite.questions[is];
-      const items = qm.items ?? [];
-      if (items.length !== qs.items.length) continue;   // découpage divergent : on ne touche à rien
-      for (let k = 0; k < items.length; k++) {
-        if (ressemblance(items[k].enonce, qs.items[k].texte) < 0.8) continue;
-        if (items[k].is_correct !== qs.items[k].juste) { items[k].is_correct = qs.items[k].juste; corriges++; }
-      }
-    }
-    if (corriges) avertissements.push(`${corriges} proposition(s) remises d’aplomb d’après la couleur du document (le corrigé du support prime sur la lecture du modèle).`);
-  }
-
-  for (const q of questions) {
-    const pages = (q.source_pages ?? []) as number[];
-    const illustree = pages.some((p) => verite.pagesAvecImage.has(p));
-    if (illustree && (q.images ?? []).length === 0) {
-      documentsAttendus++;
-      q.warnings = [...(q.warnings ?? []), 'Une image figure sur la page de cet exercice dans la source : vérifiez qu’aucun document (radiographie, ECG, courbe…) ne manque.'];
-    }
-  }
-  if (documentsAttendus) avertissements.push(`${documentsAttendus} exercice(s) situé(s) sur une page illustrée n’ont aucun document rattaché.`);
-
-  return { corriges, documentsAttendus, avertissements };
-}
-
-/**
- * Dédoublonnage de secours, par le TEXTE.
+ * Lit le PDF et rend sa vérité : questions, propositions, corrigé par la
+ * couleur, vignettes, images, diagnostic. NE LÈVE JAMAIS : un document
+ * illisible rend `statut: 'erreur'` avec sa raison, et le pipeline continue
+ * en le disant.
  *
- * Le plan de lots partage une page entre deux lots ; quand les deux rendent la
- * même question sous des numéros de source différents (« Sujet 1 - Q1 » ici,
- * « Session 3 – Sujet 1 – Q1 » là), la fusion par numéro passe à côté. Sur
- * l'import Pédiatrie, douze questions se retrouvaient en double, dont quatre
- * avec un énoncé amputé de sa vignette.
+ * `options.pages` limite la lecture à une plage (1-based, inclusive) ; les
+ * morceaux se recollent avec `fusionnerVerites`.
  */
-export function dedoublonnerParTexte<T extends QuestionModele>(questions: T[]): { questions: T[]; retirees: number } {
-  const garder: T[] = [];
-  let retirees = 0;
-  for (const q of questions) {
-    const libelle = String(q.enonce).split('\n').filter(Boolean).pop() ?? '';
-    const propositions = (q.items ?? []).map((i) => i.enonce).join(' | ');
-    // Un doublon de recouvrement est proche dans l'ordre : on ne compare qu'au
-    // voisinage, sinon deux questions légitimement identiques de dossiers
-    // différents seraient fusionnées.
-    const voisins = garder.slice(-12);
-    const jumeau = voisins.find((g) => {
-      const gl = String(g.enonce).split('\n').filter(Boolean).pop() ?? '';
-      const gp = (g.items ?? []).map((i) => i.enonce).join(' | ');
-      return ressemblance(libelle, gl) >= 0.85 && ressemblance(propositions, gp) >= 0.85;
-    });
-    if (!jumeau) { garder.push(q); continue; }
-    retirees++;
-    // On conserve l'exemplaire le plus complet (celui qui a gardé sa vignette).
-    if (String(q.enonce).length > String(jumeau.enonce).length) garder[garder.indexOf(jumeau)] = q;
+export async function lireVeritePdf(bytes: Uint8Array, options: OptionsLecture = {}): Promise<VeritePdf> {
+  try {
+    const { pages, nbPagesDocument, pagesLues } = await lirePagesPdf(bytes, options);
+    return analyserPages(pages, { nbPagesDocument, pagesLues: options.pages ? pagesLues : null });
+  } catch (e) {
+    return veriteEnErreur(e instanceof Error ? e.message : String(e));
   }
-  return { questions: garder, retirees };
+}
+
+/**
+ * Lit un document entier par plages de `taille` pages et fusionne. Utile si
+ * un document dépasse ce qu'un seul appel peut lire dans le délai imparti.
+ */
+export async function lireVeritePdfParPlages(bytes: Uint8Array, taille = 40): Promise<VeritePdf> {
+  let nbPages: number;
+  try { const { doc } = await ouvrir(bytes); nbPages = doc.numPages; await doc.destroy?.().catch(() => undefined); } catch (e) {
+    return veriteEnErreur(e instanceof Error ? e.message : String(e));
+  }
+  const parts: VeritePdf[] = [];
+  for (let de = 1; de <= nbPages; de += taille) parts.push(await lireVeritePdf(bytes, { pages: [de, Math.min(nbPages, de + taille - 1)] }));
+  return fusionnerVerites(parts);
+}
+
+/**
+ * Lit un PDF de CORRECTIONS séparé (mode `paired`) et en tire les lettres
+ * justes par numéro : par la couleur quand le corrigé est coloré, par les
+ * motifs textuels (« Réponses : A, C, E », tableau « 1 : ACE ») sinon ou en
+ * complément. Ne lève jamais.
+ */
+export async function lireCorrigeSepare(bytes: Uint8Array, options: OptionsLecture = {}): Promise<CorrigeSepare> {
+  try {
+    const { pages, nbPagesDocument, pagesLues } = await lirePagesPdf(bytes, options);
+    const verite = analyserPages(pages, { nbPagesDocument, pagesLues: options.pages ? pagesLues : null });
+    return composerCorrigeSepare(verite, pages);
+  } catch (e) {
+    const verite = veriteEnErreur(e instanceof Error ? e.message : String(e));
+    return { statut: 'erreur', origine: 'aucune', lettresJustes: {}, avertissements: verite.avertissements, verite };
+  }
+}
+
+/**
+ * Forme attendue par `appliquerCorrections` (schéma) : un corrigé séparé lu
+ * par la couleur ou le texte se recolle aux questions par numéro imprimé.
+ */
+export function versCorrectionsResult(corrige: CorrigeSepare): CorrectionsResult {
+  return {
+    corrections: Object.entries(corrige.lettresJustes).map(([numero, lettres]) => ({
+      numero_source: numero, source_pages: [], lettres_justes: lettres, justifications: [], reponse_attendue: '', correction_generale: '',
+    })),
+    warnings: corrige.avertissements,
+  };
 }

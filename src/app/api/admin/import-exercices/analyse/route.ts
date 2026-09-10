@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
- * POST /api/admin/import-exercices/analyse — analyse IA d'un import déjà
- * téléversé, PAR LOTS et REPRENABLE.
+ * POST /api/admin/import-exercices/analyse — analyse d'un import déjà
+ * téléversé, en ÉTAPES REPRENABLES.
  *
  * POURQUOI UNE ROUTE, ET PLUS UNE ACTION SERVEUR (03/09/2026)
  * ----------------------------------------------------------
@@ -16,18 +16,19 @@
  * de pages d'exercices. Le document est découpé en lots de quelques pages
  * (`planifierLots`), chaque lot est extrait séparément, et les résultats
  * partiels sont ÉCRITS dans `exercise_imports.result` au fur et à mesure :
- *  - un appel de cette route traite autant de lots que son délai le permet,
- *    puis répond `done: false` ; le navigateur rappelle jusqu'à `done: true` ;
- *  - une panne ou un délai dépassé ne perd que les lots en cours : la reprise
- *    (« Relancer ») ne rejoue que ce qui manque ;
- *  - un lot dont la réponse dépasse le budget de sortie est scindé en deux
- *    et rejoué, jusqu'à la page unique s'il le faut.
- * Aucune limite de taille de document n'est donc imposée par l'analyse,
- * seulement par le stockage (25 Mo).
+ * un appel traite ce que son délai permet puis répond `done: false`, le
+ * navigateur rappelle jusqu'à `done: true`.
  *
- * Sujet + corrigé séparés : si le corrigé est court, il accompagne chaque lot
- * du sujet (et il est mis en cache) ; sinon il est lui-même extrait par lots
- * (« corrections ») puis recollé aux questions par numéro d'exercice.
+ * POURQUOI DES ÉTAPES (10/09/2026)
+ * -------------------------------
+ * Le client avait perdu confiance : corrigés faux, questions manquantes,
+ * images perdues, avertissements jamais montrés, lot en échec qui bloquait
+ * tout. Le travail après les lots est maintenant découpé lui aussi, chaque
+ * étape persistée dans `result.etape` (cf. `exercise-import-pipeline.ts`) :
+ *   analyse → verification → images → relance → finalisation → `ready`.
+ * Toute la logique est dans le module pur ; ici : stockage, modèle, temps,
+ * persistance. Toute exception d'étape → `status: 'failed'` avec un message
+ * français ; « Relancer » reprend à l'étape persistée.
  */
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -35,15 +36,20 @@ import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { logAudit } from '@/lib/audit/log';
 import {
-  extraireLot, extraireCorrections, LotTropLongError, EXERCISE_IMPORT_MODEL,
+  extraireLot, extraireCorrections, LotTropLongError, EXERCISE_IMPORT_MODEL, EXERCISE_IMPORT_EFFORT,
   type ImportMode, type ImportVoie, type AppelUsage,
 } from '@/lib/ai/exercise-import';
-import {
-  planifierLots, fusionnerLots, appliquerCorrections, validate,
-  type Lot, type ExerciseImportResult, type CorrectionsResult,
-} from '@/lib/ai/exercise-import-schema';
+import { planifierLots, type Lot } from '@/lib/ai/exercise-import-schema';
 import { preparerDocument, contenuDuLot, type DocumentPrepare, type ImportFormat } from '@/lib/ai/exercise-import-documents';
-import { lireVeritePdf, confronterALaSource, dedoublonnerParTexte } from '@/lib/ai/exercise-import-verite';
+import {
+  lireVeritePdf, lireVeritePdfParPlages, lireCorrigeSepare, versCorrectionsResult, veriteEnErreur, type VeritePdf,
+} from '@/lib/ai/exercise-import-verite';
+import { extraireImagesPdf, televerserImagesImport } from '@/lib/ai/exercise-import-images';
+import {
+  assemblerEtVerifier, cle, consigneRelance, estProgression, facturerImportCents, finaliser, libelle, marquerLotEnEchec,
+  planifierRelance, scinder, MAX_TENTATIVES_LOT,
+  type EtatImages, type EtatRelance, type PartielLot, type Progression, type Strategie, type Verification,
+} from '@/lib/ai/exercise-import-pipeline';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -52,49 +58,22 @@ export const maxDuration = 300;
 
 /** On ne DÉMARRE plus de lot passé ce délai : un lot peut durer jusqu'à 210 s. */
 const FENETRE_DEMARRAGE_MS = 80_000;
+/** Une étape suivante n'est enchaînée dans le même appel que si celui-ci est encore jeune. */
+const FENETRE_ENCHAINEMENT_MS = 25_000;
+/** Budget d'extraction d'images par appel (le téléversement s'y ajoute). */
+const BUDGET_IMAGES_MS = 60_000;
 /** Lots traités de front. */
 const CONCURRENCE = 4;
 /** Au-delà, le corrigé séparé est extrait par lots plutôt que joint à chaque lot du sujet. */
 const CORRIGE_INCLUS_MAX_PAGES = 24;
+/** Au-delà, la vérité du PDF est lue par plages de 40 pages. */
+const VERITE_PAR_PLAGES_AU_DELA = 60;
 /** Un verrou plus vieux que cela est considéré comme abandonné (fonction coupée). */
 const VERROU_MS = 6 * 60_000;
 
 const Body = z.object({ id: z.string().uuid() });
 
-type Strategie = 'combine' | 'corrige-inclus' | 'corrige-separe';
-
-/** État d'avancement conservé dans `exercise_imports.result` pendant l'analyse. */
-type Progression = {
-  etape: 'analyse';
-  plan: { nbPagesSujet: number; nbPagesCorrige: number | null; strategie: Strategie; lots: Lot[]; lotsCorrige: Lot[] };
-  partiels: Record<string, ExerciseImportResult>;
-  partielsCorrige: Record<string, CorrectionsResult>;
-  erreurs: Record<string, string>;
-  avertissementsDocs: string[];
-  cout: { usd: number; input_tokens: number; output_tokens: number; appels: number };
-  verrou: string | null;
-  model: string;
-};
-
-const cle = (lot: Lot) => `${lot.coeurDebut}-${lot.coeurFin}`;
-const libelle = (lot: Lot) => `Pages ${lot.coeurDebut}-${lot.coeurFin}`;
-
-function estProgression(v: unknown): v is Progression {
-  return !!v && typeof v === 'object' && (v as { etape?: string }).etape === 'analyse' && !!(v as Progression).plan;
-}
-
-/** Scinde un lot dont la réponse a débordé : deux moitiés de pages cœur. */
-function scinder(lot: Lot): Lot[] | null {
-  const n = lot.coeurFin - lot.coeurDebut + 1;
-  if (n < 2) return null;
-  const milieu = lot.coeurDebut + Math.ceil(n / 2) - 1;
-  const r = lot.coeurDebut - lot.debut; // recouvrement d'origine
-  const mk = (cd: number, cf: number, index: number): Lot => ({
-    index, coeurDebut: cd, coeurFin: cf,
-    debut: Math.max(1, cd - r), fin: Math.min(lot.fin + r, cf + r),
-  });
-  return [mk(lot.coeurDebut, milieu, lot.index), mk(milieu + 1, lot.coeurFin, lot.index)];
-}
+type Progres = { etape: string; lotsFaits: number; lotsTotal: number; exercices: number; coutUsd: number; detail?: string };
 
 export async function POST(req: Request) {
   const guard = await requireAdminRequest(req);
@@ -140,12 +119,13 @@ export async function POST(req: Request) {
       return new Uint8Array(await data.arrayBuffer());
     };
     const mode = row.source_mode as ImportMode;
-    const [sujet, corrige]: [DocumentPrepare, DocumentPrepare | null] = await Promise.all([
-      telecharger(row.sujet_path, 'sujet').then((b) => preparerDocument(format, b)),
-      mode === 'paired' && row.corrige_path
-        ? telecharger(row.corrige_path, 'corrigé').then((b) => preparerDocument(format, b))
-        : Promise.resolve(null),
+    const voie = row.voie as ImportVoie;
+    const [sujetBrut, corrigeBrut] = await Promise.all([
+      telecharger(row.sujet_path, 'sujet'),
+      mode === 'paired' && row.corrige_path ? telecharger(row.corrige_path, 'corrigé') : Promise.resolve(null),
     ]);
+    const sujet: DocumentPrepare = await preparerDocument(format, sujetBrut);
+    const corrige: DocumentPrepare | null = corrigeBrut ? await preparerDocument(format, corrigeBrut) : null;
     if (mode === 'paired' && !corrige) throw new Error('Le corrigé séparé est introuvable dans le stockage.');
 
     // ── Plan (réutilisé à l'identique lors d'une reprise) ──────────────────
@@ -161,7 +141,7 @@ export async function POST(req: Request) {
           lots: planifierLots(sujet.nbPages),
           lotsCorrige: strategie === 'corrige-separe' && corrige ? planifierLots(corrige.nbPages) : [],
         },
-        partiels: {}, partielsCorrige: {}, erreurs: {},
+        partiels: {}, partielsCorrige: {}, erreurs: {}, tentatives: {},
         avertissementsDocs: [
           ...(sujet.kind === 'texte' ? sujet.avertissements : []),
           ...(corrige?.kind === 'texte' ? corrige.avertissements.map((w) => `Corrigé — ${w}`) : []),
@@ -169,179 +149,252 @@ export async function POST(req: Request) {
         cout: { usd: 0, input_tokens: 0, output_tokens: 0, appels: 0 },
         verrou: null,
         model: EXERCISE_IMPORT_MODEL,
+        effort: EXERCISE_IMPORT_EFFORT,
       };
     }
     const p: Progression = progression;
+    // Lignes écrites avant le 10/09/2026 : champs ajoutés depuis.
+    p.tentatives ??= {}; p.effort ??= EXERCISE_IMPORT_EFFORT; p.etape ??= 'analyse';
     p.verrou = new Date().toISOString();
     p.erreurs = {}; // une reprise redonne sa chance à chaque lot en échec
     await sauvegarder(p);
 
-    const corrigeInclus = p.plan.strategie === 'corrige-inclus' && corrige
-      ? await contenuDuLot(corrige, 1, corrige.nbPages)
-      : null;
-
     const comptabiliser = (u: AppelUsage) => {
       p.cout.usd += u.usd; p.cout.input_tokens += u.usage.input_tokens; p.cout.output_tokens += u.usage.output_tokens; p.cout.appels += 1;
     };
+    const lotsTotal = () => p.plan.lots.length + p.plan.lotsCorrige.length;
+    const lotsFaits = () => p.plan.lots.filter((l) => p.partiels[cle(l)]).length + p.plan.lotsCorrige.filter((l) => p.partielsCorrige[cle(l)]).length;
+    const exercicesVus = () => Object.values(p.partiels).reduce((n, r) => n + (r.questions?.length ?? 0), 0);
+    const progres = (detail?: string): Progres => ({ etape: p.etape, lotsFaits: lotsFaits(), lotsTotal: lotsTotal(), exercices: p.verification?.questions.length ?? exercicesVus(), coutUsd: p.cout.usd, ...(detail ? { detail } : {}) });
+    const rendreLaMain = async (detail?: string) => {
+      p.verrou = null;
+      await sauvegarder(p);
+      return NextResponse.json({ ok: true, id, done: false, progress: progres(detail) });
+    };
+    const peutEnchainer = () => Date.now() - debutAppel < FENETRE_ENCHAINEMENT_MS;
 
-    // ── File de travail : lots du sujet, puis lots du corrigé séparé ───────
-    type Tache = { genre: 'sujet' | 'corrige'; lot: Lot };
-    const aFaire: Tache[] = [
-      ...p.plan.lots.filter((l) => !p.partiels[cle(l)]).map((lot) => ({ genre: 'sujet' as const, lot })),
-      ...p.plan.lotsCorrige.filter((l) => !p.partielsCorrige[cle(l)]).map((lot) => ({ genre: 'corrige' as const, lot })),
-    ];
-    let peutDemarrer = () => Date.now() - debutAppel < FENETRE_DEMARRAGE_MS;
+    /* ─────────── Exécution d'un lot (sujet, corrigé, relance) ─────────── */
 
-    const executer = async (t: Tache): Promise<void> => {
-      const doc = t.genre === 'sujet' ? sujet : (corrige as DocumentPrepare);
-      try {
-        const contenu = await contenuDuLot(doc, t.lot.debut, t.lot.fin);
-        if (t.genre === 'sujet') {
-          const { result, usage } = await extraireLot({
-            voie: row.voie as ImportVoie, mode, contenu, corrige: corrigeInclus, lot: t.lot, nbPagesTotal: doc.nbPages,
-          });
-          comptabiliser(usage);
-          p.partiels[cle(t.lot)] = result;
-        } else {
-          const { result, usage } = await extraireCorrections({ contenu, lot: t.lot, nbPagesTotal: doc.nbPages });
-          comptabiliser(usage);
-          p.partielsCorrige[cle(t.lot)] = result;
-        }
-        await sauvegarder(p);
-      } catch (e) {
-        if (e instanceof LotTropLongError) {
-          const moities = scinder(t.lot);
-          if (moities) {
-            // Le plan est réécrit : les deux moitiés remplacent le lot, et
-            // sont traitées dès que possible (dans cet appel s'il reste du temps).
-            const liste = t.genre === 'sujet' ? p.plan.lots : p.plan.lotsCorrige;
-            const i = liste.findIndex((l) => cle(l) === cle(t.lot));
-            if (i >= 0) liste.splice(i, 1, ...moities);
-            p.avertissementsDocs.push(e.motif === 'delai'
-              ? `${libelle(t.lot)} : analyse trop longue, lot scindé en deux et rejoué.`
-              : `${libelle(t.lot)} : réponse trop longue, lot scindé en deux.`);
+    type Tache = { genre: 'sujet' | 'corrige' | 'relance'; lot: Lot };
+    const corrigeInclus = p.plan.strategie === 'corrige-inclus' && corrige ? await contenuDuLot(corrige, 1, corrige.nbPages) : null;
+
+    const executerLots = async (aFaire: Tache[], options: { partielsRelance?: Record<string, PartielLot>; lotsRelance?: Lot[]; attendus?: Record<string, string[]> } = {}) => {
+      let peutDemarrer = () => Date.now() - debutAppel < FENETRE_DEMARRAGE_MS;
+      /** Abandon d'un lot : partiel vide, l'import aboutit. Seul un lot du SUJET rend sa plage bloquante. */
+      const abandonner = (t: Tache, motif: string) => {
+        const k = cle(t.lot);
+        if (t.genre === 'corrige') p.partielsCorrige[k] = { corrections: [], warnings: [`${libelle(t.lot)} du corrigé non lues : ${motif}`] };
+        else if (t.genre === 'relance') (options.partielsRelance ?? {})[k] = { questions: [], warnings: [`Relance des pages ${t.lot.coeurDebut}-${t.lot.coeurFin} sans résultat : ${motif}`], echec: true };
+        else marquerLotEnEchec(p.partiels, t.lot, motif);
+      };
+      const executer = async (t: Tache): Promise<void> => {
+        const doc = t.genre === 'corrige' ? (corrige as DocumentPrepare) : sujet;
+        const k = cle(t.lot);
+        const cibleRelance = t.genre === 'relance';
+        const liste = t.genre === 'sujet' ? p.plan.lots : t.genre === 'corrige' ? p.plan.lotsCorrige : (options.lotsRelance ?? []);
+        const partiels = t.genre === 'sujet' ? p.partiels : cibleRelance ? (options.partielsRelance ?? {}) : null;
+        try {
+          const contenu = await contenuDuLot(doc, t.lot.debut, t.lot.fin);
+          if (t.genre === 'corrige') {
+            const { result, usage } = await extraireCorrections({ contenu, lot: t.lot, nbPagesTotal: doc.nbPages });
+            comptabiliser(usage);
+            p.partielsCorrige[k] = result;
+          } else {
+            const { result, usage } = await extraireLot({
+              voie, mode, contenu, corrige: corrigeInclus, lot: t.lot, nbPagesTotal: doc.nbPages,
+              ...(cibleRelance ? { effort: 'xhigh' as const, consigneSupplementaire: consigneRelance(options.attendus?.[k] ?? []) } : {}),
+            });
+            comptabiliser(usage);
+            (partiels as Record<string, PartielLot>)[k] = result;
+          }
+          await sauvegarder(p);
+        } catch (e) {
+          if (e instanceof LotTropLongError) {
+            const moities = scinder(t.lot);
+            if (moities) {
+              // Le plan est réécrit : les deux moitiés remplacent le lot, et
+              // sont traitées dès que possible (dans cet appel s'il reste du temps).
+              const i = liste.findIndex((l) => cle(l) === k);
+              if (i >= 0) liste.splice(i, 1, ...moities);
+              if (cibleRelance && options.attendus) { for (const m of moities) options.attendus[cle(m)] = options.attendus[k] ?? []; delete options.attendus[k]; }
+              p.avertissementsDocs.push(e.motif === 'delai'
+                ? `${libelle(t.lot)} : analyse trop longue, lot scindé en deux et rejoué.`
+                : `${libelle(t.lot)} : réponse trop longue, lot scindé en deux.`);
+              await sauvegarder(p);
+              aFaire.push(...moities.map((lot) => ({ genre: t.genre, lot })));
+              return;
+            }
+            // Une seule page dépasse déjà : on abandonne la page, l'import
+            // aboutira et la plage sera un écart bloquant.
+            const motif = e.motif === 'delai' ? 'une seule page dépasse déjà le délai d’analyse.' : 'une seule page dépasse déjà le budget de sortie du modèle.';
+            abandonner(t, motif);
             await sauvegarder(p);
-            aFaire.push(...moities.map((lot) => ({ genre: t.genre, lot })));
             return;
           }
-          p.erreurs[cle(t.lot)] = e.motif === 'delai'
-            ? `${libelle(t.lot)} : une seule page dépasse déjà le délai d'analyse, page ignorée.`
-            : `${libelle(t.lot)} : une seule page dépasse le budget de sortie, page ignorée.`;
+          const message = e instanceof Error ? e.message : String(e);
+          // Configuration en cause : inutile d'insister lot par lot.
+          if (/^Clé Anthropic|ANTHROPIC_API_KEY/.test(message)) throw e;
+          console.error('[import-exercices/analyse] lot en échec', { id, genre: t.genre, lot: k, message });
+          const kt = `${t.genre}:${k}`;
+          p.tentatives[kt] = (p.tentatives[kt] ?? 0) + 1;
+          const limite = cibleRelance ? 1 : MAX_TENTATIVES_LOT;
+          if (p.tentatives[kt] >= limite) {
+            abandonner(t, `${message} (${p.tentatives[kt]} tentative(s)).`);
+          } else {
+            p.erreurs[kt] = message;
+          }
           await sauvegarder(p);
-          return;
         }
-        p.erreurs[cle(t.lot)] = e instanceof Error ? e.message : String(e);
-        console.error('[import-exercices/analyse] lot en échec', { id, lot: cle(t.lot), message: p.erreurs[cle(t.lot)] });
-        await sauvegarder(p);
-      }
-    };
-
-    // Ouvriers : chacun prend la tâche suivante tant que la fenêtre de
-    // démarrage est ouverte ; les tâches restantes attendront l'appel suivant.
-    const ouvrier = async () => {
-      while (aFaire.length > 0 && peutDemarrer()) {
-        const t = aFaire.shift();
-        if (!t) break;
-        await executer(t);
-      }
-    };
-    await Promise.all(Array.from({ length: CONCURRENCE }, ouvrier));
-    peutDemarrer = () => false;
-
-    const lotsTotal = p.plan.lots.length + p.plan.lotsCorrige.length;
-    const lotsFaits = p.plan.lots.filter((l) => p.partiels[cle(l)]).length + p.plan.lotsCorrige.filter((l) => p.partielsCorrige[cle(l)]).length;
-    const exercicesVus = Object.values(p.partiels).reduce((n, r) => n + (r.questions?.length ?? 0), 0);
-    const enErreur = Object.keys(p.erreurs).length;
-
-    // ── Pas fini : on rend la main, le navigateur rappellera ───────────────
-    if (lotsFaits < lotsTotal) {
-      p.verrou = null;
-      if (enErreur > 0 && lotsFaits + enErreur >= lotsTotal) {
-        // Tout ce qui pouvait être tenté l'a été : on s'arrête en échec
-        // explicite, les lots réussis sont conservés pour la relance.
-        const message = `${enErreur} lot(s) en échec sur ${lotsTotal} : ${Object.values(p.erreurs).slice(0, 2).join(' · ')} — relancez pour rejouer ces lots seulement.`;
-        await sauvegarder(p, { status: 'failed', error_message: message });
-        return NextResponse.json({ ok: false, error: message, progress: { lotsFaits, lotsTotal, exercices: exercicesVus, coutUsd: p.cout.usd } }, { status: 502 });
-      }
-      await sauvegarder(p);
-      return NextResponse.json({ ok: true, id, done: false, progress: { lotsFaits, lotsTotal, exercices: exercicesVus, coutUsd: p.cout.usd } });
-    }
-
-    // ── Fini : fusion, corrigé, validation ─────────────────────────────────
-    let fusion = fusionnerLots(p.plan.lots.map((l) => ({ ordre: l.coeurDebut, label: libelle(l), result: p.partiels[cle(l)] })));
-
-    // Dédoublonnage de secours par le texte : la fusion se fie au numéro de
-    // source, que les lots ne numérotent pas toujours pareil (« Sujet 1 - Q1 »
-    // ici, « Session 3 – Sujet 1 – Q1 » là). Douze doublons étaient passés sur
-    // l'import Pédiatrie du 08/09/2026.
-    {
-      const { questions, retirees } = dedoublonnerParTexte(fusion.questions);
-      if (retirees > 0) {
-        fusion = { ...fusion, questions, warnings: [...fusion.warnings, `${retirees} exercice(s) rendus en double par deux lots voisins, fusionné(s) sur le texte.`] };
-      }
-    }
-    if (p.plan.strategie === 'corrige-separe') {
-      const corrections: CorrectionsResult = {
-        corrections: p.plan.lotsCorrige.flatMap((l) => p.partielsCorrige[cle(l)]?.corrections ?? []),
-        warnings: p.plan.lotsCorrige.flatMap((l) => (p.partielsCorrige[cle(l)]?.warnings ?? []).map((w) => `${libelle(l)} : ${w}`)),
       };
-      fusion = appliquerCorrections(fusion, corrections);
-    }
-    // Confrontation au document : dans ces supports le corrigé est porté par la
-    // COULEUR (vert = proposition exacte). Il prime sur la lecture du modèle,
-    // qui inversait 8,6 % des propositions sur l'import du 08/09/2026. La même
-    // passe signale les exercices posés sur une page illustrée et rendus sans
-    // document.
-    if (format === 'pdf') {
-      try {
-        const brutSujet = await telecharger(row.sujet_path, 'sujet');
-        const verite = await lireVeritePdf(brutSujet);
-        const bilan = confronterALaSource(fusion.questions, verite);
-        fusion.warnings = [...fusion.warnings, ...bilan.avertissements];
-        if (verite.colore && bilan.corriges === 0) {
-          fusion.warnings = [...fusion.warnings, 'Corrigé vérifié sur la couleur du document : aucun écart.'];
+      const ouvrier = async () => {
+        while (aFaire.length > 0 && peutDemarrer()) {
+          const t = aFaire.shift();
+          if (!t) break;
+          await executer(t);
         }
-      } catch (e) {
-        fusion.warnings = [...fusion.warnings, `Le corrigé du document n'a pas pu être vérifié automatiquement : ${e instanceof Error ? e.message : 'erreur inconnue'}.`];
-      }
-    }
-    fusion.warnings = [...p.avertissementsDocs, ...fusion.warnings];
-    if (fusion.questions.length === 0) {
-      const dit = fusion.warnings.filter(Boolean).slice(0, 3).join(' ');
-      throw new Error(`Aucun exercice n'a été trouvé dans le document.${dit ? ' Analyse : ' + dit : ''}`);
-    }
-    const result = validate(fusion, row.voie as ImportVoie);
-    const resultat = {
-      ...result,
-      meta: {
-        model: p.model, lots: lotsTotal, pages: p.plan.nbPagesSujet, pagesCorrige: p.plan.nbPagesCorrige, strategie: p.plan.strategie,
-        cout: p.cout,
-      },
+      };
+      await Promise.all(Array.from({ length: CONCURRENCE }, ouvrier));
+      peutDemarrer = () => false;
     };
 
-    const { error } = await a.from('exercise_imports').update({
-      status: 'ready', result: resultat, warnings: result.warnings, model: p.model,
-      billed_price_cents: row.estimated_price_cents, processed_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    }).eq('id', id);
-    if (error) throw new Error(error.message);
+    /* ─────────── Vérification (vérité du PDF, corrigé séparé, confrontation) ─────────── */
 
-    await logAudit({
-      actor: { id: guard.auth.user.id, email: guard.auth.user.email ?? null, role: 'admin' } as any,
-      action: 'create', entity: 'exercise_import', entityId: id,
-      coursId: row.cours_id, coursTitre: row.cours?.titre,
-      description: `Import d’exercices analysé : ${result.questions.length} exercice(s), ${lotsTotal} lot(s), ${p.plan.nbPagesSujet} page(s), ${p.cout.usd.toFixed(2)} $`,
-    });
+    const lireVerite = async (): Promise<VeritePdf> => {
+      if (sujet.kind !== 'pdf') return veriteEnErreur('document texte (Word ou TXT) : la couleur du corrigé et la position des figures ne sont pas lisibles');
+      return sujet.nbPages > VERITE_PAR_PLAGES_AU_DELA ? lireVeritePdfParPlages(sujetBrut, 40) : lireVeritePdf(sujetBrut);
+    };
+    const verifier = async (): Promise<Verification> => {
+      const verite = await lireVerite();
+      let corrigeSepare: Parameters<typeof assemblerEtVerifier>[0]['corrigeSepare'] = null;
+      if (mode === 'paired' && corrigeBrut && corrige?.kind === 'pdf') {
+        const lu = await lireCorrigeSepare(corrigeBrut);
+        corrigeSepare = {
+          corrections: versCorrectionsResult(lu),
+          resume: { statut: lu.statut, origine: lu.origine, nbNumeros: Object.keys(lu.lettresJustes).length, avertissements: lu.avertissements },
+        };
+      }
+      return assemblerEtVerifier({
+        plan: p.plan, partiels: p.partiels, partielsCorrige: p.partielsCorrige, relance: p.relance ?? null,
+        corrigeSepare, verite, voie, avertissementsDocs: p.avertissementsDocs, erreurs: p.erreurs,
+      });
+    };
 
-    return NextResponse.json({ ok: true, id, done: true, questions: result.questions.length, progress: { lotsFaits, lotsTotal, exercices: result.questions.length, coutUsd: p.cout.usd } });
+    /* ─────────── Boucle d'étapes ─────────── */
+
+    for (;;) {
+      if (p.etape === 'analyse') {
+        const aFaire: Tache[] = [
+          ...p.plan.lots.filter((l) => !p.partiels[cle(l)]).map((lot) => ({ genre: 'sujet' as const, lot })),
+          ...p.plan.lotsCorrige.filter((l) => !p.partielsCorrige[cle(l)]).map((lot) => ({ genre: 'corrige' as const, lot })),
+        ];
+        await executerLots(aFaire);
+        if (lotsFaits() < lotsTotal()) {
+          const enErreur = Object.keys(p.erreurs).length;
+          return rendreLaMain(enErreur ? `${enErreur} lot(s) à rejouer : ${Object.values(p.erreurs)[0]}` : undefined);
+        }
+        p.etape = 'verification';
+        await sauvegarder(p);
+        if (!peutEnchainer()) return rendreLaMain();
+      }
+
+      if (p.etape === 'verification') {
+        p.verification = await verifier();
+        p.etape = 'images';
+        await sauvegarder(p);
+        if (!peutEnchainer()) return rendreLaMain();
+      }
+
+      if (p.etape === 'images') {
+        if (sujet.kind === 'pdf') {
+          const etat: EtatImages = p.images ?? { numPages: sujet.nbPages, pageSuivante: 1, images: [], signaturesDecor: [], dureeMs: 0, appels: 0 };
+          p.images = etat;
+          if (etat.pageSuivante !== null && !etat.erreur) {
+            try {
+              const r = await extraireImagesPdf(sujetBrut, {
+                pages: [etat.pageSuivante, sujet.nbPages], budgetMs: BUDGET_IMAGES_MS,
+                exclureSha1: etat.images.map((i) => i.sha1), decorConnu: etat.signaturesDecor,
+              });
+              const envoyees = await televerserImagesImport(id, r.images);
+              etat.images.push(...envoyees.map((im) => ({ page: im.page, indice: im.indice, yDebut: im.yDebut, yFin: im.yFin, largeurPx: im.largeurPx, hauteurPx: im.hauteurPx, url: im.url, chemin: im.chemin, sha1: im.sha1 })));
+              etat.signaturesDecor = [...new Set([...etat.signaturesDecor, ...r.signaturesDecor])];
+              etat.pageSuivante = r.pageSuivante; etat.dureeMs += r.dureeMs; etat.appels += 1;
+            } catch (e) {
+              // Les images ne bloquent jamais l'import : l'échec est rapporté (alerte à relire).
+              etat.erreur = e instanceof Error ? e.message : String(e);
+              console.error('[import-exercices/analyse] images', { id, message: etat.erreur });
+            }
+            await sauvegarder(p);
+            if (etat.pageSuivante !== null && !etat.erreur) return rendreLaMain(`images : page ${etat.pageSuivante}/${sujet.nbPages}`);
+          }
+        }
+        p.etape = 'relance';
+        await sauvegarder(p);
+        if (!peutEnchainer()) return rendreLaMain();
+      }
+
+      if (p.etape === 'relance') {
+        const v = p.verification;
+        if (!v) { p.etape = 'verification'; continue; }
+        if (!p.relance) {
+          const plan = (v.verite.statut === 'colore' || v.verite.statut === 'non-colore')
+            ? planifierRelance(v.rapport.ecarts, p.plan.nbPagesSujet)
+            : { lots: [], attendus: {}, motifs: [] };
+          const relance: EtatRelance = { lots: plan.lots, attendus: plan.attendus, partiels: {}, faite: plan.lots.length === 0, motifs: plan.motifs };
+          p.relance = relance;
+          if (relance.motifs.length) p.avertissementsDocs.push(...relance.motifs);
+          await sauvegarder(p);
+        }
+        const relance = p.relance;
+        if (!relance.faite) {
+          const aFaire: Tache[] = relance.lots.filter((l) => !relance.partiels[cle(l)]).map((lot) => ({ genre: 'relance' as const, lot }));
+          await executerLots(aFaire, { partielsRelance: relance.partiels, lotsRelance: relance.lots, attendus: relance.attendus });
+          if (relance.lots.some((l) => !relance.partiels[cle(l)])) {
+            const enErreur = Object.keys(p.erreurs).length;
+            return rendreLaMain(`relance : ${relance.lots.filter((l) => relance.partiels[cle(l)]).length}/${relance.lots.length} lot(s)${enErreur ? ' · à rejouer' : ''}`);
+          }
+          // Nouvelle vérification avec les lots de relance fusionnés.
+          relance.faite = true;
+          p.verification = await verifier();
+        }
+        p.etape = 'finalisation';
+        await sauvegarder(p);
+        if (!peutEnchainer()) return rendreLaMain();
+      }
+
+      if (p.etape === 'finalisation') {
+        const v = p.verification;
+        if (!v) { p.etape = 'verification'; continue; }
+        const resultat = finaliser({ progression: p, verification: v, images: p.images ?? null });
+        const billed = facturerImportCents(row.estimated_price_cents, p.cout.usd);
+        const { error } = await a.from('exercise_imports').update({
+          status: 'ready', result: resultat, warnings: resultat.warnings, model: p.model,
+          billed_price_cents: billed, processed_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(), error_message: null,
+        }).eq('id', id);
+        if (error) throw new Error(error.message);
+
+        await logAudit({
+          actor: { id: guard.auth.user.id, email: guard.auth.user.email ?? null, role: 'admin' } as any,
+          action: 'create', entity: 'exercise_import', entityId: id,
+          coursId: row.cours_id, coursTitre: row.cours?.titre,
+          description: `Import d’exercices analysé : ${resultat.questions.length} exercice(s), verdict ${resultat.fiabilite.verdict}, ${lotsTotal()} lot(s)${resultat.meta.relances.lots ? ` + ${resultat.meta.relances.lots} relance(s)` : ''}, ${p.plan.nbPagesSujet} page(s), ${resultat.fiabilite.imagesRattachees} image(s), ${p.cout.usd.toFixed(2)} $`,
+        });
+
+        return NextResponse.json({
+          ok: true, id, done: true, questions: resultat.questions.length, verdict: resultat.fiabilite.verdict,
+          progress: { etape: 'ready', lotsFaits: lotsFaits(), lotsTotal: lotsTotal(), exercices: resultat.questions.length, coutUsd: p.cout.usd },
+        });
+      }
+    }
   } catch (e) {
-    const message = e instanceof Error ? e.message : 'Échec de l’analyse IA.';
-    console.error('[import-exercices/analyse]', { id, message });
+    const message = e instanceof Error ? e.message : 'Échec de l’analyse.';
+    console.error('[import-exercices/analyse]', { id, etape: progression?.etape, message });
     if (progression) progression.verrou = null;
+    const etape = progression?.etape ? ` (étape : ${progression.etape})` : '';
     await a.from('exercise_imports').update({
-      status: 'failed', error_message: message, updated_at: new Date().toISOString(),
+      status: 'failed', error_message: `${message}${etape} — relancez l’import, il reprend à cette étape.`, updated_at: new Date().toISOString(),
       ...(progression ? { result: progression } : {}),
     }).eq('id', id);
-    return NextResponse.json({ ok: false, error: message }, { status: 502 });
+    return NextResponse.json({ ok: false, error: `${message}${etape}` }, { status: 502 });
   }
 }

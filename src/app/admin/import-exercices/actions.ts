@@ -27,6 +27,10 @@ import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { logAudit } from '@/lib/audit/log';
 import { estimateExerciseImportCents, EXERCISE_IMPORT_MAX_FILE_BYTES } from '@/lib/ai/exercise-import';
+import {
+  acquitterAlerte, appliquerPatchQuestion, estResultatFinal, recalculerFiabilite,
+  type AlerteImport, type Fiabilite, type PatchQuestion, type QuestionFinale, type ResultatFinal,
+} from '@/lib/ai/exercise-import-pipeline';
 
 const Offers = z.enum(['decouverte', 'essentiel', 'intensif', 'approfondi']);
 const FileMeta = z.object({
@@ -141,6 +145,22 @@ export async function publishExerciseImportAction(id: string): Promise<ActionRes
   try {
     const admin = createAdminClient();
     const a = admin as unknown as { rpc: (name: string, args: unknown) => any; from: (table: string) => any };
+
+    // GARDE (10/09/2026) : tant qu'il reste une alerte BLOQUANTE non traitée
+    // (question ni corrigée-et-vérifiée, ni écartée ; alerte globale non
+    // acquittée), la publication est refusée et l'import reste « à valider ».
+    // Le verdict est recalculé ici, jamais lu tel quel : l'écran peut être
+    // en retard sur la base.
+    const { data: row } = await a.from('exercise_imports').select('status, result').eq('id', id).maybeSingle();
+    if (!row) return { ok: false, error: 'Import introuvable.' };
+    if (row.status === 'ready' && estResultatFinal(row.result)) {
+      const fiabilite = recalculerFiabilite(row.result as ResultatFinal);
+      if (fiabilite.verdict === 'rouge') {
+        return { ok: false, error: `Publication refusée : ${fiabilite.alertesBloquantes} alerte(s) bloquante(s) restent à traiter (corrigez ou cochez « Vérifiée » sur chaque question concernée, ou écartez-la).` };
+      }
+      if (!row.result.questions?.length) return { ok: false, error: 'Publication refusée : aucune question à publier (toutes ont été écartées).' };
+    }
+
     const { data, error } = await a.rpc('publish_exercise_import', { p_import_id: id });
     if (error || !data) return { ok: false, error: error?.message ?? 'Publication impossible.' };
     await logAudit({ actor: profile, action: 'create', entity: 'qcm_series', entityId: data as string, description: `Publication de l’import d’exercices ${id.slice(0, 8)}` });
@@ -162,4 +182,109 @@ export async function cancelExerciseImportAction(id: string): Promise<ActionResu
   await logAudit({ actor: profile, action: 'update', entity: 'exercise_import', entityId: id, description: 'Import d’exercices annulé' });
   revalidatePath('/admin/import-exercices');
   return { ok: true, id };
+}
+
+/* ─────────── Relecture : modifications de l'administrateur (10/09/2026) ─────────── */
+
+const PatchItem = z.object({
+  lettre: z.string().min(1).max(3),
+  enonce: z.string().max(4000).optional(),
+  is_correct: z.boolean().optional(),
+  justification: z.string().max(8000).optional(),
+});
+const Patch = z.object({
+  enonce: z.string().max(20000).optional(),
+  items: z.array(PatchItem).max(11).optional(),
+  reponse_attendue: z.string().max(4000).optional(),
+  correction_generale: z.string().max(20000).optional(),
+  images: z.array(z.string().url().max(600)).max(20).optional(),
+  validee_par_admin: z.boolean().optional(),
+  supprimee: z.boolean().optional(),
+});
+
+export type PatchResult =
+  | { ok: true; question: QuestionFinale | null; fiabilite: Fiabilite; modifications: string[]; warnings: string[] }
+  | { ok: false; error: string };
+
+/** Lit un import « à valider » avec son résultat final, ou explique pourquoi il n'est pas modifiable. */
+async function lireImportModifiable(id: string): Promise<{ ok: true; a: { from: (table: string) => any }; result: ResultatFinal } | { ok: false; error: string }> {
+  if (!z.string().uuid().safeParse(id).success) return { ok: false, error: 'Import invalide.' };
+  const admin = createAdminClient();
+  const a = admin as unknown as { from: (table: string) => any };
+  const { data: row, error } = await a.from('exercise_imports').select('status, result').eq('id', id).maybeSingle();
+  if (error) return { ok: false, error: error.message };
+  if (!row) return { ok: false, error: 'Import introuvable.' };
+  if (row.status !== 'ready') return { ok: false, error: 'Seul un import « à valider » peut être modifié.' };
+  if (!estResultatFinal(row.result) || !row.result.fiabilite) return { ok: false, error: 'Cet import a été analysé avant la mise en place du rapport de fiabilité : relancez son analyse pour le modifier.' };
+  return { ok: true, a, result: row.result as ResultatFinal };
+}
+
+/**
+ * Modifie une question d'un import à valider : énoncé, propositions (texte,
+ * vrai/faux, justification), réponse attendue, corrigé général, images
+ * (retrait ou ajout d'une URL déjà connue de l'import), case « Vérifiée »,
+ * ou l'écarte (`supprimee: true`, restaurable). Les champs sont bornés ici,
+ * appliqués par `appliquerPatchQuestion` (pur, testé), journalisés dans
+ * `warnings`, et la fiabilité est recalculée : c'est elle qui débloque la
+ * publication.
+ */
+export async function updateImportQuestionAction(importId: string, clientId: string, rawPatch: unknown): Promise<PatchResult> {
+  const { profile } = await requireAdmin();
+  const parsed = Patch.safeParse(rawPatch);
+  if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? 'Modification invalide.' };
+  if (typeof clientId !== 'string' || !clientId.trim()) return { ok: false, error: 'Question invalide.' };
+  try {
+    const lu = await lireImportModifiable(importId);
+    if (!lu.ok) return lu;
+    const { question, modifications } = appliquerPatchQuestion(lu.result, clientId, parsed.data as PatchQuestion);
+    if (!question) return { ok: false, error: 'Question introuvable dans cet import.' };
+    if (modifications.length) {
+      const { error } = await lu.a.from('exercise_imports').update({ result: lu.result, warnings: lu.result.warnings, updated_at: new Date().toISOString() }).eq('id', importId);
+      if (error) return { ok: false, error: error.message };
+      await logAudit({ actor: profile, action: 'update', entity: 'exercise_import', entityId: importId, description: `Import d’exercices : question ${question.numero_document ?? question.numero_source ?? clientId.slice(0, 8)} — ${modifications.join(', ')}` });
+    }
+    return { ok: true, question, fiabilite: lu.result.fiabilite, modifications, warnings: lu.result.warnings };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : 'Modification impossible.' };
+  }
+}
+
+/** Acquitte (ou rouvre) une alerte GLOBALE (sans question : pages non importées, images non extraites…). */
+export async function acknowledgeImportAlerteAction(importId: string, index: number, traitee: boolean): Promise<{ ok: true; alerte: AlerteImport; fiabilite: Fiabilite; warnings: string[] } | { ok: false; error: string }> {
+  const { profile } = await requireAdmin();
+  if (!Number.isInteger(index) || index < 0) return { ok: false, error: 'Alerte invalide.' };
+  try {
+    const lu = await lireImportModifiable(importId);
+    if (!lu.ok) return lu;
+    const alerte = acquitterAlerte(lu.result, index, !!traitee);
+    if (!alerte) return { ok: false, error: 'Alerte introuvable.' };
+    const { error } = await lu.a.from('exercise_imports').update({ result: lu.result, warnings: lu.result.warnings, updated_at: new Date().toISOString() }).eq('id', importId);
+    if (error) return { ok: false, error: error.message };
+    await logAudit({ actor: profile, action: 'update', entity: 'exercise_import', entityId: importId, description: `Import d’exercices : alerte ${traitee ? 'acquittée' : 'rouverte'} — ${alerte.message.slice(0, 100)}` });
+    return { ok: true, alerte, fiabilite: lu.result.fiabilite, warnings: lu.result.warnings };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : 'Modification impossible.' };
+  }
+}
+
+/**
+ * URL signée de LECTURE (1 h) du document source, pour afficher la page d'une
+ * question dans l'écran de relecture. Le bucket `exercise-imports` est privé.
+ */
+export async function getExerciseImportSourceUrlAction(importId: string, role: 'sujet' | 'corrige' = 'sujet'): Promise<{ ok: true; url: string; format: string } | { ok: false; error: string }> {
+  await requireAdmin();
+  if (!z.string().uuid().safeParse(importId).success) return { ok: false, error: 'Import invalide.' };
+  try {
+    const admin = createAdminClient();
+    const a = admin as unknown as { from: (table: string) => any; storage: typeof admin.storage };
+    const { data: row } = await a.from('exercise_imports').select('sujet_path, corrige_path, format').eq('id', importId).maybeSingle();
+    if (!row) return { ok: false, error: 'Import introuvable.' };
+    const path = role === 'corrige' ? row.corrige_path : row.sujet_path;
+    if (!path) return { ok: false, error: 'Ce document n’existe pas pour cet import.' };
+    const { data, error } = await a.storage.from('exercise-imports').createSignedUrl(path, 3600);
+    if (error || !data?.signedUrl) return { ok: false, error: error?.message ?? 'Le document source n’est plus disponible dans le stockage.' };
+    return { ok: true, url: data.signedUrl, format: row.format };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : 'Document indisponible.' };
+  }
 }

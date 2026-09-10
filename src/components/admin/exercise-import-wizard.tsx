@@ -1,39 +1,41 @@
 'use client';
 
 import { useMemo, useState, useTransition } from 'react';
-import { reponseModele } from '@/lib/qcm/grade';
-import { VariantesAcceptees } from '@/components/qcm/variantes-acceptees';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, CheckCircle2, ChevronDown, CircleDollarSign, Eye, ImageIcon, Loader2, RotateCw, Send, UploadCloud, X } from 'lucide-react';
+import { AlertCircle, CheckCircle2, ChevronDown, CircleDollarSign, Eye, Loader2, RotateCw, Send, UploadCloud, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { cancelExerciseImportAction, estimateExerciseImportAction, prepareExerciseImportAction, publishExerciseImportAction } from '@/app/admin/import-exercices/actions';
 import { createClient } from '@/lib/supabase/client';
 import { fetchAuthentifie } from '@/lib/auth/fresh-token';
+import { ImportRelecture, VERDICTS, type ResultatImport } from '@/components/admin/exercise-import-relecture';
 
 export type ImportCollege = { id: string; name: string; parentId: string | null; courses: { id: string; title: string }[] };
 export type ImportHistoryRow = {
   id: string; title: string; voie: 'interne' | 'externe'; format: string; status: string; estimatedPriceCents: number; billedPriceCents: number | null;
-  result: ImportResultat | null; warnings: string[]; error: string | null; createdAt: string; courseTitle: string; collegeName: string; serieId: string | null;
+  result: ResultatImport | null; warnings: string[]; error: string | null; createdAt: string; courseTitle: string; collegeName: string; serieId: string | null;
 };
-/** `exercise_imports.result` : résultat final (questions) OU progression d'une
- *  analyse par lots en cours (plan + partiels), cf. route analyse. */
-type ImportResultat = {
-  questions?: PreviewQuestion[]; warnings?: string[];
-  meta?: { model?: string; lots?: number; pages?: number; cout?: { usd?: number } };
-  etape?: 'analyse'; plan?: { lots?: unknown[]; lotsCorrige?: unknown[]; nbPagesSujet?: number }; partiels?: Record<string, unknown>; partielsCorrige?: Record<string, unknown>;
-};
-type ProgressionAnalyse = { lotsFaits: number; lotsTotal: number; exercices: number; coutUsd?: number };
+type ProgressionAnalyse = { etape?: string; lotsFaits: number; lotsTotal: number; exercices: number; coutUsd?: number; detail?: string };
 type ReponseAnalyse = { ok?: boolean; error?: string; done?: boolean; progress?: ProgressionAnalyse } | null;
 
+const ETAPES: Record<string, string> = {
+  analyse: 'Analyse', verification: 'Vérification sur le document', images: 'Extraction des images', relance: 'Relance des pages incomplètes', finalisation: 'Finalisation',
+};
+
 /** Avancement lisible d'un import en cours d'analyse, depuis sa ligne. */
-function avancement(r: ImportResultat | null): string | null {
-  if (!r || r.etape !== 'analyse' || !r.plan) return null;
+function avancement(r: ResultatImport | null): string | null {
+  if (!r || !r.etape || r.etape === 'ready' || !r.plan) return null;
+  if (r.etape !== 'analyse') return ETAPES[r.etape] ?? r.etape;
   const total = (r.plan.lots?.length ?? 0) + (r.plan.lotsCorrige?.length ?? 0);
   const faits = Object.keys(r.partiels ?? {}).length + Object.keys(r.partielsCorrige ?? {}).length;
   return total ? `lot ${Math.min(faits, total)}/${total}` : null;
 }
-type PreviewQuestion = { client_id: string; format: 'qcm' | 'qroc'; enonce: string; items: { lettre: string; enonce: string; is_correct: boolean; justification: string; images?: unknown[] }[]; reponse_attendue: string; correction_generale: string; images?: { source_description: string; placement: string }[]; warnings: string[] };
+/** Message de progression pendant les appels enchaînés à la route d'analyse. */
+function messageProgression(pr: ProgressionAnalyse | undefined): string {
+  if (!pr) return 'Analyse en cours…';
+  const etape = pr.etape && pr.etape !== 'analyse' ? `${ETAPES[pr.etape] ?? pr.etape}${pr.detail ? ` (${pr.detail})` : ''}…` : `Analyse : lot ${pr.lotsFaits}/${pr.lotsTotal}${pr.detail ? ` · ${pr.detail}` : ''}`;
+  return `${etape} · ${pr.exercices} exercice${pr.exercices > 1 ? 's' : ''} trouvé${pr.exercices > 1 ? 's' : ''}`;
+}
 type Format = 'pdf' | 'docx' | 'txt';
 type Mode = 'combined' | 'paired';
 const OFFERS = [
@@ -184,8 +186,7 @@ export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCo
         return { ok: false, error: payload?.error ?? `L’analyse a échoué (code ${res.status}). L’import est enregistré : relancez-le depuis la liste, les lots déjà analysés sont conservés.` };
       }
       if (payload.done) return { ok: true };
-      const pr = payload.progress;
-      setEtape(pr ? `Analyse : lot ${pr.lotsFaits}/${pr.lotsTotal} · ${pr.exercices} exercice${pr.exercices > 1 ? 's' : ''} trouvé${pr.exercices > 1 ? 's' : ''}…` : 'Analyse en cours…');
+      setEtape(messageProgression(payload.progress));
       router.refresh();
     }
     return { ok: false, error: 'L’analyse n’a pas abouti après de nombreux appels : relancez-la depuis la liste.' };
@@ -219,8 +220,31 @@ export function ExerciseImportWizard({ colleges, history }: { colleges: ImportCo
         </div>
         <aside className="h-fit rounded-2xl border border-[#C9E6D5] bg-[#F3FBF6] p-5"><div className="flex items-center gap-2 text-sm font-semibold text-[#16793C]"><CircleDollarSign className="h-4 w-4" /> Estimation IA</div><p className="mt-2 text-3xl font-semibold tabular-nums text-[#124A2A]">{estimate == null ? '—' : money(estimate)}</p><p className="mt-2 text-xs leading-5 text-[#38624A]">Calculée avant l’analyse à partir de la taille et du type de document. Le montant affiché est conservé pour cet import.</p></aside>
       </section>
-      <section className="mt-8"><h2 className="text-lg font-semibold text-(--color-ink)">Imports récents</h2><p className="mt-1 text-sm text-(--color-ink-soft)">Ouvrez les détails pour vérifier les exercices dans leur présentation étudiante.</p><div className="mt-4 overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface)">{history.length === 0 ? <p className="px-5 py-10 text-center text-sm text-(--color-ink-muted)">Aucun import pour le moment.</p> : <div className="divide-y divide-(--color-border)">{history.map((row) => <div key={row.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center"><div className="min-w-0 flex-1"><p className="truncate font-semibold text-(--color-ink)">{row.title}</p><p className="text-xs text-(--color-ink-muted)">{row.collegeName} · {row.courseTitle} · {row.voie === 'interne' ? 'QCM' : 'QROC'} · {new Date(row.createdAt).toLocaleDateString('fr-FR')}</p>{row.error && <p className="mt-1 text-xs text-[#B4233C]">{row.error}</p>}{row.result?.meta?.cout?.usd != null && <p className="mt-1 text-[11px] text-(--color-ink-muted)">{row.result.meta.pages ?? '?'} pages · {row.result.meta.lots ?? '?'} lots · coût IA {row.result.meta.cout.usd.toFixed(2)} $ · {row.result.meta.model}</p>}</div><span className={cn('w-fit rounded-full px-2.5 py-1 text-xs font-semibold', STATUS[row.status]?.className ?? 'bg-slate-100 text-slate-700')}>{STATUS[row.status]?.label ?? row.status}{row.status === 'processing' && avancement(row.result) ? ` · ${avancement(row.result)}` : ''}</span><span className="text-sm font-semibold tabular-nums text-(--color-ink)">{money(row.billedPriceCents ?? row.estimatedPriceCents)}</span><div className="flex gap-2"><Button size="sm" variant="outline" onClick={() => setSelected(row)} disabled={!row.result?.questions?.length}><Eye /> Détails</Button>{row.status === 'ready' && <Button size="sm" onClick={() => start(async () => { try { const r = await publishExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); router.refresh(); } })} disabled={pending}>Publier</Button>}{(row.status === 'failed' || row.status === 'processing') && <Button size="sm" variant="outline" onClick={() => relancer(row.id)} disabled={pending}><RotateCw className="h-4 w-4" /> {row.status === 'failed' ? 'Relancer' : 'Reprendre'}</Button>}{!['published','cancelled'].includes(row.status) && <Button size="sm" variant="ghost" onClick={() => start(async () => { try { const r = await cancelExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); } })} disabled={pending}><X /></Button>}</div></div>)}</div>}</div></section>
-      {selected && <PreviewDialog row={selected} onClose={() => setSelected(null)} />}
+      <section className="mt-8"><h2 className="text-lg font-semibold text-(--color-ink)">Imports récents</h2><p className="mt-1 text-sm text-(--color-ink-soft)">Relisez chaque import (rapport de fiabilité, page source, corrections) avant de le publier.</p><div className="mt-4 overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface)">{history.length === 0 ? <p className="px-5 py-10 text-center text-sm text-(--color-ink-muted)">Aucun import pour le moment.</p> : <div className="divide-y divide-(--color-border)">{history.map((row) => {
+        const f = row.result?.fiabilite ?? null;
+        const verdict = f?.verdict ?? null;
+        const publiable = row.status === 'ready' && verdict !== 'rouge';
+        return <div key={row.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center" data-testid="ligne-import">
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-semibold text-(--color-ink)">{row.title}</p>
+            <p className="text-xs text-(--color-ink-muted)">{row.collegeName} · {row.courseTitle} · {row.voie === 'interne' ? 'QCM' : 'QROC'} · {new Date(row.createdAt).toLocaleDateString('fr-FR')}</p>
+            {row.error && <p className="mt-1 text-xs text-[#B4233C]">{row.error}</p>}
+            {f && <p className="mt-1 text-[11px] text-(--color-ink-soft)" data-testid="compteurs-ligne">{f.questionsImportees}/{f.questionsDocument || f.questionsImportees} questions · {f.questionsManquantes} manquante{f.questionsManquantes > 1 ? 's' : ''} · {f.corrigesCorriges} corrigé{f.corrigesCorriges > 1 ? 's' : ''} corrigé{f.corrigesCorriges > 1 ? 's' : ''} · {f.imagesRattachees}/{f.imagesDocument} image{f.imagesDocument > 1 ? 's' : ''} · {f.alertesBloquantes} bloquante{f.alertesBloquantes > 1 ? 's' : ''} · {f.alertesARelire} à relire</p>}
+            {row.result?.meta?.cout?.usd != null && <p className="mt-1 text-[11px] text-(--color-ink-muted)">{row.result.meta.pages ?? '?'} pages · {row.result.meta.lots ?? '?'} lots{row.result.meta.relances?.lots ? ` + ${row.result.meta.relances.lots} relance(s)` : ''} · coût réel {row.result.meta.cout.usd.toFixed(2)} $ · {row.result.meta.model}</p>}
+          </div>
+          <div className="flex flex-col items-start gap-1 sm:items-center">
+            <span className={cn('w-fit rounded-full px-2.5 py-1 text-xs font-semibold', STATUS[row.status]?.className ?? 'bg-slate-100 text-slate-700')}>{STATUS[row.status]?.label ?? row.status}{row.status === 'processing' && avancement(row.result) ? ` · ${avancement(row.result)}` : ''}</span>
+            {verdict && <span data-testid="verdict-ligne" className={cn('w-fit rounded-full px-2.5 py-1 text-xs font-semibold', VERDICTS[verdict].pastille)}>{VERDICTS[verdict].label}</span>}
+          </div>
+          <span className="text-sm font-semibold tabular-nums text-(--color-ink)" title={row.billedPriceCents != null ? `Facturé (estimation ${money(row.estimatedPriceCents)})` : 'Estimation'}>{money(row.billedPriceCents ?? row.estimatedPriceCents)}</span>
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={() => setSelected(row)} disabled={!row.result?.questions?.length && !row.result?.questions_ecartees?.length}><Eye /> {row.status === 'ready' ? 'Relire' : 'Détails'}</Button>
+            {row.status === 'ready' && <Button size="sm" onClick={() => { if (!publiable) { setSelected(row); return; } start(async () => { try { const r = await publishExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); router.refresh(); } }); }} disabled={pending || !publiable} title={!publiable ? `${f?.alertesBloquantes ?? ''} alerte(s) bloquante(s) à traiter dans la relecture` : undefined}>Publier</Button>}
+            {(row.status === 'failed' || row.status === 'processing') && <Button size="sm" variant="outline" onClick={() => relancer(row.id)} disabled={pending}><RotateCw className="h-4 w-4" /> {row.status === 'failed' ? 'Relancer' : 'Reprendre'}</Button>}
+            {!['published','cancelled'].includes(row.status) && <Button size="sm" variant="ghost" onClick={() => start(async () => { try { const r = await cancelExerciseImportAction(row.id); if (!r.ok) setError(r.error); else router.refresh(); } catch (e) { setError(messageErreur(e)); } })} disabled={pending} aria-label="Annuler l’import"><X /></Button>}
+          </div>
+        </div>; })}</div>}</div></section>
+      {selected && <ImportRelecture row={selected} onClose={() => setSelected(null)} onChanged={() => router.refresh()} />}
     </main>
   );
 }
@@ -228,4 +252,3 @@ const STATUS: Record<string, { label: string; className: string }> = { draft: { 
 function Choice({ active, title, text, onClick }: { active: boolean; title: string; text: string; onClick: () => void }) { return <button type="button" onClick={onClick} className={cn('rounded-xl border p-4 text-left transition-colors', active ? 'border-(--color-primary) bg-(--color-primary-soft)' : 'border-(--color-border) hover:bg-(--color-surface-soft)')}><p className="font-semibold text-(--color-ink)">{title}</p><p className="mt-1 text-xs text-(--color-ink-muted)">{text}</p></button>; }
 function Select({ label, value, onChange, children, disabled }: { label: string; value: string; onChange: (value: string) => void; children: React.ReactNode; disabled?: boolean }) { return <label className="block text-xs font-medium text-(--color-ink-soft)">{label}<span className="relative mt-1 block"><select disabled={disabled} value={value} onChange={(e) => onChange(e.target.value)} className="h-10 w-full appearance-none rounded-lg border border-(--color-border) bg-white px-3 pr-8 text-sm text-(--color-ink) outline-none focus:border-(--color-primary)">{children}</select><ChevronDown className="pointer-events-none absolute right-2 top-3 h-4 w-4 text-(--color-ink-muted)" /></span></label>; }
 function FileDrop({ label, accept, file, onFile }: { label: string; accept: Format; file: File | null; onFile: (file: File | null) => void }) { const mime = accept === 'pdf' ? '.pdf,application/pdf' : accept === 'docx' ? '.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document' : '.txt,text/plain'; return <label className="flex min-h-28 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-(--color-border) bg-(--color-surface-soft) px-4 text-center hover:border-(--color-primary)"><UploadCloud className="h-5 w-5 text-(--color-primary)" /><span className="mt-2 text-xs font-semibold text-(--color-ink)">{label}</span><span className="mt-1 max-w-full truncate text-[11px] text-(--color-ink-muted)">{file ? file.name : `Déposer un ${accept.toUpperCase()}`}</span><input type="file" accept={mime} className="sr-only" onChange={(e) => onFile(e.target.files?.[0] ?? null)} /></label>; }
-function PreviewDialog({ row, onClose }: { row: ImportHistoryRow; onClose: () => void }) { const [index, setIndex] = useState(0); const questions = row.result?.questions ?? []; const q = questions[index]; if (!q) return null; return <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"><div role="dialog" aria-modal="true" className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-2xl"><header className="sticky top-0 flex items-center justify-between border-b border-(--color-border) bg-white px-5 py-4"><div><p className="text-xs text-(--color-ink-muted)">Vue étudiant · {q.format.toUpperCase()}</p><h3 className="font-semibold text-(--color-ink)">{row.title}</h3></div><Button variant="ghost" size="sm" onClick={onClose}><X /></Button></header><div className="p-5"><div className="mb-4 flex items-center justify-between text-sm text-(--color-ink-soft)"><button disabled={index === 0} onClick={() => setIndex(index - 1)}>← Précédent</button><span>Question {index + 1} / {questions.length}</span><button disabled={index === questions.length - 1} onClick={() => setIndex(index + 1)}>Suivant →</button></div><p className="whitespace-pre-wrap text-[15px] leading-7 text-(--color-ink)">{q.enonce}</p>{(q.images ?? []).length > 0 && <div className="mt-4 rounded-xl border border-dashed border-(--color-border) p-3 text-xs text-(--color-ink-soft)"><ImageIcon className="mr-1 inline h-4 w-4" />Illustrations détectées : {(q.images ?? []).map((i) => i.source_description).join(' · ')}</div>}{q.format === 'qcm' ? <div className="mt-5 space-y-3">{q.items.map((item) => <div key={item.lettre} className="rounded-xl border border-(--color-border) p-3"><p className="font-medium text-(--color-ink)"><span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-(--color-surface-soft) text-xs">{item.lettre}</span>{item.enonce}</p><p className={cn('mt-2 text-sm', item.is_correct ? 'text-[#16793C]' : 'text-(--color-ink-soft)')}>{item.is_correct ? 'Vrai' : 'Faux'} · {item.justification}</p></div>)}</div> : <div className="mt-5 rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-4"><p className="text-xs font-semibold uppercase tracking-wide text-(--color-ink-muted)">Réponse attendue</p><p className="mt-1 whitespace-pre-wrap text-sm text-(--color-ink)">{reponseModele(q.reponse_attendue) || 'À vérifier'}</p><VariantesAcceptees reponseAttendue={q.reponse_attendue} /></div>}{q.correction_generale && <div className="mt-5 rounded-xl border border-[#C9E6D5] bg-[#F3FBF6] p-4"><p className="text-xs font-semibold uppercase tracking-wide text-[#16793C]">Correction</p><p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-(--color-ink)">{q.correction_generale}</p></div>}{q.warnings.length > 0 && <div className="mt-4 text-xs text-amber-700">À vérifier : {q.warnings.join(' · ')}</div>}</div></div></div>; }

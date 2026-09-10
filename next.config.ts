@@ -114,7 +114,11 @@ const nextConfig: NextConfig = {
   // même `serverExternalPackages` pour ne pas faire passer puppeteer-core et
   // le SDK chromium-min par le bundler Turbopack (qui sinon tente de tracer
   // tout l'arbre de deps).
-  serverExternalPackages: ["@sparticuz/chromium-min", "puppeteer-core"],
+  // Extraction des images des PDF d'exercices (src/lib/ai/exercise-import-images.ts) :
+  // `@napi-rs/canvas` est un module natif (.node) et pdf.js le charge lui-même
+  // par `require("@napi-rs/canvas")` ; l'un comme l'autre doivent rester des
+  // paquets externes chargés depuis node_modules, pas passer par le bundler.
+  serverExternalPackages: ["@sparticuz/chromium-min", "puppeteer-core", "pdfjs-dist", "@napi-rs/canvas"],
   // Vercel ne bundle pas les fichiers hors src/public par défaut.
   // On force l'inclusion des PDFs d'annales pour que la route watermark
   // puisse les lire en runtime (process.cwd()/data/medgen-annales).
@@ -125,6 +129,17 @@ const nextConfig: NextConfig = {
     '/api/certificate/[cours]': ['./public/major-ecn-logo.png', './public/tampon-pae-formation.png'],
     '/api/admin/campaign': ['./src/lib/email/campaigns/**/*'],
     '/api/cron/campaign-drip': ['./src/lib/email/campaigns/**/*'],
+    // Import d'exercices : pdf.js lit ses décodeurs wasm (JPEG 2000, JBIG2) et
+    // ses polices standard avec fs.readFile, hors de portée du traçage
+    // statique ; et le binaire Linux de @napi-rs/canvas est un paquet optionnel
+    // chargé dans un try/catch. Sans ces fichiers, une image JPX ne se décode
+    // pas et le rendu des pages échoue en production.
+    '/api/admin/import-exercices/**': [
+      './node_modules/pdfjs-dist/wasm/**/*',
+      './node_modules/pdfjs-dist/standard_fonts/**/*',
+      './node_modules/@napi-rs/canvas/**/*',
+      './node_modules/.pnpm/@napi-rs+canvas-linux-x64-gnu*/**/*',
+    ],
   },
   // Le tracing de Vercel embarque les assets STATIQUES de `public/` dans le
   // bundle de chaque fonction serverless. Une liste de sous-dossiers exclus
