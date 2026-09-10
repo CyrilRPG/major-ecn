@@ -77,11 +77,12 @@ function documentColore(): VeritePdf {
 
 /* ─────────── Facturation ─────────── */
 
-test('la facturation retient le maximum de l’estimation et du coût réel majoré (× 1,1 × 5), en centimes', () => {
+test('la facturation retient le maximum de l’estimation et du coût réel majoré (× 1,1 × 3), en centimes', () => {
   assert.equal(PRICE_MULTIPLIER, 3);
-  assert.equal(facturerImportCents(500, 0.2), 500);              // 0,2 × 1,1 × 5 = 1,10 € < 5 €
-  assert.equal(facturerImportCents(500, 3), 1650);               // 3 × 1,1 × 5 = 16,50 €
-  assert.equal(facturerImportCents(500, 1.234567), Math.ceil(1.234567 * 1.1 * 3 * 100));
+  assert.equal(facturerImportCents(500, 0.2), 500);              // 0,2 × 1,1 × 3 = 0,66 € < 5 €
+  assert.equal(facturerImportCents(500, 3), 990);                // 3 × 1,1 × 3 = 9,90 €
+  assert.equal(facturerImportCents(500, 1.234567), 500);          // 1,23 × 1,1 × 3 = 4,07 € < 5 €
+  assert.equal(facturerImportCents(100, 1.234567), Math.ceil(1.234567 * 1.1 * 3 * 100));
   assert.equal(facturerImportCents(500, 0), 500);
   assert.equal(facturerImportCents(Number.NaN, Number.NaN), 0);
 });
@@ -422,7 +423,7 @@ test('assemblerEtVerifier + finaliser : lot en échec → alerte bloquante « pa
   assert.deepEqual(fq1.images, []); assert.deepEqual(fq1.images_modele, []); assert.equal(fq1.page_document, 1); assert.equal(fq1.numero_document, '1/');
   assert.equal(r.meta.model, 'claude-opus-5'); assert.equal(r.meta.effort, 'high'); assert.equal(r.meta.cout.usd, 0.42); assert.equal(r.meta.lotsEnEchec, 1); assert.equal(r.meta.images.erreur, 'canvas indisponible');
   assert.ok(!('appariements' in r.rapport), 'le rapport final ne porte pas les appariements');
-  assert.equal(facturerImportCents(100, r.meta.cout.usd), 231);
+  assert.equal(facturerImportCents(100, r.meta.cout.usd), 139); // 0,42 $ × 1,1 × 3
 });
 
 test('assemblerEtVerifier fusionne les lots d’une relance et lève un message français sans exercice', () => {
