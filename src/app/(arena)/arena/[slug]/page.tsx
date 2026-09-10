@@ -1,6 +1,7 @@
+import { ArenaBackdropPhoto } from '@/components/arena/arena-backdrop';
 import { ArenaPage } from '@/components/arena/arena-shell';
 import { Container } from '@/components/arena/arena-ui';
-import { ARENA, BODY, CAPS, HEADLINE } from '@/components/arena/tokens';
+import { ARENA, BODY, CAPS, HEADLINE, PHOTOS } from '@/components/arena/tokens';
 import { Stadium } from '@/components/arena/stadium';
 import { LandingBareme, type BaremeCard } from '@/components/arena/landing/bareme-board';
 import { LandingCorrections } from '@/components/arena/landing/corrections';
@@ -80,6 +81,8 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
 
   return (
     <ArenaPage nav={nav}>
+      {/* Landing du tournoi : l'image d'origine (médecin au Colisée) remplace la plaque commune. */}
+      <ArenaBackdropPhoto src={PHOTOS.heroArena} />
       <ArenaFxStyles />
       <LandingHero
         specialty={t.specialty}

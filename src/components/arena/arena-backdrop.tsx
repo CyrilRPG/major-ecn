@@ -66,3 +66,22 @@ export function ArenaBackdrop() {
     </div>
   );
 }
+
+/**
+ * Remplace la photo du fond unique pour la page qui le monte (variable CSS
+ * posée sur <html>, retirée au démontage). La landing d'un tournoi garde ainsi
+ * l'image d'origine de la médecin au Colisée (`hero-arena.jpg`) tandis que les
+ * autres pages Arena restent sur la plaque du colisée.
+ */
+export function ArenaBackdropPhoto({ src, srcMobile }: { src: string; srcMobile?: string }) {
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty('--arena-photo', `url("${src}")`);
+    root.style.setProperty('--arena-photo-mobile', `url("${srcMobile ?? src}")`);
+    return () => {
+      root.style.removeProperty('--arena-photo');
+      root.style.removeProperty('--arena-photo-mobile');
+    };
+  }, [src, srcMobile]);
+  return null;
+}
