@@ -115,14 +115,35 @@ export async function readCorrectionPage(tournamentId: string, roundNumber: numb
  * une ligne en pied de page. Sortie JPEG (poids réduit, pas de canal alpha à
  * détourer).
  */
+let policeEnregistree: string | null = null;
+/**
+ * Police du filigrane : la fonction Vercel n'a aucune police système (le texte
+ * serait invisible). On enregistre la Liberation Sans livrée par pdfjs-dist
+ * (déjà tracée pour le rendu des pages).
+ */
+async function policeFiligrane(GlobalFonts: { registerFromPath(path: string, alias?: string): boolean }): Promise<string> {
+  if (policeEnregistree !== null) return policeEnregistree;
+  try {
+    const require = createRequire(import.meta.url);
+    const racine = path.dirname(require.resolve('pdfjs-dist/package.json'));
+    const ok = GlobalFonts.registerFromPath(path.join(racine, 'standard_fonts', 'LiberationSans-Bold.ttf'), 'ArenaWatermark');
+    policeEnregistree = ok ? 'ArenaWatermark' : '';
+  } catch {
+    policeEnregistree = '';
+  }
+  return policeEnregistree;
+}
+
 export async function burnWatermark(png: Buffer, label: string): Promise<Buffer> {
-  const { createCanvas, loadImage } = await import('@napi-rs/canvas');
+  const { createCanvas, loadImage, GlobalFonts } = await import('@napi-rs/canvas');
+  const police = await policeFiligrane(GlobalFonts);
+  const famille = police ? `"${police}", ` : '';
   const img = await loadImage(png);
   const c = createCanvas(img.width, img.height);
   const ctx = c.getContext('2d');
   ctx.drawImage(img, 0, 0);
   const size = Math.round(img.width / 42);
-  ctx.font = `600 ${size}px Inter, Roboto, Helvetica, Arial, sans-serif`;
+  ctx.font = `bold ${size}px ${famille}Inter, Roboto, Helvetica, Arial, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   const stepX = img.width / 2.2;
@@ -139,7 +160,7 @@ export async function burnWatermark(png: Buffer, label: string): Promise<Buffer>
   }
   ctx.restore();
   // Ligne de pied : lisible même sur une capture partielle.
-  ctx.font = `500 ${Math.round(size * 0.7)}px Inter, Roboto, Helvetica, Arial, sans-serif`;
+  ctx.font = `bold ${Math.round(size * 0.7)}px ${famille}Inter, Roboto, Helvetica, Arial, sans-serif`;
   ctx.fillStyle = 'rgba(120, 18, 40, 0.55)';
   ctx.textAlign = 'right';
   ctx.fillText(label, img.width - size, img.height - size * 0.9);

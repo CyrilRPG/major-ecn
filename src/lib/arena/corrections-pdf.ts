@@ -142,8 +142,14 @@ export function correctionsHtml(t: TournamentRow, r: RoundRow, questions: Questi
   .bareme ul { list-style: none; margin: 0; padding: 0; }
   .bareme li { display: flex; justify-content: space-between; gap: 6px; border-top: 1px dashed var(--line); padding: 3px 0; }
   .bareme li b { color: var(--ink); white-space: nowrap; }
-  .q { page-break-inside: avoid; break-inside: avoid; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 10px; margin: 0 0 12px; }
-  .q-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  /* Une question peut s'étendre sur deux pages (la première question laissait
+     une page blanche derrière le titre « Questions ») ; seules ses briques
+     internes restent insécables. */
+  .baremes { break-inside: avoid; }
+  h2 { break-after: avoid; }
+  .q { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 10px; margin: 0 0 12px; }
+  .q-head, .vignette, .enonce, .items li, .expected, .callout, .block, .images { break-inside: avoid; }
+  .q-head, .enonce { break-after: avoid; }
   .q-num { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--bordeaux); color: #fff; font-family: Oswald, sans-serif; font-size: 13pt; font-weight: 600; }
   .q-meta { display: flex; gap: 6px; flex-wrap: wrap; }
   .tag { font-family: Oswald, sans-serif; font-size: 8pt; letter-spacing: .12em; text-transform: uppercase; color: var(--red); border: 1px solid rgba(228,0,43,.35); border-radius: 999px; padding: 2px 8px; }
