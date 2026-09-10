@@ -26,3 +26,4 @@ Recadrées et compressées pour le web le 07/09/2026.
 |---|---|
 | colosseum-plate.jpg | `colosseum-2026.png` sans ses deux bannières latérales (zones reconstruites par symétrie des colonnades voisines, `tmp/_arena-plate.mjs`, @napi-rs/canvas). Fond unique de toutes les pages Arena (`arena-backdrop.tsx`) ; les oriflammes sont désormais des éléments HTML (`arena-oriflammes.tsx`). |
 | colosseum-plate-1080.jpg | Même plaque réduite à 1080 px de large pour la couche statique mobile / tablette. |
+| rules-scene-2026.png | Décor de la page Règles recréé avec l’outil intégré `image_gen` à partir de la maquette client du 10/09/2026 : amphithéâtre, bannières et casque sur son socle. Tous les textes et contrôles de la page sont rendus en HTML, en dehors des inscriptions décoratives des bannières. Consigne : `rules-scene-2026.prompt.md`. |
