@@ -129,17 +129,13 @@ const nextConfig: NextConfig = {
     '/api/certificate/[cours]': ['./public/major-ecn-logo.png', './public/tampon-pae-formation.png'],
     '/api/admin/campaign': ['./src/lib/email/campaigns/**/*'],
     '/api/cron/campaign-drip': ['./src/lib/email/campaigns/**/*'],
-    // Import d'exercices : pdf.js lit ses décodeurs wasm (JPEG 2000, JBIG2) et
-    // ses polices standard avec fs.readFile, hors de portée du traçage
-    // statique ; et le binaire Linux de @napi-rs/canvas est un paquet optionnel
-    // chargé dans un try/catch. Sans ces fichiers, une image JPX ne se décode
-    // pas et le rendu des pages échoue en production.
-    '/api/admin/import-exercices/**': [
-      './node_modules/pdfjs-dist/wasm/**/*',
-      './node_modules/pdfjs-dist/standard_fonts/**/*',
-      './node_modules/@napi-rs/canvas/**/*',
-      './node_modules/.pnpm/@napi-rs+canvas-linux-x64-gnu*/**/*',
-    ],
+    // Import d'exercices : pdf.js et @napi-rs/canvas sont déclarés externes
+    // (serverExternalPackages) et tracés par Vercel depuis node_modules. Ne PAS
+    // ajouter ici de glob sous ./node_modules : avec pnpm ce sont des liens
+    // symboliques et Vercel refuse le paquet de la fonction (« invalid deployment
+    // package … symlinked directories », déploiement du 10/09/2026). Les décodeurs
+    // wasm (JPEG 2000, JBIG2) et les polices standard de pdf.js ne sont donc pas
+    // embarqués : une figure JPX non découpée remonte comme avertissement.
   },
   // Le tracing de Vercel embarque les assets STATIQUES de `public/` dans le
   // bundle de chaque fonction serverless. Une liste de sous-dossiers exclus
