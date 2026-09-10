@@ -53,124 +53,47 @@
   }
 }
 
-/* ---------- Oriflammes ---------- */
+/* ---------- Oriflammes : visuels de la maquette, en images ---------- */
+.arena-experience-main { position: relative; }
 .arena-oriflammes {
-  --oriflamme-w: clamp(108px, 12vw, 132px);
+  --oriflamme-w: clamp(136px, 11.5vw, 180px);
+  display: none;
   position: absolute;
-  inset: 0 0 auto 0;
-  z-index: 1;
+  inset: 0 0 auto;
+  z-index: -1;
   pointer-events: none;
 }
 .arena-oriflamme {
   position: absolute;
   top: 0;
   width: var(--oriflamme-w);
-  aspect-ratio: 123 / 380;
-  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.55));
-  color: #e8c46a;
+  aspect-ratio: 172 / 400;
+  filter: drop-shadow(0 12px 18px #0008);
 }
-.arena-oriflamme-left {
-  left: 2%;
-}
-.arena-oriflamme-right {
-  right: 2%;
-}
-.arena-oriflamme-cloth {
+.arena-oriflamme-left { left: 1.2%; }
+.arena-oriflamme-right { right: 1.2%; }
+.arena-oriflamme > img { display: block; width: 100%; height: 100%; }
+/* The frame follows each photograph's outer edge; the cloth, gold lettering,
+   helmet, laurels and fringes all come from the generated image. */
+.arena-oriflamme-left > img { clip-path: polygon(4% 0, 96% 0, 96% 79%, 50% 97.5%, 4% 79%); }
+.arena-oriflamme-right > img { clip-path: polygon(8% 0, 92% 0, 92% 81.5%, 50% 97%, 8% 81.5%); }
+.arena-oriflamme-season {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-.arena-oriflamme-content {
-  position: absolute;
-  inset: 0 0 12% 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  padding: 10% 8% 0;
+  top: 21%;
+  left: 27%;
+  right: 27%;
+  margin: 0;
   text-align: center;
-}
-.arena-oriflamme-icon {
-  width: 42%;
-  height: auto;
-  margin-bottom: 8%;
-}
-.arena-oriflamme-wordmark {
-  display: flex;
-  flex-direction: column;
-  font-family: var(--font-oswald), "Oswald", "Arial Narrow", Impact, sans-serif;
-  font-weight: 700;
-  font-size: clamp(28px, 3.3vw, 34px);
-  line-height: 0.98;
-  letter-spacing: 0.03em;
   text-transform: uppercase;
+  color: #ffcf65;
+  font-family: var(--font-oswald), 'Oswald', sans-serif;
+  text-shadow: 0 1px 3px #5b140b;
 }
-.arena-oriflamme-rule {
-  display: block;
-  width: 30%;
-  height: 2px;
-  margin: 10% 0;
-  background: linear-gradient(90deg, rgba(232, 196, 106, 0), #e8c46a 25%, #e8c46a 75%, rgba(232, 196, 106, 0));
-}
-.arena-oriflamme-motto,
-.arena-oriflamme-text {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  font-family: var(--font-oswald), "Oswald", "Arial Narrow", Impact, sans-serif;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 1.35;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-.arena-oriflamme-text {
-  letter-spacing: 0.12em;
-}
-@media (max-width: 899.98px) {
-  .arena-oriflammes {
-    display: none;
-  }
-}
-
-/* Pages immersives : les bannières qui étaient incrustées dans la photo
-   réapparaissent en HTML, sur le seul écran qui leur réservait la place. */
-.arena-experience-main {
-  position: relative;
-}
-.arena-experience-main > .arena-oriflammes {
-  display: none;
-  --oriflamme-w: clamp(96px, 10.8vw, 150px);
-  /* Sous le contenu du lobby (contexte d'empilement de .arena-experience,
-     isolé), au-dessus de la couche fixe du fond ; aucun z-index posé sur les
-     enfants de <main>, pour ne pas piéger les boîtes de dialogue fixes. */
-  z-index: -1;
-}
+.arena-oriflamme-season span { display: block; font-size: 11px; line-height: 1.5; letter-spacing: .12em; }
+.arena-oriflamme-season strong { display: block; font-size: 22px; line-height: 1.2; font-weight: 500; }
 @media (min-width: 1100px) {
-  .arena-experience-main:has(.ae-lobby) > .arena-oriflammes {
-    display: block;
-  }
-  .arena-experience-main:has(.ae-lobby) > .arena-oriflammes .arena-oriflamme {
-    /* proportions des bannières qui étaient incrustées dans la photo (172 × 470) */
-    aspect-ratio: 172 / 470;
-  }
-  .arena-experience-main:has(.ae-lobby) > .arena-oriflammes .arena-oriflamme-left {
-    left: 1.2%;
-  }
-  .arena-experience-main:has(.ae-lobby) > .arena-oriflammes .arena-oriflamme-right {
-    right: 1.2%;
-  }
-  /* La carte de la manche recouvre le bas de la bannière droite (comme dans
-     la photo d'origine) : son contenu se tient dans la moitié haute. */
-  .arena-experience-main:has(.ae-lobby) > .arena-oriflammes .arena-oriflamme-content {
-    justify-content: flex-start;
-    padding-top: 14%;
-  }
+  .ae-lobby > .arena-oriflammes { display: block; }
 }
-
 /* ---------- Page « Les règles de l'Arena » — référence 1024 × 1536 ---------- */
 .arena-root:has(.ar-page) > .arena-backdrop { display: none; }
 .ar-page {

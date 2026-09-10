@@ -4,7 +4,6 @@ import type { ReactNode } from 'react';
 import { Trophy } from 'lucide-react';
 import { ExperienceNavigation } from './experience-navigation';
 import { ArenaWordmark } from './arena-logo';
-import { ArenaOriflammes, LaurelIcon, OriflammeEvcArena } from './arena-oriflammes';
 import type { ArenaNavigation } from '@/lib/arena/navigation';
 import { Container } from './arena-ui';
 import { ARENA, BODY } from './tokens';
@@ -75,13 +74,6 @@ export function ArenaPage({ nav, children, bare = false, immersive = false }: { 
   if (immersive) return <div className="arena-experience">
     <ExperienceNavigation nav={nav} />
     <main className="arena-experience-main">
-      {/* Oriflammes autrefois incrustées dans la photo de fond ; n'apparaissent
-          que sur l'écran d'accueil du participant (`:has(.ae-lobby)`, ≥ 1100 px),
-          derrière son contenu, textes inchangés. */}
-      <ArenaOriflammes
-        left={<OriflammeEvcArena />}
-        right={<><LaurelIcon className="arena-oriflamme-icon" /><p className="arena-oriflamme-text"><span>Saison</span></p><p className="arena-oriflamme-wordmark"><span>2026</span></p><span className="arena-oriflamme-rule" /></>}
-      />
       {children}
     </main>
     <footer className="arena-experience-footer">

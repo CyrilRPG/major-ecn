@@ -13,6 +13,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { ArenaAvatar } from "./arena-avatar";
+import { ArenaOriflammes } from "./arena-oriflammes";
 import { Countdown } from "./countdown";
 import { describeBareme, type Bareme } from "@/lib/arena/scoring";
 import { roundState } from "@/lib/arena/time";
@@ -68,6 +69,8 @@ export function RoundLobby({
     new Date(nowIso),
   );
   const isCng = Object.values(bareme).every((b) => b.mode === "cng");
+  const seasonDate = rounds.find(r => r.opens_at)?.opens_at;
+  const season = seasonDate ? new Intl.DateTimeFormat('fr-FR', { year: 'numeric', timeZone: 'Europe/Paris' }).format(new Date(seasonDate)) : null;
   const target =
     state === "open"
       ? round.closes_at
@@ -76,6 +79,7 @@ export function RoundLobby({
         : null;
   return (
     <section className="ae-lobby">
+      <ArenaOriflammes season={season} />
       <div className="ae-lobby-hero">
         <div className="ae-lobby-heading">
           <p className="ae-caps">
