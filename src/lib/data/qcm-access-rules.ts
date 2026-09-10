@@ -169,8 +169,12 @@ export function canStudentReadSerie(
   // RETIRÉE le 03/09/2026 : ajoutée le 22/08 pour sauver les annales, elle était
   // devenue redondante avec l'exemption ci-dessus, et laissait une élève de voie
   // interne inscrite en Psychiatrie ouvrir les QROC de son collège.
-  if (serie.type === 'qcm' && !entrainement && !isAnnaleLabel(label) && ctx.voie) {
-    const kind = serie.kind ?? 'qcm';
+  // Les séries `type = 'qroc'` (« Questions rédactionnelles » du miroir Odontologie,
+  // 906 séries) relèvent de la même règle depuis le 10/09/2026 : un dentiste inscrit
+  // sur Major ECN en voie interne (QCM) ne doit voir que les QCM. Les élèves de
+  // Major Odontologie n'ont pas de voie : rien ne change pour eux.
+  if ((serie.type === 'qcm' || serie.type === 'qroc') && !entrainement && !isAnnaleLabel(label) && ctx.voie) {
+    const kind = serieQcmKind(serie) ?? 'qcm';
     if (ctx.voie === 'interne' && kind === 'qroc') return false;
     if (ctx.voie === 'externe' && kind !== 'qroc' && serie.is_revisions !== true) return false;
   }

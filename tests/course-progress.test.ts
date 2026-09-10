@@ -65,12 +65,9 @@ test('les séries `type = qroc` sont comptées, comme les `kind = qroc`', () => 
     assert.equal(questionAccessible({ voie: null, serie }), true);
   }
   assert.equal(questionAccessible({ voie: 'interne', serie: kindQroc }), false);
-  // Une série `type = 'qroc'` échappe à la règle voie ↔ kind (policy
-  // `qcm_series_voie_restrict` : `type is distinct from 'qcm'`) — elle reste
-  // lisible, donc comptée, pour la voie interne. Au 10/09/2026, ces 906 séries
-  // sont toutes des « Questions rédactionnelles » du miroir Odontologie, dont
-  // les élèves n'ont pas de voie.
-  assert.equal(questionAccessible({ voie: 'interne', serie: typeQroc }), true);
+  // Depuis le 10/09/2026, une série `type = 'qroc'` suit la règle voie ↔ kind
+  // (policy `qcm_series_voie_restrict`) : cachée, donc non comptée, en voie interne.
+  assert.equal(questionAccessible({ voie: 'interne', serie: typeQroc }), false);
   assert.equal(questionAccessible({ voie: 'externe', serie: { label: 'Séance 1', type: 'seance' } }), false);
 });
 

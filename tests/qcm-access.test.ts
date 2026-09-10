@@ -23,9 +23,13 @@ test('la voie tranche QCM (interne) et QROC (externe)', () => {
   assert.equal(canStudentReadSerie(qcm, ctx({ voie: 'interne' })), true);
   assert.equal(canStudentReadSerie(qcm, ctx({ voie: 'externe' })), false);
 
-  // Une série de type `qroc` n'est pas concernée par cette règle (kind-based).
-  const serieQroc = { id: '3', label: 'DP QROC 1', type: 'qroc' };
-  assert.equal(canStudentReadSerie(serieQroc, ctx({ voie: 'interne' })), true);
+  // Une série de type `qroc` (questions rédactionnelles du miroir Odontologie)
+  // suit la même règle depuis le 10/09/2026 : cachée en voie interne, visible en
+  // voie externe, et sans voie (élèves de Major Odontologie) tout reste lisible.
+  const serieQroc = { id: '3', label: 'Questions rédactionnelles 1', type: 'qroc' };
+  assert.equal(canStudentReadSerie(serieQroc, ctx({ voie: 'interne' })), false);
+  assert.equal(canStudentReadSerie(serieQroc, ctx({ voie: 'externe' })), true);
+  assert.equal(canStudentReadSerie(serieQroc, ctx({ voie: null })), true);
 });
 
 test('allowed_voies et allowed_offers filtrent les séries importées', () => {
