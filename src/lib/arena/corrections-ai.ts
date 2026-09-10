@@ -100,7 +100,7 @@ export async function redigerCorrectionEditoriale(t: TournamentRow, r: RoundRow,
     ...actives.map((q, i) => materiau(q, i + 1)),
   ].filter(Boolean).join('\n\n');
 
-  const res = await callClaude({ system: SYSTEM, user, model: ARENA_CORRECTIONS_MODEL, maxTokens: 16000, temperature: 0.2, cacheSystem: true });
+  const res = await callClaude({ system: SYSTEM, user, model: ARENA_CORRECTIONS_MODEL, maxTokens: 16000, temperature: null, cacheSystem: true });
   const out = extractJson<Sortie>(res.text);
   const brut = Array.isArray(out.questions) ? (out.questions as Record<string, unknown>[]) : [];
   const parIndex = new Map<number, Record<string, unknown>>();

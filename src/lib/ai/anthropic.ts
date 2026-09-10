@@ -35,7 +35,8 @@ export async function callClaude({
   user: string | CachedTextBlock[];
   model?: string;
   maxTokens?: number;
-  temperature?: number;
+  /** `null` = ne pas envoyer le paramètre (Opus 5 et Fable 5 le refusent : « temperature is deprecated for this model »). */
+  temperature?: number | null;
   cacheSystem?: boolean;
 }): Promise<AnthropicResult> {
   const key = process.env.ANTHROPIC_API_KEY;
@@ -60,7 +61,7 @@ export async function callClaude({
     body: JSON.stringify({
       model,
       max_tokens: maxTokens,
-      temperature,
+      ...(temperature === null ? {} : { temperature }),
       system: systemBlocks,
       messages: [{ role: 'user', content: userContent }],
     }),
