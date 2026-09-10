@@ -176,14 +176,13 @@
 .ar-page {
   --ar-gold: #ffc653;
   --ar-red: #ff0033;
-  --ar-width: min(100vw, 1280px);
+  --ar-width: 100vw;
   --ar-gutter: clamp(24px, 3.03vw, 38px);
   --ar-display: var(--font-oswald), 'Oswald', 'Arial Narrow', Impact, sans-serif;
   --ar-condensed: var(--font-bebas), 'Bebas Neue', Impact, sans-serif;
   position: relative;
   isolation: isolate;
   width: 100%;
-  max-width: 1280px;
   min-height: 1536px;
   margin-inline: auto;
   padding: 0 var(--ar-gutter) 36px;
