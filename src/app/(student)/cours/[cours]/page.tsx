@@ -128,7 +128,17 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   // Sous-collège « Recommandations » : l'item ne porte qu'un document de
   // référence. Sa page d'aperçu n'aurait qu'une seule carte à proposer — on
   // ouvre donc directement le lecteur PDF, comme pour une fiche de cours.
-  if (estRecommandation(c.matiere_id)) redirect(`/cours/${coursId}/fiche`);
+  //
+  // La redirection est CONDITIONNÉE au droit de lire une fiche : l'onglet
+  // Fiche renvoie lui-même vers l'aperçu quand la formule ne l'ouvre pas
+  // (c'est le cas de la formule Essentielle, cf. Config Permissions), et les
+  // deux redirections se seraient renvoyé l'élève en boucle. Sans le droit,
+  // l'élève reste sur l'aperçu, qui lui explique ce qui lui manque.
+  if (estRecommandation(c.matiere_id)) {
+    const peutLireLaFiche =
+      profile.role === 'admin' || (await fetchContentAccessForScope(scope)).fiche;
+    if (peutLireLaFiche) redirect(`/cours/${coursId}/fiche`);
+  }
 
   await supabase
     .from('course_progress')
