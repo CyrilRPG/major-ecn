@@ -10,6 +10,7 @@ import { canRead, canReadAnyQcm } from '@/lib/schemas/professor';
 import type { CourseSupport } from '@/lib/student/supports';
 import { hiddenBlocksVisibility, parseHiddenBlocks } from '@/lib/student/blocs';
 import { estTitreRevisions } from '@/lib/videos/revisions';
+import { rubriqueCommune, rubriqueParDefaut } from '@/lib/videos/rubriques';
 import { videoVisible, supportVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
 import { scopeOffers } from '@/lib/auth/permissions';
 import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
@@ -19,6 +20,7 @@ type CourseVideoRow = {
   id: string;
   titre: string;
   type: string | null;
+  rubrique?: string | null;
   storage_path: string | null;
   bunny_video_id: string | null;
   order_index: number | null;
@@ -46,7 +48,7 @@ export default async function CoursLayout({
     .select(`
       id, titre, matiere_id, access_type, hidden_blocks,
       matieres(nom, access_type, semestres(label, faculte_id)),
-      videos(id, titre, type, storage_path, bunny_video_id, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)),
+      videos(id, titre, type, rubrique, storage_path, bunny_video_id, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)),
       fiches(storage_path),
       flashcards(id),
       course_progress(video_watched, fiche_read)
@@ -219,6 +221,9 @@ export default async function CoursLayout({
         titre={c.titre}
         context={`${c.matieres.nom} · Programme EVC`}
         availability={availability}
+        // L'onglet porte le nom de la rubrique des cours vidéo (« Séance
+        // intensive » par défaut, renommable depuis la vue étudiant).
+        videoLabel={rubriqueCommune(coursVideos.map((v) => ({ type: 'cours', rubrique: v.rubrique ?? null }))) ?? rubriqueParDefaut('cours')}
         supports={supports}
         mastery={mastery}
         isDecouverte={isDecouverte}

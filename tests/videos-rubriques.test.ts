@@ -10,7 +10,7 @@ import {
 } from '../src/lib/videos/rubriques';
 
 test('libellés par défaut : un par type de vidéo', () => {
-  assert.equal(rubriqueParDefaut('cours'), 'Dernier tour de révision · Préparation intensive');
+  assert.equal(rubriqueParDefaut('cours'), 'Séance intensive');
   assert.equal(rubriqueParDefaut('seance_approfondie'), 'Séances approfondies · Programme approfondi');
   // Type inconnu ou absent (anciennes lignes) : comportement du cours vidéo.
   assert.equal(rubriqueParDefaut(null), rubriqueParDefaut('cours'));

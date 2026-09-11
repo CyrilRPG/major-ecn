@@ -537,6 +537,47 @@ export async function addVideoToRevisionsAction(input: {
 }
 
 /** Renomme une vidéo. Le titre sert aussi de nom d'onglet du support. */
+/**
+ * Renomme la rubrique (titre de section côté élève) de toutes les vidéos d'un
+ * type pour un item — appelé depuis le crayon de la vue étudiant. Libellé vide
+ * ⇒ NULL ⇒ libellé par défaut du type (« Séance intensive »…).
+ */
+export async function renameRubriqueAction(input: {
+  coursId: string;
+  type: 'cours' | 'seance_approfondie';
+  rubrique: string;
+}): Promise<{ ok: true; videos: number } | { error: string }> {
+  const ctx = await guard(input.coursId);
+  if ('error' in ctx) return ctx;
+  if (input.type !== 'cours' && input.type !== 'seance_approfondie') return { error: 'Type de vidéo inconnu.' };
+  const rubrique = normaliserRubrique(input.rubrique);
+  const { data, error } = await ctx.a
+    .from('videos')
+    .update({ rubrique, updated_at: new Date().toISOString() })
+    .eq('cours_id', input.coursId)
+    .eq('type', input.type)
+    .select('id');
+  if (error) return { error: error.message };
+  const videos = (data ?? []).length;
+  if (videos === 0) return { error: 'Aucune vidéo de ce type sur cet item : ajoutez d’abord une vidéo pour nommer sa rubrique.' };
+  await logAudit({
+    actor: ctx.profile,
+    action: 'update',
+    entity: 'video',
+    entityId: input.coursId,
+    coursId: ctx.cours.id,
+    coursTitre: ctx.cours.titre,
+    matiereNom: ctx.cours.matiereNom,
+    description: `Rubrique ${input.type === 'cours' ? 'Séance intensive' : 'Séances approfondies'} renommée « ${rubrique ?? rubriqueParDefaut(input.type)} » (${videos} vidéo(s))`,
+    diff: { type: input.type, to: rubrique },
+  });
+  refresh(input.coursId);
+  revalidatePath(`/cours/${input.coursId}`);
+  revalidatePath(`/cours/${input.coursId}/video`);
+  revalidatePath(`/cours/${input.coursId}/seance-approfondie`);
+  return { ok: true, videos };
+}
+
 export async function renameVideoAction(input: {
   videoId: string;
   titre: string;

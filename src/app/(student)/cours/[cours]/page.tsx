@@ -14,6 +14,7 @@ import { estItemAnnales } from '@/lib/data/annales';
 import { videoVisible, supportVisible, eleveAutorise, eleveExclu, type SupportOverride } from '@/lib/videos/audience';
 import { estOuverte } from '@/lib/videos/unlock';
 import { grouperParRubrique, rubriqueParDefaut } from '@/lib/videos/rubriques';
+import { RubriqueEditor } from '@/components/student/rubrique-editor';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-locked-card';
 import { ItemPopups, type ItemPopup } from '@/components/student/item-popups';
@@ -268,7 +269,12 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   // En-têtes de section : seulement s'il y a de quoi distinguer — plusieurs
   // rubriques, ou une rubrique saisie à la main. Un item ordinaire avec sa
   // seule carte « Cours vidéo » garde l'aperçu habituel, sans titre de section.
-  const afficherRubriques = rubriquesVideo.length > 1
+  // Le personnel (vue étudiant) voit toujours l'en-tête : c'est là que se
+  // trouve le crayon qui renomme la rubrique.
+  const staffRubriques = profile.role === 'admin' || profile.role === 'professor';
+  const typeParRubrique = new Map(rubriquesVideo.map((g) => [g.rubrique, g.videos[0]?.kind === 'seance' ? 'seance_approfondie' as const : 'cours' as const]));
+  const afficherRubriques = staffRubriques
+    || rubriquesVideo.length > 1
     || coursVideos.some((v) => !!v.rubrique?.trim())
     || saVids.some((v) => !!v.rubrique?.trim());
 
@@ -315,7 +321,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     ? [
         {
           // Cours vidéo « À venir » : carte non cliquable, badge orange.
-          href: '#video-coming-soon', label: 'Cours vidéo',
+          href: '#video-coming-soon', label: rubriqueParDefaut('cours'),
           desc: 'Méthodologie EVC : ce qui est attendu et comment structurer vos réponses.',
           Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
           available: false,
@@ -344,7 +350,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         },
         {
           // Cours vidéo verrouillé — clic = popup LockedContentModal.
-          href: '#locked-video', label: 'Cours vidéo',
+          href: '#locked-video', label: rubriqueParDefaut('cours'),
           desc: 'Le cours filmé, aligné sur les recommandations HAS.',
           Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
           available: false,
@@ -408,7 +414,8 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         const carteCoursVideo = (rubrique: string) => {
           standardActions.push(
             {
-              href: `/cours/${coursId}/video`, label: 'Cours vidéo',
+              // La carte porte le nom de sa rubrique (« Séance intensive » par défaut).
+              href: `/cours/${coursId}/video`, label: rubrique,
               desc: 'Le cours filmé, aligné sur les recommandations HAS.',
               Icon: MonitorPlay, accent: '#E4002B', bg: '#FDE7E9',
               available: coursVideosDisponibles,
@@ -473,7 +480,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
               if (supportsVisibles(v, !access || access.video).length > 0) {
                 standardActions.push({
                   href: `/cours/${coursId}/support/${v.id}`,
-                  label: `Supports — ${v.titre?.trim() || 'Cours vidéo'}`,
+                  label: `Supports — ${v.titre?.trim() || groupe.rubrique}`,
                   desc: 'Les documents du cours, consultables en ligne (non téléchargeables).',
                   Icon: Paperclip, accent: '#E4002B', bg: '#FDE7E9',
                   available: true,
@@ -801,12 +808,17 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
           const idTitre = `rubrique-${si}`;
           return (
             <section key={`rubrique-${si}`} aria-labelledby={idTitre}>
-              <h2
-                id={idTitre}
-                className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-accent-deep)"
-              >
-                {segment.rubrique}
-              </h2>
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                <h2
+                  id={idTitre}
+                  className="text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-accent-deep)"
+                >
+                  {segment.rubrique}
+                </h2>
+                {staffRubriques && (
+                  <RubriqueEditor coursId={coursId} type={typeParRubrique.get(segment.rubrique) ?? 'cours'} value={segment.rubrique} />
+                )}
+              </div>
               <div className={grille}>{cartes}</div>
             </section>
           );

@@ -79,7 +79,7 @@ function buildSteps(flags: ContentFlags): Step[] {
     steps.push({
       Icon: MonitorPlay,
       tag: next(),
-      title: 'Cours vidéo',
+      title: 'Séance intensive',
       color: '#C0112E', bg: '#FDEEEF', border: '#F5C2C7',
       body: (
         <>

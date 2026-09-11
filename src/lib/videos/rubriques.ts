@@ -20,11 +20,16 @@ export type VideoAvecRubrique = {
   order_index?: number | null;
 };
 
-/** Libellé de section quand l'administrateur n'en a pas saisi. */
+/**
+ * Libellé de section quand l'administrateur n'en a pas saisi.
+ * Les cours vidéo de la Préparation intensive s'appellent « Séance intensive »
+ * (demande de Cyril, 11/09/2026) ; le personnel peut renommer la rubrique
+ * d'un item depuis la vue étudiant (crayon à côté du titre).
+ */
 export function rubriqueParDefaut(type: string | null | undefined): string {
   return type === 'seance_approfondie'
     ? 'Séances approfondies · Programme approfondi'
-    : 'Dernier tour de révision · Préparation intensive';
+    : 'Séance intensive';
 }
 
 /** Rubrique effective d'une vidéo : la sienne, sinon celle de son type. */

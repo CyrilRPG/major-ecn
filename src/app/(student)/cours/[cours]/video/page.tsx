@@ -12,7 +12,8 @@ import { bunnyEmbedUrl } from '@/lib/bunny';
 import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { videoVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
-import { grouperParRubrique, rubriqueCommune, rubriqueDeVideo } from '@/lib/videos/rubriques';
+import { grouperParRubrique, rubriqueCommune, rubriqueDeVideo, rubriqueParDefaut } from '@/lib/videos/rubriques';
+import { RubriqueEditor } from '@/components/student/rubrique-editor';
 
 type CoursVideo = {
   id: string;
@@ -45,6 +46,8 @@ export default async function CoursVideoPage({
 
   const scope = parseScope(profile.permission_scope);
   const isAdmin = profile.role === 'admin';
+  // Crayon de renommage de la rubrique (vue étudiant du personnel).
+  const staffRubriques = isAdmin || profile.role === 'professor';
 
   // Cours + vidéos en parallèle : le contrôle d'accès au collège dépend
   // maintenant AUSSI des autorisations nominatives portées par les vidéos,
@@ -157,7 +160,7 @@ export default async function CoursVideoPage({
           </span>
           <span className="min-w-0">
             <span className="block truncate text-sm font-bold text-(--color-ink)">
-              {v.titre?.trim() || `Cours vidéo ${i + 1}`}
+              {v.titre?.trim() || `${rubriqueParDefaut('cours')} ${i + 1}`}
             </span>
             <span className="mt-0.5 block text-xs text-(--color-ink-soft)">
               Disponible — cliquez pour lancer la vidéo.
@@ -169,9 +172,12 @@ export default async function CoursVideoPage({
     return (
       <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-primary-deep)">
-          {c.matieres?.nom} · Cours vidéo
+          {c.matieres?.nom} · {rubriqueParDefaut('cours')}
         </p>
-        <h1 className="mt-1 text-2xl font-bold tracking-tight text-(--color-ink)">{commune ?? 'Cours vidéo'}</h1>
+        <div className="mt-1 flex flex-wrap items-center gap-2">
+          <h1 className="text-2xl font-bold tracking-tight text-(--color-ink)">{commune ?? rubriqueParDefaut('cours')}</h1>
+          {staffRubriques && commune && <RubriqueEditor coursId={coursId} type="cours" value={commune} />}
+        </div>
         <p className="mt-1 text-sm text-(--color-ink-soft)">Choisissez la vidéo à regarder.</p>
         {commune ? (
           <ul className="mt-6 space-y-3">{allVideos.map(carte)}</ul>
@@ -179,8 +185,9 @@ export default async function CoursVideoPage({
           <div className="mt-6 space-y-8">
             {groupes.map((g) => (
               <section key={g.rubrique} aria-label={g.rubrique}>
-                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-ink-soft)">
+                <h2 className="mb-3 flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-ink-soft)">
                   {g.rubrique}
+                  {staffRubriques && <RubriqueEditor coursId={coursId} type="cours" value={g.rubrique} />}
                 </h2>
                 <ul className="space-y-3">{g.videos.map(carte)}</ul>
               </section>
@@ -211,8 +218,9 @@ export default async function CoursVideoPage({
       {allVideos.length > 1 && (
         <div className="mb-4 flex items-center justify-between gap-3">
           <div className="min-w-0">
-            <p className="truncate text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-primary-deep)">
+            <p className="flex items-center gap-2 truncate text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-primary-deep)">
               {rubriqueDeVideo(video)}
+              {staffRubriques && <RubriqueEditor coursId={coursId} type="cours" value={rubriqueDeVideo(video)} />}
             </p>
             <h1 className="truncate text-lg font-bold tracking-tight text-(--color-ink)">
               {video.titre}

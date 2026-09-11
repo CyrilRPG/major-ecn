@@ -13,6 +13,7 @@ import { LockedContentModal } from '@/components/espace-decouverte/locked-conten
 import { SplitViewToggle, SplitLayout } from './split-view';
 import { AssistantCoachmark } from './assistant-coachmark';
 import { cn } from '@/lib/utils';
+import { rubriqueParDefaut } from '@/lib/videos/rubriques';
 
 export type Availability = {
   video: boolean;
@@ -55,6 +56,7 @@ export function StudyConsole({
   titre,
   context,
   availability,
+  videoLabel = rubriqueParDefaut('cours'),
   supports = [],
   mastery,
   isDecouverte = false,
@@ -66,6 +68,8 @@ export function StudyConsole({
   titre: string;
   context: string;
   availability: Availability;
+  /** Libellé de l'onglet des cours vidéo : rubrique de l'item (« Séance intensive » par défaut). */
+  videoLabel?: string;
   /** Supports de séance autorisés pour cet élève : un onglet chacun, placé
    *  juste après l'onglet de la vidéo dont ils dépendent. */
   supports?: CourseSupport[];
@@ -128,7 +132,7 @@ export function StudyConsole({
           : []),
         // Support de séance : juste après l'onglet Séance approfondie.
         ...seanceSupports,
-        { key: 'video', label: 'Cours vidéo', seg: 'video', Icon: MonitorPlay, available: availability.video },
+        { key: 'video', label: videoLabel, seg: 'video', Icon: MonitorPlay, available: availability.video },
         ...coursSupports,
         { key: 'flashcards', label: 'Flashcards', seg: 'flashcards', Icon: Layers3, available: availability.flashcards },
         { key: 'notes', label: 'Prise de notes', seg: 'notes', Icon: NotebookPen, available: true },
