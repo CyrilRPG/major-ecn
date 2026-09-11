@@ -23,7 +23,8 @@ export default async function AdminFacturationPage() {
     // Générations IA facturées au forfait (uniquement les réussites).
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.epreuve).eq('status', 'success'),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.interrogation).eq('status', 'success'),
-    a.from('exercise_imports').select('id, title, billed_price_cents, result, created_at').in('status', ['ready', 'published', 'cancelled']).not('billed_price_cents', 'is', null),
+    // Import d'exercices : seuls les imports PUBLIÉS sont facturés (arbitrage de Cyril, 11/09/2026).
+    a.from('exercise_imports').select('id, title, billed_price_cents, result, created_at').eq('status', 'published').not('billed_price_cents', 'is', null),
     // Articles de blog importés par IA : forfait 2,50 € par génération réussie.
     a.from('ai_generations').select('id, cours_titre, items_count, created_at').eq('feature', GEN_FEATURE.article).eq('status', 'success').order('created_at', { ascending: false }),
     // Collège Odontologie et ses sous-collèges : la RPC renvoie le nom du

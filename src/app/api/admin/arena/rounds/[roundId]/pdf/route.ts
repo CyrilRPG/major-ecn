@@ -46,7 +46,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ roundId: strin
       tournamentId: round.tournament_id, roundId, actorId: actor.id, actorLabel: actor.label,
       kind: mode === 'ai' ? 'pdf_generated_ai' : 'pdf_generated',
       details: mode === 'ai'
-        ? `Corrigé rédigé par IA (${r.pages} page(s), ${BILLING_EUR.arena_corrections.toFixed(2)} € facturé, coût ${r.costUsd.toFixed(2)} $).`
+        ? `Corrigé rédigé par IA (${r.pages} page(s), ${BILLING_EUR.arena_corrections.toFixed(2)} € facturé).`
         : `Corrigé mis en page depuis la base (${r.pages} page(s)).`,
     });
     return NextResponse.json({ ok: true, path: r.path, pages: r.pages, mode: r.mode, priceEur: r.priceEur });
