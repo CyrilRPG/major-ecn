@@ -8,6 +8,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { canAccessCollege, canAccessCours, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { parseHiddenBlocks, type BlocKey } from '@/lib/student/blocs';
+import { estRecommandation } from '@/lib/data/recommandations';
 import { estTitreRevisions } from '@/lib/videos/revisions';
 import { estItemAnnales } from '@/lib/data/annales';
 import { videoVisible, supportVisible, eleveAutorise, eleveExclu, type SupportOverride } from '@/lib/videos/audience';
@@ -123,6 +124,11 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   if (profile.role !== 'admin' && !canAccessCollege(scope, c.matiere_id, collegeAccess) && !autoriseParVideo) redirect('/facultes');
   // Filtrage fin : si le prof est limité à certains cours, on bloque les autres.
   if (profile.role !== 'admin' && !canAccessCours(scope, c.matiere_id, coursId, coursAccess) && !autoriseParVideo) redirect(`/matieres/${c.matiere_id}`);
+
+  // Sous-collège « Recommandations » : l'item ne porte qu'un document de
+  // référence. Sa page d'aperçu n'aurait qu'une seule carte à proposer — on
+  // ouvre donc directement le lecteur PDF, comme pour une fiche de cours.
+  if (estRecommandation(c.matiere_id)) redirect(`/cours/${coursId}/fiche`);
 
   await supabase
     .from('course_progress')

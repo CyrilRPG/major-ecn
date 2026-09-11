@@ -1,6 +1,6 @@
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { requireAdmin } from '@/lib/auth/require-role';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createAdminClient, createAdminClientToutesFacultes } from '@/lib/supabase/admin';
 import { BILLING_EUR, GEN_FEATURE, ODONTOLOGIE_COLLEGE_ID, billingLinePrices } from '@/lib/ai/cost';
 import { FacturationDashboard, type ArticleBillingLine, type CourseLine, type ExerciseImportBillingLine } from '@/components/admin/facturation-dashboard';
 
@@ -13,6 +13,17 @@ export default async function AdminFacturationPage() {
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
+  /*
+    Facturation IA COMMUNE aux deux plateformes.
+
+    Major Odontologie tourne sur le même projet Supabase et n'a pas de compte de
+    facturation propre : ce qui y est produit par IA — import d'exercices, import
+    d'articles de blog — est refacturé ici (arbitrage de Cyril, 11/09/2026).
+    Ces deux lectures-là passent donc par un client NON cloisonné ; tout le reste
+    de la page reste borné à Major ECN.
+  */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const toutes = createAdminClientToutesFacultes() as any;
 
   const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes, articlesRes, odontoRes, genArenaRes] = await Promise.all([
     a.rpc('admin_facturation_lines', { p_faculte_id: EDN_FACULTE_ID }),
@@ -24,9 +35,11 @@ export default async function AdminFacturationPage() {
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.epreuve).eq('status', 'success'),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.interrogation).eq('status', 'success'),
     // Import d'exercices : seuls les imports PUBLIÉS sont facturés (arbitrage de Cyril, 11/09/2026).
-    a.from('exercise_imports').select('id, title, billed_price_cents, result, created_at').eq('status', 'published').not('billed_price_cents', 'is', null),
-    // Articles de blog importés par IA : forfait 2,50 € par génération réussie.
-    a.from('ai_generations').select('id, cours_titre, items_count, created_at').eq('feature', GEN_FEATURE.article).eq('status', 'success').order('created_at', { ascending: false }),
+    // Les deux facultés, Major Odontologie comprise — voir le commentaire ci-dessus.
+    toutes.from('exercise_imports').select('id, title, billed_price_cents, result, created_at, faculte_id').eq('status', 'published').not('billed_price_cents', 'is', null),
+    // Articles de blog importés par IA : forfait 2,50 € par génération réussie,
+    // sur l'une ou l'autre plateforme.
+    toutes.from('ai_generations').select('id, cours_titre, items_count, created_at, faculte_id').eq('feature', GEN_FEATURE.article).eq('status', 'success').order('created_at', { ascending: false }),
     // Collège Odontologie et ses sous-collèges : la RPC renvoie le nom du
     // sous-collège, la facture les regroupe sous le collège parent.
     a.from('matieres').select('id, nom').or(`id.eq.${ODONTOLOGIE_COLLEGE_ID},parent_matiere_id.eq.${ODONTOLOGIE_COLLEGE_ID}`),
@@ -72,11 +85,16 @@ export default async function AdminFacturationPage() {
   );
 
   const aiResponses = aiRes.count ?? 0;
-  const exerciseImports: ExerciseImportBillingLine[] = ((importsRes.data ?? []) as Array<{ id: string; title: string; billed_price_cents: number; result: { questions?: unknown[] } | null; created_at: string }>)
-    .map((row) => ({ id: row.id, title: row.title, cents: row.billed_price_cents, questions: row.result?.questions?.length ?? 0, createdAt: row.created_at }));
+  /** Ligne produite sur l'autre plateforme : le libellé le dit, pour qu'une
+   *  facture reste lisible une fois imprimée. */
+  const marqueOdonto = (faculteId: string | null | undefined, titre: string) =>
+    faculteId && faculteId !== EDN_FACULTE_ID ? `${titre} (Major Odonto)` : titre;
 
-  const articles: ArticleBillingLine[] = ((articlesRes.data ?? []) as Array<{ id: string; cours_titre: string | null; items_count: number | null; created_at: string }>)
-    .map((row) => ({ id: row.id, title: row.cours_titre ?? 'Article sans titre', blocks: row.items_count ?? 0, createdAt: row.created_at }));
+  const exerciseImports: ExerciseImportBillingLine[] = ((importsRes.data ?? []) as Array<{ id: string; title: string; billed_price_cents: number; result: { questions?: unknown[] } | null; created_at: string; faculte_id: string | null }>)
+    .map((row) => ({ id: row.id, title: marqueOdonto(row.faculte_id, row.title), cents: row.billed_price_cents, questions: row.result?.questions?.length ?? 0, createdAt: row.created_at }));
+
+  const articles: ArticleBillingLine[] = ((articlesRes.data ?? []) as Array<{ id: string; cours_titre: string | null; items_count: number | null; created_at: string; faculte_id: string | null }>)
+    .map((row) => ({ id: row.id, title: marqueOdonto(row.faculte_id, row.cours_titre ?? 'Article sans titre'), blocks: row.items_count ?? 0, createdAt: row.created_at }));
 
   return (
     <FacturationDashboard
