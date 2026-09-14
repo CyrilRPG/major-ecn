@@ -266,6 +266,10 @@ export async function POST(req: Request) {
       voie: voie ?? '',
       installments: String(installments),
       source: 'major-ecn-tarifs',
+      // Signature de l'application : le compte Stripe est partagé avec Major
+      // Odontologie, dont le webhook ignore les sessions qui ne sont pas les
+      // siennes grâce à cette clé (cf. lib/stripe/origine-session.ts).
+      app: APP_ID,
       // Traçabilité des consentements (horodatés) — auditable depuis Stripe
       // dashboard ainsi que via le webhook côté serveur.
       consent_cgu: c.cgu ? '1' : '0',

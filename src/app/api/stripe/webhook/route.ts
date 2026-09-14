@@ -20,6 +20,7 @@ import { getStripe } from '@/lib/stripe';
 import { provisionStudentAccount, formatStripeAddress } from '@/lib/stripe/provisioning';
 import { ensureInstallmentPlanEnds } from '@/lib/stripe/installments';
 import type { FormuleId } from '@/lib/stripe';
+import { origineSession, sessionEstEtrangere } from '@/lib/stripe/origine-session';
 
 export const dynamic = 'force-dynamic';
 // Le webhook reçoit du raw body — il NE FAUT PAS le parser via JSON.
@@ -125,6 +126,19 @@ export async function POST(req: Request) {
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const email = session.customer_email ?? session.customer_details?.email ?? '';
   const metadata = session.metadata ?? {};
+
+  // Compte Stripe partagé avec Major Odontologie : cet évènement peut porter
+  // un achat de l'autre plateforme. Le provisionner ici créerait un compte
+  // Major ECN à un élève d'odontologie (et réciproquement — c'est arrivé le
+  // 13/09/2026 dans l'autre sens). On ne touche à rien.
+  if (sessionEstEtrangere(metadata)) {
+    console.log('[webhook] session d’une autre application ignorée', {
+      sessionId: session.id,
+      origine: origineSession(metadata),
+    });
+    return;
+  }
+
   const formuleId = metadata.formule as FormuleId | undefined;
   const firstName = metadata.first_name ?? '';
   const lastName = metadata.last_name ?? '';

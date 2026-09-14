@@ -2,6 +2,7 @@ import 'server-only';
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
+import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { coursAnnalesParMatiere } from '@/lib/data/annales';
 import { canAccessCollege, type parseScope } from '@/lib/auth/permissions';
 import {
@@ -125,22 +126,51 @@ export type StudiedSpecialty = {
   studiedCoursIds: string[];
 };
 
+type Mat = { id: string; nom: string; semestres: { faculte_id: string } };
+
+/** Une tentative de l'élève, avec le cours et la matière de la question. */
+export type StudentAttempt = {
+  question_id: string;
+  is_correct: boolean;
+  attempted_at: string;
+  qcm_questions: { qcm_series: { cours_id: string; cours: { matiere_id: string; matieres: Mat } } };
+};
+
+/**
+ * TOUTES les tentatives de l'élève, par tranches de 1 000 lignes.
+ *
+ * PostgREST plafonne chaque requête à 1 000 lignes et tronque EN SILENCE. Un
+ * élève assidu dépasse vite ce seuil (5 092 tentatives le 13/09/2026) : ses
+ * spécialités « étudiées » et l'historique servant à choisir les questions
+ * étaient amputés sans que rien ne le signale.
+ */
+export async function loadStudentAttempts(supabase: AnyClient, userId: string): Promise<StudentAttempt[]> {
+  return fetchAllRows<StudentAttempt>((from, to) =>
+    supabase
+      .from('qcm_attempts')
+      .select('question_id, is_correct, attempted_at, qcm_questions!inner(qcm_series!inner(cours_id, cours!inner(matiere_id, matieres!inner(id, nom, semestres!inner(faculte_id)))))')
+      .eq('user_id', userId)
+      .order('attempted_at', { ascending: true })
+      .order('id', { ascending: true })
+      .range(from, to),
+  );
+}
+
 export async function getStudiedSpecialties(
   supabase: AnyClient,
   userId: string,
   scope: Scope,
+  /** Tentatives déjà chargées par l'appelant (évite une seconde lecture intégrale). */
+  attempts?: StudentAttempt[],
 ): Promise<StudiedSpecialty[]> {
   const days30Ago = new Date(Date.now() - 30 * 86_400_000).toISOString();
 
-  const [{ data: progressRaw }, { data: attemptsRaw }, { data: evalsRaw }] = await Promise.all([
+  const [{ data: progressRaw }, attemptsRaw, { data: evalsRaw }] = await Promise.all([
     supabase
       .from('course_progress')
       .select('cours_id, video_watched, fiche_read, last_seen_at, cours!inner(matiere_id, matieres!inner(id, nom, semestres!inner(faculte_id)))')
       .eq('user_id', userId),
-    supabase
-      .from('qcm_attempts')
-      .select('question_id, is_correct, attempted_at, qcm_questions!inner(qcm_series!inner(cours_id, cours!inner(matiere_id, matieres!inner(id, nom, semestres!inner(faculte_id)))))')
-      .eq('user_id', userId),
+    attempts ?? loadStudentAttempts(supabase, userId),
     supabase
       .from('specialty_evaluations')
       .select('matiere_id, status, score_correct, score_total, created_at')
@@ -148,14 +178,9 @@ export async function getStudiedSpecialties(
       .order('created_at', { ascending: false }),
   ]);
 
-  type Mat = { id: string; nom: string; semestres: { faculte_id: string } };
   type ProgressRow = {
     cours_id: string; video_watched: boolean | null; fiche_read: boolean | null;
     last_seen_at: string | null; cours: { matiere_id: string; matieres: Mat };
-  };
-  type AttemptRow = {
-    question_id: string; is_correct: boolean; attempted_at: string;
-    qcm_questions: { qcm_series: { cours_id: string; cours: { matiere_id: string; matieres: Mat } } };
   };
   type EvalRow = { matiere_id: string; status: string; score_correct: number; score_total: number; created_at: string };
 
@@ -189,7 +214,7 @@ export async function getStudiedSpecialties(
       if (!acc.lastActivity || d > acc.lastActivity) acc.lastActivity = d;
     }
   }
-  for (const a of (attemptsRaw ?? []) as unknown as AttemptRow[]) {
+  for (const a of attemptsRaw) {
     const serie = a.qcm_questions.qcm_series;
     const acc = touch(serie.cours.matieres);
     if (!acc) continue;

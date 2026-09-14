@@ -10,6 +10,8 @@ import {
   archiveQuestionAction,
 } from '@/app/admin/qa/actions';
 import { Markdown } from '@/components/ui/markdown';
+import { StudentIdentityBadge } from '@/components/admin/qa/student-identity-badge';
+import type { StudentIdentity } from '@/lib/admin/student-identity';
 
 export type QaAnswerView = {
   id: string;
@@ -24,6 +26,8 @@ export type QaQuestionView = {
   ai_context: string | null;
   created_at: string;
   student_pseudo: string;
+  /** Identité réelle de l'élève (null si le profil a disparu). */
+  student: StudentIdentity | null;
   cours_titre: string | null;
   matiere_nom: string | null;
   status: 'pending' | 'answered' | 'archived';
@@ -73,9 +77,8 @@ export function QaRow({ q }: { q: QaQuestionView }) {
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2 text-xs">
-            <span className="font-mono font-semibold text-(--color-ink)">{q.student_pseudo}</span>
-            <span className="text-(--color-ink-muted)">·</span>
+          <StudentIdentityBadge student={q.student} pseudo={q.student_pseudo} />
+          <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs">
             <span className="text-(--color-ink-muted)">
               {new Date(q.created_at).toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
             </span>

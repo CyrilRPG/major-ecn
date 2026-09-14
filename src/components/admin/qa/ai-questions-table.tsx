@@ -4,10 +4,14 @@ import { useState } from 'react';
 import { ChevronDown, ChevronUp, Bot, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Markdown } from '@/components/ui/markdown';
+import { StudentIdentityBadge } from '@/components/admin/qa/student-identity-badge';
+import type { StudentIdentity } from '@/lib/admin/student-identity';
 
 export type AiQuestionRow = {
   id: string;
   user_pseudo: string | null;
+  /** Identité réelle de l'élève (null si le profil a disparu). */
+  student: StudentIdentity | null;
   user_offer: string | null;
   cours_titre: string | null;
   user_question: string | null;
@@ -64,9 +68,7 @@ export function AiQuestionsTable({ rows }: { rows: AiQuestionRow[] }) {
             {/* Row */}
             <div className="grid grid-cols-1 gap-1 px-4 py-3 sm:grid-cols-[1fr_140px_180px_90px] sm:items-center sm:gap-3">
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-(--color-ink)">
-                  {r.user_pseudo || 'Élève'}
-                </p>
+                <StudentIdentityBadge student={r.student} pseudo={r.user_pseudo || 'Élève'} compact />
                 <p className="truncate text-xs text-(--color-ink-muted)">
                   {r.cours_titre || '—'}
                 </p>

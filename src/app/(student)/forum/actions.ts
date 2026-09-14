@@ -9,6 +9,7 @@ import { generatePseudo } from '@/lib/auth/pseudo';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { forumNewQuestionEmail } from '@/lib/email/templates';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { identityContext, identityFromProfile } from '@/lib/admin/student-identity';
 import { canRead, canWrite, type ProfessorScope } from '@/lib/schemas/professor';
 import { logAudit } from '@/lib/audit/log';
 
@@ -81,10 +82,20 @@ export async function askQuestionAction(input: {
   if (error || !data) return { error: error?.message ?? 'Impossible d’envoyer la question.' };
 
   // Notification email aux professeurs ayant accès à ce collège (best-effort).
+  const identite = identityFromProfile({
+    id: user.id,
+    first_name: profile.first_name ?? null,
+    last_name: profile.last_name ?? null,
+    email: profile.email ?? user.email ?? null,
+    permission_scope: profile.permission_scope,
+  });
   notifyProfessorsOfNewQuestion({
     questionId: data.id,
     matiereId,
     studentPseudo: pseudo,
+    studentName: identite.name,
+    studentEmail: identite.email,
+    studentContext: identityContext(identite),
     coursTitre,
     matiereNom,
     body,
@@ -102,6 +113,9 @@ async function notifyProfessorsOfNewQuestion(args: {
   questionId: string;
   matiereId: string | null;
   studentPseudo: string;
+  studentName: string;
+  studentEmail: string | null;
+  studentContext: string;
   coursTitre: string | null;
   matiereNom: string | null;
   body: string;
@@ -129,6 +143,9 @@ async function notifyProfessorsOfNewQuestion(args: {
       const { subject, html, text } = forumNewQuestionEmail({
         professorFirstName: p.first_name ?? '',
         studentPseudo: args.studentPseudo,
+        studentName: args.studentName,
+        studentEmail: args.studentEmail,
+        studentContext: args.studentContext,
         coursTitre: args.coursTitre,
         matiereNom: args.matiereNom,
         questionBody: args.body,

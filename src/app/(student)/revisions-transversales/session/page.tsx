@@ -4,7 +4,8 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { parseScope } from '@/lib/auth/permissions';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
-import { getMaintienStats, getStudiedSpecialties } from '@/lib/pedago/maintien';
+import { getMaintienStats, getStudiedSpecialties, loadStudentAttempts } from '@/lib/pedago/maintien';
+import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { transversalSessionSize, requiredReevaluationKind, SEUIL_REEVALUATION } from '@/lib/pedago/status';
 import {
   TransversalSession,
@@ -47,9 +48,12 @@ export default async function TransversalSessionPage({
   const supabase = await createClient();
   const unitLabel = scope.voie === 'externe' ? 'QROC' : 'QCM';
 
-  /* 1) Spécialités étudiées (par matière) + état de maintien des acquis. */
+  /* 1) Spécialités étudiées (par matière) + état de maintien des acquis.
+        Les tentatives sont lues INTÉGRALEMENT (par tranches de 1 000) et une
+        seule fois : elles servent aux spécialités ET au choix des questions. */
+  const attempts = await loadStudentAttempts(supabase as never, user.id);
   const [specs, stats] = await Promise.all([
-    getStudiedSpecialties(supabase as never, user.id, scope),
+    getStudiedSpecialties(supabase as never, user.id, scope, attempts),
     getMaintienStats(supabase as never, user.id),
   ]);
 
@@ -75,13 +79,9 @@ export default async function TransversalSessionPage({
   const studiedCoursIds = specs.flatMap((s) => s.studiedCoursIds);
 
   /* 3) Historique de réponses : jamais vu / raté / ancien, par question. */
-  const { data: attemptsRaw } = await supabase
-    .from('qcm_attempts')
-    .select('question_id, is_correct, attempted_at')
-    .eq('user_id', user.id);
   type AttemptStat = { seen: number; fails: number; last: number };
   const attemptStats = new Map<string, AttemptStat>();
-  for (const a of ((attemptsRaw ?? []) as { question_id: string; is_correct: boolean; attempted_at: string }[])) {
+  for (const a of attempts) {
     const cur = attemptStats.get(a.question_id) ?? { seen: 0, fails: 0, last: 0 };
     cur.seen++;
     if (!a.is_correct) cur.fails++;
@@ -90,14 +90,41 @@ export default async function TransversalSessionPage({
     attemptStats.set(a.question_id, cur);
   }
 
-  /* 4) Questions EDN accessibles dans les cours étudiés. */
-  const { data: seriesRaw } = await supabase
-    .from('qcm_series')
-    .select('id')
-    .in('cours_id', studiedCoursIds);
-  const serieIds = (seriesRaw ?? []).map((s) => s.id);
+  /* 4) Questions EDN accessibles dans les cours étudiés.
 
-  if (serieIds.length === 0) {
+        POURQUOI CETTE FORME. L'ancienne version listait d'abord les séries des
+        cours étudiés puis demandait les questions « dont serie_id est dans la
+        liste ». Chez un élève assidu (41 cours, 1 360 séries le 13/09/2026),
+        la liste des séries était tronquée à 1 000 par PostgREST, et l'URL de
+        la seconde requête (37 Ko d'identifiants) était refusée : la page
+        concluait « Aucune question disponible pour votre profil » alors que
+        près de 7 000 questions étaient accessibles. On filtre désormais les
+        questions par COURS (liste courte, par tranches de 50), on lit toutes
+        les pages de 1 000 lignes, sans embarquer les énoncés ni les items —
+        seules les questions retenues sont ensuite chargées en entier. */
+  type PoolRow = {
+    id: string;
+    format: 'qcm' | 'qroc' | null;
+    qcm_items: { count: number }[] | null;
+    qcm_series: { cours: { matieres: { id: string; semestres: { faculte_id: string } } } };
+  };
+  const COURS_PAR_TRANCHE = 50;
+  const tranches: string[][] = [];
+  for (let i = 0; i < studiedCoursIds.length; i += COURS_PAR_TRANCHE) {
+    tranches.push(studiedCoursIds.slice(i, i + COURS_PAR_TRANCHE));
+  }
+  const pool = (await Promise.all(tranches.map((coursIds) =>
+    fetchAllRows<PoolRow>((from, to) =>
+      supabase
+        .from('qcm_questions')
+        .select('id, format, qcm_items(count), qcm_series!inner(cours_id, cours!inner(matieres!inner(id, semestres!inner(faculte_id))))')
+        .in('qcm_series.cours_id', coursIds)
+        .order('id', { ascending: true })
+        .range(from, to) as never,
+    ),
+  ))).flat();
+
+  if (pool.length === 0) {
     return (
       <ExplainScreen
         title={`Aucune série de ${unitLabel} disponible`}
@@ -108,20 +135,14 @@ export default async function TransversalSessionPage({
     );
   }
 
-  const { data: allQRaw } = await supabase
-    .from('qcm_questions')
-    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, images, qcm_items(id, lettre, enonce, justification, is_correct, images), qcm_series!inner(cours_id, vignette, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
-    .in('serie_id', serieIds)
-    .order('order_index');
-
   const accessibleMatieres = new Set(specs.map((s) => s.matiereId));
-  const allQ = ((allQRaw ?? []) as unknown as QRow[]).filter((q) => {
+  const allQ = pool.filter((q) => {
     const m = q.qcm_series.cours.matieres;
     if (m.semestres.faculte_id !== EDN_FACULTE_ID) return false;
     if (!accessibleMatieres.has(m.id)) return false;
     // On garde les QCM (avec items) ET les QROC (saisie libre, sans items).
     const isQroc = q.format === 'qroc';
-    if (!isQroc && (!q.qcm_items || q.qcm_items.length === 0)) return false;
+    if (!isQroc && (q.qcm_items?.[0]?.count ?? 0) === 0) return false;
     return true;
   });
 
@@ -179,7 +200,15 @@ export default async function TransversalSessionPage({
     return { q, score };
   });
   scored.sort((a, b) => a.score - b.score);
-  const ordered = scored.slice(0, N).map((s) => s.q);
+  const retenues = scored.slice(0, N).map((s) => s.q.id);
+
+  /* 6) Chargement complet des seules questions retenues (N ≤ 75). */
+  const { data: fullRaw } = await supabase
+    .from('qcm_questions')
+    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, images, qcm_items(id, lettre, enonce, justification, is_correct, images), qcm_series!inner(cours_id, vignette, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
+    .in('id', retenues);
+  const parId = new Map(((fullRaw ?? []) as unknown as QRow[]).map((q) => [q.id, q]));
+  const ordered = retenues.map((id) => parId.get(id)).filter((q): q is QRow => !!q);
 
   // Mélange final : on ne sert pas la session triée par priorité brute
   // (l'élève alternerait 25 questions jamais vues puis 15 ratées) — on

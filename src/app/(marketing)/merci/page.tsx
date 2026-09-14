@@ -18,6 +18,7 @@ import { AlertTriangle, ArrowRight, CheckCircle2, Mail, PartyPopper, Sparkles } 
 import { getStripe } from '@/lib/stripe';
 import type { FormuleId } from '@/lib/stripe';
 import { provisionStudentAccount, formatStripeAddress } from '@/lib/stripe/provisioning';
+import { sessionEstEtrangere } from '@/lib/stripe/origine-session';
 import { ensureInstallmentPlanEnds } from '@/lib/stripe/installments';
 import { deSpecialite } from '@/lib/stripe/copy';
 
@@ -80,6 +81,12 @@ async function provisionFromSession(sessionId: string): Promise<ProvisioningStat
 
   const email = session.customer_email ?? session.customer_details?.email ?? '';
   const meta = session.metadata ?? {};
+  // Session d'une autre plateforme du même compte Stripe (Major Odontologie) :
+  // elle ne donne aucun droit ici.
+  if (sessionEstEtrangere(meta)) {
+    log('session-etrangere', { sessionId: session.id });
+    return { ok: false, reason: 'Cette session de paiement ne concerne pas Major ECN.' };
+  }
   const formuleId = meta.formule as FormuleId | undefined;
   const installments = Number(meta.installments ?? '1') || 1;
   const cancelAt = meta.cancel_at ? Number(meta.cancel_at) : null;

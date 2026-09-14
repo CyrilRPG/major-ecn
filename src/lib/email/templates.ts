@@ -231,20 +231,33 @@ function buttonHtml(href: string, label: string): string {
 type ForumQuestionArgs = {
   professorFirstName: string;
   studentPseudo: string;
+  /** Identité réelle : ce mail est réservé à l'équipe, qui doit savoir à qui répondre. */
+  studentName?: string | null;
+  studentEmail?: string | null;
+  /** « Gériatrie · voie interne · Formule Intensive » */
+  studentContext?: string | null;
   coursTitre: string | null;
   matiereNom: string | null;
   questionBody: string;
   qaUrl: string;
 };
-export function forumNewQuestionEmail({ professorFirstName, studentPseudo, coursTitre, matiereNom, questionBody, qaUrl }: ForumQuestionArgs) {
+export function forumNewQuestionEmail({ professorFirstName, studentPseudo, studentName, studentEmail, studentContext, coursTitre, matiereNom, questionBody, qaUrl }: ForumQuestionArgs) {
   const subject = '✉️ Nouvelle question d’élève — Major ECN';
   const ctx = [matiereNom, coursTitre].filter(Boolean).join(' · ');
   const preview = questionBody.length > 240 ? questionBody.slice(0, 240) + '…' : questionBody;
+  const nom = (studentName ?? '').trim() || studentPseudo;
+  const auteurHtml = `<strong>${escapeHtml(nom)}</strong>${nom !== studentPseudo ? ` <span style="color:#7A7A7A;">(${escapeHtml(studentPseudo)})</span>` : ''}`;
+  const identiteHtml = [
+    studentEmail ? `<a href="mailto:${escapeHtml(studentEmail)}" style="color:#1F5FBF;">${escapeHtml(studentEmail)}</a>` : null,
+    studentContext ? escapeHtml(studentContext) : null,
+  ].filter(Boolean).join(' · ');
+  const identiteText = [nom !== studentPseudo ? `(${studentPseudo})` : null, studentEmail, studentContext].filter(Boolean).join(' · ');
 
   const bodyHtml = `
     <p style="margin:0 0 18px;font-size:15px;line-height:1.65;color:#4A5568;">
       Bonjour <strong style="color:#2D2D2D;">${escapeHtml(professorFirstName || '')}</strong>,<br />
-      <strong>${escapeHtml(studentPseudo)}</strong> vient de poser une question${ctx ? ` sur <em>${escapeHtml(ctx)}</em>` : ''}.
+      ${auteurHtml} vient de poser une question${ctx ? ` sur <em>${escapeHtml(ctx)}</em>` : ''}.
+      ${identiteHtml ? `<br /><span style="font-size:13px;color:#4A5568;">${identiteHtml}</span>` : ''}
     </p>
     <div style="background:#F6F7F9;border:1px solid #ECEEF1;border-radius:14px;padding:14px 16px;margin:0 0 22px;">
       <p style="margin:0;font-size:13px;line-height:1.6;color:#2D2D2D;white-space:pre-wrap;">${escapeHtml(preview)}</p>
@@ -257,7 +270,8 @@ export function forumNewQuestionEmail({ professorFirstName, studentPseudo, cours
   const text = [
     'Nouvelle question d’élève — Major ECN',
     '',
-    `${studentPseudo} vient de poser une question${ctx ? ` (${ctx})` : ''} :`,
+    `${nom} vient de poser une question${ctx ? ` (${ctx})` : ''} :`,
+    ...(identiteText ? [identiteText] : []),
     '',
     preview,
     '',

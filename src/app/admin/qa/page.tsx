@@ -1,6 +1,8 @@
 import { Bot, MessagesSquare } from 'lucide-react';
 import { requireStaff } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { loadStudentIdentities } from '@/lib/admin/student-identity';
 import { QaRow, type QaQuestionView } from '@/components/admin/qa/qa-row';
 import { AiQuestionsTable, type AiQuestionRow } from '@/components/admin/qa/ai-questions-table';
 
@@ -31,13 +33,19 @@ export default async function AdminQaPage({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let query = (supabase as any)
       .from('forum_questions')
-      .select('id, body, ai_context, created_at, student_pseudo, cours_titre, matiere_nom, status, is_public, forum_answers(id, body, created_at, professor_name)')
+      .select('id, body, ai_context, created_at, student_id, student_pseudo, cours_titre, matiere_nom, status, is_public, forum_answers(id, body, created_at, professor_name)')
       .order('created_at', { ascending: false });
     if (forumStatus !== 'all') query = query.eq('status', forumStatus);
     const { data } = await query;
+    // Le pseudo automatique ne dit pas QUI écrit : l'équipe doit pouvoir
+    // répondre par mail et ouvrir le profil (spécialité, voie, formule).
+    const identites = await loadStudentIdentities(
+      createAdminClient(),
+      ((data ?? []) as Array<{ student_id: string | null }>).map((r) => r.student_id),
+    );
     forumRows = ((data ?? []) as Array<{
       id: string; body: string; ai_context: string | null; created_at: string;
-      student_pseudo: string; cours_titre: string | null; matiere_nom: string | null;
+      student_id: string | null; student_pseudo: string; cours_titre: string | null; matiere_nom: string | null;
       status: 'pending' | 'answered' | 'archived'; is_public: boolean;
       forum_answers: Array<{ id: string; body: string; created_at: string; professor_name: string }>;
     }>).map<QaQuestionView>((r) => ({
@@ -46,6 +54,7 @@ export default async function AdminQaPage({
       ai_context: r.ai_context,
       created_at: r.created_at,
       student_pseudo: r.student_pseudo,
+      student: (r.student_id && identites.get(r.student_id)) || null,
       cours_titre: r.cours_titre,
       matiere_nom: r.matiere_nom,
       status: r.status,
@@ -68,13 +77,15 @@ export default async function AdminQaPage({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data } = await (supabase as any)
       .from('ai_generations')
-      .select('id, user_pseudo, user_offer, cours_titre, user_question, ai_answer, created_at')
+      .select('id, user_id, user_pseudo, user_offer, cours_titre, user_question, ai_answer, created_at')
       .eq('feature', 'assistant_chat')
       .eq('status', 'success')
       .not('user_question', 'is', null)
       .order('created_at', { ascending: false })
       .limit(200);
-    aiRows = (data ?? []) as AiQuestionRow[];
+    const brut = (data ?? []) as Array<Omit<AiQuestionRow, 'student'> & { user_id: string | null }>;
+    const identites = await loadStudentIdentities(createAdminClient(), brut.map((r) => r.user_id));
+    aiRows = brut.map((r) => ({ ...r, student: (r.user_id && identites.get(r.user_id)) || null }));
   }
 
   const FORUM_TABS: Array<{ key: typeof forumStatus; label: string }> = [
