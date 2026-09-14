@@ -6,6 +6,46 @@ import { QcmSession } from '@/components/qcm/qcm-session';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { buildQcmAccessContext, canStudentReadSerie, SERIE_ACCESS_COLUMNS, type SerieAccessRow } from '@/lib/data/qcm-access';
 import { estSerieAnnale, anneeDeSerieAnnale } from '@/lib/data/annales';
+import { serieSuivanteDpQi, trierSeriesDpQi } from '@/lib/data/qcm-ordre';
+import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
+import { scopeOffers } from '@/lib/auth/permissions';
+
+type ProfilLecteur = Awaited<ReturnType<typeof requireUser>>['profile'];
+
+/**
+ * Série qui suit `serieId` dans l'onglet DP · QI de l'item, pour le bouton
+ * « Dossier suivant » du mode édition. Rejoue les filtres de la liste
+ * (`/cours/[cours]/qcm`) : types listés, entraînements masqués, droits élève,
+ * séries verrouillées (sans question) ; puis le tri partagé de lib/data/qcm-ordre.
+ */
+async function serieSuivantePourLecteur(
+  profile: ProfilLecteur,
+  coursId: string,
+  serieId: string,
+  accessCtx: Awaited<ReturnType<typeof buildQcmAccessContext>>,
+) {
+  const scope = parseScope(profile.permission_scope);
+  const isAdmin = profile.role === 'admin';
+  const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
+  const showSeances = !access || access.seanceProf;
+  const hideEntrainement = !!access && !access.entrainement;
+  const { data: raw } = await createAdminClient()
+    .from('qcm_series')
+    .select(`${SERIE_ACCESS_COLUMNS}, order_index, annee, qcm_questions(id, format)` as 'id, label, order_index, type')
+    .eq('cours_id', coursId)
+    .in('type', showSeances ? ['qcm', 'seance', 'qroc'] : ['qcm', 'qroc'])
+    .order('order_index');
+  type Row = SerieAccessRow & { order_index: number; annee?: number | null; qcm_questions?: { id: string; format: string }[] | null };
+  const series = trierSeriesDpQi(
+    ((raw ?? []) as unknown as Row[])
+      .filter((s) => !hideEntrainement || !/entra[iî]nement/i.test(s.label))
+      .filter((s) => canStudentReadSerie(s, accessCtx, (s.qcm_questions ?? []).map((q) => q.format)))
+      // Une série sans question est verrouillée dans la liste : on ne s'y rend pas.
+      .filter((s) => (s.qcm_questions ?? []).length > 0 || s.id === serieId),
+    { isApprofondi: scopeOffers(scope).includes('approfondi') },
+  );
+  return serieSuivanteDpQi(series, serieId);
+}
 
 export default async function QcmRunPage({
   params,
@@ -88,6 +128,12 @@ export default async function QcmRunPage({
   // question depuis la vue élève via un bouton crayon.
   const editable = canEditCoursContent(profile, 'qcm', c.matiere_id, c.id);
 
+  // Mode édition : « Dossier suivant » en fin de série, pour enchaîner la
+  // relecture des dossiers d'un item sans repasser par la liste (retour
+  // enseignant du 14/09/2026). L'ordre est CELUI de la liste DP · QI — mêmes
+  // filtres, même tri (lib/data/qcm-ordre) ; une annale enchaîne dans sa session.
+  const suivante = editable ? await serieSuivantePourLecteur(profile, coursId, serieId, accessCtx) : null;
+
   // Questions déjà enregistrées dans « Questions à revoir » par cet élève.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: savedRows } = await (supabase as any)
@@ -127,6 +173,8 @@ export default async function QcmRunPage({
       questions={enrichedQuestions}
       backHref={backHref}
       editable={editable}
+      nextSerieHref={suivante ? `/cours/${coursId}/qcm/${suivante.id}` : null}
+      nextSerieLabel={suivante?.label ?? null}
       savedQuestionIds={savedQuestionIds}
       initialIndex={focusQuestionId ? Math.max(0, enrichedQuestions.findIndex((q) => q.id === focusQuestionId)) : 0}
     />

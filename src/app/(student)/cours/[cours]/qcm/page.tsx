@@ -13,6 +13,7 @@ import { canWrite } from '@/lib/schemas/professor';
 import { EditHintTooltip } from '@/components/professor/edit-hint-tooltip';
 import { buildQcmAccessContext, canStudentReadSerie, SERIE_ACCESS_COLUMNS, type SerieAccessRow } from '@/lib/data/qcm-access';
 import { estSerieAnnale, anneeDeSerieAnnale } from '@/lib/data/annales';
+import { trierSeriesDpQi } from '@/lib/data/qcm-ordre';
 import { SerieCard } from '@/components/qcm/serie-card';
 import { StudentExercisesEntry } from '@/components/student/exercices/student-exercises-entry';
 import { estTableAbsente } from '@/lib/student-exercises/regles';
@@ -72,31 +73,17 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     && (rawSeries as SerieListRow[]).every((s) => estSerieAnnale(s.label));
   const userOffers = scopeOffers(scope);
   const accessCtx = await buildQcmAccessContext(profile, c.matiere_id);
-  // Programme Approfondi : ordre pédagogique imposé dans l'onglet QCM/DP/QROC —
-  //   séances du professeur → entraînements → DP (DP QCM interne / DP QROC externe)
-  //   → QCM (voie interne) ou QROC (voie externe).
+  // Ordre pédagogique de l'onglet (Programme Approfondi : séances → entraînements
+  // → DP → QCM/QROC → annales ; autres formules : séances puis ordre admin).
+  // Logique partagée avec le bouton « Dossier suivant » du lecteur, qui doit
+  // suivre EXACTEMENT cet ordre (cf. lib/data/qcm-ordre).
   const isApprofondi = userOffers.includes('approfondi');
-  const categoryRank = (s: { label: string; type?: string | null }) => {
-    if (s.type === 'seance') return 0;                 // Séance du professeur
-    if (/entra[iî]nement/i.test(s.label)) return 1;    // Entraînement
-    if (/^dp\b/i.test(s.label)) return 2;              // DP (couvre « DP … » et « DP QROC … »)
-    if (/^annales?\b/i.test(s.label)) return 4;        // Annales EVC corrigées (après les banques)
-    return 3;                                          // QCM / QROC de base
-  };
-  const series = ((rawSeries ?? []) as unknown as SerieListRow[])
-    .filter((s) => !hideEntrainement || !/entra[iî]nement/i.test(s.label))
-    .filter((s) => canStudentReadSerie(s, accessCtx, (s.qcm_questions ?? []).map((q) => q.format)))
-    .sort((a, b) => {
-      if (isApprofondi) {
-        const ra = categoryRank(a);
-        const rb = categoryRank(b);
-        return ra !== rb ? ra - rb : a.order_index - b.order_index;
-      }
-      // Autres formules : séances d'abord, puis ordre d'affichage défini en admin.
-      const ta = a.type === 'seance' ? 0 : 1;
-      const tb = b.type === 'seance' ? 0 : 1;
-      return ta !== tb ? ta - tb : a.order_index - b.order_index;
-    });
+  const series = trierSeriesDpQi(
+    ((rawSeries ?? []) as unknown as SerieListRow[])
+      .filter((s) => !hideEntrainement || !/entra[iî]nement/i.test(s.label))
+      .filter((s) => canStudentReadSerie(s, accessCtx, (s.qcm_questions ?? []).map((q) => q.format))),
+    { isApprofondi },
+  );
 
   // Les annales ne se listent pas série par série : une session EVC compte
   // jusqu'à onze dossiers, et dix-sept sessions cohabitent sur un même item.

@@ -83,6 +83,8 @@ export function QcmSession({
   mode = 'live',
   durationMinutes = null,
   editable = false,
+  nextSerieHref = null,
+  nextSerieLabel = null,
   savedQuestionIds = [],
   initialIndex = 0,
 }: {
@@ -105,8 +107,15 @@ export function QcmSession({
   /** Mode édition prof : affiche un bouton crayon sur chaque question
    *  pour ouvrir l'éditeur de question depuis la vue étudiant. */
   editable?: boolean;
+  /** Mode édition : série qui suit celle-ci dans l'ordre de la liste DP · QI
+   *  (« Dossier suivant » en fin de série, sans repasser par la liste). */
+  nextSerieHref?: string | null;
+  nextSerieLabel?: string | null;
 }) {
   const [editingQ, setEditingQ] = useState<QcmQuestionDraft | null>(null);
+  // Mode édition : questions dont la correction a été affichée SANS réponse
+  // (le professeur relit, il ne répond pas) — aucun verdict juste/faux n'a de sens.
+  const [revealedOnly, setRevealedOnly] = useState<Record<string, boolean>>({});
   const [editingVignette, setEditingVignette] = useState(false);
   const isTraining = mode === 'training';
   const isSeance = serieKind === 'seance';
@@ -176,11 +185,14 @@ export function QcmSession({
     });
   };
 
+  // Mode édition : la correction d'un QCM s'affiche sans cocher de proposition,
+  // comme pour un QROC (retour enseignant du 14/09/2026 — « obligé de
+  // sélectionner une réponse pour pouvoir afficher la correction »).
   const canValidate = isSeanceQroc
     ? true
     : isQroc
     ? (qrocAnswers[q.id] ?? '').trim().length > 0
-    : sel.size > 0;
+    : editable || sel.size > 0;
 
   // Ajoute / retire la question courante des « Questions à revoir » (toggle).
   const toggleSaved = async () => {
@@ -262,6 +274,7 @@ export function QcmSession({
       const { perItem, isQuestionCorrect } = gradeQuestion(gradeInput);
       const outcomes: ItemOutcome[] = q.items.map((it) => perItem[it.lettre]);
 
+      if (editable && sel.size === 0) setRevealedOnly((prev) => ({ ...prev, [q.id]: true }));
       setValidated((prev) => ({ ...prev, [q.id]: outcomes }));
       setQuestionCorrect((prev) => ({ ...prev, [q.id]: isQuestionCorrect }));
 
@@ -327,6 +340,12 @@ export function QcmSession({
   const qOk = questionCorrect[q.id];
   const isRevealed = seanceRevealed[q.id] ?? false;
   const selfGrade = seanceSelfGrade[q.id] ?? null;
+  const correctionSeule = revealedOnly[q.id] ?? false;
+  // Fin de série en mode édition : « Dossier suivant » (DP, annale) ou
+  // « Série suivante » (QCM / QROC), sinon retour à la liste.
+  const derniereQuestion = index >= total - 1;
+  const estDossier = /^dp\b/i.test(nextSerieLabel ?? serieLabel) || serieKind === 'annale';
+  const libelleSuivant = estDossier ? 'Dossier suivant' : 'Série suivante';
 
   const progressPct = useMemo(() => (index / total) * 100, [index, total]);
 
@@ -365,6 +384,17 @@ export function QcmSession({
             title="Ouvrir la série dans le panneau d’administration"
           >
             <LayoutList className="h-3.5 w-3.5 shrink-0" /> Vue d’ensemble de la série
+          </Link>
+        )}
+        {editable && nextSerieHref && (
+          /* Raccourci permanent : le professeur saute au dossier suivant à tout
+             moment, sans finir la série ni repasser par la liste. */
+          <Link
+            href={nextSerieHref}
+            className="inline-flex min-w-0 shrink-0 items-center gap-1 text-xs font-semibold text-(--color-primary-deep) underline-offset-2 hover:underline"
+            title={nextSerieLabel ?? undefined}
+          >
+            {libelleSuivant} <ArrowRight className="h-3.5 w-3.5 shrink-0" />
           </Link>
         )}
         <div
@@ -538,6 +568,7 @@ export function QcmSession({
               outcome={isTraining ? null : outcomes?.[i] ?? null}
               disabled={isValidated}
               isCorrect={it.is_correct}
+              revealOnly={correctionSeule}
               onToggle={() => toggle(it.lettre)}
             />
           ))}
@@ -623,8 +654,8 @@ export function QcmSession({
         />
       ) : null}
 
-      {/* ─── Feedback ─── */}
-      {isValidated && !isTraining && !isSeanceQroc && (
+      {/* ─── Feedback ─── (jamais après une correction affichée sans réponse) */}
+      {isValidated && !isTraining && !isSeanceQroc && !correctionSeule && (
         <div
           className={cn(
             'mt-3 flex items-center gap-2.5 rounded-xl border px-3.5 py-2.5 text-sm',
@@ -686,7 +717,7 @@ export function QcmSession({
                 !isRevealed ? (
                   <Button onClick={revealSeanceAnswer} variant="outline" size="sm" className="border-[#7C3AED]/40 text-[#5B21B6] hover:bg-[#F3EAFF]">
                     <Eye className="h-4 w-4" />
-                    Prévisualiser la correction
+                    Afficher la correction
                   </Button>
                 ) : (
                   <>
@@ -702,7 +733,8 @@ export function QcmSession({
                 )
               ) : (
                 <Button onClick={validate} variant="outline" size="sm" disabled={!canValidate || submitting}>
-                  Prévisualiser la correction
+                  <Eye className="h-4 w-4" />
+                  Afficher la correction
                 </Button>
               )}
             </div>
@@ -723,13 +755,35 @@ export function QcmSession({
                 <option key={qq.id} value={i}>Question {i + 1} / {total}</option>
               ))}
             </select>
-            <Button type="button" variant="outline" size="sm" onClick={next} disabled={index >= total - 1}>
-              Suivant
-              <ArrowRight />
-            </Button>
+            {!derniereQuestion ? (
+              <Button type="button" variant="outline" size="sm" onClick={next}>
+                Suivant
+                <ArrowRight />
+              </Button>
+            ) : nextSerieHref ? (
+              /* Fin de série : on enchaîne directement sur le dossier suivant de
+                 la liste, sans repasser par l'onglet DP · QI. */
+              <Button asChild size="sm">
+                <Link href={nextSerieHref} title={nextSerieLabel ?? undefined}>
+                  {libelleSuivant}
+                  <ArrowRight />
+                </Link>
+              </Button>
+            ) : (
+              <Button asChild variant="outline" size="sm">
+                <Link href={backHref}>
+                  Terminer
+                  <ArrowRight />
+                </Link>
+              </Button>
+            )}
           </div>
           <p className="text-center text-[11px] text-(--color-ink-muted)">
-            Mode édition : navigation libre, aucune tentative ni score n’est enregistré.
+            {derniereQuestion && nextSerieHref
+              ? <>Dernière question — « {libelleSuivant} » ouvre <span className="font-semibold text-(--color-ink-soft)">{nextSerieLabel}</span>.</>
+              : derniereQuestion
+              ? 'Dernière question de la liste — « Terminer » ramène à l’onglet DP · QI.'
+              : 'Mode édition : navigation libre, aucune tentative ni score n’est enregistré.'}
           </p>
         </div>
       ) : (

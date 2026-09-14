@@ -32,6 +32,15 @@ const STATE_LABEL: Record<Exclude<ItemState, 'idle' | 'sel'>, string> = {
   'ok-unpicked': 'Énoncé faux — à ne pas cocher',
 };
 
+/** Libellés d'une correction affichée SANS réponse (mode édition) : aucun
+ *  verdict sur un choix qui n'a pas été fait, seulement la vérité de l'item. */
+const REVEAL_LABEL: Record<Exclude<ItemState, 'idle' | 'sel'>, string> = {
+  'ok-picked': 'Bonne réponse',
+  'bad-picked': 'Énoncé faux',
+  'missed': 'Bonne réponse',
+  'ok-unpicked': 'Énoncé faux',
+};
+
 export type QcmItemView = {
   id: string;
   lettre: string;
@@ -47,6 +56,7 @@ export function QcmItem({
   outcome,
   disabled,
   isCorrect,
+  revealOnly = false,
 }: {
   item: QcmItemView;
   selected: boolean;
@@ -54,12 +64,17 @@ export function QcmItem({
   outcome: ItemOutcome | null;
   disabled: boolean;
   isCorrect: boolean | null;
+  /** Correction affichée sans réponse (mode édition) : on montre la vérité de
+   *  chaque item, sans « manquée » ni « bien cochée » — rien n'a été coché. */
+  revealOnly?: boolean;
 }) {
   // `outcome` non nul = correction révélée. On dérive alors l'état des 4 cas
   // depuis (coché × vrai) plutôt que du simple 'correct'/'wrong'.
   const revealed = outcome !== null;
   const state: ItemState = !revealed
     ? (selected ? 'sel' : 'idle')
+    : revealOnly
+    ? (isCorrect ? 'ok-picked' : 'ok-unpicked')
     : selected && isCorrect
     ? 'ok-picked'
     : selected && !isCorrect
@@ -147,7 +162,7 @@ export function QcmItem({
                 className="text-[10px] uppercase tracking-wider font-medium"
                 style={{ color: state === 'bad-picked' ? 'var(--color-danger)' : GREEN }}
               >
-                {state === 'idle' || state === 'sel' ? '' : STATE_LABEL[state]}
+                {state === 'idle' || state === 'sel' ? '' : (revealOnly ? REVEAL_LABEL : STATE_LABEL)[state]}
               </p>
               <JustificationText text={item.justification} />
             </div>
