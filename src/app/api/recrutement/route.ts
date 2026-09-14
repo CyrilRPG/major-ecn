@@ -14,6 +14,8 @@ const RecrutementSchema = z.object({
   phone: z.string().max(40).optional().or(z.literal('')),
   message: z.string().max(2000).optional().or(z.literal('')),
   attachments: z.array(ContactAttachmentSchema).max(8).optional(),
+  /** Profil professionnel et disponibilités, dans l'ordre du formulaire. */
+  details: z.array(z.object({ label: z.string().min(1).max(80), value: z.string().max(600) })).max(30).optional(),
   turnstileToken: z.string().optional(),
 });
 
@@ -27,7 +29,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const { name, email, phone, message, attachments, turnstileToken } = parsed.data;
+  const { name, email, phone, message, attachments, details, turnstileToken } = parsed.data;
 
   // Anti-robot : vérification du captcha Turnstile (neutralisée si non configuré).
   const captcha = await verifyTurnstile(turnstileToken, clientIp(req));
@@ -51,6 +53,7 @@ export async function POST(req: Request) {
     email,
     phone: phone || null,
     message: message || null,
+    details: (details ?? []).filter((d) => d.value.trim()),
     attachmentNames: (attachments ?? []).map((a) => a.filename),
   });
 

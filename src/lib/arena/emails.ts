@@ -3,6 +3,7 @@ import { sendEmail, siteUrl } from '@/lib/email/send';
 import { arenaDb } from './db';
 import { signedLinkToken } from './session';
 import { describeBareme, type Bareme } from './scoring';
+import { formatNote, noteMax, noteSur10 } from './note';
 import { parisAndLocalLabel } from './time';
 import { COMMERCIAL_AFTER_M3, publicRules, UNDER_THRESHOLD_MESSAGE, WARNING_CONNECTION, WARNING_NATURE } from './texts';
 import { DEFAULT_SECONDS_PER_QUESTION, type EmailKind, type ParticipantRow, type TournamentRow } from './types';
@@ -173,15 +174,17 @@ export function relanceEmail(t: TournamentRow, p: ParticipantRow, round: { numbe
 export function resultsEmail(
   t: TournamentRow,
   p: ParticipantRow,
-  r: { number: number; theme: string; score: number | null; max: number; cumulScore: number; cumulMax: number; rank: number | null; isLast: boolean; next: { number: number; opens_at: Date | null; theme: string } | null },
+  r: { number: number; theme: string; score: number | null; max: number; cumulScore: number; cumulMax: number; cumulRounds: number; rank: number | null; isLast: boolean; next: { number: number; opens_at: Date | null; theme: string } | null },
 ): Mail {
   const urls = arenaUrls(t);
-  const fr = (v: number) => v.toLocaleString('fr-FR', { maximumFractionDigits: 2 });
+  // Notes affichées sur 10 par manche (cf. lib/arena/note.ts).
+  const noteManche = `${formatNote(noteSur10(r.score ?? 0, r.max))} / ${formatNote(noteMax())}`;
+  const noteCumul = `${formatNote(noteSur10(r.cumulScore, r.cumulMax, r.cumulRounds))} / ${formatNote(noteMax(r.cumulRounds))}`;
   const subject = `Résultats de la manche ${r.number} — votre correction détaillée est disponible`;
   const played = r.score !== null;
   const lines: string[] = [para(`Bonjour ${p.first_name},`)];
   if (played) {
-    lines.push(box(`<p style="margin:0;font-weight:700;color:${NAVY}">Score de la manche ${r.number} : ${fr(r.score as number)} / ${fr(r.max)}</p><p style="margin:6px 0 0;color:#374151">Score cumulé : ${fr(r.cumulScore)} / ${fr(r.cumulMax)}${r.rank !== null ? ` — rang ${r.rank}` : ''}</p>`));
+    lines.push(box(`<p style="margin:0;font-weight:700;color:${NAVY}">Note de la manche ${r.number} : ${noteManche}</p><p style="margin:6px 0 0;color:#374151">Note cumulée : ${noteCumul}${r.rank !== null ? ` — rang ${r.rank}` : ''}</p>`));
     if (r.rank === null) lines.push(para(UNDER_THRESHOLD_MESSAGE));
   } else {
     lines.push(para(`Vous n’avez pas joué la manche ${r.number}. Le classement général nécessite les trois manches. Vos résultats, vos rangs de manche et vos corrections détaillées restent disponibles pour les manches disputées.`));
@@ -196,7 +199,7 @@ export function resultsEmail(
   const html = shell(t, p, `Résultats de la manche ${r.number}`, lines.join(''));
   const text = [
     `Bonjour ${p.first_name},`,
-    played ? `Score de la manche ${r.number} : ${fr(r.score as number)} / ${fr(r.max)}\nScore cumulé : ${fr(r.cumulScore)} / ${fr(r.cumulMax)}${r.rank !== null ? ` — rang ${r.rank}` : ''}` : `Vous n'avez pas joué la manche ${r.number}.`,
+    played ? `Note de la manche ${r.number} : ${noteManche}\nNote cumulée : ${noteCumul}${r.rank !== null ? ` — rang ${r.rank}` : ''}` : `Vous n'avez pas joué la manche ${r.number}.`,
     r.rank === null && played ? UNDER_THRESHOLD_MESSAGE : '',
     `Votre correction détaillée de la manche ${r.number} est maintenant disponible dans votre espace EVC Arena (Mon espace → Manche ${r.number} → Résultats → Correction détaillée).\nOuvrir mon espace : ${urls.space}`,
     r.next ? `Prochaine manche : M${r.next.number}${r.next.opens_at ? ` — ${parisAndLocalLabel(r.next.opens_at, p.timezone, true)}` : ''}` : '',

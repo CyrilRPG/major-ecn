@@ -432,9 +432,11 @@ type RecrutementArgs = {
   email: string;
   phone: string | null;
   message: string | null;
+  /** Profil professionnel et disponibilités (libellé → réponse). */
+  details?: { label: string; value: string }[];
   attachmentNames: string[];
 };
-export function recrutementEmail({ name, email, phone, message, attachmentNames }: RecrutementArgs) {
+export function recrutementEmail({ name, email, phone, message, details = [], attachmentNames }: RecrutementArgs) {
   const mailSubject = `🎓 Nouvelle candidature — ${name}`;
   const bodyHtml = `
     <p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#4A5568;">
@@ -445,6 +447,7 @@ export function recrutementEmail({ name, email, phone, message, attachmentNames 
       <tr><td style="padding:6px 0;font-size:13px;color:#7A7A7A;">Email</td><td style="padding:6px 0;font-size:13px;color:#2D2D2D;font-family:monospace;">${escapeHtml(email)}</td></tr>
       ${phone ? `<tr><td style="padding:6px 0;font-size:13px;color:#7A7A7A;">Téléphone</td><td style="padding:6px 0;font-size:13px;color:#2D2D2D;font-weight:600;">${escapeHtml(phone)}</td></tr>` : ''}
       <tr><td style="padding:6px 0;font-size:13px;color:#7A7A7A;">Documents</td><td style="padding:6px 0;font-size:13px;color:#2D2D2D;font-weight:600;">${attachmentNames.length ? escapeHtml(attachmentNames.join(', ')) : 'Aucun'}</td></tr>
+      ${details.map((d) => `<tr><td style="padding:6px 12px 6px 0;font-size:13px;color:#7A7A7A;vertical-align:top;">${escapeHtml(d.label)}</td><td style="padding:6px 0;font-size:13px;color:#2D2D2D;font-weight:600;">${escapeHtml(d.value)}</td></tr>`).join('')}
     </table>
     ${message ? `<div style="margin:0 0 8px;padding:16px 18px;background:#FAFAF8;border:1px solid #ECEEF1;border-radius:12px;">
       <p style="margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7A7A7A;">Message</p>
@@ -460,6 +463,7 @@ export function recrutementEmail({ name, email, phone, message, attachmentNames 
     `Email : ${email}`,
     phone ? `Téléphone : ${phone}` : '',
     `Documents : ${attachmentNames.length ? attachmentNames.join(', ') : 'Aucun'}`,
+    ...details.map((d) => `${d.label} : ${d.value}`),
     '',
     message ?? '',
   ].filter(Boolean).join('\n');

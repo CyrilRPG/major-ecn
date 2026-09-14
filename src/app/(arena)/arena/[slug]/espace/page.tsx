@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 import { ArenaPage, Notice, Panel } from '@/components/arena/arena-shell';
 import { BigScore, Container } from '@/components/arena/arena-ui';
+import { formatNote, noteMax, noteSur10 } from '@/lib/arena/note';
 import { buttonClass, buttonStyle } from '@/components/arena/tokens';
 import { Countdown, LocalTime } from '@/components/arena/countdown';
 import { InviteBox } from '@/components/arena/invite-box';
@@ -35,7 +36,6 @@ export async function generateMetadata({ params }: Params) {
   return arenaMetadata(ctx.snap, { title: 'Mon espace', noindex: true });
 }
 
-const fr = (v: number) => v.toLocaleString('fr-FR', { maximumFractionDigits: 2 });
 const STATE_LABEL = { open: 'Ouverte', upcoming: 'À venir', closed: 'Clôturée', unscheduled: 'À programmer' } as const;
 
 /** Espace participant (maquette 7) : position, manches, scores, rang (si seuil), corrections, invitation, réglages. */
@@ -122,7 +122,7 @@ export default async function SpacePage({ params, searchParams }: Params) {
                   <div className="mt-5 flex flex-wrap items-center gap-4">
                     {played ? (
                       <>
-                        <BigScore value={fr(Number(a.score ?? 0))} max={fr(max)} color={ARENA.text} size="md" />
+                        <BigScore value={formatNote(noteSur10(Number(a.score ?? 0), max))} max={formatNote(noteMax())} color={ARENA.text} size="md" />
                         <span className="text-[13px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>temps {clockLabel(a.duration_seconds ?? 0)}{a.truncated ? ' (fenêtre réduite)' : ''}</span>
                         <Link href={`${base}/manche/${r.number}`} className="text-[13px] font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Résultats</Link>
                         {correctionsAccess({ round: r, tournamentId: t.id, participant: p, now }).allowed ? (
@@ -162,7 +162,7 @@ export default async function SpacePage({ params, searchParams }: Params) {
               ) : (
                 <>
                   <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Score cumulé{lastCounted ? ` · après M${lastCounted}` : ''}</p>
-                  <div className="mt-1"><BigScore value={fr(me?.totalScore ?? 0)} max={fr(cumulMax)} color={ARENA.text} size="md" /></div>
+                  <div className="mt-1"><BigScore value={formatNote(noteSur10(me?.totalScore ?? 0, cumulMax, standings.countedRounds.length))} max={formatNote(noteMax(standings.countedRounds.length))} color={ARENA.text} size="md" /></div>
                   {me?.rank ? (
                     <>
                       <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Classement {standings.isFinal ? 'final' : 'provisoire'}</p>

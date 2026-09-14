@@ -56,6 +56,7 @@ export default async function LeaderboardPage({ params, searchParams }: Params) 
               subtitle={round ? `Classement de la manche ${round.number}` : standings.isFinal ? 'Classement général final' : last ? `Classement provisoire cumulé · après M${last}` : 'En attente de la première manche'}
               effectif={effectif} general={standings.isFinal && !round} roundOnly={Boolean(round)}
               totalMax={totalMax}
+              roundsCount={round ? 1 : standings.countedRounds.length}
               rulesHref={`/arena/${slug}/regles#classement`}
               emptyMessage={last ? 'Aucun participant n’atteint encore le seuil du classement.' : undefined}
             />

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { GENERAL_RANKING_NOTICE } from '@/lib/arena/format';
+import { formatNote, noteMax, noteSur10 } from '@/lib/arena/note';
 import { ArenaAvatar } from '@/components/arena/arena-avatar';
 import { avatarAppearance, AVATAR_DISTINCTIONS } from '@/lib/arena/avatar-appearance';
 import { ARENA, BODY, CAPS, DISPLAY, HEADLINE, TABULAR } from './arena-ui';
@@ -29,6 +30,8 @@ export function Leaderboard({
   rows = [],
   subtitle = 'Classement provisoire (cumulé)',
   totalMax = 0,
+  /** Nombre de manches cumulées dans `totalMax` : la note est sur 10 × n. */
+  roundsCount = 1,
   rulesHref = '#regles',
   emptyMessage,
   flat = false,
@@ -37,6 +40,7 @@ export function Leaderboard({
   rows?: LeaderboardRowView[];
   subtitle?: string;
   totalMax?: number;
+  roundsCount?: number;
   rulesHref?: string;
   emptyMessage?: string;
   /** Sans cadre propre (déjà encadré par un écran de stade). */
@@ -96,7 +100,7 @@ export function Leaderboard({
                     </span>
                   </span>
                   <span className="text-right text-[1.35rem] leading-none sm:text-[1.5rem]" style={{ ...TABULAR, color: podium || r.me ? ARENA.text : ARENA.textSoft }}>
-                    {fr(r.totalScore)}<span className="mt-1 block text-[0.7em] sm:mt-0 sm:ml-1 sm:inline" style={{ color: ARENA.textMuted }}>/ {fr(totalMax)}</span>
+                    {formatNote(noteSur10(r.totalScore, totalMax, roundsCount))}<span className="mt-1 block text-[0.7em] sm:mt-0 sm:ml-1 sm:inline" style={{ color: ARENA.textMuted }}>/ {formatNote(noteMax(roundsCount))}</span>
                   </span>
                 </li>
               );

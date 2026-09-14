@@ -34,8 +34,8 @@ export type RoundResultsProps = {
   preview?: boolean;
   children?: ReactNode;
 };
-const fr = (v: number) =>
-  v.toLocaleString("fr-FR", { maximumFractionDigits: 2 });
+import { NOTE_PAR_MANCHE, formatNote, noteSur10 } from '@/lib/arena/note';
+
 const time = (iso: string) =>
   new Intl.DateTimeFormat("fr-FR", {
     timeZone: "Europe/Paris",
@@ -135,7 +135,7 @@ export function MissedRound({
               <FileText aria-hidden />
               <span className="ae-muted">
                 {next.questionCount} questions
-                <br />({fr(next.max)} points au total)
+                <br />(notée sur {NOTE_PAR_MANCHE})
               </span>
             </div>
           </div>
@@ -260,7 +260,7 @@ export function RoundResults({
         <div className="ae-score-value">
           <p>Votre score</p>
           <div className="ae-score-number">
-            {fr(score)} <span>/ {fr(max)}</span>
+            {formatNote(noteSur10(score, max))} <span>/ {NOTE_PAR_MANCHE}</span>
           </div>
           <div
             className="ae-score-segments"
@@ -404,7 +404,7 @@ export function RoundResults({
                 : "date annoncée prochainement"}
             </strong>
             <br />
-            {next.questionCount} questions • {fr(next.max)} points au total •{" "}
+            {next.questionCount} questions • notée sur {NOTE_PAR_MANCHE} •{" "}
             {next.duration} minutes
           </span>
         </p>

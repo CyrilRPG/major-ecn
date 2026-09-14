@@ -112,6 +112,7 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
         board={board}
         boardSubtitle={standings?.isFinal ? 'Classement final (cumulé)' : lastCounted ? `Classement provisoire (cumulé) · après M${lastCounted}` : 'Classement provisoire (cumulé)'}
         totalMax={totalMax}
+        boardRounds={standings?.countedRounds.length ?? 1}
         boardEmpty={lastCounted ? 'Aucun participant n’atteint encore le seuil du classement.' : 'Le tableau s’allumera après la publication des résultats de la première manche.'}
         leaderboardEnabled={t.leaderboard_enabled}
         general={standings?.isFinal} effectif={standings?.isFinal ? standings.effectifGeneral : undefined}

@@ -37,7 +37,7 @@ export function AvatarShowcase({ nav }: { nav: ShellNav }) {
       </div>
       <div className="ae-avatar-simulation-grid">
         <div aria-live="polite"><AvatarRankHistory seed={seed} pseudo="DrHorus27" rank={rank} entries={history} /></div>
-        <Leaderboard rows={rows} totalMax={step * 13} subtitle={step === 3 ? 'Classement final (cumulé)' : 'Classement provisoire (cumulé)'} rulesHref="?state=avatars" />
+        <Leaderboard rows={rows} totalMax={step * 13} roundsCount={step} subtitle={step === 3 ? 'Classement final (cumulé)' : 'Classement provisoire (cumulé)'} rulesHref="?state=avatars" />
       </div>
     </section>
   </div></ArenaPage>;

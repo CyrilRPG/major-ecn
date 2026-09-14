@@ -1075,6 +1075,7 @@ export async function sendSequenceEmailNow(
           ),
           cumulScore: st?.totalScore ?? 0,
           cumulMax: st?.totalMax ?? 0,
+          cumulRounds: standings?.countedRounds.length ?? 0,
           rank: st?.rank ?? null,
           isLast:
             round.number === Math.max(...snap.rounds.map((x) => x.number)),

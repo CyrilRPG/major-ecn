@@ -15,6 +15,7 @@ import {
 import { ArenaBars, ArenaTarget } from "./experience-icons";
 import type { FinalSummary } from "@/lib/arena/final-summary";
 import { durationText, GENERAL_RANKING_NOTICE } from "@/lib/arena/format";
+import { ecartSur10, noteMax, noteSur10 } from "@/lib/arena/note";
 import "./tournament-final.css";
 
 const score = (value: number) =>
@@ -218,8 +219,8 @@ export function TournamentFinal({
                   <span>{s.gap.label}</span>
                   <strong>
                     {s.gap.value > 0 ? "+" : ""}
-                    {score(s.gap.value)} point
-                    {Math.abs(s.gap.value) !== 1 ? "s" : ""}
+                    {score(ecartSur10(s.gap.value, s.max, s.played))} point
+                    {Math.abs(ecartSur10(s.gap.value, s.max, s.played)) !== 1 ? "s" : ""}
                   </strong>
                 </div>
               )}
@@ -289,7 +290,7 @@ export function TournamentFinal({
                 {r.played ? (
                   <>
                     <p>
-                      <b>{score(r.score)}</b> / {score(r.max)} points
+                      <b>{score(noteSur10(r.score, r.max))}</b> / {score(noteMax())}
                     </p>
                     <span>{r.questionCount} questions</span>
                     <span>Temps : {durationText(r.seconds)}</span>
@@ -313,7 +314,7 @@ export function TournamentFinal({
           <div>
             <h2>SCORE TOTAL</h2>
             <p>
-              {score(s.score)} <em>/ {score(s.max)} points</em>
+              {score(noteSur10(s.score, s.max, s.played))} <em>/ {score(noteMax(s.played))}</em>
             </p>
             <span>
               {incomplete

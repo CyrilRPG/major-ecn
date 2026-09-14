@@ -34,6 +34,43 @@ const COUNTRIES = [
   'Chine', 'Vietnam', 'Cambodge', 'Philippines', 'Autre',
 ];
 
+const STATUTS = [
+  'Médecin thésé — diplôme hors Union européenne', 'Médecin thésé — diplôme de l’Union européenne',
+  'Interne / docteur junior', 'Chef de clinique / assistant', 'Praticien hospitalier',
+  'Médecin libéral', 'Enseignant / universitaire', 'Autre',
+];
+const SPECIALITES = [
+  'Médecine générale', 'Anesthésie-réanimation', 'Cardiologie', 'Dermatologie', 'Endocrinologie',
+  'Gériatrie', 'Gynécologie-obstétrique', 'Hématologie', 'Hépato-gastro-entérologie', 'Infectiologie',
+  'Médecine d’urgence', 'Médecine intensive-réanimation', 'Médecine interne', 'Néphrologie', 'Neurologie',
+  'Odontologie', 'Ophtalmologie', 'ORL', 'Orthopédie', 'Pédiatrie', 'Pharmacologie', 'Pneumologie',
+  'Psychiatrie', 'Radiologie', 'Rhumatologie', 'Urologie', 'Autre',
+];
+const ANNEES_EXERCICE = ['Moins de 2 ans', '2 à 5 ans', '5 à 10 ans', 'Plus de 10 ans'];
+const LIEUX_EXERCICE = ['CHU', 'Centre hospitalier', 'Clinique / établissement privé', 'Cabinet libéral', 'Université / faculté', 'Hors de France', 'Autre'];
+const EXPERIENCES = ['Aucune', '1 à 3 ans', '3 à 5 ans', 'Plus de 5 ans'];
+const CONTRIBUTIONS = ['QCM', 'Cas cliniques', 'Fiches pédagogiques', 'Relecture scientifique', 'Cours / supports', 'Autre (précisez)'];
+const MOTIVATIONS = ['Enseignement', 'Création de QCM', 'Cas cliniques', 'Fiches pédagogiques', 'Relecture scientifique', 'Webinaires / vidéos', 'Correction de dossiers', 'Élaboration d’épreuves blanches', 'Autre (précisez)'];
+const DISPONIBILITES = ['Moins de 5 h', '5 à 10 h', '10 à 20 h', 'Plus de 20 h'];
+
+/** Champs d'identité pré-remplis depuis le formulaire de la page. */
+type Identity = { first: string; last: string; email: string; phone: string; country: string; city: string };
+const EMPTY_IDENTITY: Identity = { first: '', last: '', email: '', phone: '', country: '', city: '' };
+
+/** Profil professionnel et disponibilités : TOUT est transmis dans le mail. */
+type Profile = {
+  status: string; specialty: string; otherSpecialties: string; years: string; workplace: string;
+  teaching: string; contributed: string; contributions: string[]; motivations: string[]; availability: string;
+};
+const EMPTY_PROFILE: Profile = {
+  status: '', specialty: '', otherSpecialties: '', years: '', workplace: '',
+  teaching: '', contributed: '', contributions: [], motivations: [], availability: '',
+};
+
+function toggle(list: string[], value: string): string[] {
+  return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
+}
+
 type ModalStep = 1 | 2 | 3;
 
 type DocKey = 'cv' | 'lettre' | 'diplomes' | 'publications';
@@ -54,9 +91,11 @@ function fileToBase64(file: File): Promise<string> {
   });
 }
 
-function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+function ApplicationModal({ open, onClose, initial = EMPTY_IDENTITY }: { open: boolean; onClose: () => void; initial?: Identity }) {
   const [step, setStep] = useState<ModalStep>(1);
-  const [form, setForm] = useState({ first: '', last: '', email: '', phone: '', message: '' });
+  const [form, setForm] = useState({ ...initial, message: '' });
+  const [profile, setProfile] = useState<Profile>(EMPTY_PROFILE);
+  const setP = <K extends keyof Profile>(key: K, value: Profile[K]) => setProfile((p) => ({ ...p, [key]: value }));
   const [docs, setDocs] = useState<Record<DocKey, File | null>>({ cv: null, lettre: null, diplomes: null, publications: null });
   const [attested, setAttested] = useState(false);
   const [captchaToken, setCaptchaToken] = useState('');
@@ -65,9 +104,14 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
   const [errMsg, setErrMsg] = useState('');
 
   const submit = async () => {
-    if (!form.first.trim() || !form.last.trim() || !form.email.trim()) {
-      setErrMsg('Renseignez vos prénom, nom et email (étape 1).'); setStatus('error'); setStep(1); return;
+    if (!form.first.trim() || !form.last.trim() || !form.email.trim() || !form.phone.trim() || !form.country || !form.city.trim()) {
+      setErrMsg('Renseignez vos prénom, nom, e-mail, téléphone, pays et ville (étape 1).'); setStatus('error'); setStep(1); return;
     }
+    if (!profile.status || !profile.specialty || !profile.years || !profile.workplace || !profile.teaching || !profile.contributed) {
+      setErrMsg('Complétez votre profil professionnel : statut, spécialité, années et lieu d’exercice, expérience et contributions (étape 2).'); setStatus('error'); setStep(2); return;
+    }
+    if (profile.motivations.length === 0) { setErrMsg('Indiquez au moins un domaine qui vous intéresse (étape 2).'); setStatus('error'); setStep(2); return; }
+    if (!profile.availability) { setErrMsg('Indiquez votre temps disponible moyen par mois (étape 3).'); setStatus('error'); return; }
     if (!docs.cv) { setErrMsg('Le CV est obligatoire pour soumettre votre candidature.'); setStatus('error'); return; }
     if (!attested) { setErrMsg('Veuillez attester l’exactitude des informations fournies.'); setStatus('error'); return; }
     if (TURNSTILE_ENABLED && !captchaToken) { setErrMsg('Merci de valider le test anti-robot.'); setStatus('error'); return; }
@@ -93,6 +137,20 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
           email: form.email.trim(),
           phone: form.phone.trim(),
           message: form.message.trim(),
+          details: [
+            { label: 'Pays de résidence', value: form.country },
+            { label: 'Ville', value: form.city.trim() },
+            { label: 'Statut actuel', value: profile.status },
+            { label: 'Spécialité principale', value: profile.specialty },
+            { label: 'Autres spécialités', value: profile.otherSpecialties.trim() },
+            { label: 'Années d’exercice', value: profile.years },
+            { label: 'Lieu d’exercice principal', value: profile.workplace },
+            { label: 'Expérience dans l’enseignement', value: profile.teaching },
+            { label: 'A déjà contribué à des contenus pédagogiques', value: profile.contributed },
+            { label: 'Contributions', value: profile.contributions.join(', ') },
+            { label: 'Domaines d’intérêt', value: profile.motivations.join(', ') },
+            { label: 'Temps disponible par mois', value: profile.availability },
+          ].filter((d) => d.value),
           turnstileToken: captchaToken,
           attachments,
         }),
@@ -177,6 +235,12 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
           ))}
         </div>
 
+        {status === 'error' && errMsg && (
+          <p role="alert" className="mt-5 rounded-xl border px-4 py-3 text-[13px]" style={{ borderColor: 'rgba(192,17,46,0.25)', background: '#FCEAEC', color: RED }}>
+            {errMsg}
+          </p>
+        )}
+
         {/* Step 1: Informations personnelles */}
         {step === 1 && (
           <div className="mt-6">
@@ -201,61 +265,20 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
               </div>
               <div>
                 <label className="text-xs font-bold" style={{ color: INK }}>Pays de résidence *</label>
-                <select className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: INK_SOFT }}>
+                <select value={form.country} onChange={(e) => setForm((f) => ({ ...f, country: e.target.value }))} className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: form.country ? INK : INK_SOFT }}>
                   <option value="">Sélectionnez un pays</option>
                   {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>
                 <label className="text-xs font-bold" style={{ color: INK }}>Ville *</label>
-                <input placeholder="Votre ville" className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER }} />
+                <input value={form.city} onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))} placeholder="Votre ville" className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER }} />
               </div>
             </div>
 
-            <h3 className="mt-6 text-base font-black" style={{ color: NAVY }}>Profil professionnel (aperçu)</h3>
-            <div className="mt-1 h-0.5 w-10" style={{ background: RED }} />
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <div>
-                <label className="text-xs font-bold" style={{ color: INK }}>Statut actuel *</label>
-                <select className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                  <option>Sélectionnez votre statut</option>
-                </select>
-              </div>
-              <div>
-                <label className="text-xs font-bold" style={{ color: INK }}>Spécialité principale *</label>
-                <select className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                  <option>Sélectionnez votre spécialité</option>
-                </select>
-              </div>
-              <div className="sm:col-span-2">
-                <label className="text-xs font-bold" style={{ color: INK }}>Autres spécialités (le cas échéant)</label>
-                <select className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                  <option>Sélectionnez une ou plusieurs spécialités</option>
-                </select>
-              </div>
-            </div>
-
-            <h3 className="mt-6 text-base font-black" style={{ color: NAVY }}>Missions d\'interet (aperçu)</h3>
-            <div className="mt-1 h-0.5 w-10" style={{ background: RED }} />
-            <p className="mt-2 text-xs" style={{ color: INK_SOFT }}>Sélectionnez les types de missions qui vous intéressent :</p>
-            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {['Enseignement', 'Création de QCM', 'Cas cliniques', 'Fiches pédagogiques', 'Relecture scientifique', 'Webinaires', 'Correction de dossiers', 'Élaboration d\'epreuves blanches', 'Autre (précisez)'].map(m => (
-                <label key={m} className="flex items-center gap-2 text-sm" style={{ color: INK }}>
-                  <input type="checkbox" className="rounded" /> {m}
-                </label>
-              ))}
-            </div>
-
-            <h3 className="mt-6 text-base font-black" style={{ color: NAVY }}>Disponibilités (aperçu)</h3>
-            <div className="mt-1 h-0.5 w-10" style={{ background: RED }} />
-            <p className="mt-2 text-xs font-bold" style={{ color: INK }}>Temps disponible moyen par mois *</p>
-            <div className="mt-2 flex flex-wrap gap-3">
-              {['Moins de 5 h', '5 à 10 h', '10 à 20 h', 'Plus de 20 h'].map(t => (
-                <label key={t} className="flex items-center gap-2 text-sm" style={{ color: INK }}>
-                  <input type="radio" name="availability" /> {t}
-                </label>
-              ))}
-            </div>
+            <p className="mt-6 text-xs leading-relaxed" style={{ color: INK_SOFT }}>
+              Étape 2 : votre profil professionnel (statut, spécialité, expérience). Étape 3 : vos documents et vos disponibilités.
+            </p>
 
             <div className="mt-6 flex items-center gap-3 rounded-xl p-4" style={{ background: '#F0F4FA' }}>
               <ShieldCheck className="h-5 w-5 shrink-0" style={{ color: NAVY }} />
@@ -280,41 +303,43 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="text-xs font-bold" style={{ color: INK }}>Statut actuel *</label>
-                <select className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                  <option>Sélectionnez votre statut</option>
+                <select value={profile.status} onChange={(e) => setP('status', e.target.value)} className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: profile.status ? INK : INK_SOFT }}>
+                  <option value="">Sélectionnez votre statut</option>
+                  {STATUTS.map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
               <div>
                 <label className="text-xs font-bold" style={{ color: INK }}>Spécialité principale *</label>
-                <select className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                  <option>Sélectionnez votre spécialité</option>
+                <select value={profile.specialty} onChange={(e) => setP('specialty', e.target.value)} className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: profile.specialty ? INK : INK_SOFT }}>
+                  <option value="">Sélectionnez votre spécialité</option>
+                  {SPECIALITES.map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
               <div className="sm:col-span-2">
                 <label className="text-xs font-bold" style={{ color: INK }}>Autres spécialités (le cas échéant)</label>
-                <select className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                  <option>Sélectionnez une ou plusieurs spécialités</option>
-                </select>
+                <input value={profile.otherSpecialties} onChange={(e) => setP('otherSpecialties', e.target.value.slice(0, 300))} placeholder="Séparez-les par des virgules" className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER }} />
               </div>
               <div>
                 <label className="text-xs font-bold" style={{ color: INK }}>Année(s) d'exercice *</label>
-                <select className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                  <option>Sélectionnez</option>
+                <select value={profile.years} onChange={(e) => setP('years', e.target.value)} className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: profile.years ? INK : INK_SOFT }}>
+                  <option value="">Sélectionnez</option>
+                  {ANNEES_EXERCICE.map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
               <div>
                 <label className="text-xs font-bold" style={{ color: INK }}>Lieu d'exercice principal *</label>
-                <select className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                  <option>Sélectionnez votre lieu d'exercice</option>
+                <select value={profile.workplace} onChange={(e) => setP('workplace', e.target.value)} className="mt-1 w-full rounded-lg border px-3 py-2.5 text-sm" style={{ borderColor: BORDER, color: profile.workplace ? INK : INK_SOFT }}>
+                  <option value="">Sélectionnez votre lieu d'exercice</option>
+                  {LIEUX_EXERCICE.map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
             </div>
 
             <p className="mt-4 text-xs font-bold" style={{ color: INK }}>Expérience dans l'enseignement / la formation *</p>
             <div className="mt-2 flex flex-wrap gap-3">
-              {['Aucune', '1 à 3 ans', '3 à 5 ans', 'Plus de 5 ans'].map(e => (
+              {EXPERIENCES.map(e => (
                 <label key={e} className="flex items-center gap-2 text-sm" style={{ color: INK }}>
-                  <input type="radio" name="experience" /> {e}
+                  <input type="radio" name="experience" checked={profile.teaching === e} onChange={() => setP('teaching', e)} /> {e}
                 </label>
               ))}
             </div>
@@ -323,25 +348,25 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
             <div className="mt-2 flex gap-4">
               {['Non', 'Oui'].map(v => (
                 <label key={v} className="flex items-center gap-2 text-sm" style={{ color: INK }}>
-                  <input type="radio" name="contributed" /> {v}
+                  <input type="radio" name="contributed" checked={profile.contributed === v} onChange={() => setP('contributed', v)} /> {v}
                 </label>
               ))}
             </div>
 
             <p className="mt-4 text-xs font-bold" style={{ color: INK }}>Si oui, lesquels ?</p>
             <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {['QCM', 'Cas cliniques', 'Fiches pédagogiques', 'Relecture scientifique', 'Cours / supports', 'Autre (précisez)'].map(c => (
+              {CONTRIBUTIONS.map(c => (
                 <label key={c} className="flex items-center gap-2 text-sm" style={{ color: INK }}>
-                  <input type="checkbox" className="rounded" /> {c}
+                  <input type="checkbox" className="rounded" checked={profile.contributions.includes(c)} onChange={() => setP('contributions', toggle(profile.contributions, c))} /> {c}
                 </label>
               ))}
             </div>
 
             <p className="mt-4 text-xs font-bold" style={{ color: INK }}>Motivations (quel(s) domaine(s) vous intéressent particulièrement ?) *</p>
             <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {['Enseignement', 'Création de QCM', 'Cas cliniques', 'Fiches pédagogiques', 'Relecture scientifique', 'Webinaires / vidéos', 'Correction de dossiers', 'Élaboration d\'epreuves blanches', 'Autre (précisez)'].map(m => (
+              {MOTIVATIONS.map(m => (
                 <label key={m} className="flex items-center gap-2 text-sm" style={{ color: INK }}>
-                  <input type="checkbox" className="rounded" /> {m}
+                  <input type="checkbox" className="rounded" checked={profile.motivations.includes(m)} onChange={() => setP('motivations', toggle(profile.motivations, m))} /> {m}
                 </label>
               ))}
             </div>
@@ -403,10 +428,10 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
             <h4 className="mt-6 text-sm font-black" style={{ color: NAVY }}>Disponibilités</h4>
             <p className="mt-1 text-xs font-bold" style={{ color: INK }}>Temps disponible moyen par mois *</p>
             <div className="mt-2 flex flex-wrap gap-3">
-              {['Moins de 5 h', '5 à 10 h', '10 à 20 h', 'Plus de 20 h'].map((t, i) => (
-                <label key={t} className={`flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm ${i === 1 ? 'border-red-500' : ''}`}
-                  style={{ borderColor: i === 1 ? RED : BORDER, color: INK }}>
-                  <input type="radio" name="time" defaultChecked={i === 1} /> {t}
+              {DISPONIBILITES.map((t) => (
+                <label key={t} className="flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm"
+                  style={{ borderColor: profile.availability === t ? RED : BORDER, color: INK }}>
+                  <input type="radio" name="time" checked={profile.availability === t} onChange={() => setP('availability', t)} /> {t}
                 </label>
               ))}
             </div>
@@ -440,12 +465,6 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
               </div>
             )}
 
-            {status === 'error' && (
-              <p className="mt-4 rounded-xl border px-4 py-3 text-[13px]" style={{ borderColor: 'rgba(192,17,46,0.25)', background: '#FCEAEC', color: RED }}>
-                {errMsg}
-              </p>
-            )}
-
             <div className="mt-4 flex items-center justify-between">
               <button type="button" onClick={() => setStep(2)} className="inline-flex items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-bold" style={{ borderColor: BORDER, color: NAVY }}>
                 ← Précédent
@@ -463,6 +482,10 @@ function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => voi
 
 export function RecrutementPageContent() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalKey, setModalKey] = useState(0);
+  const [inline, setInline] = useState<Identity>(EMPTY_IDENTITY);
+  const setI = <K extends keyof Identity>(key: K, value: string) => setInline((f) => ({ ...f, [key]: value }));
+  const openModal = () => { setModalKey((k) => k + 1); setModalOpen(true); };
 
   return (
     <div className="relative overflow-hidden" style={{ fontFamily: FONT, background: 'linear-gradient(180deg, #FFFFFF 0%, #FAFBFF 30%, #FFF8F9 60%, #FFFFFF 100%)' }}>
@@ -717,34 +740,34 @@ export function RecrutementPageContent() {
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
                 <div>
                   <label className="text-[11px] font-bold" style={{ color: INK }}>Prenom *</label>
-                  <input placeholder="Votre prenom" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
+                  <input value={inline.first} onChange={(e) => setI('first', e.target.value)} placeholder="Votre prénom" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
                 </div>
                 <div>
                   <label className="text-[11px] font-bold" style={{ color: INK }}>Nom *</label>
-                  <input placeholder="Votre nom" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
+                  <input value={inline.last} onChange={(e) => setI('last', e.target.value)} placeholder="Votre nom" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
                 </div>
                 <div>
                   <label className="text-[11px] font-bold" style={{ color: INK }}>E-mail *</label>
-                  <input type="email" placeholder="exemple@email.com" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
+                  <input type="email" value={inline.email} onChange={(e) => setI('email', e.target.value)} placeholder="exemple@email.com" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
                 </div>
                 <div>
                   <label className="text-[11px] font-bold" style={{ color: INK }}>Telephone *</label>
-                  <input placeholder="06 12 34 56 78" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
+                  <input value={inline.phone} onChange={(e) => setI('phone', e.target.value)} placeholder="06 12 34 56 78" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
                 </div>
                 <div>
                   <label className="text-[11px] font-bold" style={{ color: INK }}>Pays de residence *</label>
-                  <select className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER, color: INK_SOFT }}>
-                    <option value="">Selectionnez un pays</option>
+                  <select value={inline.country} onChange={(e) => setI('country', e.target.value)} className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER, color: inline.country ? INK : INK_SOFT }}>
+                    <option value="">Sélectionnez un pays</option>
                     {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="text-[11px] font-bold" style={{ color: INK }}>Ville *</label>
-                  <input placeholder="Votre ville" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
+                  <input value={inline.city} onChange={(e) => setI('city', e.target.value)} placeholder="Votre ville" className="mt-1 w-full rounded-lg border px-3 py-2 text-sm" style={{ borderColor: BORDER }} />
                 </div>
               </div>
               <div className="mt-4 flex justify-end">
-                <button onClick={() => setModalOpen(true)} className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white" style={{ background: RED }}>
+                <button type="button" onClick={openModal} className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white" style={{ background: RED }}>
                   Suivant <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
@@ -777,7 +800,7 @@ export function RecrutementPageContent() {
         </div>
       </section>
 
-      <ApplicationModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      <ApplicationModal key={modalKey} open={modalOpen} onClose={() => setModalOpen(false)} initial={inline} />
     </div>
   );
 }

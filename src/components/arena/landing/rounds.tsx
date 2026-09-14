@@ -16,10 +16,10 @@ const STATE_LABEL = { open: 'Ouverte', upcoming: 'À venir', closed: 'Clôturée
 
 /** Section sombre « Les 3 manches du tournoi » + « Meilleurs scores » du modèle (sans médaille ni effectif, §7 et §13). */
 export function LandingRounds({
-  rounds, rulesHref, leaderboardHref, board, boardSubtitle, totalMax, boardEmpty, leaderboardEnabled, general = false, effectif,
+  rounds, rulesHref, leaderboardHref, board, boardSubtitle, totalMax, boardRounds = 1, boardEmpty, leaderboardEnabled, general = false, effectif,
 }: {
   rounds: RoundCard[]; rulesHref: string; leaderboardHref: string;
-  board: LeaderboardRowView[]; boardSubtitle: string; totalMax: number; boardEmpty: string; leaderboardEnabled: boolean;
+  board: LeaderboardRowView[]; boardSubtitle: string; totalMax: number; boardRounds?: number; boardEmpty: string; leaderboardEnabled: boolean;
   general?: boolean; effectif?: number;
 }) {
   return (
@@ -69,7 +69,7 @@ export function LandingRounds({
                   Voir tous les scores <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
-              <Leaderboard rows={board} subtitle={boardSubtitle} totalMax={totalMax} rulesHref={`${rulesHref}#classement`} emptyMessage={boardEmpty} flat general={general} effectif={effectif} />
+              <Leaderboard rows={board} subtitle={boardSubtitle} totalMax={totalMax} roundsCount={boardRounds} rulesHref={`${rulesHref}#classement`} emptyMessage={boardEmpty} flat general={general} effectif={effectif} />
             </div>
             </Reveal>
           )}

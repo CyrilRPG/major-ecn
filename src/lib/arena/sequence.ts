@@ -163,6 +163,7 @@ async function sendDueEmails(snap: TournamentSnapshot, now: Date, report: SweepR
           max: roundMaxScore(snap.questionsByRound.get(r.id) ?? [], effectiveBareme(t, r)),
           cumulScore: st?.totalScore ?? 0,
           cumulMax: st?.totalMax ?? 0,
+          cumulRounds: standings.countedRounds.length,
           rank: st?.rank ?? null,
           isLast: r.number === Math.max(...snap.rounds.map((x) => x.number)),
           next: nextRound ? { number: nextRound.number, opens_at: toDate(nextRound.opens_at), theme: nextRound.theme } : null,
