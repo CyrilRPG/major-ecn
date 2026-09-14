@@ -36,6 +36,7 @@ import { verifyTurnstile, clientIp } from '@/lib/turnstile';
 import { collegeIdForSpecialty, specialtyByName, voieImposeePourSpecialite } from '@/lib/data/enrollable-colleges';
 import { decodeSignaturePng, storeInscriptionSignature, attachSessionToSignature } from '@/lib/signatures/inscription';
 import { RENONCIATION_RETRACTATION } from '@/lib/legal/consents';
+import { APP_ID } from '@/lib/stripe/origine-session';
 
 type Consents = {
   cgu?: boolean;
