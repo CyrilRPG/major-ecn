@@ -302,6 +302,9 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     videos: c.videos,
     flashcards: c.flashcards,
   });
+  // Les annales se consultent directement : DP · QI est la seule page de
+  // l'item (demande de Cyril, 14/09/2026), la console n'y montre aucun onglet.
+  if (isAnnalesItem) redirect(`/cours/${coursId}/qcm`);
 
   // Cartes du parcours dans l'ordre pédagogique :
   //  - Annales      : une seule carte « Dossiers progressifs & QI »

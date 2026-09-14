@@ -11,6 +11,7 @@ import {
 } from '@/lib/auth/permissions';
 import { normalizeSpecialtyStatus } from '@/lib/pedago/status';
 import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
+import { estItemAnnales } from '@/lib/data/annales';
 
 export default async function MatierePage({ params }: { params: Promise<{ matiere: string }> }) {
   const { matiere } = await params;
@@ -33,9 +34,11 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
 
   const { data: coursAll } = await supabase
     .from('cours')
-    .select('id, titre, description, order_index, access_type, course_progress(video_watched, fiche_read), qcm_series(id), flashcards(id)')
+    .select('id, titre, description, order_index, access_type, course_progress(video_watched, fiche_read), qcm_series(id, label), flashcards(id), fiches(storage_path), videos(id)')
     .eq('matiere_id', matiere)
-    .order('order_index');
+    // À rang égal, « Annales - X » précède « Révisions - X ».
+    .order('order_index')
+    .order('titre');
 
   // Filtrage fin : un prof peut être limité à un sous-ensemble de cours
   // (scope.cours). Cours marqués 'specific' : exige listing explicite.
@@ -60,11 +63,14 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
     const p = c.course_progress?.[0];
     const hasContent = (c.qcm_series?.length ?? 0) > 0 || (c.flashcards?.length ?? 0) > 0;
     const progress = progression.get(c.id)?.progression ?? 0;
+    // Item d'annales (« Annales - <Collège> ») : l'élève tombe directement sur
+    // DP · QI, la seule page de l'item (aucun autre onglet).
+    const annales = estItemAnnales({ series: c.qcm_series, fiches: c.fiches, videos: c.videos, flashcards: c.flashcards });
     return {
       id: c.id,
-      href: `/cours/${c.id}`,
+      href: annales ? `/cours/${c.id}/qcm` : `/cours/${c.id}`,
       title: c.titre,
-      subtitle: c.description ?? undefined,
+      subtitle: c.description ?? (annales ? 'Annales EVC officielles, corrigées et justifiées — par année et par épreuve.' : undefined),
       leading: (
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-(--color-primary) font-mono text-xs font-semibold text-white">
           {String(idx + 1).padStart(2, '0')}

@@ -56,6 +56,7 @@ export function StudyConsole({
   titre,
   context,
   availability,
+  hideTabs = false,
   videoLabel = rubriqueParDefaut('cours'),
   supports = [],
   mastery,
@@ -68,6 +69,8 @@ export function StudyConsole({
   titre: string;
   context: string;
   availability: Availability;
+  /** Item d'annales : aucune barre d'onglets, DP · QI est la seule page. */
+  hideTabs?: boolean;
   /** Libellé de l'onglet des cours vidéo : rubrique de l'item (« Séance intensive » par défaut). */
   videoLabel?: string;
   /** Supports de séance autorisés pour cet élève : un onglet chacun, placé
@@ -182,8 +185,9 @@ export function StudyConsole({
           </button>
         </div>
 
-        {/* Tabs : scroll horizontal sur mobile, icônes seules très étroites */}
-        <div className="-mx-3 mt-2 flex gap-0.5 overflow-x-auto px-3 sm:mx-0 sm:mt-3 sm:gap-1 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* Tabs : scroll horizontal sur mobile, icônes seules très étroites.
+            Aucun onglet sur un item d'annales (DP · QI est sa seule page). */}
+        {!hideTabs && <div className="-mx-3 mt-2 flex gap-0.5 overflow-x-auto px-3 sm:mx-0 sm:mt-3 sm:gap-1 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {tabs.filter((t) => {
             if (visibility?.[t.key] === false) return false;
             // For non-découverte students, hide formula-locked tabs entirely
@@ -258,7 +262,7 @@ export function StudyConsole({
               </Link>
             );
           })}
-        </div>
+        </div>}
       </div>
 
       {/* Popup "Ce contenu est réservé" — déclenchée par l'onglet Cours vidéo

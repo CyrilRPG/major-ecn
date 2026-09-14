@@ -10,6 +10,7 @@ import { canRead, canReadAnyQcm } from '@/lib/schemas/professor';
 import type { CourseSupport } from '@/lib/student/supports';
 import { hiddenBlocksVisibility, parseHiddenBlocks } from '@/lib/student/blocs';
 import { estTitreRevisions } from '@/lib/videos/revisions';
+import { estItemAnnales } from '@/lib/data/annales';
 import { rubriqueCommune, rubriqueParDefaut } from '@/lib/videos/rubriques';
 import { videoVisible, supportVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
 import { scopeOffers } from '@/lib/auth/permissions';
@@ -69,7 +70,7 @@ export default async function CoursLayout({
 
   const { data: qcmSeries } = await createAdminClient()
     .from('qcm_series')
-    .select('type')
+    .select('type, label')
     .eq('cours_id', coursId);
   const scope = parseScope(profile.permission_scope);
   const collegeAccess = (c.matieres as unknown as { access_type?: 'all' | 'specific' }).access_type ?? 'all';
@@ -111,6 +112,15 @@ export default async function CoursLayout({
     (v.video_supports ?? []).filter((d) => isAdmin || supportVisible(d, v, {
       offres: offresEleve, voie: scope.voie ?? null, droitFormule: droitFormulePour(v), userId: user.id,
     }));
+
+  // Item d'annales (« Annales - <Collège> ») : DP · QI est sa seule page, la
+  // barre d'onglets disparaît et l'en-tête l'annonce.
+  const annalesSeules = estItemAnnales({
+    series: (qcmSeries ?? []) as { label?: string | null }[],
+    fiches: c.fiches,
+    videos: videosRow,
+    flashcards: c.flashcards,
+  });
 
   const availability = {
     video: coursVideos.some(hasSource),
@@ -219,7 +229,8 @@ export default async function CoursLayout({
       <StudyConsole
         coursId={coursId}
         titre={c.titre}
-        context={`${c.matieres.nom} · Programme EVC`}
+        context={annalesSeules ? `${c.matieres.nom} · Annales EVC` : `${c.matieres.nom} · Programme EVC`}
+        hideTabs={annalesSeules}
         availability={availability}
         // L'onglet porte le nom de la rubrique des cours vidéo (« Séance
         // intensive » par défaut, renommable depuis la vue étudiant).
