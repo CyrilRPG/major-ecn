@@ -82,6 +82,7 @@ const MANUAL_QCM_TOTAL = MANUAL_QCM_LINES.reduce((s, l) => s + l.montant, 0);
 // reste à payer. Ajouter une ligne à chaque nouveau versement.
 const REGLEMENTS = [
   { label: 'Acompte réglé', montant: 6547.69 },
+  { label: 'Règlement du 16/09/2026', montant: 4007 },
 ];
 const REGLE_TOTAL = REGLEMENTS.reduce((s, r) => s + r.montant, 0);
 
