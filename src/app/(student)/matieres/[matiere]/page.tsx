@@ -36,7 +36,7 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
     .from('cours')
     .select('id, titre, description, order_index, access_type, course_progress(video_watched, fiche_read), qcm_series(id, label), flashcards(id), fiches(storage_path), videos(id)')
     .eq('matiere_id', matiere)
-    // À rang égal, « Annales - X » précède « Révisions - X ».
+    // À rang égal, « Annales - X » précède « Replays - Révisions ».
     .order('order_index')
     .order('titre');
 
@@ -175,7 +175,7 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
 
   // Les annales EVC ne sont plus un onglet PDF séparé : elles sont publiées
   // corrigées, question par question, dans l'onglet DP · QI des items
-  // « Annales - <Collège> » / « Révisions - <Collège> ».
+  // « Annales - <Collège> » / « Replays - Révisions ».
   const rows: IndexRow[] = [...actionRows, ...coursRows];
 
   // ── Date d'épreuve de cette spécialité ──────────────────────────────────

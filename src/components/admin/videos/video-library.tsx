@@ -17,7 +17,7 @@ export type LibraryCollege = {
   enfants: { id: string; nom: string }[];
 };
 
-/** Valeur sentinelle du sélecteur d'item pour « Révisions - <Collège> ». */
+/** Valeur sentinelle du sélecteur d'item pour « Replays - Révisions ». */
 const REVISIONS_VALUE = '__revisions__';
 
 const CATEGORIES: { type: VideoType; label: string; aide: string }[] = [
@@ -95,7 +95,7 @@ export function VideoLibrary({ colleges }: { colleges: LibraryCollege[] }) {
 
   const item = items?.find((i) => i.id === coursId) ?? null;
 
-  // « Révisions - <Collège> » : proposé pour les collèges hors Médecine
+  // « Replays - Révisions » : proposé pour les collèges hors Médecine
   // générale (ceux qui portent directement leurs items) tant que l'item
   // n'existe pas. Il sera créé au moment d'ajouter la première vidéo.
   const nomCollege = college && !aDesEnfants ? college.nom : '';

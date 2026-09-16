@@ -9,7 +9,7 @@ import {
 } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { extractBunnyVideoId } from '@/lib/bunny-link';
-import { revisionsTitre } from '@/lib/videos/revisions';
+import { estItemRevisions, revisionsTitre } from '@/lib/videos/revisions';
 import {
   normaliserOffres, normaliserVoies, resumeAudience, VIDEO_OFFERS,
 } from '@/lib/videos/audience';
@@ -429,7 +429,7 @@ async function insertVideo(
 }
 
 /**
- * Ajoute une vidéo à l'item « Révisions - <Collège> », en le CRÉANT s'il
+ * Ajoute une vidéo à l'item « Replays - Révisions », en le CRÉANT s'il
  * n'existe pas encore (en tête du collège, comme les autres items de révisions).
  *
  * L'item n'est créé qu'au moment où on lui donne une première vidéo : on ne
@@ -477,17 +477,15 @@ export async function addVideoToRevisionsAction(input: {
   const nomCollege = (matiere as { nom: string }).nom;
   const titreItem = revisionsTitre(nomCollege);
 
-  // Item existant ? (comparaison insensible à la casse, pour ne jamais créer
-  // un doublon de « Révisions - Cardiologie »).
-  const { data: dejaLa } = await a
+  // Item existant ? (nouveau libellé « Replays - Révisions » OU ancien
+  // « Révisions - <Collège> », comparaison tolérante : jamais de doublon).
+  const { data: existants } = await a
     .from('cours')
     .select('id, titre')
-    .eq('matiere_id', input.matiereId)
-    .ilike('titre', titreItem)
-    .limit(1)
-    .maybeSingle();
+    .eq('matiere_id', input.matiereId);
+  const dejaLa = ((existants ?? []) as { id: string; titre: string }[]).find((c) => estItemRevisions(c.titre, nomCollege)) ?? null;
 
-  let coursId = (dejaLa as { id?: string } | null)?.id ?? null;
+  let coursId = dejaLa?.id ?? null;
 
   if (!coursId) {
     // Décale les items existants : les révisions se placent en tête.

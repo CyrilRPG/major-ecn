@@ -28,13 +28,14 @@ export type NavCollege = {
 };
 
 /**
- * « Révisions - Gériatrie » doit être le tout premier item du collège Gériatrie.
+ * L'item de révisions (« Replays - Révisions », anciennement « Révisions -
+ * Gériatrie ») doit être le tout premier item du collège Gériatrie.
  * Comparaison insensible aux accents et à la casse : le titre est saisi en base
  * et a déjà varié (« Révisions – Gériatrie », « Revisions - geriatrie »).
  */
 function isRevisionsGeriatrie(titre: string): boolean {
   const t = titre.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
-  return t.includes('revision') && t.includes('geriatrie');
+  return t.includes('revision');
 }
 
 type Row = {
