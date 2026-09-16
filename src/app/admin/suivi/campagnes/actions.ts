@@ -142,7 +142,8 @@ export async function generateSlotsAction(input: unknown): Promise<Ok<{ inserted
     if (p.from > p.to) return { ok: false, error: 'La date de fin précède la date de début.' };
     const generated = generateSlots({ ...p, excludeDays: p.excludeDays.filter(isValidDayKey) });
     if (generated.length === 0) return { ok: false, error: 'Aucun créneau à générer avec ces paramètres.' };
-    if (generated.length > 5000) return { ok: false, error: 'Plus de 5 000 créneaux : réduisez la période.' };
+    // Borne technique seulement (§3 : pas de limite fonctionnelle) — 20 000 créneaux par génération.
+    if (generated.length > 20_000) return { ok: false, error: 'Plus de 20 000 créneaux en une fois : générez la période en plusieurs fois.' };
     // Doublons : un créneau existant au même instant (même campagne, même intervenant) n'est pas recréé.
     const existing = await listSlots({ campaignId: p.campaignId, from: generated[0].starts_at, to: generated[generated.length - 1].starts_at });
     const seen = new Set(existing.map((s) => `${s.starts_at}|${s.staff_user_id ?? ''}`));

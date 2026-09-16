@@ -122,7 +122,7 @@ export function AlertsPanel({ alerts, campaigns, staff, defaultEmail, canManage 
                     {canManage && (
                       <div className="flex flex-wrap gap-1.5">
                         <Link href={`/admin/suivi/campagnes/nouvelle?alert=${al.id}`} className="inline-flex h-9 items-center rounded-(--radius-button) bg-(--color-primary) px-3 text-sm font-medium text-(--color-primary-fg)">Créer la campagne</Link>
-                        <Link href={al.campaign_id ? `/admin/suivi/campagnes/${al.campaign_id}#creneaux` : '/admin/suivi/campagnes'} className="inline-flex h-9 items-center rounded-(--radius-button) border border-(--color-border) px-3 text-sm text-(--color-ink)">Ouvrir les créneaux</Link>
+                        <Link href={al.campaign_id ? `/admin/suivi/campagnes/${al.campaign_id}#creneaux` : '/admin/suivi/creneaux'} className="inline-flex h-9 items-center rounded-(--radius-button) border border-(--color-border) px-3 text-sm text-(--color-ink)">Ouvrir les créneaux</Link>
                         <Button size="sm" variant="outline" disabled={pending} onClick={() => { setPostponeFor(al); setPostponeAt(toLocalInputValue(new Date(Date.now() + 7 * 86_400_000))); }}>Reporter</Button>
                         <Button size="sm" variant="secondary" disabled={pending} onClick={() => run('Alerte traitée.', () => setAlertStatus(al.id, 'done'))}>Marquer comme traité</Button>
                         <Button size="sm" variant="ghost" disabled={pending} onClick={() => run('Alerte clôturée.', () => setAlertStatus(al.id, 'closed'))}>Clôturer</Button>

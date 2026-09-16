@@ -38,7 +38,9 @@ export function CollegeAccessPicker({
   const topColleges = colleges.filter((c) => !c.parentId);
   const mgSpecialties = colleges.filter((c) => c.parentId === MG_COLLEGE_ID);
   const allSpecialtyIds = mgSpecialties.map((s) => s.id);
-  const specialtySet = new Set(allSpecialtyIds);
+  /** Sous-collèges d'un collège parent (Médecine générale, Odontologie…). */
+  const enfantsDe = (parentId: string) =>
+    colleges.filter((c) => c.parentId === parentId).map((c) => c.id);
 
   const selectedSet = new Set(value.colleges);
   const mgSelected = selectedSet.has(MG_COLLEGE_ID);
@@ -46,20 +48,22 @@ export function CollegeAccessPicker({
   const setColleges = (next: string[], extra?: Partial<AccessValue>) =>
     onChange({ ...value, colleges: next, ...extra });
 
+  // Un collège à sous-collèges (Médecine générale, Odontologie) ne porte AUCUN
+  // item en propre : ce sont ses enfants qui les portent, et le navigateur filtre
+  // chaque sous-collège individuellement. Cocher le seul parent laissait donc
+  // l'élève sans un seul item — constaté le 15/09/2026 sur une invitation
+  // Odontologie. Cocher le parent accorde désormais tous ses sous-collèges ;
+  // pour la Médecine générale, le panneau ci-dessous permet d'en retirer.
   const toggleTop = (id: string, checked: boolean) => {
     const s = new Set(value.colleges);
-    if (id === MG_COLLEGE_ID) {
-      if (checked) {
-        s.add(MG_COLLEGE_ID);
-        allSpecialtyIds.forEach((x) => s.add(x)); // par défaut, toutes les spécialités
-      } else {
-        s.delete(MG_COLLEGE_ID);
-        allSpecialtyIds.forEach((x) => s.delete(x));
-      }
-      setColleges(Array.from(s));
-      return;
+    const enfants = enfantsDe(id);
+    if (checked) {
+      s.add(id);
+      enfants.forEach((x) => s.add(x)); // par défaut, tous les sous-collèges
+    } else {
+      s.delete(id);
+      enfants.forEach((x) => s.delete(x));
     }
-    if (checked) s.add(id); else s.delete(id);
     setColleges(Array.from(s));
   };
 

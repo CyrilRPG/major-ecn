@@ -128,9 +128,23 @@ brouillon, module de suivi réservé à l'administration) jusqu'à validation du
 - [x] Migration appliquée sur Supabase le 07/09/2026 (CLI `supabase db query --linked`, jeton fourni par le client) ; sonde au vert
 - [x] Recette de bout en bout le 07/09/2026 : campagne (ciblage manuel) → créneaux → invitation tracée → réservation par lien → déplacement → « Mes rendez-vous » élève → statut réalisé → compte rendu (difficulté + action) → agenda, tableau de bord, export CSV, cron. Deux correctifs issus de la recette : suppression des membres par lots (URL PostgREST) et identifiant du rendez-vous renvoyé après réservation (déplacement immédiat).
 
+- [x] 16/09/2026 — compléments d'audit : onglet **Créneaux** (calendrier global 1–12 mois, créneaux globaux hors
+      campagne, bornes techniques seulement), relances automatiques paramétrables (`auto_relance_*`, migration
+      `20260916100000`), export **Excel**, fiche candidat avec progression + derniers résultats, tests de recette
+      (`tests/suivi-recette.test.ts`). Bilan : `docs/bilan-cahiers-des-charges-2026-09-16.md`.
+
 Limite connue (§18) : `suivi_reports.user_id` et `suivi_appointments.user_id` sont `on delete cascade` ;
 la suppression d'un compte conserve seulement une trace statistique anonyme dans `suivi_history`.
 Une anonymisation ligne à ligne demanderait `user_id` nullable + `on delete set null`.
+
+## 3. Planificateur adaptatif EVC (16/09/2026)
+
+Livré intégralement le 16/09/2026 : moteurs purs `src/lib/plan/` (priorité, prérequis, charge, planning, révision,
+évaluation, analytics), 12 tables `plan_*` (`20260916110000_planificateur.sql`), espace élève `/planificateur`
+(onboarding avec information obligatoire, aujourd'hui / semaine / complet / programme complet / tableau de bord /
+disponibilités / évaluation), back-office `/admin/planificateur` (matrice, import CSV/XLSX, création depuis les cours,
+prérequis, réglages du moteur, candidats), cron `plan-sweep`. Interrupteur `PLAN_STUDENT_ENABLED`. Détail et
+protocole de test : `docs/bilan-cahiers-des-charges-2026-09-16.md`. Tests : `tests/plan-engines.test.ts` (14).
 
 ## Recette locale
 

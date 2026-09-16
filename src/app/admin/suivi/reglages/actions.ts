@@ -20,6 +20,9 @@ const SettingsSchema = z.object({
   retention_months: z.number().int().min(1).max(120),
   alert_email: z.string().trim().max(200).nullable().transform((v) => (v ? v : null)),
   deletion_policy: z.enum(['delete', 'anonymize']),
+  auto_relance_enabled: z.boolean().default(true),
+  auto_relance_days: z.number().int().min(1).max(60).default(3),
+  auto_relance_max: z.number().int().min(0).max(10).default(2),
 });
 
 /** Réglages du module (§6, §9, §18) — administrateur uniquement. */

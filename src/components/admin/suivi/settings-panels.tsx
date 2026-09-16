@@ -36,6 +36,7 @@ export function SettingsForm({ settings }: { settings: SuiviSettings }) {
     default_slot_minutes: String(settings.default_slot_minutes), buffer_minutes: String(settings.buffer_minutes),
     reminder_hours: String(settings.reminder_hours), reminder_preset: [48, 24, 2].includes(settings.reminder_hours) ? String(settings.reminder_hours) : 'custom',
     retention_months: String(settings.retention_months), alert_email: settings.alert_email ?? '', deletion_policy: settings.deletion_policy,
+    auto_relance_enabled: settings.auto_relance_enabled, auto_relance_days: String(settings.auto_relance_days), auto_relance_max: String(settings.auto_relance_max),
   });
   return (
     <SectionCard title="Réglages généraux">
@@ -58,11 +59,19 @@ export function SettingsForm({ settings }: { settings: SuiviSettings }) {
             <option value="delete">Supprimer complètement</option>
           </NativeSelect>
         </Field>
+        <Field label="Relance automatique sans réservation" hint="Invités n’ayant pas réservé, tant qu’il reste des créneaux.">
+          <NativeSelect value={f.auto_relance_enabled ? 'on' : 'off'} onChange={(e) => setF({ ...f, auto_relance_enabled: e.target.value === 'on' })}>
+            <option value="on">Activée</option><option value="off">Désactivée (relances manuelles seulement)</option>
+          </NativeSelect>
+        </Field>
+        <Field label="Délai entre deux relances (jours)"><Input type="number" min={1} max={60} value={f.auto_relance_days} onChange={(e) => setF({ ...f, auto_relance_days: e.target.value })} /></Field>
+        <Field label="Nombre maximal de relances automatiques"><Input type="number" min={0} max={10} value={f.auto_relance_max} onChange={(e) => setF({ ...f, auto_relance_max: e.target.value })} /></Field>
       </div>
       <div className="mt-4 flex items-center gap-3">
         <Button disabled={pending} onClick={() => run('Réglages enregistrés.', () => saveSettingsAction({
           default_slot_minutes: Number(f.default_slot_minutes), buffer_minutes: Number(f.buffer_minutes), reminder_hours: Number(f.reminder_hours),
           retention_months: Number(f.retention_months), alert_email: f.alert_email || null, deletion_policy: f.deletion_policy,
+          auto_relance_enabled: f.auto_relance_enabled, auto_relance_days: Number(f.auto_relance_days), auto_relance_max: Number(f.auto_relance_max),
         }))}>{pending && <Loader2 className="animate-spin" />} Enregistrer</Button>
         <InlineStatus error={error} status={status} />
       </div>

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AlertTriangle, BarChart3, BookOpen, CalendarCheck, CalendarClock, CalendarDays, ChevronDown, Clapperboard, ClipboardList, Cog, Eye, GraduationCap, Library, ListTree, Mail, Megaphone, MessageCircle, MessagesSquare, MonitorPlay, Newspaper, PencilRuler, Receipt, ScrollText, ShieldCheck, Sparkles, Ticket, Timer, Trophy, Upload, UserCog, Users, X } from 'lucide-react';
+import { AlertTriangle, BarChart3, BookOpen, CalendarCheck, CalendarClock, CalendarDays, CalendarRange, ChevronDown, Clapperboard, ClipboardList, Cog, Eye, GraduationCap, Library, ListTree, Mail, Megaphone, MessageCircle, MessagesSquare, MonitorPlay, Newspaper, PencilRuler, Receipt, ScrollText, ShieldCheck, Sparkles, Ticket, Timer, Trophy, Upload, UserCog, Users, X } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
@@ -39,6 +39,7 @@ const GROUPS: Group[] = [
       { href: '/admin/epreuves-blanches', label: 'Épreuves blanches', Icon: PencilRuler, adminOnly: true },
       { href: '/admin/interrogations', label: 'Interrogations de spécialité', Icon: ClipboardList, adminOnly: true },
       { href: '/admin/parcours', label: 'Parcours du Major', Icon: Trophy, adminOnly: true },
+      { href: '/admin/planificateur', label: 'Planificateur EVC', Icon: CalendarRange, adminOnly: true },
       { href: '/admin/arena', label: 'EVC Arena', Icon: Timer, adminOnly: true },
       { href: '/admin/qa', label: 'Questions / Réponses', Icon: MessagesSquare, staff: true },
     ],

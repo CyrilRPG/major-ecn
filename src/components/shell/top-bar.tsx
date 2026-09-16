@@ -21,6 +21,7 @@ function contextLabel(pathname: string): string {
   if (pathname.startsWith('/entrainement')) return 'Entraînement ciblé';
   if (pathname.startsWith('/agenda')) return 'Agenda';
   if (pathname.startsWith('/mes-rendez-vous')) return 'Mes rendez-vous';
+  if (pathname.startsWith('/planificateur')) return 'Mon planning';
   return 'Mon espace';
 }
 

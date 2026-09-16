@@ -20,3 +20,11 @@ export const ARENA_PUBLIC_ENABLED = true;
  * qu'aux candidats invités par un administrateur.
  */
 export const SUIVI_STUDENT_ENABLED = false;
+
+/**
+ * Planificateur adaptatif EVC côté élève : rubrique « Mon planning » dans
+ * l'espace personnel. Tant que l'interrupteur est à `false`, seuls
+ * l'administrateur et les professeurs y accèdent (vue étudiant), pour la
+ * recette. Le back-office /admin/planificateur est toujours disponible.
+ */
+export const PLAN_STUDENT_ENABLED = false;

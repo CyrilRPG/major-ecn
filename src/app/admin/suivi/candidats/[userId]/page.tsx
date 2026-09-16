@@ -55,6 +55,7 @@ export default async function FicheCandidatPage({ params }: { params: Promise<{ 
             <div><dt className="text-(--color-ink-muted)">Dernière activité</dt><dd className="text-(--color-ink)">{fmtDateTime(fiche.activity?.last_activity)}</dd></div>
             <div><dt className="text-(--color-ink-muted)">Contenus travaillés</dt><dd className="text-(--color-ink)">{fiche.activity ? `${fiche.activity.videos_watched} vidéos · ${fiche.activity.fiches_read} fiches · ${fiche.activity.flashcards_done} flashcards` : '—'}</dd></div>
             <div><dt className="text-(--color-ink-muted)">Évaluations</dt><dd className="text-(--color-ink)">{fiche.activity ? `${fiche.activity.qcm_done} séries QCM · ${fiche.activity.epreuves_blanches} épreuves blanches` : '—'}</dd></div>
+            <div><dt className="text-(--color-ink-muted)">Progression</dt><dd className="text-(--color-ink)">{fiche.platform?.progression !== null && fiche.platform?.progression !== undefined ? `${fiche.platform.progression} % · ${fiche.platform.coursCommences}/${fiche.platform.coursAccessibles} items commencés · ${fiche.platform.coursTermines} terminés` : '—'}</dd></div>
             <div><dt className="text-(--color-ink-muted)">Inscrit le</dt><dd className="text-(--color-ink)">{fmtDateShort(fiche.student.created_at)}</dd></div>
             <div><dt className="text-(--color-ink-muted)">Accès</dt><dd className="text-(--color-ink)">{fiche.student.access_end ? `jusqu’au ${fmtDateShort(fiche.student.access_end)}` : fiche.student.evc_session_id ?? '—'}</dd></div>
             <div><dt className="text-(--color-ink-muted)">Suivis réalisés</dt><dd className="text-(--color-ink)">{fiche.reports.length}</dd></div>
@@ -120,6 +121,25 @@ export default async function FicheCandidatPage({ params }: { params: Promise<{ 
             absenceTemplate={tpl.absence} can={can} defaultReminderHours={settings.reminder_hours} selfId={profile.id} />
         </SectionCard>
       </div>
+
+      {fiche.platform && fiche.platform.results.length > 0 && (
+        <div className="mt-6">
+          <SectionCard title="Derniers résultats sur la plateforme" description="Séries d’évaluation terminées, les plus récentes en premier.">
+            <ul className="divide-y divide-(--color-border) text-sm">
+              {fiche.platform.results.map((r, i) => {
+                const pct = r.total > 0 ? Math.round((r.correct / r.total) * 100) : null;
+                return (
+                  <li key={i} className="flex flex-wrap items-center gap-3 py-1.5">
+                    <span className="w-36 text-xs text-(--color-ink-muted)">{fmtDateTime(r.at)}</span>
+                    <span className="min-w-0 flex-1 truncate text-(--color-ink)">{r.label}{r.cours ? <span className="text-(--color-ink-soft)"> · {r.cours}</span> : null}</span>
+                    <span className={`tabular-nums font-medium ${pct !== null && pct < 50 ? 'text-(--color-danger)' : 'text-(--color-ink)'}`}>{r.correct}/{r.total}{pct !== null ? ` (${pct} %)` : ''}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </SectionCard>
+        </div>
+      )}
 
       {can.report && (
         <div className="mt-6">

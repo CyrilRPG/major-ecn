@@ -90,6 +90,7 @@ export function CandidatesTable({ candidates, appointments, campaigns, specialti
         <span className="text-sm text-(--color-ink-soft)">{rows.length} candidat(s){selected.size > 0 ? ` · ${selectedIds.length} sélectionné(s)` : ''}</span>
         <span className="ml-auto flex flex-wrap gap-2">
           <DownloadButton href={`/api/admin/suivi/export${exportQuery}`} filename="suivi-candidats.csv" label="Export CSV (liste filtrée)" />
+          <DownloadButton href={`/api/admin/suivi/export${exportQuery ? `${exportQuery}&format=xlsx` : '?format=xlsx'}`} filename="suivi-candidats.xlsx" label="Export Excel (liste filtrée)" />
           <DownloadButton href={`/api/admin/suivi/fiches/pdf${selectedIds.length > 0 ? `?ids=${selectedIds.join(',')}` : exportQuery}`} filename="fiches-suivi.pdf"
             label={selectedIds.length > 0 ? `PDF des ${selectedIds.length} sélectionné(s)` : 'PDF de la liste filtrée'} disabled={rows.length === 0} />
         </span>

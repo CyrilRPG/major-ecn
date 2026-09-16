@@ -18,6 +18,10 @@ export type SuiviSettings = {
   alert_email: string | null;
   deletion_policy: 'delete' | 'anonymize';
   specialty_colors: Record<string, string>;
+  /** Relances automatiques des invités sans réservation (§14). */
+  auto_relance_enabled: boolean;
+  auto_relance_days: number;
+  auto_relance_max: number;
   updated_at: string;
 };
 
@@ -30,6 +34,9 @@ export const DEFAULT_SETTINGS: SuiviSettings = {
   alert_email: null,
   deletion_policy: 'anonymize',
   specialty_colors: {},
+  auto_relance_enabled: true,
+  auto_relance_days: 3,
+  auto_relance_max: 2,
   updated_at: '',
 };
 

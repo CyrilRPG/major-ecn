@@ -5,6 +5,7 @@ import {
   type ActivityRow, type LegacyNote, type StaffProfile, type StudentLite,
 } from './db';
 import { studentName, studentOffer, studentSpecialty, studentVoie } from './students';
+import { loadPlatformSnapshot, type PlatformSnapshot } from './platform';
 import { isOccupying, isOpenAction, type ActionRow, type AppointmentRow, type CampaignRow, type DifficultyRow, type HistoryRow, type MemberRow, type ReportRow } from './types';
 
 /**
@@ -22,6 +23,8 @@ export type Fiche = {
   voie: string | null;
   lastSignIn: string | null;
   activity: ActivityRow | null;
+  /** Progression, couverture et derniers résultats sur la plateforme (§11). */
+  platform: PlatformSnapshot | null;
   appointments: AppointmentRow[];
   nextAppointment: AppointmentRow | null;
   reports: FicheReport[];
@@ -40,7 +43,7 @@ export type Fiche = {
 export async function loadFiche(userId: string, opts: { internalNotes: boolean; withActivity?: boolean }): Promise<Fiche | null> {
   const student = await getStudent(userId);
   if (!student) return null;
-  const [appointments, reports, difficulties, actions, history, legacyNotes, members, campaigns, staff, signIns, activity] = await Promise.all([
+  const [appointments, reports, difficulties, actions, history, legacyNotes, members, campaigns, staff, signIns, activity, platform] = await Promise.all([
     listAppointments({ userId }),
     listReports({ userId }),
     listDifficulties({ userId }),
@@ -52,6 +55,7 @@ export async function loadFiche(userId: string, opts: { internalNotes: boolean; 
     listStaffProfiles(),
     loadLastSignIns(),
     opts.withActivity === false ? Promise.resolve(new Map<string, ActivityRow>()) : loadActivity(),
+    opts.withActivity === false ? Promise.resolve(null) : loadPlatformSnapshot(userId, student.permission_scope).catch(() => null),
   ]);
 
   const diffsByReport = new Map<string, DifficultyRow[]>();
@@ -77,6 +81,7 @@ export async function loadFiche(userId: string, opts: { internalNotes: boolean; 
     voie: studentVoie(student.permission_scope),
     lastSignIn: signIns.get(userId) ?? activity.get(userId)?.last_sign_in ?? null,
     activity: activity.get(userId) ?? null,
+    platform,
     appointments,
     nextAppointment: upcoming[0] ?? null,
     reports: ficheReports,

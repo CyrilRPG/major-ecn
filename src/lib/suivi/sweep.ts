@@ -26,9 +26,6 @@ export type SweepReport = {
   errors: string[];
 };
 
-const RELANCE_AFTER_DAYS = 3;
-const RELANCE_MAX = 2;
-
 export async function runSuiviSweep(now: Date = new Date()): Promise<SweepReport> {
   const report: SweepReport = { reminders: 0, alerts: 0, relances: 0, tokensPurged: 0, retentionPurged: 0, errors: [] };
   const settings = await getSettings();
@@ -76,14 +73,16 @@ export async function runSuiviSweep(now: Date = new Date()): Promise<SweepReport
     report.errors.push(`alertes: ${err instanceof Error ? err.message : String(err)}`);
   }
 
-  /* 3. Relances automatiques sans réservation */
+  /* 3. Relances automatiques sans réservation — délai et plafond paramétrés (§14) */
   try {
-    const threshold = new Date(now.getTime() - RELANCE_AFTER_DAYS * 86_400_000).toISOString();
-    const campaigns = (await listCampaigns()).filter((c) => c.status === 'active');
+    const relanceDays = Math.max(1, settings.auto_relance_days);
+    const relanceMax = Math.max(0, settings.auto_relance_max);
+    const threshold = new Date(now.getTime() - relanceDays * 86_400_000).toISOString();
+    const campaigns = settings.auto_relance_enabled && relanceMax > 0 ? (await listCampaigns()).filter((c) => c.status === 'active') : [];
     for (const c of campaigns) {
       const members = (await listMembers(c.id)).filter((m) =>
         m.status === 'invited' && m.invited_at && m.invited_at <= threshold &&
-        (!m.last_reminder_at || m.last_reminder_at <= threshold) && m.reminder_count < RELANCE_MAX);
+        (!m.last_reminder_at || m.last_reminder_at <= threshold) && m.reminder_count < relanceMax);
       if (members.length === 0) continue;
       // Inutile de relancer s'il ne reste aucun créneau réservable.
       const available = await listAvailableSlots({ campaignId: c.id }, { from: now });
@@ -156,13 +155,18 @@ export async function applyDeletionPolicy(userId: string): Promise<void> {
   const settings = await getSettings();
   if (settings.deletion_policy !== 'anonymize') return;
   const db = suiviDb();
-  const [{ data: appts }, { data: reports }] = await Promise.all([
+  const [{ data: appts }, { data: reports }, { data: diffs }, { data: acts }] = await Promise.all([
     db.from('suivi_appointments').select('status, starts_at').eq('user_id', userId),
     db.from('suivi_reports').select('occurred_at').eq('user_id', userId),
+    db.from('suivi_difficulties').select('category, no_action').eq('user_id', userId),
+    db.from('suivi_actions').select('category, status').eq('user_id', userId),
   ]);
   const a = (appts ?? []) as { status: string; starts_at: string }[];
   const r = (reports ?? []) as { occurred_at: string }[];
+  const d = (diffs ?? []) as { category: string; no_action: boolean }[];
+  const ac = (acts ?? []) as { category: string; status: string }[];
   if (a.length === 0 && r.length === 0) return;
+  const countBy = <T,>(rows: T[], key: (x: T) => string) => rows.reduce<Record<string, number>>((acc, x) => { acc[key(x)] = (acc[key(x)] ?? 0) + 1; return acc; }, {});
   await db.from('suivi_history').insert({
     user_id: null,
     kind: 'anonymized',
@@ -171,6 +175,10 @@ export async function applyDeletionPolicy(userId: string): Promise<void> {
       done: a.filter((x) => x.status === 'done').length,
       no_show: a.filter((x) => x.status === 'no_show').length,
       reports: r.length,
+      difficulties: countBy(d, (x) => x.category),
+      difficulties_no_action: d.filter((x) => x.no_action).length,
+      actions: countBy(ac, (x) => x.category),
+      actions_done: ac.filter((x) => x.status === 'done').length,
       first: [...a.map((x) => x.starts_at), ...r.map((x) => x.occurred_at)].sort()[0] ?? null,
     },
   });

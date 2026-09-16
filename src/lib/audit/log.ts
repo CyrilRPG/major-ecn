@@ -26,7 +26,9 @@ export type AuditEntity =
   | 'suivi_campaign'
   | 'suivi_appointment'
   | 'suivi_report'
-  | 'suivi_settings';
+  | 'suivi_settings'
+  | 'plan_item'
+  | 'plan_settings';
 
 export type AuditPayload = {
   actor: Pick<Profile, 'id' | 'first_name' | 'last_name' | 'email' | 'role'>;

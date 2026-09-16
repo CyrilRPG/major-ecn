@@ -55,8 +55,9 @@ export function generateSlots(input: GenerateSlotsInput): GeneratedSlot[] {
   const startMin = minutesOf(startTime);
 
   const out: GeneratedSlot[] = [];
-  // Borne de sécurité : 2 ans de génération maximum.
-  for (let day = from, i = 0; day <= to && i < 731; day = addDays(day, 1), i++) {
+  // Aucune limite fonctionnelle (§3) : la période est libre. Seule une borne
+  // de sécurité technique (10 ans) protège d'une saisie aberrante.
+  for (let day = from, i = 0; day <= to && i < 3660; day = addDays(day, 1), i++) {
     if (!wanted.has(isoWeekday(day)) || excluded.has(day)) continue;
     for (let k = 0; k < perDay; k++) {
       const s = startMin + k * (slotMinutes + buffer);

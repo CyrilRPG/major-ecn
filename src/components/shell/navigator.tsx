@@ -1,9 +1,9 @@
-import { SUIVI_STUDENT_ENABLED } from '@/lib/modules-flags';
+import { PLAN_STUDENT_ENABLED, SUIVI_STUDENT_ENABLED } from '@/lib/modules-flags';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  ArrowRight, CalendarCheck, CalendarDays, ChevronRight, Home, Lock,
+  ArrowRight, CalendarCheck, CalendarDays, CalendarRange, ChevronRight, Home, Lock,
   MousePointerClick, NotebookPen, PencilRuler, PenLine, RefreshCcw, Star, Target, Trophy, X,
 } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
@@ -200,6 +200,7 @@ export function Navigator({
   const transversalActive = pathname.startsWith('/revisions-transversales');
   const agendaActive = pathname.startsWith('/agenda');
   const rendezVousActive = pathname.startsWith('/mes-rendez-vous');
+  const planActive = pathname.startsWith('/planificateur');
   const notesActive = pathname.startsWith('/notes');
   const revoirActive = pathname.startsWith('/revoir');
   const mesEntrainementsActive = pathname.startsWith('/mes-entrainements');
@@ -254,6 +255,7 @@ export function Navigator({
         <>
           {isDecouverte ? (
             <>
+              {(PLAN_STUDENT_ENABLED || role !== 'student') && renderLockedTop(CalendarRange, 'Mon planning')}
               {renderLockedTop(Target, 'Entraînement ciblé')}
               {renderLockedTop(RefreshCcw, 'Révisions transversales')}
               {renderLockedTop(CalendarDays, 'Agenda')}
