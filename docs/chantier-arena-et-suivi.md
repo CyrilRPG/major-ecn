@@ -144,7 +144,7 @@ Livré intégralement le 16/09/2026 : moteurs purs `src/lib/plan/` (priorité, p
 (onboarding avec information obligatoire, aujourd'hui / semaine / complet / programme complet / tableau de bord /
 disponibilités / évaluation), back-office `/admin/planificateur` (matrice, import CSV/XLSX, création depuis les cours,
 prérequis, réglages du moteur, candidats), cron `plan-sweep`. Interrupteur `PLAN_STUDENT_ENABLED`. Détail et
-protocole de test : `docs/bilan-cahiers-des-charges-2026-09-16.md`. Tests : `tests/plan-engines.test.ts` (14).
+protocole de test : `docs/bilan-cahiers-des-charges-2026-09-16.md`. Tests : `tests/plan-engines.test.ts` (16). Migration appliquée en production le 16/09/2026.
 
 ## Recette locale
 

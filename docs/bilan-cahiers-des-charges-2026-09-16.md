@@ -1,12 +1,10 @@
 # Bilan — cahiers des charges « Suivi pédagogique individuel V4 » et « Planificateur adaptatif EVC »
 
-Date : 16 septembre 2026. Branche locale, **rien n'est poussé sur `main`**.
+Date : 16 septembre 2026. Poussé sur `main` (commit a35b78d7), déploiement Vercel READY, **migrations appliquées en production le 16/09/2026** (sonde tmp/_probe-planificateur.mjs : 13/13).
 
 ## 0. Ce qu'il faut faire AVANT de tester
 
-1. **Appliquer le SQL** (une fois) : Supabase → SQL Editor → coller `supabase/APPLIQUER_PLANIFICATEUR.sql` → Run.
-   Il contient les deux migrations du jour (`20260916100000_suivi_relances_auto.sql`, `20260916110000_planificateur.sql`) ;
-   sans risque à relancer. Vérifier : `node --env-file=.env.local tmp/_probe-planificateur.mjs` (12 tables ✔ + 3 colonnes ✔).
+1. ~~Appliquer le SQL~~ **Fait le 16/09/2026** (`supabase/APPLIQUER_PLANIFICATEUR.sql` via l'API Management ; 12 tables `plan_*` + 3 colonnes `suivi_settings` vérifiées).
 2. **Déployer** (preview Vercel ou local `pnpm dev`). Le cron `plan-sweep` (03:30) est déclaré dans `vercel.json`.
 3. **Interrupteurs** (`src/lib/modules-flags.ts`) : `SUIVI_STUDENT_ENABLED` et `PLAN_STUDENT_ENABLED` sont à `false` →
    les rubriques élève « Mes rendez-vous » et « Mon planning » ne sont visibles que du personnel (vue étudiant), pour la
