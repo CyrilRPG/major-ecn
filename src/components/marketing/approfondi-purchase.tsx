@@ -27,20 +27,37 @@ function euros(cents: number): string {
   return (cents / 100).toLocaleString('fr-FR', { maximumFractionDigits: 0 });
 }
 
-export function ApprofondiPurchase({ initialSpecialty }: { initialSpecialty?: string }) {
+export function ApprofondiPurchase({
+  initialSpecialty,
+  offresIndisponibles = [],
+}: {
+  initialSpecialty?: string;
+  /** Offres dont le prix Stripe n'est pas configuré : elles restent visibles
+   *  mais ne sont pas achetables. Sans cela, l'étudiant remplissait tout le
+   *  formulaire — identité, consentements, signature manuscrite — pour se voir
+   *  refuser la session de paiement par une erreur interne (cas de la
+   *  Radiologie, constaté le 17/09/2026). */
+  offresIndisponibles?: string[];
+}) {
+  const indisponible = (id: string) => offresIndisponibles.includes(id);
   const initialSpec = getApprofondiSpecialty(initialSpecialty);
   const [specKey, setSpecKey] = useState<string | null>(initialSpec?.key ?? (initialSpecialty ? OTHER : null));
-  const [tierId, setTierId] = useState<string | null>(initialSpec?.tiers.find((t) => t.tier === 'base')?.id ?? null);
+  const [tierId, setTierId] = useState<string | null>(
+    initialSpec?.tiers.find((t) => t.tier === 'base' && !indisponible(t.id))?.id ?? null,
+  );
 
   const spec = APPROFONDI_SPECIALTIES.find((s) => s.key === specKey) ?? null;
-  const tier = spec?.tiers.find((t) => t.id === tierId) ?? null;
+  const tier = spec?.tiers.find((t) => t.id === tierId && !indisponible(t.id)) ?? null;
   const isOther = specKey === OTHER;
+  /** Spécialité choisie dont AUCUNE offre n'est ouverte au paiement en ligne. */
+  const specSansOffre = !!spec && spec.tiers.every((t) => indisponible(t.id));
 
   function pickSpecialty(key: string) {
     setSpecKey(key);
-    // Auto-sélection quand une seule offre (ex. MIPIC).
+    // Auto-sélection quand une seule offre achetable (ex. MIPIC).
     const s = APPROFONDI_SPECIALTIES.find((x) => x.key === key);
-    setTierId(s && s.tiers.length === 1 ? s.tiers[0].id : null);
+    const achetables = s?.tiers.filter((t) => !indisponible(t.id)) ?? [];
+    setTierId(achetables.length === 1 ? achetables[0].id : null);
   }
 
   return (
@@ -93,17 +110,20 @@ export function ApprofondiPurchase({ initialSpecialty }: { initialSpecialty?: st
           </p>
           <div className="grid grid-cols-1 gap-2.5">
             {spec.tiers.map((t) => {
-              const active = tierId === t.id;
+              const ferme = indisponible(t.id);
+              const active = tierId === t.id && !ferme;
               return (
                 <button
                   key={t.id}
                   type="button"
-                  onClick={() => setTierId(t.id)}
+                  onClick={() => { if (!ferme) setTierId(t.id); }}
                   aria-pressed={active}
-                  className="w-full rounded-xl border px-4 py-3 text-left transition-colors"
+                  disabled={ferme}
+                  className="w-full rounded-xl border px-4 py-3 text-left transition-colors disabled:cursor-not-allowed"
                   style={{
                     borderColor: active ? CTA.main : BORDER,
-                    background: active ? '#EEF2FF' : 'white',
+                    background: ferme ? '#F8F9FC' : active ? '#EEF2FF' : 'white',
+                    opacity: ferme ? 0.7 : 1,
                   }}
                 >
                   <div className="flex items-center justify-between gap-3">
@@ -115,6 +135,14 @@ export function ApprofondiPurchase({ initialSpecialty }: { initialSpecialty?: st
                       <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[12px]" style={{ color: INK_SOFT }}>
                         {t.hoursLabel && <><Clock className="h-3.5 w-3.5" /> {t.hoursLabel}</>}
                         {t.coverageLabel && <><Layers3 className="h-3.5 w-3.5" /> {t.coverageLabel}</>}
+                        {ferme && (
+                          <span
+                            className="rounded px-1.5 py-0.5 text-[11px] font-bold"
+                            style={{ background: '#E7EDF7', color: '#3A4A66' }}
+                          >
+                            Ouverture prochaine
+                          </span>
+                        )}
                         {t.contentPending && (
                           <span
                             className="rounded px-1.5 py-0.5 text-[11px] font-bold"
@@ -159,8 +187,26 @@ export function ApprofondiPurchase({ initialSpecialty }: { initialSpecialty?: st
       )}
 
       {/* Étape 3 — paiement ou rappel */}
-      {isOther ? (
-        <div className="pt-1">
+      {isOther || specSansOffre ? (
+        <div className="space-y-3 pt-1">
+          {specSansOffre && (
+            <div
+              className="flex items-start gap-2.5 rounded-xl border px-3.5 py-3"
+              style={{ borderColor: '#F5C86B', background: '#FFF8EA' }}
+            >
+              <AlertTriangle className="mt-px h-4 w-4 shrink-0" style={{ color: '#B26A00' }} />
+              <div>
+                <p className="text-[13px] font-extrabold" style={{ color: '#8A5200' }}>
+                  Offre pas encore ouverte au paiement en ligne
+                </p>
+                <p className="mt-0.5 text-[12.5px] leading-snug" style={{ color: INK_SOFT }}>
+                  Le Programme Approfondi de cette spécialité ouvre très prochainement.
+                  Laissez-nous vos coordonnées : un conseiller vous rappelle pour finaliser
+                  votre inscription.
+                </p>
+              </div>
+            </div>
+          )}
           <CallbackRequestForm color={CTA} />
         </div>
       ) : tier ? (

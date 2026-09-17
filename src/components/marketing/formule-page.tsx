@@ -104,7 +104,16 @@ const CONFIGS: Record<Variant, {
 
 const SPECIALTIES = ['Médecine Générale', 'Pédiatrie', 'Cardiologie', 'Pneumologie', 'Neurologie', 'Gynécologie'];
 
-export function FormulePageContent({ variant, specialite }: { variant: Variant; specialite?: string }) {
+export function FormulePageContent({
+  variant,
+  specialite,
+  offresIndisponibles,
+}: {
+  variant: Variant;
+  specialite?: string;
+  /** Offres Approfondi sans prix Stripe configuré (cf. approfondi-disponibilite). */
+  offresIndisponibles?: string[];
+}) {
   const c = CONFIGS[variant];
 
   // Couleurs mesh par variant
@@ -320,7 +329,7 @@ export function FormulePageContent({ variant, specialite }: { variant: Variant; 
       {/* CHOISIR CETTE FORMULE — checkout Stripe ou formulaire de rappel.
           PLACÉ JUSTE APRÈS « Pourquoi choisir » pour conversion maximale. */}
       <AncreTunnel actif={!!specialite} />
-      <PaymentSection variant={variant} c={c} specialite={specialite} />
+      <PaymentSection variant={variant} c={c} specialite={specialite} offresIndisponibles={offresIndisponibles} />
 
       {/* SPECIALTIES */}
       <section className="bg-[#F8F9FC] py-14">
@@ -532,7 +541,17 @@ type PaymentCfg = {
   ctaSecondary?: string;
 };
 
-function PaymentSection({ variant, c, specialite }: { variant: Variant; c: PaymentCfg; specialite?: string }) {
+function PaymentSection({
+  variant,
+  c,
+  specialite,
+  offresIndisponibles,
+}: {
+  variant: Variant;
+  c: PaymentCfg;
+  specialite?: string;
+  offresIndisponibles?: string[];
+}) {
 
   // Spécialité arrivant du tunnel d'inscription (pop-up → page spécialité →
   // formule). On ne retient que les libellés réellement inscriptibles : c'est
@@ -712,7 +731,11 @@ function PaymentSection({ variant, c, specialite }: { variant: Variant; c: Payme
 
             <div className="mt-6">
               {isApprofondi ? (
-                <ApprofondiPurchase key={specialiteTunnel ?? 'libre'} initialSpecialty={specialiteTunnel} />
+                <ApprofondiPurchase
+                  key={specialiteTunnel ?? 'libre'}
+                  initialSpecialty={specialiteTunnel}
+                  offresIndisponibles={offresIndisponibles}
+                />
               ) : (
                 <CheckoutButton
                   key={specialiteTunnel ?? 'libre'}

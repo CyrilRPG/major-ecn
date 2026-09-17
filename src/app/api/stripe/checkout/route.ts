@@ -123,8 +123,22 @@ export async function POST(req: Request) {
     if (approfondiTier) {
       const id = process.env[approfondiTier.envPriceId];
       if (!id) {
-        throw new Error(
-          `Le prix Stripe pour « ${productName} » n'est pas configuré (variable ${approfondiTier.envPriceId}).`,
+        // Offre au catalogue mais sans prix Stripe : l'étudiant n'y peut rien
+        // et n'a que faire du nom de la variable. On lui dit ce qu'il peut
+        // faire, on garde le détail technique dans les logs, et on répond 503
+        // (indisponible) plutôt que 500 (panne). Le tunnel, lui, ne propose
+        // plus l'offre à l'achat (cf. lib/stripe/approfondi-disponibilite).
+        console.error(
+          `[stripe/checkout] prix absent pour « ${productName} » — variable ${approfondiTier.envPriceId} non renseignée`,
+        );
+        return NextResponse.json(
+          {
+            error:
+              `Le paiement en ligne du Programme ${approfondiTier.tierLabel} — ${approfondiTier.specialtyName} `
+              + "n'est pas encore ouvert. Écrivez-nous à contact@major-ecn.fr ou demandez à être rappelé : "
+              + 'nous finalisons votre inscription avec vous.',
+          },
+          { status: 503 },
         );
       }
       priceId = id;
