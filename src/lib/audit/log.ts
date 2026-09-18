@@ -28,7 +28,11 @@ export type AuditEntity =
   | 'suivi_report'
   | 'suivi_settings'
   | 'plan_item'
-  | 'plan_settings';
+  | 'plan_settings'
+  // Gestion des accès collaborateurs (cahier des charges 18/09/2026).
+  | 'collaborator'
+  | 'student_followup'
+  | 'pedagogical_note';
 
 export type AuditPayload = {
   actor: Pick<Profile, 'id' | 'first_name' | 'last_name' | 'email' | 'role'>;

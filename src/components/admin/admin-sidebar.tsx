@@ -8,8 +8,15 @@ import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
 import { hasAnyContentAccess, type ContentType, type PermissionLevel } from '@/lib/schemas/professor';
+import { lireScopeEquipe, type Modules } from '@/lib/auth/collaborateurs';
 
-type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean; profContent?: boolean; adminOnly?: boolean };
+/**
+ * `module` : entrée ouverte à un membre du personnel dont ce module est actif
+ * (cahier des charges 18/09/2026 — suivi élèves, contenus, blog). `staff` :
+ * ouverte à tout le personnel. `profContent` : héritage (accès contenu). Sans
+ * marqueur : administrateur seulement.
+ */
+type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean; profContent?: boolean; adminOnly?: boolean; module?: keyof Modules };
 type Group = { key: string; label: string; Icon: typeof Users; items: Item[] };
 
 const GROUPS: Group[] = [
@@ -19,7 +26,7 @@ const GROUPS: Group[] = [
     Icon: Users,
     items: [
       { href: '/admin/eleves', label: 'Élèves', Icon: Users },
-      { href: '/admin/professeurs', label: 'Professeurs', Icon: GraduationCap },
+      { href: '/admin/equipe', label: 'Équipe & Permissions', Icon: GraduationCap, adminOnly: true },
       { href: '/admin/leads', label: 'Leads', Icon: Users, adminOnly: true },
     ],
   },
@@ -59,7 +66,7 @@ const GROUPS: Group[] = [
     Icon: MessageCircle,
     items: [
       { href: '/admin/annonces', label: 'Annonces', Icon: Megaphone },
-      { href: '/admin/blog', label: 'Blog', Icon: Newspaper, adminOnly: true },
+      { href: '/admin/blog', label: 'Blog', Icon: Newspaper, module: 'blog' },
       { href: '/admin/popups', label: 'Popups', Icon: MonitorPlay, adminOnly: true },
       { href: '/admin/emails', label: 'Envoi d’emails', Icon: Mail },
       { href: '/admin/formulaires', label: 'Formulaires', Icon: ClipboardList },
@@ -84,6 +91,7 @@ const GROUPS: Group[] = [
     label: 'Configuration',
     Icon: Cog,
     items: [
+      { href: '/admin/securite', label: 'Sécurité (2FA)', Icon: ShieldCheck, staff: true },
       { href: '/admin/permissions', label: 'Config. Permissions', Icon: ShieldCheck, adminOnly: true },
       { href: '/admin/codes-promo', label: 'Codes de réduction', Icon: Ticket, adminOnly: true },
     ],
@@ -108,9 +116,13 @@ function readProfContentAccess(scope: unknown): boolean {
 
 const BG = 'linear-gradient(180deg, #0E1626 0%, #161336 40%, #2A1130 75%, #2D0518 100%)';
 
-function filterItems(items: Item[], isProf: boolean, profHasContent: boolean): Item[] {
+function filterItems(items: Item[], isProf: boolean, profHasContent: boolean, modules: Modules | null): Item[] {
   if (!isProf) return items;
-  return items.filter((i) => i.staff || (i.profContent && profHasContent));
+  return items.filter((i) =>
+    i.staff
+    || (i.profContent && profHasContent)
+    || (i.module && modules?.[i.module].actif),
+  );
 }
 
 export function AdminSidebar({ profile }: { profile: Profile }) {
@@ -119,13 +131,18 @@ export function AdminSidebar({ profile }: { profile: Profile }) {
 
   const isProf = profile.role === 'professor';
   const profHasContent = isProf && readProfContentAccess(profile.permission_scope);
+  // Modules du cahier des charges (suivi / contenus / blog) de ce membre du personnel.
+  const modules = useMemo(
+    () => (isProf ? lireScopeEquipe(profile.permission_scope)?.modules ?? null : null),
+    [isProf, profile.permission_scope],
+  );
 
   // Groupes visibles (au moins un item accessible après filtrage) + item Vue étudiant.
   const visibleGroups = useMemo(
     () =>
-      GROUPS.map((g) => ({ ...g, items: filterItems(g.items, isProf, profHasContent) }))
+      GROUPS.map((g) => ({ ...g, items: filterItems(g.items, isProf, profHasContent, modules) }))
         .filter((g) => g.items.length > 0),
-    [isProf, profHasContent],
+    [isProf, profHasContent, modules],
   );
   const showStudentView = !isProf; // adminOnly
 

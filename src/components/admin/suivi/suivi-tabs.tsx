@@ -7,6 +7,7 @@ import { roleCan, type SuiviRole } from '@/lib/suivi/types';
 
 const TABS: { href: string; label: string; exact?: boolean; cap?: 'settings' }[] = [
   { href: '/admin/suivi', label: 'Tableau de bord', exact: true },
+  { href: '/admin/suivi/eleves', label: 'Élèves' },
   { href: '/admin/suivi/agenda', label: 'Agenda' },
   { href: '/admin/suivi/creneaux', label: 'Créneaux' },
   { href: '/admin/suivi/campagnes', label: 'Campagnes' },

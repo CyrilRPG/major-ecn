@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
-import { requireAdmin } from '@/lib/auth/require-role';
-import { createClient } from '@/lib/supabase/server';
+import { peutModifierArticle, requireBlogPage } from '@/lib/blog/acces';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { getArticlePicker } from '@/lib/data/blog-db';
 import type { Block } from '@/lib/data/blog-content/types';
 import type { BlogCategory } from '@/lib/data/blog-articles';
@@ -24,6 +24,7 @@ type Row = {
   status: string;
   featured: boolean;
   published_at: string | null;
+  author_id: string | null;
 };
 
 export default async function EditBlogPostPage({
@@ -34,13 +35,15 @@ export default async function EditBlogPostPage({
   /** `?apercu=1` — arrivée depuis l'import IA : l'aperçu s'ouvre d'emblée. */
   searchParams: Promise<{ apercu?: string }>;
 }) {
-  await requireAdmin();
+  const { user, droits } = await requireBlogPage();
   const { id } = await params;
   const { apercu } = await searchParams;
-  const supabase = await createClient();
-  const { data } = await supabase.from('blog_posts').select('*').eq('id', id).maybeSingle();
+  // Client service-role : la RLS de blog_posts ne connaît que l'administrateur,
+  // le droit « modifier ses articles / tous » est contrôlé ici.
+  const { data } = await createAdminClient().from('blog_posts').select('*').eq('id', id).maybeSingle();
   if (!data) notFound();
   const row = data as Row;
+  if (!peutModifierArticle(droits, row.author_id, user.id)) redirect('/admin/blog');
 
   const blocks: Block[] = Array.isArray(row.content) ? (row.content as Block[]) : [];
   const heroBlock = blocks.find((b): b is Extract<Block, { t: 'hero' }> => b.t === 'hero');
@@ -54,7 +57,7 @@ export default async function EditBlogPostPage({
     category: row.category as BlogCategory,
     readingMinutes: row.reading_minutes,
     heroImage: row.hero_image ?? heroBlock?.src ?? null,
-    status: (row.status as 'draft' | 'published') ?? 'draft',
+    status: (row.status as 'draft' | 'pending' | 'published') ?? 'draft',
     featured: row.featured,
     publishedAt: row.published_at,
     blocks: bodyBlocks,
@@ -72,7 +75,7 @@ export default async function EditBlogPostPage({
           Éditer : {row.title || '(sans titre)'}
         </h1>
       </header>
-      <BlogEditor initial={initial} allArticles={allArticles} openPreview={apercu === '1'} />
+      <BlogEditor initial={initial} allArticles={allArticles} openPreview={apercu === '1'} droits={{ publier: droits.publier, depublier: droits.depublier }} />
     </main>
   );
 }

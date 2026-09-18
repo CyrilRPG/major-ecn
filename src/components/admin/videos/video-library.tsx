@@ -8,7 +8,7 @@ import {
 } from '@/app/admin/videos/actions';
 import { estItemRevisions, revisionsTitre } from '@/lib/videos/revisions';
 import { BunnyVideoUpload } from '@/components/admin/content/bunny-video-upload';
-import { VideoManager } from './video-manager';
+import { VideoManager, type DroitsVideo } from './video-manager';
 
 export type LibraryCollege = {
   id: string;
@@ -32,7 +32,7 @@ const CATEGORIES: { type: VideoType; label: string; aide: string }[] = [
  * Les listes sont chargées à la demande : la plateforme compte plusieurs
  * centaines d'items, les charger toutes d'avance rendrait la page lourde.
  */
-export function VideoLibrary({ colleges }: { colleges: LibraryCollege[] }) {
+export function VideoLibrary({ colleges, droits }: { colleges: LibraryCollege[]; droits?: DroitsVideo }) {
   const [collegeId, setCollegeId] = useState('');
   const [sousCollegeId, setSousCollegeId] = useState('');
   const [coursId, setCoursId] = useState('');
@@ -254,6 +254,7 @@ export function VideoLibrary({ colleges }: { colleges: LibraryCollege[] }) {
             type={type}
             videos={videos}
             onChanged={modeRevisions ? apresCreationRevisions : rechargerTout}
+            droits={droits}
             notice={modeRevisions
               ? `L’item « ${titreRevisions} » n’existe pas encore : il sera créé automatiquement, en tête du collège, dès que vous ajouterez cette vidéo.`
               : undefined}

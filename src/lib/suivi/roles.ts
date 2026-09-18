@@ -7,15 +7,23 @@ import { requireStaffRequest } from '@/lib/auth/api-guard';
 import { getCurrentUserAndProfile, type Profile } from '@/lib/auth/get-profile';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { roleCan, type SuiviCapability, type SuiviRole } from './types';
+import { lireScopeEquipe, roleSuiviDeScope } from '@/lib/auth/collaborateurs';
 
 /**
  * Rôles du module (§18). L'administrateur de la plateforme a tous les droits ;
  * un professeur n'accède au module que s'il figure dans `suivi_staff_roles`.
  * Mémoïsé par requête : le layout et la page appellent tous deux ce résolveur.
  */
-export const getSuiviRole = cache(async (profile: Pick<Profile, 'id' | 'role'>): Promise<SuiviRole | null> => {
+export const getSuiviRole = cache(async (profile: Pick<Profile, 'id' | 'role'> & { permission_scope?: unknown }): Promise<SuiviRole | null> => {
   if (profile.role === 'admin') return 'admin';
   if (profile.role !== 'professor') return null;
+  // Cahier des charges 18/09/2026 : le module « Suivi élèves » du scope
+  // d'équipe fait foi quand il existe (gérer → responsable, rédiger →
+  // intervenant, sinon lecture). Les comptes historiques gardent
+  // `suivi_staff_roles`.
+  const scope = 'permission_scope' in profile ? lireScopeEquipe(profile.permission_scope) : null;
+  const raw = profile.permission_scope as { modules?: unknown } | null | undefined;
+  if (scope && raw && typeof raw === 'object' && raw.modules) return roleSuiviDeScope(scope);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = createAdminClient() as any;
   const { data } = await db.from('suivi_staff_roles').select('role').eq('user_id', profile.id).maybeSingle();

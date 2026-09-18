@@ -114,6 +114,9 @@ export async function createReport(input: unknown): Promise<Ok<{ id: string }> |
 export async function deleteReport(reportId: string): Promise<Ok | Err> {
   try {
     const actor = await requireSuiviAction('manage');
+    // Cahier des charges §3 : l'historique n'est pas destructible par les
+    // collaborateurs ; seul l'administrateur de la plateforme peut purger.
+    if (actor.role !== 'admin') return { ok: false, error: 'Historique non destructible : seul l’administrateur peut supprimer un compte rendu.' };
     const rep = await getReport(reportId);
     if (!rep) return { ok: false, error: 'Compte rendu introuvable' };
     const db = suiviDb();

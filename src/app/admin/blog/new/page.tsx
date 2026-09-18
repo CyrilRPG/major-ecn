@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
-import { requireAdmin } from '@/lib/auth/require-role';
+import { redirect } from 'next/navigation';
+import { requireBlogPage } from '@/lib/blog/acces';
 import { getArticlePicker } from '@/lib/data/blog-db';
 import { BlogEditor } from '../blog-editor';
 
@@ -8,7 +9,8 @@ export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Nouvel article — Blog' };
 
 export default async function NewBlogPostPage() {
-  await requireAdmin();
+  const { droits } = await requireBlogPage();
+  if (!droits.creer) redirect('/admin/blog');
   const allArticles = await getArticlePicker();
 
   return (
@@ -19,7 +21,7 @@ export default async function NewBlogPostPage() {
         </Link>
         <h1 className="mt-2 text-xl font-semibold tracking-tight text-(--color-ink)">Nouvel article</h1>
       </header>
-      <BlogEditor allArticles={allArticles} />
+      <BlogEditor allArticles={allArticles} droits={{ publier: droits.publier, depublier: droits.depublier }} />
     </main>
   );
 }

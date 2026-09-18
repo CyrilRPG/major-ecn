@@ -11,7 +11,7 @@ import { createClient } from '@/lib/supabase/client';
 import { extractBunnyVideoId } from '@/lib/bunny-link';
 import {
   addVideoAction, addVideoSupportAction, deleteVideoAction, listStudentsAction,
-  moveVideoAction, moveVideoSupportAction, removeVideoSupportAction, renameVideoAction,
+  moveVideoAction, moveVideoSupportAction, publishVideoAction, removeVideoSupportAction, renameVideoAction, unpublishVideoAction,
   renameVideoSupportAction, replaceVideoLinkAction, updateVideoAudienceAction,
   updateVideoRubriqueAction, updateVideoSupportAudienceAction,
   type AddResult, type StudentLite, type VideoSupportDoc, type VideoType,
@@ -19,11 +19,18 @@ import {
 import { resumeAudience, VIDEO_OFFERS, VOIES } from '@/lib/videos/audience';
 import { rubriqueParDefaut } from '@/lib/videos/rubriques';
 
+/** Droits fins du cahier des charges (§5) de la personne connectée. */
+export type DroitsVideo = { creer: boolean; modifier: boolean; publier: boolean; supprimer: boolean };
+export const TOUS_DROITS: DroitsVideo = { creer: true, modifier: true, publier: true, supprimer: true };
+
 export type ManagedVideo = {
   id: string;
   titre: string;
   bunny_video_id: string | null;
   order_index: number;
+  /** « À valider » tant qu'une personne habilitée n'a pas publié. */
+  status?: 'publie' | 'a_valider';
+  publish_at?: string | null;
   /** Rubrique affichée à l'élève (null = libellé par défaut du type). */
   rubrique: string | null;
   voies: string[];
@@ -415,6 +422,7 @@ export function VideoManager({
   onChanged,
   onAdd,
   notice,
+  droits = TOUS_DROITS,
 }: {
   coursId: string;
   type: VideoType;
@@ -425,12 +433,16 @@ export function VideoManager({
     voies: string[]; offers: string[]; deniedUserIds: string[]; allowedUserIds: string[];
   }) => Promise<AddResult>;
   notice?: string;
+  /** Droits de la personne : sans « publier », ses dépôts restent « À valider » ; sans « supprimer », pas de corbeille. */
+  droits?: DroitsVideo;
 }) {
   const router = useRouter();
   const copy = COPY[type];
   const apresModification = onChanged ?? (() => router.refresh());
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  // Horloge figée au premier rendu (badge « Programmée le … »).
+  const [maintenant] = useState(() => Date.now());
   const [editing, setEditing] = useState<string | null>(null);
 
   // Annuaire des élèves (partagé par tous les sélecteurs)
@@ -668,28 +680,55 @@ export function VideoManager({
                       Rubrique : {v.rubrique}
                     </p>
                   )}
+                  {/* Statut de publication (cahier des charges §5). */}
+                  <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[11px]">
+                    {v.status === 'a_valider' ? (
+                      <span className="rounded-full bg-[#FEF3E2] px-2 py-0.5 font-bold text-[#B26A00]">À valider — invisible des élèves</span>
+                    ) : v.publish_at && new Date(v.publish_at).getTime() > maintenant ? (
+                      <span className="rounded-full bg-[#E5F1FF] px-2 py-0.5 font-bold text-[#1E4D8B]">Programmée le {new Date(v.publish_at).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
+                    ) : (
+                      <span className="rounded-full bg-[#E7F6EC] px-2 py-0.5 font-bold text-[#16793C]">Publiée</span>
+                    )}
+                    {droits.publier && v.status === 'a_valider' && (
+                      <>
+                        <button type="button" disabled={pending} onClick={() => run(() => publishVideoAction({ videoId: v.id }))} className="rounded-md bg-[#16793C] px-2 py-0.5 font-bold text-white hover:brightness-110 disabled:opacity-50">Publier</button>
+                        <button
+                          type="button" disabled={pending}
+                          onClick={() => { const d = prompt('Publier le (AAAA-MM-JJ HH:MM) :'); if (d) run(() => publishVideoAction({ videoId: v.id, publishAt: d.replace(' ', 'T') })); }}
+                          className="rounded-md border border-(--color-border) px-2 py-0.5 font-semibold text-(--color-ink-soft) hover:bg-(--color-sand-100) disabled:opacity-50"
+                        >Programmer…</button>
+                      </>
+                    )}
+                    {droits.publier && v.status !== 'a_valider' && (
+                      <button type="button" disabled={pending} onClick={() => { if (confirm(`Retirer « ${v.titre} » de la publication ? Elle repassera « À valider ».`)) run(() => unpublishVideoAction({ videoId: v.id })); }} className="rounded-md border border-(--color-border) px-2 py-0.5 font-semibold text-(--color-ink-soft) hover:bg-(--color-sand-100) disabled:opacity-50">Retirer</button>
+                    )}
+                  </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setEditing(editing === v.id ? null : v.id)}
-                  className="rounded-lg p-1.5 text-(--color-ink-muted) hover:bg-(--color-sand-100) hover:text-(--color-ink)"
-                  aria-label="Modifier"
-                >
-                  {editing === v.id ? <X className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
-                </button>
-                <button
-                  type="button"
-                  disabled={pending}
-                  onClick={() => {
-                    if (confirm(`Supprimer « ${v.titre} » ?${v.supports.length > 0 ? ' Ses supports seront également supprimés.' : ''}`)) {
-                      run(() => deleteVideoAction({ videoId: v.id }));
-                    }
-                  }}
-                  className="rounded-lg p-1.5 text-(--color-ink-muted) hover:bg-red-50 hover:text-red-600"
-                  aria-label="Supprimer"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
+                {droits.modifier && (
+                  <button
+                    type="button"
+                    onClick={() => setEditing(editing === v.id ? null : v.id)}
+                    className="rounded-lg p-1.5 text-(--color-ink-muted) hover:bg-(--color-sand-100) hover:text-(--color-ink)"
+                    aria-label="Modifier"
+                  >
+                    {editing === v.id ? <X className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
+                  </button>
+                )}
+                {droits.supprimer && (
+                  <button
+                    type="button"
+                    disabled={pending}
+                    onClick={() => {
+                      if (confirm(`Supprimer « ${v.titre} » ?${v.supports.length > 0 ? ' Ses supports seront également supprimés.' : ''}`)) {
+                        run(() => deleteVideoAction({ videoId: v.id }));
+                      }
+                    }}
+                    className="rounded-lg p-1.5 text-(--color-ink-muted) hover:bg-red-50 hover:text-red-600"
+                    aria-label="Supprimer"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                )}
               </div>
 
               {editing === v.id && (
@@ -822,11 +861,20 @@ export function VideoManager({
             </Button>
           </div>
         </div>
+      ) : droits.creer ? (
+        <div className="space-y-2">
+          <Button type="button" variant="outline" size="sm" onClick={startAdding}>
+            <Plus />
+            Ajouter {videos.length > 0 ? 'des' : 'une'} {copy.unite}{videos.length > 0 ? 's' : ''}
+          </Button>
+          {!droits.publier && (
+            <p className="text-[12px] text-[#B26A00]">
+              Vos dépôts restent « À valider » : un responsable habilité les publiera après relecture.
+            </p>
+          )}
+        </div>
       ) : (
-        <Button type="button" variant="outline" size="sm" onClick={startAdding}>
-          <Plus />
-          Ajouter {videos.length > 0 ? 'des' : 'une'} {copy.unite}{videos.length > 0 ? 's' : ''}
-        </Button>
+        <p className="text-[12px] text-(--color-ink-muted)">Votre accès ne permet pas de déposer de {copy.unite}.</p>
       )}
 
       {error && <p className="text-xs font-medium text-red-600">{error}</p>}

@@ -7,7 +7,23 @@ import {
   type ContentType, type ProfessorScope,
 } from '@/lib/schemas/professor';
 import { getProfessorScope, profCanAccessCours } from './prof-content-access';
+import { accesEquipeExpire, lireScopeEquipe, premierePage } from './collaborateurs';
 import { createAdminClient } from '@/lib/supabase/admin';
+
+/**
+ * Fin d'accès d'un membre du personnel (cahier des charges 18/09/2026, §8 :
+ * « expiration des accès »). Un compte expiré est traité comme désactivé,
+ * partout : pages d'administration, vue élève, routes API (cf. api-guard).
+ */
+function bloquerSiEquipeExpiree(profile: { role?: string | null; access_end?: string | null } | null): void {
+  if (profile && accesEquipeExpire(profile)) redirect('/login?expired=1');
+}
+
+/** Page d'atterrissage d'un membre du personnel non administrateur, selon ses modules. */
+function atterrissageEquipe(profile: { role?: string | null; permission_scope?: unknown } | null): string {
+  if (profile?.role !== 'professor') return '/app';
+  return premierePage(lireScopeEquipe(profile.permission_scope));
+}
 
 // Règles pures (portée collège/item d'un professeur) : définies dans
 // `prof-content-access.ts` pour rester testables hors serveur, ré-exportées ici
@@ -20,6 +36,7 @@ export async function requireUser() {
   const { user, profile } = await getCurrentUserAndProfile();
   if (!user || !profile) redirect('/login');
   if (profile.is_active === false) redirect('/login?disabled=1');
+  bloquerSiEquipeExpiree(profile);
   // Fin d'accès (session EVC) : un étudiant expiré est bloqué sur /acces-expire.
   if (profile.role === 'student' && getAccessInfo(profile).expired) redirect('/acces-expire');
   return { user, profile };
@@ -29,9 +46,11 @@ export async function requireAdmin() {
   const { user, profile } = await getCurrentUserAndProfile();
   if (!user) redirect('/login');
   if (profile?.is_active === false) redirect('/login?disabled=1');
+  bloquerSiEquipeExpiree(profile);
   if (profile?.role !== 'admin') {
-    // Profs are redirected to their Q&R panel; everyone else to /app.
-    redirect(profile?.role === 'professor' ? '/admin/qa' : '/app');
+    // Un membre du personnel est renvoyé vers la première page que ses
+    // modules lui ouvrent ; tout autre compte vers l'espace élève.
+    redirect(atterrissageEquipe(profile));
   }
   return { user, profile };
 }
@@ -41,6 +60,7 @@ export async function requireStaff() {
   const { user, profile } = await getCurrentUserAndProfile();
   if (!user) redirect('/login');
   if (profile?.is_active === false) redirect('/login?disabled=1');
+  bloquerSiEquipeExpiree(profile);
   if (!profile || (profile.role !== 'admin' && profile.role !== 'professor')) redirect('/app');
   return { user, profile, isAdmin: profile.role === 'admin' };
 }
@@ -53,13 +73,24 @@ export async function requireContentEditor() {
   const { user, profile } = await getCurrentUserAndProfile();
   if (!user) redirect('/login');
   if (!profile) redirect('/login');
+  if (profile.is_active === false) redirect('/login?disabled=1');
+  bloquerSiEquipeExpiree(profile);
   if (profile.role === 'admin') return { user, profile, isAdmin: true as const, scope: null };
   if (profile.role === 'professor') {
     const scope = getProfessorScope(profile.permission_scope);
-    if (!scope || !hasAnyContentAccess(scope)) redirect('/admin/qa');
+    if (!scope || !hasAnyContentAccess(scope)) redirect(atterrissageEquipe(profile));
     return { user, profile, isAdmin: false as const, scope };
   }
   redirect('/app');
+}
+
+/**
+ * Membre du personnel avec le scope du cahier des charges (modules +
+ * périmètre) résolu : `scope` vaut null pour un administrateur (tous droits).
+ */
+export async function requireEquipe() {
+  const { user, profile, isAdmin } = await requireStaff();
+  return { user, profile, isAdmin, scope: isAdmin ? null : lireScopeEquipe(profile.permission_scope) };
 }
 
 /** Vérifie qu'un prof a la permission write sur un type donné — throw sinon. */

@@ -60,6 +60,7 @@ const TABLES_CLOISONNEES = new Set([
   'suivi_email_templates',
   'suivi_history',
   'suivi_booking_tokens',
+  'suivi_followups',
   // Planificateur adaptatif EVC
   'plan_settings',
   'plan_items',

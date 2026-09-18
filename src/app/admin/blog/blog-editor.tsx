@@ -6,7 +6,7 @@ import Link from 'next/link';
 import {
   ArrowUp, ArrowDown, Copy, Trash2, Plus, Save, Rocket, Loader2, ExternalLink,
   Type, Heading2, Heading3, List, ListOrdered, Image as ImageIcon, Images,
-  Table2, StickyNote, Quote, Megaphone, Link2, Eye, X, Wand2, AlertTriangle,
+  Table2, StickyNote, Quote, Megaphone, Link2, Eye, X, Wand2, AlertTriangle, SendHorizonal,
 } from 'lucide-react';
 import type { Block, ImageLayout } from '@/lib/data/blog-content/types';
 import { BLOG_CATEGORIES, type BlogCategory, type BlogArticleMeta } from '@/lib/data/blog-articles';
@@ -81,15 +81,22 @@ const inputCls =
   'w-full rounded-md border border-(--color-border) bg-white px-2.5 py-1.5 text-sm text-(--color-ink) outline-none focus:border-[#E4002B]';
 const labelCls = 'mb-1 block text-xs font-semibold text-(--color-ink-muted)';
 
+/** Droits du module Blog (cahier des charges §6) reçus de la page serveur. */
+export type DroitsEditeurBlog = { publier: boolean; depublier: boolean };
+const TOUS_DROITS_EDITEUR: DroitsEditeurBlog = { publier: true, depublier: true };
+
 export function BlogEditor({
   initial,
   allArticles,
   openPreview = false,
+  droits = TOUS_DROITS_EDITEUR,
 }: {
   initial?: BlogPostInput & { id: string };
   allArticles: { slug: string; title: string }[];
   /** Ouvre l'aperçu dès l'arrivée (retour d'un import IA : on relit puis on publie). */
   openPreview?: boolean;
+  /** Sans « publier », l'article part « En attente de validation ». */
+  droits?: DroitsEditeurBlog;
 }) {
   const router = useRouter();
   const [pending, start] = useTransition();
@@ -113,7 +120,10 @@ export function BlogEditor({
   );
 
   const [preview, setPreview] = useState(openPreview);
-  const [status, setStatus] = useState<'draft' | 'published'>(initial?.status ?? 'draft');
+  const [status, setStatus] = useState<'draft' | 'pending' | 'published'>(initial?.status ?? 'draft');
+  // Un article publié qu'on ré-enregistre sans le droit de dépublier reste
+  // publié ; le bouton « brouillon » n'a alors pas de sens.
+  const peutRetirer = status !== 'published' || droits.depublier;
 
   // Retouche par IA : remarques libres de l'administrateur, appliquées à
   // l'état COURANT de l'éditeur (modifications non enregistrées comprises).
@@ -207,7 +217,7 @@ export function BlogEditor({
     setItems((prev) => [...prev, { id: uid(), block: newBlock(t) }]);
   }
 
-  function submit(nextStatus: 'draft' | 'published') {
+  function submit(nextStatus: 'draft' | 'pending' | 'published') {
     setError(null);
     setSavedSlug(null);
     const input: BlogPostInput = {
@@ -243,7 +253,7 @@ export function BlogEditor({
         return;
       }
       setPostId(res.id);
-      setStatus(nextStatus);
+      setStatus(res.status);
       setSavedSlug(res.slug);
       setSlug(res.slug);
       setSlugTouched(true);
@@ -257,12 +267,13 @@ export function BlogEditor({
         <PreviewOverlay
           meta={previewMeta}
           blocks={previewBlocks}
-          published={status === 'published'}
+          statut={status}
           pending={pending}
+          peutPublier={droits.publier}
           onPublish={() => {
             // On referme l'aperçu : le résultat (lien vers l'article ou erreur)
             // s'affiche dans le panneau « Publication ».
-            submit('published');
+            submit(droits.publier ? 'published' : 'pending');
             setPreview(false);
           }}
           onClose={() => setPreview(false)}
@@ -355,23 +366,53 @@ export function BlogEditor({
             >
               <Eye className="h-4 w-4" /> Aperçu
             </button>
-            <button
-              type="button"
-              disabled={pending}
-              onClick={() => submit('published')}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#C0001F] px-3 py-2 text-sm font-bold text-white hover:brightness-110 disabled:opacity-60"
-            >
-              {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket className="h-4 w-4" />}
-              Publier
-            </button>
-            <button
-              type="button"
-              disabled={pending}
-              onClick={() => submit('draft')}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-(--color-border) bg-white px-3 py-2 text-sm font-semibold text-(--color-ink) hover:bg-(--color-surface-soft) disabled:opacity-60"
-            >
-              <Save className="h-4 w-4" /> Enregistrer le brouillon
-            </button>
+            {droits.publier ? (
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() => submit('published')}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#C0001F] px-3 py-2 text-sm font-bold text-white hover:brightness-110 disabled:opacity-60"
+              >
+                {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket className="h-4 w-4" />}
+                Publier
+              </button>
+            ) : status !== 'published' ? (
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() => submit('pending')}
+                title="Votre accès ne permet pas de publier : l'article sera validé par un responsable."
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#B26A00] px-3 py-2 text-sm font-bold text-white hover:brightness-110 disabled:opacity-60"
+              >
+                {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <SendHorizonal className="h-4 w-4" />}
+                Soumettre pour validation
+              </button>
+            ) : (
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() => submit('published')}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#C0001F] px-3 py-2 text-sm font-bold text-white hover:brightness-110 disabled:opacity-60"
+              >
+                {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                Enregistrer (reste publié)
+              </button>
+            )}
+            {peutRetirer && (
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() => submit('draft')}
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-(--color-border) bg-white px-3 py-2 text-sm font-semibold text-(--color-ink) hover:bg-(--color-surface-soft) disabled:opacity-60"
+              >
+                <Save className="h-4 w-4" /> {status === 'published' ? 'Dépublier (brouillon)' : 'Enregistrer le brouillon'}
+              </button>
+            )}
+            {status === 'pending' && (
+              <p className="rounded-lg bg-[#FEF3E2] px-3 py-2 text-xs font-semibold text-[#B26A00]">
+                En attente de validation : un responsable doit publier cet article.
+              </p>
+            )}
           </div>
         </section>
 
@@ -499,18 +540,21 @@ export function BlogEditor({
 function PreviewOverlay({
   meta,
   blocks,
-  published,
+  statut,
   pending,
+  peutPublier,
   onPublish,
   onClose,
 }: {
   meta: BlogArticleMeta;
   blocks: Block[];
-  published: boolean;
+  statut: 'draft' | 'pending' | 'published';
   pending: boolean;
+  peutPublier: boolean;
   onPublish: () => void;
   onClose: () => void;
 }) {
+  const published = statut === 'published';
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-white">
       <div className="flex items-center justify-between gap-3 border-b border-(--color-border) bg-white px-4 py-2.5">
@@ -518,23 +562,25 @@ function PreviewOverlay({
           <Eye className="h-4 w-4 text-[#E4002B]" /> Aperçu de l’article
           <span
             className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
-              published ? 'bg-[#E7F6EC] text-[#16793C]' : 'bg-[#FEF3C7] text-[#92400E]'
+              published ? 'bg-[#E7F6EC] text-[#16793C]' : statut === 'pending' ? 'bg-[#FEF3E2] text-[#B26A00]' : 'bg-[#FEF3C7] text-[#92400E]'
             }`}
           >
-            {published ? 'Publié' : 'Brouillon'}
+            {published ? 'Publié' : statut === 'pending' ? 'En attente de validation' : 'Brouillon'}
           </span>
         </span>
         <div className="flex items-center gap-2">
           {/* Publication directe depuis l'aperçu : on relit, on publie. */}
-          <button
-            type="button"
-            disabled={pending}
-            onClick={onPublish}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[#C0001F] px-3 py-1.5 text-sm font-bold text-white hover:brightness-110 disabled:opacity-60"
-          >
-            {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket className="h-4 w-4" />}
-            Publier
-          </button>
+          {(peutPublier || !published) && (
+            <button
+              type="button"
+              disabled={pending}
+              onClick={onPublish}
+              className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-bold text-white hover:brightness-110 disabled:opacity-60 ${peutPublier ? 'bg-[#C0001F]' : 'bg-[#B26A00]'}`}
+            >
+              {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : peutPublier ? <Rocket className="h-4 w-4" /> : <SendHorizonal className="h-4 w-4" />}
+              {peutPublier ? 'Publier' : 'Soumettre pour validation'}
+            </button>
+          )}
           <button
             type="button"
             onClick={onClose}

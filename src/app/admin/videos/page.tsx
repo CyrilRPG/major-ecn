@@ -1,6 +1,8 @@
 import { requireContentEditor } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { VideoLibrary, type LibraryCollege } from '@/components/admin/videos/video-library';
+import { TOUS_DROITS, type DroitsVideo } from '@/components/admin/videos/video-manager';
+import { lireScopeEquipe, peutContenu } from '@/lib/auth/collaborateurs';
 
 export const metadata = { title: 'Vidéos' };
 
@@ -13,7 +15,16 @@ export const metadata = { title: 'Vidéos' };
  * Cours vidéo → Formule Intensive, Séance approfondie → Programme Approfondi.
  */
 export default async function AdminVideosPage() {
-  await requireContentEditor();
+  const { profile, isAdmin } = await requireContentEditor();
+  // Droits fins du cahier des charges (§5) : créer / modifier / publier /
+  // supprimer, lus depuis le module « Contenus » du scope d'équipe.
+  const scope = isAdmin ? null : lireScopeEquipe(profile.permission_scope);
+  const droits: DroitsVideo = isAdmin ? TOUS_DROITS : {
+    creer: peutContenu(scope, 'creer', 'video'),
+    modifier: peutContenu(scope, 'modifier', 'video'),
+    publier: peutContenu(scope, 'publier', 'video'),
+    supprimer: peutContenu(scope, 'supprimer', 'video'),
+  };
   const supabase = await createClient();
 
   const { data } = await supabase
@@ -46,7 +57,7 @@ export default async function AdminVideosPage() {
         </p>
       </header>
 
-      <VideoLibrary colleges={colleges} />
+      <VideoLibrary colleges={colleges} droits={droits} />
     </main>
   );
 }

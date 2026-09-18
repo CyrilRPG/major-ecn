@@ -15,6 +15,7 @@ import {
 } from '@/lib/videos/audience';
 import { normaliserRubrique, rubriqueParDefaut } from '@/lib/videos/rubriques';
 import { logAudit } from '@/lib/audit/log';
+import { lireScopeEquipe, peutContenu, type DroitContenu } from '@/lib/auth/collaborateurs';
 
 /**
  * Bibliothèque vidéo de l'administration (onglet « Vidéos ») : navigation
@@ -47,14 +48,33 @@ type Ctx = {
   cours: { id: string; titre: string; matiere_id: string; matiereNom: string | null };
 };
 
-/** Contrôles communs : éditeur de contenu, droit d'écriture vidéo, périmètre. */
-async function guard(coursId: string): Promise<Ctx | { error: string }> {
+/**
+ * Droit fin du cahier des charges (18/09/2026, §5) sur les vidéos : créer /
+ * modifier / publier / supprimer. L'administrateur a tout ; un membre du
+ * personnel suit son module « Contenus » (un professeur historique y a tous
+ * les droits, comme avant).
+ */
+function droitVideo(profile: Ctx['profile'], droit: DroitContenu): boolean {
+  if (profile.role === 'admin') return true;
+  return peutContenu(lireScopeEquipe(profile.permission_scope), droit, 'video');
+}
+
+const REFUS_DROIT: Record<DroitContenu, string> = {
+  creer: 'Votre accès ne permet pas de déposer une vidéo.',
+  modifier: 'Votre accès ne permet pas de modifier les vidéos.',
+  publier: 'Votre accès ne permet pas de publier : la vidéo reste « À valider ».',
+  supprimer: 'Votre accès ne permet pas de supprimer une vidéo.',
+};
+
+/** Contrôles communs : éditeur de contenu, droit d'écriture vidéo, droit fin, périmètre. */
+async function guard(coursId: string, droit: DroitContenu = 'modifier'): Promise<Ctx | { error: string }> {
   const { profile, scope } = await requireContentEditor();
   try {
     assertCanWrite(scope, 'video');
   } catch (e) {
     return { error: e instanceof Error ? e.message : 'Permission insuffisante.' };
   }
+  if (!droitVideo(profile, droit)) return { error: REFUS_DROIT[droit] };
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
@@ -97,20 +117,20 @@ async function guardRead(coursId: string): Promise<Ctx | { error: string }> {
 }
 
 /** Charge une vidéo et applique les mêmes contrôles via son cours. */
-async function guardVideo(videoId: string) {
+async function guardVideo(videoId: string, droit: DroitContenu = 'modifier') {
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data } = await (admin as any)
     .from('videos')
-    .select('id, cours_id, titre, type, rubrique, order_index, support_path')
+    .select('id, cours_id, titre, type, rubrique, order_index, support_path, status, publish_at')
     .eq('id', videoId)
     .maybeSingle();
   if (!data) return { error: 'Vidéo introuvable.' as const };
   const video = data as {
     id: string; cours_id: string; titre: string; type: VideoType; rubrique: string | null;
-    order_index: number; support_path: string | null;
+    order_index: number; support_path: string | null; status: 'publie' | 'a_valider' | null; publish_at: string | null;
   };
-  const ctx = await guard(video.cours_id);
+  const ctx = await guard(video.cours_id, droit);
   if ('error' in ctx) return ctx;
   return { ...ctx, video };
 }
@@ -147,6 +167,10 @@ export type VideoLibraryVideo = {
   titre: string;
   bunny_video_id: string | null;
   order_index: number;
+  /** « À valider » tant qu'une personne habilitée n'a pas publié (cahier §5). */
+  status: 'publie' | 'a_valider';
+  /** Publication programmée : invisible des élèves avant cette date. */
+  publish_at: string | null;
   /** Intitulé de rubrique affiché à l'élève (NULL = libellé par défaut du type). */
   rubrique: string | null;
   /** Voies de concours concernées (les deux = aucune restriction). */
@@ -224,7 +248,7 @@ export async function listVideosAction(
 
   const { data, error } = await ctx.a
     .from('videos')
-    .select('id, titre, bunny_video_id, order_index, rubrique, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)')
+    .select('id, titre, bunny_video_id, order_index, rubrique, voies, offers, denied_user_ids, allowed_user_ids, status, publish_at, video_supports(id, titre, order_index, voies, offers)')
     .eq('cours_id', coursId)
     .eq('type', type)
     .order('order_index', { ascending: true })
@@ -236,6 +260,8 @@ export async function listVideosAction(
       titre: v.titre,
       bunny_video_id: v.bunny_video_id,
       order_index: v.order_index,
+      status: v.status === 'a_valider' ? 'a_valider' as const : 'publie' as const,
+      publish_at: v.publish_at ?? null,
       rubrique: normaliserRubrique(v.rubrique),
       voies: normaliserVoies(v.voies),
       offers: normaliserOffres(v.offers),
@@ -304,12 +330,12 @@ export async function addVideoAction(input: {
   deniedUserIds?: string[];
   allowedUserIds?: string[];
 }): Promise<AddResult> {
-  const ctx = await guard(input.coursId);
+  const ctx = await guard(input.coursId, 'creer');
   if ('error' in ctx) return ctx;
   return insertVideo(ctx, input);
 }
 
-export type AddResult = { ok: true; videoId: string; coursId: string } | { error: string };
+export type AddResult = { ok: true; videoId: string; coursId: string; status: 'publie' | 'a_valider' } | { error: string };
 
 /** Normalise une liste d'IDs d'élèves (UUID, dédoublonnés). Sert autant à
  *  l'exclusion nominative (denied) qu'à l'autorisation nominative (allowed). */
@@ -377,6 +403,11 @@ async function insertVideo(
   const wanted = input.position == null ? list.length : input.position - 1;
   const insertAt = Math.max(0, Math.min(list.length, wanted));
 
+  // Cahier des charges §5 : sans le droit « Publier », le dépôt reste
+  // « À valider » — invisible des élèves jusqu'à ce qu'une personne habilitée
+  // le publie.
+  const publie = droitVideo(ctx.profile, 'publier');
+  const maintenant = new Date().toISOString();
   const { data: created, error } = await ctx.a
     .from('videos')
     .insert({
@@ -390,6 +421,10 @@ async function insertVideo(
       offers: audience.offers,
       denied_user_ids: deniedUserIds,
       allowed_user_ids: allowedUserIds,
+      status: publie ? 'publie' : 'a_valider',
+      created_by: ctx.profile.id,
+      published_by: publie ? ctx.profile.id : null,
+      published_at: publie ? maintenant : null,
     })
     .select('id')
     .single();
@@ -425,7 +460,7 @@ async function insertVideo(
   });
 
   refresh(coursId);
-  return { ok: true, videoId: created.id as string, coursId };
+  return { ok: true, videoId: created.id as string, coursId, status: publie ? 'publie' : 'a_valider' };
 }
 
 /**
@@ -799,7 +834,7 @@ export async function replaceVideoLinkAction(input: {
 export async function deleteVideoAction(input: {
   videoId: string;
 }): Promise<{ ok: true } | { error: string }> {
-  const ctx = await guardVideo(input.videoId);
+  const ctx = await guardVideo(input.videoId, 'supprimer');
   if ('error' in ctx) return ctx;
 
   // Retire les fichiers de tous ses supports (les lignes partent en cascade).
@@ -830,6 +865,72 @@ export async function deleteVideoAction(input: {
     diff: { supports_supprimes: chemins.length },
   });
 
+  refresh(ctx.cours.id);
+  return { ok: true };
+}
+
+/**
+ * Publie une vidéo « À valider » (cahier §5) — tout de suite, ou à une date
+ * programmée (`publishAt`, ISO) : la vidéo reste invisible des élèves jusque-là.
+ */
+export async function publishVideoAction(input: {
+  videoId: string;
+  publishAt?: string | null;
+}): Promise<{ ok: true } | { error: string }> {
+  const ctx = await guardVideo(input.videoId, 'publier');
+  if ('error' in ctx) return ctx;
+  const quand = input.publishAt ? new Date(input.publishAt) : null;
+  if (quand && Number.isNaN(quand.getTime())) return { error: 'Date de publication invalide.' };
+  const { error } = await ctx.a
+    .from('videos')
+    .update({
+      status: 'publie',
+      publish_at: quand ? quand.toISOString() : null,
+      published_by: ctx.profile.id,
+      published_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', input.videoId);
+  if (error) return { error: error.message };
+  await logAudit({
+    actor: ctx.profile,
+    action: 'update',
+    entity: 'video',
+    entityId: input.videoId,
+    coursId: ctx.cours.id,
+    coursTitre: ctx.cours.titre,
+    matiereNom: ctx.cours.matiereNom,
+    description: quand
+      ? `Publication de « ${ctx.video.titre} » programmée le ${quand.toLocaleDateString('fr-FR')}`
+      : `Publication de « ${ctx.video.titre} »`,
+    diff: { status: 'publie', publish_at: quand?.toISOString() ?? null },
+  });
+  refresh(ctx.cours.id);
+  return { ok: true };
+}
+
+/** Retire une vidéo de la publication : elle repasse « À valider ». */
+export async function unpublishVideoAction(input: {
+  videoId: string;
+}): Promise<{ ok: true } | { error: string }> {
+  const ctx = await guardVideo(input.videoId, 'publier');
+  if ('error' in ctx) return ctx;
+  const { error } = await ctx.a
+    .from('videos')
+    .update({ status: 'a_valider', publish_at: null, updated_at: new Date().toISOString() })
+    .eq('id', input.videoId);
+  if (error) return { error: error.message };
+  await logAudit({
+    actor: ctx.profile,
+    action: 'update',
+    entity: 'video',
+    entityId: input.videoId,
+    coursId: ctx.cours.id,
+    coursTitre: ctx.cours.titre,
+    matiereNom: ctx.cours.matiereNom,
+    description: `« ${ctx.video.titre} » retirée de la publication (à valider)`,
+    diff: { status: 'a_valider' },
+  });
   refresh(ctx.cours.id);
   return { ok: true };
 }
