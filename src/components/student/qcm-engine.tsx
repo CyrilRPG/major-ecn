@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { AlertTriangle, ArrowRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RichText } from '@/components/qcm/rich-text';
-import { ZoomableImage } from '@/components/qcm/image-zoom';
+import { RichTextZoom, ZoomableImage } from '@/components/qcm/image-zoom';
+import { sanitizeBlockHtml } from '@/lib/flashcards/rich-text';
 import { cn } from '@/lib/utils';
 
 export type EngineQuestion = {
@@ -15,6 +16,12 @@ export type EngineQuestion = {
   /** Documents de l'énoncé (ECG, radiographie, cliché…) : indispensables aux
    *  questions qui désignent une iconographie. */
   images?: string[] | null;
+  /** Contexte clinique du dossier progressif (l'« énoncé » du dossier, partagé
+   *  par ses questions). Sans lui, une question de DP est intraitable. */
+  vignette?: string | null;
+  /** Position dans le dossier : les questions d'un dossier se suivent, dans
+   *  l'ordre, et le dossier est toujours servi complet (règle du 18/09/2026). */
+  dossier?: { serie_id: string; label: string | null; position: number; total: number } | null;
   items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean; images?: string[] | null }[];
 };
 
@@ -95,6 +102,38 @@ export function QcmEngine({
           </span>
         </div>
       </div>
+
+      {q.dossier && (
+        <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-[#F1E8FD] px-2.5 py-1 text-[11px] font-semibold text-[#6D28D9]">
+          Dossier progressif{q.dossier.label ? ` · ${q.dossier.label}` : ''} — question {q.dossier.position}/{q.dossier.total}
+        </p>
+      )}
+      {q.vignette && (
+        /* `key` : le bloc est remonté à chaque question, donc ouvert sur la
+           première question du dossier et replié sur les suivantes — l'élève
+           peut le rouvrir à tout moment. */
+        <details
+          key={q.id}
+          open={!q.dossier || q.dossier.position === 1}
+          className="group mb-3 block rounded-xl border border-l-4 border-[#6D28D9]/30 border-l-[#6D28D9] bg-[#F1E8FD]/50 p-3.5"
+        >
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-2 [&::-webkit-details-marker]:hidden">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6D28D9]">
+              Contexte clinique du dossier
+            </span>
+            <span className="text-[11px] font-medium text-[#6D28D9]">
+              <span className="group-open:hidden">Afficher</span>
+              <span className="hidden group-open:inline">Réduire</span>
+            </span>
+          </summary>
+          <RichTextZoom>
+            <div
+              className="mt-2 break-words text-sm leading-relaxed text-(--color-ink) [&_strong]:font-semibold [&_strong]:text-(--color-ink) [&_img]:my-2 [&_img]:max-h-80 [&_img]:rounded-lg"
+              dangerouslySetInnerHTML={{ __html: sanitizeBlockHtml(q.vignette) }}
+            />
+          </RichTextZoom>
+        </details>
+      )}
 
       {/* Question */}
       <div className="rounded-2xl border bg-white p-5 shadow-sm sm:p-6">

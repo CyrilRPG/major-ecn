@@ -7,6 +7,7 @@ import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { getMaintienStats, getStudiedSpecialties, loadStudentAttempts } from '@/lib/pedago/maintien';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { transversalSessionSize, requiredReevaluationKind, SEUIL_REEVALUATION } from '@/lib/pedago/status';
+import { aplatirUnites, choisirUnites, regrouperEnUnites } from '@/lib/pedago/dossiers';
 import {
   TransversalSession,
   type TransversalQuestion,
@@ -29,6 +30,7 @@ type QRow = {
   qcm_items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean; images: string[] | null }[] | null;
   qcm_series: {
     cours_id: string;
+    label: string | null;
     /** Contexte clinique partagé du dossier progressif (l'« énoncé » du dossier). */
     vignette: string | null;
     cours: { matieres: { id: string; nom: string; semestres: { faculte_id: string } } };
@@ -104,25 +106,50 @@ export default async function TransversalSessionPage({
         seules les questions retenues sont ensuite chargées en entier. */
   type PoolRow = {
     id: string;
+    serie_id: string;
+    order_index: number;
     format: 'qcm' | 'qroc' | null;
     qcm_items: { count: number }[] | null;
     qcm_series: { cours: { matieres: { id: string; semestres: { faculte_id: string } } } };
   };
+  /** Série de forme « dossier » (vignette) et son nombre TOTAL de questions :
+   *  c'est ce qui permet de vérifier qu'un dossier est servi complet. */
+  type DossierRow = { id: string; qcm_questions: { count: number }[] | null };
   const COURS_PAR_TRANCHE = 50;
   const tranches: string[][] = [];
   for (let i = 0; i < studiedCoursIds.length; i += COURS_PAR_TRANCHE) {
     tranches.push(studiedCoursIds.slice(i, i + COURS_PAR_TRANCHE));
   }
-  const pool = (await Promise.all(tranches.map((coursIds) =>
-    fetchAllRows<PoolRow>((from, to) =>
-      supabase
-        .from('qcm_questions')
-        .select('id, format, qcm_items(count), qcm_series!inner(cours_id, cours!inner(matieres!inner(id, semestres!inner(faculte_id))))')
-        .in('qcm_series.cours_id', coursIds)
-        .order('id', { ascending: true })
-        .range(from, to) as never,
-    ),
-  ))).flat();
+  const [pool, dossierRows] = await Promise.all([
+    Promise.all(tranches.map((coursIds) =>
+      fetchAllRows<PoolRow>((from, to) =>
+        supabase
+          .from('qcm_questions')
+          .select('id, serie_id, order_index, format, qcm_items(count), qcm_series!inner(cours_id, cours!inner(matieres!inner(id, semestres!inner(faculte_id))))')
+          .in('qcm_series.cours_id', coursIds)
+          .order('id', { ascending: true })
+          .range(from, to) as never,
+      ),
+    )).then((r) => r.flat()),
+    // Un dossier = une série qui porte une vignette (contexte clinique partagé),
+    // le critère même du trigger qcm_series_set_kind. Les DP QROC (kind 'qroc'
+    // à vignette) en font partie, comme le veut la règle du 18/09/2026.
+    Promise.all(tranches.map((coursIds) =>
+      fetchAllRows<DossierRow>((from, to) =>
+        supabase
+          .from('qcm_series')
+          .select('id, qcm_questions(count)')
+          .in('cours_id', coursIds)
+          .not('vignette', 'is', null)
+          .neq('vignette', '')
+          .order('id', { ascending: true })
+          .range(from, to) as never,
+      ),
+    )).then((r) => r.flat()),
+  ]);
+  const dossiers = new Map<string, number>(
+    dossierRows.map((s) => [s.id, s.qcm_questions?.[0]?.count ?? 0]),
+  );
 
   if (pool.length === 0) {
     return (
@@ -167,7 +194,12 @@ export default async function TransversalSessionPage({
         4. spécialités fragiles/insuffisantes privilégiées ;
         5. spécialités validées mais peu revues récemment.
      Implémentation : score = rang de priorité principal + pondération de la
-     spécialité + bruit aléatoire léger (varier les sessions). */
+     spécialité + bruit aléatoire léger (varier les sessions).
+
+     UNITÉ DE SÉLECTION (règle du 18/09/2026) : une question isolée pour les
+     QCM / QROC ; le DOSSIER ENTIER, dans l'ordre, pour les DP QCM et DP QROC
+     — une question de dossier progressif servie seule n'a pas les éléments
+     pour être traitée. Un dossier incomplet est écarté, jamais tronqué. */
   const now = Date.now();
   const days30Ms = 30 * 86_400_000;
 
@@ -187,7 +219,7 @@ export default async function TransversalSessionPage({
     specWeight.set(s.matiereId, w);
   }
 
-  const scored = allQ.map((q) => {
+  const scoreDe = (q: PoolRow): number => {
     const st = attemptStats.get(q.id);
     let bucket: number;
     if (!st) bucket = 0;                                     // jamais vue
@@ -196,44 +228,57 @@ export default async function TransversalSessionPage({
     else bucket = 3;                                         // récente et réussie
     const failBoost = st ? Math.min(0.9, st.fails * 0.3) : 0;
     const w = specWeight.get(q.qcm_series.cours.matieres.id) ?? 1.5;
-    const score = bucket * 10 + w - failBoost + Math.random() * 1.5;
-    return { q, score };
-  });
-  scored.sort((a, b) => a.score - b.score);
-  const retenues = scored.slice(0, N).map((s) => s.q.id);
+    // Déterministe : le bruit qui varie les sessions est tiré par choisirUnites,
+    // une fois par unité (sinon un dossier le moyennait et ne sortait jamais).
+    return bucket * 10 + w - failBoost;
+  };
 
-  /* 6) Chargement complet des seules questions retenues (N ≤ 75). */
+  const { unites, dossiersIncomplets } = regrouperEnUnites(allQ, dossiers);
+  if (dossiersIncomplets.length > 0) {
+    console.warn('[revisions-transversales] dossiers incomplets écartés du vivier', dossiersIncomplets.length);
+  }
+  // Le mélange de l'ordre de passage se fait PAR UNITÉ : on conserve la
+  // sélection prioritaire, les dossiers restent d'un seul tenant, et l'élève
+  // n'enchaîne pas 25 questions jamais vues puis 15 ratées.
+  const suite = aplatirUnites(choisirUnites(unites, scoreDe, N));
+  const retenues = suite.map((r) => r.question.id);
+
+  /* 6) Chargement complet des seules questions retenues (N ≤ 120). */
   const { data: fullRaw } = await supabase
     .from('qcm_questions')
-    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, images, qcm_items(id, lettre, enonce, justification, is_correct, images), qcm_series!inner(cours_id, vignette, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
+    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, images, qcm_items(id, lettre, enonce, justification, is_correct, images), qcm_series!inner(cours_id, label, vignette, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
     .in('id', retenues);
   const parId = new Map(((fullRaw ?? []) as unknown as QRow[]).map((q) => [q.id, q]));
-  const ordered = retenues.map((id) => parId.get(id)).filter((q): q is QRow => !!q);
 
-  // Mélange final : on ne sert pas la session triée par priorité brute
-  // (l'élève alternerait 25 questions jamais vues puis 15 ratées) — on
-  // conserve la SÉLECTION prioritaire mais on mélange l'ordre de passage.
-  for (let i = ordered.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [ordered[i], ordered[j]] = [ordered[j], ordered[i]];
-  }
+  // Un dossier dont une question n'aurait pas été rechargée serait servi
+  // amputé : on écarte alors le dossier entier, comme au regroupement.
+  const seriesAmputees = new Set(
+    suite.filter((r) => r.dossier && !parId.has(r.question.id)).map((r) => r.dossier!.serieId),
+  );
 
-  const questions: TransversalQuestion[] = ordered.map((q) => ({
-    id: q.id,
-    enonce: q.enonce,
-    vignette: q.qcm_series.vignette,
-    college: q.qcm_series.cours.matieres.nom,
-    matiere_id: q.qcm_series.cours.matieres.id,
-    cours_id: q.qcm_series.cours_id,
-    format: q.format ?? 'qcm',
-    reponse_attendue: q.reponse_attendue,
-    correction_generale: q.correction_generale,
-    commentaire_enseignant: q.commentaire_enseignant,
-    images: q.images ?? [],
-    items: [...(q.qcm_items ?? [])]
-      .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct, images: it.images ?? [] }))
-      .sort((a, b) => a.lettre.localeCompare(b.lettre)),
-  }));
+  const questions: TransversalQuestion[] = suite.flatMap(({ question, dossier }) => {
+    const q = parId.get(question.id);
+    if (!q || (dossier && seriesAmputees.has(dossier.serieId))) return [];
+    return [{
+      id: q.id,
+      enonce: q.enonce,
+      vignette: q.qcm_series.vignette,
+      dossier: dossier
+        ? { serie_id: dossier.serieId, label: q.qcm_series.label, position: dossier.position, total: dossier.total }
+        : null,
+      college: q.qcm_series.cours.matieres.nom,
+      matiere_id: q.qcm_series.cours.matieres.id,
+      cours_id: q.qcm_series.cours_id,
+      format: q.format ?? 'qcm',
+      reponse_attendue: q.reponse_attendue,
+      correction_generale: q.correction_generale,
+      commentaire_enseignant: q.commentaire_enseignant,
+      images: q.images ?? [],
+      items: [...(q.qcm_items ?? [])]
+        .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct, images: it.images ?? [] }))
+        .sort((a, b) => a.lettre.localeCompare(b.lettre)),
+    }];
+  });
 
   // Statut officiel par spécialité — conditionne les boutons de fin de session
   // (« Consolider » si déjà orange officiellement, « Renforcement » si rouge).

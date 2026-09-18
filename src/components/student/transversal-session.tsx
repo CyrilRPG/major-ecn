@@ -20,9 +20,12 @@ export type TransversalQuestion = {
   id: string;
   enonce: string;
   /** Contexte clinique du dossier progressif (l'« énoncé » du dossier, partagé
-   *  par ses questions). Nul pour une question isolée. Comme les questions sont
-   *  piochées individuellement, chaque question porte sa propre vignette. */
+   *  par ses questions). Nul pour une question isolée. */
   vignette?: string | null;
+  /** Position dans le dossier. Depuis le 18/09/2026, un dossier progressif est
+   *  toujours servi ENTIER et dans l'ordre (ses questions se suivent) : une
+   *  question de DP servie seule n'a pas les éléments pour être traitée. */
+  dossier?: { serie_id: string; label: string | null; position: number; total: number } | null;
   college: string;
   /** Identifiant de la spécialité (matière) — sert aux scores par spécialité
    *  et aux boutons Consolider / Renforcement de l'écran de fin. */
@@ -251,8 +254,19 @@ export function TransversalSession({
         </div>
       )}
 
+      {q.dossier && (
+        <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-(--color-accent-soft) px-2.5 py-1 text-[11px] font-semibold text-(--color-accent-deep)">
+          Dossier progressif{q.dossier.label ? ` · ${q.dossier.label}` : ''} — question {q.dossier.position}/{q.dossier.total}
+        </p>
+      )}
       {q.vignette && (
-        <details open className="group mb-3 block rounded-xl border border-l-4 border-(--color-accent)/30 border-l-(--color-accent) bg-(--color-accent-soft)/40 p-3.5 shadow-sm">
+        /* `key` : le bloc est remonté à chaque question — ouvert sur la première
+           question du dossier, replié sur les suivantes (l'élève peut le rouvrir). */
+        <details
+          key={q.id}
+          open={!q.dossier || q.dossier.position === 1}
+          className="group mb-3 block rounded-xl border border-l-4 border-(--color-accent)/30 border-l-(--color-accent) bg-(--color-accent-soft)/40 p-3.5 shadow-sm"
+        >
           <summary className="flex cursor-pointer list-none items-center justify-between gap-2 [&::-webkit-details-marker]:hidden">
             <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
               Contexte clinique du dossier
@@ -755,9 +769,16 @@ function CorrectionsView({
       <div className="space-y-6">
         {questions.map((q, qi) => (
           <div key={q.id} className="rounded-xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft)">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs font-medium text-(--color-ink-muted)">{q.college}</span>
-              <span className="text-xs font-bold text-(--color-ink)">Q{qi + 1}</span>
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <span className="truncate text-xs font-medium text-(--color-ink-muted)">
+                {q.college}
+                {q.dossier && (
+                  <span className="text-(--color-accent-deep)">
+                    {' · '}Dossier{q.dossier.label ? ` ${q.dossier.label}` : ''} — {q.dossier.position}/{q.dossier.total}
+                  </span>
+                )}
+              </span>
+              <span className="shrink-0 text-xs font-bold text-(--color-ink)">Q{qi + 1}</span>
             </div>
             {q.vignette && (
               <details className="group mb-2 block rounded-lg border border-l-4 border-(--color-accent)/30 border-l-(--color-accent) bg-(--color-accent-soft)/30 px-3 py-2">
