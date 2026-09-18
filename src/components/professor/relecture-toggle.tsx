@@ -36,6 +36,15 @@ export function RelectureToggle({
   const [relecture, setRelecture] = useState<Relecture | null>(initial);
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
+  // Après `router.refresh()`, le serveur renvoie l'état réel de la marque :
+  // la case s'y réaligne (deux cases de la même série peuvent coexister le
+  // temps d'une transition — chacune suit alors le serveur, pas son clic).
+  const cleInitiale = initial?.reviewedAt ?? '';
+  const [cleVue, setCleVue] = useState(cleInitiale);
+  if (cleInitiale !== cleVue) {
+    setCleVue(cleInitiale);
+    setRelecture(initial);
+  }
   const fait = !!relecture;
   const feminin = 'serieId' in cible;
 
