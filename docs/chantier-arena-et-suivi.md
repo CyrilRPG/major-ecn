@@ -101,8 +101,9 @@ brouillon, module de suivi réservé à l'administration) jusqu'à validation du
       Participants → jamais de CTA d'achat, lien vers son collège ; prospect → page de la spécialité du Battle.
       Bilan final : variante `podium` (1er-3e du général sans trophée). Classement public : §10 « Aucun candidat classé
       pour cette manche ». Admin : seuils, passerelle (affichage, URL, CTA), statut candidat. Migration
-      `20260918130000_arena_distinction_passerelle.sql` **à appliquer** (le code tolère son absence : valeurs par
-      défaut, message explicite à l'enregistrement). Tests : `tests/arena-performance.test.ts` (9). Recette visuelle :
+      `20260918130000_arena_distinction_passerelle.sql` appliquée en production le 18/09/2026 (jeton fourni par le
+      client, `tmp/_sql-run.mjs`), colonnes sondées ; la migration `20260914130000` (trigger nouveau cours → listes
+      élèves) restait en attente et a été appliquée le même jour. Tests : `tests/arena-performance.test.ts` (9). Recette visuelle :
       `/arena-preview/design?state=results-unranked|results-ranked|results-podium-1|results-podium-2|results-high|results-trophy|final-podium`.
 
 ## 2. Suivi pédagogique individuel
