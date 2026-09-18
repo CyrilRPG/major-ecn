@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
 import { EDN_FACULTE_ID, getNavigatorTree } from '@/lib/data/navigator';
 import { TargetedSession, type TQuestion } from '@/components/student/targeted-session';
+import { aplatirUnites, choisirUnites, regrouperEnUnites } from '@/lib/pedago/dossiers';
 
 const MAX_Q = 12;
 /**
@@ -15,9 +16,9 @@ const TAILLE_VIVIER = 300;
 
 /** Colonnes communes aux deux lectures de questions. */
 const CHAMPS_QUESTION =
-  'id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, images, '
+  'id, serie_id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, images, '
   + 'qcm_items(id, lettre, enonce, justification, is_correct, images), '
-  + 'qcm_series!inner(vignette, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))';
+  + 'qcm_series!inner(label, vignette, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))';
 
 type AttemptRow = {
   question_id: string;
@@ -26,6 +27,7 @@ type AttemptRow = {
 };
 type QRow = {
   id: string;
+  serie_id: string;
   enonce: string;
   order_index: number;
   format: 'qcm' | 'qroc' | null;
@@ -34,8 +36,10 @@ type QRow = {
   commentaire_enseignant: string | null;
   images: string[] | null;
   qcm_items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean; images: string[] | null }[] | null;
-  qcm_series: { vignette: string | null; cours: { matieres: { id: string; nom: string; semestres: { faculte_id: string } } } };
+  qcm_series: { label: string | null; vignette: string | null; cours: { matieres: { id: string; nom: string; semestres: { faculte_id: string } } } };
 };
+/** Série de forme « dossier » (vignette) et son nombre TOTAL de questions. */
+type DossierRow = { id: string; qcm_questions: { count: number }[] | null };
 
 export default async function TargetedSessionPage({
   searchParams,
@@ -113,20 +117,6 @@ export default async function TargetedSessionPage({
   }
   const serieIds = melangees.slice(0, SERIES_ECHANTILLONNEES);
 
-  // 3. Deux lectures bornées, en parallèle : les questions prioritaires (au
-  //    plus 12, visées par identifiant) et un vivier de remplissage.
-  const [prioRes, vivierRes] = await Promise.all([
-    prioritized.length > 0
-      ? supabase.from('qcm_questions').select(CHAMPS_QUESTION).in('id', prioritized)
-      : Promise.resolve({ data: [] as unknown[] }),
-    supabase
-      .from('qcm_questions')
-      .select(CHAMPS_QUESTION)
-      .in('serie_id', serieIds)
-      .order('order_index')
-      .limit(TAILLE_VIVIER),
-  ]);
-
   // Mêmes garde-fous qu'avant : périmètre EDN, droits, et question réellement
   // jouable (un QCM sans items n'est pas exploitable).
   const utilisable = (q: QRow) =>
@@ -135,27 +125,71 @@ export default async function TargetedSessionPage({
     && (!collegeFilter || collegeFilter.has(q.qcm_series.cours.matieres.id))
     // On garde les QCM (avec items) ET les QROC (saisie libre).
     && (q.format === 'qroc' || (!!q.qcm_items && q.qcm_items.length > 0));
+  /** Un dossier = une série à vignette (critère du trigger qcm_series_set_kind). */
+  const estDossier = (q: QRow) => !!q.qcm_series.vignette?.trim();
 
-  const prioQ = ((prioRes.data ?? []) as unknown as QRow[]).filter(utilisable);
-  const vivier = ((vivierRes.data ?? []) as unknown as QRow[]).filter(utilisable);
+  // 3. Questions prioritaires (au plus 12, visées par identifiant). Celle qui
+  //    appartient à un dossier progressif ne peut pas être servie seule : son
+  //    dossier ENTIER est chargé avec l'échantillon (règle du 18/09/2026).
+  const prioQ = prioritized.length > 0
+    ? (((await supabase.from('qcm_questions').select(CHAMPS_QUESTION).in('id', prioritized)).data ?? []) as unknown as QRow[]).filter(utilisable)
+    : [];
+  const seriesACharger = [...new Set([...serieIds, ...prioQ.filter(estDossier).map((q) => q.serie_id)])];
 
-  const byId = new Map(prioQ.map((q) => [q.id, q]));
-  const ordered: QRow[] = [];
-  for (const id of prioritized) {
-    const q = byId.get(id);
-    if (q) ordered.push(q);
+  // 4. Vivier (séries entières, rangées série par série pour qu'une limite ne
+  //    coupe pas un dossier en deux) et total de questions des dossiers, pour
+  //    vérifier qu'un dossier est bien complet avant de le servir.
+  const [vivierRes, dossiersRes] = await Promise.all([
+    supabase
+      .from('qcm_questions')
+      .select(CHAMPS_QUESTION)
+      .in('serie_id', seriesACharger)
+      .order('serie_id')
+      .order('order_index')
+      .limit(TAILLE_VIVIER),
+    supabase
+      .from('qcm_series')
+      .select('id, qcm_questions(count)')
+      .in('id', seriesACharger)
+      .not('vignette', 'is', null)
+      .neq('vignette', ''),
+  ]);
+  const dossiers = new Map<string, number>(
+    ((dossiersRes.data ?? []) as unknown as DossierRow[]).map((s) => [s.id, s.qcm_questions?.[0]?.count ?? 0]),
+  );
+
+  // Vivier = questions des séries chargées + questions prioritaires isolées
+  // (celles d'un dossier y sont déjà, avec tout leur dossier).
+  const parId = new Map<string, QRow>();
+  for (const q of ((vivierRes.data ?? []) as unknown as QRow[]).filter(utilisable)) parId.set(q.id, q);
+  for (const q of prioQ) if (!parId.has(q.id) && !estDossier(q)) parId.set(q.id, q);
+
+  // Unité de sélection : dossier complet ou question isolée ; un dossier
+  // incomplet (limite du vivier, question sans items) est écarté, jamais tronqué.
+  const { unites, dossiersIncomplets } = regrouperEnUnites([...parId.values()], dossiers);
+  if (dossiersIncomplets.length > 0) {
+    console.warn('[entrainement] dossiers incomplets écartés du vivier', dossiersIncomplets.length);
   }
-  if (ordered.length < 8) {
-    const picked = new Set(ordered.map((q) => q.id));
-    for (const q of vivier) {
-      if (ordered.length >= MAX_Q) break;
-      if (!picked.has(q.id)) ordered.push(q);
-    }
+
+  // Priorité : les plus ratées d'abord (déterministe) ; le bruit qui varie les
+  // sessions est tiré par choisirUnites, une fois par unité. Comme avant, les
+  // unités prioritaires passent d'abord et le vivier ne complète que si elles
+  // couvrent moins de 8 questions.
+  const scoreDe = (q: QRow): number => -(failCount.get(q.id) ?? 0);
+  const prioSet = new Set(prioritized);
+  const unitesPrio = unites.filter((u) => u.questions.some((q) => prioSet.has(q.id)));
+  let retenues = choisirUnites(unitesPrio, scoreDe, MAX_Q, Math.random, 1);
+  const dejaPrises = retenues.reduce((n, u) => n + u.questions.length, 0);
+  if (dejaPrises < 8) {
+    const prises = new Set(retenues.flatMap((u) => u.questions.map((q) => q.id)));
+    const reste = unites.filter((u) => !u.questions.some((q) => prises.has(q.id)));
+    retenues = [...retenues, ...choisirUnites(reste, scoreDe, MAX_Q - dejaPrises, Math.random, 1)];
   }
+  const suite = aplatirUnites(retenues);
 
-  if (ordered.length === 0) redirect('/entrainement');
+  if (suite.length === 0) redirect('/entrainement');
 
-  const questions: TQuestion[] = ordered.slice(0, MAX_Q).map((q) => ({
+  const questions: TQuestion[] = suite.map(({ question: q, dossier }) => ({
     id: q.id,
     enonce: q.enonce,
     college: q.qcm_series.cours.matieres.nom,
@@ -165,6 +199,9 @@ export default async function TargetedSessionPage({
     commentaire_enseignant: q.commentaire_enseignant,
     images: q.images,
     vignette: q.qcm_series.vignette,
+    dossier: dossier
+      ? { serie_id: dossier.serieId, label: q.qcm_series.label, position: dossier.position, total: dossier.total }
+      : null,
     items: [...(q.qcm_items ?? [])]
       .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct, images: it.images }))
       .sort((a, b) => a.lettre.localeCompare(b.lettre)),

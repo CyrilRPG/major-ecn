@@ -21,6 +21,9 @@ export type TQuestion = {
   college: string;
   images?: string[] | null;
   vignette?: string | null;
+  /** Position dans le dossier progressif : un dossier est toujours servi
+   *  ENTIER et dans l'ordre (règle du 18/09/2026) — ses questions se suivent. */
+  dossier?: { serie_id: string; label: string | null; position: number; total: number } | null;
   items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean; images?: string[] | null }[];
   /** QROC (voie externe) : saisie libre + révéler + auto-évaluation. */
   format?: 'qcm' | 'qroc';
@@ -156,8 +159,19 @@ export function TargetedSession({ questions, backHref }: { questions: TQuestion[
       </div>
       <Progress value={(index / total) * 100} className="mb-3" />
 
+      {q.dossier && (
+        <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-(--color-accent-soft) px-2.5 py-1 text-[11px] font-semibold text-(--color-accent-deep)">
+          Dossier progressif{q.dossier.label ? ` · ${q.dossier.label}` : ''} — question {q.dossier.position}/{q.dossier.total}
+        </p>
+      )}
       {q.vignette && (
-        <details open className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface-soft) shadow-(--shadow-soft)">
+        /* `key` : le bloc est remonté à chaque question — ouvert sur la première
+           question du dossier, replié sur les suivantes (l'élève peut le rouvrir). */
+        <details
+          key={q.id}
+          open={!q.dossier || q.dossier.position === 1}
+          className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface-soft) shadow-(--shadow-soft)"
+        >
           <summary className="cursor-pointer px-3.5 py-2.5 text-[10px] font-bold uppercase tracking-[0.16em] text-(--color-ink-muted) select-none">
             Contexte clinique du dossier
           </summary>
