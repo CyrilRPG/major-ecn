@@ -8,6 +8,15 @@ import {
 import { cn } from '@/lib/utils';
 import type { CourseSupport } from '@/lib/student/supports';
 import { NotesEditor } from './notes-editor';
+import { PdfViewer } from './pdf-viewer';
+
+/**
+ * Support tel que la vue partagée le connaît : la séance ET ses documents,
+ * pour afficher le PDF directement dans le panneau (un onglet par document).
+ */
+export type SplitSupport = CourseSupport & {
+  docs?: { id: string; titre: string }[];
+};
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -30,7 +39,7 @@ type SplitCtx = {
   hasQcm: boolean;
   hasFlashcards: boolean;
   hasSeanceApprofondie: boolean;
-  supports: CourseSupport[];
+  supports: SplitSupport[];
   /** Blocs masqués pour cet item par l'administration : ils ne sont pas non
    *  plus proposés en vue partagée. */
   hiddenBlocks: string[];
@@ -202,12 +211,64 @@ function EmbedPanel({ coursId, path, title }: { coursId: string; path: string; t
   );
 }
 
-function SplitPanelContent({ coursId, type, notesHtml }: { coursId: string; type: SplitContentType; notesHtml: string }) {
-  // Support de séance : page interne (rendu <canvas>, filigrané, non
-  // téléchargeable) — surtout pas le PDF brut dans une iframe.
+/**
+ * Support de séance dans le panneau : LE PDF, et rien d'autre — rendu
+ * <canvas> filigrané (PdfViewer, comme sur sa page), jamais le PDF brut dans
+ * une iframe (visionneuse native = téléchargement / impression), et jamais la
+ * page complète (qui embarquait toute la plateforme à côté de la vidéo).
+ * Plusieurs documents ⇒ un onglet par document, le premier par défaut.
+ */
+function SupportPanel({ coursId, videoId, support }: { coursId: string; videoId: string; support?: SplitSupport }) {
+  const docs = support?.docs ?? [];
+  const [docId, setDocId] = useState<string | null>(docs[0]?.id ?? null);
+  const courant = docs.find((d) => d.id === docId) ?? docs[0] ?? null;
+  // Sans liste de documents (support hors contexte) : la route sert le premier.
+  const src = `/api/supports/${videoId}/pdf${courant ? `?doc=${courant.id}` : ''}`;
+  return (
+    <div className="flex h-full flex-col">
+      {docs.length > 1 && (
+        <div className="flex flex-wrap gap-1 border-b border-(--color-border) px-2 py-1.5">
+          {docs.map((d, i) => {
+            const actif = d.id === (courant?.id ?? null);
+            return (
+              <button
+                key={d.id}
+                type="button"
+                onClick={() => setDocId(d.id)}
+                className={cn(
+                  'inline-flex max-w-full items-center gap-1 rounded-md border px-2 py-1 text-[11.5px] font-semibold transition-colors',
+                  actif
+                    ? 'border-(--color-primary)/40 bg-(--color-primary)/10 text-(--color-primary)'
+                    : 'border-(--color-border) bg-(--color-surface) text-(--color-ink-soft) hover:bg-(--color-sand-100)',
+                )}
+                title={d.titre}
+              >
+                <FileText className="h-3 w-3 shrink-0" />
+                <span className="truncate">{d.titre?.trim() || `Document ${i + 1}`}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+      <div className="min-h-0 flex-1">
+        <PdfViewer
+          key={src}
+          src={src}
+          coursId={coursId}
+          initiallyRead={false}
+          canMarkRead={false}
+          fill
+          notice={courant?.titre ? `${courant.titre} — consultable en ligne uniquement.` : 'Support consultable en ligne uniquement.'}
+        />
+      </div>
+    </div>
+  );
+}
+
+function SplitPanelContent({ coursId, type, notesHtml, supports }: { coursId: string; type: SplitContentType; notesHtml: string; supports: SplitSupport[] }) {
   if (type.startsWith('support:')) {
     const videoId = type.slice('support:'.length);
-    return <EmbedPanel coursId={coursId} path={`support/${videoId}`} title="Support de séance" />;
+    return <SupportPanel coursId={coursId} videoId={videoId} support={supports.find((s) => s.videoId === videoId)} />;
   }
   switch (type) {
     case 'fiche':
@@ -259,7 +320,7 @@ function SplitPanel({
   hasQcm: boolean;
   hasFlashcards: boolean;
   hasSeanceApprofondie: boolean;
-  supports: CourseSupport[];
+  supports: SplitSupport[];
   hiddenBlocks: string[];
   locked: Partial<Record<string, boolean>>;
   notesHtml: string;
@@ -361,7 +422,7 @@ function SplitPanel({
             </p>
           </div>
         ) : (
-          <SplitPanelContent coursId={coursId} type={type} notesHtml={notesHtml} />
+          <SplitPanelContent coursId={coursId} type={type} notesHtml={notesHtml} supports={supports} />
         )}
       </div>
     </div>
@@ -453,7 +514,7 @@ export function SplitViewProvider({
   hasQcm?: boolean;
   hasFlashcards?: boolean;
   hasSeanceApprofondie?: boolean;
-  supports?: CourseSupport[];
+  supports?: SplitSupport[];
   hiddenBlocks?: string[];
   locked?: Partial<Record<string, boolean>>;
   notesHtml: string;

@@ -3,7 +3,7 @@ import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { StudyConsole } from '@/components/student/study-console';
-import { SplitViewProvider } from '@/components/student/split-view';
+import { SplitViewProvider, type SplitSupport } from '@/components/student/split-view';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { canRead, canReadAnyQcm } from '@/lib/schemas/professor';
@@ -136,12 +136,18 @@ export default async function CoursLayout({
   // Un onglet par vidéo VISIBLE ayant au moins un support visible pour l'élève.
   // Les permissions propres d'un support « répercutent » ici : un support plus
   // restreint que sa vidéo peut disparaître pour l'élève même si la vidéo reste.
-  const supportsAll: CourseSupport[] = [...seanceVideos, ...coursVideos]
+  // Chaque entrée porte aussi la liste de ses documents visibles : la vue
+  // partagée affiche le PDF directement dans son panneau, un onglet par document.
+  const supportsAll: SplitSupport[] = [...seanceVideos, ...coursVideos]
     .filter((v) => supportsVisibles(v).length > 0)
     .map((v) => ({
       videoId: v.id,
       titre: v.titre,
       type: (v.type ?? 'cours') as CourseSupport['type'],
+      docs: supportsVisibles(v)
+        .slice()
+        .sort((a, b) => a.order_index - b.order_index)
+        .map((d) => ({ id: d.id, titre: d.titre })),
     }));
 
   const profScope = profile.role === 'professor' ? getProfessorScope(profile.permission_scope) : null;

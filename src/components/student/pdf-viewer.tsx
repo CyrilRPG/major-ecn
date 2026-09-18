@@ -38,6 +38,7 @@ export function PdfViewer({
   canDownload = false,
   canMarkRead = true,
   notice,
+  fill = false,
 }: {
   src: string;
   coursId: string;
@@ -49,6 +50,9 @@ export function PdfViewer({
   canMarkRead?: boolean;
   /** Petit texte affiché à gauche de la barre d'outils (ex. nom de la séance). */
   notice?: string;
+  /** Remplit le conteneur parent (panneau de la vue partagée) au lieu d'une
+   *  hauteur d'écran : le parent fixe la hauteur, le canvas prend le reste. */
+  fill?: boolean;
 }) {
   const [read, setRead] = useState(initiallyRead);
   const [pending, start] = useTransition();
@@ -97,7 +101,9 @@ export function PdfViewer({
       className={
         isFullscreen
           ? 'fixed inset-0 z-50 flex flex-col bg-black'
-          : 'surface-card flex flex-col overflow-hidden p-0'
+          : fill
+            ? 'flex h-full flex-col overflow-hidden bg-(--color-surface)'
+            : 'surface-card flex flex-col overflow-hidden p-0'
       }
     >
       {/* Toolbar : zoom + plein écran + marquer comme lue (pas de téléchargement) */}
@@ -148,7 +154,7 @@ export function PdfViewer({
           )}
         </div>
       </div>
-      <div className={isFullscreen ? 'min-h-0 flex-1' : 'h-[calc(100dvh-220px)] sm:h-[80vh]'}>
+      <div className={isFullscreen || fill ? 'min-h-0 flex-1' : 'h-[calc(100dvh-220px)] sm:h-[80vh]'}>
         <PdfCanvas src={src} zoom={zoom} />
       </div>
     </div>
