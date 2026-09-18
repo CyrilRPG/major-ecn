@@ -13,7 +13,8 @@ import { estTitreRevisions } from '@/lib/videos/revisions';
 import { estItemAnnales } from '@/lib/data/annales';
 import { videoVisible, supportVisible, eleveAutorise, eleveExclu, blocVideoOuvert, type SupportOverride } from '@/lib/videos/audience';
 import { estOuverte } from '@/lib/videos/unlock';
-import { grouperParRubrique, rubriqueParDefaut } from '@/lib/videos/rubriques';
+import { grouperParRubrique, rubriqueCommune, rubriqueParDefaut } from '@/lib/videos/rubriques';
+import { CATEGORIES_VIDEO, resumeCategorie, titreCategorie } from '@/lib/videos/categories';
 import { RubriqueEditor } from '@/components/student/rubrique-editor';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-locked-card';
@@ -26,6 +27,8 @@ const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
 /** Cours « Méthodologie EVC » dans le collège Découverte : on n'affiche
  *  qu'une carte « Cours vidéo » marquée « À venir ». */
 const METHODOLOGIE_COURS_ID = '6b321ef6-ef8a-4174-945a-1e1c60f22c5d';
+/** En-tête de section des cartes de catégorie d'un item « Replays - Révisions ». */
+const SECTION_REPLAYS = 'Replays · choisissez votre programme';
 
 type Action = {
   href: string;
@@ -415,6 +418,42 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         const afficherCoursVideo = !access || blocVideoOuvert(coursVideos, access.video);
         const plusieursSeances = saVids.length > 1;
         const rubriqueOuVide = (r: string) => (afficherRubriques ? { rubrique: r } : {});
+        // Item « Replays - Révisions » : l'élève choisit d'abord son PROGRAMME
+        // (Séance intensive / Séances approfondies), une carte par catégorie
+        // accessible, puis ne voit que son contenu — chaque séance avec ses
+        // supports. Avant, l'aperçu empilait une carte par séance ET une carte
+        // par lot de supports des deux programmes (34 cartes en Médecine
+        // d'urgence), sans qu'on sache quel support allait avec quelle vidéo.
+        if (estTitreRevisions(c.titre)) {
+          const nbSupports = (videos: { video_supports?: SupportOverride[] | null }[], droit: boolean) =>
+            videos.reduce((n, v) => n + supportsVisibles(v, droit).length, 0);
+          if (afficherCoursVideo) {
+            const d = CATEGORIES_VIDEO.cours;
+            standardActions.push({
+              href: `/cours/${coursId}/video`,
+              label: titreCategorie('cours', rubriqueCommune(coursVideos)),
+              desc: coursVideosDisponibles
+                ? `${d.formule} — ${resumeCategorie(coursVideos.length, nbSupports(coursVideos, !access || access.video))}. Chaque séance avec ses supports.`
+                : `${d.formule} — les replays arrivent bientôt.`,
+              Icon: MonitorPlay, accent: d.accent, bg: d.fond,
+              available: coursVideosDisponibles,
+              rubrique: SECTION_REPLAYS,
+            });
+          }
+          if (afficherSeances) {
+            const d = CATEGORIES_VIDEO.seance_approfondie;
+            const ouvertes = saVids.filter(isVideoUnlocked).length;
+            standardActions.push({
+              href: `/cours/${coursId}/seance-approfondie`,
+              label: titreCategorie('seance_approfondie', rubriqueCommune(saVids)),
+              desc: `${d.formule} — ${resumeCategorie(saVids.length, nbSupports(saVids, !access || access.seanceApprofondie))}. Chaque séance avec ses supports.`
+                + (ouvertes < saVids.length ? ` ${ouvertes} ouverte${ouvertes > 1 ? 's' : ''} sur ${saVids.length}.` : ''),
+              Icon: Video, accent: d.accent, bg: d.fond,
+              available: true,
+              rubrique: SECTION_REPLAYS,
+            });
+          }
+        }
         const carteCoursVideo = (rubrique: string) => {
           standardActions.push(
             {
@@ -428,7 +467,9 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
           );
         };
         let carteCoursVideoPoussee = false;
-        for (const groupe of rubriquesVideo) {
+        // Hors révisions : cartes par séance et par lot de supports, comme avant.
+        // (Un item de révisions a déjà reçu ses cartes de catégorie ci-dessus.)
+        for (const groupe of estTitreRevisions(c.titre) ? [] : rubriquesVideo) {
           for (const entree of groupe.videos) {
             if (entree.kind === 'seance') {
               if (!afficherSeances) continue;
@@ -496,7 +537,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         }
         // Formule ouverte au cours vidéo mais aucune vidéo encore en ligne :
         // la carte « Bientôt » reste affichée, comme avant.
-        if (afficherCoursVideo && !carteCoursVideoPoussee) carteCoursVideo(rubriqueParDefaut('cours'));
+        if (afficherCoursVideo && !carteCoursVideoPoussee && !estTitreRevisions(c.titre)) carteCoursVideo(rubriqueParDefaut('cours'));
         if (!access || access.flashcards) {
           standardActions.push(
             {
@@ -819,7 +860,8 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
                 >
                   {segment.rubrique}
                 </h2>
-                {staffRubriques && (
+                {/* Pas de crayon sur l'en-tête des cartes de catégorie : ce n'est pas une rubrique. */}
+                {staffRubriques && segment.rubrique !== SECTION_REPLAYS && (
                   <RubriqueEditor coursId={coursId} type={typeParRubrique.get(segment.rubrique) ?? 'cours'} value={segment.rubrique} />
                 )}
               </div>

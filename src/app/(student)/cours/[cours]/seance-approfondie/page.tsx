@@ -1,17 +1,25 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { Lock, Pencil, Video } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Lock, Pencil, Video } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
-import { videoVisible, eleveAutorise, eleveExclu, blocVideoOuvert } from '@/lib/videos/audience';
+import { blocVideoOuvert } from '@/lib/videos/audience';
 import { estOuverte } from '@/lib/videos/unlock';
 import { grouperParRubrique, rubriqueCommune, rubriqueDeVideo } from '@/lib/videos/rubriques';
+import { CATEGORIES_VIDEO, titreCategorie } from '@/lib/videos/categories';
+import { chargerReplays, compterReplays, type ReplayVideo } from '@/lib/videos/replays';
 import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
 import { EmargementGate } from '@/components/student/emargement-gate';
 import { bunnyEmbedUrl } from '@/lib/bunny';
 import { EmptyState } from '@/components/empty-state';
+import { RubriqueEditor } from '@/components/student/rubrique-editor';
+import { CategorieSwitch, type CategorieSwitchItem } from '@/components/student/replays/categorie-switch';
+import { SeanceListe, type SeanceListeItem } from '@/components/student/replays/seance-liste';
+import { SupportsDeSeance } from '@/components/student/replays/supports-de-seance';
+
+const CAT = CATEGORIES_VIDEO.seance_approfondie;
 
 export default async function SeanceApprofondiePage({
   params,
@@ -29,38 +37,34 @@ export default async function SeanceApprofondiePage({
   const { user, profile } = await requireUser();
   const supabase = await createClient();
   const isAdmin = profile.role === 'admin';
+  const staffRubriques = isAdmin || profile.role === 'professor';
 
   const scope = parseScope(profile.permission_scope);
-  const access = isAdmin ? null : await fetchContentAccessForScope(scope);
+  const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
 
-  const { data: c } = await supabase
-    .from('cours')
-    .select('id, titre, matiere_id, matieres(nom)')
-    .eq('id', coursId)
-    .maybeSingle();
+  // Cours, replays (les deux catégories, chaque vidéo avec SES supports,
+  // filtrés pour cet élève — même point d'entrée que l'aperçu et la page des
+  // séances intensives) et séances du professeur, en parallèle.
+  const [{ data: c }, replays, { data: seanceSeries }] = await Promise.all([
+    supabase
+      .from('cours')
+      .select('id, titre, matiere_id, matieres(nom)')
+      .eq('id', coursId)
+      .maybeSingle(),
+    chargerReplays(supabase, coursId, { userId: user.id, scope, access, isAdmin }),
+    // Déblocage PROGRESSIF : une vidéo RELIÉE à une séance du professeur
+    // (videos.serie_id) s'ouvre avec CETTE séance. Faire la séance 1 ouvre la
+    // vidéo 1, sans exiger d'avoir fait les séances 2 à 12. Une vidéo qui n'est
+    // reliée à aucune séance n'a pas de déblocage : elle est ouverte (cf.
+    // `estOuverte`).
+    supabase
+      .from('qcm_series')
+      .select('id, label')
+      .eq('cours_id', coursId)
+      .eq('type', 'seance'),
+  ]);
   if (!c) notFound();
 
-  // Émargement du cours : même obligation que sur la page vidéo, l'état vient
-  // de la base pour résister au rechargement.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: attendance } = await (supabase as any)
-    .from('course_attendances')
-    .select('signed_at')
-    .eq('user_id', user.id)
-    .eq('cours_id', coursId)
-    .eq('kind', 'seance')
-    .maybeSingle();
-
-  // Déblocage PROGRESSIF : une vidéo RELIÉE à une séance du professeur
-  // (videos.serie_id) s'ouvre avec CETTE séance. Faire la séance 1 ouvre la
-  // vidéo 1, sans exiger d'avoir fait les séances 2 à 12. Une vidéo qui n'est
-  // reliée à aucune séance n'a pas de déblocage : elle est ouverte (cf.
-  // `estOuverte`).
-  const { data: seanceSeries } = await supabase
-    .from('qcm_series')
-    .select('id, label')
-    .eq('cours_id', coursId)
-    .eq('type', 'seance');
   const seances = seanceSeries ?? [];
   const seanceIds = seances.map((s) => s.id);
   const labelById = new Map(seances.map((s) => [s.id, s.label]));
@@ -76,46 +80,16 @@ export default async function SeanceApprofondiePage({
     completedSerieIds = new Set((completedSessions ?? []).map((s) => s.serie_id));
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: videos } = await (supabase as any)
-    .from('videos')
-    .select('id, titre, type, rubrique, order_index, bunny_video_id, serie_id, unlock_direct, voies, offers, denied_user_ids, allowed_user_ids')
-    .eq('cours_id', coursId)
-    .eq('type', 'seance_approfondie')
-    // Ordre choisi par l'administrateur (Contenu › Séances approfondies) ;
-    // la date ne sert plus que de départage.
-    .order('order_index', { ascending: true })
-    .order('created_at', { ascending: true });
-
-  type SAVideo = {
-    id: string; titre: string; bunny_video_id: string | null; serie_id: string | null;
-    type?: string | null; rubrique?: string | null; order_index?: number | null;
-    unlock_direct?: boolean | null;
-    voies?: string[] | null; offers?: string[] | null;
-    denied_user_ids?: string[] | null; allowed_user_ids?: string[] | null;
-  };
   // L'audience portée par la vidéo fait foi (voies + formules + listes
-  // nominatives). Un élève retiré de la séance, ou dont la formule/voie n'est
-  // pas ciblée, ne la voit pas — même en navigation directe. À l'inverse, un
-  // élève autorisé nominativement la voit même sans « accès approfondi ».
-  const allVideosRaw = (videos ?? []) as SAVideo[];
-  const allSaVideos = allVideosRaw.filter(
-    (v) => isAdmin || videoVisible(v, {
-      offres: scopeOffers(scope),
-      voie: scope.voie ?? null,
-      droitFormule: !access || access.seanceApprofondie,
-      userId: user.id,
-    }),
-  );
+  // nominatives) : `chargerReplays` a déjà écarté ce que l'élève ne doit pas
+  // voir, y compris en navigation directe.
+  const allSaVideos = replays.seance_approfondie;
   // Redirections tardives : on ne coupe la route qu'une fois qu'on sait
   // qu'aucune vidéo n'autorise l'élève à voir cette page. Sans cela, une
   // autorisation nominative sur une formule inférieure serait sabotée par le
   // droit global (access.seanceApprofondie), et l'accès au collège serait
   // bloqué avant même de connaître les autorisations.
-  const autoriseParVideo = allVideosRaw.some(
-    (v) => eleveAutorise(v, user.id) && !eleveExclu(v, user.id),
-  );
-  if (!isAdmin && !canAccessCollege(scope, c.matiere_id) && !autoriseParVideo) redirect('/facultes');
+  if (!isAdmin && !canAccessCollege(scope, c.matiere_id) && !replays.autoriseParVideo) redirect('/facultes');
   // Le droit de la formule ne ferme JAMAIS un bloc qui a du contenu ciblé
   // (cf. `blocVideoOuvert`) : une séance cochée « Formule Intensive » s'ouvre
   // pour un élève intensif, même si sa formule n'inclut pas les séances
@@ -132,15 +106,34 @@ export default async function SeanceApprofondiePage({
     : allSaVideos;
   if (onlyVideoId && saVideos.length === 0) notFound();
 
-  const isUnlocked = (v: SAVideo) => estOuverte(v, completedSerieIds, isAdmin);
+  const isUnlocked = (v: ReplayVideo) => estOuverte(v, completedSerieIds, isAdmin);
+  const motifFermeture = (v: ReplayVideo) => {
+    const gate = v.serie_id ? labelById.get(v.serie_id) : null;
+    return gate
+      ? `Terminez « ${gate} » pour débloquer cette vidéo.`
+      : 'Terminez les séances du professeur de ce cours pour débloquer cette vidéo.';
+  };
   const watermarkText = `Accès réservé à ${profile.first_name} ${profile.last_name} — ${user.email}`;
   // Titre de page : la rubrique quand toutes les vidéos affichées la partagent,
   // sinon le libellé générique et un sous-groupe par rubrique.
   const rubriqueTitre = rubriqueCommune(saVideos) ?? 'Séances approfondies';
 
+  // Sélecteur de catégorie : proposé dès que l'élève a AUSSI accès aux
+  // séances intensives de cet item.
+  const coursAvecSource = replays.cours.filter((v) => !!v.bunny_video_id || !!v.storage_path);
+  const categories: CategorieSwitchItem[] = [
+    { type: 'cours' as const, titre: titreCategorie('cours', rubriqueCommune(coursAvecSource)), ...compterReplays(coursAvecSource) },
+    { type: 'seance_approfondie' as const, titre: titreCategorie('seance_approfondie', rubriqueCommune(allSaVideos)), ...compterReplays(allSaVideos) },
+  ].filter((k) => k.seances > 0);
+  const switchCategories = (
+    <CategorieSwitch coursId={coursId} active="seance_approfondie" categories={categories} embedQs={embedQs} />
+  );
+  const surTitre = `${c.matieres?.nom} · ${CAT.formule}`;
+
   if (saVideos.length === 0) {
     return (
       <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
+        {switchCategories}
         <div className="rounded-xl border border-(--color-border) bg-(--color-surface) py-2">
           <EmptyState
             icon={Video}
@@ -152,74 +145,46 @@ export default async function SeanceApprofondiePage({
     );
   }
 
-  // Plusieurs séances et aucune choisie : on présente le CHOIX plutôt que
-  // d'empiler tous les lecteurs. C'est l'entrée naturelle depuis le split view
-  // (iframe sans `?v=`), et c'est plus lisible dès qu'il y a plus d'une séance.
+  // Plusieurs séances et aucune choisie : le PROGRAMME de la catégorie — une
+  // ligne par séance, avec ses supports sous son titre — plutôt que d'empiler
+  // tous les lecteurs. C'est l'entrée naturelle depuis le split view (iframe
+  // sans `?v=`), et c'est plus lisible dès qu'il y a plus d'une séance.
   if (!onlyVideoId && allSaVideos.length > 1) {
     const commune = rubriqueCommune(allSaVideos);
     const groupes = grouperParRubrique(allSaVideos);
-    const carte = (v: SAVideo, i: number) => {
-      const unlocked = isUnlocked(v);
-      const gate = v.serie_id ? labelById.get(v.serie_id) : null;
-      const label = v.titre?.trim() || `Séance approfondie ${i + 1}`;
-      const inner = (
-        <>
-          <span
-            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
-              unlocked ? 'bg-[#F3EAFF] text-[#7C3AED]' : 'bg-(--color-sand-100) text-(--color-ink-soft)'
-            }`}
-          >
-            {unlocked ? <Video className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
-          </span>
-          <span className="min-w-0">
-            <span className="block truncate text-sm font-bold text-(--color-ink)">{label}</span>
-            <span className="mt-0.5 block text-xs text-(--color-ink-soft)">
-              {unlocked
-                ? 'Disponible — cliquez pour lancer la vidéo.'
-                : gate
-                  ? `Terminez « ${gate} » pour débloquer.`
-                  : 'Terminez les séances du professeur de ce cours pour débloquer.'}
-            </span>
-          </span>
-        </>
-      );
-      return (
-        <li key={v.id}>
-          {unlocked ? (
-            <Link
-              href={`/cours/${coursId}/seance-approfondie?v=${v.id}${embedQs}`}
-              className="flex items-center gap-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3 transition-colors hover:bg-(--color-sand-100)"
-            >
-              {inner}
-            </Link>
-          ) : (
-            <div className="flex cursor-not-allowed items-center gap-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3 opacity-70">
-              {inner}
-            </div>
-          )}
-        </li>
-      );
-    };
+    const items = (videos: ReplayVideo[]): SeanceListeItem[] => videos.map((video) => {
+      const ouverte = isUnlocked(video);
+      return { video, ouverte, motifFermeture: ouverte ? null : motifFermeture(video) };
+    });
+    const nb = compterReplays(allSaVideos);
+    const relie = allSaVideos.some((v) => !!v.serie_id && !v.unlock_direct);
     return (
       <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7C3AED]">
-          {c.matieres?.nom} · Programme Approfondi
+        {switchCategories}
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: CAT.accent }}>
+          {surTitre}
         </p>
-        <h1 className="mt-1 text-2xl font-bold tracking-tight text-(--color-ink)">{commune ?? 'Séances approfondies'}</h1>
+        <div className="mt-1 flex flex-wrap items-center gap-2">
+          <h1 className="text-2xl font-bold tracking-tight text-(--color-ink)">{commune ?? 'Séances approfondies'}</h1>
+          {staffRubriques && commune && <RubriqueEditor coursId={coursId} type="seance_approfondie" value={commune} />}
+        </div>
         <p className="mt-1 text-sm text-(--color-ink-soft)">
-          Choisissez la séance à regarder. Celles qui sont reliées à une séance du professeur
-          s’ouvrent une fois cette séance terminée.
+          {nb.seances} séance{nb.seances > 1 ? 's' : ''}
+          {nb.supports > 0 ? ` · ${nb.supports} support${nb.supports > 1 ? 's' : ''}` : ''}
+          {' — choisissez la séance à regarder ; ses supports sont listés sous son titre.'}
+          {relie ? ' Celles qui sont reliées à une séance du professeur s’ouvrent une fois cette séance terminée.' : ''}
         </p>
         {commune ? (
-          <ul className="mt-6 space-y-3">{allSaVideos.map(carte)}</ul>
+          <div className="mt-6"><SeanceListe coursId={coursId} type="seance_approfondie" items={items(allSaVideos)} embedQs={embedQs} /></div>
         ) : (
           <div className="mt-6 space-y-8">
             {groupes.map((g) => (
               <section key={g.rubrique} aria-label={g.rubrique}>
-                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-ink-soft)">
+                <h2 className="mb-3 flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-ink-soft)">
                   {g.rubrique}
+                  {staffRubriques && <RubriqueEditor coursId={coursId} type="seance_approfondie" value={g.rubrique} />}
                 </h2>
-                <ul className="space-y-3">{g.videos.map(carte)}</ul>
+                <SeanceListe coursId={coursId} type="seance_approfondie" items={items(g.videos)} embedQs={embedQs} />
               </section>
             ))}
           </div>
@@ -227,6 +192,20 @@ export default async function SeanceApprofondiePage({
       </div>
     );
   }
+
+  // Émargement du cours : même obligation que sur la page vidéo, l'état vient
+  // de la base pour résister au rechargement.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: attendance } = await (supabase as any)
+    .from('course_attendances')
+    .select('signed_at')
+    .eq('user_id', user.id)
+    .eq('cours_id', coursId)
+    .eq('kind', 'seance')
+    .maybeSingle();
+
+  const hrefListe = `/cours/${coursId}/seance-approfondie${embed ? `?embed=${encodeURIComponent(embed)}` : ''}`;
+  const hrefVideo = (v: ReplayVideo) => `/cours/${coursId}/seance-approfondie?v=${v.id}${embedQs}`;
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
@@ -240,17 +219,23 @@ export default async function SeanceApprofondiePage({
           initialSigned={!!attendance?.signed_at}
         />
       )}
-      <div className="mb-6 flex items-start justify-between gap-4">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7C3AED]">
-            {c.matieres?.nom} · Programme Approfondi
+      {allSaVideos.length > 1 && (
+        <Link
+          href={hrefListe}
+          className="mb-3 inline-flex items-center gap-1.5 text-xs font-semibold text-(--color-ink-soft) underline-offset-2 hover:text-(--color-ink) hover:underline"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Toutes les séances
+        </Link>
+      )}
+      <div className="mb-4 flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: CAT.accent }}>
+            {surTitre}
           </p>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-(--color-ink)">
+          <h1 className="mt-1 text-lg font-bold tracking-tight text-(--color-ink) sm:text-xl">
             {rubriqueTitre}
           </h1>
-          <p className="mt-1 text-sm text-(--color-ink-soft)">
-            Cours vidéo approfondis par le professeur pour aller plus loin dans la maîtrise de la spécialité.
-          </p>
         </div>
         {isAdmin && (
           <Link
@@ -266,16 +251,19 @@ export default async function SeanceApprofondiePage({
       <div className="space-y-8">
         {saVideos.map((v) => {
           const bunnyId = v.bunny_video_id;
-          const embed = bunnyId ? bunnyEmbedUrl(bunnyId) : null;
+          const embedUrl = bunnyId ? bunnyEmbedUrl(bunnyId) : null;
           const unlocked = isUnlocked(v);
-          const gateLabel = v.serie_id ? labelById.get(v.serie_id) : null;
+          const position = allSaVideos.indexOf(v);
+          const precedente = position > 0 ? allSaVideos[position - 1] : null;
+          const suivante = position < allSaVideos.length - 1 ? allSaVideos[position + 1] : null;
           return (
             <section key={v.id}>
               <h2 className="mb-3 flex items-center gap-2 text-base font-bold text-(--color-ink)">
                 <span
-                  className={`flex h-8 w-8 items-center justify-center rounded-lg ${
-                    unlocked ? 'bg-[#F3EAFF] text-[#7C3AED]' : 'bg-(--color-sand-100) text-(--color-ink-soft)'
-                  }`}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+                  style={unlocked
+                    ? { background: CAT.fond, color: CAT.accent }
+                    : { background: 'var(--color-sand-100)', color: 'var(--color-ink-soft)' }}
                 >
                   {unlocked ? <Video className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
                 </span>
@@ -286,6 +274,9 @@ export default async function SeanceApprofondiePage({
                       {rubriqueDeVideo(v)}
                     </span>
                   )}
+                  {allSaVideos.length > 1 && (
+                    <span className="mr-2 font-mono text-sm font-bold text-(--color-ink-muted)">{String(position + 1).padStart(2, '0')}</span>
+                  )}
                   {v.titre}
                 </span>
               </h2>
@@ -294,15 +285,11 @@ export default async function SeanceApprofondiePage({
                   <EmptyState
                     icon={Lock}
                     title="Séance à terminer d'abord"
-                    description={
-                      gateLabel
-                        ? `Terminez « ${gateLabel} » pour débloquer cette vidéo.`
-                        : 'Terminez les séances du professeur de ce cours pour débloquer cette vidéo.'
-                    }
+                    description={motifFermeture(v)}
                   />
                 </div>
-              ) : embed ? (
-                <BunnyVideoPlayer embedUrl={embed} coursId={coursId} watermarkText={watermarkText} />
+              ) : embedUrl ? (
+                <BunnyVideoPlayer embedUrl={embedUrl} coursId={coursId} watermarkText={watermarkText} />
               ) : (
                 <div className="rounded-xl border border-(--color-border) bg-(--color-surface) py-2">
                   <EmptyState
@@ -312,10 +299,43 @@ export default async function SeanceApprofondiePage({
                   />
                 </div>
               )}
+
+              {/* Les supports de CETTE séance, sous son lecteur (une séance
+                  verrouillée garde ses supports verrouillés avec elle). */}
+              {unlocked && (
+                <SupportsDeSeance
+                  coursId={coursId}
+                  videoId={v.id}
+                  supports={v.supports}
+                  accent={CAT.accent}
+                  fond={CAT.fond}
+                  embedQs={embedQs}
+                  embed={!!embed}
+                />
+              )}
+
+              {(precedente || suivante) && (
+                <nav aria-label="Séance précédente / suivante" className="mt-5 flex items-center justify-between gap-3">
+                  {precedente ? (
+                    <Link href={hrefVideo(precedente)} className="inline-flex min-w-0 items-center gap-1.5 text-sm font-semibold text-(--color-ink-soft) hover:text-(--color-ink)">
+                      <ArrowLeft className="h-4 w-4 shrink-0" />
+                      <span className="truncate">{precedente.titre}</span>
+                    </Link>
+                  ) : <span />}
+                  {suivante && (
+                    <Link href={hrefVideo(suivante)} className="inline-flex min-w-0 items-center gap-1.5 text-sm font-semibold hover:underline" style={{ color: CAT.accent }}>
+                      <span className="truncate">{suivante.titre}</span>
+                      <ArrowRight className="h-4 w-4 shrink-0" />
+                    </Link>
+                  )}
+                </nav>
+              )}
             </section>
           );
         })}
       </div>
+
+      {allSaVideos.length === 1 && <div className="mt-6">{switchCategories}</div>}
     </div>
   );
 }

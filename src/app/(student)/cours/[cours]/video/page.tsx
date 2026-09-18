@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { FileText, PlayCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, FileText, PlayCircle } from 'lucide-react';
 import { requireUser, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { Button } from '@/components/ui/button';
@@ -9,25 +9,18 @@ import { VideoPlayer } from '@/components/student/video-player';
 import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
 import { EmargementGate } from '@/components/student/emargement-gate';
 import { bunnyEmbedUrl } from '@/lib/bunny';
-import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
-import { videoVisible, eleveAutorise, eleveExclu, blocVideoOuvert } from '@/lib/videos/audience';
+import { blocVideoOuvert } from '@/lib/videos/audience';
 import { grouperParRubrique, rubriqueCommune, rubriqueDeVideo, rubriqueParDefaut } from '@/lib/videos/rubriques';
+import { CATEGORIES_VIDEO, titreCategorie } from '@/lib/videos/categories';
+import { chargerReplays, compterReplays, type ReplayVideo } from '@/lib/videos/replays';
 import { RubriqueEditor } from '@/components/student/rubrique-editor';
+import { CategorieSwitch, type CategorieSwitchItem } from '@/components/student/replays/categorie-switch';
+import { SeanceListe } from '@/components/student/replays/seance-liste';
+import { SupportsDeSeance } from '@/components/student/replays/supports-de-seance';
 
-type CoursVideo = {
-  id: string;
-  titre: string;
-  type: string | null;
-  rubrique: string | null;
-  order_index: number | null;
-  bunny_video_id: string | null;
-  storage_path: string | null;
-  voies: string[] | null;
-  offers: string[] | null;
-  denied_user_ids: string[] | null;
-  allowed_user_ids: string[] | null;
-};
+const CAT = CATEGORIES_VIDEO.cours;
 
 export default async function CoursVideoPage({
   params,
@@ -48,11 +41,14 @@ export default async function CoursVideoPage({
   const isAdmin = profile.role === 'admin';
   // Crayon de renommage de la rubrique (vue étudiant du personnel).
   const staffRubriques = isAdmin || profile.role === 'professor';
+  const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
 
-  // Cours + vidéos en parallèle : le contrôle d'accès au collège dépend
-  // maintenant AUSSI des autorisations nominatives portées par les vidéos,
-  // qu'il faut donc connaître avant de rediriger.
-  const [{ data: c }, { data: videoRows }] = await Promise.all([
+  // Cours + replays en parallèle : le contrôle d'accès au collège dépend
+  // AUSSI des autorisations nominatives portées par les vidéos, qu'il faut
+  // donc connaître avant de rediriger. Les replays sont chargés par le même
+  // point d'entrée que l'aperçu et la page des séances approfondies : les
+  // deux catégories, chaque vidéo avec SES supports, filtrés pour cet élève.
+  const [{ data: c }, replays] = await Promise.all([
     supabase
       .from('cours')
       .select(`
@@ -61,38 +57,31 @@ export default async function CoursVideoPage({
       `)
       .eq('id', coursId)
       .maybeSingle(),
-    // Un item peut porter plusieurs cours vidéo, dans l'ordre choisi par
-    // l'administrateur (Contenu › Cours vidéo).
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (supabase as any)
-      .from('videos')
-      .select('id, titre, type, rubrique, order_index, bunny_video_id, storage_path, voies, offers, denied_user_ids, allowed_user_ids')
-      .eq('cours_id', coursId)
-      .eq('type', 'cours')
-      .order('order_index', { ascending: true })
-      .order('created_at', { ascending: true }),
+    chargerReplays(supabase, coursId, { userId: user.id, scope, access, isAdmin }),
   ]);
   if (!c || !c.matieres?.semestres) notFound();
-  const allVideosRaw = (videoRows ?? []) as CoursVideo[];
-  const autoriseParVideo = allVideosRaw.some(
-    (v) => eleveAutorise(v, user.id) && !eleveExclu(v, user.id),
-  );
-  if (!isAdmin && !canAccessCollege(scope, c.matiere_id) && !autoriseParVideo) redirect('/facultes');
-  const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
+  if (!isAdmin && !canAccessCollege(scope, c.matiere_id) && !replays.autoriseParVideo) redirect('/facultes');
   profPageReadGuard(profile, 'video', `/cours/${coursId}`);
-  // L'audience est portée par la vidéo (voies + formules cochées à l'ajout, plus
-  // les listes nominatives) ; le droit global de la formule ne sert que de repli.
-  const offresEleve = scopeOffers(scope);
-  const allVideos = allVideosRaw.filter(
-    (v) => (!!v.bunny_video_id || !!v.storage_path)
-      && (isAdmin || videoVisible(v, {
-        offres: offresEleve, voie: scope.voie ?? null, droitFormule: !access || access.video, userId: user.id,
-      })),
-  );
+
+  // Une vidéo sans source (ni Bunny ni fichier) n'est pas encore regardable.
+  const hasSource = (v: ReplayVideo) => !!v.bunny_video_id || !!v.storage_path;
+  const allVideos = replays.cours.filter(hasSource);
   // Ni droit de formule, ni vidéo ciblant cet élève : la page n'a rien à
   // montrer et n'aurait pas dû être atteignable (règle commune à tous les
   // blocs vidéo, cf. `blocVideoOuvert`).
   if (!isAdmin && access && !blocVideoOuvert(allVideos, access.video)) redirect(`/cours/${coursId}`);
+
+  // Sélecteur de catégorie : proposé dès que l'élève a AUSSI accès aux
+  // séances approfondies de cet item. Chaque catégorie ne montre que son
+  // contenu, l'élève choisit d'abord laquelle il travaille.
+  const categories: CategorieSwitchItem[] = [
+    { type: 'cours' as const, titre: titreCategorie('cours', rubriqueCommune(allVideos)), ...compterReplays(allVideos) },
+    { type: 'seance_approfondie' as const, titre: titreCategorie('seance_approfondie', rubriqueCommune(replays.seance_approfondie)), ...compterReplays(replays.seance_approfondie) },
+  ].filter((k) => k.seances > 0);
+  const switchCategories = (
+    <CategorieSwitch coursId={coursId} active="cours" categories={categories} embedQs={embedQs} />
+  );
+  const surTitre = `${c.matieres?.nom} · ${CAT.formule}`;
 
   const watermarkText = `Accès réservé à ${profile.first_name} ${profile.last_name} — ${user.email}`;
 
@@ -122,6 +111,7 @@ export default async function CoursVideoPage({
   if (allVideos.length === 0) {
     return (
       <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
+        {switchCategories}
         <div className="rounded-xl border border-(--color-border) bg-(--color-surface) py-2">
           <EmptyState
             icon={PlayCircle}
@@ -141,8 +131,9 @@ export default async function CoursVideoPage({
     );
   }
 
-  // Plusieurs vidéos et aucune choisie : on présente la liste plutôt que
-  // d'empiler les lecteurs.
+  // Plusieurs vidéos et aucune choisie : le PROGRAMME de la catégorie — une
+  // ligne par séance, avec ses supports sous son titre — plutôt que d'empiler
+  // les lecteurs.
   if (!onlyVideoId && allVideos.length > 1) {
     // Rubriques : une seule commune à toutes les vidéos ⇒ elle devient le titre
     // de la page ; plusieurs ⇒ un sous-groupe par rubrique, dans l'ordre décidé
@@ -150,38 +141,25 @@ export default async function CoursVideoPage({
     // et dans quel ordre.
     const commune = rubriqueCommune(allVideos);
     const groupes = grouperParRubrique(allVideos);
-    const carte = (v: CoursVideo, i: number) => (
-      <li key={v.id}>
-        <Link
-          href={`/cours/${coursId}/video?v=${v.id}${embedQs}`}
-          className="flex items-center gap-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3 transition-colors hover:bg-(--color-sand-100)"
-        >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-(--color-primary-soft) text-(--color-primary-deep)">
-            <PlayCircle className="h-4 w-4" />
-          </span>
-          <span className="min-w-0">
-            <span className="block truncate text-sm font-bold text-(--color-ink)">
-              {v.titre?.trim() || `${rubriqueParDefaut('cours')} ${i + 1}`}
-            </span>
-            <span className="mt-0.5 block text-xs text-(--color-ink-soft)">
-              Disponible — cliquez pour lancer la vidéo.
-            </span>
-          </span>
-        </Link>
-      </li>
-    );
+    const items = (videos: ReplayVideo[]) => videos.map((video) => ({ video, ouverte: true }));
+    const nb = compterReplays(allVideos);
     return (
       <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-primary-deep)">
-          {c.matieres?.nom} · {rubriqueParDefaut('cours')}
+        {switchCategories}
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: CAT.accent }}>
+          {surTitre}
         </p>
         <div className="mt-1 flex flex-wrap items-center gap-2">
           <h1 className="text-2xl font-bold tracking-tight text-(--color-ink)">{commune ?? rubriqueParDefaut('cours')}</h1>
           {staffRubriques && commune && <RubriqueEditor coursId={coursId} type="cours" value={commune} />}
         </div>
-        <p className="mt-1 text-sm text-(--color-ink-soft)">Choisissez la vidéo à regarder.</p>
+        <p className="mt-1 text-sm text-(--color-ink-soft)">
+          {nb.seances} séance{nb.seances > 1 ? 's' : ''}
+          {nb.supports > 0 ? ` · ${nb.supports} support${nb.supports > 1 ? 's' : ''}` : ''}
+          {' — choisissez la séance à regarder ; ses supports sont listés sous son titre.'}
+        </p>
         {commune ? (
-          <ul className="mt-6 space-y-3">{allVideos.map(carte)}</ul>
+          <div className="mt-6"><SeanceListe coursId={coursId} type="cours" items={items(allVideos)} embedQs={embedQs} /></div>
         ) : (
           <div className="mt-6 space-y-8">
             {groupes.map((g) => (
@@ -190,7 +168,7 @@ export default async function CoursVideoPage({
                   {g.rubrique}
                   {staffRubriques && <RubriqueEditor coursId={coursId} type="cours" value={g.rubrique} />}
                 </h2>
-                <ul className="space-y-3">{g.videos.map(carte)}</ul>
+                <SeanceListe coursId={coursId} type="cours" items={items(g.videos)} embedQs={embedQs} />
               </section>
             ))}
           </div>
@@ -201,6 +179,9 @@ export default async function CoursVideoPage({
 
   const video = onlyVideoId ? allVideos.find((v) => v.id === onlyVideoId) : allVideos[0];
   if (!video) notFound();
+  const position = allVideos.indexOf(video);
+  const precedente = position > 0 ? allVideos[position - 1] : null;
+  const suivante = position < allVideos.length - 1 ? allVideos[position + 1] : null;
 
   // L'embed ne dépend d'aucune configuration serveur (cf. bunny.ts) : quand la
   // clé API manquait en production, cette page affichait « Vidéo bientôt
@@ -212,29 +193,33 @@ export default async function CoursVideoPage({
     const { data } = await supabase.storage.from('videos').createSignedUrl(video.storage_path, 60 * 60);
     signedUrl = data?.signedUrl ?? null;
   }
+  const hrefListe = `/cours/${coursId}/video${embed ? `?embed=${encodeURIComponent(embed)}` : ''}`;
+  const hrefVideo = (v: ReplayVideo) => `/cours/${coursId}/video?v=${v.id}${embedQs}`;
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
       {gate}
       {allVideos.length > 1 && (
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="flex items-center gap-2 truncate text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-primary-deep)">
-              {rubriqueDeVideo(video)}
-              {staffRubriques && <RubriqueEditor coursId={coursId} type="cours" value={rubriqueDeVideo(video)} />}
-            </p>
-            <h1 className="truncate text-lg font-bold tracking-tight text-(--color-ink)">
-              {video.titre}
-            </h1>
-          </div>
-          <Link
-            href={`/cours/${coursId}/video${embed ? `?embed=${encodeURIComponent(embed)}` : ''}`}
-            className="shrink-0 text-xs font-semibold text-(--color-ink-soft) underline underline-offset-2 hover:text-(--color-ink)"
-          >
-            Toutes les vidéos
-          </Link>
-        </div>
+        <Link
+          href={hrefListe}
+          className="mb-3 inline-flex items-center gap-1.5 text-xs font-semibold text-(--color-ink-soft) underline-offset-2 hover:text-(--color-ink) hover:underline"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Toutes les séances
+        </Link>
       )}
+      <div className="mb-4">
+        <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: CAT.accent }}>
+          {rubriqueDeVideo(video)}
+          {staffRubriques && <RubriqueEditor coursId={coursId} type="cours" value={rubriqueDeVideo(video)} />}
+        </p>
+        <h1 className="text-lg font-bold tracking-tight text-(--color-ink) sm:text-xl">
+          {allVideos.length > 1 && (
+            <span className="mr-2 font-mono text-sm font-bold text-(--color-ink-muted)">{String(position + 1).padStart(2, '0')}</span>
+          )}
+          {video.titre}
+        </h1>
+      </div>
       {embedUrl ? (
         <BunnyVideoPlayer embedUrl={embedUrl} coursId={coursId} watermarkText={watermarkText} />
       ) : signedUrl ? (
@@ -256,6 +241,36 @@ export default async function CoursVideoPage({
           />
         </div>
       )}
+
+      {/* Les supports de CETTE séance, sous son lecteur. */}
+      <SupportsDeSeance
+        coursId={coursId}
+        videoId={video.id}
+        supports={video.supports}
+        accent={CAT.accent}
+        fond={CAT.fond}
+        embedQs={embedQs}
+        embed={!!embed}
+      />
+
+      {(precedente || suivante) && (
+        <nav aria-label="Séance précédente / suivante" className="mt-5 flex items-center justify-between gap-3">
+          {precedente ? (
+            <Link href={hrefVideo(precedente)} className="inline-flex min-w-0 items-center gap-1.5 text-sm font-semibold text-(--color-ink-soft) hover:text-(--color-ink)">
+              <ArrowLeft className="h-4 w-4 shrink-0" />
+              <span className="truncate">{precedente.titre}</span>
+            </Link>
+          ) : <span />}
+          {suivante && (
+            <Link href={hrefVideo(suivante)} className="inline-flex min-w-0 items-center gap-1.5 text-sm font-semibold hover:underline" style={{ color: CAT.accent }}>
+              <span className="truncate">{suivante.titre}</span>
+              <ArrowRight className="h-4 w-4 shrink-0" />
+            </Link>
+          )}
+        </nav>
+      )}
+
+      {allVideos.length === 1 && <div className="mt-6">{switchCategories}</div>}
     </div>
   );
 }

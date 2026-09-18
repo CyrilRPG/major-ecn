@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { FileText } from 'lucide-react';
+import { ArrowLeft, FileText } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
@@ -9,6 +9,7 @@ import { supportVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience
 import { PdfViewer } from '@/components/student/pdf-viewer';
 import { EmptyState } from '@/components/empty-state';
 import { supportPageTitle, type SupportVideoType } from '@/lib/student/supports';
+import { CATEGORIES_VIDEO, categorieDeVideo } from '@/lib/videos/categories';
 
 /**
  * Supports d'une séance : consultation en ligne uniquement.
@@ -81,12 +82,22 @@ export default async function SupportPage({
   // Le support prend la couleur de la vidéo dont il dépend : rouge pour un
   // cours vidéo, violet pour une séance approfondie — comme les cartes de
   // l'aperçu de l'item.
-  const accent = video.type === 'seance_approfondie' ? '#7C3AED' : '#E4002B';
+  const categorie = CATEGORIES_VIDEO[categorieDeVideo(video.type)];
+  const accent = categorie.accent;
 
   const entete = (
     <div className="mb-2 sm:mb-3">
+      {/* Le support ramène toujours à SA vidéo : l'association est visible
+          dans les deux sens. */}
+      <Link
+        href={`/cours/${coursId}/${categorie.segment}?v=${video.id}${embedQs}`}
+        className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-(--color-ink-soft) underline-offset-2 hover:text-(--color-ink) hover:underline"
+      >
+        <ArrowLeft className="h-3.5 w-3.5" />
+        Retour à la vidéo
+      </Link>
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: accent }}>
-        {video.cours.matieres?.nom}
+        {video.cours.matieres?.nom} · {categorie.formule}
       </p>
       <h1 className="mt-0.5 text-lg font-bold tracking-tight text-(--color-ink) sm:text-xl">
         {supportPageTitle({ videoId: video.id, titre: video.titre, type: video.type })}

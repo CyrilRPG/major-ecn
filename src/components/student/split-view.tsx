@@ -6,7 +6,7 @@ import {
   Layers3, Lock, MonitorPlay, NotebookPen, Paperclip, Video, X, type LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { supportTabLabel, type CourseSupport } from '@/lib/student/supports';
+import type { CourseSupport } from '@/lib/student/supports';
 import { NotesEditor } from './notes-editor';
 
 /* ------------------------------------------------------------------ */
@@ -51,7 +51,13 @@ export const useSplitView = () => useContext(SplitContext);
 /*  Content type config                                                */
 /* ------------------------------------------------------------------ */
 
-type SplitOption = { type: SplitContentType; label: string; Icon: LucideIcon };
+type SplitOption = {
+  type: SplitContentType;
+  label: string;
+  Icon: LucideIcon;
+  /** Support d'une séance : rangé sous sa catégorie, avec le titre de la séance. */
+  indent?: boolean;
+};
 
 const SPLIT_OPTIONS: SplitOption[] = [
   { type: 'fiche', label: 'Fiche de cours', Icon: FileText },
@@ -63,13 +69,23 @@ const SPLIT_OPTIONS: SplitOption[] = [
   { type: 'notes', label: 'Prise de notes', Icon: NotebookPen },
 ];
 
-/** Ajoute une entrée par support, juste après le contenu dont il dépend. */
+/**
+ * Ajoute une entrée par support, rangée sous la catégorie dont il dépend et
+ * nommée par SA séance : dans le menu, « Séance approf. » est suivi de
+ * « SEANCE 1 : METHODOLOGIE », « SEANCE 2 … », pas de vingt « Support de la
+ * séance … » indistincts.
+ */
 function splitOptionsWithSupports(supports: CourseSupport[]): SplitOption[] {
   if (supports.length === 0) return SPLIT_OPTIONS;
+  const titreCourt = (titre: string) => {
+    const t = titre.trim() || 'Support';
+    return t.length > 40 ? `${t.slice(0, 39).trimEnd()}…` : t;
+  };
   const option = (s: CourseSupport): SplitOption => ({
     type: `support:${s.videoId}`,
-    label: supportTabLabel(s),
+    label: titreCourt(s.titre),
     Icon: Paperclip,
+    indent: true,
   });
   const out: SplitOption[] = [];
   for (const o of SPLIT_OPTIONS) {
@@ -294,7 +310,7 @@ function SplitPanel({
             <ChevronDown className={cn('h-3 w-3 transition-transform', menuOpen && 'rotate-180')} />
           </button>
           {menuOpen && (
-            <div className="absolute right-0 top-full z-20 mt-1 w-48 overflow-hidden rounded-xl border border-(--color-border) bg-(--color-surface) py-1 shadow-(--shadow-lifted)">
+            <div className="absolute right-0 top-full z-20 mt-1 max-h-[60vh] w-64 overflow-y-auto rounded-xl border border-(--color-border) bg-(--color-surface) py-1 shadow-(--shadow-lifted)">
               {available.map((o) => {
                 const oLocked = locked[o.type] === true;
                 return (
@@ -305,8 +321,11 @@ function SplitPanel({
                       if (!oLocked) { onChangeType(o.type); setMenuOpen(false); }
                     }}
                     disabled={oLocked}
+                    title={o.label}
                     className={cn(
                       'flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors',
+                      // Support : décalé sous sa catégorie, titre de la séance.
+                      o.indent && 'pl-7 [&>span]:truncate',
                       oLocked
                         ? 'opacity-40 cursor-not-allowed text-(--color-ink-muted)'
                         : type === o.type
@@ -315,7 +334,7 @@ function SplitPanel({
                     )}
                   >
                     <o.Icon className="h-3.5 w-3.5 shrink-0" />
-                    {o.label}
+                    <span className="min-w-0 flex-1">{o.label}</span>
                     {oLocked && <Lock className="ml-auto h-3 w-3 shrink-0" style={{ color: '#C0112E' }} />}
                   </button>
                 );

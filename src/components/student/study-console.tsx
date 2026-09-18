@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   BookMarked, ClipboardCheck, FileText, Layers3, Lock, MessageCircle,
-  MonitorPlay, NotebookPen, Paperclip, Telescope, Video, X, type LucideIcon,
+  MonitorPlay, NotebookPen, Telescope, Video, X, type LucideIcon,
 } from 'lucide-react';
-import { supportTabKey, supportTabLabel, type CourseSupport } from '@/lib/student/supports';
+import type { CourseSupport } from '@/lib/student/supports';
 import { CourseChatbot } from '@/components/course-chatbot';
 import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
 import { SplitViewToggle, SplitLayout } from './split-view';
@@ -98,8 +98,15 @@ export function StudyConsole({
   // Segment courant COMPLET (« support/<id> » compte deux niveaux), avec
   // correspondance par préfixe pour les sous-pages (« qcm/<serie> »).
   const activeFull = (pathname.startsWith(base) ? pathname.slice(base.length) : '').replace(/^\//, '');
-  const isActiveSeg = (seg: string) =>
-    seg === '' ? activeFull === '' : activeFull === seg || activeFull.startsWith(`${seg}/`);
+  // La page d'un support éclaire l'onglet de SA catégorie (« Séance
+  // intensive » ou « Séance approfondie ») : le support n'a pas d'onglet à lui.
+  const supportActif = supports.find((s) => activeFull === `support/${s.videoId}` || activeFull.startsWith(`support/${s.videoId}/`));
+  const isActiveSeg = (seg: string) => {
+    if (seg === '') return activeFull === '';
+    if (supportActif && seg === 'video') return supportActif.type === 'cours';
+    if (supportActif && seg === 'seance-approfondie') return supportActif.type === 'seance_approfondie';
+    return activeFull === seg || activeFull.startsWith(`${seg}/`);
+  };
 
   /** Si AUCUN contenu pédagogique n'est encore disponible pour ce cours
    *  (cas typique de « Méthodologie EVC » côté Découverte), on n'affiche
@@ -114,16 +121,13 @@ export function StudyConsole({
 
   // Ordre pédagogique fixe : Fiche -> Fiche éclair -> DP/QI -> Séance
   // approfondie / Cours vidéo -> Flashcards (Aperçu et Prise de notes encadrent).
-  const supportTab = (s: CourseSupport): Tab => ({
-    key: supportTabKey(s.videoId),
-    label: supportTabLabel(s),
-    seg: `support/${s.videoId}`,
-    Icon: Paperclip,
-    available: true,
-  });
-  const seanceSupports = supports.filter((s) => s.type === 'seance_approfondie').map(supportTab);
-  const coursSupports = supports.filter((s) => s.type === 'cours').map(supportTab);
-
+  //
+  // Les supports n'ont PLUS d'onglet propre : ils vivent avec leur séance —
+  // sous son titre dans le programme de la catégorie, sous son lecteur, et
+  // dans la vue partagée. Un onglet par support faisait 25 onglets sur
+  // « Replays - Révisions » de Médecine d'urgence, sans dire quel support
+  // allait avec quelle vidéo. La page d'un support reste atteignable (onglet
+  // de sa catégorie marqué actif).
   const tabs: Tab[] = hasAnyContent
     ? [
         { key: 'apercu', label: 'Aperçu', seg: '', Icon: Telescope, available: true },
@@ -133,10 +137,7 @@ export function StudyConsole({
         ...(availability.seanceApprofondie
           ? [{ key: 'seance-approfondie', label: 'Séance approfondie', seg: 'seance-approfondie', Icon: Video, available: true }]
           : []),
-        // Support de séance : juste après l'onglet Séance approfondie.
-        ...seanceSupports,
         { key: 'video', label: videoLabel, seg: 'video', Icon: MonitorPlay, available: availability.video },
-        ...coursSupports,
         { key: 'flashcards', label: 'Flashcards', seg: 'flashcards', Icon: Layers3, available: availability.flashcards },
         { key: 'notes', label: 'Prise de notes', seg: 'notes', Icon: NotebookPen, available: true },
       ]
