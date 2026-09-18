@@ -11,7 +11,7 @@ import { EmargementGate } from '@/components/student/emargement-gate';
 import { bunnyEmbedUrl } from '@/lib/bunny';
 import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
-import { videoVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
+import { videoVisible, eleveAutorise, eleveExclu, blocVideoOuvert } from '@/lib/videos/audience';
 import { grouperParRubrique, rubriqueCommune, rubriqueDeVideo, rubriqueParDefaut } from '@/lib/videos/rubriques';
 import { RubriqueEditor } from '@/components/student/rubrique-editor';
 
@@ -90,8 +90,9 @@ export default async function CoursVideoPage({
       })),
   );
   // Ni droit de formule, ni vidéo ciblant cet élève : la page n'a rien à
-  // montrer et n'aurait pas dû être atteignable.
-  if (!isAdmin && access && !access.video && allVideos.length === 0) redirect(`/cours/${coursId}`);
+  // montrer et n'aurait pas dû être atteignable (règle commune à tous les
+  // blocs vidéo, cf. `blocVideoOuvert`).
+  if (!isAdmin && access && !blocVideoOuvert(allVideos, access.video)) redirect(`/cours/${coursId}`);
 
   const watermarkText = `Accès réservé à ${profile.first_name} ${profile.last_name} — ${user.email}`;
 

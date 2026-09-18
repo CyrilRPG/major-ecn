@@ -123,6 +123,28 @@ export function videoVisible(
   return parOffre ?? options.droitFormule;
 }
 
+/**
+ * Le bloc vidéo d'un item (« Cours vidéo » ou « Séances approfondies ») est-il
+ * ouvert à cet élève ?
+ *
+ * RÈGLE UNIQUE, à appliquer partout — onglet, carte d'aperçu, page, route API :
+ * le bloc est ouvert dès qu'UNE vidéo est visible pour l'élève (`videoVisible`
+ * a déjà tranché : voie, formules cochées, listes nominatives). Le droit global
+ * de la formule (`access.video` / `access.seanceApprofondie`) n'est qu'un
+ * REPLI : il ouvre le bloc quand l'item n'a encore aucune vidéo ciblée, il ne
+ * peut jamais le fermer.
+ *
+ * Sans cette règle commune, une page peut couper l'accès sur le seul droit de
+ * formule pendant que la mise en page, elle, affiche l'onglet et les cartes :
+ * l'élève voit le contenu annoncé, clique, et retombe sur l'item. C'est
+ * exactement ce qui privait les élèves de la Formule Intensive des séances
+ * approfondies de Médecine d'urgence qui les ciblaient explicitement
+ * (18/09/2026) — d'où ce point de vérité unique.
+ */
+export function blocVideoOuvert(videosVisibles: { length: number }, droitFormule: boolean): boolean {
+  return droitFormule || videosVisibles.length > 0;
+}
+
 /** Un support peut porter SES PROPRES voies/formules. NULL ⇒ hérite de la vidéo. */
 export type SupportOverride = { voies?: string[] | null; offers?: string[] | null };
 

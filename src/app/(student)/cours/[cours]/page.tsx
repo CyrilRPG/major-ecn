@@ -11,7 +11,7 @@ import { parseHiddenBlocks, type BlocKey } from '@/lib/student/blocs';
 import { estRecommandation } from '@/lib/data/recommandations';
 import { estTitreRevisions } from '@/lib/videos/revisions';
 import { estItemAnnales } from '@/lib/data/annales';
-import { videoVisible, supportVisible, eleveAutorise, eleveExclu, type SupportOverride } from '@/lib/videos/audience';
+import { videoVisible, supportVisible, eleveAutorise, eleveExclu, blocVideoOuvert, type SupportOverride } from '@/lib/videos/audience';
 import { estOuverte } from '@/lib/videos/unlock';
 import { grouperParRubrique, rubriqueParDefaut } from '@/lib/videos/rubriques';
 import { RubriqueEditor } from '@/components/student/rubrique-editor';
@@ -410,8 +410,9 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
         // quel ordre.
         const afficherSeances = hasSeanceApprofondie && isApprofondi;
         // Le bloc « Cours vidéo » s'ouvre si la formule inclut le résumé vidéo
-        // OU si au moins une vidéo cible explicitement cet élève.
-        const afficherCoursVideo = !access || access.video || coursVideos.length > 0;
+        // OU si au moins une vidéo cible explicitement cet élève (règle commune
+        // à l'onglet et à la page : `blocVideoOuvert`).
+        const afficherCoursVideo = !access || blocVideoOuvert(coursVideos, access.video);
         const plusieursSeances = saVids.length > 1;
         const rubriqueOuVide = (r: string) => (afficherRubriques ? { rubrique: r } : {});
         const carteCoursVideo = (rubrique: string) => {

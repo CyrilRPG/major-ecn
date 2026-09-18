@@ -5,7 +5,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
-import { videoVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
+import { videoVisible, eleveAutorise, eleveExclu, blocVideoOuvert } from '@/lib/videos/audience';
 import { estOuverte } from '@/lib/videos/unlock';
 import { grouperParRubrique, rubriqueCommune, rubriqueDeVideo } from '@/lib/videos/rubriques';
 import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
@@ -116,7 +116,14 @@ export default async function SeanceApprofondiePage({
     (v) => eleveAutorise(v, user.id) && !eleveExclu(v, user.id),
   );
   if (!isAdmin && !canAccessCollege(scope, c.matiere_id) && !autoriseParVideo) redirect('/facultes');
-  if (!isAdmin && access && !access.seanceApprofondie && !autoriseParVideo) redirect(`/cours/${coursId}`);
+  // Le droit de la formule ne ferme JAMAIS un bloc qui a du contenu ciblé
+  // (cf. `blocVideoOuvert`) : une séance cochée « Formule Intensive » s'ouvre
+  // pour un élève intensif, même si sa formule n'inclut pas les séances
+  // approfondies. L'onglet et les cartes de l'aperçu suivent déjà cette règle —
+  // la couper ici renvoyait l'élève sur l'item à chaque clic.
+  if (!isAdmin && access && !blocVideoOuvert(allSaVideos, access.seanceApprofondie)) {
+    redirect(`/cours/${coursId}`);
+  }
   // `?v=<id>` : la page du cours propose une carte par séance approfondie et
   // pointe ici avec l'identifiant. On n'affiche alors QUE cette vidéo. Sans le
   // paramètre (ou s'il ne correspond à rien), on garde la liste complète.

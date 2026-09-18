@@ -12,7 +12,7 @@ import { hiddenBlocksVisibility, parseHiddenBlocks } from '@/lib/student/blocs';
 import { estTitreRevisions } from '@/lib/videos/revisions';
 import { estItemAnnales } from '@/lib/data/annales';
 import { rubriqueCommune, rubriqueParDefaut } from '@/lib/videos/rubriques';
-import { videoVisible, supportVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
+import { videoVisible, supportVisible, eleveAutorise, eleveExclu, blocVideoOuvert } from '@/lib/videos/audience';
 import { scopeOffers } from '@/lib/auth/permissions';
 import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
 
@@ -176,13 +176,13 @@ export default async function CoursLayout({
     : undefined;
   // Cadenas : le droit de la formule ne suffit plus à trancher — une vidéo peut
   // cibler explicitement la formule de l'élève. Dès qu'un contenu lui est
-  // destiné, le bloc s'ouvre.
+  // destiné, le bloc s'ouvre (règle commune : `blocVideoOuvert`).
   const locked = (!isAdmin && !profScope && access) ? {
     fiche: !access.fiche,
     'fiche-express': !access.ficheExpress,
-    video: !access.video && coursVideos.length === 0,
+    video: !blocVideoOuvert(coursVideos, access.video),
     flashcards: !access.flashcards,
-    'seance-approfondie': !access.seanceApprofondie && seanceVideos.length === 0,
+    'seance-approfondie': !blocVideoOuvert(seanceVideos, access.seanceApprofondie),
   } as Partial<Record<string, boolean>> : undefined;
 
   // `supportsAll` est déjà filtré par la visibilité propre de chaque support.
