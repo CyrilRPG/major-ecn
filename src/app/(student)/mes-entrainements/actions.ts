@@ -127,4 +127,3 @@ export async function supprimerExerciceEleveAction(input: { id: string; coursId:
   return { ok: true, id: parsed.data.id };
 }
 
-export type { StudentExerciseKind };
