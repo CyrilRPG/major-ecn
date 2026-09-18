@@ -271,10 +271,12 @@ function SplitPanelContent({ coursId, type, notesHtml, supports }: { coursId: st
     return <SupportPanel coursId={coursId} videoId={videoId} support={supports.find((s) => s.videoId === videoId)} />;
   }
   switch (type) {
+    // Fiche et fiche éclair : le même lecteur canvas que leur page (filigrané,
+    // sans téléchargement) — plus la visionneuse native du navigateur.
     case 'fiche':
-      return <iframe src={`/api/fiches/${coursId}/pdf`} title="Fiche de cours" className="h-full w-full border-0" />;
+      return <PdfViewer key="fiche" src={`/api/fiches/${coursId}/pdf`} coursId={coursId} initiallyRead={false} canMarkRead={false} fill notice="Fiche consultable en ligne uniquement." />;
     case 'fiche-express':
-      return <iframe src={`/api/fiches/${coursId}/express`} title="Fiche éclair" className="h-full w-full border-0" />;
+      return <PdfViewer key="fiche-express" src={`/api/fiches/${coursId}/express`} coursId={coursId} initiallyRead={false} canMarkRead={false} fill notice="Fiche éclair consultable en ligne uniquement." />;
     case 'video':
       return <VideoPanel coursId={coursId} />;
     case 'seance-approfondie':

@@ -1,5 +1,6 @@
 import { profCanAccessCours, requireContentEditor } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { coursRelus } from '@/lib/data/relectures';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import {
   ContenuExplorer, type CollegeAffiche, type ItemAvecCompteurs,
@@ -65,11 +66,18 @@ export default async function AdminContenuPage() {
     compteurs.set(cours_id, reste);
   }
 
+  // Items entièrement relus par un professeur (badge « Relu » de la grille).
+  const tousLesIds = (
+    ((data as unknown as { semestres?: { matieres?: { cours?: { id: string }[] }[] }[] } | null)?.semestres ?? [])
+  ).flatMap((s) => s.matieres ?? []).flatMap((m) => m.cours ?? []).map((c) => c.id);
+  const relus = await coursRelus(tousLesIds);
+
   const avecCompteurs = (c: { id: string; titre: string }): ItemAvecCompteurs => {
     const k = compteurs.get(c.id) ?? SANS_COMPTEURS;
     return {
       id: c.id,
       titre: c.titre,
+      relu: relus.has(c.id),
       has_video: k.has_video,
       has_fiche: k.has_fiche,
       qcm_count: k.qcm_count,

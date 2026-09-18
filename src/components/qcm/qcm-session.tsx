@@ -85,6 +85,7 @@ export function QcmSession({
   editable = false,
   nextSerieHref = null,
   nextSerieLabel = null,
+  relectureSlot = null,
   savedQuestionIds = [],
   initialIndex = 0,
 }: {
@@ -111,6 +112,8 @@ export function QcmSession({
    *  (« Dossier suivant » en fin de série, sans repasser par la liste). */
   nextSerieHref?: string | null;
   nextSerieLabel?: string | null;
+  /** Mode édition : case « série relue » (RelectureToggle) dans la barre du lecteur. */
+  relectureSlot?: React.ReactNode;
 }) {
   const [editingQ, setEditingQ] = useState<QcmQuestionDraft | null>(null);
   // Mode édition : questions dont la correction a été affichée SANS réponse
@@ -386,6 +389,7 @@ export function QcmSession({
             <LayoutList className="h-3.5 w-3.5 shrink-0" /> Vue d’ensemble de la série
           </Link>
         )}
+        {editable && relectureSlot}
         {editable && nextSerieHref && (
           /* Raccourci permanent : le professeur saute au dossier suivant à tout
              moment, sans finir la série ni repasser par la liste. */

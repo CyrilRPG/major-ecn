@@ -1,5 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { requireUser, canEditCoursContent, profPageReadGuard } from '@/lib/auth/require-role';
+import { RelectureToggle } from '@/components/professor/relecture-toggle';
+import { chargerRelectures } from '@/lib/data/relectures';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { QcmSession } from '@/components/qcm/qcm-session';
@@ -133,6 +135,12 @@ export default async function QcmRunPage({
   // enseignant du 14/09/2026). L'ordre est CELUI de la liste DP · QI — mêmes
   // filtres, même tri (lib/data/qcm-ordre) ; une annale enchaîne dans sa session.
   const suivante = editable ? await serieSuivantePourLecteur(profile, coursId, serieId, accessCtx) : null;
+  // Mode édition : la case « relue » de CETTE série, dans la barre du lecteur —
+  // le professeur coche en fin de relecture sans revenir à la liste.
+  const relectures = editable ? await chargerRelectures(coursId) : null;
+  const relectureSlot = relectures && !relectures.indisponible
+    ? <RelectureToggle cible={{ coursId, serieId }} initial={relectures.series.get(serieId) ?? null} />
+    : null;
 
   // Questions déjà enregistrées dans « Questions à revoir » par cet élève.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -173,6 +181,7 @@ export default async function QcmRunPage({
       questions={enrichedQuestions}
       backHref={backHref}
       editable={editable}
+      relectureSlot={relectureSlot}
       nextSerieHref={suivante ? `/cours/${coursId}/qcm/${suivante.id}` : null}
       nextSerieLabel={suivante?.label ?? null}
       savedQuestionIds={savedQuestionIds}

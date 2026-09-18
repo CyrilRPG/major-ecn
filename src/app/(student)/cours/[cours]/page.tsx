@@ -2,7 +2,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { Award, ArrowRight, BookMarked, ClipboardCheck, FileText, Layers3, Lock, MonitorPlay, NotebookPen, Paperclip, Sparkles, Video, type LucideIcon } from 'lucide-react';
-import { requireUser } from '@/lib/auth/require-role';
+import { requireUser, canEditCoursContent } from '@/lib/auth/require-role';
+import { RelectureToggle } from '@/components/professor/relecture-toggle';
+import { chargerRelectures } from '@/lib/data/relectures';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { canAccessCollege, canAccessCours, parseScope, scopeOffers } from '@/lib/auth/permissions';
@@ -10,7 +12,7 @@ import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { parseHiddenBlocks, type BlocKey } from '@/lib/student/blocs';
 import { estRecommandation } from '@/lib/data/recommandations';
 import { estTitreRevisions } from '@/lib/videos/revisions';
-import { estItemAnnales } from '@/lib/data/annales';
+import { estItemAnnales, estSerieAnnale } from '@/lib/data/annales';
 import { videoVisible, supportVisible, eleveAutorise, eleveExclu, blocVideoOuvert, type SupportOverride } from '@/lib/videos/audience';
 import { estOuverte } from '@/lib/videos/unlock';
 import { grouperParRubrique, rubriqueCommune, rubriqueParDefaut } from '@/lib/videos/rubriques';
@@ -110,7 +112,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   // conservent leurs contrôles d'accès utilisateur.
   const { data: qcmSeriesForAvailability } = await createAdminClient()
     .from('qcm_series')
-    .select('type, label')
+    .select('id, type, label')
     .eq('cours_id', coursId);
   const scope = parseScope(profile.permission_scope);
   const collegeAccess = (c.matieres as unknown as { access_type?: 'all' | 'specific' }).access_type ?? 'all';
@@ -168,6 +170,14 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   const isAdmin = profile.role === 'admin';
   const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
   const offresEleve = scopeOffers(scope);
+  // Relecture (personnel) : la case « j'ai fini de tout relire » de l'item et
+  // l'avancement des séries relues — visibles du seul personnel habilité à
+  // éditer au moins un des contenus relus (QCM, fiche, flashcards).
+  const peutRelire = (['qcm', 'fiche', 'flashcards'] as const)
+    .some((t) => canEditCoursContent(profile, t, c.matiere_id, c.id));
+  const relectures = peutRelire ? await chargerRelectures(coursId) : null;
+  const seriesRelisibles = (qcmSeriesForAvailability ?? []).filter((s) => !estSerieAnnale(s.label));
+  const nbSeriesRelues = relectures ? seriesRelisibles.filter((s) => relectures.series.has(s.id)).length : 0;
   // Une vidéo porte son audience (voies + formules) : c'est elle qui décide,
   // le droit global de la formule ne servant que de repli. Un contenu peut donc
   // viser explicitement une formule à laquelle il n'était pas ouvert.
@@ -684,6 +694,45 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   return (
     <div className="mx-auto w-full max-w-6xl px-5 py-6 lg:px-8">
       {itemPopups.length > 0 && <ItemPopups popups={itemPopups} />}
+      {/* Espace professeur : où en est la relecture de cet item, et la case
+          « j'ai fini de tout relire » (fiche, flashcards, QCM). */}
+      {relectures && (
+        <section
+          aria-label="Relecture de l’item"
+          className="mb-6 rounded-2xl border border-dashed border-(--color-border-strong) bg-(--color-surface-soft) p-4"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-ink-muted)">
+                Relecture · espace professeur
+              </p>
+              {relectures.indisponible ? (
+                <p className="mt-1 text-sm text-(--color-ink-soft)">
+                  Table des relectures absente — appliquez la migration <code>20260918120000_content_reviews.sql</code>.
+                </p>
+              ) : (
+                <p className="mt-1 text-sm text-(--color-ink-soft)">
+                  {seriesRelisibles.length > 0
+                    ? `${nbSeriesRelues} / ${seriesRelisibles.length} série${seriesRelisibles.length > 1 ? 's' : ''} relue${nbSeriesRelues > 1 ? 's' : ''}`
+                    : 'Aucune série de QCM sur cet item'}
+                  {' · '}
+                  <Link href={`/cours/${coursId}/qcm`} className="font-semibold text-(--color-primary-deep) underline-offset-2 hover:underline">
+                    cocher série par série
+                  </Link>
+                </p>
+              )}
+            </div>
+            {!relectures.indisponible && (
+              <RelectureToggle
+                cible={{ coursId }}
+                initial={relectures.cours}
+                libelleCoche="J’ai fini de tout relire (fiche, flashcards, QCM)"
+                taille="md"
+              />
+            )}
+          </div>
+        </section>
+      )}
       {c.description && (
         <div className="mb-6 rounded-2xl border border-(--color-border) bg-gradient-to-br from-(--color-primary-soft) to-transparent p-5">
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-accent-deep)">

@@ -1,5 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
-import { Layers3 } from 'lucide-react';
+import Link from 'next/link';
+import { Layers3, LayoutList } from 'lucide-react';
 import { requireUser, canEditCoursContent, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { EmptyState } from '@/components/empty-state';
@@ -90,6 +91,20 @@ export default async function FlashcardsPage({ params }: { params: Promise<{ cou
   return (
     <>
       {entree}
+      {/* Professeur : la présentation « toutes les cartes d'un coup » du
+          panneau d'administration, bien plus rapide pour relire que de
+          retourner les cartes une à une (retour des correcteurs, 18/09/2026). */}
+      {editable && (
+        <div className="mx-auto flex w-full max-w-4xl items-center justify-end px-4 pt-4 lg:px-8">
+          <Link
+            href={`/admin/contenu/${coursId}?tab=flashcards`}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs font-bold text-(--color-ink) hover:bg-(--color-sand-100)"
+          >
+            <LayoutList className="h-3.5 w-3.5" />
+            Toutes les cartes d’un coup (mode professeur)
+          </Link>
+        </div>
+      )}
       <FlashcardSession
         cards={input}
         total={allCards.length}

@@ -39,6 +39,14 @@ export async function middleware(request: NextRequest) {
   // recevait '' et TOUS ces gardes étaient inopérants. Muter request.headers
   // ici le propage à chaque NextResponse.next({ request }) en aval.
   request.headers.set('x-pathname', pathname);
+  // Vue partagée : la page est chargée dans une iframe (`?embed=1`, ou le
+  // navigateur le dit lui-même via Sec-Fetch-Dest — ce qui couvre aussi les
+  // liens internes qui n'auraient pas propagé le paramètre). Les layouts
+  // lisent `x-embed` pour ne rendre QUE le contenu, sans menu ni console :
+  // un panneau n'est pas une seconde plateforme à côté de la vidéo.
+  const embed = request.nextUrl.searchParams.get('embed') === '1'
+    || request.headers.get('sec-fetch-dest') === 'iframe';
+  request.headers.set('x-embed', embed ? '1' : '0');
 
   // Les routes API gèrent leur propre auth. Les faire passer par updateSession
   // (même en no-op) était inutile et, pour le préflight CORS + heartbeat,

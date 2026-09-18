@@ -322,6 +322,18 @@ export default async function StudentLayout({ children }: { children: React.Reac
     }
   }
 
+  // Vue partagée (iframe du panneau, cf. middleware `x-embed`) : le contenu
+  // seul. Ni menu, ni barre, ni popups, ni tutoriel — l'élève a déjà tout cela
+  // dans la fenêtre principale. Les gardes ci-dessus (formulaire obligatoire,
+  // restriction prof, blocage section 15, interrogation) restent appliquées.
+  if (h.get('x-embed') === '1') {
+    return (
+      <div className="min-h-dvh bg-(--color-surface)" data-embed="1" data-onboarding-user={user.id}>
+        {children}
+      </div>
+    );
+  }
+
   return (
     // `data-onboarding-user` : les étapes du tutoriel déjà vues sont mémorisées
     // PAR COMPTE (cf. lib/student/onboarding). Auparavant elles l'étaient par

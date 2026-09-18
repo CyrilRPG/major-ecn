@@ -11,6 +11,8 @@ import { LockedTrainingsList } from '@/components/espace-decouverte/locked-train
 import { LockedSerieButton } from '@/components/espace-decouverte/locked-serie-button';
 import { canWrite } from '@/lib/schemas/professor';
 import { EditHintTooltip } from '@/components/professor/edit-hint-tooltip';
+import { RelectureToggle } from '@/components/professor/relecture-toggle';
+import { chargerRelectures } from '@/lib/data/relectures';
 import { buildQcmAccessContext, canStudentReadSerie, SERIE_ACCESS_COLUMNS, type SerieAccessRow } from '@/lib/data/qcm-access';
 import { estSerieAnnale, anneeDeSerieAnnale } from '@/lib/data/annales';
 import { trierSeriesDpQi } from '@/lib/data/qcm-ordre';
@@ -51,6 +53,9 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   const qcmHorsPerimetre = !canEditQcm
     && profile.role === 'professor'
     && canWrite(getProfessorScope(profile.permission_scope), 'qcm');
+  // Relecture (personnel) : quelle série a déjà été relue, par qui, quand —
+  // et une case par série pour le marquer sans quitter la liste.
+  const relectures = canEditQcm ? await chargerRelectures(coursId) : null;
   const access = isAdmin ? undefined : await fetchContentAccessForScope(scope);
   const showSeances = !access || access.seanceProf;
   const seriesTypes = showSeances ? ['qcm', 'seance', 'qroc'] : ['qcm', 'qroc'];
@@ -129,7 +134,16 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-5 lg:px-8">
       {canEditQcm && (
-        <div className="mb-3 flex items-center justify-end">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          {/* Avancement de la relecture de l'item : les séries de la liste
+              (hors annales) déjà marquées relues. */}
+          {relectures && (
+            <p className="text-xs font-semibold text-(--color-ink-soft)">
+              {relectures.indisponible
+                ? 'Relecture : table absente — appliquez la migration 20260918120000_content_reviews.sql.'
+                : `Relecture : ${autres.filter((s) => relectures.series.has(s.id)).length} / ${autres.length} série${autres.length > 1 ? 's' : ''} relue${autres.length > 1 ? 's' : ''}`}
+            </p>
+          )}
           <EditHintTooltip contentType="qcm" message="Gérez et modifiez les QCM de ce cours depuis le panneau d'administration.">
             <Link
               href={`/admin/contenu/${coursId}`}
@@ -192,16 +206,31 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
                     </li>
                   );
                 }
+                const carte = (
+                  <SerieCard
+                    href={`/cours/${coursId}/qcm/${s.id}`}
+                    label={s.label}
+                    type={s.type}
+                    qCount={qCount}
+                    rang={idx + 1}
+                    dernierScore={lastBySerie.get(s.id) ?? null}
+                    relue={!!relectures?.series.get(s.id)}
+                  />
+                );
+                // Personnel : la case « relue » vit À CÔTÉ de la carte (un
+                // bouton dans un lien n'est pas valide), alignée à droite.
                 return (
                   <li key={s.id}>
-                    <SerieCard
-                      href={`/cours/${coursId}/qcm/${s.id}`}
-                      label={s.label}
-                      type={s.type}
-                      qCount={qCount}
-                      rang={idx + 1}
-                      dernierScore={lastBySerie.get(s.id) ?? null}
-                    />
+                    {relectures && !relectures.indisponible ? (
+                      <div className="flex items-center gap-2">
+                        <div className="min-w-0 flex-1">{carte}</div>
+                        <RelectureToggle
+                          cible={{ coursId, serieId: s.id }}
+                          initial={relectures.series.get(s.id) ?? null}
+                          className="shrink-0"
+                        />
+                      </div>
+                    ) : carte}
                   </li>
                 );
               })}

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, ClipboardList, GraduationCap, PenLine, ScrollText, Sparkles, Star, Trophy } from 'lucide-react';
+import { ArrowRight, Check, ClipboardList, GraduationCap, PenLine, ScrollText, Sparkles, Star, Trophy } from 'lucide-react';
 
 /**
  * Carte d'une série dans l'onglet DP · QI.
@@ -52,7 +52,7 @@ export function scoreTheme(correct: number, total: number) {
  * `titre` permet d'afficher un libellé raccourci sans toucher au libellé réel.
  */
 export function SerieCard({
-  href, label, titre, type, qCount, rang, dernierScore,
+  href, label, titre, type, qCount, rang, dernierScore, relue = false,
 }: {
   href: string;
   label: string;
@@ -61,6 +61,8 @@ export function SerieCard({
   qCount: number;
   rang: number;
   dernierScore?: { score_correct: number; score_total: number } | null;
+  /** Personnel : la série a été relue par un professeur (coche verte). */
+  relue?: boolean;
 }) {
   const theme = serieTheme({ label, type });
   const st = dernierScore ? scoreTheme(dernierScore.score_correct, dernierScore.score_total) : null;
@@ -88,6 +90,14 @@ export function SerieCard({
           {/* Étoile distinctive sur les nouveaux DP QROC (voie externe). */}
           {isStarredDpQroc(label) && <Star className="h-4 w-4 shrink-0 fill-[#F5B301] text-[#F5B301]" aria-label="Nouveau dossier QROC" />}
           <span className="truncate">{titre ?? label}</span>
+          {relue && (
+            <span
+              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#E7F6EC] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#16793C]"
+              title="Série relue par un professeur"
+            >
+              <Check className="h-3 w-3" /> Relue
+            </span>
+          )}
         </p>
         <p className="text-xs text-(--color-ink-muted)">
           {qCount} questions · environ {Math.max(1, qCount)} min

@@ -1,3 +1,4 @@
+import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
@@ -218,6 +219,18 @@ export default async function CoursLayout({
     .eq('user_id', user.id)
     .eq('cours_id', coursId)
     .maybeSingle();
+
+  // Vue partagée (iframe du panneau, cf. middleware `x-embed`) : la page seule,
+  // sans en-tête de console ni onglets — ils sont déjà dans la fenêtre
+  // principale. Le fournisseur reste monté pour les composants qui lisent le
+  // contexte (ils n'y ouvrent rien : on n'imbrique pas une vue partagée).
+  if ((await headers()).get('x-embed') === '1') {
+    return (
+      <SplitViewProvider coursId={coursId} hasFiche={availability.fiche} hasVideo={availability.video} notesHtml="">
+        {children}
+      </SplitViewProvider>
+    );
+  }
 
   return (
     <SplitViewProvider

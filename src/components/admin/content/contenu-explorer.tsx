@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
   ChevronDown, ChevronRight, ClipboardList, FileText, Layers3, PlayCircle, Search, X,
+  Check,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { iconFromKey } from '@/lib/icons';
@@ -23,6 +24,8 @@ import { NewItemButton } from './new-item-button';
 export type ItemAvecCompteurs = {
   id: string;
   titre: string;
+  /** Marqué « entièrement relu » par un professeur (content_reviews). */
+  relu?: boolean;
   has_video: boolean;
   has_fiche: boolean;
   qcm_count: number;
@@ -265,6 +268,11 @@ function GrilleItems({ cours }: { cours: ItemAvecCompteurs[] }) {
             <Badge variant={c.has_fiche ? 'success' : 'muted'}>
               <FileText className="h-3 w-3" /> {c.has_fiche ? 'Fiche' : 'Pas de fiche'}
             </Badge>
+            {c.relu && (
+              <Badge variant="success">
+                <Check className="h-3 w-3" /> Relu
+              </Badge>
+            )}
             <Badge variant={c.qcm_count + c.annale_count > 0 ? 'primary' : 'muted'}>
               <ClipboardList className="h-3 w-3" /> {c.qcm_count + c.annale_count} séries
             </Badge>
