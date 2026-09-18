@@ -30,6 +30,8 @@ export function finalFixture(variant: FinalVariant, showEffectif: boolean) {
           ? [19, 19, 19.5]
           : variant === "top"
             ? [18.5, 18.5, 18.5]
+            : variant === "podium"
+              ? [13, 12, 13]
             : variant === "progress"
               ? [20, 17.5]
               : [8, 9, 9.5];
@@ -55,8 +57,13 @@ export function finalFixture(variant: FinalVariant, showEffectif: boolean) {
     for (const a of attempts)
       if (a.participantId !== "p0")
         a.score = Number(a.participantId.slice(1)) <= 9 ? 20 : 15;
+  // 1er du général à 63 % : sous le seuil de distinction, donc sans trophée.
+  if (variant === "podium")
+    for (const a of attempts)
+      if (a.participantId !== "p0") a.score = 11 - Number(a.participantId.slice(1)) / 50;
   const rankings = computeArenaRankings(rounds, attempts, participants, {
     thresholdPct: 50,
+    distinctionPct: 70,
     minRoundsFinal: 3,
     isFinal: true,
   });
@@ -67,6 +74,8 @@ export function finalFixture(variant: FinalVariant, showEffectif: boolean) {
         ? [3, 2]
         : variant === "bronze"
           ? [4, 3]
+          : variant === "podium"
+            ? [1, 1]
           : variant === "top"
             ? [15, 10]
             : [null, null];
@@ -77,6 +86,7 @@ export function finalFixture(variant: FinalVariant, showEffectif: boolean) {
     rankings,
     rounds,
     thresholdPct: 50,
+    distinctionPct: 70,
     history: ranks.map((rank, i) => ({
       roundId: `r${i + 1}`,
       roundNumber: i + 1,

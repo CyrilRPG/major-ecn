@@ -87,6 +87,23 @@ brouillon, module de suivi réservé à l'administration) jusqu'à validation du
 - [x] Fichier SQL consolidé `supabase/APPLIQUER_ARENA_SUIVI.sql` + sonde `tmp/_probe-arena-suivi.mjs`
 - [x] Migration appliquée sur Supabase le 07/09/2026 (CLI `supabase db query --linked`, jeton fourni par le client) ; sonde au vert
 - [x] Recette de bout en bout le 07/09/2026 : création admin → intégrité → statuts → inscription → confirmation → manche jouée → clôture par le cron → résultats, rang, corrections, signalement → neutralisation + recalcul, export CSV. Données de recette supprimées ensuite.
+- [x] 18/09/2026 — **cahier des charges complémentaire « scores faibles, classement, distinctions, passerelle Major ECN »** :
+      trois niveaux lus ensemble (score absolu, rang, distinction) dans `src/lib/arena/performance.ts` (pur, testé) ;
+      `threshold_pct` = RANKING_THRESHOLD (50 %), nouveau `distinction_pct` = DISTINCTION_THRESHOLD (70 %) ; trophée
+      Or / Argent / Bronze = podium **et** seuil (`Standing.distinction`), un 1er sous le seuil est félicité sans trophée
+      (`podium`), un < 50 % n'est jamais « 1er » même avec le meilleur score ; l'avatar suit la distinction et non le
+      rang (`avatarAppearance(distinction)`). Écran de résultat refait dans l'ordre imposé (§14) : score → rang / statut
+      → motivation → correction / analyse → prochain objectif → passerelle, animations CSS par étapes
+      (`result-outcome.css`, sobre sous le seuil, médaille + halo sans trophée, trophée + confettis en distinction,
+      `prefers-reduced-motion` respecté). Textes §3-§10, §17 repris tels quels (`performance-texts.ts`). Passerelle
+      Major ECN (`passerelle.ts` + `passerelle-block.tsx`) : discours progresser / franchir un cap / se perfectionner,
+      élève reconnu par l'adresse (`major-ecn.ts` : profil élève actif à formule payante) ou forcé dans l'onglet
+      Participants → jamais de CTA d'achat, lien vers son collège ; prospect → page de la spécialité du Battle.
+      Bilan final : variante `podium` (1er-3e du général sans trophée). Classement public : §10 « Aucun candidat classé
+      pour cette manche ». Admin : seuils, passerelle (affichage, URL, CTA), statut candidat. Migration
+      `20260918130000_arena_distinction_passerelle.sql` **à appliquer** (le code tolère son absence : valeurs par
+      défaut, message explicite à l'enregistrement). Tests : `tests/arena-performance.test.ts` (9). Recette visuelle :
+      `/arena-preview/design?state=results-unranked|results-ranked|results-podium-1|results-podium-2|results-high|results-trophy|final-podium`.
 
 ## 2. Suivi pédagogique individuel
 

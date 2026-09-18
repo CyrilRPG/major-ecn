@@ -16,6 +16,8 @@ import { ArenaBars, ArenaTarget } from "./experience-icons";
 import type { FinalSummary } from "@/lib/arena/final-summary";
 import { durationText, GENERAL_RANKING_NOTICE } from "@/lib/arena/format";
 import { ecartSur10, noteMax, noteSur10 } from "@/lib/arena/note";
+import type { PasserelleContent } from "@/lib/arena/passerelle";
+import { PasserelleBlock } from "./passerelle-block";
 import "./tournament-final.css";
 
 const score = (value: number) =>
@@ -38,12 +40,17 @@ export function TournamentFinal({
   summary: s,
   base,
   leaderboardEnabled = true,
+  passerelle = null,
 }: {
   summary: FinalSummary;
   base: string;
   leaderboardEnabled?: boolean;
+  /** Passerelle Major ECN (§11-§14, §17-§19), toujours en dernier ; null = masquée. */
+  passerelle?: PasserelleContent | null;
 }) {
   const incomplete = s.variant === "progress";
+  // « podium » = trophée (podium ET seuil de distinction) ; un 1er sous le seuil
+  // est la variante `podium` sans trophée (cahier des charges complémentaire §5-§8).
   const podium = ["champion", "silver", "bronze"].includes(s.variant);
   const edition = `EVC ARENA ${s.edition}`.trim();
   const average = durationText(s.meanSeconds);
@@ -97,6 +104,21 @@ export function TournamentFinal({
                 </p>
                 <p className="af-edition">{edition}</p>
               </>
+            ) : s.variant === "podium" ? (
+              <>
+                <p className="af-kicker">FÉLICITATIONS !</p>
+                <h1 className="af-podium-place">
+                  {s.general ? (s.general.rank === 1 ? "1ER" : `${s.general.rank}ÈME`) : "PODIUM"}
+                </h1>
+                <p className="af-hero-rank">
+                  {s.general?.effectif !== null && s.general?.effectif !== undefined ? `SUR ${s.general.effectif} ` : ""}
+                  DU CLASSEMENT GÉNÉRAL
+                </p>
+                <p className="af-edition">{edition}</p>
+                <p className="af-journey-copy">
+                  Vous avez remporté votre place sur le podium. Le trophée EVC Arena reste à conquérir : il exige un score cumulé d’au moins {s.thresholds.distinctionPct} %.
+                </p>
+              </>
             ) : incomplete ? (
               <>
                 <p className="af-kicker">VOTRE PARCOURS</p>
@@ -138,14 +160,14 @@ export function TournamentFinal({
             <p className="af-values">
               {podium
                 ? "RÉGULARITÉ · CONSTANCE · EXCELLENCE"
-                : s.variant === "top"
+                : s.variant === "top" || s.variant === "podium"
                   ? "RÉGULARITÉ · PROGRESSION · PERFORMANCE"
                   : "APPRENDRE · S’ÉVALUER · PROGRESSER"}
             </p>
           </div>
           <div className="af-trophy" aria-hidden="true">
             <Image
-              src={`/arena/final/${s.variant}.png`}
+              src={`/arena/final/${s.variant === "podium" ? "standard" : s.variant}.png`}
               alt=""
               width={1254}
               height={1254}
@@ -271,12 +293,12 @@ export function TournamentFinal({
             <p className="af-round-date">{date(r.date)}</p>
             <div className="af-round-content">
               <div
-                className={`af-round-rank af-medal-${r.rank === 1 ? "gold" : r.rank === 2 ? "silver" : r.rank === 3 ? "bronze" : "normal"}`}
+                className={`af-round-rank af-medal-${r.distinction ?? "normal"}`}
               >
                 {r.played ? (
                   r.rank ? (
                     <>
-                      <Trophy aria-hidden />
+                      {r.distinction && <Trophy aria-hidden />}
                       <strong>{ordinal(r.rank)}</strong>
                     </>
                   ) : (
@@ -465,7 +487,7 @@ export function TournamentFinal({
               </Link>
             )
           )}
-          {incomplete && (
+          {incomplete && !passerelle && (
             <Link className="af-continue" href="/">
               <GraduationCap aria-hidden />
               <span>
@@ -480,6 +502,7 @@ export function TournamentFinal({
           )}
         </div>
       </div>
+      {passerelle && <PasserelleBlock content={passerelle} />}
     </section>
   );
 }

@@ -13,6 +13,7 @@ import { TournamentPicker } from '@/components/arena/landing/tournament-picker';
 import { loadTournamentCards } from '@/lib/arena/cards-data';
 import { computeTournamentStandings, effectiveBareme, roundMaxScore } from '@/lib/arena/db';
 import { leaderboardRows } from '@/lib/arena/ranking';
+import { NO_RANKED_BODY, NO_RANKED_TITLE } from '@/lib/arena/performance-texts';
 import { describeBareme } from '@/lib/arena/scoring';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
 import { publicRules, WARNING_CONNECTION, WARNING_NATURE } from '@/lib/arena/texts';
@@ -113,7 +114,7 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
         boardSubtitle={standings?.isFinal ? 'Classement final (cumulé)' : lastCounted ? `Classement provisoire (cumulé) · après M${lastCounted}` : 'Classement provisoire (cumulé)'}
         totalMax={totalMax}
         boardRounds={standings?.countedRounds.length ?? 1}
-        boardEmpty={lastCounted ? 'Aucun participant n’atteint encore le seuil du classement.' : 'Le tableau s’allumera après la publication des résultats de la première manche.'}
+        boardEmpty={lastCounted ? `${NO_RANKED_TITLE}. ${NO_RANKED_BODY[0]} ${NO_RANKED_BODY[2]}` : 'Le tableau s’allumera après la publication des résultats de la première manche.'}
         leaderboardEnabled={t.leaderboard_enabled}
         general={standings?.isFinal} effectif={standings?.isFinal ? standings.effectifGeneral : undefined}
       />

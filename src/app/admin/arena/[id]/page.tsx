@@ -10,6 +10,7 @@ import { RoundsEditor } from '@/components/admin/arena/rounds-editor';
 import { QuestionsManager } from '@/components/admin/arena/questions-manager';
 import { BaremeEditor, type BaremeTemplateRow } from '@/components/admin/arena/bareme-editor';
 import { ParticipantsTable, type ParticipantView } from '@/components/admin/arena/participants-table';
+import { majorEcnStudentEmails } from '@/lib/arena/major-ecn';
 import { ReportsPanel, type ReportView } from '@/components/admin/arena/reports-panel';
 import { EmailsPanel, type EmailLogView } from '@/components/admin/arena/emails-panel';
 import { PdfPanel } from '@/components/admin/arena/pdf-panel';
@@ -59,6 +60,8 @@ export default async function TournamentAdminPage({ params, searchParams }: { pa
   ]);
 
   const confirmed = participants.filter((p) => p.email_confirmed_at && !p.anonymized_at);
+  // Passerelle Major ECN (§12, §15) : élèves reconnus par leur adresse.
+  const majorEcnStudents = await majorEcnStudentEmails(participants.map((p) => p.email));
   const hasAttempts: Record<string, boolean> = {};
   const questionCounts: Record<string, number> = {};
   for (const r of snap.rounds) {
@@ -139,6 +142,8 @@ export default async function TournamentAdminPage({ params, searchParams }: { pa
       source: p.acquisition_source, invited: Boolean(p.invited_by), created_at: p.created_at, last_login_at: p.last_login_at,
       rounds: snap.rounds.map((r) => { const a = attempts.find((x) => x.round_id === r.id && x.participant_id === p.id); return { number: r.number, attemptId: a?.id ?? null, status: a?.status ?? null, score: a ? Number(a.score ?? 0) : null, truncated: a?.truncated ?? false, rank: standings.byRound[r.id]?.standings.find(s => s.participantId === p.id)?.rank ?? null, effectifManche: standings.byRound[r.id]?.effectifManche ?? 0 }; }),
       totalScore: st?.totalScore ?? 0, rank: st?.rank ?? null,
+      distinction: st?.distinction ?? null,
+      majorEcn: { status: p.major_ecn_status, detected: majorEcnStudents.has(p.email.trim().toLowerCase()) },
       effectifGeneral: standings.effectifGeneral, reason: st?.reason ?? null, isFinal: standings.isFinal,
     };
   });

@@ -6,16 +6,38 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import {
   ArrowRight,
+  Brain,
   CalendarDays,
   CircleAlert,
   Clock3,
+  Crown,
   FileText,
+  Flame,
   Info,
+  Medal,
   Timer,
+  Trophy,
+  Zap,
 } from "lucide-react";
 import { ArenaLogoStack } from "./arena-logo";
+import { ArenaAvatar } from "./arena-avatar";
 import { CalendarLink } from "./calendar-link";
+import { PasserelleBlock } from "./passerelle-block";
 import { arenaDate, type LobbyRound } from "./round-lobby";
+import { NOTE_PAR_MANCHE, formatNote, noteSur10 } from "@/lib/arena/note";
+import {
+  DEFAULT_THRESHOLDS,
+  DISTINCTION_LABEL,
+  ordinalRank,
+  outcomeVariant,
+  thresholdNote,
+  type Distinction,
+  type PerformanceThresholds,
+  type RoundOutcome,
+} from "@/lib/arena/performance";
+import { HIGH_PERFORMANCE_AXES, outcomeCopy } from "@/lib/arena/performance-texts";
+import type { PasserelleContent } from "@/lib/arena/passerelle";
+import "./result-outcome.css";
 
 export type NextRound = LobbyRound & {
   questionCount: number;
@@ -34,7 +56,6 @@ export type RoundResultsProps = {
   preview?: boolean;
   children?: ReactNode;
 };
-import { NOTE_PAR_MANCHE, formatNote, noteSur10 } from '@/lib/arena/note';
 
 const time = (iso: string) =>
   new Intl.DateTimeFormat("fr-FR", {
@@ -195,6 +216,114 @@ export function MissedRound({
   );
 }
 
+/* ------------------------------------------------------------------ */
+/* Résultat d'une manche jouée                                          */
+/* ------------------------------------------------------------------ */
+
+const CONFETTI_COLORS = ["#ffd05e", "#fff1b4", "#e4002b", "#ffffff", "#c4d3e9", "#ff5470"];
+
+/** Pluie de confettis déterministe (pas de hasard au rendu : même HTML serveur et client). */
+function Confetti({ count = 42 }: { count?: number }) {
+  return (
+    <div className="ae-confetti" aria-hidden>
+      {Array.from({ length: count }, (_, i) => {
+        const x = (i * 37 + 11) % 100;
+        const delay = 2.4 + ((i * 13) % 9) / 10;
+        const duration = 2.6 + ((i * 7) % 8) / 10;
+        const rotation = 360 + ((i * 53) % 540);
+        return (
+          <span
+            key={i}
+            style={{
+              ["--x" as string]: `${x}%`,
+              ["--c" as string]: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+              ["--delay" as string]: `${delay}s`,
+              ["--d" as string]: `${duration}s`,
+              ["--r" as string]: `${rotation}deg`,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+/** Silhouette de podium (objectif « intégrer le classement »), sans effectif ni nom. */
+function PodiumSilhouette() {
+  return (
+    <svg className="ae-objective-podium" viewBox="0 0 140 100" aria-hidden>
+      <g fill="#3f4f5a">
+        <rect x="8" y="46" width="40" height="46" rx="3" />
+        <rect x="50" y="26" width="40" height="66" rx="3" />
+        <rect x="92" y="58" width="40" height="34" rx="3" />
+      </g>
+      <g fill="#8494a0" fontFamily="var(--font-oswald), sans-serif" fontSize="16" textAnchor="middle">
+        <text x="28" y="72">2</text>
+        <text x="70" y="56">1</text>
+        <text x="112" y="80">3</text>
+      </g>
+      <path d="M62 6l4 8 9 1-6.5 6 1.6 9L62 25.5 53.9 30l1.6-9L49 15l9-1z" fill="#5d6c77" />
+    </svg>
+  );
+}
+
+const AXIS_ICONS = [Zap, Target, Brain, Timer, Flame] as const;
+
+function medalLabel(rank: number): string {
+  return rank === 1 ? "1re place" : `${rank}e place`;
+}
+
+/** Bloc « rang / statut » du verdict, animé par étapes (§4, §7, §9). */
+function VerdictRank({ outcome, thresholds }: { outcome: RoundOutcome; thresholds: PerformanceThresholds }) {
+  const variant = outcomeVariant(outcome);
+  const copy = outcomeCopy(outcome);
+  if (variant === "pending")
+    return (
+      <div className="ae-verdict-rank ae-reveal" data-step="3">
+        <p className="ae-verdict-status">{copy.status}</p>
+        <p className="ae-verdict-unranked">Le classement de la manche est publié à sa clôture.</p>
+      </div>
+    );
+  if (variant === "unranked")
+    return (
+      <div className="ae-verdict-rank ae-reveal" data-step="3">
+        <p className="ae-verdict-status">{copy.status}</p>
+        <p className="ae-verdict-unranked">
+          Seuil du classement : {formatNote(thresholdNote(thresholds.thresholdPct))} / {NOTE_PAR_MANCHE}. Votre score est conservé, votre correction et votre analyse sont disponibles.
+        </p>
+      </div>
+    );
+  const rank = outcome.rank as number;
+  if (variant === "trophy") {
+    const d = outcome.distinction as Distinction;
+    return (
+      <div className="ae-verdict-rank">
+        <div className="ae-verdict-trophy"><Trophy aria-hidden /></div>
+        <p className="ae-verdict-status ae-reveal" data-step="4">Distinction {DISTINCTION_LABEL[d]}</p>
+        <span className="ae-rank-number">{rank}<small>{rank === 1 ? "er" : "e"}</small></span>
+        <p className="ae-verdict-medal ae-reveal" data-step="4"><Medal aria-hidden />Trophée EVC Arena</p>
+      </div>
+    );
+  }
+  if (variant === "podium")
+    return (
+      <div className="ae-verdict-rank">
+        {rank === 1 && <Crown className="ae-verdict-crown ae-reveal" data-step="4" aria-hidden />}
+        <span className="ae-rank-number">{rank}</span>
+        <p className="ae-verdict-medal ae-reveal" data-step="4"><Medal aria-hidden />{medalLabel(rank)}</p>
+        <p className="ae-verdict-status ae-reveal" data-step="4">{rank === 1 ? "Vous terminez en tête de ce Battle" : "Podium de ce Battle"}</p>
+      </div>
+    );
+  return (
+    <div className="ae-verdict-rank">
+      <p className="ae-verdict-status ae-reveal" data-step="3">Votre rang</p>
+      <span className="ae-rank-number">{rank}<small>{rank === 1 ? "er" : "e"}</small></span>
+      <p className="ae-verdict-status ae-reveal" data-step="4">au classement de ce Battle</p>
+      {variant === "high" && <span className="ae-verdict-badge ae-reveal" data-step="4">Niveau de distinction atteint</span>}
+    </div>
+  );
+}
+
 export function RoundResults({
   round,
   total,
@@ -210,10 +339,12 @@ export function RoundResults({
   failed,
   durationSeconds,
   durationMinutes,
-  position,
-  positionDetail,
+  outcome,
+  thresholds = DEFAULT_THRESHOLDS,
+  participant = null,
+  cumul = null,
+  passerelle = null,
   weakTheme,
-  feedbackSubject = "cette manche",
   truncated,
   children,
 }: RoundResultsProps & {
@@ -224,41 +355,37 @@ export function RoundResults({
   failed: number;
   durationSeconds: number;
   durationMinutes: number;
-  position: string;
-  positionDetail: string;
+  /** Lecture du résultat (score, rang, niveau, distinction). */
+  outcome: RoundOutcome;
+  thresholds?: PerformanceThresholds;
+  participant?: { pseudo: string; avatarSeed: string } | null;
+  /** Position au classement cumulé (après publication), pour le rappel. */
+  cumul?: { rank: number | null; distinction: Distinction | null; rounds: number } | null;
+  /** Passerelle Major ECN (§11-§14), null = masquée. */
+  passerelle?: PasserelleContent | null;
   weakTheme: string | null;
-  feedbackSubject?: string;
   truncated?: boolean;
 }) {
-  const strong = max > 0 && score / max >= 0.5;
+  const variant = outcomeVariant(outcome);
+  const copy = outcomeCopy(outcome);
   const almostAllTime = durationSeconds >= durationMinutes * 60 * 0.9;
+  const classes = [
+    "ae-result",
+    "ae-outcome",
+    `ae-outcome--${variant}`,
+    outcome.distinction ? `ae-outcome--${outcome.distinction}` : "",
+    outcome.rank ? `ae-outcome--rank-${Math.min(outcome.rank, 4)}` : "",
+  ].filter(Boolean).join(" ");
+  const showAxes = variant === "high" || variant === "trophy";
   return (
-    <section className="ae-result">
+    <section className={classes} aria-live="polite">
       <ResultHeader round={round} total={total} />
-      <div className="ae-result-intro">
-        <span className="ae-result-icon"><ChartNoAxesColumnIncreasing aria-hidden /></span>
-        <div>
-          <h2>
-            {strong
-              ? "Vous avez consolidé vos connaissances."
-              : "Vous avez identifié vos points faibles"}
-            {!strong && (
-              <>
-                <br />
-                sur {feedbackSubject}.
-              </>
-            )}
-          </h2>
-          <p>
-            {correctionsAvailable
-              ? "Votre correction détaillée est disponible dans votre espace."
-              : "Votre correction détaillée sera disponible dans votre espace à la clôture de la manche."}
-          </p>
-        </div>
-      </div>
-      <div className="ae-panel ae-scoreboard">
-        <div className="ae-score-value">
-          <p>Votre score</p>
+
+      {/* 1. SCORE → 2. RANG / STATUT */}
+      <div className="ae-verdict">
+        {variant === "trophy" && <Confetti />}
+        <div className="ae-verdict-score ae-reveal" data-step="1">
+          <p className="ae-kicker">Votre score</p>
           <div className="ae-score-number">
             {formatNote(noteSur10(score, max))} <span>/ {NOTE_PAR_MANCHE}</span>
           </div>
@@ -279,7 +406,32 @@ export function RoundResults({
               />
             ))}
           </div>
+          <p className="ae-verdict-thresholds">
+            Classement dès {formatNote(thresholdNote(thresholds.thresholdPct))} / {NOTE_PAR_MANCHE} · distinction dès {formatNote(thresholdNote(thresholds.distinctionPct))} / {NOTE_PAR_MANCHE}
+          </p>
         </div>
+        <div className="ae-verdict-avatar ae-reveal" data-step="2">
+          <ArenaAvatar
+            seed={participant?.avatarSeed ?? "casque"}
+            rank={outcome.rank}
+            distinction={outcome.distinction}
+            size={150}
+            title={participant?.pseudo}
+          />
+          {participant && <span className="ae-verdict-pseudo">{participant.pseudo}</span>}
+        </div>
+        <VerdictRank outcome={outcome} thresholds={thresholds} />
+      </div>
+
+      {/* 3. MESSAGE DE MOTIVATION */}
+      <h2 className="ae-verdict-title ae-reveal" data-step="4">{copy.title}</h2>
+      <div className="ae-motivation ae-reveal" data-step="4">
+        {copy.paragraphs.map((p) => <p key={p}>{p}</p>)}
+        {preview && <p><strong>Mode prévisualisation :</strong> aucun classement ni score enregistré.</p>}
+      </div>
+
+      {/* 4. CORRECTION / ANALYSE */}
+      <div className="ae-panel ae-scoreboard ae-reveal" data-step="5">
         <div className="ae-answer-stats">
           <FileText aria-hidden />
           <div>
@@ -322,16 +474,26 @@ export function RoundResults({
             </p>
           )}
         </div>
-      </div>
-      <div className="ae-panel ae-result-insights">
-        <div>
+        <div className="ae-answer-stats">
           <ChartNoAxesColumnIncreasing aria-hidden />
           <div>
-            <p className="ae-kicker">Votre position</p>
-            <h3>{position}</h3>
-            <p>{positionDetail}</p>
+            <p className="ae-kicker">Classement cumulé</p>
+            {preview ? (
+              <p>Aucun classement en prévisualisation.</p>
+            ) : !outcome.published ? (
+              <p>Publié à la clôture de la manche.</p>
+            ) : cumul?.rank ? (
+              <>
+                <p><strong>{ordinalRank(cumul.rank)}</strong> après {cumul.rounds} manche{cumul.rounds > 1 ? "s" : ""}</p>
+                <p>{cumul.distinction ? `Distinction ${DISTINCTION_LABEL[cumul.distinction]} au cumul` : cumul.rank <= 3 ? "Podium au cumul · trophée à conquérir" : "Continuez à gagner des places"}</p>
+              </>
+            ) : (
+              <p>Non classé au cumul pour l’instant : le seuil est réévalué à chaque manche.</p>
+            )}
           </div>
         </div>
+      </div>
+      <div className="ae-panel ae-result-insights ae-reveal" data-step="5">
         <div>
           <Target aria-hidden />
           <div>
@@ -346,8 +508,20 @@ export function RoundResults({
             </p>
           </div>
         </div>
+        <div>
+          <FileText aria-hidden />
+          <div>
+            <p className="ae-kicker">Votre analyse</p>
+            <h3>{correctionsAvailable ? "Correction détaillée disponible" : "Correction détaillée à la clôture"}</h3>
+            <p>
+              {correctionsAvailable
+                ? "Vos réponses face aux réponses attendues, avec les explications, les pièges et les erreurs les plus fréquentes."
+                : "Votre correction détaillée sera disponible dans votre espace à la clôture de la manche."}
+            </p>
+          </div>
+        </div>
       </div>
-      <div className="ae-result-actions">
+      <div className="ae-result-actions ae-reveal" data-step="5">
         {correctionsAvailable ? (
           <Link
             className="ae-button ae-button-outline"
@@ -355,7 +529,7 @@ export function RoundResults({
           >
             <FileText aria-hidden />
             <span>
-              Voir ma correction détaillée<small>Vos réponses face aux réponses attendues</small>
+              Voir ma correction<small>Vos réponses face aux réponses attendues</small>
             </span>
             <ArrowRight aria-hidden />
           </Link>
@@ -385,14 +559,46 @@ export function RoundResults({
           }
         >
           <span>
-            {next ? `Voir la manche ${next.number}` : "Voir mon espace"}
+            {next ? "Me préparer au prochain Battle" : "Voir mon espace"}
             <small>
-              {next?.theme ?? "Retrouvez vos résultats et votre progression"}
+              {next ? `Manche ${next.number} · ${next.theme}` : "Retrouvez vos résultats et votre progression"}
             </small>
           </span>
           <ArrowRight aria-hidden />
         </Link>
       </div>
+
+      {/* 5. PROCHAIN OBJECTIF EVC ARENA */}
+      <div className="ae-objective ae-reveal" data-step="6">
+        <div className="ae-objective-visual" aria-hidden>
+          {variant === "unranked" || variant === "pending" ? <PodiumSilhouette /> : <Trophy className="ae-objective-trophy" />}
+        </div>
+        <div>
+          <p className="ae-kicker">Prochain objectif</p>
+          <h3><Trophy aria-hidden />{copy.objective.title}</h3>
+          <p>{copy.objective.body}</p>
+          {copy.objective.closing && <p>{copy.objective.closing}</p>}
+          {showAxes && (
+            <ul className="ae-objective-axes">
+              {HIGH_PERFORMANCE_AXES.map((axis, i) => {
+                const Icon = AXIS_ICONS[i];
+                return <li key={axis}><Icon aria-hidden />{axis}</li>;
+              })}
+            </ul>
+          )}
+          <p className="ae-objective-thresholds">
+            {variant === "unranked" || variant === "pending"
+              ? `Intégrer le classement : ${formatNote(thresholdNote(thresholds.thresholdPct))} / ${NOTE_PAR_MANCHE}. Trophées EVC Arena : podium et ${formatNote(thresholdNote(thresholds.distinctionPct))} / ${NOTE_PAR_MANCHE}.`
+              : variant === "trophy"
+                ? `Distinction conservée dans votre palmarès. Elle se joue à chaque Battle : podium et ${formatNote(thresholdNote(thresholds.distinctionPct))} / ${NOTE_PAR_MANCHE}.`
+                : `Trophées EVC Arena : une place sur le podium et un score d’au moins ${formatNote(thresholdNote(thresholds.distinctionPct))} / ${NOTE_PAR_MANCHE}.`}
+          </p>
+        </div>
+      </div>
+
+      {/* 6. PASSERELLE MAJOR ECN — toujours en dernier */}
+      {passerelle && !preview && <PasserelleBlock content={passerelle} />}
+
       {next && (
         <p className="ae-next-date">
           <CalendarDays aria-hidden />

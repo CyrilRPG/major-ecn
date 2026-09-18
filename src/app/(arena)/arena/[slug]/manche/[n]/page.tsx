@@ -25,11 +25,11 @@ import {
 } from "@/lib/arena/db";
 import { arenaMetadata, loadArenaPage } from "@/lib/arena/page-context";
 import { MODE_LABEL } from "@/lib/arena/scoring";
-import {
-  UNDER_THRESHOLD_MESSAGE,
-  buttonTruncated,
-  warningTruncated,
-} from "@/lib/arena/texts";
+import { buttonTruncated, warningTruncated } from "@/lib/arena/texts";
+import { roundOutcome } from "@/lib/arena/performance";
+import { passerelleContent, passerelleUrl, studentTrainingUrl } from "@/lib/arena/passerelle";
+import { participantAudience } from "@/lib/arena/major-ecn";
+import { collegeIdForSpecialty } from "@/lib/data/enrollable-colleges";
 import { minutesLabel, roundState, toDate } from "@/lib/arena/time";
 import { qrpNs, toPublicQuestion } from "@/lib/arena/types";
 import { resultBreakdown } from "@/lib/arena/result-summary";
@@ -170,6 +170,30 @@ export default async function RoundPage({ params, searchParams }: Params) {
     const score = Number(a.score ?? 0);
     const max = roundMaxScore(questions, bareme);
     const counts = resultBreakdown(questions, answers);
+    // Cahier des charges complémentaire (18/09/2026) : score absolu, rang et
+    // niveau de distinction lus ensemble ; un 1er sous le seuil n'est jamais « 1er ».
+    const thresholds = { thresholdPct: t.threshold_pct, distinctionPct: t.distinction_pct };
+    const outcome = roundOutcome({
+      score,
+      max,
+      rank: me?.rank ?? null,
+      published: published && !preview,
+      thresholds,
+    });
+    const cumulMe = standings?.standings.find((s) => s.participantId === ctx.participant!.id) ?? null;
+    const cumul = standings && published
+      ? { rank: cumulMe?.rank ?? null, distinction: cumulMe?.distinction ?? null, rounds: standings.countedRounds.length }
+      : null;
+    const passerelle = !preview && t.passerelle_enabled
+      ? passerelleContent({
+          enabled: true,
+          level: outcome.level,
+          audience: await participantAudience(ctx.participant!),
+          prospectUrl: passerelleUrl(t),
+          studentUrl: studentTrainingUrl(collegeIdForSpecialty(t.specialty)),
+          ctaOverride: t.passerelle_cta,
+        })
+      : null;
     return (
       <ArenaPage nav={nav} immersive>
         <RoundResults
@@ -180,24 +204,11 @@ export default async function RoundPage({ params, searchParams }: Params) {
           durationSeconds={a.duration_seconds ?? 0}
           durationMinutes={duration}
           truncated={a.truncated}
-          position={
-            preview
-              ? "Mode prévisualisation"
-              : published && me?.rank
-                ? me.rank + (me.rank === 1 ? "er" : "e") + " au classement"
-                : published
-                  ? "Poursuivez votre progression"
-                  : "Classement à venir"
-          }
-          positionDetail={
-            preview
-              ? "Aucun classement ni score enregistré."
-              : published && !me?.rank
-                ? UNDER_THRESHOLD_MESSAGE
-                : published
-                  ? "Votre rang parmi les participants ayant disputé cette manche."
-                  : "Le classement complet sera publié à la clôture de la manche."
-          }
+          outcome={outcome}
+          thresholds={thresholds}
+          participant={preview ? null : { pseudo: ctx.participant!.pseudo, avatarSeed: ctx.participant!.avatar_seed }}
+          cumul={cumul}
+          passerelle={passerelle}
           weakTheme={max > 0 && score / max < 0.5 ? round.theme : null}
         >
           {restart}

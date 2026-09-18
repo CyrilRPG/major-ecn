@@ -6,6 +6,7 @@ import { computeTournamentStandings, effectiveBareme, roundMaxScore } from '@/li
 import { leaderboardRows } from '@/lib/arena/ranking';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
 import { correctionsAccess } from '@/lib/arena/corrections-access';
+import { NO_RANKED_BODY, NO_RANKED_TITLE } from '@/lib/arena/performance-texts';
 import Link from 'next/link';
 import { ArrowRight, FileText } from 'lucide-react';
 
@@ -29,7 +30,11 @@ export default async function LeaderboardPage({ params, searchParams }: Params) 
   const round = standings.countedRounds.find(r => r.number === roundNumber);
   const cohort = round ? standings.byRound[round.id] : null;
   const source = cohort?.standings ?? standings.standings;
-  const rows = leaderboardRows(source, Infinity, ctx.participant?.id ?? null).map(row => ({ ...row, avatarRank: standings.standings.find(s => s.pseudo === row.pseudo)?.rank ?? null }));
+  // Trophée de la liste affichée (manche ou cumul) + habillage de l'avatar par la distinction cumulée.
+  const rows = leaderboardRows(source, Infinity, ctx.participant?.id ?? null).map(row => ({
+    ...row,
+    avatarDistinction: standings.standings.find(s => s.pseudo === row.pseudo)?.distinction ?? null,
+  }));
   const totalMax = (round ? [round] : standings.countedRounds).reduce((a, r) => a + roundMaxScore(ctx.snap.questionsByRound.get(r.id) ?? [], effectiveBareme(t, r)), 0);
   const effectif = cohort?.effectifManche ?? (standings.isFinal ? standings.effectifGeneral : standings.standings.filter(s => s.roundsPlayed > 0).length);
   const last = standings.countedRounds.length ? Math.max(...standings.countedRounds.map((r) => r.number)) : null;
@@ -37,6 +42,15 @@ export default async function LeaderboardPage({ params, searchParams }: Params) 
   const correctionRounds = ctx.participant
     ? (round ? [round] : standings.countedRounds).filter((r) => correctionsAccess({ round: r, tournamentId: t.id, participant: ctx.participant }).allowed)
     : [];
+  // §10 : personne n'atteint le seuil → aucun podium, message d'encouragement.
+  const nobodyRanked = last ? (
+    <div className="mx-auto max-w-xl">
+      <p className="text-[1.3rem] leading-tight" style={{ ...CAPS, color: ARENA.text }}>{NO_RANKED_TITLE}</p>
+      {NO_RANKED_BODY.map((line, i) => (
+        <p key={line} className={i === 0 ? 'mt-3' : 'mt-2'} style={{ color: i === NO_RANKED_BODY.length - 1 ? ARENA.gold : ARENA.textSoft, fontFamily: BODY }}>{line}</p>
+      ))}
+    </div>
+  ) : undefined;
 
   return (
     <ArenaPage nav={ctx.nav} immersive>
@@ -44,7 +58,7 @@ export default async function LeaderboardPage({ params, searchParams }: Params) 
         <Eyebrow>{t.specialty}{t.edition_label ? ` · ${t.edition_label}` : ''}</Eyebrow>
         <h1 className="mt-4 text-[2.4rem] leading-[0.95] sm:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Meilleurs scores</h1>
         <p className="mt-3 text-[15px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-          Classement cumulé, provisoire après chaque manche et final après la dernière.
+          Classement cumulé, provisoire après chaque manche et final après la dernière. Les trophées Or, Argent et Bronze exigent le podium et un score d’au moins {t.distinction_pct} %.
         </p>
         <nav aria-label="Classements" className="flex flex-wrap gap-4 mt-6"><Link aria-current={!round ? 'page' : undefined} className="underline" href={`/arena/${slug}/classement`}>{standings.isFinal ? 'Classement général' : 'Cumul provisoire'}</Link>{standings.countedRounds.map(r => <Link key={r.id} className="underline" aria-current={r.id === round?.id ? 'page' : undefined} href={`/arena/${slug}/classement?manche=${r.number}`}>Manche {r.number}</Link>)}</nav>
         <div className="mt-8">
@@ -58,7 +72,8 @@ export default async function LeaderboardPage({ params, searchParams }: Params) 
               totalMax={totalMax}
               roundsCount={round ? 1 : standings.countedRounds.length}
               rulesHref={`/arena/${slug}/regles#classement`}
-              emptyMessage={last ? 'Aucun participant n’atteint encore le seuil du classement.' : undefined}
+              emptyMessage={nobodyRanked}
+              distinctionPct={t.distinction_pct}
             />
           )}
         </div>

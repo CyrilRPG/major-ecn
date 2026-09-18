@@ -47,7 +47,9 @@ import {
   defaultEmailSequence,
   isValidPseudo,
   pseudoKey,
+  MAJOR_ECN_STATUSES,
   qrpNs,
+  type MajorEcnStatus,
   type SequenceKind,
 } from "@/lib/arena/types";
 import { neutralizeQuestion } from "./questions-actions";
@@ -61,6 +63,23 @@ type Ok<T = object> = { ok: true } & T;
 type Err = { ok: false; error: string };
 const err = (error: string): Err => ({ ok: false, error });
 const BASE = "/admin/arena";
+
+/** Colonnes ajoutées par la migration 20260918130000 (seuil de distinction, passerelle Major ECN). */
+const ARENA_2026_09_18_COLUMNS = ["distinction_pct", "passerelle_enabled", "passerelle_url", "passerelle_cta"] as const;
+const MIGRATION_HINT =
+  "Paramètres enregistrés, sauf le seuil de distinction et la passerelle Major ECN : la migration supabase/migrations/20260918130000_arena_distinction_passerelle.sql doit être appliquée sur Supabase.";
+/** PostgREST : colonne absente du cache de schéma (PGRST204) ou de la table (42703). */
+function isMissingArenaColumn(error: { code?: string; message?: string } | null): boolean {
+  if (!error) return false;
+  const code = String(error.code ?? "");
+  const msg = String(error.message ?? "");
+  return (code === "PGRST204" || code === "42703") && [...ARENA_2026_09_18_COLUMNS, "major_ecn_status"].some((c) => msg.includes(c));
+}
+function withoutColumns<T extends Record<string, unknown>>(row: T, columns: readonly string[]): Partial<T> {
+  const out: Record<string, unknown> = { ...row };
+  for (const c of columns) delete out[c];
+  return out as Partial<T>;
+}
 
 function revalidate(id?: string) {
   revalidatePath(BASE);
@@ -172,6 +191,11 @@ const SettingsSchema = z.object({
   afficher_effectif_general: z.boolean().default(false),
   leaderboard_size: z.number().int().min(1).max(50),
   threshold_pct: z.number().min(0).max(100),
+  // Cahier des charges complémentaire (18/09/2026) : seuil de distinction et passerelle Major ECN.
+  distinction_pct: z.number().min(0).max(100).default(70),
+  passerelle_enabled: z.boolean().default(true),
+  passerelle_url: z.string().trim().max(500).nullable().default(null),
+  passerelle_cta: z.string().trim().max(120).nullable().default(null),
   min_rounds_final: z.literal(3),
   questions_per_round: z.literal(20),
   round_duration_minutes: z.number().int().min(1).max(240),
@@ -198,13 +222,26 @@ export async function updateTournamentSettings(
     const d = parsed.data;
     const patch = {
       ...d,
+      // La distinction ne descend jamais sous le seuil de classement.
+      distinction_pct: Math.max(d.threshold_pct, d.distinction_pct),
+      passerelle_url: d.passerelle_url || null,
+      passerelle_cta: d.passerelle_cta || null,
       email_sequence: defaultEmailSequence(d.email_sequence),
       texts: d.texts ?? {},
     };
-    const { error } = await arenaDb()
+    let { error } = await arenaDb()
       .from("arena_tournaments")
       .update(patch)
       .eq("id", id);
+    let migrationMissing = false;
+    if (error && isMissingArenaColumn(error)) {
+      // Migration 20260918130000 non appliquée : le reste est enregistré, et on le dit.
+      migrationMissing = true;
+      ({ error } = await arenaDb()
+        .from("arena_tournaments")
+        .update(withoutColumns(patch, ARENA_2026_09_18_COLUMNS))
+        .eq("id", id));
+    }
     if (error)
       return err(
         String(error.code) === "23505"
@@ -222,6 +259,7 @@ export async function updateTournamentSettings(
       details: `Paramètres modifiés : ${changed.join(", ") || "aucun changement"}.`,
     });
     revalidate(id);
+    if (migrationMissing) return err(MIGRATION_HINT);
     return { ok: true };
   } catch (error) {
     unstable_rethrow(error);
@@ -537,9 +575,7 @@ export async function duplicateTournament(
       slugify(d.slug || `${d.specialty}-${d.edition_label || d.title}`) ||
       `tournoi-${Date.now()}`;
     const db = arenaDb();
-    const { data, error } = await db
-      .from("arena_tournaments")
-      .insert({
+    const row = {
         title: d.title,
         specialty: d.specialty,
         specialty_id: d.specialty_id ?? null,
@@ -553,6 +589,10 @@ export async function duplicateTournament(
         leaderboard_enabled: src.leaderboard_enabled,
         leaderboard_size: src.leaderboard_size,
         threshold_pct: src.threshold_pct,
+        distinction_pct: src.distinction_pct,
+        passerelle_enabled: src.passerelle_enabled,
+        passerelle_url: src.passerelle_url,
+        passerelle_cta: src.passerelle_cta,
         afficher_effectif_general: src.afficher_effectif_general,
         min_rounds_final: 3,
         questions_per_round: 20,
@@ -563,9 +603,11 @@ export async function duplicateTournament(
         email_sequence: src.email_sequence,
         texts: src.texts,
         created_by: actor.user.id,
-      })
-      .select("id")
-      .single();
+    };
+    let inserted = await db.from("arena_tournaments").insert(row).select("id").single();
+    if (inserted.error && isMissingArenaColumn(inserted.error))
+      inserted = await db.from("arena_tournaments").insert(withoutColumns(row, ARENA_2026_09_18_COLUMNS)).select("id").single();
+    const { data, error } = inserted;
     if (error || !data)
       return err(
         String(error?.code) === "23505"
@@ -681,6 +723,39 @@ export async function deleteBaremeTemplate(id: string): Promise<Ok | Err> {
 /* ------------------------------------------------------------------ */
 /* Participants (§15.4)                                                */
 /* ------------------------------------------------------------------ */
+
+/** Statut Major ECN forcé (cahier des charges complémentaire §15) : élève / prospect / détection automatique. */
+export async function setParticipantMajorEcnStatus(
+  id: string,
+  status: MajorEcnStatus,
+): Promise<Ok | Err> {
+  try {
+    const actor = await ensureArenaAdmin();
+    if (!MAJOR_ECN_STATUSES.includes(status)) return err("Statut inconnu.");
+    const p = await getParticipant(id);
+    if (!p) return err("Participant introuvable.");
+    const { error } = await arenaDb()
+      .from("arena_participants")
+      .update({ major_ecn_status: status })
+      .eq("id", id);
+    if (error)
+      return err(isMissingArenaColumn(error) ? MIGRATION_HINT : error.message);
+    await logAdmin(actor, {
+      tournamentId: p.tournament_id,
+      kind: "participant_major_ecn_status",
+      details: `${p.pseudo} (${p.email}) : statut Major ECN « ${status} » (avant : « ${p.major_ecn_status} »).`,
+    });
+    revalidate(p.tournament_id);
+    return { ok: true };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("[arena] action échouée", error);
+    return {
+      ok: false,
+      error: "L’action n’a pas pu être effectuée. Réessayez.",
+    };
+  }
+}
 
 export async function blockParticipant(
   id: string,
@@ -1077,6 +1152,7 @@ export async function sendSequenceEmailNow(
           cumulMax: st?.totalMax ?? 0,
           cumulRounds: standings?.countedRounds.length ?? 0,
           rank: st?.rank ?? null,
+          distinction: st?.distinction ?? null,
           isLast:
             round.number === Math.max(...snap.rounds.map((x) => x.number)),
           next: next

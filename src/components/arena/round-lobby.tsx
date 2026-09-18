@@ -52,7 +52,7 @@ export function RoundLobby({
   slug: string;
   round: LobbyRound;
   rounds: LobbyRound[];
-  participant: { pseudo: string; avatar_seed?: string; rank?: number | null } | null;
+  participant: { pseudo: string; avatar_seed?: string; rank?: number | null; distinction?: 'gold' | 'silver' | 'bronze' | null } | null;
   questionCount: number;
   duration: number;
   bareme: Bareme;
@@ -144,7 +144,7 @@ export function RoundLobby({
           </ol>
         </div>
         <div className="ae-lobby-profile">
-          <ArenaAvatar seed={participant?.avatar_seed ?? "casque"} rank={participant?.rank} size={174} title={participant?.pseudo} />
+          <ArenaAvatar seed={participant?.avatar_seed ?? "casque"} rank={participant?.rank} distinction={participant?.distinction} size={174} title={participant?.pseudo} />
           <strong>{participant?.pseudo ?? "Prévisualisation"}</strong>
           <span>{preview ? "Prévisualisation" : "Participant"}</span>
           {participant && (

@@ -1,4 +1,5 @@
 import { ARENA_ROUNDS, meanRoundSeconds } from './format';
+import { distinctionFor, normalizeThresholds, performanceLevel, type Distinction, type PerformanceLevel } from './performance';
 
 /**
  * EVC Arena — classement cumulatif (cahier des charges §2.2, §6.13, §7).
@@ -16,7 +17,10 @@ import { ARENA_ROUNDS, meanRoundSeconds } from './format';
  *    manche (§7.1) ; au classement général final, les trois manches ;
  *  - départage (§6.13) : points, puis réponses parfaites, puis temps moyen par
  *    manche (le plus faible l'emporte), temps cumulé / manches disputées ;
- *  - les effectifs de manche et général sont calculés séparément.
+ *  - les effectifs de manche et général sont calculés séparément ;
+ *  - distinction (cahier des charges complémentaire §9) : place sur le podium
+ *    ET score ≥ seuil de distinction (70 % par défaut) → Or / Argent / Bronze.
+ *    Être premier ne suffit pas.
  */
 
 export type RankingRound = {
@@ -63,11 +67,17 @@ export type Standing = {
   rank: number | null;
   /** Explication de l'absence de rang (jamais affichée telle quelle, §7.1). */
   reason: 'under_threshold' | 'not_enough_rounds' | 'no_round' | null;
+  /** Niveau de performance du score cumulé (non classé / classé / distinction). */
+  level: PerformanceLevel;
+  /** Trophée Or / Argent / Bronze : podium ET niveau de distinction. */
+  distinction: Distinction | null;
   perRound: Record<string, { score: number; perfect: number; duration: number; truncated: boolean } | null>;
 };
 
 export type RankingOptions = {
   thresholdPct: number;
+  /** Seuil de distinction (%), 70 par défaut ; jamais inférieur au seuil de classement. */
+  distinctionPct?: number;
   minRoundsFinal: number;
   /** Vrai quand toutes les manches sont comptées : le classement est final. */
   isFinal: boolean;
@@ -79,6 +89,7 @@ export function computeStandings(
   participants: readonly RankingParticipant[],
   opts: RankingOptions,
 ): Standing[] {
+  const thresholds = normalizeThresholds({ thresholdPct: opts.thresholdPct, distinctionPct: opts.distinctionPct });
   const counted = rounds.filter((r) => r.counted);
   const countedIds = new Set(counted.map((r) => r.id));
   const totalMax = counted.reduce((a, r) => a + r.maxScore, 0);
@@ -109,7 +120,7 @@ export function computeStandings(
     let reason: Standing['reason'] = null;
     if (list.length === 0) reason = 'no_round';
     else if (opts.isFinal && (rounds.length !== ARENA_ROUNDS || list.length !== ARENA_ROUNDS)) reason = 'not_enough_rounds';
-    else if (pct < opts.thresholdPct) reason = 'under_threshold';
+    else if (pct < thresholds.thresholdPct) reason = 'under_threshold';
 
     standings.push({
       participantId: p.id,
@@ -124,6 +135,8 @@ export function computeStandings(
       meanTime,
       rank: null,
       reason,
+      level: performanceLevel(pct, thresholds),
+      distinction: null,
       perRound,
     });
   }
@@ -134,6 +147,7 @@ export function computeStandings(
   for (let i = 0; i < eligible.length; i++) {
     if (i === 0 || compareStandings(eligible[i - 1], eligible[i]) !== 0) rank = i + 1;
     eligible[i].rank = rank;
+    eligible[i].distinction = distinctionFor(rank, eligible[i].pct, thresholds);
   }
 
   return standings.sort((a, b) => {
@@ -154,14 +168,14 @@ export function compareStandings(a: Standing, b: Standing): number {
   return a.meanTime - b.meanTime;
 }
 
-export type LeaderboardRow = { rank: number; pseudo: string; avatarSeed: string; totalScore: number; roundsPlayed: number; me: boolean };
+export type LeaderboardRow = { rank: number; pseudo: string; avatarSeed: string; totalScore: number; roundsPlayed: number; me: boolean; distinction: Distinction | null };
 
 /** Public list is complete by default; landing excerpts may request a limit. */
 export function leaderboardRows(standings: readonly Standing[], size: number = Infinity, meId: string | null = null): LeaderboardRow[] {
   return standings
     .filter((s) => s.rank !== null)
     .slice(0, Math.max(1, size))
-    .map((s) => ({ rank: s.rank as number, pseudo: s.pseudo, avatarSeed: s.avatarSeed, totalScore: s.totalScore, roundsPlayed: s.roundsPlayed, me: s.participantId === meId }));
+    .map((s) => ({ rank: s.rank as number, pseudo: s.pseudo, avatarSeed: s.avatarSeed, totalScore: s.totalScore, roundsPlayed: s.roundsPlayed, me: s.participantId === meId, distinction: s.distinction }));
 }
 
 export type ArenaRankings = {

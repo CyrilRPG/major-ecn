@@ -1,14 +1,19 @@
 import { cheminAvatar, estAvatarPlanche, libelleAvatar, resolveArenaAvatarSeed } from './avatars';
 import { useId, type CSSProperties } from 'react';
 import { avatarAppearance, AVATAR_DISTINCTIONS, rankLabel } from '@/lib/arena/avatar-appearance';
+import type { Distinction } from '@/lib/arena/performance';
 import './arena-avatar.css';
 
-/** All distinctions are overlays on the same original character. */
-export function ArenaAvatar({ seed, size = 40, className, title, rank }: {
-  seed: string; size?: number; className?: string; title?: string; rank?: number | null;
+/**
+ * All distinctions are overlays on the same original character. L'habillage
+ * suit la DISTINCTION cumulée (podium ET seuil de distinction) ; le rang ne
+ * sert qu'au libellé accessible.
+ */
+export function ArenaAvatar({ seed, size = 40, className, title, rank, distinction }: {
+  seed: string; size?: number; className?: string; title?: string; rank?: number | null; distinction?: Distinction | null;
 }) {
   seed = resolveArenaAvatarSeed(seed);
-  const appearance = avatarAppearance(rank);
+  const appearance = avatarAppearance(distinction);
   const metalId = `metal-${useId().replace(/:/g, '')}`;
   const label = `${title ?? libelleAvatar(seed) ?? 'Avatar'} — ${AVATAR_DISTINCTIONS[appearance].label}${rank ? `, ${rankLabel(rank)} au classement cumulé` : ''}`;
   return (
@@ -38,7 +43,7 @@ export function ArenaAvatar({ seed, size = 40, className, title, rank }: {
             <path d="M-8-7 0-10 8-7V2Q8 8 0 11-8 8-8 2Z" fill="#8b4d0a" strokeWidth=".7" />
             <path d="M0-6V8M0-4C8-5 7 0 1 1S-5 5 0 5 5 7 1 8" strokeWidth="1.3" />
             <circle cy="-7" r="1.2" fill="#ffe38c" stroke="none" />
-          </g> : <text textAnchor="middle" y="7" fill={`url(#${metalId})`} fontSize="23" fontFamily="var(--font-oswald), sans-serif" fontWeight="600">{rank}</text>}
+          </g> : <text textAnchor="middle" y="7" fill={`url(#${metalId})`} fontSize="23" fontFamily="var(--font-oswald), sans-serif" fontWeight="600">{appearance === 'silver' ? 2 : 3}</text>}
         </g>
       </svg>}
     </span>

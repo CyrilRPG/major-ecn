@@ -1,6 +1,15 @@
 import type { ArenaRankings } from "./ranking";
 import type { RankHistoryEntry } from "./rank-history";
 import { ARENA_ROUNDS, individualGeneralRank } from "./format";
+import {
+  DEFAULT_DISTINCTION_PCT,
+  distinctionFor,
+  normalizeThresholds,
+  performanceLevel,
+  scorePct,
+  type Distinction,
+  type PerformanceLevel,
+} from "./performance";
 
 export type FinalRound = {
   id: string;
@@ -13,11 +22,20 @@ export type FinalRound = {
   score: number;
   seconds: number;
   rank: number | null;
+  /** Trophée de la manche (podium ET seuil de distinction sur la manche). */
+  distinction: Distinction | null;
 };
+/**
+ * Variantes du bilan. `champion` / `silver` / `bronze` = podium AVEC
+ * distinction (trophée) ; `podium` = 1er, 2e ou 3e du classement général
+ * SANS trophée (score cumulé sous le seuil de distinction, cahier des charges
+ * complémentaire §5-§8) : félicité pour sa place, trophée à conquérir.
+ */
 export type FinalVariant =
   | "champion"
   | "silver"
   | "bronze"
+  | "podium"
   | "top"
   | "standard"
   | "progress";
@@ -28,6 +46,13 @@ export type FinalSummary = {
   played: number;
   score: number;
   max: number;
+  /** Score cumulé en % du maximum cumulé. */
+  pct: number;
+  level: PerformanceLevel;
+  /** Trophée du classement général, ou null. */
+  distinction: Distinction | null;
+  /** Seuils appliqués (pour les textes « prochain objectif »). */
+  thresholds: { thresholdPct: number; distinctionPct: number };
   questionCount: number;
   perfect: number;
   totalSeconds: number;
@@ -48,9 +73,14 @@ export function tournamentFinalSummary(input: {
   rankings: ArenaRankings;
   history: RankHistoryEntry[];
   thresholdPct: number;
-  rounds: Omit<FinalRound, "played" | "score" | "seconds" | "rank">[];
+  distinctionPct?: number;
+  rounds: Omit<FinalRound, "played" | "score" | "seconds" | "rank" | "distinction">[];
   analysis?: FinalSummary["analysis"];
 }): FinalSummary {
+  const thresholds = normalizeThresholds({
+    thresholdPct: input.thresholdPct,
+    distinctionPct: input.distinctionPct ?? DEFAULT_DISTINCTION_PCT,
+  });
   const me = input.rankings.standings.find(
     (s) => s.participantId === input.participantId,
   );
@@ -65,6 +95,7 @@ export function tournamentFinalSummary(input: {
       score: result?.score ?? 0,
       seconds: result?.duration ?? 0,
       rank: standing?.rank ?? null,
+      distinction: standing?.distinction ?? null,
     };
   });
   const played = rounds.filter((r) => r.played);
@@ -84,17 +115,22 @@ export function tournamentFinalSummary(input: {
     percentile !== null && percentile <= 50
       ? Math.max(5, Math.ceil(percentile / 5) * 5)
       : null;
+  const pct = scorePct(me?.totalScore ?? 0, me?.totalMax ?? 0);
+  const level = performanceLevel(pct, thresholds);
+  const distinction = complete ? distinctionFor(rank, pct, thresholds) : null;
   const variant: FinalVariant = !complete
     ? "progress"
-    : rank === 1
+    : distinction === "gold"
       ? "champion"
-      : rank === 2
+      : distinction === "silver"
         ? "silver"
-        : rank === 3
+        : distinction === "bronze"
           ? "bronze"
-          : topPercent
-            ? "top"
-            : "standard";
+          : rank === 1 || rank === 2 || rank === 3
+            ? "podium"
+            : topPercent
+              ? "top"
+              : "standard";
   const leader = input.rankings.standings.find((s) => s.rank === 1);
   const runnerUp = input.rankings.standings.find(
     (s) => s.rank !== null && s.rank > 1,
@@ -103,24 +139,31 @@ export function tournamentFinalSummary(input: {
     ? null
     : !rank
       ? {
-          label: `Écart avec le seuil de ${input.thresholdPct} %`,
+          label: `Écart avec le seuil de ${thresholds.thresholdPct} %`,
           value:
             (me?.totalScore ?? 0) -
-            ((me?.totalMax ?? 0) * input.thresholdPct) / 100,
+            ((me?.totalMax ?? 0) * thresholds.thresholdPct) / 100,
         }
-      : rank === 1
-        ? runnerUp
-          ? {
-              label: "Écart avec le suivant",
-              value: (me?.totalScore ?? 0) - runnerUp.totalScore,
-            }
-          : null
-        : leader
-          ? {
-              label: "Écart avec le 1er",
-              value: (me?.totalScore ?? 0) - leader.totalScore,
-            }
-          : null;
+      : variant === "podium"
+        ? {
+            label: `Écart avec le seuil de distinction (${thresholds.distinctionPct} %)`,
+            value:
+              (me?.totalScore ?? 0) -
+              ((me?.totalMax ?? 0) * thresholds.distinctionPct) / 100,
+          }
+        : rank === 1
+          ? runnerUp
+            ? {
+                label: "Écart avec le suivant",
+                value: (me?.totalScore ?? 0) - runnerUp.totalScore,
+              }
+            : null
+          : leader
+            ? {
+                label: "Écart avec le 1er",
+                value: (me?.totalScore ?? 0) - leader.totalScore,
+              }
+            : null;
   return {
     variant,
     edition: input.edition,
@@ -128,6 +171,10 @@ export function tournamentFinalSummary(input: {
     played: played.length,
     score: me?.totalScore ?? 0,
     max: played.reduce((sum, r) => sum + r.max, 0),
+    pct,
+    level,
+    distinction,
+    thresholds,
     questionCount: played.reduce((sum, r) => sum + r.questionCount, 0),
     perfect: me?.perfectCount ?? 0,
     totalSeconds: me?.totalDurationSeconds ?? 0,

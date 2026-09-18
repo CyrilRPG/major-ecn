@@ -10,8 +10,9 @@ import { effectiveStatus, type TournamentStatus } from './time';
 import { resolveParticipantAvatars, type AvatarProfile } from './participant-avatar';
 import {
   defaultEmailSequence, DEFAULT_SECONDS_PER_QUESTION,
-  type AnswerRow, type AttemptRow, type ParticipantRow, type QuestionRow, type ReportRow, type RoundRow, type TournamentRow,
+  type AnswerRow, type AttemptRow, type MajorEcnStatus, type ParticipantRow, type QuestionRow, type ReportRow, type RoundRow, type TournamentRow,
 } from './types';
+import { DEFAULT_DISTINCTION_PCT } from './performance';
 
 /**
  * EVC Arena — accès aux données (service role). Les tables `arena_*` sont
@@ -31,6 +32,11 @@ export function normalizeTournament(row: Record<string, unknown>): TournamentRow
     email_sequence: defaultEmailSequence(row.email_sequence),
     texts: (row.texts && typeof row.texts === 'object' ? row.texts : {}) as Record<string, string>,
     threshold_pct: Number(row.threshold_pct ?? 50),
+    // Colonnes de la migration 20260918130000 : valeurs par défaut tant qu'elle n'est pas appliquée.
+    distinction_pct: Number.isFinite(Number(row.distinction_pct)) ? Number(row.distinction_pct) : DEFAULT_DISTINCTION_PCT,
+    passerelle_enabled: row.passerelle_enabled !== false,
+    passerelle_url: typeof row.passerelle_url === 'string' && row.passerelle_url.trim() ? row.passerelle_url.trim() : null,
+    passerelle_cta: typeof row.passerelle_cta === 'string' && row.passerelle_cta.trim() ? row.passerelle_cta.trim() : null,
     afficher_effectif_general: row.afficher_effectif_general === true,
     min_rounds_final: ARENA_ROUNDS,
     questions_per_round: Number(row.questions_per_round ?? ARENA_QUESTIONS_PER_ROUND),
@@ -87,8 +93,14 @@ export async function getQuestion(id: string): Promise<QuestionRow | null> {
   return data ? normalizeQuestion(data) : null;
 }
 
+/** Statut Major ECN forçable (migration 20260918130000) : 'auto' tant que la colonne n'existe pas. */
+function normalizeParticipant(p: ParticipantRow): ParticipantRow {
+  const status = (p as { major_ecn_status?: unknown }).major_ecn_status;
+  return { ...p, major_ecn_status: (status === 'student' || status === 'prospect' ? status : 'auto') as MajorEcnStatus };
+}
+
 function withParticipantAvatars(participants: ParticipantRow[]): Promise<ParticipantRow[]> {
-  return resolveParticipantAvatars(participants, async emails => {
+  return resolveParticipantAvatars(participants.map(normalizeParticipant), async emails => {
     const { data } = await arenaDb().from('profiles').select('email,faculte_id,avatar_seed')
       .eq('faculte_id', 'major-ecn').in('email', emails).throwOnError();
     return (data ?? []) as AvatarProfile[];
@@ -283,7 +295,7 @@ export const computeTournamentStandings = cache(async function computeTournament
       excluded: Boolean(p.blocked_at || p.anonymized_at || !p.email_confirmed_at ||
         (participantCutoff && (new Date(p.created_at) > new Date(participantCutoff) || new Date(p.email_confirmed_at) > new Date(participantCutoff)))),
     })),
-    { thresholdPct: t.threshold_pct, minRoundsFinal: t.min_rounds_final, isFinal },
+    { thresholdPct: t.threshold_pct, distinctionPct: t.distinction_pct, minRoundsFinal: t.min_rounds_final, isFinal },
   );
   return { ...rankings, isFinal, countedRounds };
 });

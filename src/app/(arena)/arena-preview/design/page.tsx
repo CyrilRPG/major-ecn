@@ -10,6 +10,19 @@ import { DEFAULT_ARENA_AVATAR } from '@/components/arena/avatars';
 import { TournamentFinal } from '@/components/arena/tournament-final';
 import { finalFixture } from './final-fixture';
 import type { FinalVariant } from '@/lib/arena/final-summary';
+import { roundOutcome } from '@/lib/arena/performance';
+import { passerelleContent, type PasserelleAudience } from '@/lib/arena/passerelle';
+
+/** Écrans de résultat du cahier des charges complémentaire (score /20 → /10, rang, publication, statut Major ECN). */
+const RESULT_STATES: Record<string, { score: number; rank: number | null; published: boolean; audience: PasserelleAudience; label: string }> = {
+  'results': { score: 12, rank: null, published: false, audience: 'prospect', label: 'Résultats (non publiés)' },
+  'results-unranked': { score: 6, rank: null, published: true, audience: 'prospect', label: 'Non classé (< 50 %)' },
+  'results-ranked': { score: 11, rank: 12, published: true, audience: 'prospect', label: 'Classé 12e' },
+  'results-podium-1': { score: 11, rank: 1, published: true, audience: 'prospect', label: '1er sans trophée' },
+  'results-podium-2': { score: 11.5, rank: 2, published: true, audience: 'student', label: '2e sans trophée (élève)' },
+  'results-high': { score: 16, rank: 5, published: true, audience: 'prospect', label: '5e ≥ 70 %' },
+  'results-trophy': { score: 17, rank: 1, published: true, audience: 'student', label: 'Trophée Or (élève)' },
+};
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -27,7 +40,10 @@ export default async function ArenaDesignPage({
   if (process.env.ARENA_DESIGN_FIXTURES !== "1") redirect('/arena/demo-medecine-interne/espace');
   const { state = "lobby", effectif } = await searchParams;
   const variant = state.startsWith('final-') ? state.slice(6) as FinalVariant : null;
-  const finalSummary = variant && ['champion','silver','bronze','top','standard','progress'].includes(variant) ? finalFixture(variant, effectif === '1') : null;
+  const finalSummary = variant && ['champion','silver','bronze','podium','top','standard','progress'].includes(variant) ? finalFixture(variant, effectif === '1') : null;
+  const resultState = RESULT_STATES[state] ?? null;
+  const resultOutcome = resultState ? roundOutcome({ score: resultState.score, max: 20, rank: resultState.rank, published: resultState.published }) : null;
+  const resultPasserelle = resultState && resultOutcome ? passerelleContent({ enabled: true, level: resultOutcome.level, audience: resultState.audience, prospectUrl: '/specialites/medecine-generale', studentUrl: '/matieres/col-medecine-generale' }) : null;
   const round = {
     number: 1,
     theme: "Vascularités et maladies systémiques",
@@ -72,7 +88,7 @@ export default async function ArenaDesignPage({
     <>
       <aside role="status" style={{ padding: 16, background: '#ffca4c', color: '#001019', textAlign: 'center' }}>Recette graphique interne — données fictives. <Link href="/arena/demo-medecine-interne/espace">Ouvrir mon véritable espace Arena</Link></aside>
       {state === "avatars" ? <AvatarShowcase nav={nav} /> : <ArenaPage nav={nav} immersive bare>
-        {finalSummary ? <TournamentFinal summary={finalSummary} base="/arena/demo-medecine-interne" /> : state === "lobby" ? (
+        {finalSummary ? <TournamentFinal summary={finalSummary} base="/arena/demo-medecine-interne" passerelle={resultState ? null : passerelleContent({ enabled: true, level: finalSummary.level, audience: effectif === '1' ? 'student' : 'prospect', prospectUrl: '/specialites/medecine-generale', studentUrl: '/matieres/col-medecine-generale' })} /> : state === "lobby" ? (
           <RoundLobby
             slug={nav.slug}
             round={round}
@@ -93,20 +109,21 @@ export default async function ArenaDesignPage({
           </RoundLobby>
         ) : state === "missed" ? (
           <MissedRound {...shared} />
-        ) : state === "results" ? (
+        ) : resultState && resultOutcome ? (
           <RoundResults
             {...shared}
-            score={3}
+            score={resultState.score}
             max={20}
-            perfect={2}
-            partial={5}
-            failed={13}
+            perfect={Math.round(resultState.score / 2)}
+            partial={4}
+            failed={20 - Math.round(resultState.score / 2) - 4}
             durationSeconds={688}
             durationMinutes={20}
-            position="Dans la seconde moitié du classement"
-            positionDetail="Le classement complet sera publié à la clôture de la manche."
-            weakTheme="Vascularites"
-            feedbackSubject="les vascularites"
+            outcome={resultOutcome}
+            participant={{ pseudo: 'DrHorus27', avatarSeed: DEFAULT_ARENA_AVATAR }}
+            cumul={resultState.published ? { rank: resultState.rank, distinction: resultOutcome.distinction, rounds: 1 } : null}
+            passerelle={resultPasserelle}
+            weakTheme={resultState.score < 10 ? "Vascularites" : null}
           />
         ) : (
           <div className="ae-question-wrap">
@@ -130,10 +147,10 @@ export default async function ArenaDesignPage({
         {[
           ["lobby", "Avant la manche"],
           ["question", "Question"],
-          ["results", "Résultats"],
+          ...Object.entries(RESULT_STATES).map(([key, s]) => [key, s.label]),
           ["missed", "Manche manquée"],
           ["avatars", "Avatars et palmarès"],
-          ['final-champion', 'Champion'], ['final-silver', 'Argent'], ['final-bronze', 'Bronze'], ['final-top', 'Top 10 %'], ['final-standard', 'Progression'], ['final-progress', 'Parcours incomplet'],
+          ['final-champion', 'Champion'], ['final-silver', 'Argent'], ['final-bronze', 'Bronze'], ['final-podium', '1er sans trophée'], ['final-top', 'Top 10 %'], ['final-standard', 'Progression'], ['final-progress', 'Parcours incomplet'],
         ].map(([key, label]) => (
           <Link key={key} href={`?state=${key}`}>
             {label}

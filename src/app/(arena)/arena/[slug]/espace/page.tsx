@@ -25,6 +25,11 @@ import { correctionsAccess } from '@/lib/arena/corrections-access';
 import { UNDER_THRESHOLD_MESSAGE, buttonTruncated, warningTruncated } from '@/lib/arena/texts';
 import { clockLabel, minutesLabel, roundState } from '@/lib/arena/time';
 import { siteUrl } from '@/lib/email/send';
+import { DISTINCTION_LABEL, isPodiumRank, roundOutcome } from '@/lib/arena/performance';
+import { passerelleContent, passerelleUrl, studentTrainingUrl } from '@/lib/arena/passerelle';
+import { participantAudience } from '@/lib/arena/major-ecn';
+import { collegeIdForSpecialty } from '@/lib/data/enrollable-colleges';
+import { PasserelleBlock } from '@/components/arena/passerelle-block';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,6 +58,15 @@ export default async function SpacePage({ params, searchParams }: Params) {
   const standings = await computeTournamentStandings(ctx.snap);
   const me = standings.standings.find((s) => s.participantId === p.id) ?? null;
   const rankHistory = await participantRankHistory(p.id);
+  // Cahier des charges complémentaire (18/09/2026) : niveau du cumul → discours de la passerelle.
+  const thresholds = { thresholdPct: t.threshold_pct, distinctionPct: t.distinction_pct };
+  const cumulOutcome = roundOutcome({ score: me?.totalScore ?? 0, max: me?.totalMax ?? 0, rank: me?.rank ?? null, published: standings.countedRounds.length > 0, thresholds });
+  const passerelle = t.passerelle_enabled && standings.countedRounds.length > 0
+    ? passerelleContent({
+        enabled: true, level: cumulOutcome.level, audience: await participantAudience(p),
+        prospectUrl: passerelleUrl(t), studentUrl: studentTrainingUrl(collegeIdForSpecialty(t.specialty)), ctaOverride: t.passerelle_cta,
+      })
+    : null;
   if (standings.isFinal) {
     const playedAttempts = attempts.filter(a => me?.perRound[a.round_id]);
     const answers = (await Promise.all(playedAttempts.map(a => listAnswers(a.id)))).flat();
@@ -61,7 +75,7 @@ export default async function SpacePage({ params, searchParams }: Params) {
       (ctx.snap.questionsByRound.get(r.id) ?? []).filter(q => !q.neutralized_at).map(q => ({ type: q.type, score: Number(byQuestion.get(q.id)?.score ?? 0), max: questionMaxUnit(q, effectiveBareme(t, r)) * q.weight }))));
     const summary = tournamentFinalSummary({
       participantId: p.id, edition: t.edition_label, afficherEffectifGeneral: t.afficher_effectif_general,
-      rankings: standings, history: rankHistory, thresholdPct: t.threshold_pct,
+      rankings: standings, history: rankHistory, thresholdPct: t.threshold_pct, distinctionPct: t.distinction_pct,
       analysis,
       rounds: ctx.snap.rounds.map(r => {
         const questions = (ctx.snap.questionsByRound.get(r.id) ?? []).filter(q => !q.neutralized_at);
@@ -69,10 +83,10 @@ export default async function SpacePage({ params, searchParams }: Params) {
       }),
     });
     return <ArenaPage nav={ctx.nav} immersive>
-      <TournamentFinal summary={summary} base={base} leaderboardEnabled={t.leaderboard_enabled} />
+      <TournamentFinal summary={summary} base={base} leaderboardEnabled={t.leaderboard_enabled} passerelle={passerelle} />
       <ProfileDetails>
-        <AvatarRankHistory seed={p.avatar_seed} pseudo={p.pseudo} rank={me?.rank ?? null} entries={rankHistory} final general={summary.general} />
-        <SpaceSettings slug={slug} pseudo={p.pseudo} avatarSeed={p.avatar_seed} rank={me?.rank} marketing={p.consent_marketing && !p.marketing_unsubscribed_at} canChangePseudo={attempts.length === 0} email={p.email} />
+        <AvatarRankHistory seed={p.avatar_seed} pseudo={p.pseudo} rank={me?.rank ?? null} distinction={me?.distinction ?? null} thresholds={thresholds} entries={rankHistory} final general={summary.general} />
+        <SpaceSettings slug={slug} pseudo={p.pseudo} avatarSeed={p.avatar_seed} rank={me?.rank} distinction={me?.distinction ?? null} marketing={p.consent_marketing && !p.marketing_unsubscribed_at} canChangePseudo={attempts.length === 0} email={p.email} />
       </ProfileDetails>
     </ArenaPage>;
   }
@@ -167,14 +181,26 @@ export default async function SpacePage({ params, searchParams }: Params) {
                     <>
                       <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Classement {standings.isFinal ? 'final' : 'provisoire'}</p>
                       <p className="mt-1 text-[3.6rem] leading-none" style={{ fontFamily: HEADLINE, color: ARENA.ok, letterSpacing: '0.04em' }}>{me.rank}<span className="text-[0.5em]">{me.rank === 1 ? 'er' : 'e'}</span></p>
+                      <p className="mt-2 text-[13px] leading-relaxed" style={{ color: me.distinction ? ARENA.gold : ARENA.textSoft, fontFamily: BODY }}>
+                        {me.distinction
+                          ? `Distinction ${DISTINCTION_LABEL[me.distinction]} EVC Arena : podium et score cumulé au niveau de distinction.`
+                          : isPodiumRank(me.rank)
+                            ? `Podium sans trophée : le trophée EVC Arena exige un score cumulé d’au moins ${t.distinction_pct} %.`
+                            : `Prochain objectif : gagner des places, viser le podium et décrocher un trophée (dès ${t.distinction_pct} %).`}
+                      </p>
                     </>
                   ) : (
-                    <p className="mt-3 text-[13.5px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>{UNDER_THRESHOLD_MESSAGE}</p>
+                    <>
+                      <p className="mt-3 text-[13.5px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>{UNDER_THRESHOLD_MESSAGE}</p>
+                      <p className="mt-2 text-[12.5px] leading-relaxed" style={{ color: ARENA.gold, fontFamily: BODY }}>Prochain objectif : intégrer le classement EVC Arena (dès {t.threshold_pct} %) et partir à la conquête des trophées de la saison.</p>
+                    </>
                   )}
                 </>
               )}
               <Link href={`${base}/regles#classement`} className="mt-4 inline-block text-[12px] font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Comment est calculé le classement ?</Link>
             </Panel>
+
+            {passerelle && <PasserelleBlock content={passerelle} compact />}
 
             <Panel>
               <h2 id="inviter" className="text-[1.4rem] leading-none" style={{ ...CAPS, color: ARENA.text }}>Invitez un collègue à rejoindre l’Arena</h2>
@@ -183,13 +209,13 @@ export default async function SpacePage({ params, searchParams }: Params) {
             </Panel>
 
             <Panel>
-              <AvatarRankHistory seed={p.avatar_seed} pseudo={p.pseudo} rank={me?.rank ?? null} entries={rankHistory} />
+              <AvatarRankHistory seed={p.avatar_seed} pseudo={p.pseudo} rank={me?.rank ?? null} distinction={me?.distinction ?? null} thresholds={thresholds} entries={rankHistory} />
             </Panel>
 
             <Panel>
               <h2 id="compte" className="text-[1.4rem] leading-none" style={{ ...CAPS, color: ARENA.text }}>Mon compte</h2>
               <div className="mt-5">
-                <SpaceSettings slug={slug} pseudo={p.pseudo} avatarSeed={p.avatar_seed} rank={me?.rank} marketing={p.consent_marketing && !p.marketing_unsubscribed_at} canChangePseudo={attempts.length === 0} email={p.email} />
+                <SpaceSettings slug={slug} pseudo={p.pseudo} avatarSeed={p.avatar_seed} rank={me?.rank} distinction={me?.distinction ?? null} marketing={p.consent_marketing && !p.marketing_unsubscribed_at} canChangePseudo={attempts.length === 0} email={p.email} />
               </div>
             </Panel>
           </div>

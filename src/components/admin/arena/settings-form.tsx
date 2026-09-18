@@ -11,6 +11,7 @@ import { STATUS_LABEL, type TournamentStatus } from '@/lib/arena/time';
 import { SEQUENCE_KINDS, SEQUENCE_LABEL, type EmailSequence, type TournamentRow } from '@/lib/arena/types';
 import type { IntegrityReport } from '@/lib/arena/admin';
 import { CoverField } from './cover-field';
+import { majorEcnSpecialtyUrl } from '@/lib/arena/passerelle';
 
 function Field({ label, id, children, hint }: { label: string; id: string; children: React.ReactNode; hint?: string }) {
   return (
@@ -30,6 +31,8 @@ export function SettingsForm({ t, integrity, effectiveStatus }: { t: TournamentR
     meta_title: t.meta_title ?? '', meta_description: t.meta_description ?? '', intro_text: t.intro_text, indexable: t.indexable,
     leaderboard_enabled: t.leaderboard_enabled, leaderboard_size: t.leaderboard_size, threshold_pct: t.threshold_pct, min_rounds_final: t.min_rounds_final,
     afficher_effectif_general: t.afficher_effectif_general,
+    distinction_pct: t.distinction_pct, passerelle_enabled: t.passerelle_enabled,
+    passerelle_url: t.passerelle_url ?? '', passerelle_cta: t.passerelle_cta ?? '',
     questions_per_round: t.questions_per_round, round_duration_minutes: t.round_duration_minutes,
     seconds_per_question: t.seconds_per_question, retention_days: t.retention_days,
   });
@@ -52,6 +55,8 @@ export function SettingsForm({ t, integrity, effectiveStatus }: { t: TournamentR
         questions_per_round: 20,
         meta_title: form.meta_title || null,
         meta_description: form.meta_description || null,
+        passerelle_url: form.passerelle_url.trim() || null,
+        passerelle_cta: form.passerelle_cta.trim() || null,
         email_sequence: seq,
         texts: t.texts,
       });
@@ -155,7 +160,8 @@ export function SettingsForm({ t, integrity, effectiveStatus }: { t: TournamentR
             <Input id="s-d" type="number" min={1} max={240} value={form.round_duration_minutes} onChange={(e) => set('round_duration_minutes', num(e.target.value))} disabled={locked} />
           </Field>
           <Field label="Manches requises au classement général" id="s-min" hint="Les trois manches doivent être disputées."><Input id="s-min" type="number" value={3} readOnly /></Field>
-          <Field label="Seuil d’affichage du rang (%)" id="s-th"><Input id="s-th" type="number" min={0} max={100} step="0.5" value={form.threshold_pct} onChange={(e) => set('threshold_pct', num(e.target.value))} /></Field>
+          <Field label="Seuil d’intégration au classement (%)" id="s-th" hint="RANKING_THRESHOLD — sous ce seuil : aucun rang, aucune apparition publique, aucune médaille, même avec le meilleur score (50 % = 5/10)."><Input id="s-th" type="number" min={0} max={100} step="0.5" value={form.threshold_pct} onChange={(e) => set('threshold_pct', num(e.target.value))} /></Field>
+          <Field label="Seuil de distinction (%)" id="s-dist" hint="DISTINCTION_THRESHOLD — trophées Or / Argent / Bronze : podium ET score ≥ seuil (70 % = 7/10). Un 1er sous ce seuil est félicité, sans trophée."><Input id="s-dist" type="number" min={0} max={100} step="0.5" value={form.distinction_pct} onChange={(e) => set('distinction_pct', num(e.target.value))} /></Field>
           <Field label="Entrées dans l’aperçu de l’accueil" id="s-lb" hint="La page Meilleurs scores affiche toujours la liste complète."><Input id="s-lb" type="number" min={1} max={50} value={form.leaderboard_size} onChange={(e) => set('leaderboard_size', num(e.target.value))} /></Field>
           <Field label="Conservation des données (jours)" id="s-ret" hint="Anonymisation automatique après la fin du tournoi (§3.1)."><Input id="s-ret" type="number" min={30} max={3650} value={form.retention_days} onChange={(e) => set('retention_days', num(e.target.value))} /></Field>
         </div>
@@ -167,6 +173,23 @@ export function SettingsForm({ t, integrity, effectiveStatus }: { t: TournamentR
           <input type="checkbox" checked={form.afficher_effectif_general} onChange={(e) => set('afficher_effectif_general', e.target.checked)} />
           <span>Afficher l’effectif général sur les bilans individuels<br /><span className="text-xs text-(--color-ink-muted)">Affiche « 1er sur N » si le rang est visible. Sans effet sur les rangs de manche ni sur la page publique Meilleurs scores.</span></span>
         </label>
+      </section>
+
+      <section className="rounded-(--radius-card) border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft)">
+        <h2 className="text-base font-bold text-(--color-ink)">Passerelle Major ECN (complément du 18/09/2026, §11 à §15)</h2>
+        <p className="mt-1 text-xs text-(--color-ink-soft)">Bloc affiché en dernier sur l’écran de résultat et dans l’espace (score → rang → motivation → correction → prochain objectif → passerelle). Le discours suit le niveau : progresser (&lt; seuil de classement), franchir un cap, se perfectionner (≥ seuil de distinction). Un participant reconnu comme élève Major ECN (adresse d’un compte élève actif à formule payante, ou statut forcé dans l’onglet Participants) ne reçoit jamais de CTA d’achat.</p>
+        <label className="mt-4 flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={form.passerelle_enabled} onChange={(e) => set('passerelle_enabled', e.target.checked)} />
+          Afficher la passerelle Major ECN
+        </label>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <Field label="URL Major ECN de la spécialité (prospects)" id="s-purl" hint={`Vide = page de la spécialité du tournoi : ${majorEcnSpecialtyUrl(form.specialty, form.specialty_id)}`}>
+            <Input id="s-purl" value={form.passerelle_url} onChange={(e) => set('passerelle_url', e.target.value)} placeholder={majorEcnSpecialtyUrl(form.specialty, form.specialty_id)} />
+          </Field>
+          <Field label="Texte du bouton (prospects)" id="s-pcta" hint="Vide = texte du niveau : « Progresser avec Major ECN », « Passer au niveau supérieur avec Major ECN », « Me perfectionner avec Major ECN ».">
+            <Input id="s-pcta" value={form.passerelle_cta} onChange={(e) => set('passerelle_cta', e.target.value)} maxLength={120} placeholder="Découvrir les préparations Major ECN" />
+          </Field>
+        </div>
       </section>
 
       <section className="rounded-(--radius-card) border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft)">

@@ -5,7 +5,9 @@ import { useRouter } from 'next/navigation';
 import { Ban, Download, MailCheck, Pencil, RotateCcw, Trash2, Unlock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { blockParticipant, deleteParticipantData, renameParticipant, resendConfirmationAdmin, resetAttempt } from '@/app/admin/arena/actions';
+import { blockParticipant, deleteParticipantData, renameParticipant, resendConfirmationAdmin, resetAttempt, setParticipantMajorEcnStatus } from '@/app/admin/arena/actions';
+import type { MajorEcnStatus } from '@/lib/arena/types';
+import { DISTINCTION_LABEL, type Distinction } from '@/lib/arena/performance';
 
 export type ParticipantView = {
   id: string; pseudo: string; first_name: string; last_name: string; email: string; specialty: string;
@@ -13,8 +15,14 @@ export type ParticipantView = {
   created_at: string; last_login_at: string | null;
   rounds: { number: number; attemptId: string | null; status: string | null; score: number | null; truncated: boolean; rank: number | null; effectifManche: number }[];
   totalScore: number; rank: number | null;
+  /** Trophée cumulé (podium ET seuil de distinction). */
+  distinction: Distinction | null;
+  /** Statut Major ECN : forçage administratif + détection par l'adresse. */
+  majorEcn: { status: MajorEcnStatus; detected: boolean };
   effectifGeneral: number; reason: string | null; isFinal: boolean;
 };
+
+const isStudent = (p: ParticipantView) => p.majorEcn.status === 'student' || (p.majorEcn.status === 'auto' && p.majorEcn.detected);
 
 const fmt = (iso: string | null) => (iso ? new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' }).format(new Date(iso)) : '—');
 
@@ -22,7 +30,7 @@ const fmt = (iso: string | null) => (iso ? new Intl.DateTimeFormat('fr-FR', { da
 export function ParticipantsTable({ tournamentId, rows }: { tournamentId: string; rows: ParticipantView[] }) {
   const router = useRouter();
   const [q, setQ] = useState('');
-  const [filter, setFilter] = useState<'all' | 'confirmed' | 'unconfirmed' | 'marketing' | 'blocked'>('all');
+  const [filter, setFilter] = useState<'all' | 'confirmed' | 'unconfirmed' | 'marketing' | 'blocked' | 'students' | 'prospects'>('all');
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
 
@@ -31,6 +39,8 @@ export function ParticipantsTable({ tournamentId, rows }: { tournamentId: string
     if (filter === 'unconfirmed' && r.confirmed) return false;
     if (filter === 'marketing' && !r.marketing) return false;
     if (filter === 'blocked' && !r.blocked) return false;
+    if (filter === 'students' && !isStudent(r)) return false;
+    if (filter === 'prospects' && isStudent(r)) return false;
     const s = q.trim().toLowerCase();
     return !s || [r.pseudo, r.first_name, r.last_name, r.email, r.specialty].some((v) => v.toLowerCase().includes(s));
   }), [rows, filter, q]);
@@ -47,6 +57,8 @@ export function ParticipantsTable({ tournamentId, rows }: { tournamentId: string
           <option value="unconfirmed">Non confirmés</option>
           <option value="marketing">Consentement marketing (case 2)</option>
           <option value="blocked">Bloqués</option>
+          <option value="students">Élèves Major ECN</option>
+          <option value="prospects">Prospects</option>
         </select>
         <span className="text-sm text-(--color-ink-soft)">{filtered.length} / {rows.length}</span>
         <div className="ml-auto flex gap-2">
@@ -65,6 +77,7 @@ export function ParticipantsTable({ tournamentId, rows }: { tournamentId: string
               {rows[0]?.rounds.map((r) => <th key={r.number} className="px-3 py-2">M{r.number}</th>)}
               <th className="px-3 py-2">Cumul</th>
               <th className="px-3 py-2">Rang</th>
+              <th className="px-3 py-2">Major ECN</th>
               <th className="px-3 py-2 text-right">Actions</th>
             </tr>
           </thead>
@@ -93,7 +106,14 @@ export function ParticipantsTable({ tournamentId, rows }: { tournamentId: string
                   </td>
                 ))}
                 <td className="px-3 py-2 font-semibold">{p.totalScore.toLocaleString('fr-FR')}</td>
-                <td className="px-3 py-2">{p.rank ?? <span className="text-xs text-(--color-ink-muted)">{p.reason === 'not_enough_rounds' ? '3 manches requises' : p.reason === 'under_threshold' ? 'sous seuil' : 'non classé'}</span>}{p.isFinal && <span className="block text-xs text-(--color-ink-muted)">Effectif général : {p.effectifGeneral}</span>}</td>
+                <td className="px-3 py-2">{p.rank ?? <span className="text-xs text-(--color-ink-muted)">{p.reason === 'not_enough_rounds' ? '3 manches requises' : p.reason === 'under_threshold' ? 'sous seuil' : 'non classé'}</span>}{p.distinction && <span className="block text-xs font-semibold text-amber-700">Distinction {DISTINCTION_LABEL[p.distinction]}</span>}{p.rank !== null && !p.distinction && p.rank <= 3 && <span className="block text-xs text-(--color-ink-muted)">podium sans trophée</span>}{p.isFinal && <span className="block text-xs text-(--color-ink-muted)">Effectif général : {p.effectifGeneral}</span>}</td>
+                <td className="px-3 py-2 text-xs">
+                  <select value={p.majorEcn.status} disabled={pending || p.anonymized} title="Statut pour la passerelle Major ECN (auto = détection par l’adresse)" onChange={(e) => run(() => setParticipantMajorEcnStatus(p.id, e.target.value as MajorEcnStatus))} className="h-8 rounded-(--radius-button) border border-(--color-border) bg-(--color-surface) px-2 text-xs">
+                    <option value="auto">Auto ({p.majorEcn.detected ? 'élève' : 'prospect'})</option>
+                    <option value="student">Élève Major ECN</option>
+                    <option value="prospect">Prospect</option>
+                  </select>
+                </td>
                 <td className="px-3 py-2">
                   <div className="flex justify-end gap-1">
                     {!p.confirmed && !p.anonymized && <Button variant="ghost" size="sm" title="Renvoyer la confirmation" disabled={pending} onClick={() => run(() => resendConfirmationAdmin(p.id))}><MailCheck className="h-4 w-4" /></Button>}
@@ -106,7 +126,7 @@ export function ParticipantsTable({ tournamentId, rows }: { tournamentId: string
                 </td>
               </tr>
             ))}
-            {filtered.length === 0 && <tr><td colSpan={7 + (rows[0]?.rounds.length ?? 0)} className="px-3 py-6 text-center text-(--color-ink-soft)">Aucun participant.</td></tr>}
+            {filtered.length === 0 && <tr><td colSpan={8 + (rows[0]?.rounds.length ?? 0)} className="px-3 py-6 text-center text-(--color-ink-soft)">Aucun participant.</td></tr>}
           </tbody>
         </table>
       </div>

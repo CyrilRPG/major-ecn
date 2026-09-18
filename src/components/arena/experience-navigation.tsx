@@ -121,6 +121,7 @@ export function ExperienceNavigation({ nav }: { nav: ArenaNavigation }) {
           <ArenaAvatar
             seed={nav.participant?.avatar_seed ?? "casque"}
             rank={nav.participant?.rank}
+            distinction={nav.participant?.distinction}
             size={50}
           />
           <span>{nav.participant?.pseudo ?? "Connexion"}</span>

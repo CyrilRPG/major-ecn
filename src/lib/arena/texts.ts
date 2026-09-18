@@ -46,26 +46,33 @@ export const COMMERCIAL_AFTER_M3 = 'Vous souhaitez poursuivre votre préparation
  * durée, ces deux valeurs viennent du tournoi : une règle publique fausse
  * serait pire que pas de règle du tout.
  */
-export function publicRules(t: { questions_per_round: number; seconds_per_question?: number | null; threshold_pct?: number }): string[] {
+export function publicRules(t: { questions_per_round: number; seconds_per_question?: number | null; threshold_pct?: number; distinction_pct?: number }): string[] {
   const secondes = t.seconds_per_question ?? DEFAULT_SECONDS_PER_QUESTION;
+  const seuil = t.threshold_pct ?? 50;
+  const distinction = Math.max(seuil, t.distinction_pct ?? 70);
   return [
   'Trois manches. Les dates et heures d’ouverture et de clôture de chaque manche figurent dans le calendrier du tournoi.',
   `Format prévu : ${t.questions_per_round} questions par manche. Durée par défaut : ${secondes} s par question ; une durée spécifique peut être indiquée pour certaines questions. Une seule tentative. Chaque question est chronométrée séparément : le temps écoulé, on passe à la suivante. Le nombre effectif de questions, le thème et le barème figurent sur l’écran de la manche.`,
   'Corrections après clôture.',
   'Classement cumulatif, provisoire après M1 et M2, final après M3.',
-  'Votre personnage est conservé pendant toute l’Arena. Son habillage dépend uniquement du classement cumulé actuel : 1er Or / Prestige, 2e Argent, 3e Bronze, tous les autres Standard. Il peut monter ou redescendre après chaque publication ; vos positions précédentes restent dans votre palmarès personnel.',
+  `Votre personnage est conservé pendant toute l’Arena. Son habillage suit votre distinction cumulée actuelle : Or / Prestige, Argent ou Bronze quand vous occupez la 1re, 2e ou 3e place ET que votre score cumulé atteint ${distinction} % ; Standard dans tous les autres cas. Il peut monter ou redescendre après chaque publication ; vos positions précédentes restent dans votre palmarès personnel.`,
   'Classement général établi sur les participants ayant disputé les trois manches.',
   'Inscription possible en cours de tournoi, y compris pendant une manche ouverte : le temps de jeu est alors limité au temps restant avant la clôture.',
   'Égalité départagée par points, puis réponses parfaites, puis temps moyen par manche.',
-  `Sous ${t.threshold_pct ?? 50} % de score cumulé, aucun rang affiché et aucune apparition dans le classement public ; le seuil est réévalué après chaque manche sur le score cumulé du moment.`,
+  `Sous ${seuil} % de score cumulé, aucun rang affiché et aucune apparition dans le classement public, même avec le meilleur score de la manche ; le seuil est réévalué après chaque manche sur le score cumulé du moment.`,
+  `Être premier ne suffit pas : les distinctions Or, Argent et Bronze (trophées EVC Arena) exigent une place sur le podium ET un score d’au moins ${distinction} %. Un premier sous ce seuil est félicité pour sa place, sans trophée.`,
   'Les rangs de manche sont affichés sans effectif sur votre espace. L’effectif général peut accompagner votre rang final selon le paramétrage du tournoi. Il reste visible sur la page publique Meilleurs scores.',
   'EVC Arena est un entraînement ludique, pas un concours blanc.',
   ];
 }
 
-/** Message neutre sous le seuil (§7) — jamais de mention de perte de rang. */
+/**
+ * Message sous le seuil (§7 du cahier initial : jamais de mention de perte de
+ * rang ; §3 du complément du 18/09/2026 : « Il reste du travail, mais ne vous
+ * arrêtez pas là »).
+ */
 export const UNDER_THRESHOLD_MESSAGE =
-  'Vous restez en course. Le classement cumulé s’affiche dès que votre score cumulé atteint le seuil, réévalué après chaque manche. Les corrections détaillées vous aideront à préparer la suivante.';
+  'Vous n’avez pas encore réussi à intégrer le classement EVC Arena. Il reste du travail, mais ne vous arrêtez pas là : analysez vos erreurs, entraînez-vous et revenez plus fort à chaque manche. Le seuil est réévalué après chaque manche sur votre score cumulé.';
 
 /** Motifs de signalement (§10.1). */
 export const REPORT_MOTIFS: Record<string, string> = {

@@ -6,13 +6,14 @@ import { Trash2 } from 'lucide-react';
 import { ArenaAvatar } from '@/components/arena/arena-avatar';
 import { changePseudo, deleteMyAccount, logoutArena, setMarketingConsent } from '@/app/(arena)/arena/[slug]/actions';
 import { CONSENT_MARKETING } from '@/lib/arena/texts';
+import type { Distinction } from '@/lib/arena/performance';
 import { ArenaButton, ARENA, BODY, DISPLAY } from './arena-ui';
 import { CheckRow, Field, FormError, TextInput } from './form-ui';
 
 /** Réglages de l'espace participant : avatar, pseudonyme (avant la 1re manche), consentement n° 2, suppression du compte (§3.1). */
 export function SpaceSettings({
-  slug, pseudo, avatarSeed, rank, marketing, canChangePseudo, email,
-}: { slug: string; pseudo: string; avatarSeed: string; rank?: number | null; marketing: boolean; canChangePseudo: boolean; email: string }) {
+  slug, pseudo, avatarSeed, rank, distinction, marketing, canChangePseudo, email,
+}: { slug: string; pseudo: string; avatarSeed: string; rank?: number | null; distinction?: Distinction | null; marketing: boolean; canChangePseudo: boolean; email: string }) {
   const router = useRouter();
   const [newPseudo, setNewPseudo] = useState(pseudo);
   const [consent, setConsent] = useState(marketing);
@@ -24,11 +25,11 @@ export function SpaceSettings({
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-4">
-        <ArenaAvatar seed={avatarSeed} rank={rank} size={72} title={pseudo} />
+        <ArenaAvatar seed={avatarSeed} rank={rank} distinction={distinction} size={72} title={pseudo} />
         <div>
           <p className="text-lg font-extrabold" style={{ fontFamily: DISPLAY }}>{pseudo}</p>
           <p className="text-xs" style={{ color: ARENA.textMuted, fontFamily: BODY }}>{email}</p>
-          <p className="mt-2 text-xs leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Votre personnage reste le même pendant toute l’Arena. Son habillage suit votre rang au classement cumulé.</p>
+          <p className="mt-2 text-xs leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Votre personnage reste le même pendant toute l’Arena. Son habillage suit votre distinction au classement cumulé : Or, Argent ou Bronze quand vous êtes sur le podium avec un score au niveau de distinction.</p>
         </div>
       </div>
 

@@ -7,6 +7,7 @@ import { AVATARS_PLANCHE, DEFAULT_ARENA_AVATAR } from '@/components/arena/avatar
 import { Leaderboard } from '@/components/arena/leaderboard';
 import { ArenaPage, type ShellNav } from '@/components/arena/arena-shell';
 import type { RankHistoryEntry } from '@/lib/arena/rank-history';
+import { distinctionFor, scorePct } from '@/lib/arena/performance';
 
 /** Local fixtures, behind the preview route's development-only guard. */
 export function AvatarShowcase({ nav }: { nav: ShellNav }) {
@@ -15,6 +16,8 @@ export function AvatarShowcase({ nav }: { nav: ShellNav }) {
   const [step, setStep] = useState(0);
   const ranks = scenario.split(',').map(Number);
   const rank = step ? ranks[step - 1] : null;
+  // Même règle que le moteur : podium ET score cumulé au niveau de distinction.
+  const distinction = distinctionFor(rank, scorePct(step * 10, step * 13));
   const history: RankHistoryEntry[] = ranks.slice(0, step).map((r, i) => ({
     roundId: `demo-${i}`, roundNumber: i + 1, rank: r, totalScore: (i + 1) * 10,
     totalMax: (i + 1) * 13, recordedAt: `2026-09-${10 + i}T12:00:00Z`, isFinal: i === 2, reconstructed: false,
@@ -23,9 +26,10 @@ export function AvatarShowcase({ nav }: { nav: ShellNav }) {
     rank: i + 1, pseudo: rank === i + 1 ? 'DrHorus27' : ['Asclepios', 'DrMinerva', 'Medicus', 'Hygie', 'DrAtlas', 'Panacee'][i],
     avatarSeed: rank === i + 1 ? seed : ['medecin-01', 'medecin-02', 'medecin-03', 'lion', 'hibou', 'casque'][i],
     totalScore: rank ? step * 10 + rank - i - 1 : 0, roundsPlayed: step, me: rank === i + 1,
+    distinction: distinctionFor(i + 1, scorePct(rank ? step * 10 + rank - i - 1 : 0, step * 13)),
   })) : [];
-  return <ArenaPage nav={{ ...nav, participant: { pseudo: 'DrHorus27', avatar_seed: seed, rank } }} immersive bare><div className="ae-avatar-showcase">
-    <header><p className="ae-kicker">VOTRE IDENTITÉ DANS L’ARENA</p><h1>Un personnage. Votre classement actuel.</h1><p>Votre avatar reste le même pendant toute l’Arena. Après chaque manche, son habillage évolue selon votre position au classement cumulé, à la hausse comme à la baisse.</p></header>
+  return <ArenaPage nav={{ ...nav, participant: { pseudo: 'DrHorus27', avatar_seed: seed, rank, distinction } }} immersive bare><div className="ae-avatar-showcase">
+    <header><p className="ae-kicker">VOTRE IDENTITÉ DANS L’ARENA</p><h1>Un personnage. Votre classement actuel.</h1><p>Votre avatar reste le même pendant toute l’Arena. Après chaque manche, son habillage évolue selon votre distinction au classement cumulé (podium et seuil de distinction), à la hausse comme à la baisse.</p></header>
     <AvatarDistinctions seed={seed} />
     <section className="ae-panel ae-avatar-simulation">
       <h2>Simulation du parcours</h2><p>Aperçu local avec des données fictives. Publiez les trois manches pour vérifier l’apparence actuelle et le palmarès.</p>
@@ -36,7 +40,7 @@ export function AvatarShowcase({ nav }: { nav: ShellNav }) {
         <button disabled={step === 0} onClick={() => setStep(0)}>Recommencer</button>
       </div>
       <div className="ae-avatar-simulation-grid">
-        <div aria-live="polite"><AvatarRankHistory seed={seed} pseudo="DrHorus27" rank={rank} entries={history} /></div>
+        <div aria-live="polite"><AvatarRankHistory seed={seed} pseudo="DrHorus27" rank={rank} distinction={distinction} entries={history} /></div>
         <Leaderboard rows={rows} totalMax={step * 13} roundsCount={step} subtitle={step === 3 ? 'Classement final (cumulé)' : 'Classement provisoire (cumulé)'} rulesHref="?state=avatars" />
       </div>
     </section>

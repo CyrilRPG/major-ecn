@@ -77,7 +77,16 @@ export type TournamentRow = {
   leaderboard_enabled: boolean;
   afficher_effectif_general: boolean;
   leaderboard_size: number;
+  /** Seuil d'intégration au classement (%), RANKING_THRESHOLD — 50 par défaut. */
   threshold_pct: number;
+  /** Seuil de distinction (%), DISTINCTION_THRESHOLD — 70 par défaut. */
+  distinction_pct: number;
+  /** Afficher la passerelle Major ECN après les résultats (§11 à §14). */
+  passerelle_enabled: boolean;
+  /** URL Major ECN de la spécialité ; null = page de la spécialité du tournoi. */
+  passerelle_url: string | null;
+  /** Texte du CTA prospect ; null = texte du niveau (§18). */
+  passerelle_cta: string | null;
   min_rounds_final: number;
   questions_per_round: number;
   /** Plafond de sécurité de la manche entière (min). Le minutage réel est
@@ -173,6 +182,8 @@ export type ParticipantRow = {
   utm: Record<string, string> | null;
   invited_by: string | null;
   invite_code: string;
+  /** Statut Major ECN forcé par l'administration ; 'auto' = détection par l'adresse. */
+  major_ecn_status: MajorEcnStatus;
   blocked_at: string | null;
   blocked_reason: string | null;
   anonymized_at: string | null;
@@ -180,6 +191,9 @@ export type ParticipantRow = {
   created_at: string;
   updated_at: string;
 };
+
+export type MajorEcnStatus = 'auto' | 'student' | 'prospect';
+export const MAJOR_ECN_STATUSES: MajorEcnStatus[] = ['auto', 'student', 'prospect'];
 
 export type AttemptStatus = 'in_progress' | 'submitted' | 'expired';
 

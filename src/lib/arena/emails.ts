@@ -6,6 +6,7 @@ import { describeBareme, type Bareme } from './scoring';
 import { formatNote, noteMax, noteSur10 } from './note';
 import { parisAndLocalLabel } from './time';
 import { COMMERCIAL_AFTER_M3, publicRules, UNDER_THRESHOLD_MESSAGE, WARNING_CONNECTION, WARNING_NATURE } from './texts';
+import { DISTINCTION_LABEL, isPodiumRank, ordinalRank, type Distinction } from './performance';
 import { DEFAULT_SECONDS_PER_QUESTION, type EmailKind, type ParticipantRow, type TournamentRow } from './types';
 
 /**
@@ -174,7 +175,7 @@ export function relanceEmail(t: TournamentRow, p: ParticipantRow, round: { numbe
 export function resultsEmail(
   t: TournamentRow,
   p: ParticipantRow,
-  r: { number: number; theme: string; score: number | null; max: number; cumulScore: number; cumulMax: number; cumulRounds: number; rank: number | null; isLast: boolean; next: { number: number; opens_at: Date | null; theme: string } | null },
+  r: { number: number; theme: string; score: number | null; max: number; cumulScore: number; cumulMax: number; cumulRounds: number; rank: number | null; distinction?: Distinction | null; isLast: boolean; next: { number: number; opens_at: Date | null; theme: string } | null },
 ): Mail {
   const urls = arenaUrls(t);
   // Notes affichées sur 10 par manche (cf. lib/arena/note.ts).
@@ -182,10 +183,20 @@ export function resultsEmail(
   const noteCumul = `${formatNote(noteSur10(r.cumulScore, r.cumulMax, r.cumulRounds))} / ${formatNote(noteMax(r.cumulRounds))}`;
   const subject = `Résultats de la manche ${r.number} — votre correction détaillée est disponible`;
   const played = r.score !== null;
+  // Cahier des charges complémentaire §5-§9 : être classé ≠ trophée. Le trophée
+  // (Or / Argent / Bronze) exige le podium ET le seuil de distinction.
+  const distinctionLine = r.rank !== null
+    ? r.distinction
+      ? `Distinction ${DISTINCTION_LABEL[r.distinction]} EVC Arena : ${ordinalRank(r.rank)} du classement cumulé au niveau de distinction. Elle est conservée dans votre palmarès.`
+      : isPodiumRank(r.rank)
+        ? `Vous occupez la ${ordinalRank(r.rank)} place du classement cumulé. Le trophée EVC Arena reste à conquérir : il exige un score d’au moins ${t.distinction_pct} %.`
+        : null
+    : null;
   const lines: string[] = [para(`Bonjour ${p.first_name},`)];
   if (played) {
     lines.push(box(`<p style="margin:0;font-weight:700;color:${NAVY}">Note de la manche ${r.number} : ${noteManche}</p><p style="margin:6px 0 0;color:#374151">Note cumulée : ${noteCumul}${r.rank !== null ? ` — rang ${r.rank}` : ''}</p>`));
     if (r.rank === null) lines.push(para(UNDER_THRESHOLD_MESSAGE));
+    else if (distinctionLine) lines.push(para(distinctionLine));
   } else {
     lines.push(para(`Vous n’avez pas joué la manche ${r.number}. Le classement général nécessite les trois manches. Vos résultats, vos rangs de manche et vos corrections détaillées restent disponibles pour les manches disputées.`));
   }
@@ -201,6 +212,7 @@ export function resultsEmail(
     `Bonjour ${p.first_name},`,
     played ? `Note de la manche ${r.number} : ${noteManche}\nNote cumulée : ${noteCumul}${r.rank !== null ? ` — rang ${r.rank}` : ''}` : `Vous n'avez pas joué la manche ${r.number}.`,
     r.rank === null && played ? UNDER_THRESHOLD_MESSAGE : '',
+    played && distinctionLine ? distinctionLine : '',
     `Votre correction détaillée de la manche ${r.number} est maintenant disponible dans votre espace EVC Arena (Mon espace → Manche ${r.number} → Résultats → Correction détaillée).\nOuvrir mon espace : ${urls.space}`,
     r.next ? `Prochaine manche : M${r.next.number}${r.next.opens_at ? ` — ${parisAndLocalLabel(r.next.opens_at, p.timezone, true)}` : ''}` : '',
     r.isLast ? `${COMMERCIAL_AFTER_M3} ${siteUrl()}` : '',

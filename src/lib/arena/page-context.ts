@@ -24,7 +24,9 @@ export async function loadArenaPage(slug: string, opts: { preview?: boolean } = 
   if (!v) notFound();
   const { snap, staff } = v;
   const participant = await currentParticipant(snap.tournament.id);
-  const rank = participant ? (await computeTournamentStandings(snap)).standings.find(s => s.participantId === participant.id)?.rank ?? null : null;
+  const me = participant ? (await computeTournamentStandings(snap)).standings.find(s => s.participantId === participant.id) ?? null : null;
+  const rank = me?.rank ?? null;
+  const distinction = me?.distinction ?? null;
   const open = registrationOpen(snap);
   return {
     snap,
@@ -35,7 +37,7 @@ export async function loadArenaPage(slug: string, opts: { preview?: boolean } = 
       slug,
       title: snap.tournament.title,
       editionLabel: snap.tournament.edition_label,
-      participant: participant ? { pseudo: participant.pseudo, avatar_seed: participant.avatar_seed, rank } : null,
+      participant: participant ? { pseudo: participant.pseudo, avatar_seed: participant.avatar_seed, rank, distinction } : null,
       registrationOpen: open,
       leaderboardEnabled: snap.tournament.leaderboard_enabled,
       staffPreview: Boolean(opts.preview && staff),

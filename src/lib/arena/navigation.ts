@@ -6,7 +6,7 @@ export type ArenaNavigation = {
   slug: string;
   title: string;
   editionLabel?: string;
-  participant: { pseudo: string; avatar_seed?: string; rank?: number | null } | null;
+  participant: { pseudo: string; avatar_seed?: string; rank?: number | null; distinction?: 'gold' | 'silver' | 'bronze' | null } | null;
   registrationOpen: boolean;
   leaderboardEnabled: boolean;
   staffPreview?: boolean;

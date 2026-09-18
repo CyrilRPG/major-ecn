@@ -10,7 +10,8 @@ const options = { thresholdPct: 0, minRoundsFinal: 3, isFinal: false };
 
 for (const scenario of [
   { scores: [[9, 5, 10], [8, 8, 6], [6, 5, 4], [5, 5, 3], [4, 4, 2], [3, 3, 1]], ranks: [1, 2, 1], tiers: ['gold', 'silver', 'gold'] },
-  { scores: [[7, 0, 10], [10, 1, 1], [8, 2, 1], [6, 3, 1], [5, 3, 1], [4, 4, 10]], ranks: [3, 6, 2], tiers: ['bronze', 'standard', 'silver'] },
+  // 3e à 70 % → Bronze ; 2e à 56,7 % → Standard : le trophée exige le podium ET le seuil de distinction.
+  { scores: [[7, 0, 10], [10, 1, 1], [8, 2, 1], [6, 3, 1], [5, 3, 1], [4, 4, 10]], ranks: [3, 6, 2], tiers: ['bronze', 'standard', 'standard'] },
 ]) {
   test(`classement cumulé ${scenario.ranks.join(' → ')} : identité stable et palmarès conservé`, () => {
     const attempts: RankingAttempt[] = scenario.scores.flatMap((scores, p) => scores.map((score, m) => ({ participantId: `p${p}`, roundId: `m${m + 1}`, score, perfectCount: 0, durationSeconds: 60, truncated: false })));
@@ -20,7 +21,7 @@ for (const scenario of [
       const me = standings.find(s => s.participantId === 'p0')!;
       history.push(rankingSnapshotRows(standings).find(s => s.participant_id === 'p0')!);
       assert.equal(me.rank, scenario.ranks[publication - 1]);
-      assert.equal(avatarAppearance(me.rank), scenario.tiers[publication - 1]);
+      assert.equal(avatarAppearance(me.distinction), scenario.tiers[publication - 1]);
       assert.equal(me.avatarSeed, 'personnage-0');
       assert.equal(me.roundsPlayed, publication);
       // Snapshots retain their own scalar values even if current standings change.
@@ -36,16 +37,17 @@ test('avant publication, sous le seuil, hors podium : Standard ; aucune promotio
   for (const published of [false, true]) {
     const me = computeStandings(rounds.map(r => ({ ...r, counted: published })), attempts, participants, { ...options, thresholdPct: 50 })[0];
     assert.equal(me.rank, null);
-    assert.equal(avatarAppearance(me.rank), 'standard');
+    assert.equal(me.distinction, null);
+    assert.equal(avatarAppearance(me.distinction), 'standard');
   }
-  for (const rank of [undefined, null, 0, -1, 4, 150, NaN, 1.5]) assert.equal(avatarAppearance(rank), 'standard');
+  for (const value of [undefined, null, 'or', 'GOLD', 1, 'standard', '']) assert.equal(avatarAppearance(value as never), 'standard');
 });
 
 test('le classement public ne contient que le pseudonyme, le portrait original, le rang et les scores', () => {
   const standings = computeStandings([{ ...rounds[0], counted: true }], participants.map(p => ({ participantId: p.id, roundId: 'm1', score: 10, perfectCount: 0, durationSeconds: 60, truncated: false })), participants, options);
   const rows = leaderboardRows(standings, 10);
-  assert.ok(rows.every(r => r.rank === 1 && avatarAppearance(r.rank) === 'gold'), 'égalité parfaite = même distinction');
-  assert.deepEqual(Object.keys(rows[0]).sort(), ['avatarSeed', 'me', 'pseudo', 'rank', 'roundsPlayed', 'totalScore']);
+  assert.ok(rows.every(r => r.rank === 1 && r.distinction === 'gold' && avatarAppearance(r.distinction) === 'gold'), 'égalité parfaite = même distinction');
+  assert.deepEqual(Object.keys(rows[0]).sort(), ['avatarSeed', 'distinction', 'me', 'pseudo', 'rank', 'roundsPlayed', 'totalScore']);
   assert.ok(!JSON.stringify(rows).includes('PRIVATE'));
   assert.ok(!JSON.stringify(rows).includes('private@example.test'));
 });
