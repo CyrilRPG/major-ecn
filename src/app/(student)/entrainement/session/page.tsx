@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
 import { EDN_FACULTE_ID, getNavigatorTree } from '@/lib/data/navigator';
 import { TargetedSession, type TQuestion } from '@/components/student/targeted-session';
-import { aplatirUnites, choisirUnites, regrouperEnUnites } from '@/lib/pedago/dossiers';
+import { aplatirUnites, choisirUnites, dossiersDepuisSeries, formeDeSerie, regrouperEnUnites, type SerieRowForme } from '@/lib/pedago/dossiers';
 
 const MAX_Q = 12;
 /**
@@ -38,8 +38,6 @@ type QRow = {
   qcm_items: { id: string; lettre: string; enonce: string; justification: string; is_correct: boolean; images: string[] | null }[] | null;
   qcm_series: { label: string | null; vignette: string | null; cours: { matieres: { id: string; nom: string; semestres: { faculte_id: string } } } };
 };
-/** Série de forme « dossier » (vignette) et son nombre TOTAL de questions. */
-type DossierRow = { id: string; qcm_questions: { count: number }[] | null };
 
 export default async function TargetedSessionPage({
   searchParams,
@@ -125,44 +123,49 @@ export default async function TargetedSessionPage({
     && (!collegeFilter || collegeFilter.has(q.qcm_series.cours.matieres.id))
     // On garde les QCM (avec items) ET les QROC (saisie libre).
     && (q.format === 'qroc' || (!!q.qcm_items && q.qcm_items.length > 0));
-  /** Un dossier = une série à vignette (critère du trigger qcm_series_set_kind). */
-  const estDossier = (q: QRow) => !!q.qcm_series.vignette?.trim();
 
-  // 3. Questions prioritaires (au plus 12, visées par identifiant). Celle qui
-  //    appartient à un dossier progressif ne peut pas être servie seule : son
-  //    dossier ENTIER est chargé avec l'échantillon (règle du 18/09/2026).
+  // 3. Questions prioritaires (au plus 12, visées par identifiant). Une
+  //    question n'est servie seule que si sa série est une série de questions
+  //    isolées ; sinon sa série ENTIÈRE est chargée avec l'échantillon (règle
+  //    du 18/09/2026, précisée le 20/09/2026 : annales, entraînements, séances
+  //    et sujets longs comptent comme des dossiers — voir lib/pedago/dossiers).
   const prioQ = prioritized.length > 0
     ? (((await supabase.from('qcm_questions').select(CHAMPS_QUESTION).in('id', prioritized)).data ?? []) as unknown as QRow[]).filter(utilisable)
     : [];
-  const seriesACharger = [...new Set([...serieIds, ...prioQ.filter(estDossier).map((q) => q.serie_id)])];
 
-  // 4. Vivier (séries entières, rangées série par série pour qu'une limite ne
-  //    coupe pas un dossier en deux) et total de questions des dossiers, pour
-  //    vérifier qu'un dossier est bien complet avant de le servir.
-  const [vivierRes, dossiersRes] = await Promise.all([
-    supabase
-      .from('qcm_questions')
-      .select(CHAMPS_QUESTION)
-      .in('serie_id', seriesACharger)
-      .order('serie_id')
-      .order('order_index')
-      .limit(TAILLE_VIVIER),
-    supabase
-      .from('qcm_series')
-      .select('id, qcm_questions(count)')
-      .in('id', seriesACharger)
-      .not('vignette', 'is', null)
-      .neq('vignette', ''),
-  ]);
-  const dossiers = new Map<string, number>(
-    ((dossiersRes.data ?? []) as unknown as DossierRow[]).map((s) => [s.id, s.qcm_questions?.[0]?.count ?? 0]),
-  );
+  // 4. Forme des séries candidates (échantillon + séries des prioritaires) :
+  //    libellé, type, vignette et nombre TOTAL de questions. Une série servie
+  //    entière qui compte plus de questions que la session ne peut jamais être
+  //    retenue : on ne la charge pas (un entraînement de 50 questions ou la
+  //    révision générale de 354 saturaient le vivier pour rien).
+  const candidates = [...new Set([...serieIds, ...prioQ.map((q) => q.serie_id)])];
+  const { data: formesRaw } = await supabase
+    .from('qcm_series')
+    .select('id, label, type, vignette, qcm_questions(count)')
+    .in('id', candidates);
+  const formes = ((formesRaw ?? []) as unknown as SerieRowForme[]).map(formeDeSerie);
+  const dossiers = dossiersDepuisSeries(formes);
+  const seriesACharger = formes
+    .filter((s) => !dossiers.has(s.id) || s.nbQuestions <= MAX_Q)
+    .map((s) => s.id);
+
+  // 5. Vivier : les séries retenues, entières, rangées série par série pour
+  //    qu'une limite ne coupe pas une série servie entière en deux.
+  const { data: vivierRaw } = seriesACharger.length > 0
+    ? await supabase
+        .from('qcm_questions')
+        .select(CHAMPS_QUESTION)
+        .in('serie_id', seriesACharger)
+        .order('serie_id')
+        .order('order_index')
+        .limit(TAILLE_VIVIER)
+    : { data: [] };
 
   // Vivier = questions des séries chargées + questions prioritaires isolées
-  // (celles d'un dossier y sont déjà, avec tout leur dossier).
+  // (celles d'une série servie entière y sont déjà, avec toute leur série).
   const parId = new Map<string, QRow>();
-  for (const q of ((vivierRes.data ?? []) as unknown as QRow[]).filter(utilisable)) parId.set(q.id, q);
-  for (const q of prioQ) if (!parId.has(q.id) && !estDossier(q)) parId.set(q.id, q);
+  for (const q of ((vivierRaw ?? []) as unknown as QRow[]).filter(utilisable)) parId.set(q.id, q);
+  for (const q of prioQ) if (!parId.has(q.id) && !dossiers.has(q.serie_id)) parId.set(q.id, q);
 
   // Unité de sélection : dossier complet ou question isolée ; un dossier
   // incomplet (limite du vivier, question sans items) est écarté, jamais tronqué.

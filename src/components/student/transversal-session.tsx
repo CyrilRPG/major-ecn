@@ -256,7 +256,7 @@ export function TransversalSession({
 
       {q.dossier && (
         <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-(--color-accent-soft) px-2.5 py-1 text-[11px] font-semibold text-(--color-accent-deep)">
-          Dossier progressif{q.dossier.label ? ` · ${q.dossier.label}` : ''} — question {q.dossier.position}/{q.dossier.total}
+          {q.vignette ? 'Dossier progressif' : 'Série complète'}{q.dossier.label ? ` · ${q.dossier.label}` : ''} — question {q.dossier.position}/{q.dossier.total}
         </p>
       )}
       {q.vignette && (
@@ -774,7 +774,7 @@ function CorrectionsView({
                 {q.college}
                 {q.dossier && (
                   <span className="text-(--color-accent-deep)">
-                    {' · '}Dossier{q.dossier.label ? ` ${q.dossier.label}` : ''} — {q.dossier.position}/{q.dossier.total}
+                    {' · '}{q.vignette ? 'Dossier' : 'Série'}{q.dossier.label ? ` ${q.dossier.label}` : ''} — {q.dossier.position}/{q.dossier.total}
                   </span>
                 )}
               </span>

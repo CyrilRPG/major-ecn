@@ -105,7 +105,7 @@ export function QcmEngine({
 
       {q.dossier && (
         <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-[#F1E8FD] px-2.5 py-1 text-[11px] font-semibold text-[#6D28D9]">
-          Dossier progressif{q.dossier.label ? ` · ${q.dossier.label}` : ''} — question {q.dossier.position}/{q.dossier.total}
+          {q.vignette ? 'Dossier progressif' : 'Série complète'}{q.dossier.label ? ` · ${q.dossier.label}` : ''} — question {q.dossier.position}/{q.dossier.total}
         </p>
       )}
       {q.vignette && (

@@ -90,6 +90,20 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     { isApprofondi },
   );
 
+  // Bonus Gériatrie → Médecine générale : les DP, entraînements et séances du
+  // professeur de cet item sont retirés par la règle d'accès (policy
+  // qcm_series_geriatrie_mg_block_dp_entrainement_seance, rejouée ci-dessus).
+  // L'élève qui cherche « les dossiers progressifs » doit le lire ici plutôt
+  // que d'y voir un contenu manquant (signalé le 19/09/2026 sur Syndromes
+  // coronariens aigus). On compte les séries que ce seul bonus masque.
+  const masqueesParBonus = accessCtx.geriatrieMgBonus
+    ? ((rawSeries ?? []) as unknown as SerieListRow[]).filter((s) => {
+        const formats = (s.qcm_questions ?? []).map((q) => q.format);
+        return !canStudentReadSerie(s, accessCtx, formats)
+          && canStudentReadSerie(s, { ...accessCtx, geriatrieMgBonus: false }, formats);
+      }).length
+    : 0;
+
   // Les annales ne se listent pas série par série : une session EVC compte
   // jusqu'à onze dossiers, et dix-sept sessions cohabitent sur un même item.
   // On passe donc par l'ANNÉE — l'élève choisit une année, puis l'annale.
@@ -179,6 +193,16 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
           Chaque proposition est corrigée et justifiée immédiatement, au format EVC.
         </p>
       </div>
+
+      {masqueesParBonus > 0 && (
+        <div className="mb-4 flex items-start gap-2 rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2 text-xs text-(--color-ink-soft)">
+          <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+          <p>
+            <span className="font-semibold text-(--color-ink)">Accès complémentaire Médecine générale.</span>{' '}
+            Cet item vous propose uniquement ses questions isolées : ses dossiers progressifs, entraînements et séances du professeur ne font pas partie de cet accès.
+          </p>
+        </div>
+      )}
 
       {series.length === 0 ? (
         <div className="rounded-2xl border border-(--color-border) bg-(--color-surface)">

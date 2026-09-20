@@ -7,7 +7,7 @@ import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { getMaintienStats, getStudiedSpecialties, loadStudentAttempts } from '@/lib/pedago/maintien';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { transversalSessionSize, requiredReevaluationKind, SEUIL_REEVALUATION } from '@/lib/pedago/status';
-import { aplatirUnites, choisirUnites, regrouperEnUnites } from '@/lib/pedago/dossiers';
+import { aplatirUnites, choisirUnites, dossiersDepuisSeries, formeDeSerie, regrouperEnUnites, type SerieRowForme } from '@/lib/pedago/dossiers';
 import {
   TransversalSession,
   type TransversalQuestion,
@@ -112,15 +112,12 @@ export default async function TransversalSessionPage({
     qcm_items: { count: number }[] | null;
     qcm_series: { cours: { matieres: { id: string; semestres: { faculte_id: string } } } };
   };
-  /** Série de forme « dossier » (vignette) et son nombre TOTAL de questions :
-   *  c'est ce qui permet de vérifier qu'un dossier est servi complet. */
-  type DossierRow = { id: string; qcm_questions: { count: number }[] | null };
   const COURS_PAR_TRANCHE = 50;
   const tranches: string[][] = [];
   for (let i = 0; i < studiedCoursIds.length; i += COURS_PAR_TRANCHE) {
     tranches.push(studiedCoursIds.slice(i, i + COURS_PAR_TRANCHE));
   }
-  const [pool, dossierRows] = await Promise.all([
+  const [pool, serieRows] = await Promise.all([
     Promise.all(tranches.map((coursIds) =>
       fetchAllRows<PoolRow>((from, to) =>
         supabase
@@ -131,25 +128,25 @@ export default async function TransversalSessionPage({
           .range(from, to) as never,
       ),
     )).then((r) => r.flat()),
-    // Un dossier = une série qui porte une vignette (contexte clinique partagé),
-    // le critère même du trigger qcm_series_set_kind. Les DP QROC (kind 'qroc'
-    // à vignette) en font partie, comme le veut la règle du 18/09/2026.
+    // TOUTES les séries des cours étudiés, avec ce qui décide de leur forme
+    // (vignette, libellé, type) et leur nombre TOTAL de questions. Seule une
+    // série de questions isolées se pioche question par question ; toute
+    // autre (dossier progressif, annale, entraînement, séance, sujet long) est
+    // servie entière ou pas du tout — règle du 18/09/2026 précisée le
+    // 20/09/2026 (annales servies question par question), voir
+    // lib/pedago/dossiers.ts.
     Promise.all(tranches.map((coursIds) =>
-      fetchAllRows<DossierRow>((from, to) =>
+      fetchAllRows<SerieRowForme>((from, to) =>
         supabase
           .from('qcm_series')
-          .select('id, qcm_questions(count)')
+          .select('id, label, type, vignette, qcm_questions(count)')
           .in('cours_id', coursIds)
-          .not('vignette', 'is', null)
-          .neq('vignette', '')
           .order('id', { ascending: true })
           .range(from, to) as never,
       ),
     )).then((r) => r.flat()),
   ]);
-  const dossiers = new Map<string, number>(
-    dossierRows.map((s) => [s.id, s.qcm_questions?.[0]?.count ?? 0]),
-  );
+  const dossiers = dossiersDepuisSeries(serieRows.map(formeDeSerie));
 
   if (pool.length === 0) {
     return (
@@ -196,10 +193,12 @@ export default async function TransversalSessionPage({
      Implémentation : score = rang de priorité principal + pondération de la
      spécialité + bruit aléatoire léger (varier les sessions).
 
-     UNITÉ DE SÉLECTION (règle du 18/09/2026) : une question isolée pour les
-     QCM / QROC ; le DOSSIER ENTIER, dans l'ordre, pour les DP QCM et DP QROC
-     — une question de dossier progressif servie seule n'a pas les éléments
-     pour être traitée. Un dossier incomplet est écarté, jamais tronqué. */
+     UNITÉ DE SÉLECTION (règle du 18/09/2026, précisée le 20/09/2026) : une
+     question isolée pour les séries de questions isolées ; la SÉRIE ENTIÈRE,
+     dans l'ordre, pour tout le reste (dossiers progressifs, annales,
+     entraînements, séances, sujets longs) — une question servie hors de son
+     sujet n'a pas les éléments pour être traitée. Une série incomplète est
+     écartée, jamais tronquée. */
   const now = Date.now();
   const days30Ms = 30 * 86_400_000;
 

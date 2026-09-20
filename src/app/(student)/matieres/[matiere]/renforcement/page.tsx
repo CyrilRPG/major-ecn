@@ -3,7 +3,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
-import { aplatirUnites, choisirUnites, regrouperEnUnites, type PositionDossier } from '@/lib/pedago/dossiers';
+import { aplatirUnites, choisirUnites, dossiersDepuisSeries, formeDeSerie, regrouperEnUnites, type PositionDossier, type SerieRowForme } from '@/lib/pedago/dossiers';
 import { loadStudentAttempts } from '@/lib/pedago/maintien';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { RenforcementFlow } from './renforcement-flow';
@@ -64,13 +64,12 @@ export default async function RenforcementPage({ params }: { params: Promise<{ m
      faisait refuser l'URL (39 Ko d'identifiants pour les 1 371 séries de
      Psychiatrie) : la série renforcée était alors vide. Même correctif que la
      session transversale du 14/09/2026. */
-  type DossierRow = { id: string; qcm_questions: { count: number }[] | null };
   const COURS_PAR_TRANCHE = 50;
   const tranches: string[][] = [];
   for (let i = 0; i < coursIds.length; i += COURS_PAR_TRANCHE) {
     tranches.push(coursIds.slice(i, i + COURS_PAR_TRANCHE));
   }
-  const [pool, dossierRows, attempts, { data: progressRow }] = await Promise.all([
+  const [pool, serieRows, attempts, { data: progressRow }] = await Promise.all([
     Promise.all(tranches.map((ids) =>
       fetchAllRows<PoolRow>((from, to) =>
         supabase
@@ -81,17 +80,17 @@ export default async function RenforcementPage({ params }: { params: Promise<{ m
           .range(from, to) as never,
       ),
     )).then((r) => r.flat()),
-    // Les dossiers (séries à vignette) avec leur nombre TOTAL de questions :
-    // un dossier n'est servi que complet, dans l'ordre, jamais question par
-    // question (règle du 18/09/2026).
+    // TOUTES les séries de la spécialité (libellé, type, vignette, nombre
+    // TOTAL de questions) : seule une série de questions isolées se pioche
+    // question par question ; toute autre (dossier progressif, annale,
+    // entraînement, séance, sujet long) est servie entière, dans l'ordre, ou
+    // pas du tout (règle du 18/09/2026 précisée le 20/09/2026).
     Promise.all(tranches.map((ids) =>
-      fetchAllRows<DossierRow>((from, to) =>
+      fetchAllRows<SerieRowForme>((from, to) =>
         supabase
           .from('qcm_series')
-          .select('id, qcm_questions(count)')
+          .select('id, label, type, vignette, qcm_questions(count)')
           .in('cours_id', ids)
-          .not('vignette', 'is', null)
-          .neq('vignette', '')
           .order('id', { ascending: true })
           .range(from, to) as never,
       ),
@@ -122,9 +121,7 @@ export default async function RenforcementPage({ params }: { params: Promise<{ m
       .is('completed_at', null)
       .maybeSingle(),
   ]);
-  const dossiers = new Map<string, number>(
-    dossierRows.map((s) => [s.id, s.qcm_questions?.[0]?.count ?? 0]),
-  );
+  const dossiers = dossiersDepuisSeries(serieRows.map(formeDeSerie));
 
   // Un QCM jouable a au moins 3 items.
   const allQ = pool.filter((q) => (q.qcm_items?.[0]?.count ?? 0) >= 3);

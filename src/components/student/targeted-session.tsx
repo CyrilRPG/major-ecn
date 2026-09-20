@@ -161,7 +161,7 @@ export function TargetedSession({ questions, backHref }: { questions: TQuestion[
 
       {q.dossier && (
         <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-(--color-accent-soft) px-2.5 py-1 text-[11px] font-semibold text-(--color-accent-deep)">
-          Dossier progressif{q.dossier.label ? ` · ${q.dossier.label}` : ''} — question {q.dossier.position}/{q.dossier.total}
+          {q.vignette ? 'Dossier progressif' : 'Série complète'}{q.dossier.label ? ` · ${q.dossier.label}` : ''} — question {q.dossier.position}/{q.dossier.total}
         </p>
       )}
       {q.vignette && (
