@@ -63,6 +63,10 @@ const MANUAL_QCM_LINES = [
   { label: 'QROC Voies externes — DP QROC', montant: 67 },
   // 960 DP Gériatrie (8 QCM + 8 QROC × 60 cours MG bonus).
   { label: 'DP Gériatrie MG', montant: 300 },
+  // 80 DP Gériatrie de plus (8 QCM + 8 QROC × 5 cours ajoutés au bonus le
+  // 08/09/2026 : SCA, angor d'effort, AOMI, MTEV, pneumonies communautaires),
+  // rédigés le 20/09/2026 — même tarif que la ligne précédente (5 € le cours).
+  { label: 'DP Gériatrie MG — 5 cours du 08/09', montant: 25 },
   // Pédiatrie MG — 7 fiches complémentaires mises au format Major ECN, avec
   // leurs 38 séries (218 questions, 545 propositions) et 180 flashcards.
   // Facturé au FORFAIT et non au tarif habituel (10 € la fiche, 5 € les QCM) :

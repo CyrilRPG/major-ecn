@@ -90,12 +90,14 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
     { isApprofondi },
   );
 
-  // Bonus Gériatrie → Médecine générale : les DP, entraînements et séances du
-  // professeur de cet item sont retirés par la règle d'accès (policy
-  // qcm_series_geriatrie_mg_block_dp_entrainement_seance, rejouée ci-dessus).
-  // L'élève qui cherche « les dossiers progressifs » doit le lire ici plutôt
-  // que d'y voir un contenu manquant (signalé le 19/09/2026 sur Syndromes
-  // coronariens aigus). On compte les séries que ce seul bonus masque.
+  // Bonus Gériatrie → Médecine générale : les DP génériques, entraînements et
+  // séances du professeur de cet item sont retirés par la règle d'accès (policy
+  // qcm_series_geriatrie_mg_block_dp_entrainement_seance, rejouée ci-dessus) et
+  // REMPLACÉS par les dossiers « DP Gériatrie » / « DP QROC Gériatrie » rédigés
+  // pour ces élèves (8 + 8 par item). Tant qu'un item n'a pas encore reçu les
+  // siens, l'élève qui cherche « les dossiers progressifs » doit le lire ici
+  // plutôt que d'y voir un contenu manquant (signalé le 19/09/2026 sur
+  // Syndromes coronariens aigus, ajouté au bonus le 08/09 sans ses DP).
   const masqueesParBonus = accessCtx.geriatrieMgBonus
     ? ((rawSeries ?? []) as unknown as SerieListRow[]).filter((s) => {
         const formats = (s.qcm_questions ?? []).map((q) => q.format);
@@ -103,6 +105,8 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
           && canStudentReadSerie(s, { ...accessCtx, geriatrieMgBonus: false }, formats);
       }).length
     : 0;
+  const dpGeriatrieVisibles = series.some((s) => /g[eé]riatrie/i.test(s.label));
+  const dpGeriatrieEnAttente = masqueesParBonus > 0 && !dpGeriatrieVisibles;
 
   // Les annales ne se listent pas série par série : une session EVC compte
   // jusqu'à onze dossiers, et dix-sept sessions cohabitent sur un même item.
@@ -194,12 +198,12 @@ export default async function CoursQcmListPage({ params }: { params: Promise<{ c
         </p>
       </div>
 
-      {masqueesParBonus > 0 && (
+      {dpGeriatrieEnAttente && (
         <div className="mb-4 flex items-start gap-2 rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2 text-xs text-(--color-ink-soft)">
           <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <p>
             <span className="font-semibold text-(--color-ink)">Accès complémentaire Médecine générale.</span>{' '}
-            Cet item vous propose uniquement ses questions isolées : ses dossiers progressifs, entraînements et séances du professeur ne font pas partie de cet accès.
+            Les dossiers progressifs dédiés aux élèves de Gériatrie sont en cours de rédaction pour cet item : en attendant, seules ses questions isolées vous sont proposées.
           </p>
         </div>
       )}
