@@ -5,7 +5,10 @@ import { NextResponse } from 'next/server';
 import { getBearerUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { isPlatformAvatar, PLATFORM_AVATARS, platformAvatarUrl, effectiveSeed } from '@/lib/avatar';
+import { AVATAR_PRESETS, isPlatformAvatar, platformAvatarUrl, effectiveSeed } from '@/lib/avatar';
+import { canoniserAvatar, estAvatarAutorise, estAvatarCompose } from '@/lib/avatars/traits';
+import { sondeAvatarsProfils } from '@/lib/avatars/profils';
+import { avatarEstLibre } from '@/lib/avatars/unicite';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -42,7 +45,9 @@ export async function GET(req: Request) {
   const absoluteAvatarUrl = (id: string) => new URL(platformAvatarUrl(id), req.url).href;
   return NextResponse.json({
     profile: { ...data, avatar_seed: seed, avatar_url: absoluteAvatarUrl(seed) },
-    avatars: PLATFORM_AVATARS.map((avatar) => ({ ...avatar, url: absoluteAvatarUrl(avatar.id) })),
+    // L'application mobile n'a pas l'atelier complet : elle propose des
+    // médaillons prêts à l'emploi. Le choix fin se fait sur le site.
+    avatars: AVATAR_PRESETS.map((preset) => ({ id: preset.seed, label: preset.label, url: absoluteAvatarUrl(preset.seed) })),
   });
 }
 
@@ -101,8 +106,20 @@ export async function POST(req: Request) {
   if (body.action === 'avatar') {
     const seed = body.seed;
     if (!isPlatformAvatar(seed)) return NextResponse.json({ error: 'Choisissez un avatar du catalogue Major ECN.' }, { status: 400 });
-    const { data, error } = await createAdminClient().from('profiles').update({ avatar_seed: seed }).eq('id', auth.user.id).select('avatar_seed').maybeSingle();
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (estAvatarCompose(seed) && !estAvatarAutorise(seed, 'plateforme')) {
+      return NextResponse.json({ error: 'Ce médaillon est réservé à EVC Arena.' }, { status: 400 });
+    }
+    // Deux comptes Major ECN ne portent jamais le même médaillon. L'unicité
+    // d'EVC Arena est indépendante : elle ne bloque rien ici.
+    const avatar = estAvatarCompose(seed) ? canoniserAvatar(seed) : seed;
+    if (estAvatarCompose(avatar) && !(await avatarEstLibre(avatar, sondeAvatarsProfils(auth.user.id)))) {
+      return NextResponse.json({ error: 'Ce médaillon est déjà porté par un autre compte. Choisissez-en un autre.' }, { status: 409 });
+    }
+    const { data, error } = await createAdminClient().from('profiles').update({ avatar_seed: avatar }).eq('id', auth.user.id).select('avatar_seed').maybeSingle();
+    if (error) {
+      if (error.code === '23505') return NextResponse.json({ error: 'Ce médaillon est déjà porté par un autre compte. Choisissez-en un autre.' }, { status: 409 });
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
     if (!data) return NextResponse.json({ error: 'Profil introuvable' }, { status: 404 });
     return NextResponse.json({ ok: true, seed: data.avatar_seed });
   }

@@ -1,25 +1,28 @@
 'use client';
 
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
-import { ArenaAvatar } from '@/components/arena/arena-avatar';
-import { checkPseudo, registerParticipant } from '@/app/(arena)/arena/[slug]/actions';
+import { AvatarAtelier } from '@/components/avatar/avatar-atelier';
+import { avatarsPris, checkPseudo, registerParticipant } from '@/app/(arena)/arena/[slug]/actions';
 import { CONSENT_MARKETING, CONSENT_TOURNAMENT } from '@/lib/arena/texts';
 import { browserTimezone } from '@/lib/arena/time';
-import { AVATARS_PLANCHE, avatarPlancheAuHasard } from '@/components/arena/avatars';
+import { avatarAuHasard, avatarDepuisChaine } from '@/lib/avatars/traits';
 import { ArenaButton, ARENA, BODY } from './arena-ui';
 import { CheckRow, Field, FormError, SelectInput, TextInput, type FieldStatus } from './form-ui';
 
 /**
  * Formulaire d'inscription (§3, maquette « 1. Inscription » + « 2. Modération
  * pseudonyme ») : prénom, nom, email, spécialité, pseudonyme obligatoires ;
- * avatar au choix parmi la planche Major ECN ; deux cases de consentement
+ * médaillon composé en quatre étapes ; deux cases de consentement
  * distinctes, jamais
  * pré-cochées. Pas de numéro de téléphone. Le pseudonyme est vérifié en
  * direct (mots interdits, format, disponibilité).
  */
+/** Personnage affiché le temps que le navigateur en tire un au hasard. */
+const AVATAR_DEPART = avatarDepuisChaine('evc-arena', 'arena');
+
 const PSEUDO_RULES = [
   'Pas de mots interdits',
   'Pas de marques ou structures concurrentes',
@@ -46,6 +49,7 @@ export function RegisterForm({
   const [pseudoStatus, setPseudoStatus] = useState<FieldStatus>(null);
   const [pseudoMsg, setPseudoMsg] = useState<string | null>(null);
   const [seed, setSeed] = useState('');
+  const [dispo, setDispo] = useState<'inconnu' | 'verification' | 'libre' | 'pris'>('inconnu');
   const [c1, setC1] = useState(false);
   const [c2, setC2] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -55,9 +59,19 @@ export function RegisterForm({
   // Sélection initiale tirée au sort côté navigateur : un rendu serveur
   // aléatoire ferait diverger l'hydratation.
   useEffect(() => {
-    const t = window.setTimeout(() => setSeed(avatarPlancheAuHasard()), 0);
+    const t = window.setTimeout(() => setSeed(avatarAuHasard(Math.random, 'arena')), 0);
     return () => window.clearTimeout(t);
   }, []);
+
+  /**
+   * Médaillons déjà pris, parmi ceux que l'atelier propose à sa dernière
+   * étape. La réponse ne porte que sur les codes demandés : elle ne dit rien
+   * du nombre d'inscrits (§7 — aucun effectif, nulle part).
+   */
+  const verifierDisponibilite = useCallback(async (codes: string[]) => {
+    const r = await avatarsPris(slug, codes);
+    return r.ok ? r.pris : [];
+  }, [slug]);
 
   // Vérification du pseudonyme en direct (débordement 400 ms, dernière réponse gagnante).
   useEffect(() => {
@@ -76,7 +90,9 @@ export function RegisterForm({
     return () => window.clearTimeout(t);
   }, [pseudo, slug]);
 
-  const avatarSeed = seed || AVATARS_PLANCHE[0].id;
+  // Avant le tirage côté navigateur, un personnage FIXE : un tirage au rendu
+  // ferait diverger l'hydratation et changerait d'avatar à chaque frappe.
+  const avatarSeed = seed || AVATAR_DEPART;
 
   return (
     <form
@@ -147,27 +163,17 @@ export function RegisterForm({
 
       <div>
         <p className="mb-2 text-[12px] font-semibold" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Votre personnage pour toute l’Arena</p>
-        <p className="mb-4 text-xs leading-relaxed" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Choisissez votre avatar avant de vous inscrire. Vous conserverez ce personnage ; son habillage Or, Argent, Bronze ou Standard dépendra uniquement de votre classement cumulé actuel.</p>
-        <div role="radiogroup" aria-label="Choisir un avatar" className="grid grid-cols-6 gap-2 sm:grid-cols-8 sm:gap-2.5">
-          {AVATARS_PLANCHE.map((a) => {
-            const on = a.id === seed;
-            return (
-              <button
-                key={a.id}
-                type="button"
-                role="radio"
-                aria-checked={on}
-                title={a.label}
-                aria-label={a.label}
-                onClick={() => setSeed(a.id)}
-                className="rounded-full p-0.5 transition-transform hover:scale-105"
-                style={{ boxShadow: on ? `0 0 0 2.5px ${ARENA.red}, 0 0 20px rgba(228,0,43,0.5)` : `0 0 0 1.5px ${ARENA.lineStrong}` }}
-              >
-                <ArenaAvatar seed={a.id} size={44} title={a.label} />
-              </button>
-            );
-          })}
-        </div>
+        <p className="mb-4 text-xs leading-relaxed" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Composez votre médaillon en quatre étapes : portrait, fond, cadre, emblème. Vous le conserverez toute l’Arena ; sa couronne Or, Argent, Bronze ou Standard dépendra uniquement de votre classement cumulé actuel. <strong style={{ color: ARENA.textSoft }}>Deux participants ne portent jamais le même médaillon : à la dernière étape, ceux qui sont déjà pris apparaissent grisés.</strong></p>
+        <AvatarAtelier
+          valeur={avatarSeed}
+          onChange={setSeed}
+          theme="arena"
+          perimetre="arena"
+          verifierDisponibilite={verifierDisponibilite}
+          onDisponibilite={setDispo}
+          legende="Votre médaillon tel qu’il apparaîtra dans le classement."
+        />
+
       </div>
 
       <div className="space-y-3">
@@ -184,9 +190,16 @@ export function RegisterForm({
       </div>
 
       <FormError>{error}</FormError>
-      <ArenaButton type="submit" size="lg" disabled={pending} className="w-full">
+      {/* Le médaillon est vérifié à la dernière étape de l'atelier : on ne
+          laisse pas partir une inscription vers un avatar déjà pris. */}
+      <ArenaButton type="submit" size="lg" disabled={pending || dispo === 'pris' || dispo === 'verification'} className="w-full">
         {pending ? 'Inscription…' : 'Je m’inscris'}
       </ArenaButton>
+      {dispo === 'pris' && (
+        <p role="status" className="text-center text-[12px] font-semibold" style={{ color: ARENA.redSoft, fontFamily: BODY }}>
+          Choisissez un médaillon disponible à la dernière étape pour poursuivre.
+        </p>
+      )}
       <p className="text-center text-[13px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>
         Déjà inscrit ? <Link href="/arena/connexion" className="font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft }}>Se connecter</Link>
       </p>

@@ -1,0 +1,249 @@
+/* Atelier de composition d'avatar. Deux thèmes, une seule feuille : l'Arena
+   (fond sombre, rouge Major ECN) et l'espace élève (fond clair). */
+
+.av-atelier {
+  --av-encre: #0f1720;
+  --av-encre-douce: #5a6874;
+  --av-surface: #ffffff;
+  --av-surface-2: #f4f6f9;
+  --av-ligne: rgba(15, 23, 32, 0.14);
+  --av-actif: #c8102e;
+  --av-actif-contraste: #ffffff;
+  display: grid;
+  gap: 18px;
+}
+.av-atelier[data-theme='arena'] {
+  --av-encre: #f2f3f5;
+  --av-encre-douce: #8b95a3;
+  --av-surface: rgba(255, 255, 255, 0.04);
+  --av-surface-2: rgba(255, 255, 255, 0.07);
+  --av-ligne: rgba(255, 255, 255, 0.14);
+  --av-actif: #e4002b;
+}
+
+@media (min-width: 720px) {
+  .av-atelier {
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+/* --------------------------------------------------------------- aperçu */
+
+.av-apercu {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--av-ligne);
+  border-radius: 18px;
+  background: var(--av-surface);
+}
+.av-apercu__figure {
+  border-radius: 50%;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.28);
+}
+.av-apercu__tailles {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+.av-apercu__legende {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--av-encre-douce);
+}
+.av-apercu__code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--av-encre-douce);
+}
+
+/* -------------------------------------------------------------- étapes */
+
+.av-etapes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+.av-etape {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px 7px 8px;
+  border: 1px solid var(--av-ligne);
+  border-radius: 999px;
+  background: var(--av-surface);
+  color: var(--av-encre-douce);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.av-etape__rang {
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background: var(--av-surface-2);
+  font-size: 11px;
+  line-height: 1;
+}
+.av-etape:hover:not(:disabled) { color: var(--av-encre); }
+.av-etape:disabled { opacity: 0.45; cursor: not-allowed; }
+.av-etape[data-fait] { color: var(--av-encre); }
+.av-etape[aria-current='step'] {
+  background: var(--av-actif);
+  border-color: var(--av-actif);
+  color: var(--av-actif-contraste);
+}
+.av-etape[aria-current='step'] .av-etape__rang {
+  background: rgba(255, 255, 255, 0.28);
+  color: var(--av-actif-contraste);
+}
+.av-etapes__consigne {
+  margin: 0 0 16px;
+  font-size: 12px;
+  color: var(--av-encre-douce);
+}
+
+.av-onglet {
+  padding: 8px 15px;
+  border: 1px solid var(--av-ligne);
+  border-radius: 999px;
+  background: var(--av-surface);
+  color: var(--av-encre-douce);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.av-onglet:hover { color: var(--av-encre); }
+.av-onglet--suite {
+  background: var(--av-actif);
+  border-color: var(--av-actif);
+  color: var(--av-actif-contraste);
+}
+.av-onglet:focus-visible,
+.av-etape:focus-visible,
+.av-choix:focus-visible,
+.av-pastille:focus-visible {
+  outline: 2px solid var(--av-actif);
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------- disponibilité */
+
+.av-dispo {
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--av-encre-douce);
+}
+.av-dispo[data-etat='pris'] { color: var(--av-actif); }
+
+/* --------------------------------------------------------------- choix */
+
+.av-trait + .av-trait { margin-top: 16px; }
+.av-trait__titre {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--av-encre-douce);
+}
+.av-grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
+  gap: 8px;
+}
+.av-choix {
+  display: grid;
+  justify-items: center;
+  padding: 3px;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  background: var(--av-surface-2);
+  cursor: pointer;
+}
+.av-choix[aria-pressed='true'] {
+  border-color: var(--av-actif);
+  background: color-mix(in srgb, var(--av-actif) 14%, transparent);
+}
+.av-choix svg { border-radius: 50%; display: block; }
+
+/* Médaillon déjà porté : grisé, barré d'une étiquette, et non cliquable.
+   N'apparaît qu'à la dernière étape, seule où la combinaison est complète. */
+.av-choix[data-indisponible],
+.av-pastille[data-indisponible] {
+  cursor: not-allowed;
+}
+.av-choix[data-indisponible] svg,
+.av-pastille[data-indisponible] {
+  filter: grayscale(1) brightness(0.55);
+  opacity: 0.6;
+}
+.av-pastille[data-indisponible] {
+  position: relative;
+  border-style: dashed;
+}
+.av-choix { position: relative; }
+.av-choix__pris {
+  position: absolute;
+  inset-inline: 2px;
+  bottom: 6px;
+  border-radius: 4px;
+  background: rgba(10, 12, 16, 0.86);
+  color: #f2f3f5;
+  font-size: 8.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  pointer-events: none;
+}
+
+.av-pastilles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.av-pastille {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 2px solid var(--av-ligne);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.av-pastille[aria-pressed='true'] {
+  border-color: var(--av-actif);
+  box-shadow: 0 0 0 2px var(--av-surface), 0 0 0 4px var(--av-actif);
+}
+
+/* -------------------------------------------------------------- actions */
+
+.av-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--av-ligne);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .av-onglet { transition: none; }
+}

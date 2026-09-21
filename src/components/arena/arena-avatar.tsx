@@ -1,6 +1,8 @@
 import { cheminAvatar, estAvatarPlanche, libelleAvatar, resolveArenaAvatarSeed } from './avatars';
 import { useId, type CSSProperties } from 'react';
 import { avatarAppearance, AVATAR_DISTINCTIONS, rankLabel } from '@/lib/arena/avatar-appearance';
+import { ComposedAvatarSvg } from '@/components/avatar/composed-avatar';
+import { decrireAvatar, estAvatarCompose } from '@/lib/avatars/traits';
 import type { Distinction } from '@/lib/arena/performance';
 import './arena-avatar.css';
 
@@ -15,7 +17,8 @@ export function ArenaAvatar({ seed, size = 40, className, title, rank, distincti
   seed = resolveArenaAvatarSeed(seed);
   const appearance = avatarAppearance(distinction);
   const metalId = `metal-${useId().replace(/:/g, '')}`;
-  const label = `${title ?? libelleAvatar(seed) ?? 'Avatar'} — ${AVATAR_DISTINCTIONS[appearance].label}${rank ? `, ${rankLabel(rank)} au classement cumulé` : ''}`;
+  const nom = title ?? (estAvatarCompose(seed) ? decrireAvatar(seed) : libelleAvatar(seed)) ?? 'Avatar';
+  const label = `${nom} — ${AVATAR_DISTINCTIONS[appearance].label}${rank ? `, ${rankLabel(rank)} au classement cumulé` : ''}`;
   return (
     <span className={`arena-avatar arena-avatar--${appearance} ${className ?? ''}`} role="img" aria-label={label}
       data-appearance={appearance} data-avatar-seed={seed} style={{ '--avatar-size': `${size}px` } as CSSProperties}>
@@ -177,6 +180,10 @@ const WingedCaduceus = ({ p }: { p: P }) => (
 );
 
 function BaseAvatar({ seed, size = 40, className, title }: { seed: string; size?: number; className?: string; title?: string }) {
+  // Avatar composé dans l'atelier (09/2026) : dessiné sur place, sans image.
+  if (estAvatarCompose(seed)) {
+    return <ComposedAvatarSvg seed={seed} size={size} className={className} title={title ?? decrireAvatar(seed)} />;
+  }
   // Planche de médaillons fournie par Major ECN (09/09/2026) : elle prime sur
   // les emblèmes générés, qui restent le repli des graines historiques.
   if (estAvatarPlanche(seed)) {

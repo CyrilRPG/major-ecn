@@ -182,3 +182,76 @@ protocole de test : `docs/bilan-cahiers-des-charges-2026-09-16.md`. Tests : `tes
 3. Arena §6.4 QRP : valeur par défaut « toute erreur annule » retenue, modifiable.
 4. Suivi §18 : suppression d'un compte → paramètre `deletion_policy`
    (`delete` | `anonymize`), défaut `anonymize`.
+
+## Médaillons composés — un avatar unique par personne (21/09/2026)
+
+Les 24 portraits peints de la planche Major ECN sont CONSERVÉS tels quels : ce
+sont toujours les mêmes fichiers `public/arena/avatars/*.png`. Ce qui se compose
+autour d'eux, c'est le médaillon — champ, motif, cadre, métal, liseré, emblème.
+**5 529 600 combinaisons**, de quoi donner un médaillon unique à chacun sur une
+Arena de plusieurs centaines d'inscrits.
+
+Sur une image peinte, on ne peut ni changer la tenue ni ajouter des lunettes :
+la variété vient de l'orfèvrerie, pas du personnage.
+
+### Encodage
+
+`avatar_seed` reçoit `c1-` + un caractère base 36 par emplacement, dans l'ordre
+FIGÉ de `TRAIT_ORDER` (`src/lib/avatars/traits.ts`) :
+
+    portrait · fond · motif · cadre · couleurCadre · liseré · emblème
+
+Ne jamais réordonner ni retirer un emplacement — seulement en ajouter à la fin,
+sinon tous les médaillons enregistrés changent d'apparence. Les indices sont
+communs aux deux périmètres : on masque des options, on ne renumérote jamais.
+
+### Cloisonnement EVC Arena / Major ECN
+
+Deux séparations, à ne pas confondre :
+
+- **Unicité** : deux index distincts, `arena_participants (tournament_id,
+  avatar_seed)` et `profiles (avatar_seed) where faculte_id = 'major-ecn'`. Le
+  même médaillon peut exister des deux côtés. Un participant anonymisé libère
+  le sien.
+- **Catalogue** : le gladiateur (portrait `casque`, emblème `casque`) reste à
+  l'Arena. `optionsAutorisees(trait, perimetre)` est la seule source de vérité.
+
+`resolveParticipantAvatars` ne remplace plus l'avatar d'un participant par
+celui de son compte Major ECN dès lors qu'il s'agit d'un médaillon composé :
+seules les vieilles graines procédurales (« k3f9x2a1 ») sont encore rattrapées.
+
+### Atelier en quatre étapes
+
+`AvatarAtelier` (`src/components/avatar/avatar-atelier.tsx`) : portrait → fond
+→ cadre → emblème. La disponibilité n'est interrogée qu'à la **dernière étape**,
+et c'est voulu : un médaillon n'est complet qu'une fois tous ses réglages posés,
+griser plus tôt n'aurait aucun sens. Les options prises y sont grisées, barrées
+d'un « PRIS » et non cliquables, avec un bouton « Prendre le premier libre ».
+
+`verifierDisponibilite` reçoit des codes complets et renvoie ceux qui sont pris.
+**§7 : la réponse ne porte que sur les codes demandés** — jamais la liste des
+codes occupés, jamais leur nombre, aucun effectif déductible.
+
+### Points d'entrée
+
+| Surface | Chemin |
+|---|---|
+| Dessin (chaîne, source unique) | `src/lib/avatars/dessin.ts` |
+| Catalogue, encodage, périmètres | `src/lib/avatars/traits.ts` |
+| Unicité (pure, testée) | `src/lib/avatars/unicite.ts` |
+| Sonde Major ECN | `src/lib/avatars/profils.ts` |
+| Sonde Arena | `sondeAvatars()` dans `arena/[slug]/actions.ts` |
+| Image pour l'app mobile | `GET /api/avatar/<code>.svg` |
+| Recette visuelle (dev) | `/arena-preview/avatars`, `/arena-preview/atelier` |
+
+Le dessin est une CHAÎNE et non du JSX : Next interdit `react-dom/server` dans
+`app/`, et la route d'image doit produire exactement le même médaillon que la
+page. La route embarque les PNG en base 64 — un SVG chargé par `<img>` ne peut
+pas aller chercher d'image externe, il rendrait un cadre vide.
+
+### Migration
+
+`supabase/migrations/20260921100000_avatars_composes.sql` — **à appliquer**.
+Sans elle, le déclencheur posé le 09/09/2026 écrase en silence tout médaillon
+composé à l'enregistrement, et aucune unicité n'est garantie. Vérifiée par
+`tests/platform-avatars.test.ts` sur un vrai Postgres (PGlite).

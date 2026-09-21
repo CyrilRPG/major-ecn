@@ -1,27 +1,60 @@
-import { AVATARS_PLANCHE, cheminAvatar } from '@/components/arena/avatars';
+import { AVATARS_PLANCHE, cheminAvatar, estAvatarPlanche } from '@/components/arena/avatars';
+import {
+  avatarAuHasard,
+  avatarDepuisChaine,
+  avatarDepuisPortrait,
+  canoniserAvatar,
+  estAvatarAutorise,
+  estAvatarCompose,
+} from '@/lib/avatars/traits';
 
-/** Le catalogue pédagogique partage les images Arena, sans le gladiateur. */
+export { AVATAR_PRESETS } from '@/lib/avatars/presets';
+
+/**
+ * Identité visuelle des comptes Major ECN.
+ *
+ * Depuis septembre 2026, un avatar est une COMBINAISON de traits composée dans
+ * l'atelier (`c1-…`, voir `lib/avatars/traits`), et non plus un médaillon
+ * choisi dans une planche de vingt-quatre images. Les anciens identifiants
+ * restent valides et continuent de s'afficher : personne ne perd le portrait
+ * qu'il avait choisi.
+ */
+
+/** Ancien catalogue d'images, conservé pour les choix déjà enregistrés. */
 export const PLATFORM_AVATARS = AVATARS_PLANCHE.filter((avatar) => avatar.id !== 'casque');
-const IDS = new Set(PLATFORM_AVATARS.map((avatar) => avatar.id));
 
+/**
+ * Une graine enregistrable côté Major ECN : un médaillon composé du périmètre
+ * plateforme, ou un portrait de l'ancienne planche. Le gladiateur reste à
+ * l'Arena — c'est la seule restriction de catalogue entre les deux mondes.
+ */
 export function isPlatformAvatar(seed: unknown): seed is string {
-  return typeof seed === 'string' && IDS.has(seed);
+  if (estAvatarCompose(seed)) return estAvatarAutorise(seed, 'plateforme');
+  return typeof seed === 'string' && seed !== 'casque' && estAvatarPlanche(seed);
 }
 
+/** Toute nouvelle attribution est un médaillon composé du périmètre plateforme. */
 export function randomAvatarSeed(): string {
-  return PLATFORM_AVATARS[Math.floor(Math.random() * PLATFORM_AVATARS.length)].id;
+  return avatarAuHasard(Math.random, 'plateforme');
 }
 
-/** Secours stable pour un ancien profil ; les nouveaux choix sont persistés en base. */
+/**
+ * Secours stable pour un profil sans choix : même compte, même médaillon.
+ * Un portrait de l'ancienne planche est promu en médaillon sans ornement :
+ * le visage choisi est conservé à l'identique.
+ */
 export function effectiveSeed(id: string, chosen?: string | null): string {
-  if (isPlatformAvatar(chosen)) return chosen;
-  let hash = 2166136261;
-  for (let i = 0; i < id.length; i++) {
-    hash = Math.imul(hash ^ id.charCodeAt(i), 16777619);
-  }
-  return PLATFORM_AVATARS[(hash >>> 0) % PLATFORM_AVATARS.length].id;
+  if (estAvatarCompose(chosen)) return canoniserAvatar(chosen);
+  if (isPlatformAvatar(chosen)) return avatarDepuisPortrait(chosen);
+  return avatarDepuisChaine(id, 'plateforme');
 }
 
+/**
+ * URL d'image d'un avatar : les avatars composés sont rendus par la route
+ * `/api/avatar`, qui renvoie un SVG immuable. Indispensable partout où une
+ * balise `<img>` est la seule option — application mobile, exports.
+ */
 export function platformAvatarUrl(seed: string): string {
-  return cheminAvatar(effectiveSeed(seed, seed));
+  const id = effectiveSeed(seed, seed);
+  return estAvatarCompose(id) ? `/api/avatar/${id}.svg` : cheminAvatar(id);
 }

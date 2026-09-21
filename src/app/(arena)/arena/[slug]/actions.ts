@@ -4,6 +4,8 @@ import { unstable_rethrow } from "next/navigation";
 
 import { revalidatePath } from "next/cache";
 import { estAvatarPlanche } from "@/components/arena/avatars";
+import { canoniserAvatar, estAvatarCompose } from "@/lib/avatars/traits";
+import { avatarEstLibre, type SondeAvatars } from "@/lib/avatars/unicite";
 import { z } from "zod";
 import { siteUrl } from "@/lib/email/send";
 import {
@@ -74,6 +76,24 @@ function err(error: string): Err {
   return { ok: false, error };
 }
 
+/**
+ * Avatars déjà portés dans ce tournoi, parmi une liste de codes proposés.
+ * Les comptes anonymisés libèrent leur avatar — leur identité n'existe plus.
+ * Ne renvoie jamais autre chose que l'intersection demandée : aucun effectif
+ * ne peut en être déduit (§7).
+ */
+function sondeAvatars(tournamentId: string): SondeAvatars {
+  return async (codes) => {
+    const { data } = await arenaDb()
+      .from("arena_participants")
+      .select("avatar_seed")
+      .eq("tournament_id", tournamentId)
+      .is("anonymized_at", null)
+      .in("avatar_seed", codes);
+    return new Set(((data ?? []) as { avatar_seed: string }[]).map((row) => row.avatar_seed));
+  };
+}
+
 function inviteCode(): string {
   const alphabet = "23456789abcdefghjkmnpqrstuvwxyz";
   let s = "";
@@ -96,7 +116,7 @@ const RegisterSchema = z.object({
     .trim()
     .min(3, "Pseudonyme : 3 caractères minimum")
     .max(24, "Pseudonyme : 24 caractères maximum"),
-  avatarSeed: z.string().trim().min(1).max(32),
+  avatarSeed: z.string().trim().min(1).max(48),
   consentTournament: z.literal(true, {
     message: "Le consentement au traitement des données est obligatoire.",
   }),
@@ -138,7 +158,9 @@ export async function registerParticipant(
     );
   if (pseudoForbidden(input.pseudo))
     return err("Ce pseudonyme n’est pas autorisé.");
-  if (!estAvatarPlanche(input.avatarSeed))
+  // Un avatar composé dans l'atelier, ou un médaillon de l'ancienne planche
+  // (lien d'inscription ouvert avant la refonte, client mobile non à jour).
+  if (!estAvatarCompose(input.avatarSeed) && !estAvatarPlanche(input.avatarSeed))
     return err("Choisissez un avatar de la plateforme.");
 
   const email = normalizeEmail(input.email);
@@ -172,6 +194,16 @@ export async function registerParticipant(
     };
   }
 
+  // Un avatar par participant : l'atelier prévient en direct, ce contrôle
+  // rattrape la course entre deux inscriptions simultanées.
+  const avatarSeed = estAvatarCompose(input.avatarSeed)
+    ? canoniserAvatar(input.avatarSeed)
+    : input.avatarSeed;
+  if (estAvatarCompose(avatarSeed) && !(await avatarEstLibre(avatarSeed, sondeAvatars(t.id))))
+    return err(
+      "Cet avatar vient d’être pris dans cette Arena. Changez un détail — la couleur du fond suffit — puis réessayez.",
+    );
+
   const key = pseudoKey(input.pseudo);
   const { data: clash } = await db
     .from("arena_participants")
@@ -202,7 +234,7 @@ export async function registerParticipant(
       specialty: input.specialty,
       pseudo: input.pseudo,
       pseudo_key: key,
-      avatar_seed: input.avatarSeed || randomAvatarSeed(),
+      avatar_seed: avatarSeed || randomAvatarSeed(),
       timezone: input.timezone ?? null,
       consent_tournament_at: new Date().toISOString(),
       consent_tournament_version: CONSENT_VERSION,
@@ -221,8 +253,14 @@ export async function registerParticipant(
     .select("*")
     .single();
   if (error || !created) {
-    if (String(error?.code) === "23505")
+    if (String(error?.code) === "23505") {
+      // L'index d'unicité des avatars a le dernier mot sur la course.
+      if (/avatar/i.test(`${error?.message} ${error?.details ?? ""}`))
+        return err(
+          "Cet avatar vient d’être pris dans cette Arena. Changez un détail — la couleur du fond suffit — puis réessayez.",
+        );
       return err("Ce pseudonyme ou cette adresse est déjà utilisé.");
+    }
     return err(error?.message ?? "Inscription impossible.");
   }
 
@@ -818,6 +856,35 @@ export async function submitReport(
 }
 
 /**
+ * Cet avatar est-il encore libre dans ce tournoi ? Appelée en direct par
+ * l'atelier d'inscription.
+ *
+ * La réponse porte sur UN code et ne dit rien d'autre : ni combien d'avatars
+ * sont pris, ni combien de personnes sont inscrites (§7). Le catalogue compte
+ * plusieurs milliards de combinaisons : un tirage au hasard ne renseigne sur
+ * rien.
+ */
+export async function avatarsPris(
+  slug: string,
+  codes: string[],
+): Promise<Ok<{ pris: string[] }> | Err> {
+  try {
+    // Bornes dures : la dernière étape de l'atelier propose une poignée de
+    // candidats, jamais une exploration du catalogue.
+    const demandes = [...new Set(codes.filter(estAvatarCompose).map(canoniserAvatar))].slice(0, 40);
+    if (!demandes.length) return { ok: true, pris: [] };
+    const v = await visibleTournament(slug);
+    if (!v) return err("Tournoi introuvable.");
+    const occupes = await sondeAvatars(v.tournament.id)(demandes);
+    return { ok: true, pris: [...occupes] };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("[arena] action échouée", error);
+    return err("La vérification n’a pas abouti. Réessayez.");
+  }
+}
+
+/**
  * Endpoint conservé pour les anciens clients. L'identité choisie à
  * l'inscription est désormais fixe ; les distinctions sont des overlays.
  */
@@ -830,8 +897,12 @@ export async function choisirAvatar(
     if (!v) return err("Tournoi introuvable.");
     const p = await currentParticipant(v.tournament.id);
     if (!p) return err("Session expirée.");
-    if (!estAvatarPlanche(avatarId)) return err("Avatar inconnu.");
-    if (avatarId !== p.avatar_seed)
+    if (!estAvatarCompose(avatarId) && !estAvatarPlanche(avatarId))
+      return err("Avatar inconnu.");
+    const memeAvatar = estAvatarCompose(avatarId) && estAvatarCompose(p.avatar_seed)
+      ? canoniserAvatar(avatarId) === canoniserAvatar(p.avatar_seed)
+      : avatarId === p.avatar_seed;
+    if (!memeAvatar)
       return err(
         "Votre personnage est conservé pendant toute l’Arena. Seul son habillage évolue selon votre classement cumulé.",
       );

@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { resolveParticipantAvatars, type AvatarProfile } from '../src/lib/arena/participant-avatar';
 import { computeStandings, leaderboardRows } from '../src/lib/arena/ranking';
+import { encoderAvatar } from '../src/lib/avatars/traits';
 
 const participant = (avatar_seed = '1fhze0ln') => ({
   id: 'participant', pseudo: 'Interniste', email: 'student@example.test',
@@ -80,4 +81,18 @@ test('tous les anciens participants sont résolus par lots bornés, avec adresse
 
 test('une erreur de lecture est remontée et ne devient pas un faux avatar par défaut', async () => {
   await assert.rejects(resolveParticipantAvatars([participant()], async () => { throw new Error('profil indisponible'); }), /profil indisponible/);
+});
+
+test('cloisonnement : un médaillon composé dans l’Arena n’est jamais remplacé par celui du compte Major ECN', async () => {
+  // EVC Arena et Major ECN sont deux identités distinctes depuis le 21/09/2026.
+  const medaillonArena = encoderAvatar({ portrait: 6, fond: 4, cadre: 3, embleme: 2 });
+  const medaillonProfil = encoderAvatar({ portrait: 12, fond: 1 });
+  let interroge = false;
+  const resolus = await resolveParticipantAvatars(
+    [{ email: 'a@b.test', faculte_id: 'major-ecn', avatar_seed: medaillonArena, anonymized_at: null }],
+    async () => { interroge = true; return [{ email: 'a@b.test', faculte_id: 'major-ecn', avatar_seed: medaillonProfil }]; },
+  );
+  assert.equal(resolus[0].avatar_seed, medaillonArena);
+  // Le profil pédagogique n'est même pas consulté.
+  assert.equal(interroge, false);
 });

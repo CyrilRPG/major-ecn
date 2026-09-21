@@ -167,8 +167,9 @@ export default async function ProfilPage() {
           Votre avatar
         </p>
         <p className="mt-2 mb-4 text-sm text-(--color-ink-soft)">
-          Un avatar EVC Arena vous a été attribué au hasard. Vous pouvez choisir
-          votre personnage ou votre emblème parmi les avatars ci-dessous.
+          Composez votre personnage : visage, cheveux, tenue, coiffe,
+          accessoires et fond se règlent séparément. Il vous suit sur le forum,
+          dans votre espace et sur EVC Arena.
         </p>
         <AvatarPicker initialSeed={effectiveSeed(profile.id, profile.avatar_seed)} />
       </section>
