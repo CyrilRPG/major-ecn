@@ -109,6 +109,23 @@ test('reprise : chacun garde son visage, seuls les ornements changent', async ()
         avatar_seed text, email text);
       create table arena_participants(id int primary key, tournament_id int,
         faculte_id text, email text, avatar_seed text, anonymized_at timestamptz);
+
+      -- Le déclencheur de production qui fige l'avatar d'un participant
+      -- (« Le personnage choisi est conservé pendant toute l'Arena »). Il
+      -- bloquait la reprise : la migration doit le suspendre le temps du
+      -- rattrapage, puis le rétablir.
+      create function arena_keep_avatar_identity() returns trigger
+        language plpgsql as $t$
+        begin
+          if new.avatar_seed is distinct from old.avatar_seed then
+            raise exception 'Le personnage choisi est conservé pendant toute l''Arena.'
+              using errcode = '23514';
+          end if;
+          return new;
+        end;
+        $t$;
+      create trigger arena_keep_avatar_identity before update of avatar_seed
+        on arena_participants for each row execute function arena_keep_avatar_identity();
     `);
 
     // La migration de 09/2026 réinitialise tous les avatars Major ECN : elle
@@ -171,7 +188,14 @@ test('reprise : chacun garde son visage, seuls les ornements changent', async ()
     // 8. Un participant anonymisé n'est pas réveillé.
     assert.equal(parId.get(4), 'vieille-graine');
 
-    // 9. Rejeu : tout est déjà composé, plus rien ne bouge.
+    // 9. Le déclencheur qui fige l'avatar est rétabli : la suspension ne dure
+    //    que le temps de la reprise.
+    await assert.rejects(
+      db.exec("update arena_participants set avatar_seed = 'c1-0000000' where id = 2;"),
+      /conservé pendant toute l/,
+    );
+
+    // 10. Rejeu : tout est déjà composé, plus rien ne bouge.
     const avant = (await db.query('select id, avatar_seed from profiles order by id')).rows;
     await db.exec(await readFile(MIGRATION_COMPOSES, 'utf8'));
     assert.deepEqual((await db.query('select id, avatar_seed from profiles order by id')).rows, avant);

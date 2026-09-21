@@ -198,6 +198,22 @@ $$;
 -- portrait : jusqu'ici l'application allait chercher celui du compte Major ECN
 -- de même adresse. On fige ici ce même visage, puisque c'est celui que la
 -- personne voit — après quoi les deux mondes sont définitivement cloisonnés.
+--
+-- `arena_keep_avatar_identity` interdit toute modification de `avatar_seed`
+-- (« Le personnage choisi est conservé pendant toute l'Arena ») : la règle
+-- reste vraie pour l'application, mais elle bloque cette reprise unique. On la
+-- suspend le temps du bloc. Tout étant dans une seule transaction, un échec
+-- rétablit le déclencheur en même temps qu'il annule la reprise.
+
+do $$
+begin
+  if exists (select 1 from pg_trigger
+             where tgrelid = 'public.arena_participants'::regclass
+               and tgname = 'arena_keep_avatar_identity') then
+    alter table public.arena_participants disable trigger arena_keep_avatar_identity;
+  end if;
+end;
+$$;
 
 do $$
 declare
@@ -234,6 +250,16 @@ begin
       end;
     end loop;
   end loop;
+end;
+$$;
+
+do $$
+begin
+  if exists (select 1 from pg_trigger
+             where tgrelid = 'public.arena_participants'::regclass
+               and tgname = 'arena_keep_avatar_identity') then
+    alter table public.arena_participants enable trigger arena_keep_avatar_identity;
+  end if;
 end;
 $$;
 
