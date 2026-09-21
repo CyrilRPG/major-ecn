@@ -249,6 +249,14 @@ Le dessin est une CHAÎNE et non du JSX : Next interdit `react-dom/server` dans
 page. La route embarque les PNG en base 64 — un SVG chargé par `<img>` ne peut
 pas aller chercher d'image externe, il rendrait un cadre vide.
 
+**Piège Vercel.** `public/**` est exclu du traçage pour TOUTES les fonctions
+(limite de 250 Mo, correctif du 03/09/2026). La route lit donc des fichiers
+absents du bundle serverless : elle renvoyait 500 sur tout code valide alors
+que le build et le rendu local étaient verts. Elle réinclut désormais
+`./public/arena/avatars/*.png` via `outputFileTracingIncludes`. Toute nouvelle
+fonction qui lit `public/` sur disque doit faire de même — et vérifier la route
+en production, pas seulement l'état READY du déploiement.
+
 ### Migration
 
 `supabase/migrations/20260921100000_avatars_composes.sql` — **à appliquer**.

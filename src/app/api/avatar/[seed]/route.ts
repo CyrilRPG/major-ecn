@@ -1,5 +1,3 @@
-import { readFile } from 'node:fs/promises';
-import path from 'node:path';
 import { avatarSvg } from '@/lib/avatars/dessin';
 import { canoniserAvatar, estAvatarCompose } from '@/lib/avatars/traits';
 
@@ -16,21 +14,31 @@ export const runtime = 'nodejs';
  * `<img>` ne peut pas aller chercher d'image externe, il rendrait un cadre
  * vide. Le code décrit entièrement l'image, sans lecture en base ni donnée
  * personnelle, d'où la mise en cache immuable.
+ *
+ * Les PNG sont récupérés auprès du CDN plutôt que lus sur disque : `public/**`
+ * est exclu du traçage Vercel pour TOUTES les fonctions (limite de 250 Mo,
+ * correctif du 03/09/2026), et le réinclure par `outputFileTracingIncludes` ne
+ * suffit pas — l'exclusion globale l'emporte, la route renvoyait 503 en
+ * production (déploiement d0fde146). Le CDN sert déjà ces fichiers : c'est la
+ * seule source fiable depuis une fonction. Le coût est payé une fois par
+ * instance, les images étant gardées en mémoire.
  */
 const cache = new Map<string, string>();
 
-async function portraitEmbarque(id: string): Promise<string> {
+async function portraitEmbarque(id: string, base: string): Promise<string> {
   const connu = cache.get(id);
   if (connu) return connu;
   // `id` vient du catalogue, jamais de la requête : aucun chemin à assainir.
-  const fichier = path.join(process.cwd(), 'public', 'arena', 'avatars', `${id}.png`);
-  const data = await readFile(fichier);
-  const uri = `data:image/png;base64,${data.toString('base64')}`;
+  const reponse = await fetch(new URL(`/arena/avatars/${id}.png`, base), {
+    cache: 'force-cache',
+  });
+  if (!reponse.ok) throw new Error(`portrait ${id} : ${reponse.status}`);
+  const uri = `data:image/png;base64,${Buffer.from(await reponse.arrayBuffer()).toString('base64')}`;
   cache.set(id, uri);
   return uri;
 }
 
-export async function GET(_req: Request, { params }: { params: Promise<{ seed: string }> }) {
+export async function GET(req: Request, { params }: { params: Promise<{ seed: string }> }) {
   const { seed } = await params;
   const demande = decodeURIComponent(seed).replace(/\.svg$/i, '');
   if (!estAvatarCompose(demande)) return new Response('Avatar inconnu', { status: 404 });
@@ -42,13 +50,12 @@ export async function GET(_req: Request, { params }: { params: Promise<{ seed: s
   avatarSvg(code, { source: (id) => { ids.add(id); return ''; } });
   const images = new Map<string, string>();
   try {
-    await Promise.all([...ids].map(async (id) => images.set(id, await portraitEmbarque(id))));
+    await Promise.all([...ids].map(async (id) => images.set(id, await portraitEmbarque(id, req.url))));
   } catch (error) {
-    // Les portraits vivent dans `public/`, exclu du traçage Vercel : la route
-    // les réinclut par `outputFileTracingIncludes`. Si cette configuration
-    // saute, mieux vaut un message net qu'une erreur serveur opaque.
-    console.error('[avatar] portrait introuvable sur disque', error);
-    return new Response('Portraits indisponibles sur ce déploiement', { status: 503 });
+    // Mieux vaut un message net qu'une erreur serveur opaque : la page, elle,
+    // continue de rendre le médaillon sans passer par cette route.
+    console.error('[avatar] portrait introuvable', error);
+    return new Response('Portraits indisponibles', { status: 503 });
   }
 
   const svg = `<?xml version="1.0" encoding="UTF-8"?>${avatarSvg(code, {
