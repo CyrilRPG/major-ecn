@@ -39,10 +39,17 @@ export async function GET(_req: Request, { params }: { params: Promise<{ seed: s
   // Les deux images possibles (portrait et emblème) sont chargées d'avance :
   // le dessin est synchrone.
   const ids = new Set<string>();
-  const sonde = avatarSvg(code, { source: (id) => { ids.add(id); return ''; } });
-  void sonde;
+  avatarSvg(code, { source: (id) => { ids.add(id); return ''; } });
   const images = new Map<string, string>();
-  await Promise.all([...ids].map(async (id) => images.set(id, await portraitEmbarque(id))));
+  try {
+    await Promise.all([...ids].map(async (id) => images.set(id, await portraitEmbarque(id))));
+  } catch (error) {
+    // Les portraits vivent dans `public/`, exclu du traçage Vercel : la route
+    // les réinclut par `outputFileTracingIncludes`. Si cette configuration
+    // saute, mieux vaut un message net qu'une erreur serveur opaque.
+    console.error('[avatar] portrait introuvable sur disque', error);
+    return new Response('Portraits indisponibles sur ce déploiement', { status: 503 });
+  }
 
   const svg = `<?xml version="1.0" encoding="UTF-8"?>${avatarSvg(code, {
     source: (id) => images.get(id) ?? '',

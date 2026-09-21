@@ -130,6 +130,13 @@ const nextConfig: NextConfig = {
     // `public/**` est exclu du trace pour toutes les fonctions (voir plus bas).
     '/api/certificate/[cours]': ['./public/major-ecn-logo.png', './public/tampon-pae-formation.png'],
     '/api/admin/campaign': ['./src/lib/email/campaigns/**/*'],
+    // Médaillons composés : la route embarque le portrait en base 64 dans le
+    // SVG (un SVG chargé par une balise <img> ne va chercher aucune image
+    // externe). Elle lit donc les PNG sur disque, alors que `public/**` est
+    // exclu du trace pour toutes les fonctions (voir plus bas) — sans cette
+    // réinclusion, la route renvoie 500 en production (constaté le 21/09/2026,
+    // déploiement d600cdce). 24 fichiers, 784 Ko.
+    '/api/avatar/[seed]': ['./public/arena/avatars/*.png'],
     // Filigrane des pages de corrigé EVC Arena : police embarquée (aucune police système sur Vercel).
     '/api/arena/corrections/[roundId]/[page]': ['./src/lib/arena/fonts/*.ttf'],
     '/api/cron/campaign-drip': ['./src/lib/email/campaigns/**/*'],
