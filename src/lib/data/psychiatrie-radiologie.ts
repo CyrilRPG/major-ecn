@@ -171,7 +171,7 @@ export const PSY_METHODE = [
 /** Les quatre bénéfices annoncés dès le hero. */
 export const PSY_HERO_BENEFICES = [
   "Programme ciblé de psychiatrie",
-  "QCM ou entraînement rédactionnel selon votre voie",
+  "QCM ou entraînements rédactionnels selon votre voie",
   "Annales et corrections détaillées",
   "Accompagnement par des médecins spécialistes",
 ];
@@ -229,10 +229,15 @@ export const PSY_APERCU_TARIFS = [
  * Le comparatif détaillé reste plus bas ; ceci répond à la seule question que
  * se pose le visiteur devant trois prix : pourquoi trois niveaux ?
  */
+/**
+ * L'échelle des trois formules. Le même couple de phrases que les cartes
+ * (`positionnement` / `resume`) : le prospect lit deux fois la même chose,
+ * ce qui est voulu — il doit pouvoir trancher avant d'ouvrir les listes.
+ */
 export const PSY_MONTEE_GAMME = [
-  ["Essentielle", "Plateforme + questions pédagogiques"],
-  ["Intensive", "Plateforme + questions + révisions en direct"],
-  ["Approfondie", "Plateforme + programme d’enseignement approfondi + accompagnement renforcé"],
+  ["Essentielle", "Je travaille en autonomie — plateforme complète + équipe pédagogique"],
+  ["Intensive", "Je veux aussi réviser en direct — Essentielle + 18–20 h avec les enseignants"],
+  ["Approfondie", "Je veux reprendre le programme en profondeur — programme approfondi + accompagnement renforcé"],
 ];
 
 /**
@@ -289,10 +294,12 @@ export const PSY_PLATEFORME = [
   {
     cle: "Analysez",
     texte: "Résultats, erreurs et points à renforcer.",
-    image: "/accueil.png",
+    // Recadrage de `accueil.png` sur les seules cartes de suivi : la capture
+    // entière affiche le calendrier d'une autre session que celle vendue ici.
+    image: "/suivi-progression.png",
     alt: "Tableau de bord Major ECN : progression, performance et priorités de révision",
-    largeur: 1903,
-    hauteur: 935,
+    largeur: 1190,
+    hauteur: 560,
   },
   {
     cle: "Consolidez",
@@ -397,13 +404,40 @@ export type FormuleSpecialite = {
    */
   positionnement?: string;
   /**
+   * Le contenu de la formule en une demi-ligne, juste sous le positionnement :
+   * « Plateforme complète + équipe pédagogique ». Le couple
+   * positionnement/résumé doit permettre de distinguer les trois formules en
+   * quelques secondes, avant même de lire les listes.
+   */
+  resume?: string;
+  /**
+   * Le bandeau en haut de carte. On préfère un libellé qui dit *pourquoi*
+   * (« Préparation la plus complète ») à un simple « Recommandée », qui
+   * n'informe pas alors que l'écart de prix est important.
+   */
+  badge?: string;
+  /**
    * La ligne à faire ressortir visuellement dans la carte : ce qui justifie à
    * lui seul le passage au niveau supérieur.
    */
   soulignement?: string;
 };
 
-/** Rappel commun aux trois formules, colonne de droite du bloc tarifs. */
+/**
+ * Rappel commun aux trois formules, colonne de droite du bloc tarifs.
+ *
+ * Le libellé de la voie dépend de la spécialité : la psychiatrie n'emploie
+ * jamais le mot « QROC », elle dit « réponses rédactionnelles », et ce
+ * vocabulaire doit être identique d'un bout à l'autre de sa page.
+ */
+export function toutesFormules(psy: boolean): { fort: string; suite: string }[] {
+  return TOUTES_FORMULES.map((t) =>
+    t.fort === "Méthode adaptée à votre voie" && psy
+      ? { ...t, suite: "QCM pour la voie interne, réponses rédactionnelles pour la voie externe" }
+      : t,
+  );
+}
+
 export const TOUTES_FORMULES: { fort: string; suite: string }[] = [
   { fort: "Plateforme complète", suite: "Accessible pendant toute la période de préparation" },
   { fort: "Méthode adaptée à votre voie", suite: "QCM pour la voie interne, QROC et rédaction pour la voie externe" },
@@ -417,14 +451,15 @@ export const PSY_FORMULES: FormuleSpecialite[] = [
     n: 1,
     nom: "Essentielle",
     accroche: ACCROCHE_FORMULE.essentielle,
-    positionnement: "Pour travailler à votre rythme avec tous les outils essentiels",
+    positionnement: "Je travaille en autonomie",
+    resume: "Plateforme complète + équipe pédagogique",
     prix: "495 €",
     href: "/formules/essentielle",
     encadre: { fort: "La base complète", suite: "de la préparation Major ECN." },
     items: [
       "Plateforme pédagogique complète",
       "Supports et fiches de cours",
-      "QCM ou entraînements rédactionnels selon la voie",
+      "QCM pour la voie interne, entraînements rédactionnels pour la voie externe",
       "Dossiers cliniques",
       "Annales",
       "Corrections détaillées",
@@ -441,7 +476,8 @@ export const PSY_FORMULES: FormuleSpecialite[] = [
     n: 2,
     nom: "Intensive",
     accroche: ACCROCHE_FORMULE.intensive,
-    positionnement: "Pour ajouter des révisions guidées avec nos enseignants",
+    positionnement: "Je veux aussi réviser en direct",
+    resume: "Essentielle + 18–20 h avec les enseignants",
     prix: "995 €",
     href: "/formules/intensive",
     encadre: {
@@ -463,11 +499,13 @@ export const PSY_FORMULES: FormuleSpecialite[] = [
     n: 3,
     nom: "Approfondie",
     accroche: ACCROCHE_FORMULE.approfondie,
-    positionnement: "Pour reprendre le programme en profondeur avec nos enseignants",
+    positionnement: "Je veux reprendre le programme en profondeur",
+    resume: "Programme approfondi + accompagnement renforcé",
     prefixe: "À partir de",
     prix: "2 095 €",
     href: "/formules/programme-approfondi",
     recommandee: true,
+    badge: "Préparation la plus complète",
     encadre: {
       fort: "Tout le contenu de l’Essentielle",
       plus: [
@@ -475,13 +513,15 @@ export const PSY_FORMULES: FormuleSpecialite[] = [
         "Accompagnement renforcé jusqu’aux EVC",
       ],
     },
+    // « Accompagnement renforcé jusqu'aux EVC » est déjà annoncé dans
+    // `encadre.plus` : le répéter ici le faisait apparaître deux fois dans la
+    // même carte.
     items: [
       "Nombreuses séances avec les enseignants",
       "Reprise structurée des connaissances",
       "Dossiers et situations cliniques",
       "Méthodologie approfondie",
       "Annales et corrections",
-      "Accompagnement renforcé jusqu’aux EVC",
     ],
     soulignement: "Volume d’enseignement adapté au parcours et au programme choisi.",
   },

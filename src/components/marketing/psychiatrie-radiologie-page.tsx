@@ -30,7 +30,7 @@ import {
   RADIO_FORMULES,
   RADIO_METHODE,
   RADIO_PROGRAMME,
-  TOUTES_FORMULES,
+  toutesFormules,
   type FormuleSpecialite,
   type SpecialtyKind,
 } from '@/lib/data/psychiatrie-radiologie';
@@ -202,12 +202,16 @@ function Hero({ psy }: { psy: boolean }) {
               >
                 Choisir ma formule
               </Link>
+              {/* En psychiatrie, le second bouton mène au contact et non à la
+                  plateforme : le visiteur est déjà sur une page « Préparation
+                  EVC Psychiatrie 2026 », le haut de page doit le faire avancer.
+                  La plateforme est montrée plus bas, en captures réelles. */}
               <Link
-                href={psy ? '#plateforme' : '#programme'}
+                href={psy ? '/contact' : '#programme'}
                 className="inline-flex items-center justify-center rounded-lg bg-white px-7 py-3.5 text-[14.5px] font-black tracking-tight transition-colors hover:bg-[#FDF2F4]"
                 style={{ border: `1.5px solid ${RED}`, color: RED }}
               >
-                {psy ? 'Découvrir la plateforme' : 'Découvrir le programme'}
+                {psy ? 'Être conseillé sur ma préparation' : 'Découvrir le programme'}
               </Link>
             </div>
 
@@ -511,8 +515,9 @@ function Methode({ psy }: { psy: boolean }) {
           <Reveal delay={0.1}>
             <p className="mx-auto mt-10 max-w-3xl text-center text-[14.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
               Chaque entraînement permet d’identifier ce qui doit être retravaillé, afin de transformer
-              progressivement les connaissances en{' '}
-              <span className="font-black" style={{ color: NAVY }}>automatismes.</span>
+              progressivement vos connaissances en{' '}
+              <span className="font-black" style={{ color: NAVY }}>automatismes</span> et de gagner en précision
+              et en efficacité <span className="font-black" style={{ color: NAVY }}>le jour des EVC.</span>
             </p>
           </Reveal>
         )}
@@ -628,6 +633,78 @@ function GainTemps({ psy }: { psy: boolean }) {
    BLOC 6 — Le programme
    ============================================================ */
 
+/**
+ * Une carte de domaine du programme.
+ *
+ * Sur mobile (psychiatrie), la liste est repliée : les quatre grands domaines
+ * tiennent alors dans un écran, et le visiteur comprend d'un coup d'œil qu'il
+ * y en a quatre au lieu de faire défiler vingt lignes. Au-delà de `sm`, la
+ * classe `sm:block` l'emporte sur `hidden` et les cartes sont toujours
+ * ouvertes, sans JavaScript ni risque de divergence au rendu serveur.
+ */
+function CarteDomaine({
+  domaine,
+  index,
+  repliableMobile,
+}: {
+  domaine: { title: string; items: string[] };
+  index: number;
+  repliableMobile: boolean;
+}) {
+  const [ouvert, setOuvert] = useState(false);
+  const idListe = `programme-${index}`;
+  const entete = (
+    <>
+      <span className="text-[12px] font-black tabular-nums tracking-[0.1em]" style={{ color: RED }}>
+        {String(index + 1).padStart(2, '0')}
+      </span>
+      <h3 className="mt-3 text-[15px] font-black leading-snug tracking-tight" style={{ color: NAVY }}>
+        {domaine.title}
+      </h3>
+    </>
+  );
+
+  return (
+    <article
+      className="flex h-full flex-col rounded-[1.15rem] bg-white px-6 py-6"
+      style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -60px rgba(15,31,77,0.6)' }}
+    >
+      {repliableMobile ? (
+        <button
+          type="button"
+          onClick={() => setOuvert((v) => !v)}
+          aria-expanded={ouvert}
+          aria-controls={idListe}
+          className="-my-2 flex w-full items-start justify-between gap-4 py-2 text-left sm:pointer-events-none sm:my-0 sm:py-0"
+        >
+          <span className="block">{entete}</span>
+          <span
+            aria-hidden
+            className="mt-0.5 shrink-0 text-[20px] font-black leading-none sm:hidden"
+            style={{ color: RED }}
+          >
+            {ouvert ? '−' : '+'}
+          </span>
+        </button>
+      ) : (
+        <div>{entete}</div>
+      )}
+
+      <ul
+        id={idListe}
+        className={'mt-4 space-y-2.5 ' + (repliableMobile && !ouvert ? 'hidden sm:block' : '')}
+      >
+        {domaine.items.map((item) => (
+          <li key={item} className="flex items-start gap-3">
+            <Puce color={RED} className="mt-[9px]" />
+            <span className="text-[12.5px] leading-snug" style={{ color: INK, fontFamily: FONT_BODY }}>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </article>
+  );
+}
+
 function Programme({ psy }: { psy: boolean }) {
   const domaines = psy ? PSY_PROGRAMME : RADIO_PROGRAMME;
   return (
@@ -656,20 +733,7 @@ function Programme({ psy }: { psy: boolean }) {
         <div className={'mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 ' + (psy ? 'lg:grid-cols-4' : 'lg:grid-cols-3 xl:grid-cols-5')}>
           {domaines.map((domaine, i) => (
             <Reveal key={domaine.title} delay={Math.min(i, 6) * 0.04} className="h-full">
-              <article className="flex h-full flex-col rounded-[1.15rem] bg-white px-6 py-6" style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -60px rgba(15,31,77,0.6)' }}>
-                <span className="text-[12px] font-black tabular-nums tracking-[0.1em]" style={{ color: RED }}>
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <h3 className="mt-3 text-[15px] font-black leading-snug tracking-tight" style={{ color: NAVY }}>{domaine.title}</h3>
-                <ul className="mt-4 space-y-2.5">
-                  {domaine.items.map((item) => (
-                    <li key={item} className="flex items-start gap-3">
-                      <Puce color={RED} className="mt-[9px]" />
-                      <span className="text-[12.5px] leading-snug" style={{ color: INK, fontFamily: FONT_BODY }}>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
+              <CarteDomaine domaine={domaine} index={i} repliableMobile={psy} />
             </Reveal>
           ))}
         </div>
@@ -694,22 +758,36 @@ function Programme({ psy }: { psy: boolean }) {
 function TemoignagePsy() {
   return (
     <article className="flex h-full flex-col rounded-[1.25rem] px-7 py-8 sm:px-9" style={{ background: NAVY, boxShadow: '0 40px 90px -60px rgba(15,31,77,0.9)' }}>
+      {/* La qualité de lauréate passe devant le nom : c'est elle qui fait
+          preuve. Photo réelle plutôt que des initiales — le témoignage gagne
+          en crédibilité dès qu'on voit la personne. */}
       <div className="flex items-center gap-4">
-        <span
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-[16px] font-black text-white"
-          style={{ background: `linear-gradient(135deg, ${RED_DEEP} 0%, ${RED} 100%)` }}
-          aria-hidden
-        >
-          MW
-        </span>
+        <Image
+          src="/temoignages/dr-monica-waitzfelder.jpg"
+          alt="Dr Monica Waitzfelder, lauréate des EVC de psychiatrie 2021"
+          width={480}
+          height={480}
+          loading="lazy"
+          sizes="72px"
+          className="h-[72px] w-[72px] shrink-0 rounded-2xl object-cover"
+          style={{ border: '1px solid rgba(255,255,255,0.28)' }}
+        />
         <div>
-          <p className="text-[15px] font-black tracking-tight text-white">Dr Monica WAITZFELDER</p>
-          <p className="mt-1 text-[12.5px] text-white/65" style={{ fontFamily: FONT_BODY }}>Lauréate EVC Psychiatrie 2021</p>
+          <p className="text-[11.5px] font-black uppercase leading-tight tracking-[0.14em]" style={{ color: '#F2A0AE' }}>
+            Lauréate EVC Psychiatrie 2021
+          </p>
+          <p className="mt-2 text-[16px] font-black tracking-tight text-white">Dr Monica Waitzfelder</p>
         </div>
       </div>
-      <blockquote className="mt-7 flex-1 text-[16px] leading-relaxed text-white/90" style={{ fontFamily: FONT_BODY }}>
-        «&nbsp;Après une première tentative en solo sans succès, la formation Major ECN m’a apporté la
-        méthodologie qui a fait la différence.&nbsp;»
+      <blockquote className="mt-7 flex-1">
+        <span aria-hidden className="block text-[44px] font-black leading-none" style={{ color: '#F2A0AE', fontFamily: FONT }}>“</span>
+        <span
+          className="mt-1 block text-[19px] font-bold leading-[1.45] text-white sm:text-[22px]"
+          style={{ fontFamily: FONT_BODY, letterSpacing: '-0.01em' }}
+        >
+          Après une première tentative en solo sans succès, la formation Major ECN m’a apporté la
+          méthodologie qui a fait la différence.
+        </span>
       </blockquote>
       <ul className="mt-7 flex flex-wrap gap-2">
         {['Méthodologie', 'Connaissances ciblées', 'Entraînement', 'Confiance'].map((q) => (
@@ -768,7 +846,8 @@ function ApercuTarifsPsy() {
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-3xl text-center">
           <TitreSection sur="Tarifs">
-            Choisissez votre <span style={{ color: RED_DEEP }}>niveau d’accompagnement</span>
+            Une préparation adaptée à votre besoin{' '}
+            <span style={{ color: RED_DEEP }}>et à votre niveau d’accompagnement</span>
           </TitreSection>
         </Reveal>
 
@@ -866,6 +945,57 @@ function GainTempsCourtPsy() {
             Concentrez-vous sur l’essentiel&nbsp;:{' '}
             <span className="font-black" style={{ color: NAVY }}>apprendre, vous entraîner et progresser.</span>
           </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * « Pourquoi commencer maintenant ? »
+ *
+ * La raison de ne pas reporter l'inscription est ici une raison rationnelle :
+ * plus l'échéance approche, plus le temps disponible doit être dépensé à
+ * travailler ce qui compte. Pas de compte à rebours, pas de « dernières
+ * places », pas de rareté fabriquée — la page vend une méthode, pas une
+ * urgence.
+ */
+function CommencerMaintenantPsy() {
+  return (
+    <section className="py-14 sm:py-16" style={{ fontFamily: FONT, background: PAPER }}>
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <div
+            className="mx-auto flex max-w-5xl flex-col gap-7 rounded-[1.25rem] bg-white px-7 py-8 sm:px-10 sm:py-10 lg:flex-row lg:items-center lg:justify-between lg:gap-12"
+            style={{ border: `1px solid ${LINE}`, boxShadow: '0 34px 80px -64px rgba(15,31,77,0.7)' }}
+          >
+            <div>
+              <p className="text-[12px] font-black uppercase tracking-[0.18em]" style={{ color: RED }}>
+                Pourquoi commencer maintenant&nbsp;?
+              </p>
+              <h2
+                className="mt-4 text-[1.35rem] font-black leading-tight tracking-tight sm:text-[1.6rem]"
+                style={{ color: NAVY, letterSpacing: '-0.025em' }}
+              >
+                Chaque semaine de préparation compte
+              </h2>
+              <p className="mt-4 max-w-2xl text-[14.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                À l’approche des EVC, l’objectif n’est plus d’accumuler les ressources, mais de savoir quoi
+                travailler, comment s’entraîner et quelles lacunes corriger.
+              </p>
+              <p className="mt-3 max-w-2xl text-[14.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                Avec Major ECN, structurez dès maintenant votre préparation et concentrez votre temps sur ce qui
+                doit réellement être maîtrisé pour les épreuves.
+              </p>
+            </div>
+            <Link
+              href="#formules"
+              className="inline-flex shrink-0 items-center justify-center rounded-xl px-8 py-4 text-[14.5px] font-black tracking-tight text-white transition-transform duration-300 hover:scale-[1.02]"
+              style={{ background: `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)`, boxShadow: '0 18px 42px -22px rgba(139,14,34,0.7)' }}
+            >
+              Commencer ma préparation →
+            </Link>
+          </div>
         </Reveal>
       </div>
     </section>
@@ -994,13 +1124,23 @@ function AccompagnementPsy() {
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center">
           <Reveal>
+            {/* Image d'illustration, et non le portrait d'un enseignant de la
+                préparation : lui associer un nom et un titre de praticien
+                reviendrait à présenter un modèle comme un médecin réel. Pour
+                afficher de véritables enseignants, il faut leurs photos et
+                leurs noms.
+
+                Elle remplace aussi `cours.webp`, qui illustrait déjà l'étape
+                « Apprenez » du bloc plateforme : la même capture apparaissait
+                deux fois à quelques sections d'intervalle. */}
             <Image
-              src="/specialites/psychiatrie/cours.webp"
-              alt="Cours de psychiatrie consacré à l’évaluation du risque suicidaire"
-              width={321}
-              height={166}
+              src="/specialites/psychiatrie/accompagnement.webp"
+              alt="Médecin échangeant avec une candidate au cours de sa préparation"
+              width={1400}
+              height={934}
+              loading="lazy"
               sizes="(max-width: 1024px) 100vw, 40vw"
-              className="h-auto w-full rounded-[1.25rem]"
+              className="h-auto w-full rounded-[1.25rem] object-cover"
               style={{ border: `1px solid ${LINE}` }}
             />
           </Reveal>
@@ -1153,9 +1293,11 @@ function CarteFormule({ f, p, specialite }: { f: FormuleSpecialite; p: PaletteFo
       style={{ border: `1px solid ${p.line}`, boxShadow: `0 36px 85px -58px ${p.ombre}` }}
     >
       <span aria-hidden className="block h-1.5 w-full" style={{ background: p.grad }} />
+      {/* Un bandeau qui dit pourquoi plutôt que « Recommandée », qui
+          n'informe pas — surtout avec un écart de prix de cette ampleur. */}
       {f.recommandee && (
-        <p className="py-2.5 text-center text-[11px] font-black uppercase tracking-[0.22em] text-white" style={{ background: p.grad }}>
-          Recommandée
+        <p className="py-2.5 text-center text-[11px] font-black uppercase tracking-[0.18em] text-white" style={{ background: p.grad }}>
+          {f.badge ?? 'Recommandée'}
         </p>
       )}
 
@@ -1166,19 +1308,37 @@ function CarteFormule({ f, p, specialite }: { f: FormuleSpecialite; p: PaletteFo
           </span>
           <div className="min-w-0">
             <p className="text-[1.3rem] font-black uppercase leading-none tracking-[0.04em]" style={{ color: p.main }}>{f.nom}</p>
-            <p className="mt-2 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{f.accroche}</p>
+            {/* Sans positionnement (radiologie), l'accroche reste ici. Avec,
+                elle descend juste au-dessus du prix — la place que lui assigne
+                `formules-accroches.ts` — pour ne pas répéter le résumé qui la
+                suivrait immédiatement. */}
+            {!f.positionnement && (
+              <p className="mt-2 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{f.accroche}</p>
+            )}
           </div>
         </div>
 
-        {/* Ce que la formule permet de faire, en une phrase. Distinct de
-            l'accroche, qui est commune à tout le site. */}
+        {/* Le couple « ce que je veux » / « ce que j'obtiens », mis en avant
+            au-dessus de tout le reste : la différence entre les trois formules
+            doit se saisir en quelques secondes, avant la lecture des listes.
+            Distinct de l'accroche, qui est commune à tout le site. */}
         {f.positionnement && (
-          <p className="mt-4 text-[13px] font-black leading-snug" style={{ color: NAVY }}>
-            {f.positionnement}
-          </p>
+          <div className="mt-5 rounded-xl px-4 py-3.5" style={{ background: p.soft, border: `1px solid ${p.line}` }}>
+            <p className="text-[14.5px] font-black leading-snug" style={{ color: p.deep, letterSpacing: '-0.015em' }}>
+              {f.positionnement}
+            </p>
+            {f.resume && (
+              <p className="mt-1.5 text-[12.5px] font-bold leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                {f.resume}
+              </p>
+            )}
+          </div>
         )}
 
         <div className="mt-5">
+          {f.positionnement && (
+            <p className="mb-2 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{f.accroche}</p>
+          )}
           {f.prefixe && (
             <p className="text-[11.5px] font-black uppercase tracking-[0.08em]" style={{ color: p.main }}>{f.prefixe}</p>
           )}
@@ -1194,10 +1354,12 @@ function CarteFormule({ f, p, specialite }: { f: FormuleSpecialite; p: PaletteFo
           )}
           {f.encadre.plus && (
             <ul className="mt-3 space-y-2">
+              {/* L'espace après le « + » est un vrai caractère et non une
+                  gouttière flex : sinon le texte copié depuis la page donne
+                  « +Programme d'enseignement approfondi ». */}
               {f.encadre.plus.map((x) => (
-                <li key={x} className="flex items-start gap-2 text-[12px] font-bold leading-snug" style={{ color: NAVY, fontFamily: FONT_BODY }}>
-                  <span aria-hidden className="text-[13px] font-black leading-none" style={{ color: p.main }}>+</span>
-                  {x}
+                <li key={x} className="text-[12px] font-bold leading-snug" style={{ color: NAVY, fontFamily: FONT_BODY }}>
+                  <span aria-hidden className="font-black" style={{ color: p.main }}>+</span>{' '}{x}
                 </li>
               ))}
             </ul>
@@ -1296,7 +1458,7 @@ function Formules({ psy }: { psy: boolean }) {
             <aside className="flex h-full flex-col rounded-[1.25rem] bg-white px-6 py-7" style={{ border: `1px solid ${LINE}` }}>
               <p className="text-[12.5px] font-black uppercase tracking-[0.06em]" style={{ color: RED }}>Dans toutes les formules</p>
               <ul className="mt-5 flex-1 divide-y" style={{ borderColor: LINE_SOFT }}>
-                {TOUTES_FORMULES.map((t) => (
+                {toutesFormules(psy).map((t) => (
                   <li key={t.fort} className="py-3.5 first:pt-0 last:pb-0" style={{ borderColor: LINE_SOFT }}>
                     <p className="text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
                       <span className="block text-[13px] font-black" style={{ color: NAVY }}>{t.fort}</span>
@@ -1354,9 +1516,20 @@ function Formules({ psy }: { psy: boolean }) {
    BLOC 9 — FAQ
    ============================================================ */
 
+/**
+ * Nombre de questions affichées d'emblée en psychiatrie.
+ *
+ * Les quinze restent dans le HTML — elles répondent à de vraies objections et
+ * alimentent le JSON-LD `FAQPage`. Seul l'affichage est replié : sur mobile,
+ * quinze accordéons repoussaient l'appel final très bas dans la page.
+ */
+const FAQ_PSY_VISIBLES = 7;
+
 function FaqSection({ psy }: { psy: boolean }) {
   const entries = psy ? faqPsychiatrie : faqRadiologie;
   const [open, setOpen] = useState<number | null>(null);
+  const [tout, setTout] = useState(false);
+  const repliable = psy && entries.length > FAQ_PSY_VISIBLES;
   return (
     <section id="faq" className="scroll-mt-28 py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: PAPER }}>
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -1378,8 +1551,9 @@ function FaqSection({ psy }: { psy: boolean }) {
         <div className="mt-10 space-y-3">
           {entries.map((f, i) => {
             const ouvert = open === i;
+            const masquee = repliable && i >= FAQ_PSY_VISIBLES && !tout;
             return (
-              <Reveal key={f.q} delay={Math.min(i, 4) * 0.03}>
+              <Reveal key={f.q} delay={Math.min(i, 4) * 0.03} className={masquee ? 'hidden' : undefined}>
                 <div className="overflow-hidden rounded-xl bg-white" style={{ border: `1px solid ${ouvert ? 'rgba(192,17,46,0.28)' : LINE}` }}>
                   <button
                     type="button"
@@ -1410,6 +1584,19 @@ function FaqSection({ psy }: { psy: boolean }) {
             );
           })}
         </div>
+
+        {repliable && !tout && (
+          <p className="mt-8 text-center">
+            <button
+              type="button"
+              onClick={() => setTout(true)}
+              className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-[13.5px] font-black tracking-tight transition-colors hover:bg-[#FDF2F4]"
+              style={{ border: `1.5px solid ${RED}`, color: RED }}
+            >
+              Voir toutes les questions ({entries.length})
+            </button>
+          </p>
+        )}
       </div>
     </section>
   );
@@ -1566,6 +1753,7 @@ export function PsychiatrieRadiologiePage({ kind }: { kind: SpecialtyKind }) {
           <TemoignageSectionPsy />
           <ApercuTarifsPsy />
           <GainTempsCourtPsy />
+          <CommencerMaintenantPsy />
           <Programme psy />
           <CtaProgrammePsy />
           <PlateformePsy />
