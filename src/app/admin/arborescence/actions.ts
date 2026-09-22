@@ -322,6 +322,114 @@ export async function moveItem(id: string, target_matiere_id: string): Promise<{
   }
 }
 
+/** Renumérote une liste d'objets ordonnés en 0..n-1 et n'écrit que les lignes
+ *  qui changent. Les `order_index` posés par les scripts de production ne sont
+ *  ni contigus ni toujours distincts : un simple échange de deux valeurs
+ *  laisserait le déplacement sans effet dès qu'il y a un doublon. */
+async function renumeroter(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  a: any,
+  table: 'cours' | 'matieres',
+  liste: { id: string; order_index: number }[],
+): Promise<string | null> {
+  for (let i = 0; i < liste.length; i++) {
+    if (liste[i].order_index === i) continue;
+    const { error } = await a.from(table).update({ order_index: i }).eq('id', liste[i].id);
+    if (error) return error.message as string;
+  }
+  return null;
+}
+
+/** Réordonne un item au sein de son collège (haut / bas). C'est `order_index`
+ *  qui pilote l'ordre des items dans l'espace élève comme dans l'admin. Le tri
+ *  de référence est celui de l'espace élève : `order_index`, puis `titre` à
+ *  rang égal. */
+export async function reorderItem(
+  id: string,
+  direction: 'up' | 'down',
+): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const admin = await requireAdminClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const a = admin as any;
+    const { data: cur } = await a
+      .from('cours')
+      .select('id, matiere_id')
+      .eq('id', id)
+      .maybeSingle();
+    if (!cur) return { ok: false, error: 'Item introuvable' };
+
+    const { data: freres } = await a
+      .from('cours')
+      .select('id, order_index, titre')
+      .eq('matiere_id', cur.matiere_id)
+      .order('order_index', { ascending: true })
+      .order('titre', { ascending: true });
+    const liste = (freres ?? []) as { id: string; order_index: number; titre: string }[];
+    const idx = liste.findIndex((c) => c.id === id);
+    const cible = direction === 'up' ? idx - 1 : idx + 1;
+    if (idx < 0 || cible < 0 || cible >= liste.length) return { ok: true };
+
+    const suivant = [...liste];
+    [suivant[idx], suivant[cible]] = [suivant[cible], suivant[idx]];
+    const err = await renumeroter(a, 'cours', suivant);
+    if (err) return { ok: false, error: err };
+
+    revalidatePath('/admin/arborescence');
+    revalidatePath('/admin/contenu');
+    revalidatePath('/facultes');
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : 'Erreur' };
+  }
+}
+
+/** Réordonne un collège parmi ses pairs (haut / bas) : les collèges de premier
+ *  niveau entre eux, les sous-collèges au sein de leur parent. */
+export async function reorderCollege(
+  id: string,
+  direction: 'up' | 'down',
+): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const admin = await requireAdminClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const a = admin as any;
+    const { data: cur } = await a
+      .from('matieres')
+      .select('id, semestre_id, parent_matiere_id')
+      .eq('id', id)
+      .maybeSingle();
+    if (!cur) return { ok: false, error: 'Collège introuvable' };
+
+    let req = a
+      .from('matieres')
+      .select('id, order_index, nom')
+      .eq('semestre_id', cur.semestre_id);
+    req = cur.parent_matiere_id
+      ? req.eq('parent_matiere_id', cur.parent_matiere_id)
+      : req.is('parent_matiere_id', null);
+    const { data: freres } = await req
+      .order('order_index', { ascending: true })
+      .order('nom', { ascending: true });
+    const liste = (freres ?? []) as { id: string; order_index: number; nom: string }[];
+    const idx = liste.findIndex((c) => c.id === id);
+    const cible = direction === 'up' ? idx - 1 : idx + 1;
+    if (idx < 0 || cible < 0 || cible >= liste.length) return { ok: true };
+
+    const suivant = [...liste];
+    [suivant[idx], suivant[cible]] = [suivant[cible], suivant[idx]];
+    const err = await renumeroter(a, 'matieres', suivant);
+    if (err) return { ok: false, error: err };
+
+    revalidatePath('/admin/arborescence');
+    revalidatePath('/admin/contenu');
+    revalidatePath('/facultes');
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : 'Erreur' };
+  }
+}
+
 /* ============================================================
    SLOTS DE CONTENU (cours_content_slots)
    ============================================================ */

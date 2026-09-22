@@ -8,13 +8,13 @@ import {
 } from 'lucide-react';
 import {
   addSlot, createCollege, createItem, deleteCollege, deleteItem, deleteSlot,
-  duplicateItem, moveItem, moveSlot, renameCollege, renameItem, updateCollegePermission,
-  updateCollegeAccessType, updateCoursAccessType,
+  duplicateItem, moveItem, moveSlot, renameCollege, renameItem, reorderCollege,
+  reorderItem, updateCollegePermission, updateCollegeAccessType, updateCoursAccessType,
 } from './actions';
 
 type Slot = { id: string; label: string; content_type: 'video' | 'fiche' | 'qcm' | 'flashcards'; position: number };
 type Item = { id: string; titre: string; order_index: number; access_type: 'all' | 'specific'; slots: Slot[] };
-type College = { id: string; nom: string; icon_key: string | null; color_hex: string | null; order_index: number; min_offer: string | null; access_type: 'all' | 'specific'; items: Item[] };
+type College = { id: string; nom: string; icon_key: string | null; color_hex: string | null; order_index: number; parent_matiere_id: string | null; min_offer: string | null; access_type: 'all' | 'specific'; items: Item[] };
 
 const SLOT_ICONS = {
   video:      Video,
@@ -49,6 +49,14 @@ export function ArborescenceClient({ colleges }: { colleges: College[] }) {
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const router = useRouter();
+
+  // Les flèches d'un collège ne le déplacent qu'au sein de sa fratrie : les
+  // collèges de premier niveau entre eux, les sous-collèges dans leur parent.
+  // La liste étant affichée à plat, on calcule ce rang ici.
+  const rangDansFratrie = (m: College) => {
+    const fratrie = colleges.filter((c) => (c.parent_matiere_id ?? null) === (m.parent_matiere_id ?? null));
+    return { index: fratrie.findIndex((c) => c.id === m.id), total: fratrie.length };
+  };
 
   const toggle = (id: string) =>
     setExpanded((prev) => {
@@ -124,6 +132,23 @@ export function ArborescenceClient({ colleges }: { colleges: College[] }) {
 
             <div className="ml-auto flex items-center gap-2">
               <PermissionEditor college={m} onRun={run} />
+              {/* Réordonner le collège : pilote l'ordre des collèges côté élève. */}
+              <button
+                onClick={() => run(async () => await reorderCollege(m.id, 'up'))}
+                disabled={pending || rangDansFratrie(m).index <= 0}
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-(--color-ink-soft) hover:bg-(--color-sand-100) disabled:opacity-30"
+                title="Monter le collège"
+              >
+                <ChevronUp className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => run(async () => await reorderCollege(m.id, 'down'))}
+                disabled={pending || rangDansFratrie(m).index >= rangDansFratrie(m).total - 1}
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-(--color-ink-soft) hover:bg-(--color-sand-100) disabled:opacity-30"
+                title="Descendre le collège"
+              >
+                <ChevronDown className="h-4 w-4" />
+              </button>
               <button
                 onClick={() => {
                   if (confirm(`Supprimer « ${m.nom} » et tous ses items ? Action irréversible.`)) {
@@ -143,10 +168,12 @@ export function ArborescenceClient({ colleges }: { colleges: College[] }) {
           {expanded.has(m.id) && (
             <div className="border-t border-(--color-border) px-4 py-3 sm:px-5">
               <div className="space-y-2">
-                {m.items.map((it) => (
+                {m.items.map((it, index) => (
                   <ItemRow
                     key={it.id}
                     item={it}
+                    index={index}
+                    total={m.items.length}
                     matiere_id={m.id}
                     colleges={colleges}
                     pending={pending}
@@ -296,9 +323,11 @@ function ItemAccessEditor({ item, onRun }: { item: Item; onRun: (a: () => Promis
 }
 
 function ItemRow({
-  item, matiere_id, colleges, pending, onRun, onAddSlot, addingSlot, closeAddSlot,
+  item, index, total, matiere_id, colleges, pending, onRun, onAddSlot, addingSlot, closeAddSlot,
 }: {
   item: Item;
+  index: number;
+  total: number;
   matiere_id: string;
   colleges: College[];
   pending: boolean;
@@ -348,6 +377,23 @@ function ItemRow({
         <ItemAccessEditor item={item} onRun={onRun} />
 
         <div className="ml-auto flex items-center gap-1">
+          {/* Réordonner : pilote l'ordre des items dans l'espace élève. */}
+          <button
+            onClick={() => onRun(async () => await reorderItem(item.id, 'up'))}
+            disabled={pending || index === 0}
+            className="flex h-7 w-7 items-center justify-center rounded-md text-(--color-ink-soft) hover:bg-(--color-sand-100) disabled:opacity-30"
+            title="Monter l'item"
+          >
+            <ChevronUp className="h-3.5 w-3.5" />
+          </button>
+          <button
+            onClick={() => onRun(async () => await reorderItem(item.id, 'down'))}
+            disabled={pending || index === total - 1}
+            className="flex h-7 w-7 items-center justify-center rounded-md text-(--color-ink-soft) hover:bg-(--color-sand-100) disabled:opacity-30"
+            title="Descendre l'item"
+          >
+            <ChevronDown className="h-3.5 w-3.5" />
+          </button>
           <select
             value=""
             onChange={(e) => {
