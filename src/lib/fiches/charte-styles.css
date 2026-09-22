@@ -543,23 +543,33 @@ tr {
   font-size: 9pt;
 }
 
-/* Lignes-réflexe (à retenir / piège / mnémo), pleine largeur. */
+/* Lignes-réflexe (à retenir / piège / mnémo), pleine largeur.
+   La barre colorée de 2,4 mm n'est PAS une bordure gauche : en border-collapse,
+   le bord gauche d'un tableau se cale sur la moitié de la plus large bordure
+   gauche de ses cellules. Une bordure de 2,4 mm décalait donc de ~1,1 mm vers
+   la droite tout tableau contenant une ligne-réflexe, bandeau compris, et le
+   bord des tableaux sautait d'une page à l'autre. La cellule garde le filet de
+   0,5 pt commun à toutes les cellules, teinté de la couleur de la barre, et une
+   ombre intérieure sans flou peint le reste. Chromium rend ce filet sur 1 px :
+   l'ombre fait donc 2,4 mm - 1 px, pour une barre de 2,4 mm au total. */
 .ft-reflexe td {
+  --ft-reflexe-barre: var(--pearl);
   border: 0.5pt solid var(--pearl);
-  border-left: 2.4mm solid var(--pearl);
-  padding: 2.6mm 4mm;
+  border-left-color: var(--ft-reflexe-barre);
+  box-shadow: inset calc(2.4mm - 1px) 0 0 var(--ft-reflexe-barre);
+  padding: 2.6mm 4mm 2.6mm calc(2.4mm - 1px + 4mm);
   vertical-align: top;
 }
 .ft-reflexe--a_retenir td {
-  border-left-color: var(--navy);
+  --ft-reflexe-barre: var(--navy);
   background: var(--mist);
 }
 .ft-reflexe--piege td {
-  border-left-color: var(--burgundy);
+  --ft-reflexe-barre: var(--burgundy);
   background: #f5e9ea;
 }
 .ft-reflexe--mnemo td {
-  border-left-color: var(--gold);
+  --ft-reflexe-barre: var(--gold);
   background: #f6f1e4;
 }
 .ft-reflexe-label {
