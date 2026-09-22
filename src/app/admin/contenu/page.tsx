@@ -1,5 +1,6 @@
 import { profCanAccessCours, requireContentEditor } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { coursRelus } from '@/lib/data/relectures';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import {
@@ -45,7 +46,12 @@ export default async function AdminContenuPage() {
   // Les deux lectures sont INDÉPENDANTES : elles partent ensemble au lieu de
   // s'enchaîner. La RPC coûtait 1 374 ms à elle seule avant d'être réécrite en
   // agrégats ; l'attendre après l'arbre doublait le délai d'affichage.
-  const [{ data }, { data: counts }] = await Promise.all([
+  //
+  // La RPC renvoie une ligne par item : au-delà de 1 000 items, PostgREST la
+  // TRONQUAIT en silence, et comme elle n'était pas triée, l'item qu'on venait
+  // de modifier (nouvelle version de ligne en fin de table) tombait hors de la
+  // tranche et ses étoiles réapparaissaient à 0. Lecture paginée, triée.
+  const [{ data }, counts] = await Promise.all([
     supabase
       .from('facultes')
       .select(`
@@ -54,14 +60,19 @@ export default async function AdminContenuPage() {
       `)
       .eq('id', EDN_FACULTE_ID)
       .maybeSingle(),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (supabase as any).rpc('admin_content_counts', { p_faculte_id: EDN_FACULTE_ID }),
+    fetchAllRows<CountRow>((from, to) =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (supabase as any)
+        .rpc('admin_content_counts', { p_faculte_id: EDN_FACULTE_ID })
+        .order('cours_id')
+        .range(from, to),
+    ).catch(() => [] as CountRow[]),
   ]);
 
   // Compteurs agrégés — tolérant : si la RPC échoue, la grille s'affiche quand
   // même avec des compteurs à zéro.
   const compteurs = new Map<string, Omit<CountRow, 'cours_id'>>();
-  for (const r of ((counts ?? []) as CountRow[])) {
+  for (const r of counts) {
     const { cours_id, ...reste } = r;
     compteurs.set(cours_id, reste);
   }
