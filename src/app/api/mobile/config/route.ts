@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { PLAN_STUDENT_ENABLED, SUIVI_STUDENT_ENABLED } from '@/lib/modules-flags';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -32,6 +33,11 @@ export async function GET() {
       ?? 'https://apps.apple.com/fr/search?term=Major%20ECN',
     android_store_url: process.env.MOBILE_ANDROID_STORE_URL
       ?? 'https://play.google.com/store/apps/details?id=fr.majorecn.app',
+    // Modules en recette : l’application affiche les mêmes rubriques que le web,
+    // au même moment. Le drapeau est SERVEUR (les routes le revérifient) ; ici
+    // il ne sert qu’à masquer une entrée de menu qui répondrait « fermé ».
+    plan_enabled: PLAN_STUDENT_ENABLED,
+    suivi_enabled: SUIVI_STUDENT_ENABLED,
   };
   return NextResponse.json(config, {
     headers: { 'Cache-Control': 'public, max-age=300, s-maxage=300' },
