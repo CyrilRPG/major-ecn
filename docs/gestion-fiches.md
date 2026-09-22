@@ -42,7 +42,7 @@ quand aucune fiche n'est désignée explicitement :
   `ficheId` pour viser une fiche, ou `createNew: true` + `titre` pour en créer
   une à la suite) ;
 - l'autosave `content_html` (`/api/fiches/<id>/html`, `?doc=` en GET et
-  `ficheId` en POST) et `content_json` ;
+  `ficheId` en POST) ;
 - la **fiche éclair** (`/api/fiches/<id>/express`) — toujours la principale ;
 - l'assistant (contexte pédagogique) et le manifeste mobile — toujours la
   principale.

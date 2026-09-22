@@ -12,9 +12,7 @@ export const dynamic = 'force-dynamic';
  *   1. Si `content_html` est présent → on ouvre l'éditeur HTML WYSIWYG (Word-like).
  *      C'est le format cible : généré par `major-ecn-fiche` (Python) ou édité
  *      ici, puis converti en PDF côté serveur via Chromium.
- *   2. Sinon, si `content_json` est présent → fallback sur l'éditeur structuré
- *      legacy (pour les fiches déjà éditées dans l'ancien flow).
- *   3. Sinon → nouvel éditeur HTML, page vierge.
+ *   2. Sinon → le même éditeur, sur une page vierge.
  */
 export default async function FicheEditPage({
   params,
