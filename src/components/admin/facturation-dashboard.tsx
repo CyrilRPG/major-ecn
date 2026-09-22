@@ -74,6 +74,15 @@ const MANUAL_QCM_LINES = [
   // 5 € de QCM et 3 € de flashcards depuis longtemps, ces sept items n'y
   // ajoutent donc rien.
   { label: 'Pédiatrie MG — 7 fiches complémentaires', montant: 40 },
+  // Pneumologie MG — 3 items créés le 23/09/2026 depuis `contenus/fichespneumo`
+  // (fiche PDF, 11 séries QCM/DP/QROC/DP QROC et flashcards chacun) : 18 € par
+  // item, tarif fixé par Cyril, + 3 € par item pour ses 16 DP Gériatrie (items
+  // ajoutés au bonus Gériatrie → MG le même jour), soit 21 € par item. Comme
+  // pour Pédiatrie MG, la ligne automatique « Médecine générale / Pneumologie »
+  // est déjà au plafond : ces lignes s'ajoutent sans double facturation.
+  { label: 'Pneumologie MG — Pneumonies aiguës de l\'adulte (+ DP Gériatrie)', montant: 21 },
+  { label: 'Pneumologie MG — Tuberculose (+ DP Gériatrie)', montant: 21 },
+  { label: 'Pneumologie MG — Cancer bronchopulmonaire (+ DP Gériatrie)', montant: 21 },
   // Audit IA des corrigés sur TOUTE la base (07/09/2026) : 74 275 questions et
   // 371 385 propositions relues en cohérence, puis 5 143 questions relues en
   // rédaction. 18 958 constats produits. Coût fournisseur réel : 43,37 $.

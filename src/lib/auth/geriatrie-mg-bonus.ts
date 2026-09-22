@@ -122,6 +122,11 @@ export const GERIATRIE_MG_BONUS_COURS_IDS: string[] = [
   // collège à part entière (et sans ouvrir ses épreuves blanches / son agenda).
   // `access_type = 'specific'` le garde invisible pour les élèves MG ordinaires.
   'cca321f8-144c-4048-a982-675116a6f78d', // Infections bronchopulmonaires communautaires de l'adulte
+  // Demande du 2026-09-23 (Cyril) : les trois items MG ajoutés le même jour
+  // depuis `contenus/fichespneumo` (chacun porte ses 16 DP Gériatrie).
+  'afc338ef-bcd3-4069-aa7f-3cf5368587fd', // Pneumonies aiguës de l'adulte
+  '805ebd7b-64b6-46a5-9cef-e2f64e193bf1', // Tuberculose
+  '28f7c187-4ed8-4324-b329-5306c284af14', // Cancer bronchopulmonaire
 
   // Rhumatologie
   '2ebc5f0a-dcae-4ea4-b9f0-775ffea6aeb2', // Douleur et thérapeutiques antalgiques
