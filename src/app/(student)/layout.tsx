@@ -14,6 +14,7 @@ import { getNavigatorTree } from '@/lib/data/navigator';
 import { hasMedecineGeneraleAccess, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { isUserTargeted } from '@/lib/schemas/satisfaction';
+import { interrogationEnAttente } from '@/lib/pedago/interrogation';
 import {
   resolveWelcomeConfig, WELCOME_PAR_DEFAUT,
   type WelcomePopupRow, type WelcomeSpecialite,
@@ -204,74 +205,22 @@ export default async function StudentLayout({ children }: { children: React.Reac
   // Exceptions : la page d'interrogation elle-même, le téléchargement du
   // certificat, les pages d'auth, et la déconnexion.
   //
+  // Le cours est choisi par `interrogationEnAttente` (lib/pedago/interrogation),
+  // le même helper que /api/mobile/gates, et qui rejoue les contrôles de la
+  // page : un cours dont l'élève a perdu l'accès, ou dont l'interrogation n'a
+  // aucune question, est passé — sinon le layout et la page se renverraient
+  // l'élève à l'infini, ou le laisseraient devant un écran sans question.
+  //
   // S'APPLIQUE UNIQUEMENT AUX ÉTUDIANTS — les profs/admins qui empruntent
   // les routes de la couche (student) pour passer en mode "Vue étudiant"
   // ne doivent jamais être bloqués (sinon : boucle de redirection au login).
   // ───────────────────────────────────────────────────────────────
   if (profile.role === 'student') {
-    const PNEUMO_COURS_ID = '33579977-020e-4c94-a561-dee9d3c7bc70';
-    const [{ data: progressRows }, { data: completionsRows }] = await Promise.all([
-      supabase
-        .from('course_progress')
-        .select('cours_id, video_watched, fiche_read, last_seen_at')
-        .eq('user_id', user.id)
-        .eq('video_watched', true)
-        .eq('fiche_read', true),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (supabase as any).from('parcours_completions')
-        .select('cours_id, certificate_signed_at')
-        .eq('user_id', user.id),
-    ]);
-    const signedSet = new Set(
-      ((completionsRows ?? []) as Array<{ cours_id: string; certificate_signed_at: string | null }>)
-        .filter((r) => !!r.certificate_signed_at)
-        .map((r) => r.cours_id)
-    );
-    // Cours candidats : vidéo + fiche OK, pas encore signés.
-    const candidateIds = new Set<string>(
-      ((progressRows ?? []) as Array<{ cours_id: string }>)
-        .map((r) => r.cours_id)
-        .filter((id) => !signedSet.has(id))
-    );
-    // Bypass Pneumologie : on ne force le passage QUE si l'élève a au moins
-    // une trace d'activité sur Pneumo (pas dès la première connexion).
-    const hasPneumoActivity = ((progressRows ?? []) as Array<{ cours_id: string }>)
-      .some((r) => r.cours_id === PNEUMO_COURS_ID);
-    if (hasPneumoActivity && !signedSet.has(PNEUMO_COURS_ID)) {
-      candidateIds.add(PNEUMO_COURS_ID);
-    }
-
-    let pendingInterrogationId: string | null = null;
-    if (candidateIds.size > 0) {
-      const ids = [...candidateIds];
-      const [{ data: atts }, { data: revs }] = await Promise.all([
-        supabase
-          .from('qcm_attempts')
-          .select('id, qcm_questions!inner(qcm_series!inner(cours_id))')
-          .eq('user_id', user.id)
-          .in('qcm_questions.qcm_series.cours_id', ids),
-        supabase
-          .from('flashcard_reviews')
-          .select('id, flashcards!inner(cours_id)')
-          .eq('user_id', user.id)
-          .in('flashcards.cours_id', ids),
-      ]);
-      type AttRow = { qcm_questions: { qcm_series: { cours_id: string } } };
-      type RevRow = { flashcards: { cours_id: string } };
-      const withQcm = new Set(
-        ((atts ?? []) as unknown as AttRow[]).map((a) => a.qcm_questions.qcm_series.cours_id)
-      );
-      const withRev = new Set(
-        ((revs ?? []) as unknown as RevRow[]).map((r) => r.flashcards.cours_id)
-      );
-      for (const id of ids) {
-        const isPneumoBypass = id === PNEUMO_COURS_ID && hasPneumoActivity;
-        if (isPneumoBypass || (withQcm.has(id) && withRev.has(id))) {
-          pendingInterrogationId = id;
-          break;
-        }
-      }
-    }
+    const pendingInterrogationId = await interrogationEnAttente(supabase, {
+      id: user.id,
+      role: profile.role,
+      permission_scope: profile.permission_scope,
+    });
 
     if (pendingInterrogationId) {
       const interroPath = `/cours/${pendingInterrogationId}/interrogation`;

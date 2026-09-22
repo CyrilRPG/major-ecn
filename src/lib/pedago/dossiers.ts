@@ -26,6 +26,11 @@
  * `estSerieDeQuestionsIsolees`). Le doute profite au dossier : une série
  * d'un type inconnu est servie entière, jamais dépecée.
  *
+ * L'interrogation de fin de parcours, qui n'a pas d'unité « dossier », ne
+ * tire que des questions isolées (`tirerQuestionsIsolees`), parmi les QCM de
+ * son vivier (`vivierInterrogation`) — un vivier vide ne doit jamais retenir
+ * l'élève sur l'interrogation.
+ *
  * Module PUR (aucun accès base) : testé dans tests/pedago-dossiers.test.ts.
  */
 import { estSerieAnnale } from '../data/annales';
@@ -113,6 +118,67 @@ export function dossiersDepuisSeries<S extends SerieForme & { id: string }>(
     if (!estSerieDeQuestionsIsolees(s)) out.set(s.id, s.nbQuestions);
   }
   return out;
+}
+
+/**
+ * Tirage question par question SANS unité « dossier » : l'interrogation de
+ * fin de parcours sert N QCM indépendants, sans vignette ni libellé de série.
+ *
+ * Seules y entrent les questions d'une série de questions isolées. Celles
+ * d'une série servie entière (dossier, annale, entraînement, séance, sujet
+ * long) sont écartées, y compris pour compléter un vivier trop court : l'élève
+ * reçoit alors moins de `n` questions — aucune si l'item n'a que des
+ * dossiers —, jamais une question privée du cas qui la rend traitable. Une
+ * question dont la série est absente de `series` est écartée aussi (le doute
+ * profite au dossier).
+ *
+ * Le mélange (Fisher-Yates) précède la coupe : le tirage porte sur tout le
+ * vivier. `alea` n'est injecté que par les tests.
+ */
+export function tirerQuestionsIsolees<Q extends { serie_id: string }>(
+  questions: readonly Q[],
+  series: readonly (SerieForme & { id: string })[],
+  n: number,
+  alea: () => number = Math.random,
+): Q[] {
+  const isolees = new Set(series.filter(estSerieDeQuestionsIsolees).map((s) => s.id));
+  const vivier = questions.filter((q) => isolees.has(q.serie_id));
+  for (let i = vivier.length - 1; i > 0; i--) {
+    const j = Math.floor(alea() * (i + 1));
+    [vivier[i], vivier[j]] = [vivier[j], vivier[i]];
+  }
+  return vivier.slice(0, Math.max(0, n));
+}
+
+/**
+ * Nombre minimal de propositions d'une question de l'interrogation de fin de
+ * parcours. Une question rédactionnelle (QROC) n'en a aucune : elle n'y entre
+ * jamais.
+ */
+export const MIN_PROPOSITIONS_INTERROGATION = 3;
+
+/**
+ * Vivier de l'interrogation de fin de parcours : les QCM d'au moins
+ * `MIN_PROPOSITIONS_INTERROGATION` propositions des séries de questions
+ * isolées. `tirerQuestionsIsolees` y tire les N questions servies.
+ *
+ * Un vivier VIDE (sans interrogation composée par l'équipe) est une
+ * interrogation SANS QUESTION : la page affiche « Aucune question disponible
+ * pour le moment. » et le certificat ne peut pas être signé. Le verrou de fin
+ * de parcours, qui ramène l'élève sur l'interrogation à chaque page, ne doit
+ * donc jamais l'y conduire — toute la plateforme serait bloquée. La page et le
+ * verrou lisent le vivier par cette règle (cf. lib/pedago/interrogation).
+ *
+ * `nbPropositions` compte les items d'une question tels que la requête les a
+ * chargés (items complets ou `qcm_items(count)`).
+ */
+export function vivierInterrogation<Q extends { serie_id: string }>(
+  questions: readonly Q[],
+  series: readonly (SerieForme & { id: string })[],
+  nbPropositions: (q: Q) => number,
+): Q[] {
+  const isolees = new Set(series.filter(estSerieDeQuestionsIsolees).map((s) => s.id));
+  return questions.filter((q) => isolees.has(q.serie_id) && nbPropositions(q) >= MIN_PROPOSITIONS_INTERROGATION);
 }
 
 export type QuestionDossierable = {

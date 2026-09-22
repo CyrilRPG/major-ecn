@@ -1,66 +1,39 @@
 import { notFound, redirect } from 'next/navigation';
 import { requireUser, profPageReadGuard } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { canAccessCollege, canAccessCours, parseScope } from '@/lib/auth/permissions';
-import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { InterrogationSession, type IQuestion } from './interrogation-session';
+import {
+  interrogationsComposees,
+  ouverturesInterrogation,
+  questionsDuTirage,
+  redirectionDuRefus,
+  viviersInterrogation,
+} from '@/lib/pedago/interrogation';
+import { InterrogationSession } from './interrogation-session';
 import { InterrogationExamFlow } from './interrogation-exam-flow';
-
-const PNEUMO_COURS_ID = '33579977-020e-4c94-a561-dee9d3c7bc70';
-const N_QUESTIONS = 15;
 
 export default async function InterrogationPage({ params }: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await params;
   const { user, profile } = await requireUser();
   const supabase = await createClient();
 
-  const { data: c } = await supabase
-    .from('cours')
-    .select('id, titre, matiere_id, matieres(nom)')
-    .eq('id', coursId)
-    .maybeSingle();
-  if (!c || !c.matieres) notFound();
-  const scope = parseScope(profile.permission_scope);
-  if (profile.role !== 'admin' && !canAccessCollege(scope, c.matiere_id)) redirect('/facultes');
-  if (profile.role !== 'admin' && !canAccessCours(scope, c.matiere_id, coursId)) redirect(`/matieres/${c.matiere_id}`);
-  if (profile.role !== 'admin' && !(await fetchContentAccessForScope(scope)).interrogation) redirect(`/cours/${coursId}`);
+  // Cours lisible, accès (collège, item, formule), parcours terminé — vidéo,
+  // fiche, ≥ 1 QCM, ≥ 1 flashcard, sauf contournement Pneumologie. Le verrou de
+  // fin de parcours (layout, /api/mobile/gates) rejoue CES contrôles par la
+  // même fonction : un cours refusé ici n'y retient jamais l'élève, sinon cette
+  // redirection et celle du layout se le renverraient à l'infini.
+  const ouverture = (await ouverturesInterrogation(
+    supabase,
+    { id: user.id, role: profile.role, permission_scope: profile.permission_scope },
+    [coursId],
+  )).get(coursId) ?? { ok: false as const, refus: 'introuvable' as const };
+  if (!ouverture.ok) {
+    const cible = redirectionDuRefus(ouverture);
+    if (!cible) notFound();
+    redirect(cible);
+  }
   profPageReadGuard(profile, 'qcm', `/cours/${coursId}`);
-
-  // Verrouillage : tout doit être fait (sauf bypass Pneumo).
-  if (coursId !== PNEUMO_COURS_ID) {
-    const [{ data: cp }, { count: qcmAtt }, { count: flashRv }] = await Promise.all([
-      supabase.from('course_progress').select('video_watched, fiche_read').eq('user_id', user.id).eq('cours_id', coursId).maybeSingle(),
-      supabase.from('qcm_attempts').select('id, qcm_questions!inner(qcm_series!inner(cours_id))', { count: 'exact', head: true }).eq('user_id', user.id).eq('qcm_questions.qcm_series.cours_id', coursId),
-      supabase.from('flashcard_reviews').select('id, flashcards!inner(cours_id)', { count: 'exact', head: true }).eq('user_id', user.id).eq('flashcards.cours_id', coursId),
-    ]);
-    const ok = !!cp?.video_watched && !!cp?.fiche_read && (qcmAtt ?? 0) > 0 && (flashRv ?? 0) > 0;
-    if (!ok) redirect(`/cours/${coursId}`);
-  }
-
-  // Sélectionne N questions au hasard parmi les QCM du cours.
-  const { data: questionsRaw } = await supabase
-    .from('qcm_questions')
-    .select('id, enonce, images, qcm_items(id, lettre, enonce, is_correct, images), qcm_series!inner(cours_id)')
-    .eq('qcm_series.cours_id', coursId)
-    .limit(80);
-  type Row = { id: string; enonce: string; images: string[] | null; qcm_items: { id: string; lettre: string; enonce: string; is_correct: boolean; images: string[] | null }[] };
-  const allQ = ((questionsRaw ?? []) as unknown as Row[]).filter((q) => (q.qcm_items ?? []).length >= 3);
-  // Shuffle Fisher-Yates simple
-  const shuffled = [...allQ];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  const picked = shuffled.slice(0, Math.min(N_QUESTIONS, shuffled.length));
-  const questions: IQuestion[] = picked.map((q) => ({
-    id: q.id,
-    enonce: q.enonce,
-    images: q.images ?? [],
-    items: [...(q.qcm_items ?? [])]
-      .sort((a, b) => a.lettre.localeCompare(b.lettre))
-      .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, is_correct: it.is_correct, images: it.images ?? [] })),
-  }));
+  const c = ouverture.cours;
 
   // Si déjà signé, on saute directement vers le certificat.
   const { data: completion } = await (supabase as unknown as {
@@ -78,14 +51,12 @@ export default async function InterrogationPage({ params }: { params: Promise<{ 
   // ── Interrogation configurée par l'admin (moteur d'épreuve) ──
   // Si l'item a une interrogation avec des questions, elle prime sur le tirage
   // automatique de 15 QCM. Elle est rendue ICI (même URL) : aucune redirection,
-  // donc aucun conflit avec le verrou de fin de parcours du layout.
+  // donc aucun conflit avec le verrou de fin de parcours du layout, qui la lit
+  // par le même helper (lib/pedago/interrogation).
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ad = admin as any;
-  const { data: interro } = await ad
-    .from('mock_exams')
-    .select('id, title, qroc_mode, instructions, duration_minutes, question_order')
-    .eq('cours_id', coursId).eq('status', 'published').maybeSingle();
+  const interro = (await interrogationsComposees([coursId])).get(coursId);
 
   if (interro) {
     const { data: iqs } = await ad
@@ -133,6 +104,21 @@ export default async function InterrogationPage({ params }: { params: Promise<{ 
   }
 
   // ── Repli : interrogation automatique (15 QCM tirés au hasard) ──
+  // Des questions ISOLÉES seulement. L'interrogation n'affiche que l'énoncé,
+  // sans vignette : une question de dossier progressif, d'annale,
+  // d'entraînement ou de séance y est intraitable (« Quel examen d'imagerie est
+  // indiqué dans cette situation ? »). Règle commune à tous les tirages :
+  // lib/pedago/dossiers. Un item qui compte moins de N questions isolées en
+  // sert moins, sans compléter avec des questions de dossier.
+  //
+  // Le vivier est lu par le même helper que le verrou de fin de parcours
+  // (layout, /api/mobile/gates) et que l'écran de l'app : un item dont le
+  // vivier est vide n'y retient jamais l'élève. Seules les N questions tirées
+  // sont chargées en entier.
+  const vivier = (await viviersInterrogation(supabase, [coursId])).get(coursId)
+    ?? { series: [], questions: [] };
+  const questions = await questionsDuTirage(supabase, vivier);
+
   return (
     <InterrogationSession
       coursId={coursId}

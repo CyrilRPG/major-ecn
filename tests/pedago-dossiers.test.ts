@@ -8,6 +8,8 @@ import {
   estSerieDeQuestionsIsolees,
   formeDeSerie,
   regrouperEnUnites,
+  tirerQuestionsIsolees,
+  vivierInterrogation,
 } from '../src/lib/pedago/dossiers';
 
 type Q = { id: string; serie_id: string; order_index: number; score: number };
@@ -185,4 +187,113 @@ test('regrouper : les questions d’une annale sans vignette forment UNE unité,
   // Une session de 2 places ne peut pas prendre l'annale (3) : elle est sautée, jamais coupée.
   const ids = aplatirUnites(choisirUnites(unites, () => 0, 2, sansMelange)).map((r) => r.question.id).sort();
   assert.deepEqual(ids, ['x', 'y']);
+});
+
+/* ----------------------------------------------------------------------------
+ * Interrogation de fin de parcours : N QCM tirés un à un, affichés sans
+ * vignette ni unité « dossier ». Seules les questions isolées y entrent.
+ * -------------------------------------------------------------------------- */
+
+const ligne = (id: string, label: string, nbQuestions: number, extra: { vignette?: string; type?: string } = {}) =>
+  formeDeSerie({ id, label, type: extra.type ?? 'qcm', vignette: extra.vignette ?? null, qcm_questions: [{ count: nbQuestions }] });
+const questionsDe = (serieId: string, n: number) =>
+  Array.from({ length: n }, (_, i) => ({ id: `${serieId}-${i + 1}`, serie_id: serieId }));
+
+test('interrogation : une question de dossier n’est jamais tirée seule — « Quel examen d’imagerie est indiqué dans cette situation ? »', () => {
+  // Cette question, servie sans la vignette de son DP, était intraitable.
+  const series = [
+    ligne('qi', 'QCM — Série 1 · Dyspnée aiguë', 3),
+    ligne('dp', 'DP 2 · Dyspnée aiguë', 3, { vignette: 'Une femme de 34 ans consulte pour une dyspnée…' }),
+    ligne('dpsv', 'DP 3 · Pneumothorax', 3),
+    ligne('ann', 'Annales - Pneumologie - 2019 - EVCF', 3),
+    ligne('ent', 'Entraînement n°1', 3),
+    ligne('sea', 'Séance du professeur - Pneumologie', 3, { type: 'seance' }),
+    ligne('long', 'QCM — Série 2', MAX_QUESTIONS_SERIE_ISOLEE + 1),
+  ];
+  const questions = series.flatMap((s) => questionsDe(s.id, 3));
+  const tirees = tirerQuestionsIsolees(questions, series, 15);
+  assert.deepEqual(tirees.map((x) => x.id).sort(), ['qi-1', 'qi-2', 'qi-3']);
+});
+
+test('interrogation : moins de N questions isolées → toutes servies, sans compléter avec des questions de dossier', () => {
+  const series = [
+    ligne('dp', 'DP 1 · Douleur thoracique', 10, { vignette: 'Un homme de 60 ans…' }),
+    ligne('qi', 'QCM — Série 1 · Douleur thoracique', 5),
+    ligne('ann', 'Annales - Cardiologie - 2019 - EVCF', 36),
+  ];
+  const questions = [...questionsDe('dp', 10), ...questionsDe('qi', 5), ...questionsDe('ann', 36)];
+  const tirees = tirerQuestionsIsolees(questions, series, 15);
+  assert.deepEqual(tirees.map((x) => x.id).sort(), ['qi-1', 'qi-2', 'qi-3', 'qi-4', 'qi-5']);
+});
+
+test('interrogation : un item sans série de questions isolées ne sert rien ; une série inconnue est écartée', () => {
+  const series = [ligne('dp', 'DP 1 · Douleur thoracique', 4, { vignette: 'Un homme de 60 ans…' })];
+  const questions = [...questionsDe('dp', 4), ...questionsDe('inconnue', 3)];
+  assert.deepEqual(tirerQuestionsIsolees(questions, series, 15), []);
+});
+
+test('interrogation : au plus N questions, mélangées AVANT la coupe — le tirage porte sur tout le vivier', () => {
+  const series = [ligne('a', 'QCM — Série 1', 10), ligne('b', 'QCM — Série 2', 10)];
+  const questions = [...questionsDe('a', 10), ...questionsDe('b', 10)];
+  const ordreInitial = questions.map((x) => x.id);
+  // Aléa nul : Fisher-Yates échange chaque case avec la première, ce qui
+  // décale le vivier d'un cran — la première question passe en dernier et
+  // sort du tirage. Couper avant de mélanger aurait servi les 15 premières.
+  const tirees = tirerQuestionsIsolees(questions, series, 15, () => 0);
+  assert.equal(tirees.length, 15);
+  assert.equal(new Set(tirees.map((x) => x.id)).size, 15);
+  assert.ok(!tirees.some((x) => x.id === 'a-1'));
+  assert.ok(tirees.some((x) => x.id === 'b-6'));
+  // Le vivier fourni n'est pas modifié.
+  assert.deepEqual(questions.map((x) => x.id), ordreInitial);
+  assert.deepEqual(tirerQuestionsIsolees(questions, series, 0), []);
+});
+
+/* ----------------------------------------------------------------------------
+ * Vivier de l'interrogation : ce que la page peut tirer, et ce que le verrou
+ * de fin de parcours lit pour décider s'il y retient l'élève. Vide = aucune
+ * question = le verrou doit passer ce cours.
+ * -------------------------------------------------------------------------- */
+
+const avecPropositions = (serieId: string, n: number, nbPropositions: number) =>
+  questionsDe(serieId, n).map((x) => ({ ...x, nbPropositions }));
+const propositions = (x: { nbPropositions: number }) => x.nbPropositions;
+
+test('vivier : seuls les QCM d’au moins 3 propositions des séries de questions isolées', () => {
+  const series = [
+    ligne('qi', 'QCM — Série 1 · Asthme', 4),
+    ligne('qroc', 'QROC 1 · Asthme', 2, { type: 'qroc' }),
+    ligne('dp', 'DP 1 · Asthme', 2, { vignette: 'Une femme de 25 ans…' }),
+  ];
+  const questions = [
+    { id: 'qi-5', serie_id: 'qi', nbPropositions: 5 },
+    { id: 'qi-3', serie_id: 'qi', nbPropositions: 3 },
+    { id: 'qi-2', serie_id: 'qi', nbPropositions: 2 },
+    { id: 'qi-0', serie_id: 'qi', nbPropositions: 0 },
+    // Une QROC n'a aucune proposition, même dans une série de questions isolées.
+    ...avecPropositions('qroc', 2, 0),
+    // Une question de dossier n'entre jamais, même à 5 propositions.
+    ...avecPropositions('dp', 2, 5),
+    // Série absente des séries lues (masquée par la RLS) : écartée.
+    ...avecPropositions('masquee', 2, 5),
+  ];
+  const vivier = vivierInterrogation(questions, series, propositions);
+  assert.deepEqual(vivier.map((x) => x.id), ['qi-5', 'qi-3']);
+  // Le tirage de la page ne sert que ce vivier.
+  assert.deepEqual(tirerQuestionsIsolees(vivier, series, 15).map((x) => x.id).sort(), ['qi-3', 'qi-5']);
+});
+
+test('vivier : VIDE pour un item de QROC seuls, de dossiers seuls, ou dont l’unique série QCM est un sujet long (odontologie)', () => {
+  const qrocSeuls = [ligne('q1', 'QROC 1 · Carie', 5, { type: 'qroc' }), ligne('q2', 'QROC 2 · Carie', 5, { type: 'qroc' })];
+  assert.deepEqual(vivierInterrogation([...avecPropositions('q1', 5, 0), ...avecPropositions('q2', 5, 0)], qrocSeuls, propositions), []);
+
+  const dossiersSeuls = [ligne('dp', 'DP 1 · Douleur thoracique', 6, { vignette: 'Un homme de 60 ans…' })];
+  assert.deepEqual(vivierInterrogation(avecPropositions('dp', 6, 5), dossiersSeuls, propositions), []);
+
+  // 604 items d'odontologie au 22/09/2026 : une seule série QCM, de plus de
+  // dix questions — un sujet servi entier, jamais dépecé.
+  const sujetLong = [ligne('odonto', 'QCM — Parodontologie', MAX_QUESTIONS_SERIE_ISOLEE + 15)];
+  assert.deepEqual(vivierInterrogation(avecPropositions('odonto', MAX_QUESTIONS_SERIE_ISOLEE + 15, 5), sujetLong, propositions), []);
+
+  assert.deepEqual(vivierInterrogation([], [], propositions), []);
 });

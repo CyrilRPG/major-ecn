@@ -9,11 +9,15 @@ import { parseScope } from '@/lib/auth/permissions';
 import { isExamTargeted } from '@/lib/exams/targeting';
 import { examWindow, resultsVisible } from '@/lib/exams/window';
 import { gradeExamAnswer, summarizeExam, type BaremeConfig, type GradableQuestion } from '@/lib/exams/scoring';
+import { interrogationsComposees, ouverturesInterrogation, type ProfilInterrogation } from '@/lib/pedago/interrogation';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 type ExamAnswer = { question_id?: unknown; selected_items?: unknown; text_answer?: unknown };
+
+/** L'élève, avec son client (RLS) : ce qu'il faut pour rejouer la page d'interrogation. */
+type Eleve = { db: Parameters<typeof ouverturesInterrogation>[0]; profil: ProfilInterrogation };
 
 async function mobileAuth(req: Request) {
   const auth = await getBearerUser(req);
@@ -29,10 +33,14 @@ async function context(req: Request) {
   const admin = createAdminClient() as any;
   const { data: profile } = await (checked.auth.supabase as any)
     .from('profiles')
-    .select('permission_scope, promotion')
+    .select('role, permission_scope, promotion')
     .eq('id', checked.auth.user.id)
     .maybeSingle();
-  return { ...checked, admin, scope: parseScope(profile?.permission_scope), promotion: profile?.promotion ?? null };
+  const eleve: Eleve = {
+    db: checked.auth.supabase,
+    profil: { id: checked.auth.user.id, role: profile?.role ?? null, permission_scope: profile?.permission_scope ?? null },
+  };
+  return { ...checked, admin, eleve, scope: parseScope(profile?.permission_scope), promotion: profile?.promotion ?? null };
 }
 
 function isExamAvailable(exam: any, scope: ReturnType<typeof parseScope>, promotion: string | null, userId: string) {
@@ -91,9 +99,35 @@ async function getSpecialtyInterrogation(db: any, specialiteId: string) {
   return { exam, questions };
 }
 
-async function getExamDetail(db: any, id: string, scope: ReturnType<typeof parseScope>, promotion: string | null, userId: string) {
+/**
+ * L'interrogation COMPOSÉE d'un item (`mock_exams.cours_id`) n'est pas une
+ * épreuve blanche : absente de la liste, elle se compose depuis l'écran
+ * d'interrogation de l'item (`/api/mobile/interrogation`) — si, et seulement
+ * si, la page d'interrogation web la servirait à cet élève (accès, parcours
+ * terminé, interrogation retenue pour l'item : lib/pedago/interrogation), avec
+ * le ciblage qu'appliquent les actions web `startExam` / `submitExam`.
+ *
+ * Sans elle, un élève que les gates retenaient sur une interrogation composée
+ * ne pouvait pas la passer sur l'app : l'écran tirait des QCM à la place, ou
+ * n'affichait « aucune question » quand l'item n'a pas de question isolée.
+ */
+async function interrogationComposable(exam: any, eleve: Eleve, scope: ReturnType<typeof parseScope>, promotion: string | null) {
+  const coursId: string = exam.cours_id;
+  const [ouvertures, composees] = await Promise.all([
+    ouverturesInterrogation(eleve.db, eleve.profil, [coursId]),
+    interrogationsComposees([coursId]),
+  ]);
+  return !!ouvertures.get(coursId)?.ok
+    && composees.get(coursId)?.id === exam.id
+    && isExamTargeted(exam, scope, promotion, eleve.profil.id);
+}
+
+async function getExamDetail(db: any, id: string, scope: ReturnType<typeof parseScope>, promotion: string | null, userId: string, eleve: Eleve) {
   const { data: exam } = await db.from('mock_exams').select('*').eq('id', id).maybeSingle();
-  if (!isExamAvailable(exam, scope, promotion, userId)) return null;
+  const disponible = exam?.cours_id
+    ? await interrogationComposable(exam, eleve, scope, promotion)
+    : isExamAvailable(exam, scope, promotion, userId);
+  if (!disponible) return null;
   const [{ data: access }, { data: running }, { data: completed }, { data: questions }] = await Promise.all([
     db.from('mock_exam_access').select('open_at, close_at, duration_minutes').eq('exam_id', id).eq('user_id', userId).maybeSingle(),
     db.from('mock_exam_submissions').select('*').eq('exam_id', id).eq('user_id', userId).eq('status', 'in_progress').maybeSingle(),
@@ -119,7 +153,7 @@ export async function GET(req: Request) {
 
   const id = params.get('id');
   if (id) {
-    const detail = await getExamDetail(ctx.admin, id, ctx.scope, ctx.promotion, ctx.auth.user.id);
+    const detail = await getExamDetail(ctx.admin, id, ctx.scope, ctx.promotion, ctx.auth.user.id, ctx.eleve);
     if (!detail) return NextResponse.json({ error: 'Épreuve indisponible' }, { status: 404 });
     const collegeIds = [...new Set((detail.questions as any[]).map((q) => q.college_id).filter(Boolean))];
     const { data: colleges } = collegeIds.length > 0 ? await ctx.admin.from('matieres').select('id, nom').in('id', collegeIds) : { data: [] };
@@ -166,7 +200,7 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => ({})) as { action?: string; exam_id?: string; answers?: ExamAnswer[]; time_spent?: number; question_id?: string; grade?: string };
   const examId = typeof body.exam_id === 'string' ? body.exam_id : '';
   if (!examId) return NextResponse.json({ error: 'Épreuve invalide' }, { status: 400 });
-  const detail = await getExamDetail(ctx.admin, examId, ctx.scope, ctx.promotion, ctx.auth.user.id);
+  const detail = await getExamDetail(ctx.admin, examId, ctx.scope, ctx.promotion, ctx.auth.user.id, ctx.eleve);
   if (!detail) return NextResponse.json({ error: 'Épreuve indisponible' }, { status: 404 });
 
   if (body.action === 'start') {

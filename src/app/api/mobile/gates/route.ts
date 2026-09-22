@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getBearerUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { interrogationEnAttente } from '@/lib/pedago/interrogation';
 import { isUserTargeted, type SatisfactionForm } from '@/lib/schemas/satisfaction';
 
 export const runtime = 'nodejs';
@@ -20,10 +21,11 @@ export const dynamic = 'force-dynamic';
  * des deux : il ne voyait jamais les formulaires obligatoires et n'était jamais
  * conduit à son interrogation de fin de parcours.
  *
- * La logique est recopiée du layout web, y compris le contournement Pneumologie.
+ * Le formulaire obligatoire est recopié du layout web. L'interrogation est
+ * choisie par le MÊME helper que le layout (`interrogationEnAttente`), qui rejoue
+ * les contrôles de la page et de l'écran de l'app (`/api/mobile/interrogation`) :
+ * un cours retenu ici s'ouvre toujours là-bas, avec des questions.
  */
-const PNEUMO_COURS_ID = '33579977-020e-4c94-a561-dee9d3c7bc70';
-
 export async function GET(req: Request) {
   const auth = await getBearerUser(req);
   if (!auth) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
@@ -61,55 +63,15 @@ export async function GET(req: Request) {
     })) ?? null;
 
   // ── Interrogation obligatoire ──
-  const [{ data: progressRows }, { data: completionsRows }] = await Promise.all([
-    db.from('course_progress')
-      .select('cours_id, video_watched, fiche_read')
-      .eq('user_id', userId).eq('video_watched', true).eq('fiche_read', true),
-    db.from('parcours_completions').select('cours_id, certificate_signed_at').eq('user_id', userId),
-  ]);
-  const signes = new Set(
-    ((completionsRows ?? []) as { cours_id: string; certificate_signed_at: string | null }[])
-      .filter((r) => !!r.certificate_signed_at)
-      .map((r) => r.cours_id),
-  );
-  const candidats = new Set<string>(
-    ((progressRows ?? []) as { cours_id: string }[])
-      .map((r) => r.cours_id)
-      .filter((id) => !signes.has(id)),
-  );
-  // Contournement Pneumologie : on ne force le passage QUE si l'élève a au
-  // moins une trace d'activité sur cet item (pas dès la première connexion).
-  const activitePneumo = ((progressRows ?? []) as { cours_id: string }[])
-    .some((r) => r.cours_id === PNEUMO_COURS_ID);
-  if (activitePneumo && !signes.has(PNEUMO_COURS_ID)) candidats.add(PNEUMO_COURS_ID);
-
-  let pendingInterrogation: string | null = null;
-  if (candidats.size > 0) {
-    const ids = [...candidats];
-    const [{ data: atts }, { data: revs }] = await Promise.all([
-      db.from('qcm_attempts')
-        .select('id, qcm_questions!inner(qcm_series!inner(cours_id))')
-        .eq('user_id', userId).in('qcm_questions.qcm_series.cours_id', ids),
-      db.from('flashcard_reviews')
-        .select('id, flashcards!inner(cours_id)')
-        .eq('user_id', userId).in('flashcards.cours_id', ids),
-    ]);
-    const avecQcm = new Set(
-      ((atts ?? []) as unknown as { qcm_questions: { qcm_series: { cours_id: string } } }[])
-        .map((a) => a.qcm_questions.qcm_series.cours_id),
-    );
-    const avecRevisions = new Set(
-      ((revs ?? []) as unknown as { flashcards: { cours_id: string } }[])
-        .map((r) => r.flashcards.cours_id),
-    );
-    for (const id of ids) {
-      const bypassPneumo = id === PNEUMO_COURS_ID && activitePneumo;
-      if (bypassPneumo || (avecQcm.has(id) && avecRevisions.has(id))) {
-        pendingInterrogation = id;
-        break;
-      }
-    }
-  }
+  // Le helper du layout web, avec le client de l'ÉLÈVE (RLS) : c'est celui de
+  // la page et de l'écran d'interrogation de l'app. En service-role, le verrou
+  // compterait des réponses et des séries que la RLS masque à l'élève, et le
+  // conduirait sur un écran qu'il ne peut pas terminer.
+  const pendingInterrogation = await interrogationEnAttente(auth.supabase, {
+    id: userId,
+    role: profile.role,
+    permission_scope: profile.permission_scope,
+  });
 
   return NextResponse.json({
     mandatory_form_id: mandatoryForm?.id ?? null,
