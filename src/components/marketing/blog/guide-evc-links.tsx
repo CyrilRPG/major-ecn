@@ -3,6 +3,19 @@ import { getRelatedArticles, BLOG_CATEGORIES } from '@/lib/data/blog-articles';
 import { GUIDE_EVC_LABEL, GUIDE_EVC_PATH } from '@/lib/data/guide-evc';
 
 /**
+ * Page de préparation vers laquelle renvoie un article de spécialité : le
+ * lien retour du cluster éditorial (l'article pilier et ses satellites
+ * pointent vers la landing, qui les liste à son tour). Reconnu au slug, pour
+ * que tout nouvel article « …psychiatrie… » soit rattaché sans intervention.
+ */
+function pageSpecialitePour(slug: string): { href: string; titre: string; bouton: string } | null {
+  if (slug.includes('psychiatrie')) {
+    return { href: '/specialites/psychiatrie', titre: 'Préparation EVC Psychiatrie 2026', bouton: 'Découvrir la préparation psychiatrie' };
+  }
+  return null;
+}
+
+/**
  * Maillage de retour vers la page hub /guide-evc (règle 2 du cahier des charges :
  * « chaque article renvoie vers le hub »). Deux emplacements, cumulables :
  *   le fil d'Ariane en haut de page (Accueil › Guide EVC › titre) ;
@@ -77,12 +90,36 @@ export function ArticleGuideFooter({
     ? getRelatedArticles(slug, 8).filter((a) => !excluded.has(a.slug)).slice(0, 3)
     : [];
 
+  const specialite = pageSpecialitePour(slug);
+
   return (
     <section
       className="bg-[#FAFBFE] pb-14"
       style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {specialite && (
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#E5E9F0] bg-white p-5 sm:p-6">
+            <div>
+              <p className="text-[9.5px] font-extrabold uppercase tracking-[0.18em] text-[#C0112E]">
+                Préparer l’épreuve
+              </p>
+              <p className="mt-1.5 text-[15px] font-extrabold leading-snug text-[#1A2233]">
+                {specialite.titre}
+              </p>
+              <p className="mt-1 max-w-2xl text-[13px] leading-relaxed text-[#52607A]">
+                Programme détaillé, entraînements au format de votre voie, annales corrigées et formules
+                d’accompagnement.
+              </p>
+            </div>
+            <Link
+              href={specialite.href}
+              className="inline-flex items-center justify-center rounded-xl border-[1.5px] border-[#C0112E] bg-white px-4 py-2.5 text-[13px] font-extrabold text-[#C0112E] transition-colors hover:bg-[#FFF7F8]"
+            >
+              {specialite.bouton}
+            </Link>
+          </div>
+        )}
         <div className="rounded-2xl border border-[#FACBD0] bg-[linear-gradient(160deg,#FFF7F8_0%,#FFE9EC_100%)] p-5 sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>

@@ -3,48 +3,124 @@ import { ACCROCHE_FORMULE } from '@/lib/formules-accroches';
 /** Textes des maquettes fournies, sans les pictogrammes décoratifs. */
 export type SpecialtyKind = "psychiatrie" | "radiologie";
 
-export const PSY_PROGRAMME = [
+/**
+ * Programme de psychiatrie — cinq axes, trois volets chacun.
+ *
+ * Tout ce texte est rendu dans le HTML servi, y compris les axes repliés
+ * (panneaux `hidden`, jamais montés au clic) : c'est le seul contenu de la
+ * page propre à la psychiatrie, il doit être lu par les moteurs.
+ */
+export type AxeProgramme = { titre: string; volets: { titre: string; texte: string }[] };
+
+export const PSY_PROGRAMME: AxeProgramme[] = [
   {
-    title: "Psychiatrie de l’adulte",
-    items: [
-      "Psychoses et schizophrénie",
-      "Troubles de l’humeur",
-      "Troubles anxieux & TOC",
-      "Troubles de la personnalité",
-      "Sémiologie & diagnostics",
+    titre: "Psychiatrie de l’adulte",
+    volets: [
+      {
+        titre: "Sémiologie & diagnostic",
+        texte: "Sémiologie et conduite de l’entretien psychiatrique, construction du diagnostic positif et différentiel.",
+      },
+      {
+        titre: "Pathologies psychiatriques",
+        texte: "Troubles psychotiques, troubles de l’humeur, troubles anxieux et apparentés.",
+      },
+      {
+        titre: "Personnalité & comportement alimentaire",
+        texte: "Troubles de la personnalité et troubles du comportement alimentaire.",
+      },
     ],
   },
   {
-    title: "Urgences & cadre légal",
-    items: [
-      "Risque suicidaire",
-      "Agitation & états délirants",
-      "Soins sans consentement",
-      "Législation & certificats",
-      "Conduites à tenir urgentes",
+    titre: "Urgences & cadre légal",
+    volets: [
+      {
+        titre: "Urgences psychiatriques",
+        texte: "Crise suicidaire, agitation, états délirants aigus : évaluation et conduite à tenir.",
+      },
+      {
+        titre: "Soins sans consentement",
+        texte: "Soins psychiatriques sans consentement : modalités, certificats et chronologie réglementaire.",
+      },
+      {
+        titre: "Libertés & responsabilité",
+        texte: "Isolement et contention, mesures de protection juridique, responsabilité et secret professionnel.",
+      },
     ],
   },
   {
-    title: "Populations spécifiques",
-    items: [
-      "Pédopsychiatrie",
-      "Psychiatrie du sujet âgé",
-      "Addictologie",
-      "Troubles du neurodéveloppement",
-      "Situations particulières",
+    titre: "Populations spécifiques",
+    volets: [
+      {
+        titre: "Pédopsychiatrie",
+        texte: "Troubles du neurodéveloppement, troubles du comportement de l’adolescent, repérage de l’enfance en danger.",
+      },
+      {
+        titre: "Psychiatrie périnatale",
+        texte: "Psychiatrie périnatale et prescription chez la femme enceinte.",
+      },
+      {
+        titre: "Sujet âgé",
+        texte: "Psychiatrie du sujet âgé : dépression, troubles neurocognitifs et diagnostic différentiel.",
+      },
     ],
   },
   {
-    title: "Thérapeutiques",
-    items: [
-      "Psychopharmacologie",
-      "Antipsychotiques",
-      "Antidépresseurs",
-      "Thymorégulateurs, Lithium",
-      "ECT & autres thérapeutiques",
-      "Surveillance & effets indésirables",
+    titre: "Addictologie",
+    volets: [
+      {
+        titre: "Alcool, tabac, opiacés",
+        texte: "Repérage, sevrage et traitements de maintien.",
+      },
+      {
+        titre: "Mésusage des psychotropes",
+        texte: "Mésusage des psychotropes et protocoles de sevrage.",
+      },
+      {
+        titre: "Comorbidités",
+        texte: "Comorbidités psychiatriques des conduites addictives.",
+      },
     ],
   },
+  {
+    titre: "Thérapeutiques",
+    volets: [
+      {
+        titre: "Psychotropes",
+        texte: "Indications, effets indésirables et surveillance, par grande famille.",
+      },
+      {
+        titre: "ECT & psychothérapies",
+        texte: "Électroconvulsivothérapie et psychothérapies : indications et articulation avec le traitement médicamenteux.",
+      },
+      {
+        titre: "Organisation des soins",
+        texte: "Organisation des soins, observance et alliance thérapeutique.",
+      },
+    ],
+  },
+];
+
+/** Textes de référence du programme, cités en tête du bloc programme. */
+export const PSY_TEXTES_REFERENCE = {
+  /** Arrêté du 9 juillet 2021 portant modalités d'organisation des EVC (annexe I = programme). */
+  arrete2021: "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000043776575/",
+  /** Arrêté du 22 septembre 2004 fixant la liste et la réglementation des DES de médecine. */
+  arrete2004: "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000000807238",
+};
+
+/**
+ * Articles du blog qui forment le cluster éditorial psychiatrie, dans l'ordre
+ * d'affichage. La page ne garde que ceux qui sont publiés (statiques ou base) :
+ * un article dépublié disparaît de la liste au lieu de produire un lien mort.
+ * Le lien retour (article → page) est posé par `ArticleGuideFooter` pour tout
+ * article dont le slug contient « psychiatrie ».
+ */
+export const PSY_ARTICLES_CLUSTER = [
+  "reviser-evc-psychiatrie-10-semaines",
+  "evc-2026-psychiatrie-mipic-medecine-generale",
+  "psychiatrie-mip-medecine-generale-specialite-evc-padhue-2026",
+  "dernieres-semaines-avant-les-evc",
+  "evc-rungis-acces-hotels-jour-j",
 ];
 
 export const RADIO_PROGRAMME = [
@@ -182,6 +258,8 @@ export const PSY_HERO_BENEFICES = [
  */
 export const PSY_CHIFFRES_CLES = [
   { valeur: "10 décembre 2026", libelle: "Date des épreuves", note: "Espace Jean-Monnet, Rungis" },
+  // Arrêté du 12 juin 2026 : annexe II (voie interne) et annexe I (voie externe).
+  { valeur: "450 postes", libelle: "Voie interne" },
   { valeur: "198 postes", libelle: "Voie externe" },
   { valeur: "+ 9 000", libelle: "médecins accompagnés" },
   { valeur: "+ 15 ans", libelle: "d’expérience dans la préparation aux concours et examens médicaux" },

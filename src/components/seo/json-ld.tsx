@@ -54,6 +54,42 @@ export function faqSchema(qas: { q: string; a: string }[]): Record<string, unkno
   };
 }
 
+/**
+ * Formation (Course) et ses formules (Offer). Les prix sont ceux affichés sur
+ * la page : les passer depuis les mêmes données, jamais les recopier.
+ */
+export function courseSchema(c: {
+  name: string;
+  description: string;
+  path: string;
+  about: string[];
+  offers: { name: string; price: number; path: string; aPartirDe?: boolean }[];
+}): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: c.name,
+    description: c.description,
+    url: `${SITE_URL}${c.path}`,
+    inLanguage: 'fr-FR',
+    about: c.about,
+    provider: { '@type': 'Organization', name: 'Major ECN', sameAs: SITE_URL },
+    hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'Online' },
+    offers: c.offers.map((o) => ({
+      '@type': 'Offer',
+      name: o.name,
+      category: 'Paid',
+      priceCurrency: 'EUR',
+      // « À partir de » : prix plancher, sans prétendre à un prix unique.
+      ...(o.aPartirDe
+        ? { priceSpecification: { '@type': 'PriceSpecification', minPrice: o.price, priceCurrency: 'EUR' }, price: o.price }
+        : { price: o.price }),
+      url: `${SITE_URL}${o.path}`,
+      availability: 'https://schema.org/InStock',
+    })),
+  };
+}
+
 /** Fil d'Ariane. */
 export function breadcrumbSchema(items: { name: string; path: string }[]): Record<string, unknown> {
   return {

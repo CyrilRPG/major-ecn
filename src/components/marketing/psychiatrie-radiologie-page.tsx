@@ -27,10 +27,12 @@ import {
   PSY_MONTEE_GAMME,
   PSY_PLATEFORME,
   PSY_PROGRAMME,
+  PSY_TEXTES_REFERENCE,
   RADIO_FORMULES,
   RADIO_METHODE,
   RADIO_PROGRAMME,
   toutesFormules,
+  type AxeProgramme,
   type FormuleSpecialite,
   type SpecialtyKind,
 } from '@/lib/data/psychiatrie-radiologie';
@@ -302,7 +304,7 @@ function BandeauEcheancePsy() {
             <p className="text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ color: RED }}>
               EVC Psychiatrie 2026
             </p>
-            <div className="mt-6 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-6 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-5">
               {PSY_CHIFFRES_CLES.map((c, i) => (
                 <div
                   key={c.valeur}
@@ -633,67 +635,20 @@ function GainTemps({ psy }: { psy: boolean }) {
    BLOC 6 — Le programme
    ============================================================ */
 
-/**
- * Une carte de domaine du programme.
- *
- * Sur mobile (psychiatrie), la liste est repliée : les quatre grands domaines
- * tiennent alors dans un écran, et le visiteur comprend d'un coup d'œil qu'il
- * y en a quatre au lieu de faire défiler vingt lignes. Au-delà de `sm`, la
- * classe `sm:block` l'emporte sur `hidden` et les cartes sont toujours
- * ouvertes, sans JavaScript ni risque de divergence au rendu serveur.
- */
-function CarteDomaine({
-  domaine,
-  index,
-  repliableMobile,
-}: {
-  domaine: { title: string; items: string[] };
-  index: number;
-  repliableMobile: boolean;
-}) {
-  const [ouvert, setOuvert] = useState(false);
-  const idListe = `programme-${index}`;
-  const entete = (
-    <>
+/** Une carte de domaine du programme de radiologie, toujours ouverte. */
+function CarteDomaine({ domaine, index }: { domaine: { title: string; items: string[] }; index: number }) {
+  return (
+    <article
+      className="flex h-full flex-col rounded-[1.15rem] bg-white px-6 py-6"
+      style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -60px rgba(15,31,77,0.6)' }}
+    >
       <span className="text-[12px] font-black tabular-nums tracking-[0.1em]" style={{ color: RED }}>
         {String(index + 1).padStart(2, '0')}
       </span>
       <h3 className="mt-3 text-[15px] font-black leading-snug tracking-tight" style={{ color: NAVY }}>
         {domaine.title}
       </h3>
-    </>
-  );
-
-  return (
-    <article
-      className="flex h-full flex-col rounded-[1.15rem] bg-white px-6 py-6"
-      style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -60px rgba(15,31,77,0.6)' }}
-    >
-      {repliableMobile ? (
-        <button
-          type="button"
-          onClick={() => setOuvert((v) => !v)}
-          aria-expanded={ouvert}
-          aria-controls={idListe}
-          className="-my-2 flex w-full items-start justify-between gap-4 py-2 text-left sm:pointer-events-none sm:my-0 sm:py-0"
-        >
-          <span className="block">{entete}</span>
-          <span
-            aria-hidden
-            className="mt-0.5 shrink-0 text-[20px] font-black leading-none sm:hidden"
-            style={{ color: RED }}
-          >
-            {ouvert ? '−' : '+'}
-          </span>
-        </button>
-      ) : (
-        <div>{entete}</div>
-      )}
-
-      <ul
-        id={idListe}
-        className={'mt-4 space-y-2.5 ' + (repliableMobile && !ouvert ? 'hidden sm:block' : '')}
-      >
+      <ul className="mt-4 space-y-2.5">
         {domaine.items.map((item) => (
           <li key={item} className="flex items-start gap-3">
             <Puce color={RED} className="mt-[9px]" />
@@ -705,47 +660,215 @@ function CarteDomaine({
   );
 }
 
-function Programme({ psy }: { psy: boolean }) {
-  const domaines = psy ? PSY_PROGRAMME : RADIO_PROGRAMME;
+function Programme() {
   return (
     <section id="programme" className="scroll-mt-28 py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: PAPER }}>
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-3xl text-center">
           <TitreSection sur="Au programme">
-            {psy ? (
-              <>
-                Le programme <span style={{ color: RED_DEEP }}>de psychiatrie</span>
-              </>
-            ) : (
-              <>
-                Les grands domaines <span style={{ color: RED_DEEP }}>de la radiologie</span>
-              </>
-            )}
+            Les grands domaines <span style={{ color: RED_DEEP }}>de la radiologie</span>
           </TitreSection>
-          {!psy && (
-            <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-relaxed" style={{ color: NAVY_SOFT, fontFamily: FONT_BODY }}>
-              Un programme structuré autour des principales situations cliniques, pathologies et techniques
-              d’imagerie à maîtriser pour les EVC.
-            </p>
-          )}
+          <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-relaxed" style={{ color: NAVY_SOFT, fontFamily: FONT_BODY }}>
+            Un programme structuré autour des principales situations cliniques, pathologies et techniques
+            d’imagerie à maîtriser pour les EVC.
+          </p>
         </Reveal>
 
-        <div className={'mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 ' + (psy ? 'lg:grid-cols-4' : 'lg:grid-cols-3 xl:grid-cols-5')}>
-          {domaines.map((domaine, i) => (
+        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          {RADIO_PROGRAMME.map((domaine, i) => (
             <Reveal key={domaine.title} delay={Math.min(i, 6) * 0.04} className="h-full">
-              <CarteDomaine domaine={domaine} index={i} repliableMobile={psy} />
+              <CarteDomaine domaine={domaine} index={i} />
             </Reveal>
           ))}
         </div>
 
-        {!psy && (
-          <Reveal delay={0.1}>
-            <p className="mx-auto mt-8 max-w-3xl text-center text-[12.5px] leading-relaxed" style={{ color: INK_MUTED, fontFamily: FONT_BODY }}>
-              Aperçu non exhaustif du programme. Le contenu pédagogique est adapté aux exigences des EVC et peut
-              évoluer selon les recommandations et référentiels.
+        <Reveal delay={0.1}>
+          <p className="mx-auto mt-8 max-w-3xl text-center text-[12.5px] leading-relaxed" style={{ color: INK_MUTED, fontFamily: FONT_BODY }}>
+            Aperçu non exhaustif du programme. Le contenu pédagogique est adapté aux exigences des EVC et peut
+            évoluer selon les recommandations et référentiels.
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Un axe du programme de psychiatrie, en accordéon.
+ *
+ * Le panneau est TOUJOURS rendu, masqué par l'attribut `hidden` quand l'axe
+ * est replié : les quinze volets figurent donc dans le HTML servi et sont
+ * indexés. Ne jamais revenir à un `{ouvert && …}`, qui ne monte le texte
+ * qu'au clic — c'était le défaut relevé par l'audit SEO du 23/09/2026.
+ */
+function AxePsy({
+  axe,
+  index,
+  ouvert,
+  basculer,
+}: {
+  axe: AxeProgramme;
+  index: number;
+  ouvert: boolean;
+  basculer: () => void;
+}) {
+  const idPanneau = `programme-axe-${index + 1}`;
+  const idBouton = `${idPanneau}-titre`;
+  return (
+    <article
+      className="overflow-hidden rounded-[1.1rem] bg-white"
+      style={{
+        border: `1px solid ${ouvert ? 'rgba(192,17,46,0.22)' : LINE}`,
+        boxShadow: ouvert ? '0 30px 70px -56px rgba(15,31,77,0.55)' : undefined,
+      }}
+    >
+      <h3>
+        <button
+          id={idBouton}
+          type="button"
+          onClick={basculer}
+          aria-expanded={ouvert}
+          aria-controls={idPanneau}
+          className="flex w-full items-center gap-4 px-4 py-4 text-left sm:gap-7 sm:px-6 sm:py-5"
+        >
+          <span
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-[16px] font-black tabular-nums sm:h-14 sm:w-14 sm:text-[18px]"
+            style={{ background: '#FDEDEF', color: RED_DEEP }}
+          >
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <span
+            className="flex-1 text-[1.15rem] font-black leading-snug tracking-tight sm:text-[1.45rem]"
+            style={{ color: NAVY, letterSpacing: '-0.02em' }}
+          >
+            {axe.titre}
+          </span>
+          <span aria-hidden className="shrink-0 text-[26px] font-medium leading-none sm:pr-2" style={{ color: RED_DEEP }}>
+            {ouvert ? '−' : '+'}
+          </span>
+        </button>
+      </h3>
+
+      <div
+        id={idPanneau}
+        role="region"
+        aria-labelledby={idBouton}
+        hidden={!ouvert}
+        className="border-t px-4 py-6 sm:px-6 sm:py-7"
+        style={{ borderColor: LINE_SOFT, background: PAPER }}
+      >
+        <ul className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-0 md:divide-x" style={{ borderColor: LINE }}>
+          {axe.volets.map((v) => (
+            <li key={v.titre} className="md:px-7 md:first:pl-2 md:last:pr-2" style={{ borderColor: LINE }}>
+              <span aria-hidden className="block h-[2px] w-6 rounded-full" style={{ background: RED }} />
+              <h4 className="mt-3 text-[15px] font-black leading-snug tracking-tight" style={{ color: NAVY }}>
+                {v.titre}
+              </h4>
+              <p className="mt-2 text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                {v.texte}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </article>
+  );
+}
+
+/**
+ * Le programme de psychiatrie : textes de référence, cinq axes en accordéon,
+ * ligne de clôture, puis la relance vers les formules (maquette du
+ * 23/09/2026, sans ses pictogrammes — la DA du site n'en a aucun).
+ */
+function ProgrammePsy() {
+  const [ouvert, setOuvert] = useState<number | null>(0);
+  return (
+    <section id="programme" className="scroll-mt-28 py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: PAPER }}>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-3xl text-center">
+          <TitreSection sur="Au programme">
+            Le programme <span style={{ color: RED_DEEP }}>de psychiatrie</span>
+          </TitreSection>
+          <span
+            aria-hidden
+            className="mx-auto mt-6 block h-[2px] w-16 rounded-full"
+            style={{ background: `linear-gradient(90deg, #F2A0AE 0%, ${RED} 100%)` }}
+          />
+        </Reveal>
+
+        <Reveal delay={0.05}>
+          <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-10">
+            <div className="text-[14px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+              <p>
+                Le programme des EVC est fixé par l’
+                <a href={PSY_TEXTES_REFERENCE.arrete2021} target="_blank" rel="noreferrer" className="underline decoration-[#D5D9E3] underline-offset-4 hover:decoration-current">
+                  annexe I de l’arrêté du 9 juillet 2021
+                </a>
+                , qui renvoie, pour la profession de médecin, à l’
+                <a href={PSY_TEXTES_REFERENCE.arrete2004} target="_blank" rel="noreferrer" className="underline decoration-[#D5D9E3] underline-offset-4 hover:decoration-current">
+                  arrêté du 22 septembre 2004
+                </a>{' '}
+                fixant la liste et la réglementation des diplômes d’études spécialisées de médecine. Le
+                référentiel des épreuves est donc celui de la formation spécialisée.
+              </p>
+              <p className="mt-2 font-black" style={{ color: NAVY }}>
+                Les axes ci-dessous présentent la structure de la préparation Major ECN en psychiatrie.
+              </p>
+            </div>
+            <a
+              href={PSY_TEXTES_REFERENCE.arrete2021}
+              target="_blank"
+              rel="noreferrer"
+              className="shrink-0 text-[14px] font-bold underline underline-offset-4 lg:border-l lg:py-3 lg:pl-10"
+              style={{ color: RED_DEEP, borderColor: LINE }}
+            >
+              Voir les textes de référence ↗
+            </a>
+          </div>
+        </Reveal>
+
+        <div className="mt-10 space-y-4">
+          {PSY_PROGRAMME.map((axe, i) => (
+            <Reveal key={axe.titre} delay={Math.min(i, 4) * 0.04}>
+              <AxePsy axe={axe} index={i} ouvert={ouvert === i} basculer={() => setOuvert(ouvert === i ? null : i)} />
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.1}>
+          <div className="mt-10 flex items-center gap-6">
+            <span aria-hidden className="hidden h-px flex-1 sm:block" style={{ background: LINE }} />
+            <p className="max-w-3xl text-center text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+              Cette présentation ne reprend que les principaux axes du programme. Le détail des thèmes
+              travaillés, les annales corrigées et les entraînements correspondants sont accessibles sur la
+              plateforme.
             </p>
-          </Reveal>
-        )}
+            <span aria-hidden className="hidden h-px flex-1 sm:block" style={{ background: LINE }} />
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.12}>
+          <div
+            className="mt-10 flex flex-col gap-6 rounded-[1.25rem] px-7 py-8 sm:px-10 lg:flex-row lg:items-center lg:justify-between"
+            style={{ background: 'linear-gradient(120deg, #FFF7F8 0%, #FFFFFF 70%)', border: `1px solid ${LINE}` }}
+          >
+            <div>
+              <p className="text-[1.25rem] font-black leading-tight tracking-tight sm:text-[1.45rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
+                Prêt à structurer votre préparation&nbsp;?
+              </p>
+              <p className="mt-2 max-w-xl text-[14px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                Choisissez le niveau d’accompagnement adapté à votre préparation aux EVC.
+              </p>
+            </div>
+            <Link
+              href="#formules"
+              className="inline-flex shrink-0 items-center justify-center rounded-xl px-8 py-4 text-[14.5px] font-black tracking-tight text-white transition-transform duration-300 hover:scale-[1.02]"
+              style={{ background: `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)`, boxShadow: '0 18px 42px -22px rgba(139,14,34,0.7)' }}
+            >
+              Voir les formules →
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -995,44 +1118,6 @@ function CommencerMaintenantPsy() {
             >
               Commencer ma préparation →
             </Link>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/** Relance après le programme, avant la découverte de la plateforme. */
-function CtaProgrammePsy() {
-  return (
-    <section className="pb-4" style={{ fontFamily: FONT, background: PAPER }}>
-      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
-        <Reveal>
-          <div className="flex flex-col gap-6 rounded-[1.25rem] bg-white px-7 py-8 sm:px-9 lg:flex-row lg:items-center lg:justify-between" style={{ border: `1px solid ${LINE}` }}>
-            <div>
-              <p className="text-[1.15rem] font-black leading-tight tracking-tight" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
-                Prêt à structurer votre préparation&nbsp;?
-              </p>
-              <p className="mt-3 max-w-xl text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                Retrouvez les connaissances essentielles, les entraînements et les outils adaptés à votre voie.
-              </p>
-            </div>
-            <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
-              <Link
-                href="#formules"
-                className="inline-flex items-center justify-center rounded-xl px-7 py-3.5 text-[14px] font-black tracking-tight text-white transition-transform duration-300 hover:scale-[1.02]"
-                style={{ background: `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)`, boxShadow: '0 18px 42px -22px rgba(139,14,34,0.7)' }}
-              >
-                Voir les formules
-              </Link>
-              <Link
-                href="#plateforme"
-                className="inline-flex items-center justify-center rounded-xl bg-white px-7 py-3.5 text-[14px] font-black tracking-tight transition-colors hover:bg-[#FDF2F4]"
-                style={{ border: `1.5px solid ${RED}`, color: RED }}
-              >
-                Découvrir la plateforme
-              </Link>
-            </div>
           </div>
         </Reveal>
       </div>
@@ -1527,6 +1612,7 @@ const FAQ_PSY_VISIBLES = 7;
 
 function FaqSection({ psy }: { psy: boolean }) {
   const entries = psy ? faqPsychiatrie : faqRadiologie;
+  const kind = psy ? 'psy' : 'radio';
   const [open, setOpen] = useState<number | null>(null);
   const [tout, setTout] = useState(false);
   const repliable = psy && entries.length > FAQ_PSY_VISIBLES;
@@ -1559,6 +1645,7 @@ function FaqSection({ psy }: { psy: boolean }) {
                     type="button"
                     onClick={() => setOpen(ouvert ? null : i)}
                     aria-expanded={ouvert}
+                    aria-controls={`faq-${kind}-${i}`}
                     className="flex w-full items-center gap-4 px-5 py-4 text-left sm:px-6"
                   >
                     <span
@@ -1570,15 +1657,15 @@ function FaqSection({ psy }: { psy: boolean }) {
                     <span className="flex-1 text-[14.5px] font-black leading-snug tracking-tight" style={{ color: ouvert ? RED : NAVY }}>{f.q}</span>
                     <span aria-hidden className="shrink-0 text-[15px] font-black" style={{ color: ouvert ? RED : INK_MUTED }}>{ouvert ? '−' : '+'}</span>
                   </button>
-                  {ouvert && (
-                    <div className="space-y-3 px-5 pb-5 pl-16 sm:px-6 sm:pl-[4.5rem]">
-                      {f.a.split('\n\n').map((paragraphe, n) => (
-                        <p key={n} className="text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                          <TexteFaq text={paragraphe} />
-                        </p>
-                      ))}
-                    </div>
-                  )}
+                  {/* Réponse toujours rendue, masquée par `hidden` : elle
+                      figure dans le HTML servi et reste indexable. */}
+                  <div id={`faq-${kind}-${i}`} hidden={!ouvert} className="space-y-3 px-5 pb-5 pl-16 sm:px-6 sm:pl-[4.5rem]">
+                    {f.a.split('\n\n').map((paragraphe, n) => (
+                      <p key={n} className="text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                        <TexteFaq text={paragraphe} />
+                      </p>
+                    ))}
+                  </div>
                 </div>
               </Reveal>
             );
@@ -1640,6 +1727,53 @@ function EditorialRadio() {
             </aside>
           </div>
         </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/** Article du blog lié depuis la page (résolu côté serveur, publiés seulement). */
+export type GuideLie = { slug: string; title: string; excerpt: string };
+
+/**
+ * Le cluster éditorial psychiatrie, lié depuis la page.
+ *
+ * Placé après la FAQ et non au milieu de la page : ces liens font sortir le
+ * visiteur de la landing, ils ne doivent pas passer devant les formules.
+ */
+function GuidesPsy({ guides }: { guides: GuideLie[] }) {
+  if (guides.length === 0) return null;
+  return (
+    <section id="guides" className="scroll-mt-28 py-16 sm:py-20" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-3xl text-center">
+          <TitreSection sur="Pour aller plus loin">
+            Nos guides pour préparer <span style={{ color: RED_DEEP }}>les EVC de psychiatrie</span>
+          </TitreSection>
+        </Reveal>
+        <ul className="mt-11 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {guides.map((g, i) => (
+            <li key={g.slug} className="h-full">
+              <Reveal delay={Math.min(i, 4) * 0.04} className="h-full">
+                <Link
+                  href={`/blog/${g.slug}`}
+                  className="group flex h-full flex-col rounded-[1.15rem] bg-white px-6 py-6 transition-colors hover:bg-[#FFF7F8]"
+                  style={{ border: `1px solid ${LINE}` }}
+                >
+                  <span className="text-[15px] font-black leading-snug tracking-tight group-hover:underline" style={{ color: NAVY }}>
+                    {g.title}
+                  </span>
+                  <span className="mt-2.5 line-clamp-3 flex-1 text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                    {g.excerpt}
+                  </span>
+                  <span className="mt-4 text-[13px] font-black" style={{ color: RED }}>
+                    Lire l’article →
+                  </span>
+                </Link>
+              </Reveal>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
@@ -1714,7 +1848,7 @@ function AppelFinal({ psy }: { psy: boolean }) {
 
 /* ============================================================ */
 
-export function PsychiatrieRadiologiePage({ kind }: { kind: SpecialtyKind }) {
+export function PsychiatrieRadiologiePage({ kind, guides = [] }: { kind: SpecialtyKind; guides?: GuideLie[] }) {
   const psy = kind === 'psychiatrie';
   const nom = psy ? 'Psychiatrie' : 'Radiologie & Imagerie médicale';
   return (
@@ -1754,12 +1888,12 @@ export function PsychiatrieRadiologiePage({ kind }: { kind: SpecialtyKind }) {
           <ApercuTarifsPsy />
           <GainTempsCourtPsy />
           <CommencerMaintenantPsy />
-          <Programme psy />
-          <CtaProgrammePsy />
+          <ProgrammePsy />
           <PlateformePsy />
           <AccompagnementPsy />
           <Formules psy />
           <FaqSection psy />
+          <GuidesPsy guides={guides} />
         </>
       ) : (
         <>
@@ -1767,7 +1901,7 @@ export function PsychiatrieRadiologiePage({ kind }: { kind: SpecialtyKind }) {
           <Reperes psy={false} />
           <Methode psy={false} />
           <AccompagnementSpecialite />
-          <Programme psy={false} />
+          <Programme />
           <RessourcesRadio />
           <EnseignantsRadio />
           <FaqSection psy={false} />
