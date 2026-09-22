@@ -3,8 +3,25 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import {
+  Baby,
+  Brain,
+  Bug,
+  ClipboardCheck,
+  Droplets,
+  FileText,
+  GraduationCap,
+  Heart,
+  MessageSquare,
+  MonitorPlay,
+  MoreHorizontal,
+  Ruler,
+  Smile,
+  Sun,
+  User,
+  Users,
+} from 'lucide-react';
 import { Reveal } from './reveal';
-import { AccompagnementSpecialite } from './accompagnement-humain';
 import { AncreTunnel } from './ancre-tunnel';
 import { EtablissementSanteBanner } from './etablissement-sante-banner';
 import { FORMULE_APPROFONDIE, FORMULE_ESSENTIELLE, FORMULE_INTENSIVE } from '@/lib/formules-palette';
@@ -416,21 +433,6 @@ function Offre() {
   );
 }
 
-/* ============================================================
-   Programme, plateforme et accompagnement
-   ============================================================ */
-
-const PROGRAMME = [
-  'Nouveau-né et nutrition',
-  'Pathologies infectieuses et inflammatoires',
-  'Cardiologie, pneumologie, néphrologie…',
-  'Neurologie, endocrinologie, hématologie…',
-  'Nutrition, croissance et développement',
-  'Urgences et réanimations pédiatriques',
-  'Dossiers cliniques transversaux',
-  'Et bien plus encore…',
-];
-
 const PLATEFORME = [
   'Accès à vos cours, QCM, dossiers, annales, replays et outils de révision 24h/24 – 7j/7',
   'Révisions espacées et statistiques détaillées',
@@ -439,153 +441,413 @@ const PLATEFORME = [
   'Interface simple, claire et efficace',
 ];
 
-const ACCOMPAGNEMENT = [
-  'Des enseignants experts, spécialistes en pédiatrie',
-  'Posez vos questions à tout moment',
-  'Réponses claires et rapides',
-  'Conseils personnalisés et motivation au quotidien',
-  'Accompagnement humain du début jusqu’au jour J',
+
+/* ============================================================
+   Programme, parcours EVC, plateforme et accompagnement
+
+   Les deux blocs qui suivent — « Un programme complet » et « À vos côtés
+   jusqu'aux EVC » — reprennent les maquettes fournies le 22/09/2026.
+
+   ⚠ EXCEPTION À LA RÈGLE « AUCUN PICTOGRAMME » de l'en-tête de ce fichier.
+   Les maquettes de ces deux blocs sont construites AUTOUR de leurs icônes :
+   la frise des âges et les six domaines ne se lisent pas sans elles. Le reste
+   de la page garde le filet court de la charte. Ne pas « corriger » ces icônes
+   en filets sans revenir aux maquettes.
+   ============================================================ */
+
+/** Les quatre âges de la pédiatrie, frise horizontale du haut de bloc. */
+const AGES = [
+  { Icone: Baby, titre: 'Nouveau-né', texte: 'Adaptation à la vie extra-utérine', accent: '#2F6FE0', fond: '#EFF4FE' },
+  { Icone: Smile, titre: 'Nourrisson', texte: 'Croissance rapide et grande vulnérabilité', accent: '#1F9D57', fond: '#EEF8F2' },
+  { Icone: Sun, titre: 'Enfant', texte: 'Développement et autonomie progressive', accent: '#E07B2F', fond: '#FEF4EC' },
+  { Icone: User, titre: 'Adolescent', texte: 'Transformations physiques et psychologiques', accent: '#7C4DBD', fond: '#F5F0FC' },
+];
+
+/** Les six domaines, chacun avec sa couleur de pastille. */
+const DOMAINES = [
+  {
+    Icone: Baby,
+    titre: 'Néonatologie',
+    accent: '#2F6FE0',
+    fond: '#EFF4FE',
+    items: ['Prématurité', 'Détresse respiratoire', 'Ictère', 'Infections néonatales', 'Adaptation à la vie extra-utérine'],
+  },
+  {
+    Icone: Heart,
+    titre: 'Cardio-pneumologie',
+    accent: '#C0112E',
+    fond: '#FDEFF1',
+    items: ['Cardiopathies congénitales', 'Asthme', 'Bronchiolite', 'Pneumopathies', 'Insuffisance cardiaque'],
+  },
+  {
+    Icone: Bug,
+    titre: 'Infectiologie',
+    accent: '#1F9D57',
+    fond: '#EEF8F2',
+    items: ['Infections respiratoires', 'ORL', 'Infections digestives', 'Sepsis', 'Méningites'],
+  },
+  {
+    Icone: Brain,
+    titre: 'Neurologie',
+    accent: '#7C4DBD',
+    fond: '#F5F0FC',
+    items: ['Convulsions', 'Épilepsie', 'Troubles du développement', 'Céphalées', 'Troubles moteurs'],
+  },
+  {
+    Icone: Droplets,
+    titre: 'Néphrologie & métabolisme',
+    accent: '#2F6FE0',
+    fond: '#EFF4FE',
+    items: ['IRA', 'Infections urinaires', 'Troubles hydro-électrolytiques', 'Maladies métaboliques'],
+  },
+  {
+    Icone: Ruler,
+    titre: 'Croissance & développement',
+    accent: '#E07B2F',
+    fond: '#FEF4EC',
+    items: ['Croissance staturo-pondérale', 'Nutrition', 'Puberté', 'Développement psychomoteur'],
+  },
+];
+
+const AUTRES_ITEMS = [
+  'Urgences pédiatriques',
+  'Hématologie',
+  'Oncologie',
+  'Endocrinologie',
+  'Dermatologie',
+  'Immunologie',
+  'Pneumologie',
+  'Gastro-entérologie',
+  'Maladies rares…',
+];
+
+/** Les cinq étapes de la colonne de droite, « De la connaissance au réflexe EVC ». */
+const REFLEXE_EVC = [
+  ['Comprendre', 'Cours + fiches', 'Organiser les connaissances et comprendre l’essentiel.'],
+  ['S’entraîner', 'QCM / QROC + cas cliniques', 'Se confronter régulièrement aux situations de type EVC.'],
+  ['Corriger', 'Identifier ses erreurs', 'Comprendre pour ne plus les reproduire et progresser.'],
+  ['Revoir', 'Révisions programmées', 'Les notions importantes reviennent régulièrement pour être consolidées.'],
+  ['Se tester', 'Concours blancs', 'Se mettre en condition et gagner en précision et en temps.'],
 ];
 
 function Programme() {
   return (
     <section id="programme" className="scroll-mt-24 py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
-        <div className="space-y-12">
+        <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
+          {/* ---------------- Colonne principale ---------------- */}
           <div>
-            <Reveal>
-              <h2 className="text-[1.45rem] font-black leading-tight tracking-tight sm:text-[1.8rem]" style={{ color: NAVY, letterSpacing: '-0.025em' }}>
-                Un programme complet couvrant <span style={{ color: RED_DEEP }}>toute la pédiatrie</span>
-              </h2>
-              <p className="mt-3 text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                Aperçu non exhaustif du programme. Le contenu pédagogique est adapté aux exigences des EVC.
-              </p>
-            </Reveal>
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
+              <Reveal>
+                <h2 className="text-[1.6rem] font-black leading-[1.15] tracking-tight sm:text-[2rem]" style={{ color: NAVY, letterSpacing: '-0.025em' }}>
+                  Un programme complet
+                  <br />
+                  couvrant <span style={{ color: RED }}>toute la pédiatrie</span>
+                </h2>
+                <span aria-hidden className="mt-5 block h-[3px] w-14 rounded-full" style={{ background: RED }} />
+                <p className="mt-5 max-w-sm text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                  Aperçu non exhaustif du programme. Le contenu pédagogique est adapté aux exigences des EVC.
+                </p>
+              </Reveal>
 
-            <div className="mt-8 grid grid-cols-1 items-center gap-9 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+              {/* Frise des âges : cercles reliés par un filet ponctué. */}
               <Reveal delay={0.06}>
-                <ul className="space-y-3">
-                  {PROGRAMME.map((p) => (
-                    <li key={p} className="flex items-start gap-3">
-                      <Puce color={RED} className="mt-[9px]" />
-                      <span className="text-[13.5px] leading-snug" style={{ color: INK, fontFamily: FONT_BODY }}>{p}</span>
+                <ol className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-4">
+                  {AGES.map((a, i) => (
+                    <li key={a.titre} className="relative text-center">
+                      {i > 0 && (
+                        <span
+                          aria-hidden
+                          className="absolute left-0 top-[38px] hidden h-px w-full -translate-x-1/2 sm:block"
+                          style={{ background: LINE }}
+                        />
+                      )}
+                      {i > 0 && (
+                        <span
+                          aria-hidden
+                          className="absolute left-0 top-[35px] hidden h-1.5 w-1.5 -translate-x-1/2 rounded-full sm:block"
+                          style={{ background: a.accent }}
+                        />
+                      )}
+                      <span
+                        className="relative mx-auto flex h-[76px] w-[76px] items-center justify-center rounded-full"
+                        style={{ background: a.fond, border: `1px solid ${a.accent}22` }}
+                      >
+                        <a.Icone aria-hidden size={30} strokeWidth={1.6} color={a.accent} />
+                      </span>
+                      <p className="mt-4 text-[11.5px] font-black uppercase tracking-[0.08em]" style={{ color: a.accent }}>
+                        {a.titre}
+                      </p>
+                      <p className="mx-auto mt-2 max-w-[11rem] text-[12px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                        {a.texte}
+                      </p>
                     </li>
                   ))}
-                </ul>
-              </Reveal>
-              <Reveal delay={0.12}>
-                <Image
-                  src="/homepage/plateforme-complete.png"
-                  alt="Plateforme Major ECN de préparation aux EVC de pédiatrie, sur ordinateur et sur mobile"
-                  width={1536}
-                  height={1024}
-                  loading="lazy"
-                  sizes="(max-width:768px) 100vw, 46vw"
-                  className="w-full"
-                />
+                </ol>
               </Reveal>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <Reveal delay={0.08}>
-              <div id="plateforme" className="scroll-mt-24 rounded-[1.25rem] px-7 py-7" style={{ background: '#FDF6F7', border: '1px solid rgba(192,17,46,0.14)' }}>
-                <h2 className="text-[13.5px] font-black uppercase leading-snug tracking-[0.05em]" style={{ color: RED }}>
-                  Une plateforme pensée pour votre réussite
-                </h2>
-                <ul className="mt-5 space-y-3">
-                  {PLATEFORME.map((p) => (
-                    <li key={p} className="flex items-start gap-3">
-                      <Puce color={RED} className="mt-[9px]" />
-                      <span className="text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{p}</span>
-                    </li>
-                  ))}
-                </ul>
+            {/* Les six domaines. */}
+            <div className="mt-11 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {DOMAINES.map((d, i) => (
+                <Reveal key={d.titre} delay={Math.min(i, 5) * 0.04} className="h-full">
+                  <article
+                    className="flex h-full gap-5 rounded-[1.15rem] px-6 py-6"
+                    style={{ background: PAPER, border: `1px solid ${LINE}` }}
+                  >
+                    <span
+                      className="flex h-[58px] w-[58px] shrink-0 items-center justify-center rounded-full"
+                      style={{ background: d.fond }}
+                    >
+                      <d.Icone aria-hidden size={26} strokeWidth={1.6} color={d.accent} />
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="text-[13px] font-black uppercase leading-snug tracking-[0.06em]" style={{ color: NAVY }}>
+                        {d.titre}
+                      </h3>
+                      <ul className="mt-3 space-y-1.5">
+                        {d.items.map((x) => (
+                          <li key={x} className="flex items-start gap-2 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                            <span aria-hidden className="mt-[7px] h-1 w-1 shrink-0 rounded-full" style={{ background: d.accent }} />
+                            {x}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+
+            {/* Et bien d'autres items. */}
+            <Reveal delay={0.1} className="mt-5">
+              <div className="flex gap-5 rounded-[1.15rem] px-6 py-6" style={{ background: PAPER, border: `1px solid ${LINE}` }}>
+                <span className="flex h-[58px] w-[58px] shrink-0 items-center justify-center rounded-full" style={{ background: '#F1F3F8' }}>
+                  <MoreHorizontal aria-hidden size={26} strokeWidth={1.8} color={INK_MUTED} />
+                </span>
+                <div className="min-w-0">
+                  <h3 className="text-[13px] font-black uppercase leading-snug tracking-[0.06em]" style={{ color: NAVY }}>
+                    Et bien d’autres items
+                  </h3>
+                  <p className="mt-2.5 text-[12.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                    {AUTRES_ITEMS.join('  ·  ')}
+                  </p>
+                </div>
               </div>
             </Reveal>
 
-            <Reveal delay={0.14}>
-              <div id="accompagnement" className="scroll-mt-24 overflow-hidden rounded-[1.25rem]" style={{ background: PAPER, border: `1px solid ${LINE}` }}>
-                <div className="grid grid-cols-1 gap-6 px-7 py-7 sm:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] sm:items-center">
-                  <Image
-                    src="/specialites/pediatrie/enseignants-evc-pediatrie-major-ecn.webp"
-                    alt="Enseignant Major ECN devant une promotion de médecins en préparation aux EVC"
-                    width={800}
-                    height={800}
-                    loading="lazy"
-                    sizes="(max-width:640px) 60vw, 180px"
-                    className="mx-auto w-40 rounded-full object-cover sm:mx-0 sm:w-full"
-                  />
-                  <div>
-                    <h2 className="text-[13.5px] font-black uppercase leading-snug tracking-[0.05em]" style={{ color: RED }}>
-                      Un accompagnement humain jusqu’au jour des EVC
-                    </h2>
-                    <ul className="mt-4 space-y-2.5">
-                      {ACCOMPAGNEMENT.map((a) => (
-                        <li key={a} className="flex items-start gap-3">
-                          <Puce color={RED} className="mt-[9px]" />
-                          <span className="text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{a}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+            {/* Une préparation spécifique à chaque voie. */}
+            <Reveal delay={0.14} className="mt-5">
+              <div className="rounded-[1.15rem] px-6 py-7 sm:px-8" style={{ background: PAPER, border: `1px solid ${LINE}` }}>
+                <p className="flex items-center gap-4 text-[11.5px] font-black uppercase tracking-[0.12em]" style={{ color: NAVY }}>
+                  <span aria-hidden className="h-px flex-1" style={{ background: LINE }} />
+                  Une préparation spécifique à chaque voie
+                  <span aria-hidden className="h-px flex-1" style={{ background: LINE }} />
+                </p>
+                <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  {[
+                    {
+                      Icone: ClipboardCheck,
+                      voie: 'Voie interne',
+                      format: 'QCM',
+                      texte: 'Entraînements, stratégie et méthodologie spécifiques au format QCM.',
+                      accent: '#2F6FE0',
+                      fond: '#EFF4FE',
+                      carte: '#F5F8FE',
+                      id: 'voie-interne',
+                    },
+                    {
+                      Icone: FileText,
+                      voie: 'Voie externe',
+                      format: 'QROC',
+                      texte: 'Construction des réponses, mots-clés, PMZ et méthodologie spécifiques au format QROC.',
+                      accent: RED,
+                      fond: '#FDEFF1',
+                      carte: '#FDF6F7',
+                      id: 'voie-externe',
+                    },
+                  ].map((v) => (
+                    <div
+                      key={v.voie}
+                      id={v.id}
+                      className="flex scroll-mt-24 gap-5 rounded-[1rem] px-5 py-5"
+                      style={{ background: v.carte }}
+                    >
+                      <span className="flex h-[58px] w-[58px] shrink-0 items-center justify-center rounded-full" style={{ background: v.fond }}>
+                        <v.Icone aria-hidden size={26} strokeWidth={1.6} color={v.accent} />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-[11.5px] font-black uppercase tracking-[0.08em]" style={{ color: v.accent }}>{v.voie}</p>
+                        <p className="mt-1 text-[1.6rem] font-black leading-none tracking-tight" style={{ color: v.accent, letterSpacing: '-0.02em' }}>
+                          {v.format}
+                        </p>
+                        <p className="mt-2.5 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{v.texte}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </Reveal>
           </div>
+
+          {/* ---------------- Colonne de droite ---------------- */}
+          <Reveal delay={0.08}>
+            <aside className="rounded-[1.25rem] px-6 py-7 sm:px-7" style={{ background: '#FFFFFF', border: `1px solid ${LINE}` }}>
+              <h2 className="text-[1.15rem] font-black leading-tight tracking-tight" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
+                De la connaissance
+                <br />
+                au réflexe EVC
+              </h2>
+              <span aria-hidden className="mt-4 block h-[3px] w-12 rounded-full" style={{ background: RED }} />
+
+              <ol className="mt-6 space-y-3.5">
+                {REFLEXE_EVC.map(([titre, quoi, texte], i) => (
+                  <li key={titre} className="rounded-[1rem] px-5 py-5" style={{ background: PAPER, border: `1px solid ${LINE}` }}>
+                    <div className="flex items-start gap-4">
+                      <span
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] font-black tabular-nums text-white"
+                        style={{ background: RED }}
+                        aria-hidden
+                      >
+                        {i + 1}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-[12.5px] font-black uppercase tracking-[0.08em]" style={{ color: RED }}>{titre}</p>
+                        <p className="mt-2 text-[13px] font-black leading-snug" style={{ color: NAVY }}>{quoi}</p>
+                        <p className="mt-2 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{texte}</p>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </aside>
+          </Reveal>
         </div>
+
+        {/* La plateforme, sous les deux colonnes. */}
+        <Reveal delay={0.12} className="mt-8">
+          <div id="plateforme" className="scroll-mt-24 rounded-[1.25rem] px-7 py-7" style={{ background: '#FDF6F7', border: '1px solid rgba(192,17,46,0.14)' }}>
+            <h2 className="text-[13.5px] font-black uppercase leading-snug tracking-[0.05em]" style={{ color: RED }}>
+              Une plateforme pensée pour votre réussite
+            </h2>
+            <ul className="mt-5 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+              {PLATEFORME.map((p) => (
+                <li key={p} className="flex items-start gap-3">
+                  <Puce color={RED} className="mt-[9px]" />
+                  <span className="text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{p}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
 }
 
-/* ============================================================
-   Une préparation adaptée à votre voie
-   ============================================================ */
+/** Les quatre colonnes du bloc « À vos côtés jusqu'aux EVC ». */
+const ACCOMPAGNEMENT_COLONNES = [
+  {
+    Icone: GraduationCap,
+    titre: 'Des enseignants experts en pédiatrie',
+    texte: 'Des médecins spécialistes de la discipline, rompus aux exigences des EVC.',
+  },
+  {
+    Icone: MessageSquare,
+    titre: 'Posez vos questions à tout moment',
+    texte: 'Obtenez des réponses claires et rapides sur les points qui vous bloquent.',
+  },
+  {
+    Icone: MonitorPlay,
+    titre: 'Cours en direct & replays',
+    texte: 'Assistez aux cours en direct et retrouvez les replays disponibles tout au long de votre préparation.',
+  },
+  {
+    Icone: Users,
+    titre: 'Conseils personnalisés & motivation',
+    texte: 'Bénéficiez de conseils adaptés à votre situation et d’un vrai soutien jusqu’au jour J.',
+  },
+];
 
-function Voies() {
+function Accompagnement() {
   return (
-    <section className="py-16 sm:py-20" style={{ fontFamily: FONT, background: PAPER }}>
+    <section id="accompagnement" className="scroll-mt-24 py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
-        <Reveal className="text-center">
-          <h2 className="text-[1.5rem] font-black leading-tight tracking-tight sm:text-[1.9rem]" style={{ color: NAVY, letterSpacing: '-0.025em' }}>
-            Une préparation adaptée <span style={{ color: RED_DEEP }}>à votre voie</span>
-          </h2>
+        <Reveal>
+          <div className="rounded-[1.5rem] px-6 py-10 sm:px-10 lg:px-12" style={{ background: '#FFFFFF', border: `1px solid ${LINE}`, boxShadow: '0 40px 90px -70px rgba(15,31,77,0.7)' }}>
+            <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:items-center">
+              {/* Portrait en médaillon, avec la pastille en bas à gauche. */}
+              <div className="relative mx-auto w-full max-w-[22rem]">
+                <span aria-hidden className="absolute -inset-3 rounded-full" style={{ background: '#FDF2F4' }} />
+                <Image
+                  src="/specialites/pediatrie/enseignants-evc-pediatrie-major-ecn.webp"
+                  alt="Enseignant Major ECN devant une promotion de médecins en préparation aux EVC"
+                  width={800}
+                  height={800}
+                  loading="lazy"
+                  sizes="(max-width:1024px) 70vw, 340px"
+                  className="relative w-full rounded-full object-cover"
+                />
+                <span
+                  className="absolute -bottom-2 -left-2 flex h-[76px] w-[76px] items-center justify-center rounded-full sm:-left-4"
+                  style={{ background: '#FDF2F4', border: '6px solid #FFFFFF' }}
+                >
+                  <Users aria-hidden size={30} strokeWidth={1.6} color={RED} />
+                </span>
+              </div>
+
+              <div>
+                <p className="text-[12px] font-black uppercase tracking-[0.18em]" style={{ color: RED }}>
+                  Un accompagnement humain
+                </p>
+                <h2 className="mt-4 text-[1.9rem] font-black leading-[1.12] tracking-tight sm:text-[2.5rem]" style={{ color: NAVY, letterSpacing: '-0.03em' }}>
+                  À vos côtés jusqu’aux EVC
+                </h2>
+                <span aria-hidden className="mt-5 block h-[3px] w-14 rounded-full" style={{ background: RED }} />
+                <p className="mt-6 max-w-2xl text-[14.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                  Chez Major ECN, vous n’êtes jamais seul. Nos médecins enseignants spécialistes de la pédiatrie
+                  vous accompagnent tout au long de votre préparation pour vous aider à progresser, garder le cap
+                  et atteindre vos objectifs.
+                </p>
+
+                <div className="mt-10 grid grid-cols-1 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
+                  {ACCOMPAGNEMENT_COLONNES.map((c, i) => (
+                    <div
+                      key={c.titre}
+                      className="px-0 text-center lg:px-4"
+                      style={{ borderLeft: i > 0 ? `1px solid ${LINE_SOFT}` : undefined }}
+                    >
+                      <span className="mx-auto flex h-[68px] w-[68px] items-center justify-center rounded-full" style={{ background: '#FDF2F4' }}>
+                        <c.Icone aria-hidden size={28} strokeWidth={1.6} color={RED} />
+                      </span>
+                      <h3 className="mx-auto mt-5 max-w-[11rem] text-[13px] font-black leading-snug" style={{ color: RED }}>
+                        {c.titre}
+                      </h3>
+                      <p className="mx-auto mt-3 max-w-[11rem] text-[12.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                        {c.texte}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Bandeau de bas de bloc. */}
+            <div className="mt-10 flex items-center gap-6 rounded-[1.15rem] px-6 py-6 sm:px-8" style={{ background: '#FDF2F4' }}>
+              <span className="flex h-[62px] w-[62px] shrink-0 items-center justify-center rounded-full" style={{ background: '#FFFFFF' }}>
+                <Heart aria-hidden size={26} strokeWidth={1.6} color={RED} />
+              </span>
+              <div className="min-w-0 border-l pl-6" style={{ borderColor: 'rgba(192,17,46,0.18)' }}>
+                <p className="text-[1.05rem] font-black leading-tight tracking-tight sm:text-[1.25rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
+                  Une préparation exigeante, <span style={{ color: RED }}>un accompagnement bienveillant.</span>
+                </p>
+                <p className="mt-2 text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                  Vous travaillez en autonomie sur une plateforme complète, mais vous n’êtes jamais seul.
+                </p>
+              </div>
+            </div>
+          </div>
         </Reveal>
-
-        <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <Reveal>
-            <article id="voie-interne" className="h-full scroll-mt-24 rounded-[1.25rem] bg-white px-7 py-8 sm:px-9" style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -62px rgba(15,31,77,0.55)' }}>
-              <h3 className="text-[15px] font-black uppercase tracking-[0.06em]" style={{ color: RED_DEEP }}>Voie interne — QCM</h3>
-              <p className="mt-4 text-[14px] font-black" style={{ color: NAVY }}>Apprenez à décider vite sans tomber dans les pièges.</p>
-              <p className="mt-3 text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                Méthodologie QCM pour analyser précisément les énoncés, repérer les pièges, hiérarchiser les
-                informations et gagner en rapidité.
-              </p>
-              <p className="mt-6">
-                <span className="inline-flex rounded-lg px-5 py-2.5 text-[12.5px] font-black uppercase tracking-[0.04em]" style={{ background: '#FDEDEF', color: RED_DEEP }}>
-                  Banque complète de QCM corrigés
-                </span>
-              </p>
-            </article>
-          </Reveal>
-
-          <Reveal delay={0.08}>
-            <article id="voie-externe" className="h-full scroll-mt-24 rounded-[1.25rem] bg-white px-7 py-8 sm:px-9" style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -62px rgba(15,31,77,0.55)' }}>
-              <h3 className="text-[15px] font-black uppercase tracking-[0.06em]" style={{ color: GREEN }}>Voie externe — QROC</h3>
-              <p className="mt-4 text-[14px] font-black" style={{ color: NAVY }}>Apprenez à rédiger la réponse attendue.</p>
-              <p className="mt-3 text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                Méthodologie QROC pour utiliser les bons mots-clés, aller à l’essentiel, hiérarchiser la réponse
-                et maîtriser les PMZ lorsqu’ils s’appliquent.
-              </p>
-              <p className="mt-6">
-                <span className="inline-flex rounded-lg px-5 py-2.5 text-[12.5px] font-black uppercase tracking-[0.04em]" style={{ background: '#ECF6F0', color: GREEN }}>
-                  Banque complète de QROC corrigés
-                </span>
-              </p>
-            </article>
-          </Reveal>
-        </div>
       </div>
     </section>
   );
@@ -1017,8 +1279,7 @@ export function PediatriePageContent({
       <GagnezDuTemps />
       <Offre />
       <Programme />
-      <Voies />
-      <AccompagnementSpecialite />
+      <Accompagnement />
       <Formules specialite={specialite} paliers={paliers} />
       <Temoignages />
       <FaqSection paliers={paliers} />

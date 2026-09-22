@@ -147,13 +147,161 @@ export const RADIO_PROGRAMME = [
   },
 ];
 
+/**
+ * La boucle de progression, en six temps.
+ *
+ * Les textes sont volontairement courts : le visiteur doit saisir le cycle d'un
+ * coup d'œil, pas lire six paragraphes. Le message de fond — chaque entraînement
+ * sert à identifier ce qui doit être retravaillé — est porté par la phrase de
+ * conclusion du bloc, pas répété sous chaque étape.
+ *
+ * « + de 2 000 questions » a été retiré d'ici : le chiffre est réservé à la
+ * bande de preuves du haut de page, au bloc plateforme et à la formule
+ * Essentielle. Répété partout, il cessait d'être un argument.
+ */
 export const PSY_METHODE = [
-  ["S’entraîner", "+ de 2 000 questions, QCM, dossiers, annales"],
+  ["S’entraîner", "QCM, dossiers cliniques et annales"],
   ["Comprendre", "Corrections détaillées et fiches explicatives"],
-  ["Identifier", "Erreurs récurrentes et lacunes personnelles"],
-  ["Retravailler", "Connaissances clés et fiches ciblées"],
-  ["Retester", "Nouveaux QCM pour ancrer vos acquis"],
-  ["Acquérir des automatismes", "et être prêt le jour J"],
+  ["Identifier", "Vos erreurs récurrentes et vos lacunes"],
+  ["Retravailler", "Les connaissances à consolider, de façon ciblée"],
+  ["Retester", "Pour vérifier que c’est acquis"],
+  ["Automatiser", "Jusqu’à répondre sans hésiter le jour J"],
+];
+
+/** Les quatre bénéfices annoncés dès le hero. */
+export const PSY_HERO_BENEFICES = [
+  "Programme ciblé de psychiatrie",
+  "QCM ou entraînement rédactionnel selon votre voie",
+  "Annales et corrections détaillées",
+  "Accompagnement par des médecins spécialistes",
+];
+
+/**
+ * Bande de preuves, juste sous le hero. Quatre chiffres, lisibles en quelques
+ * secondes : l'échéance, la dotation, l'antériorité, l'expérience.
+ */
+export const PSY_CHIFFRES_CLES = [
+  { valeur: "10 décembre 2026", libelle: "Date des épreuves", note: "Espace Jean-Monnet, Rungis" },
+  { valeur: "198 postes", libelle: "Voie externe" },
+  { valeur: "+ 9 000", libelle: "médecins accompagnés" },
+  { valeur: "+ 15 ans", libelle: "d’expérience dans la préparation aux concours et examens médicaux" },
+];
+
+/**
+ * Aperçu tarifaire remonté dans la première moitié de page.
+ *
+ * POURQUOI. Un visiteur qui cherche le prix l'obtenait au terme d'un long
+ * défilement. Ce bloc lui répond tout de suite ; celui qui veut comparer
+ * descend au comparatif complet, que ce bloc ne duplique pas — trois ou quatre
+ * lignes par formule, pas la liste entière.
+ */
+export const PSY_APERCU_TARIFS = [
+  {
+    nom: "Essentielle",
+    prix: "495 €",
+    lignes: [
+      "Plateforme complète",
+      "Entraînements & annales",
+      "Supports pédagogiques",
+      "Questions à l’équipe pédagogique",
+    ],
+  },
+  {
+    nom: "Intensive",
+    prix: "995 €",
+    lignes: ["Tout Essentielle", "≈ 18–20 h de révisions guidées"],
+  },
+  {
+    nom: "Approfondie",
+    prefixe: "À partir de",
+    prix: "2 095 €",
+    lignes: [
+      "Plateforme complète",
+      "Programme d’enseignement approfondi",
+      "Accompagnement renforcé",
+    ],
+  },
+];
+
+/**
+ * Montée en gamme, à comprendre en trois secondes.
+ *
+ * Le comparatif détaillé reste plus bas ; ceci répond à la seule question que
+ * se pose le visiteur devant trois prix : pourquoi trois niveaux ?
+ */
+export const PSY_MONTEE_GAMME = [
+  ["Essentielle", "Plateforme + questions pédagogiques"],
+  ["Intensive", "Plateforme + questions + révisions en direct"],
+  ["Approfondie", "Plateforme + programme d’enseignement approfondi + accompagnement renforcé"],
+];
+
+/**
+ * « Votre temps sert à réviser » — version courte.
+ *
+ * Le tableau d'origine comptait six lignes et quatre colonnes. Trois
+ * problématiques suffisent à faire comprendre l'idée, et la colonne « gain de
+ * temps » disparaît : elle répétait en trois mots ce que la colonne précédente
+ * venait de dire.
+ */
+export const PSY_GAIN_TEMPS_COURT = [
+  {
+    titre: "Savoir quoi travailler",
+    seul: "Chercher les ressources et déterminer les priorités.",
+    major: "Programme structuré et connaissances à maîtriser identifiées.",
+  },
+  {
+    titre: "Savoir comment s’entraîner",
+    seul: "Chercher QCM, dossiers et annales adaptés.",
+    major: "Entraînements directement intégrés à la préparation.",
+  },
+  {
+    titre: "Savoir quoi retravailler",
+    seul: "Analyser ses erreurs et organiser seul ses révisions.",
+    major: "Corrections détaillées, suivi de progression et révisions ciblées.",
+  },
+];
+
+/**
+ * Le parcours dans la plateforme, illustré par de VRAIES captures.
+ *
+ * ⚠ `public/cours.png` et `public/fiche.png` ne sont pas utilisables ici : leur
+ * filigrane porte le nom et l'adresse e-mail d'un compte, lisibles à l'écran.
+ * Les trois captures retenues en sont exemptes. La quatrième vignette utilise
+ * l'image de cours de psychiatrie déjà présente sur la page.
+ */
+export const PSY_PLATEFORME = [
+  {
+    cle: "Apprenez",
+    texte: "Cours, fiches et connaissances essentielles.",
+    image: "/specialites/psychiatrie/cours.webp",
+    alt: "Cours de psychiatrie consacré à l’évaluation du risque suicidaire",
+    largeur: 317,
+    hauteur: 167,
+  },
+  {
+    cle: "Entraînez-vous",
+    texte: "QCM ou entraînements rédactionnels selon votre voie, dossiers cliniques et annales.",
+    image: "/qcm.png",
+    alt: "Question à choix multiples en cours de réalisation sur la plateforme Major ECN",
+    largeur: 1500,
+    hauteur: 935,
+  },
+  {
+    cle: "Analysez",
+    texte: "Résultats, erreurs et points à renforcer.",
+    image: "/accueil.png",
+    alt: "Tableau de bord Major ECN : progression, performance et priorités de révision",
+    largeur: 1903,
+    hauteur: 935,
+  },
+  {
+    cle: "Consolidez",
+    texte: "Corrections détaillées et révisions ciblées.",
+    image: "/entrainement.png",
+    alt: "Entraînement ciblé construit à partir des questions les plus souvent ratées",
+    largeur: 1915,
+    hauteur: 940,
+  },
 ];
 
 export const RADIO_METHODE = [
@@ -240,6 +388,19 @@ export type FormuleSpecialite = {
   items: string[];
   href: string;
   recommandee?: boolean;
+  /**
+   * Ce que la formule permet de faire, en une phrase — « Pour travailler à
+   * votre rythme avec tous les outils essentiels ». Distinct de `accroche`,
+   * qui est commune à tout le site (`formules-accroches.ts`) et ne doit pas
+   * varier d'une page à l'autre. Optionnel : les pages qui ne le renseignent
+   * pas gardent leur rendu actuel.
+   */
+  positionnement?: string;
+  /**
+   * La ligne à faire ressortir visuellement dans la carte : ce qui justifie à
+   * lui seul le passage au niveau supérieur.
+   */
+  soulignement?: string;
 };
 
 /** Rappel commun aux trois formules, colonne de droite du bloc tarifs. */
@@ -256,22 +417,31 @@ export const PSY_FORMULES: FormuleSpecialite[] = [
     n: 1,
     nom: "Essentielle",
     accroche: ACCROCHE_FORMULE.essentielle,
+    positionnement: "Pour travailler à votre rythme avec tous les outils essentiels",
     prix: "495 €",
     href: "/formules/essentielle",
     encadre: { fort: "La base complète", suite: "de la préparation Major ECN." },
     items: [
-      "Accès à la plateforme complète",
-      "+ de 2 000 questions, dossiers et annales",
-      "Fiches et ressources pédagogiques",
-      "Capsules méthodologiques ciblées",
+      "Plateforme pédagogique complète",
+      "Supports et fiches de cours",
+      "QCM ou entraînements rédactionnels selon la voie",
+      "Dossiers cliniques",
+      "Annales",
+      "Corrections détaillées",
+      "Flashcards et outils de révision",
       "Suivi de progression",
-      "Réponses à vos questions par email",
+      "Questions pédagogiques via la plateforme ou par e-mail",
     ],
+    // L'Essentielle n'est PAS une formule « en autonomie totale » : le candidat
+    // garde la possibilité de poser ses questions pédagogiques. C'est un
+    // élément de valeur réel, longtemps invisible sur la page.
+    soulignement: "Travaillez à votre rythme tout en pouvant solliciter l’équipe pédagogique.",
   },
   {
     n: 2,
     nom: "Intensive",
     accroche: ACCROCHE_FORMULE.intensive,
+    positionnement: "Pour ajouter des révisions guidées avec nos enseignants",
     prix: "995 €",
     href: "/formules/intensive",
     encadre: {
@@ -279,35 +449,41 @@ export const PSY_FORMULES: FormuleSpecialite[] = [
       suite: "Environ 18 à 20 h de révisions guidées",
     },
     items: [
-      "Cours en direct & replays selon le programme",
-      "Annales corrigées",
+      "Cours en direct",
+      "Entraînements ciblés",
+      "Annales",
+      "Corrections",
       "Méthodologie EVC",
-      "Entraînements intensifs & corrections détaillées",
-      "Accompagnement renforcé",
+      "Échanges avec les enseignants",
+      "Replays selon le programme",
     ],
+    soulignement: "Plateforme complète + révisions guidées avec les enseignants",
   },
   {
     n: 3,
     nom: "Approfondie",
     accroche: ACCROCHE_FORMULE.approfondie,
+    positionnement: "Pour reprendre le programme en profondeur avec nos enseignants",
     prefixe: "À partir de",
     prix: "2 095 €",
     href: "/formules/programme-approfondi",
     recommandee: true,
     encadre: {
-      fort: "Tout le contenu de l’Intensive",
+      fort: "Tout le contenu de l’Essentielle",
       plus: [
-        "Reprise approfondie des connaissances essentielles",
-        "Programme d’enseignement complet",
+        "Programme d’enseignement approfondi",
+        "Accompagnement renforcé jusqu’aux EVC",
       ],
     },
     items: [
-      "Nombreux cours en direct & replays",
-      "Dossiers et situations cliniques complets",
-      "Méthodologie renforcée",
-      "Annales corrigées",
-      "Accompagnement jusqu’aux EVC",
+      "Nombreuses séances avec les enseignants",
+      "Reprise structurée des connaissances",
+      "Dossiers et situations cliniques",
+      "Méthodologie approfondie",
+      "Annales et corrections",
+      "Accompagnement renforcé jusqu’aux EVC",
     ],
+    soulignement: "Volume d’enseignement adapté au parcours et au programme choisi.",
   },
 ];
 

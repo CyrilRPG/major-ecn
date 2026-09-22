@@ -1,5 +1,4 @@
 import { OdontologiePageContent, type PalierApprofondi } from '@/components/marketing/odontologie-page';
-import { lireSpecialite } from '@/lib/tunnel-inscription';
 import { APPROFONDI_SPECIALTIES } from '@/lib/stripe/approfondi';
 import { FAQ_ODO, reponseTexteOdo } from '@/lib/data/faq-odontologie';
 import { JsonLd, breadcrumbSchema, faqSchema, organizationSchema } from '@/components/seo/json-ld';
@@ -49,12 +48,7 @@ function paliersApprofondiOdontologie(): PalierApprofondi[] {
     .filter((p) => p.heures);
 }
 
-export default async function OdontologiePage({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  const specialite = lireSpecialite(await searchParams);
+export default async function OdontologiePage() {
   const paliers = paliersApprofondiOdontologie();
   return (
     <>
@@ -70,7 +64,7 @@ export default async function OdontologiePage({
           faqSchema(FAQ_ODO.map((f) => ({ q: f.q, a: reponseTexteOdo(f, paliers[0]?.prix ?? '') }))),
         ]}
       />
-      <OdontologiePageContent specialite={specialite} paliers={paliers} />
+      <OdontologiePageContent paliers={paliers} />
     </>
   );
 }

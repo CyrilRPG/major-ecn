@@ -18,8 +18,14 @@ import faqPsychiatrie from '@/lib/data/faq-psychiatrie.json';
 import faqRadiologie from '@/lib/data/faq-radiologie.json';
 import {
   GAIN_TEMPS,
+  PSY_APERCU_TARIFS,
+  PSY_CHIFFRES_CLES,
   PSY_FORMULES,
+  PSY_GAIN_TEMPS_COURT,
+  PSY_HERO_BENEFICES,
   PSY_METHODE,
+  PSY_MONTEE_GAMME,
+  PSY_PLATEFORME,
   PSY_PROGRAMME,
   RADIO_FORMULES,
   RADIO_METHODE,
@@ -88,20 +94,14 @@ function TexteFaq({ text }: { text: string }) {
    BLOC 1 — Hero
    ============================================================ */
 
-const HERO_PSY = [
-  'Les connaissances et situations cliniques essentielles',
-  'Une méthodologie adaptée à votre voie',
-  '+ de 2 000 questions, dossiers cliniques et annales corrigés',
-  'Des psychiatres pour vous guider et répondre à vos questions',
-];
-
-const CHIFFRES_PSY = [
-  { fort: '+ de 2 000\nquestions', suite: 'QCM · dossiers · entraînements' },
-  { fort: 'Cours en direct\n& replays', suite: 'selon la formule' },
-  { fort: 'Plateforme\n24h/24 – 7j/7', suite: 'accessible pendant toute la préparation' },
-  { fort: 'Réponses à\nvos questions', suite: 'par nos psychiatres' },
-];
-
+/**
+ * Bande de repères du hero — RADIOLOGIE uniquement.
+ *
+ * La page psychiatrie ne l'affiche plus : ses chiffres sont repris, en plus
+ * court, par la bande d'échéance placée juste dessous (`BandeauEcheancePsy`).
+ * Les afficher tous les deux revenait à dire deux fois la même chose à dix
+ * centimètres d'intervalle.
+ */
 const CHIFFRES_RADIO = [
   { fort: 'Enseignement par des\nradiologues experts', suite: 'Des médecins spécialistes de la discipline' },
   { fort: 'Méthode adaptée\nà votre voie', suite: 'Format QCM ou QROC et rédaction' },
@@ -136,7 +136,6 @@ function Voies({ psy, fond = '#FFFFFF' }: { psy: boolean; fond?: string }) {
 
 function Hero({ psy }: { psy: boolean }) {
   const spec = psy ? 'psychiatrie' : 'radiologie';
-  const chiffres = psy ? CHIFFRES_PSY : CHIFFRES_RADIO;
   return (
     <section style={{ fontFamily: FONT }}>
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
@@ -153,7 +152,9 @@ function Hero({ psy }: { psy: boolean }) {
                 Préparation EVC
               </span>
               {psy ? (
-                'Psychiatrie'
+                <>
+                  Psychiatrie <span className="tabular-nums">2026</span>
+                </>
               ) : (
                 <>
                   Radiologie &amp;
@@ -162,15 +163,17 @@ function Hero({ psy }: { psy: boolean }) {
                 </>
               )}
             </h1>
-            <p className="mt-4 text-[13px] font-black uppercase tracking-[0.08em]" style={{ color: RED_DEEP }}>
-              {psy ? '10 décembre 2026 · 198 postes en voie externe' : '8 décembre 2026 · 72 postes en voie externe'}
-            </p>
+            {!psy && (
+              <p className="mt-4 text-[13px] font-black uppercase tracking-[0.08em]" style={{ color: RED_DEEP }}>
+                8 décembre 2026 · 72 postes en voie externe
+              </p>
+            )}
 
             <p className="mt-6 max-w-lg text-[15px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
               {psy ? (
                 <>
-                  Savoir quoi travailler. Savoir comment travailler.
-                  <br className="hidden sm:block" /> Savoir comment répondre aux EVC de psychiatrie.
+                  Une préparation structurée pour maîtriser les connaissances essentielles,
+                  vous entraîner au format de votre voie et progresser jusqu’aux épreuves.
                 </>
               ) : (
                 <>
@@ -182,7 +185,7 @@ function Hero({ psy }: { psy: boolean }) {
 
             {psy && (
               <ul className="mt-7 space-y-2.5">
-                {HERO_PSY.map((p) => (
+                {PSY_HERO_BENEFICES.map((p) => (
                   <li key={p} className="flex items-start gap-3.5">
                     <Puce color={RED} className="mt-[11px]" />
                     <span className="text-[14px]" style={{ color: INK, fontFamily: FONT_BODY }}>{p}</span>
@@ -200,11 +203,11 @@ function Hero({ psy }: { psy: boolean }) {
                 Choisir ma formule
               </Link>
               <Link
-                href={psy ? '#methode' : '#programme'}
+                href={psy ? '#plateforme' : '#programme'}
                 className="inline-flex items-center justify-center rounded-lg bg-white px-7 py-3.5 text-[14.5px] font-black tracking-tight transition-colors hover:bg-[#FDF2F4]"
                 style={{ border: `1.5px solid ${RED}`, color: RED }}
               >
-                {psy ? 'Découvrir la préparation' : 'Découvrir le programme'}
+                {psy ? 'Découvrir la plateforme' : 'Découvrir le programme'}
               </Link>
             </div>
 
@@ -256,23 +259,76 @@ function Hero({ psy }: { psy: boolean }) {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
-        <div
-          className={
-            'grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-4 ' +
-            (psy ? '' : 'xl:grid-cols-6')
-          }
-          style={{ borderColor: LINE_SOFT }}
-        >
-          {chiffres.map((c, i) => (
-            <Reveal key={c.fort} delay={i * 0.04}>
-              <div className="px-5 py-7 text-center" style={{ borderLeft: i > 0 ? `1px solid ${LINE_SOFT}` : undefined }}>
-                <p className="whitespace-pre-line text-[13.5px] font-black leading-snug" style={{ color: RED }}>{c.fort}</p>
-                <p className="mt-3 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{c.suite}</p>
-              </div>
-            </Reveal>
-          ))}
+      {!psy && (
+        <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+          <div
+            className="grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-4 xl:grid-cols-6"
+            style={{ borderColor: LINE_SOFT }}
+          >
+            {CHIFFRES_RADIO.map((c, i) => (
+              <Reveal key={c.fort} delay={i * 0.04}>
+                <div className="px-5 py-7 text-center" style={{ borderLeft: i > 0 ? `1px solid ${LINE_SOFT}` : undefined }}>
+                  <p className="whitespace-pre-line text-[13.5px] font-black leading-snug" style={{ color: RED }}>{c.fort}</p>
+                  <p className="mt-3 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{c.suite}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
+      )}
+    </section>
+  );
+}
+
+/* ============================================================
+   BLOC 2 bis — Échéance et preuves (psychiatrie)
+   ============================================================ */
+
+/**
+ * Remplace, pour la psychiatrie, le bloc « session 2026 » et la bande de
+ * repères : ils occupaient deux sections entières pour quatre informations.
+ * Ici, une seule bande, lisible en quelques secondes.
+ */
+function BandeauEcheancePsy() {
+  return (
+    <section className="py-10 sm:py-12" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <div className="rounded-[1.25rem] px-6 py-7 sm:px-9" style={{ background: PAPER, border: `1px solid ${LINE}` }}>
+            <p className="text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ color: RED }}>
+              EVC Psychiatrie 2026
+            </p>
+            <div className="mt-6 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+              {PSY_CHIFFRES_CLES.map((c, i) => (
+                <div
+                  key={c.valeur}
+                  className="lg:pl-7 lg:first:pl-0"
+                  style={{ borderLeft: i > 0 ? undefined : undefined }}
+                >
+                  <p
+                    className="text-[1.45rem] font-black leading-none tabular-nums sm:text-[1.6rem]"
+                    style={{ color: RED_DEEP, letterSpacing: '-0.025em' }}
+                  >
+                    {c.valeur}
+                  </p>
+                  <p className="mt-2.5 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                    {c.libelle}
+                  </p>
+                  {c.note && (
+                    <p className="mt-1 text-[12px]" style={{ color: INK_MUTED, fontFamily: FONT_BODY }}>
+                      {c.note}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+            <p className="mt-7 border-t pt-5 text-[12.5px] font-bold" style={{ borderColor: LINE, color: INK_MUTED, fontFamily: FONT_BODY }}>
+              <a href={ARRETE} target="_blank" rel="noreferrer" className="underline underline-offset-4" style={{ color: RED }}>
+                Arrêté d’ouverture du concours ↗
+              </a>
+            </p>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -415,6 +471,28 @@ function Methode({ psy }: { psy: boolean }) {
           </TitreSection>
         </Reveal>
 
+        {/* Le cycle, d'un coup d'œil : l'étudiant doit comprendre qu'il ne fait
+            pas simplement des QCM, mais qu'il entre dans une boucle. */}
+        {psy && (
+          <Reveal delay={0.06}>
+            <ol className="mx-auto mt-9 flex max-w-5xl flex-wrap items-center justify-center gap-x-2.5 gap-y-2">
+              {etapes.map(([titre], i) => (
+                <li key={titre} className="flex items-center gap-2.5">
+                  <span
+                    className="rounded-full bg-white px-4 py-1.5 text-[12.5px] font-black"
+                    style={{ border: `1px solid ${LINE}`, color: NAVY }}
+                  >
+                    {titre}
+                  </span>
+                  {i < etapes.length - 1 && (
+                    <span aria-hidden className="text-[13px] font-black" style={{ color: RED }}>→</span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </Reveal>
+        )}
+
         <div className={'mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 ' + (psy ? 'lg:grid-cols-3' : 'lg:grid-cols-5')}>
           {etapes.map(([titre, texte], i) => (
             <Reveal key={titre} delay={i * 0.05} className="h-full">
@@ -432,8 +510,9 @@ function Methode({ psy }: { psy: boolean }) {
         {psy && (
           <Reveal delay={0.1}>
             <p className="mx-auto mt-10 max-w-3xl text-center text-[14.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-              L’objectif n’est pas d’accumuler les questions, mais d’identifier ce qui n’est pas encore maîtrisé
-              et de progresser de façon <span className="font-black" style={{ color: NAVY }}>ciblée et efficace.</span>
+              Chaque entraînement permet d’identifier ce qui doit être retravaillé, afin de transformer
+              progressivement les connaissances en{' '}
+              <span className="font-black" style={{ color: NAVY }}>automatismes.</span>
             </p>
           </Reveal>
         )}
@@ -612,20 +691,10 @@ function Programme({ psy }: { psy: boolean }) {
    BLOC 7 — Plateforme, enseignants et témoignages
    ============================================================ */
 
-const ETAPES_PLATEFORME = [
-  ['Travaillez', 'Cours, fiches, connaissances clés'],
-  ['Entraînez-vous', '+ de 2 000 questions, dossiers, annales'],
-  ['Identifiez', 'Erreurs et lacunes, résultats détaillés'],
-  ['Consolidez', 'Révisions ciblées et corrections'],
-];
-
 function TemoignagePsy() {
   return (
     <article className="flex h-full flex-col rounded-[1.25rem] px-7 py-8 sm:px-9" style={{ background: NAVY, boxShadow: '0 40px 90px -60px rgba(15,31,77,0.9)' }}>
-      <p className="text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ color: '#F7B9C4' }}>
-        Elle a réussi les EVC de psychiatrie avec Major ECN
-      </p>
-      <div className="mt-7 flex items-center gap-4">
+      <div className="flex items-center gap-4">
         <span
           className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-[16px] font-black text-white"
           style={{ background: `linear-gradient(135deg, ${RED_DEEP} 0%, ${RED} 100%)` }}
@@ -635,7 +704,7 @@ function TemoignagePsy() {
         </span>
         <div>
           <p className="text-[15px] font-black tracking-tight text-white">Dr Monica WAITZFELDER</p>
-          <p className="mt-1 text-[12.5px] text-white/65" style={{ fontFamily: FONT_BODY }}>Psychiatrie · Lauréate EVC 2021</p>
+          <p className="mt-1 text-[12.5px] text-white/65" style={{ fontFamily: FONT_BODY }}>Lauréate EVC Psychiatrie 2021</p>
         </div>
       </div>
       <blockquote className="mt-7 flex-1 text-[16px] leading-relaxed text-white/90" style={{ fontFamily: FONT_BODY }}>
@@ -643,7 +712,7 @@ function TemoignagePsy() {
         méthodologie qui a fait la différence.&nbsp;»
       </blockquote>
       <ul className="mt-7 flex flex-wrap gap-2">
-        {['Méthodologie', 'Rapidité', 'Connaissances ciblées', 'Confiance'].map((q) => (
+        {['Méthodologie', 'Connaissances ciblées', 'Entraînement', 'Confiance'].map((q) => (
           <li key={q} className="rounded-full border border-white/25 px-4 py-1.5 text-[11.5px] font-black text-white/85">
             {q}
           </li>
@@ -654,99 +723,319 @@ function TemoignagePsy() {
         className="mt-7 inline-flex items-center justify-center rounded-xl bg-white px-6 py-3.5 text-[13.5px] font-black tracking-tight transition-transform duration-300 hover:scale-[1.02]"
         style={{ color: NAVY }}
       >
-        Lire son témoignage complet →
+        Lire son témoignage →
       </Link>
     </article>
   );
 }
 
-function PlateformePsy() {
+/**
+ * La preuve, juste après la méthode.
+ *
+ * Elle arrivait auparavant en fin de page, après les formules : le visiteur
+ * lisait « voici comment nous procédons » sans jamais voir que cela avait
+ * fonctionné pour quelqu'un. Expliquer puis prouver, dans cet ordre.
+ */
+function TemoignageSectionPsy() {
   return (
-    <section className="py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
+    <section className="py-14 sm:py-16" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-          <Reveal className="h-full">
-            <article className="flex h-full flex-col rounded-[1.25rem] bg-white px-7 py-8 sm:px-9" style={{ border: `1px solid ${LINE}` }}>
-              <TitreSection sur="Votre plateforme">
-                Votre préparation s’adapte <span style={{ color: RED_DEEP }}>à votre progression.</span>
-              </TitreSection>
-              <Image
-                src="/plateforme/laptop-phone-dashboard.png"
-                alt="Tableau de bord de la préparation Major ECN sur ordinateur et mobile"
-                width={1400}
-                height={840}
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="mt-8 h-auto w-full"
-              />
-              <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {ETAPES_PLATEFORME.map(([titre, detail]) => (
-                  <div key={titre} className="rounded-xl px-4 py-4" style={{ background: PAPER, border: `1px solid ${LINE}` }}>
-                    <p className="text-[12.5px] font-black uppercase tracking-[0.05em]" style={{ color: RED }}>{titre}</p>
-                    <p className="mt-2 text-[12px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{detail}</p>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-7 text-[14px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                Vous savez ce que vous avez travaillé, ce que vous maîtrisez et ce qui nécessite encore votre
-                attention.
-              </p>
-            </article>
-          </Reveal>
-          <Reveal delay={0.08} className="h-full">
+        <Reveal className="mx-auto max-w-3xl text-center">
+          <TitreSection sur="Elles et ils y sont arrivés">
+            Ils ont réussi les EVC <span style={{ color: RED_DEEP }}>avec Major ECN</span>
+          </TitreSection>
+        </Reveal>
+        <Reveal delay={0.08} className="mt-10">
+          <div className="mx-auto max-w-4xl">
             <TemoignagePsy />
-          </Reveal>
-        </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
 }
 
-function EnseignantsPsy() {
+/**
+ * Aperçu tarifaire, dans la première moitié de page.
+ *
+ * Le comparatif complet reste plus bas : ce bloc ne le duplique pas, il donne
+ * l'ordre de prix. Un prospect qui cherche d'abord le tarif a sa réponse sans
+ * parcourir toute la page ; celui qui veut comparer descend d'un clic.
+ */
+function ApercuTarifsPsy() {
+  return (
+    <section className="py-16 sm:py-20" style={{ fontFamily: FONT, background: PAPER }}>
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-3xl text-center">
+          <TitreSection sur="Tarifs">
+            Choisissez votre <span style={{ color: RED_DEEP }}>niveau d’accompagnement</span>
+          </TitreSection>
+        </Reveal>
+
+        <div className="mt-11 grid grid-cols-1 gap-5 lg:grid-cols-3">
+          {PSY_APERCU_TARIFS.map((f, i) => (
+            <Reveal key={f.nom} delay={i * 0.06} className="h-full">
+              <article className="flex h-full flex-col rounded-[1.15rem] bg-white px-6 py-7" style={{ border: `1px solid ${PALETTES[i].line}` }}>
+                <span aria-hidden className="mb-5 block h-1 w-12 rounded-full" style={{ background: PALETTES[i].grad }} />
+                <p className="text-[1.05rem] font-black uppercase leading-none tracking-[0.04em]" style={{ color: PALETTES[i].main }}>
+                  {f.nom}
+                </p>
+                <p className="mt-3">
+                  {f.prefixe && (
+                    <>
+                      <span className="text-[11.5px] font-black uppercase tracking-[0.08em]" style={{ color: PALETTES[i].main }}>
+                        {f.prefixe}
+                      </span>{' '}
+                    </>
+                  )}
+                  <span className="text-[2.1rem] font-black leading-none tabular-nums" style={{ color: PALETTES[i].deep, letterSpacing: '-0.03em' }}>
+                    {f.prix}
+                  </span>
+                </p>
+                <ul className="mt-5 flex-1 space-y-2.5">
+                  {f.lignes.map((l) => (
+                    <li key={l} className="flex items-start gap-3">
+                      <Puce color={PALETTES[i].main} className="mt-[9px]" />
+                      <span className="text-[12.5px] leading-snug" style={{ color: INK, fontFamily: FONT_BODY }}>{l}</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.2} className="mt-9">
+          <div className="text-center">
+            <Link
+              href="#formules"
+              className="inline-flex items-center justify-center rounded-xl px-8 py-4 text-[14px] font-black tracking-tight text-white transition-transform duration-300 hover:scale-[1.02]"
+              style={{ background: `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)`, boxShadow: '0 18px 42px -22px rgba(139,14,34,0.7)' }}
+            >
+              Comparer les 3 formules →
+            </Link>
+            <p className="mt-4 text-[12.5px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+              Préparation à partir de 495&nbsp;€ · Paiement en plusieurs fois possible
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * « Votre temps sert à réviser » — version courte.
+ *
+ * Le tableau d'origine comptait six lignes et quatre colonnes ; trois
+ * problématiques suffisent, et la colonne « gain de temps » a disparu parce
+ * qu'elle répétait la précédente.
+ */
+function GainTempsCourtPsy() {
+  return (
+    <section id="gain-de-temps" className="scroll-mt-28 py-16 sm:py-20" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-3xl text-center">
+          <TitreSection sur="Gagnez en efficacité">
+            Votre temps sert à réviser, <span style={{ color: RED_DEEP }}>pas à organiser vos révisions.</span>
+          </TitreSection>
+        </Reveal>
+
+        <div className="mt-11 grid grid-cols-1 gap-5 lg:grid-cols-3">
+          {PSY_GAIN_TEMPS_COURT.map((g, i) => (
+            <Reveal key={g.titre} delay={i * 0.06} className="h-full">
+              <article className="flex h-full flex-col rounded-[1.15rem] bg-white px-6 py-6" style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -60px rgba(15,31,77,0.6)' }}>
+                <h3 className="text-[13px] font-black uppercase leading-snug tracking-[0.06em]" style={{ color: NAVY }}>
+                  {g.titre}
+                </h3>
+                <div className="mt-5 border-t pt-4" style={{ borderColor: LINE_SOFT }}>
+                  <p className="text-[11px] font-black uppercase tracking-[0.1em]" style={{ color: INK_MUTED }}>Seul</p>
+                  <p className="mt-1.5 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{g.seul}</p>
+                </div>
+                <div className="mt-4 flex-1 rounded-xl px-4 py-4" style={{ background: '#FDF2F4' }}>
+                  <p className="text-[11px] font-black uppercase tracking-[0.1em]" style={{ color: RED }}>Avec Major ECN</p>
+                  <p className="mt-1.5 text-[13px] leading-snug" style={{ color: INK, fontFamily: FONT_BODY }}>{g.major}</p>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.2}>
+          <p className="mx-auto mt-10 max-w-3xl text-center text-[14.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+            Concentrez-vous sur l’essentiel&nbsp;:{' '}
+            <span className="font-black" style={{ color: NAVY }}>apprendre, vous entraîner et progresser.</span>
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/** Relance après le programme, avant la découverte de la plateforme. */
+function CtaProgrammePsy() {
+  return (
+    <section className="pb-4" style={{ fontFamily: FONT, background: PAPER }}>
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <div className="flex flex-col gap-6 rounded-[1.25rem] bg-white px-7 py-8 sm:px-9 lg:flex-row lg:items-center lg:justify-between" style={{ border: `1px solid ${LINE}` }}>
+            <div>
+              <p className="text-[1.15rem] font-black leading-tight tracking-tight" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
+                Prêt à structurer votre préparation&nbsp;?
+              </p>
+              <p className="mt-3 max-w-xl text-[13.5px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                Retrouvez les connaissances essentielles, les entraînements et les outils adaptés à votre voie.
+              </p>
+            </div>
+            <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
+              <Link
+                href="#formules"
+                className="inline-flex items-center justify-center rounded-xl px-7 py-3.5 text-[14px] font-black tracking-tight text-white transition-transform duration-300 hover:scale-[1.02]"
+                style={{ background: `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)`, boxShadow: '0 18px 42px -22px rgba(139,14,34,0.7)' }}
+              >
+                Voir les formules
+              </Link>
+              <Link
+                href="#plateforme"
+                className="inline-flex items-center justify-center rounded-xl bg-white px-7 py-3.5 text-[14px] font-black tracking-tight transition-colors hover:bg-[#FDF2F4]"
+                style={{ border: `1.5px solid ${RED}`, color: RED }}
+              >
+                Découvrir la plateforme
+              </Link>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * La plateforme, montrée plutôt que décrite.
+ *
+ * Le bloc précédent affichait une seule image — un mockup volontairement flou —
+ * et une liste de fonctionnalités. Le candidat ne voyait pas ce qu'il achète.
+ * Ici, quatre étapes, chacune illustrée par une capture réelle de l'écran
+ * correspondant.
+ *
+ * ⚠ `public/cours.png` et `public/fiche.png` ont été écartés : leur filigrane
+ * porte le nom et l'adresse e-mail d'un compte, lisibles à l'écran. Les publier
+ * sur une page publique reviendrait à diffuser cette identité.
+ */
+function PlateformePsy() {
+  return (
+    <section id="plateforme" className="scroll-mt-28 py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+        <Reveal className="mx-auto max-w-3xl text-center">
+          <TitreSection sur="Votre plateforme">
+            Toute votre préparation <span style={{ color: RED_DEEP }}>au même endroit</span>
+          </TitreSection>
+          <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-relaxed" style={{ color: NAVY_SOFT, fontFamily: FONT_BODY }}>
+            <span className="font-black" style={{ color: NAVY }}>+ de 2 000 questions, dossiers et annales</span>,
+            et le suivi qui vous dit où vous en êtes.
+          </p>
+        </Reveal>
+
+        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {PSY_PLATEFORME.map((e, i) => (
+            <Reveal key={e.cle} delay={i * 0.06} className="h-full">
+              <article
+                className="flex h-full flex-col overflow-hidden rounded-[1.15rem] bg-white"
+                style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px -60px rgba(15,31,77,0.6)' }}
+              >
+                <span aria-hidden className="block h-1 w-full" style={{ background: `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)`, opacity: 0.85 }} />
+                <div className="overflow-hidden" style={{ background: PAPER, borderBottom: `1px solid ${LINE_SOFT}` }}>
+                  <Image
+                    src={e.image}
+                    alt={e.alt}
+                    width={e.largeur}
+                    height={e.hauteur}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="h-[152px] w-full object-cover object-left-top"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col px-5 py-5">
+                  <p className="text-[12.5px] font-black uppercase tracking-[0.06em]" style={{ color: RED }}>
+                    {e.cle}
+                  </p>
+                  <p className="mt-2.5 text-[12.5px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+                    {e.texte}
+                  </p>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.24}>
+          <p className="mx-auto mt-10 max-w-3xl text-center text-[14px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+            Vous savez ce que vous avez travaillé, ce que vous maîtrisez et ce qui nécessite encore votre attention.
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Un seul bloc d'accompagnement.
+ *
+ * La page en comportait deux — « Des outils pour travailler, des enseignants
+ * pour vous accompagner » puis « Des psychiatres à vos côtés » — qui disaient
+ * presque la même chose à deux sections d'intervalle. Ils sont fusionnés ici.
+ *
+ * Le vocabulaire reste celui des faits (cf. l'en-tête de
+ * `accompagnement-humain.tsx`) : équipe pédagogique, cours en direct selon la
+ * formule, réponses à vos questions. Jamais « tuteur dédié » ni « 24h/24 ».
+ */
+function AccompagnementPsy() {
   return (
     <section className="py-16 sm:py-20 lg:py-24" style={{ fontFamily: FONT, background: PAPER }}>
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center">
           <Reveal>
             <Image
               src="/specialites/psychiatrie/cours.webp"
               alt="Cours de psychiatrie consacré à l’évaluation du risque suicidaire"
-              width={630}
-              height={326}
+              width={321}
+              height={166}
               sizes="(max-width: 1024px) 100vw, 40vw"
               className="h-auto w-full rounded-[1.25rem]"
               style={{ border: `1px solid ${LINE}` }}
             />
           </Reveal>
+
           <Reveal delay={0.08}>
             <TitreSection sur="Un accompagnement humain">
-              Des psychiatres <span style={{ color: RED_DEEP }}>à vos côtés jusqu’aux EVC</span>
+              Des médecins spécialistes <span style={{ color: RED_DEEP }}>à vos côtés</span>
             </TitreSection>
             <p className="mt-6 text-[15px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-              Une notion mal comprise&nbsp;?
-              <br />
-              Une correction que vous ne comprenez pas&nbsp;?
-              <br />
-              Un doute sur la législation ou une conduite à tenir&nbsp;?
+              Une notion mal comprise&nbsp;? Une correction que vous souhaitez approfondir&nbsp;? Une question
+              sur un point du programme&nbsp;?
             </p>
-            <p className="mt-6 text-[1.15rem] font-black tracking-tight" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
-              Posez vos questions.
+            <p className="mt-4 text-[15px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
+              L’équipe pédagogique est disponible pour vous apporter les explications nécessaires et vous aider
+              à progresser dans votre préparation.
             </p>
-            <p className="mt-3 text-[15px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-              Nos psychiatres vous accompagnent pour lever vos doutes, comprendre vos erreurs et avancer avec
-              davantage de sérénité jusqu’aux EVC.
-            </p>
-            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+
+            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {[
-                ['Cours en direct', 'et interactions'],
-                ['Replays disponibles', 'quand vous voulez'],
-                ['Réponses à vos questions', 'par nos psychiatres'],
+                ['Questions pédagogiques', 'Via la plateforme ou par e-mail'],
+                ['Cours en direct', 'Selon la formule choisie'],
+                ['Corrections & méthodologie', 'Pour comprendre les attentes des EVC'],
+                ['Accompagnement renforcé', 'Selon le niveau de préparation choisi'],
               ].map(([titre, detail]) => (
-                <div key={titre} className="rounded-xl bg-white px-4 py-4" style={{ border: `1px solid ${LINE}` }}>
+                <div key={titre} className="rounded-xl bg-white px-5 py-4" style={{ border: `1px solid ${LINE}` }}>
                   <p className="text-[12.5px] font-black leading-snug" style={{ color: NAVY }}>{titre}</p>
-                  <p className="mt-1.5 text-[12px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{detail}</p>
+                  <p className="mt-1.5 text-[12px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>{detail}</p>
                 </div>
               ))}
             </div>
+
+            <p className="mt-7 text-[13px] leading-relaxed" style={{ color: INK_MUTED, fontFamily: FONT_BODY }}>
+              Enseignements assurés par des médecins spécialistes expérimentés, sélectionnés pour leur expertise
+              clinique et pédagogique.
+            </p>
           </Reveal>
         </div>
       </div>
@@ -881,6 +1170,14 @@ function CarteFormule({ f, p, specialite }: { f: FormuleSpecialite; p: PaletteFo
           </div>
         </div>
 
+        {/* Ce que la formule permet de faire, en une phrase. Distinct de
+            l'accroche, qui est commune à tout le site. */}
+        {f.positionnement && (
+          <p className="mt-4 text-[13px] font-black leading-snug" style={{ color: NAVY }}>
+            {f.positionnement}
+          </p>
+        )}
+
         <div className="mt-5">
           {f.prefixe && (
             <p className="text-[11.5px] font-black uppercase tracking-[0.08em]" style={{ color: p.main }}>{f.prefixe}</p>
@@ -915,6 +1212,17 @@ function CarteFormule({ f, p, specialite }: { f: FormuleSpecialite; p: PaletteFo
             </li>
           ))}
         </ul>
+
+        {/* La ligne qui justifie à elle seule le niveau : pour l'Essentielle,
+            le fait qu'on n'y travaille pas seul. */}
+        {f.soulignement && (
+          <p
+            className="mt-5 rounded-xl px-4 py-3.5 text-[12.5px] font-bold leading-snug"
+            style={{ background: p.soft, color: p.deep, fontFamily: FONT_BODY }}
+          >
+            {f.soulignement}
+          </p>
+        )}
 
         <Link
           href={lienPaiement(f.href, specialite)}
@@ -953,6 +1261,29 @@ function Formules({ psy }: { psy: boolean }) {
             </span>
           </p>
         </Reveal>
+
+        {/* Pourquoi trois prix ? La réponse en une ligne par formule, avant
+            d'entrer dans le détail des cartes. */}
+        {psy && (
+          <Reveal delay={0.08} className="mt-10">
+            <ol className="mx-auto grid max-w-5xl grid-cols-1 gap-3 sm:grid-cols-3">
+              {PSY_MONTEE_GAMME.map(([nom, contenu], i) => (
+                <li
+                  key={nom}
+                  className="rounded-xl bg-white px-5 py-4"
+                  style={{ border: `1px solid ${PALETTES[i].line}` }}
+                >
+                  <p className="text-[12px] font-black uppercase tracking-[0.06em]" style={{ color: PALETTES[i].main }}>
+                    {nom}
+                  </p>
+                  <p className="mt-2 text-[12.5px] leading-snug" style={{ color: INK, fontFamily: FONT_BODY }}>
+                    {contenu}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </Reveal>
+        )}
 
         <div className="mt-12 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.1fr)_minmax(0,0.74fr)]">
           {formules.map((f, i) => (
@@ -1138,13 +1469,13 @@ function AppelFinal({ psy }: { psy: boolean }) {
           >
             <div>
               <h2 className="text-[1.7rem] font-black leading-[1.15] tracking-tight text-white sm:text-[2.15rem]" style={{ letterSpacing: '-0.025em' }}>
-                Vous préparez les EVC de {psy ? 'psychiatrie' : 'radiologie'}&nbsp;?
+                Vous préparez les EVC de {psy ? 'psychiatrie 2026' : 'radiologie'}&nbsp;?
               </h2>
               <p className="mt-4 max-w-xl text-[14.5px] leading-relaxed text-white/80" style={{ fontFamily: FONT_BODY }}>
                 {psy ? (
                   <>
-                    Choisissez une préparation complète, structurée et adaptée à votre voie.
-                    <br className="hidden sm:block" /> Et mettez toutes les chances de votre côté le jour J.
+                    Choisissez le niveau d’accompagnement qui correspond à vos besoins
+                    <br className="hidden sm:block" /> et avancez avec une préparation structurée jusqu’aux épreuves.
                   </>
                 ) : (
                   <>
@@ -1153,14 +1484,40 @@ function AppelFinal({ psy }: { psy: boolean }) {
                   </>
                 )}
               </p>
+              {psy && (
+                <p className="mt-6 text-[13.5px] text-white/70" style={{ fontFamily: FONT_BODY }}>
+                  Une question&nbsp;?{' '}
+                  <Link href="/contact" className="font-black text-white underline underline-offset-4">
+                    Échanger avec notre équipe
+                  </Link>
+                </p>
+              )}
             </div>
-            <Link
-              href="#formules"
-              className="inline-flex shrink-0 items-center justify-center rounded-xl bg-white px-9 py-4 text-[14.5px] font-black tracking-tight transition-transform duration-300 hover:scale-[1.02]"
-              style={{ color: NAVY }}
-            >
-              {psy ? 'Je choisis ma préparation' : 'Je m’inscris maintenant'} →
-            </Link>
+            {psy ? (
+              <div className="flex shrink-0 flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
+                <Link
+                  href="#formules"
+                  className="inline-flex items-center justify-center rounded-xl bg-white px-9 py-4 text-[14.5px] font-black tracking-tight transition-transform duration-300 hover:scale-[1.02]"
+                  style={{ color: NAVY }}
+                >
+                  Choisir ma formule →
+                </Link>
+                <Link
+                  href="/espace-decouverte"
+                  className="inline-flex items-center justify-center rounded-xl border border-white/35 px-9 py-4 text-[14.5px] font-black tracking-tight text-white transition-colors hover:bg-white/10"
+                >
+                  Découvrir gratuitement la plateforme
+                </Link>
+              </div>
+            ) : (
+              <Link
+                href="#formules"
+                className="inline-flex shrink-0 items-center justify-center rounded-xl bg-white px-9 py-4 text-[14.5px] font-black tracking-tight transition-transform duration-300 hover:scale-[1.02]"
+                style={{ color: NAVY }}
+              >
+                Je m’inscris maintenant →
+              </Link>
+            )}
           </div>
         </Reveal>
       </div>
@@ -1188,25 +1545,40 @@ export function PsychiatrieRadiologiePage({ kind }: { kind: SpecialtyKind }) {
       </nav>
 
       <Hero psy={psy} />
-      <BlocSession psy={psy} />
-      <Reperes psy={psy} />
-      <Methode psy={psy} />
-      {/* Bloc commun aux deux spécialités : posé avant la bifurcation pour
-          qu'il apparaisse en psychiatrie comme en radiologie. */}
-      <AccompagnementSpecialite />
 
-      {/* Les instructions de la FAQ radiologie placent la preuve avant le prix. */}
+      {/*
+        L'ordre de la page psychiatrie raconte une histoire, dans cet ordre :
+        voilà votre concours → voilà comment nous vous faisons progresser →
+        voilà la preuve que cela fonctionne → voilà combien cela coûte →
+        voilà ce que vous allez travailler → voilà les outils → voilà
+        l'accompagnement → choisissez.
+
+        L'aperçu tarifaire est remonté en première moitié de page : un prospect
+        qui cherche le prix l'obtient sans parcourir toute la landing, et celui
+        qui veut comparer descend au comparatif complet d'un clic.
+
+        La radiologie conserve son ordre propre, inchangé.
+      */}
       {psy ? (
         <>
-          <GainTemps psy />
+          <BandeauEcheancePsy />
+          <Methode psy />
+          <TemoignageSectionPsy />
+          <ApercuTarifsPsy />
+          <GainTempsCourtPsy />
           <Programme psy />
+          <CtaProgrammePsy />
           <PlateformePsy />
-          <EnseignantsPsy />
+          <AccompagnementPsy />
           <Formules psy />
           <FaqSection psy />
         </>
       ) : (
         <>
+          <BlocSession psy={false} />
+          <Reperes psy={false} />
+          <Methode psy={false} />
+          <AccompagnementSpecialite />
           <Programme psy={false} />
           <RessourcesRadio />
           <EnseignantsRadio />
