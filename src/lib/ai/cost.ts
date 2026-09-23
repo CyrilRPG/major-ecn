@@ -62,6 +62,10 @@ export const BILLING_EUR = {
    *  QCM / questions rédactionnelles y est facturée 2,50 € le cours au lieu de
    *  5 € — arbitrage de Cyril, 06/09/2026. */
   qcm_per_course_odontologie: 2.5,
+  /** Collège Imagerie médicale et ses sous-collèges : les DP et questions isolées y
+   *  sont facturés 7 € l'item au lieu de 5 € — arbitrage de Cyril, 23/09/2026
+   *  (dossiers bâtis sur des cas publiés, image par image). */
+  qcm_per_course_imagerie: 7,
   fiche: 10,
   flashcards_per_course: 3,
   ai_response: 0.1,
@@ -103,6 +107,8 @@ export function billingLinePrices(line: {
   is_decouverte: boolean;
   /** Cours du collège Odontologie ou de l'un de ses sous-collèges. */
   is_odontologie?: boolean;
+  /** Cours du collège Imagerie médicale ou de l'un de ses sous-collèges. */
+  is_imagerie?: boolean;
   has_fiche: boolean;
   n_series: number;
   n_flash: number;
@@ -113,6 +119,13 @@ export function billingLinePrices(line: {
     return {
       fiche,
       qcm: line.n_series > 0 ? BILLING_EUR.qcm_per_course_odontologie : 0,
+      flash: line.n_flash > 0 ? BILLING_EUR.flashcards_per_course : 0,
+    };
+  }
+  if (line.is_imagerie) {
+    return {
+      fiche,
+      qcm: line.n_series > 0 ? BILLING_EUR.qcm_per_course_imagerie : 0,
       flash: line.n_flash > 0 ? BILLING_EUR.flashcards_per_course : 0,
     };
   }
@@ -144,3 +157,9 @@ export const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
  * sous-collèges ; la facturation les regroupe sous le nom du collège parent.
  */
 export const ODONTOLOGIE_COLLEGE_ID = 'col-ecn-odontologie';
+
+/**
+ * Collège « Imagerie médicale » : ses items vivent dans six sous-collèges ; les DP et
+ * questions isolées y sont facturés BILLING_EUR.qcm_per_course_imagerie.
+ */
+export const IMAGERIE_COLLEGE_ID = 'col-imagerie-medicale';

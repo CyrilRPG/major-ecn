@@ -1,7 +1,8 @@
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient, createAdminClientToutesFacultes } from '@/lib/supabase/admin';
-import { BILLING_EUR, GEN_FEATURE, ODONTOLOGIE_COLLEGE_ID, billingLinePrices } from '@/lib/ai/cost';
+import { BILLING_EUR, GEN_FEATURE, IMAGERIE_COLLEGE_ID, ODONTOLOGIE_COLLEGE_ID, billingLinePrices } from '@/lib/ai/cost';
+import { fetchAllRows } from '@/lib/supabase/fetch-all-pure';
 import { FacturationDashboard, type ArticleBillingLine, type CourseLine, type ExerciseImportBillingLine } from '@/components/admin/facturation-dashboard';
 
 export const metadata = { title: 'Facturation IA' };
@@ -25,8 +26,11 @@ export default async function AdminFacturationPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const toutes = createAdminClientToutesFacultes() as any;
 
-  const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes, articlesRes, odontoRes, genArenaRes] = await Promise.all([
-    a.rpc('admin_facturation_lines', { p_faculte_id: EDN_FACULTE_ID }),
+  const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes, articlesRes, odontoRes, genArenaRes, imagerieRes] = await Promise.all([
+    // Par tranches : PostgREST tronque en silence à 1 000 lignes, et la RPC en renvoie
+    // davantage (1 067 au 23/09/2026 — 61 items facturables manquaient à la facture).
+    fetchAllRows((de: number, a2: number) => a.rpc('admin_facturation_lines', { p_faculte_id: EDN_FACULTE_ID }).order('line_id').range(de, a2))
+      .then((rows) => ({ data: rows })),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', 'assistant_chat').eq('status', 'success'),
     // Épreuves blanches : facturées 1 c / épreuve + 0,5 c / QROC.
     a.from('mock_exams').select('id', { count: 'exact', head: true }).neq('status', 'archived').is('cours_id', null),
@@ -45,6 +49,8 @@ export default async function AdminFacturationPage() {
     a.from('matieres').select('id, nom').or(`id.eq.${ODONTOLOGIE_COLLEGE_ID},parent_matiere_id.eq.${ODONTOLOGIE_COLLEGE_ID}`),
     // EVC Arena : corrigés de manche rédigés par IA, forfait 1 € par document.
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.arenaCorrections).eq('status', 'success'),
+    // Collège Imagerie médicale et ses sous-collèges : DP et questions isolées à 7 € l'item.
+    a.from('matieres').select('id, nom').or(`id.eq.${IMAGERIE_COLLEGE_ID},parent_matiere_id.eq.${IMAGERIE_COLLEGE_ID}`),
   ]);
   const examsCount = examCountRes.count ?? 0;
   const qrocCount = qrocCountRes.count ?? 0;
@@ -52,6 +58,7 @@ export default async function AdminFacturationPage() {
   const odontoMatieres = (odontoRes.data ?? []) as { id: string; nom: string }[];
   const odontoNom = odontoMatieres.find((m) => m.id === ODONTOLOGIE_COLLEGE_ID)?.nom ?? 'Odontologie';
   const odontoSousColleges = new Set(odontoMatieres.filter((m) => m.id !== ODONTOLOGIE_COLLEGE_ID).map((m) => m.nom));
+  const imagerieNoms = new Set(((imagerieRes.data ?? []) as { id: string; nom: string }[]).map((m) => m.nom));
 
   const lines: CourseLine[] = (coursRes.data ?? []).map(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -64,6 +71,8 @@ export default async function AdminFacturationPage() {
         is_mg: !!c.is_mg,
         is_decouverte: decouverte,
         is_odontologie: odontologie,
+        // Imagerie médicale : DP et questions isolées à 7 € l'item (voir BILLING_EUR).
+        is_imagerie: imagerieNoms.has(matiere),
         has_fiche: !!c.has_fiche,
         n_series: Number(c.n_series ?? 0),
         n_flash: Number(c.n_flash ?? 0),
