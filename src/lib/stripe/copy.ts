@@ -42,10 +42,13 @@ export const FORMULE_STRIPE_COPY: Record<FormuleKey, StripeCopy> = {
   essentielle: {
     name: 'Formule Essentielle - Major ECN',
     description:
+      // Un élève ne s'entraîne qu'au format de SA voie (interne = QCM, externe =
+      // QROC) : jamais « QCM et QROC » ni « questions rédactionnelles » comme
+      // s'il avait les deux (règle de Cyril du 23/09/2026).
       "Préparation aux EVC — Formule Essentielle. Accès à la plateforme Major ECN : "
-      + "QCM corrigés, questions rédactionnelles, flashcards, fiches de synthèse et "
-      + "méthode EVC. L'accès porte sur la spécialité et la voie de concours choisies "
-      + "à l'inscription, rappelées ci-dessous.",
+      + "QCM ou QROC corrigés selon votre voie, dossiers cliniques, flashcards, "
+      + "fiches de synthèse et méthode EVC. L'accès porte sur la spécialité et la voie "
+      + "de concours choisies à l'inscription, rappelées ci-dessous.",
   },
   intensive: {
     name: 'Formule Intensive - Major ECN',
