@@ -41,9 +41,10 @@ export const ENROLLABLE_SPECIALTIES: EnrollableSpecialty[] = [
   { collegeId: 'col-neurologie', name: 'Neurologie' },
   { collegeId: 'col-medecine-interne', name: 'Médecine interne polyvalente' },
   { collegeId: 'col-psychiatrie', name: 'Psychiatrie' },
-  // Aucun collège de radiologie publié à la vérification du 06/09/2026.
-  // Le dispositif existant de préinscription l'annonce avant le paiement.
-  { collegeId: null, name: 'Radiologie et imagerie médicale', legacyNames: ['Radiologie', 'Radiodiagnostic et imagerie médicale'], contentPending: true },
+  // Collège `col-imagerie-medicale` (6 sous-collèges, 119 items) ouvert à la
+  // vente le 23/09/2026 : l'accès est accordé dès le paiement. Le libellé de
+  // vente reste celui de la spécialité EVC, pas le nom du collège.
+  { collegeId: 'col-imagerie-medicale', name: 'Radiologie et imagerie médicale', legacyNames: ['Radiologie', 'Radiodiagnostic et imagerie médicale', 'Imagerie médicale'] },
   { collegeId: 'col-gynecologie', name: 'Gynécologie-obstétrique' },
   // Contenus en ligne depuis le 2026-08-21 (43 items) : l'accès est accordé
   // dès le paiement, comme pour les autres spécialités.

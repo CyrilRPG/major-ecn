@@ -131,9 +131,15 @@ export const APPROFONDI_SPECIALTIES: ApprofondiSpecialty[] = [
     tiers: [
       {
         id: 'radio', tier: 'base', tierLabel: 'Approfondi',
-        amountCents: 229500,
+        amountCents: 229500, hoursLabel: '40 h de cours',
         envPriceId: 'STRIPE_PRICE_APPRO_RADIO',
-        targetCollege: null, contentPending: true,
+        targetCollege: 'col-imagerie-medicale',
+      },
+      {
+        id: 'radio-plus', tier: 'plus', tierLabel: 'Approfondi +',
+        amountCents: 269500, hoursLabel: '55 h de cours',
+        envPriceId: 'STRIPE_PRICE_APPRO_RADIO_PLUS',
+        targetCollege: 'col-imagerie-medicale',
       },
     ],
   },

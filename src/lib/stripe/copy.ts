@@ -121,7 +121,7 @@ export function shortVoie(raw: string | null | undefined): 'interne' | 'externe'
 export function voieLabel(raw: string | null | undefined): string | null {
   const v = shortVoie(raw);
   if (v === 'interne') return 'voie interne (QCM)';
-  if (v === 'externe') return 'voie externe (questions ouvertes)';
+  if (v === 'externe') return 'voie externe (QROC)';
   return null;
 }
 

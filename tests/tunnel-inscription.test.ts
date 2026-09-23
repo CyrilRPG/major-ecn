@@ -75,10 +75,19 @@ test("le programme Approfondi retrouve la spécialité canonique et ses variante
 test("les tarifs des nouvelles pages correspondent aux offres et les contenus absents ne débloquent pas un autre collège", () => {
   assert.equal(getApprofondiTier("psy")?.amountCents, 209500);
   assert.equal(getApprofondiTier("psy")?.targetCollege, "col-psychiatrie");
+  // Radiologie : collège Imagerie médicale ouvert à la vente le 23/09/2026.
   assert.equal(getApprofondiTier("radio")?.amountCents, 229500);
-  assert.equal(getApprofondiTier("radio")?.targetCollege, null);
-  assert.equal(getApprofondiTier("radio")?.contentPending, true);
-  assert.equal(specialtyByName("Radiologie")?.contentPending, true);
+  assert.equal(getApprofondiTier("radio")?.hoursLabel, "40 h de cours");
+  assert.equal(getApprofondiTier("radio-plus")?.amountCents, 269500);
+  assert.equal(getApprofondiTier("radio-plus")?.hoursLabel, "55 h de cours");
+  for (const id of ["radio", "radio-plus"]) {
+    assert.equal(getApprofondiTier(id)?.targetCollege, "col-imagerie-medicale");
+    assert.notEqual(getApprofondiTier(id)?.contentPending, true);
+  }
+  for (const alias of ["Radiologie", "Radiodiagnostic et imagerie médicale", "Radiologie et imagerie médicale"]) {
+    assert.equal(specialtyByName(alias)?.collegeId, "col-imagerie-medicale");
+    assert.notEqual(specialtyByName(alias)?.contentPending, true);
+  }
 });
 
 test("Médecine intensive et réanimation est une spécialité distincte de Médecine d’urgence", () => {

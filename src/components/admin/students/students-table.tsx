@@ -95,6 +95,7 @@ const COLLEGE_TO_SPECIALTY: Record<string, string> = {
   // n'existe pas côté Major ECN.
   'col-ecn-odontologie': 'Odontologie',
   'col-medecine-intensive-reanimation': 'Médecine intensive et réanimation',
+  'col-imagerie-medicale': 'Radiologie et imagerie médicale',
 };
 
 function specialtyFromColleges(colleges: string[]): string {
