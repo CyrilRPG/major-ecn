@@ -48,8 +48,9 @@ export function VideoLibrary({ colleges, droits }: { colleges: LibraryCollege[];
 
   const college = colleges.find((c) => c.id === collegeId) ?? null;
   const aDesEnfants = (college?.enfants.length ?? 0) > 0;
-  // Un collège à sous-collèges (Médecine générale) n'a pas d'items en propre :
-  // c'est le sous-collège qui porte les items.
+  // Un collège à sous-collèges porte ses items dans ses sous-collèges, et parfois
+  // quelques-uns en propre : le second sélecteur propose alors aussi le collège
+  // lui-même (sousCollegeId === collegeId).
   const matiereId = aDesEnfants ? sousCollegeId : collegeId;
 
   // Les chargements sont déclenchés par les sélections (pas par des effets) :
@@ -151,6 +152,9 @@ export function VideoLibrary({ colleges, droits }: { colleges: LibraryCollege[];
               className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm"
             >
               <option value="">Choisir un sous-collège…</option>
+              {/* Items portés par le collège lui-même, au-dessus de ses sous-collèges
+                  (« Replays - Révisions » d'Imagerie médicale, annales de MG). */}
+              {college && <option value={college.id}>{college.nom} — items du collège</option>}
               {college?.enfants.map((e) => (
                 <option key={e.id} value={e.id}>{e.nom}</option>
               ))}
