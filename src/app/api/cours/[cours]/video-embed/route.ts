@@ -29,9 +29,14 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
     .from('videos')
     .select('bunny_video_id, storage_path')
     .eq('cours_id', coursId);
+  // Sans séance précise : la première vidéo REGARDABLE (une séance à venir
+  // n'a encore ni lien Bunny ni fichier).
   const { data: videos } = videoId
     ? await requete.eq('id', videoId).limit(1)
-    : await requete.order('order_index', { ascending: true }).limit(1);
+    : await requete
+        .or('bunny_video_id.not.is.null,storage_path.not.is.null')
+        .order('order_index', { ascending: true })
+        .limit(1);
 
   const video = videos?.[0] as { bunny_video_id?: string | null; storage_path?: string | null } | undefined;
   if (!video) return NextResponse.json({ error: 'Vidéo introuvable' }, { status: 404 });

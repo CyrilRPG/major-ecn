@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  Check, ChevronDown, ChevronUp, FileText, Link2, Loader2, Paperclip, Pencil,
+  CalendarClock, Check, ChevronDown, ChevronUp, FileText, Link2, Loader2, Paperclip, Pencil,
   Plus, Search, Trash2, UserMinus, UserPlus, Video, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -13,11 +13,12 @@ import {
   addVideoAction, addVideoSupportAction, deleteVideoAction, listStudentsAction,
   moveVideoAction, moveVideoSupportAction, publishVideoAction, removeVideoSupportAction, renameVideoAction, unpublishVideoAction,
   renameVideoSupportAction, replaceVideoLinkAction, updateVideoAudienceAction,
-  updateVideoRubriqueAction, updateVideoSupportAudienceAction,
+  updateVideoLiveAtAction, updateVideoRubriqueAction, updateVideoSupportAudienceAction,
   type AddResult, type StudentLite, type VideoSupportDoc, type VideoType,
 } from '@/app/admin/videos/actions';
 import { resumeAudience, VIDEO_OFFERS, VOIES } from '@/lib/videos/audience';
 import { rubriqueParDefaut } from '@/lib/videos/rubriques';
+import { formaterDateSeance } from '@/lib/videos/a-venir';
 
 /** Droits fins du cahier des charges (§5) de la personne connectée. */
 export type DroitsVideo = { creer: boolean; modifier: boolean; publier: boolean; supprimer: boolean };
@@ -27,6 +28,10 @@ export type ManagedVideo = {
   id: string;
   titre: string;
   bunny_video_id: string | null;
+  /** Séance à venir : pas encore de vidéo, seulement des dossiers à préparer. */
+  a_venir?: boolean;
+  /** Date de la séance en direct (facultative). */
+  live_at?: string | null;
   order_index: number;
   /** « À valider » tant qu'une personne habilitée n'a pas publié. */
   status?: 'publie' | 'a_valider';
@@ -56,6 +61,10 @@ type BatchSupport = {
 type BatchSeance = {
   tempId: string;
   titre: string;
+  /** Séance à venir : créée sans lien Bunny, la vidéo s'ajoute après la séance. */
+  aVenir: boolean;
+  /** Date de la séance en direct, au format `datetime-local` (heure locale). */
+  liveAt: string;
   lien: string;
   /** Saisie libre ; vide ⇒ libellé par défaut du type. */
   rubrique: string;
@@ -73,6 +82,8 @@ type BatchSeance = {
 type BatchChanges = {
   rename?: string;
   replaceLink?: string;
+  /** Date de la séance en direct (ISO) ; `null` ⇒ retirée ; absent ⇒ inchangée. */
+  liveAt?: string | null;
   /** `null` ⇒ retour au libellé par défaut ; absent ⇒ inchangée. */
   rubrique?: string | null;
   audience?: { voies: string[]; offers: string[]; deniedUserIds: string[]; allowedUserIds: string[] };
@@ -241,6 +252,53 @@ const OFFRES_PAR_DEFAUT: Record<VideoType, string[]> = {
   cours: ['intensif'],
   seance_approfondie: ['approfondi'],
 };
+
+/** ISO → valeur d'un champ `datetime-local`, dans l'heure locale du navigateur. */
+function versSaisieLocale(iso: string | null | undefined): string {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  const p = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+/** Valeur d'un champ `datetime-local` (heure locale) → ISO ; vide ou invalide ⇒ null. */
+function depuisSaisieLocale(valeur: string): string | null {
+  if (!valeur.trim()) return null;
+  const d = new Date(valeur);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString();
+}
+
+/** Champ « Date de la séance en direct » (facultatif). */
+function DateSeanceField({
+  value,
+  disabled,
+  onChange,
+  compact = false,
+}: {
+  value: string;
+  disabled?: boolean;
+  onChange: (value: string) => void;
+  compact?: boolean;
+}) {
+  return (
+    <div>
+      <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+        Date de la séance en direct (facultatif)
+      </label>
+      <input
+        type="datetime-local"
+        value={value}
+        disabled={disabled}
+        onChange={(e) => onChange(e.target.value)}
+        className={`w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 text-sm focus:border-[#7C3AED] focus:outline-none focus:ring-1 focus:ring-[#7C3AED] sm:w-auto ${compact ? 'py-1.5' : 'py-2'}`}
+      />
+      <p className="mt-1 text-[11px] text-(--color-ink-muted)">
+        Affichée aux élèves : « Séance en direct à venir — le … ». Sans effet sur la publication.
+      </p>
+    </div>
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /*  AudiencePicker                                                     */
@@ -429,7 +487,8 @@ export function VideoManager({
   videos: ManagedVideo[];
   onChanged?: () => void;
   onAdd?: (input: {
-    type: VideoType; titre: string; lien: string; position: number | null; rubrique: string | null;
+    type: VideoType; titre: string; lien: string; aVenir: boolean; liveAt: string | null;
+    position: number | null; rubrique: string | null;
     voies: string[]; offers: string[]; deniedUserIds: string[]; allowedUserIds: string[];
   }) => Promise<AddResult>;
   notice?: string;
@@ -470,10 +529,12 @@ export function VideoManager({
   const [saving, setSaving] = useState(false);
   const [saveProgress, setSaveProgress] = useState({ current: 0, total: 0, label: '' });
 
-  function createEmptySeance(): BatchSeance {
+  function createEmptySeance(aVenir = false): BatchSeance {
     return {
       tempId: crypto.randomUUID(),
       titre: '',
+      aVenir,
+      liveAt: '',
       lien: '',
       rubrique: '',
       voies: ['interne', 'externe'],
@@ -484,9 +545,9 @@ export function VideoManager({
     };
   }
 
-  function startAdding() {
+  function startAdding(aVenir = false) {
     setAdding(true);
-    setSeances([createEmptySeance()]);
+    setSeances([createEmptySeance(aVenir)]);
     setError(null);
   }
 
@@ -506,7 +567,12 @@ export function VideoManager({
     for (let i = 0; i < seances.length; i++) {
       const s = seances[i];
       if (!s.titre.trim()) return setError(`Séance ${i + 1} : donnez un titre.`);
-      if (!extractBunnyVideoId(s.lien)) return setError(`Séance ${i + 1} : lien Bunny.net non reconnu. Collez le lien de la vidéo depuis bunny.net.`);
+      // Séance à venir : pas de lien exigé (la vidéo viendra après la séance) ;
+      // un lien saisi quand même est validé comme d'habitude.
+      if (s.aVenir ? !!s.lien.trim() && !extractBunnyVideoId(s.lien) : !extractBunnyVideoId(s.lien)) {
+        return setError(`Séance ${i + 1} : lien Bunny.net non reconnu. Collez le lien de la vidéo depuis bunny.net.`);
+      }
+      if (s.aVenir && s.liveAt.trim() && !depuisSaisieLocale(s.liveAt)) return setError(`Séance ${i + 1} : date de la séance invalide.`);
       if (s.offers.length === 0) return setError(`Séance ${i + 1} : cochez au moins une formule.`);
       if (s.voies.length === 0) return setError(`Séance ${i + 1} : cochez au moins une voie.`);
     }
@@ -522,14 +588,18 @@ export function VideoManager({
       setSaveProgress({ current, total, label: `Création de « ${s.titre} »…` });
 
       const rubrique = s.rubrique.trim() || null;
+      // La date est convertie ICI, dans l'heure locale de la personne qui la
+      // saisit : le serveur ne connaît pas son fuseau.
+      const aVenir = s.aVenir && !s.lien.trim();
+      const liveAt = s.aVenir ? depuisSaisieLocale(s.liveAt) : null;
       const res = onAdd
         ? await onAdd({
-            type, titre: s.titre, lien: s.lien, position: null, rubrique,
+            type, titre: s.titre, lien: s.lien, aVenir, liveAt, position: null, rubrique,
             voies: s.voies, offers: s.offers,
             deniedUserIds: s.deniedUserIds, allowedUserIds: s.allowedUserIds,
           })
         : await addVideoAction({
-            coursId, type, titre: s.titre, lien: s.lien, position: null, rubrique,
+            coursId, type, titre: s.titre, lien: s.lien, aVenir, liveAt, position: null, rubrique,
             voies: s.voies, offers: s.offers,
             deniedUserIds: s.deniedUserIds, allowedUserIds: s.allowedUserIds,
           });
@@ -656,9 +726,24 @@ export function VideoManager({
                 <span className="w-6 shrink-0 text-center text-xs font-bold tabular-nums text-(--color-ink-muted)">
                   {i + 1}
                 </span>
-                <Video className="h-4 w-4 shrink-0 text-[#7C3AED]" />
+                {v.a_venir
+                  ? <CalendarClock className="h-4 w-4 shrink-0 text-[#B26A00]" />
+                  : <Video className="h-4 w-4 shrink-0 text-[#7C3AED]" />}
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold text-(--color-ink)">{v.titre}</p>
+                  {v.a_venir && (
+                    // Séance à venir : les dossiers sont en ligne, la vidéo
+                    // s'ajoute après la séance depuis le crayon.
+                    <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[11px]">
+                      <span className="rounded-full bg-[#FEF3E2] px-2 py-0.5 font-bold text-[#B26A00]">Vidéo à venir</span>
+                      <span className="text-(--color-ink-soft)">
+                        {v.live_at && formaterDateSeance(v.live_at)
+                          ? `Séance le ${formaterDateSeance(v.live_at)}`
+                          : 'Date de séance non renseignée'}
+                        {droits.modifier ? ' — crayon pour coller le lien Bunny après la séance' : ''}
+                      </span>
+                    </p>
+                  )}
                   <p className="mt-0.5 flex items-center gap-2 text-[11px] text-(--color-ink-muted)">
                     <span className="font-mono">
                       {v.bunny_video_id ? `${v.bunny_video_id.slice(0, 8)}…` : 'aucune vidéo'}
@@ -733,6 +818,9 @@ export function VideoManager({
 
               {editing === v.id && (
                 <VideoEditPanel
+                  // Remonté quand la vidéo change (lien collé, date modifiée) :
+                  // le panneau repart de l'état enregistré.
+                  key={`${v.id}-${v.bunny_video_id ?? ''}-${v.live_at ?? ''}`}
                   video={v}
                   type={type}
                   pending={pending}
@@ -744,6 +832,10 @@ export function VideoManager({
                       }
                       if (changes.replaceLink) {
                         const r = await replaceVideoLinkAction({ videoId: v.id, lien: changes.replaceLink });
+                        if ('error' in r) return r;
+                      }
+                      if (changes.liveAt !== undefined) {
+                        const r = await updateVideoLiveAtAction({ videoId: v.id, liveAt: changes.liveAt });
                         if ('error' in r) return r;
                       }
                       if (changes.rubrique !== undefined) {
@@ -863,10 +955,20 @@ export function VideoManager({
         </div>
       ) : droits.creer ? (
         <div className="space-y-2">
-          <Button type="button" variant="outline" size="sm" onClick={startAdding}>
-            <Plus />
-            Ajouter {videos.length > 0 ? 'des' : 'une'} {copy.unite}{videos.length > 0 ? 's' : ''}
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button type="button" variant="outline" size="sm" onClick={() => startAdding()}>
+              <Plus />
+              Ajouter {videos.length > 0 ? 'des' : 'une'} {copy.unite}{videos.length > 0 ? 's' : ''}
+            </Button>
+            <Button type="button" variant="outline" size="sm" onClick={() => startAdding(true)}>
+              <CalendarClock />
+              Séance à venir (dossiers d&apos;abord)
+            </Button>
+          </div>
+          <p className="text-[11.5px] text-(--color-ink-muted)">
+            Séance à venir : déposez les dossiers à préparer sans lien Bunny ; la vidéo s&apos;ajoute
+            après la séance, depuis le crayon.
+          </p>
           {!droits.publier && (
             <p className="text-[12px] text-[#B26A00]">
               Vos dépôts restent « À valider » : un responsable habilité les publiera après relecture.
@@ -957,6 +1059,11 @@ function BatchSeanceCard({
         <p className="min-w-0 flex-1 truncate text-sm font-bold text-(--color-ink)">
           {seance.titre.trim() || `${copy.unite.charAt(0).toUpperCase() + copy.unite.slice(1)} ${index + 1}`}
         </p>
+        {seance.aVenir && (
+          <span className="shrink-0 rounded-full bg-[#FEF3E2] px-2 py-0.5 text-[10px] font-bold text-[#B26A00]">
+            Vidéo à venir
+          </span>
+        )}
         {seance.supports.length > 0 && (
           <span className="inline-flex items-center gap-1 text-[11px] text-emerald-600">
             <Paperclip className="h-3 w-3" />
@@ -986,6 +1093,24 @@ function BatchSeanceCard({
 
       {!collapsed && (
         <div className="space-y-3 border-t border-(--color-border) px-4 py-4">
+          {/* Séance à venir : pas encore de vidéo, les dossiers d'abord. */}
+          <label className="flex items-start gap-2 rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2 text-[12.5px] text-(--color-ink)">
+            <input
+              type="checkbox"
+              checked={seance.aVenir}
+              disabled={disabled}
+              onChange={(e) => onUpdate({ aVenir: e.target.checked })}
+              className="mt-0.5 h-4 w-4 accent-[#7C3AED]"
+            />
+            <span>
+              <span className="font-semibold">Séance à venir — pas encore de vidéo</span>
+              <span className="block text-[11px] text-(--color-ink-muted)">
+                Les élèves voient l&apos;annonce de la séance et ses dossiers à préparer. Le lien Bunny
+                s&apos;ajoute après la séance, depuis le crayon : les supports restent attachés.
+              </span>
+            </span>
+          </label>
+
           {/* Titre + lien Bunny */}
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div>
@@ -1003,11 +1128,11 @@ function BatchSeanceCard({
             </div>
             <div>
               <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
-                Lien Bunny.net Stream
+                Lien Bunny.net Stream{seance.aVenir ? ' (facultatif)' : ''}
               </label>
               <input
                 type="text"
-                placeholder="Collez le lien de la vidéo"
+                placeholder={seance.aVenir ? 'À ajouter après la séance' : 'Collez le lien de la vidéo'}
                 value={seance.lien}
                 disabled={disabled}
                 onChange={(e) => onUpdate({ lien: e.target.value })}
@@ -1015,6 +1140,14 @@ function BatchSeanceCard({
               />
             </div>
           </div>
+
+          {seance.aVenir && (
+            <DateSeanceField
+              value={seance.liveAt}
+              disabled={disabled}
+              onChange={(v) => onUpdate({ liveAt: v })}
+            />
+          )}
 
           {/* Rubrique (titre de section côté élève) */}
           <RubriqueField
@@ -1052,7 +1185,7 @@ function BatchSeanceCard({
           {/* Supports PDF */}
           <div>
             <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
-              Supports PDF de la {copy.unite}
+              {seance.aVenir ? 'Dossiers à préparer (PDF)' : `Supports PDF de la ${copy.unite}`}
             </p>
 
             {seance.supports.length > 0 && (
@@ -1221,6 +1354,10 @@ function VideoEditPanel({
 }) {
   const [titre, setTitre] = useState(video.titre);
   const [lien, setLien] = useState('');
+  const aVenir = !!video.a_venir;
+  // Date de la séance : proposée pour une séance à venir (ou déjà renseignée).
+  const [liveAt, setLiveAt] = useState(() => versSaisieLocale(video.live_at));
+  const liveAtInitial = video.live_at ? depuisSaisieLocale(versSaisieLocale(video.live_at)) : null;
   const [rubrique, setRubrique] = useState(video.rubrique ?? '');
   const [voies, setVoies] = useState<string[]>(video.voies);
   const [offers, setOffers] = useState<string[]>(video.offers);
@@ -1262,6 +1399,7 @@ function VideoEditPanel({
   const isDirty = useMemo(() => {
     if (titre.trim() !== video.titre) return true;
     if (lien.trim()) return true;
+    if (depuisSaisieLocale(liveAt) !== liveAtInitial) return true;
     if ((rubrique.trim() || null) !== (video.rubrique ?? null)) return true;
     if (!memeListe(voies, video.voies)) return true;
     if (!memeListe(offers, video.offers)) return true;
@@ -1279,12 +1417,14 @@ function VideoEditPanel({
     }
     return false;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [titre, lien, rubrique, voies, offers, denied, allowed, supportEdits, video]);
+  }, [titre, lien, liveAt, rubrique, voies, offers, denied, allowed, supportEdits, video]);
 
   function handleSaveAll() {
     const changes: BatchChanges = {};
     if (titre.trim() && titre.trim() !== video.titre) changes.rename = titre.trim();
     if (lien.trim()) changes.replaceLink = lien.trim();
+    const liveAtSaisie = depuisSaisieLocale(liveAt);
+    if (liveAtSaisie !== liveAtInitial) changes.liveAt = liveAtSaisie;
     const rubriqueSaisie = rubrique.trim() || null;
     if (rubriqueSaisie !== (video.rubrique ?? null)) changes.rubrique = rubriqueSaisie;
     const audienceChanged =
@@ -1331,18 +1471,43 @@ function VideoEditPanel({
         />
       </div>
 
-      <div>
-        <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
-          Remplacer la vidéo
-        </label>
-        <input
-          type="text"
-          value={lien}
-          placeholder="Nouveau lien Bunny.net (laisser vide pour conserver)"
-          onChange={(e) => setLien(e.target.value)}
-          className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 font-mono text-sm"
-        />
-      </div>
+      {aVenir ? (
+        // Séance à venir : c'est ici qu'on colle le lien après la séance. Les
+        // supports déjà en ligne restent attachés à cette même entrée.
+        <div className="rounded-xl border border-[#B26A00]/30 bg-[#FEF3E2] p-3">
+          <label className="mb-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-[#B26A00]">
+            <CalendarClock className="h-3.5 w-3.5" />
+            Ajouter la vidéo (après la séance)
+          </label>
+          <input
+            type="text"
+            value={lien}
+            placeholder="Collez le lien Bunny.net de la vidéo"
+            onChange={(e) => setLien(e.target.value)}
+            className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 font-mono text-sm"
+          />
+          <p className="mt-1 text-[11px] text-(--color-ink-soft)">
+            Les dossiers déjà déposés restent attachés : rien à refaire.
+          </p>
+        </div>
+      ) : (
+        <div>
+          <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+            Remplacer la vidéo
+          </label>
+          <input
+            type="text"
+            value={lien}
+            placeholder="Nouveau lien Bunny.net (laisser vide pour conserver)"
+            onChange={(e) => setLien(e.target.value)}
+            className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 font-mono text-sm"
+          />
+        </div>
+      )}
+
+      {(aVenir || !!video.live_at) && (
+        <DateSeanceField value={liveAt} disabled={pending} onChange={setLiveAt} compact />
+      )}
 
       <RubriqueField
         type={type}

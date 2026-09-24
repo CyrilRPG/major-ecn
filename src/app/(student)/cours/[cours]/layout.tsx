@@ -16,6 +16,7 @@ import { rubriqueCommune, rubriqueParDefaut } from '@/lib/videos/rubriques';
 import { videoVisible, supportVisible, eleveAutorise, eleveExclu, blocVideoOuvert } from '@/lib/videos/audience';
 import { scopeOffers } from '@/lib/auth/permissions';
 import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
+import { seanceMontrable } from '@/lib/videos/a-venir';
 
 /** Ligne `videos` telle que sélectionnée ci-dessous (types générés incomplets). */
 type CourseVideoRow = {
@@ -95,7 +96,6 @@ export default async function CoursLayout({
   const videos = videosRow
     .slice()
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
-  const hasSource = (v: CourseVideoRow) => !!v.bunny_video_id || !!v.storage_path;
   const offresEleve = scopeOffers(scope);
   const droitFormulePour = (v: CourseVideoRow) =>
     v.type === 'seance_approfondie' ? (!access || access.seanceApprofondie) : (!access || access.video);
@@ -124,7 +124,9 @@ export default async function CoursLayout({
   });
 
   const availability = {
-    video: coursVideos.some(hasSource),
+    // Une vidéo regardable, ou une séance à venir dont l'élève a déjà les
+    // dossiers à préparer (même règle que la page « Séance intensive »).
+    video: coursVideos.some((v) => seanceMontrable(v, supportsVisibles(v).length)),
     fiche: (c.fiches ?? []).some((f) => !!f.storage_path),
     // La page « DP · QI » liste les séries QCM **et** les séances du professeur :
     // l'onglet doit suivre le même critère, sinon un item qui n'a que des

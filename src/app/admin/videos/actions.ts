@@ -14,6 +14,9 @@ import {
   normaliserOffres, normaliserVoies, resumeAudience, VIDEO_OFFERS,
 } from '@/lib/videos/audience';
 import { normaliserRubrique, rubriqueParDefaut } from '@/lib/videos/rubriques';
+import {
+  erreurColonneLiveAt, estSeanceAVenir, formaterDateSeance, MIGRATION_SEANCE_A_VENIR, normaliserDateSeance,
+} from '@/lib/videos/a-venir';
 import { logAudit } from '@/lib/audit/log';
 import { lireScopeEquipe, peutContenu, type DroitContenu } from '@/lib/auth/collaborateurs';
 
@@ -21,6 +24,11 @@ import { lireScopeEquipe, peutContenu, type DroitContenu } from '@/lib/auth/coll
  * Bibliothèque vidéo de l'administration (onglet « Vidéos ») : navigation
  * collège → sous-collège → item → catégorie, puis ajout, ordre, renommage,
  * remplacement du lien Bunny, suppression et support de séance.
+ *
+ * « Séance à venir » : une entrée peut être créée SANS lien Bunny, pour mettre
+ * en ligne les dossiers à préparer avant une séance en direct (date
+ * facultative, `live_at`). Le lien se colle ensuite depuis le crayon, sur la
+ * même entrée : ses supports restent attachés (cf. lib/videos/a-venir.ts).
  *
  * Toutes les écritures passent par le client service-role APRÈS contrôle
  * explicite des droits (éditeur de contenu + périmètre du cours + droit
@@ -122,13 +130,14 @@ async function guardVideo(videoId: string, droit: DroitContenu = 'modifier') {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data } = await (admin as any)
     .from('videos')
-    .select('id, cours_id, titre, type, rubrique, order_index, support_path, status, publish_at')
+    .select('id, cours_id, titre, type, rubrique, order_index, support_path, status, publish_at, bunny_video_id, storage_path')
     .eq('id', videoId)
     .maybeSingle();
   if (!data) return { error: 'Vidéo introuvable.' as const };
   const video = data as {
     id: string; cours_id: string; titre: string; type: VideoType; rubrique: string | null;
     order_index: number; support_path: string | null; status: 'publie' | 'a_valider' | null; publish_at: string | null;
+    bunny_video_id: string | null; storage_path: string | null;
   };
   const ctx = await guard(video.cours_id, droit);
   if ('error' in ctx) return ctx;
@@ -166,6 +175,10 @@ export type VideoLibraryVideo = {
   id: string;
   titre: string;
   bunny_video_id: string | null;
+  /** Séance à venir : ni lien Bunny ni fichier — seulement des dossiers à préparer. */
+  a_venir: boolean;
+  /** Date de la séance en direct (facultative). */
+  live_at: string | null;
   order_index: number;
   /** « À valider » tant qu'une personne habilitée n'a pas publié (cahier §5). */
   status: 'publie' | 'a_valider';
@@ -246,19 +259,31 @@ export async function listVideosAction(
   const ctx = await guardRead(coursId);
   if ('error' in ctx) return ctx;
 
-  const { data, error } = await ctx.a
+  const lire = (colonnes: string) => ctx.a
     .from('videos')
-    .select('id, titre, bunny_video_id, order_index, rubrique, voies, offers, denied_user_ids, allowed_user_ids, status, publish_at, video_supports(id, titre, order_index, voies, offers)')
+    .select(`id, titre, bunny_video_id, storage_path, ${colonnes}order_index, rubrique, voies, offers, denied_user_ids, allowed_user_ids, status, publish_at, video_supports(id, titre, order_index, voies, offers)`)
     .eq('cours_id', coursId)
     .eq('type', type)
     .order('order_index', { ascending: true })
     .order('created_at', { ascending: true });
+  // `live_at` n'existe qu'après la migration « séance à venir » : sans elle, on
+  // relit sans la date plutôt que de vider la bibliothèque.
+  let res = await lire('live_at, ');
+  if (erreurColonneLiveAt(res.error)) res = await lire('');
+  const { data, error } = res;
   if (error) return { error: error.message };
-  const videos = ((data ?? []) as Array<VideoLibraryVideo & { video_supports?: VideoSupportDoc[] | null }>)
+  type Ligne = Omit<VideoLibraryVideo, 'a_venir' | 'live_at' | 'supports'> & {
+    storage_path: string | null;
+    live_at?: string | null;
+    video_supports?: VideoSupportDoc[] | null;
+  };
+  const videos = ((data ?? []) as Ligne[])
     .map((v) => ({
       id: v.id,
       titre: v.titre,
       bunny_video_id: v.bunny_video_id,
+      a_venir: estSeanceAVenir(v),
+      live_at: v.live_at ?? null,
       order_index: v.order_index,
       status: v.status === 'a_valider' ? 'a_valider' as const : 'publie' as const,
       publish_at: v.publish_at ?? null,
@@ -321,7 +346,12 @@ export async function addVideoAction(input: {
   coursId: string;
   type: VideoType;
   titre: string;
-  lien: string;
+  /** Lien Bunny ; facultatif pour une séance à venir (`aVenir`). */
+  lien?: string | null;
+  /** Séance à venir : création sans vidéo, pour déposer les dossiers d'abord. */
+  aVenir?: boolean;
+  /** Date de la séance en direct (ISO), facultative. */
+  liveAt?: string | null;
   position?: number | null;
   /** Rubrique affichée à l'élève ; vide ⇒ libellé par défaut du type. */
   rubrique?: string | null;
@@ -368,11 +398,41 @@ function validerAudience(
   return { voies, offers };
 }
 
+type SourceVideo = { bunnyId: string | null; liveAt: string | null };
+
+/**
+ * Vérifie la source d'un ajout : un lien Bunny reconnu, OU rien du tout pour
+ * une séance à venir (case cochée). Un lien saisi est toujours validé, même
+ * sur une séance à venir : il en fait simplement une vidéo ordinaire.
+ */
+function validerSource(input: { lien?: string | null; aVenir?: boolean; liveAt?: string | null }): SourceVideo | { error: string } {
+  const lien = (input.lien ?? '').trim();
+  const date = normaliserDateSeance(input.liveAt);
+  if ('error' in date) return date;
+  if (!lien) {
+    if (input.aVenir) return { bunnyId: null, liveAt: date.liveAt };
+    return { error: 'Collez le lien Bunny.net de la vidéo, ou cochez « Séance à venir » pour déposer les dossiers d’abord.' };
+  }
+  const bunnyId = extractBunnyVideoId(lien);
+  if (!bunnyId) {
+    return { error: 'Lien Bunny.net non reconnu. Collez le lien de la vidéo (ou son identifiant).' };
+  }
+  return { bunnyId, liveAt: date.liveAt };
+}
+
+/** Message clair quand la colonne `live_at` manque (migration non appliquée). */
+function erreurLiveAt(error: { message?: string | null }): { error: string } {
+  return erreurColonneLiveAt(error)
+    ? { error: `La date de séance nécessite la migration ${MIGRATION_SEANCE_A_VENIR} (éditeur SQL Supabase). Réessayez sans date, ou appliquez-la d’abord.` }
+    : { error: error.message ?? 'Erreur inconnue.' };
+}
+
 /** Insertion effective, partagée par l'ajout normal et l'ajout « Révisions ». */
 async function insertVideo(
   ctx: Ctx,
   input: {
-    type: VideoType; titre: string; lien: string; position?: number | null; rubrique?: string | null;
+    type: VideoType; titre: string; lien?: string | null; aVenir?: boolean; liveAt?: string | null;
+    position?: number | null; rubrique?: string | null;
     voies?: string[]; offers?: string[]; deniedUserIds?: string[]; allowedUserIds?: string[];
   },
 ): Promise<AddResult> {
@@ -380,10 +440,9 @@ async function insertVideo(
   const titre = input.titre.trim().slice(0, 200);
   if (!titre) return { error: 'Donnez un titre à la vidéo.' };
   const rubrique = normaliserRubrique(input.rubrique);
-  const bunnyId = extractBunnyVideoId(input.lien);
-  if (!bunnyId) {
-    return { error: 'Lien Bunny.net non reconnu. Collez le lien de la vidéo (ou son identifiant).' };
-  }
+  const source = validerSource(input);
+  if ('error' in source) return source;
+  const { bunnyId, liveAt } = source;
   const audience = validerAudience(input.type, input);
   if ('error' in audience) return audience;
   const deniedUserIds = normaliserExclus(input.deniedUserIds);
@@ -414,6 +473,9 @@ async function insertVideo(
       cours_id: coursId,
       titre,
       bunny_video_id: bunnyId,
+      // Colonne ajoutée par la migration « séance à venir » : citée seulement
+      // quand une date est saisie, pour que l'ajout ordinaire marche sans elle.
+      ...(liveAt ? { live_at: liveAt } : {}),
       type: input.type,
       rubrique,
       order_index: insertAt,
@@ -428,7 +490,7 @@ async function insertVideo(
     })
     .select('id')
     .single();
-  if (error) return { error: error.message };
+  if (error) return erreurLiveAt(error);
 
   // Décale ce qui suit (et recompacte au passage).
   const reordered = [...list];
@@ -448,12 +510,13 @@ async function insertVideo(
     coursTitre: ctx.cours.titre,
     matiereNom: ctx.cours.matiereNom,
     description: `Ajout de « ${titre} » (${LABEL[input.type]}) en position ${insertAt + 1}`
+      + (bunnyId ? '' : ` — séance à venir, sans vidéo${liveAt ? ` (le ${formaterDateSeance(liveAt)})` : ''}`)
       + ` — ${resumeAudience(audience)}`
       + (rubrique ? ` — rubrique « ${rubrique} »` : '')
       + (deniedUserIds.length > 0 ? ` — ${deniedUserIds.length} élève(s) exclu(s)` : '')
       + (allowedUserIds.length > 0 ? ` — ${allowedUserIds.length} élève(s) autorisé(s)` : ''),
     diff: {
-      bunny_video_id: bunnyId, type: input.type, rubrique, order_index: insertAt,
+      bunny_video_id: bunnyId, live_at: liveAt, type: input.type, rubrique, order_index: insertAt,
       voies: audience.voies, offers: audience.offers,
       denied_user_ids: deniedUserIds, allowed_user_ids: allowedUserIds,
     },
@@ -474,7 +537,9 @@ export async function addVideoToRevisionsAction(input: {
   matiereId: string;
   type: VideoType;
   titre: string;
-  lien: string;
+  lien?: string | null;
+  aVenir?: boolean;
+  liveAt?: string | null;
   position?: number | null;
   rubrique?: string | null;
   voies?: string[];
@@ -493,10 +558,9 @@ export async function addVideoToRevisionsAction(input: {
   if (scope !== null) return { error: 'Seul un administrateur peut créer l’item de révisions.' };
 
   // Le lien est vérifié AVANT toute création : un lien invalide ne doit pas
-  // laisser derrière lui un item vide.
-  if (!extractBunnyVideoId(input.lien)) {
-    return { error: 'Lien Bunny.net non reconnu. Collez le lien de la vidéo (ou son identifiant).' };
-  }
+  // laisser derrière lui un item vide. (Une séance à venir n'en a pas.)
+  const source = validerSource(input);
+  if ('error' in source) return source;
   if (!input.titre.trim()) return { error: 'Donnez un titre à la vidéo.' };
 
   const admin = createAdminClient();
@@ -814,6 +878,8 @@ export async function replaceVideoLinkAction(input: {
     .eq('id', input.videoId);
   if (error) return { error: error.message };
 
+  // Séance à venir complétée : la vidéo rejoint ses dossiers, déjà en ligne.
+  const completee = estSeanceAVenir(ctx.video);
   await logAudit({
     actor: ctx.profile,
     action: 'replace',
@@ -822,8 +888,44 @@ export async function replaceVideoLinkAction(input: {
     coursId: ctx.cours.id,
     coursTitre: ctx.cours.titre,
     matiereNom: ctx.cours.matiereNom,
-    description: `Nouvelle vidéo pour « ${ctx.video.titre} »`,
+    description: completee
+      ? `Vidéo ajoutée à la séance à venir « ${ctx.video.titre} »`
+      : `Nouvelle vidéo pour « ${ctx.video.titre} »`,
     diff: { bunny_video_id: bunnyId },
+  });
+
+  refresh(ctx.cours.id);
+  return { ok: true };
+}
+
+/** Date de la séance en direct d'une séance à venir (vide ⇒ retirée). */
+export async function updateVideoLiveAtAction(input: {
+  videoId: string;
+  liveAt: string | null;
+}): Promise<{ ok: true } | { error: string }> {
+  const ctx = await guardVideo(input.videoId);
+  if ('error' in ctx) return ctx;
+  const date = normaliserDateSeance(input.liveAt);
+  if ('error' in date) return date;
+
+  const { error } = await ctx.a
+    .from('videos')
+    .update({ live_at: date.liveAt, updated_at: new Date().toISOString() })
+    .eq('id', input.videoId);
+  if (error) return erreurLiveAt(error);
+
+  await logAudit({
+    actor: ctx.profile,
+    action: 'update',
+    entity: 'video',
+    entityId: input.videoId,
+    coursId: ctx.cours.id,
+    coursTitre: ctx.cours.titre,
+    matiereNom: ctx.cours.matiereNom,
+    description: date.liveAt
+      ? `Date de la séance « ${ctx.video.titre} » : le ${formaterDateSeance(date.liveAt)}`
+      : `Date de la séance « ${ctx.video.titre} » retirée`,
+    diff: { live_at: date.liveAt },
   });
 
   refresh(ctx.cours.id);

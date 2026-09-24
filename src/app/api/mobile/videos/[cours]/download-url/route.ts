@@ -60,6 +60,8 @@ export async function GET(req: Request, ctx: { params: Promise<{ cours: string }
       .from('videos')
       .select('bunny_video_id, storage_path, duration_seconds, denied_user_ids, allowed_user_ids')
       .eq('cours_id', coursId)
+      // Une séance à venir (pas encore de vidéo) n'a rien à télécharger.
+      .or('bunny_video_id.not.is.null,storage_path.not.is.null')
       .limit(1),
   ]);
   if (!coursRow) return NextResponse.json({ error: 'Cours introuvable' }, { status: 404 });

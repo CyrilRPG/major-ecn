@@ -18,6 +18,8 @@ import { RubriqueEditor } from '@/components/student/rubrique-editor';
 import { CategorieSwitch, type CategorieSwitchItem } from '@/components/student/replays/categorie-switch';
 import { SeanceListe, type SeanceListeItem } from '@/components/student/replays/seance-liste';
 import { SupportsDeSeance } from '@/components/student/replays/supports-de-seance';
+import { SeanceAVenir } from '@/components/student/replays/seance-a-venir';
+import { estSeanceAVenir, seanceMontrable } from '@/lib/videos/a-venir';
 
 const CAT = CATEGORIES_VIDEO.seance_approfondie;
 
@@ -120,7 +122,9 @@ export default async function SeanceApprofondiePage({
 
   // Sélecteur de catégorie : proposé dès que l'élève a AUSSI accès aux
   // séances intensives de cet item.
-  const coursAvecSource = replays.cours.filter((v) => !!v.bunny_video_id || !!v.storage_path);
+  // Même règle que la page « Séance intensive » : une vidéo, ou une séance à
+  // venir qui a déjà des documents à préparer.
+  const coursAvecSource = replays.cours.filter((v) => seanceMontrable(v, v.supports.length));
   const categories: CategorieSwitchItem[] = [
     { type: 'cours' as const, titre: titreCategorie('cours', rubriqueCommune(coursAvecSource)), ...compterReplays(coursAvecSource) },
     { type: 'seance_approfondie' as const, titre: titreCategorie('seance_approfondie', rubriqueCommune(allSaVideos)), ...compterReplays(allSaVideos) },
@@ -288,6 +292,10 @@ export default async function SeanceApprofondiePage({
                     description={motifFermeture(v)}
                   />
                 </div>
+              ) : estSeanceAVenir(v) ? (
+                // Séance en direct pas encore filmée : l'annonce, puis les
+                // dossiers à préparer juste en dessous.
+                <SeanceAVenir liveAt={v.live_at} nbSupports={v.supports.length} accent={CAT.accent} fond={CAT.fond} />
               ) : embedUrl ? (
                 <BunnyVideoPlayer embedUrl={embedUrl} coursId={coursId} watermarkText={watermarkText} />
               ) : (

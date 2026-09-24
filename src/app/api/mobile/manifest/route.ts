@@ -125,6 +125,9 @@ export async function GET(req: Request) {
   // Audience portée par la vidéo (voies + formules). Le staff voit tout.
   const videosByCours = new Map<string, ChildRow>();
   for (const r of videos) {
+    // Séance à venir (pas encore de vidéo, seulement des dossiers) : rien à
+    // lire ni à télécharger dans l'application.
+    if (!r.bunny_video_id && !r.storage_path) continue;
     const visible = isStaff || videoVisible(
       r as { voies?: string[] | null; offers?: string[] | null; denied_user_ids?: string[] | null; allowed_user_ids?: string[] | null },
       { offres: scopeOffers(scope), voie: scope.voie ?? null, droitFormule: content.video, userId: auth.user.id },

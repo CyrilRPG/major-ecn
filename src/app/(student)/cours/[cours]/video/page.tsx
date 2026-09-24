@@ -19,6 +19,8 @@ import { RubriqueEditor } from '@/components/student/rubrique-editor';
 import { CategorieSwitch, type CategorieSwitchItem } from '@/components/student/replays/categorie-switch';
 import { SeanceListe } from '@/components/student/replays/seance-liste';
 import { SupportsDeSeance } from '@/components/student/replays/supports-de-seance';
+import { SeanceAVenir } from '@/components/student/replays/seance-a-venir';
+import { estSeanceAVenir, seanceMontrable } from '@/lib/videos/a-venir';
 
 const CAT = CATEGORIES_VIDEO.cours;
 
@@ -63,9 +65,10 @@ export default async function CoursVideoPage({
   if (!isAdmin && !canAccessCollege(scope, c.matiere_id) && !replays.autoriseParVideo) redirect('/facultes');
   profPageReadGuard(profile, 'video', `/cours/${coursId}`);
 
-  // Une vidéo sans source (ni Bunny ni fichier) n'est pas encore regardable.
-  const hasSource = (v: ReplayVideo) => !!v.bunny_video_id || !!v.storage_path;
-  const allVideos = replays.cours.filter(hasSource);
+  // Une vidéo sans source (ni Bunny ni fichier) n'est pas encore regardable :
+  // elle ne se montre que comme « séance à venir », quand l'élève a déjà au
+  // moins un document à préparer (cf. `seanceMontrable`).
+  const allVideos = replays.cours.filter((v) => seanceMontrable(v, v.supports.length));
   // Ni droit de formule, ni vidéo ciblant cet élève : la page n'a rien à
   // montrer et n'aurait pas dû être atteignable (règle commune à tous les
   // blocs vidéo, cf. `blocVideoOuvert`).
@@ -179,6 +182,9 @@ export default async function CoursVideoPage({
 
   const video = onlyVideoId ? allVideos.find((v) => v.id === onlyVideoId) : allVideos[0];
   if (!video) notFound();
+  // Séance à venir : ni lecteur ni émargement (rien à regarder), les dossiers
+  // à préparer sous l'annonce.
+  const aVenir = estSeanceAVenir(video);
   const position = allVideos.indexOf(video);
   const precedente = position > 0 ? allVideos[position - 1] : null;
   const suivante = position < allVideos.length - 1 ? allVideos[position + 1] : null;
@@ -198,7 +204,7 @@ export default async function CoursVideoPage({
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
-      {gate}
+      {!aVenir && gate}
       {allVideos.length > 1 && (
         <Link
           href={hrefListe}
@@ -220,7 +226,9 @@ export default async function CoursVideoPage({
           {video.titre}
         </h1>
       </div>
-      {embedUrl ? (
+      {aVenir ? (
+        <SeanceAVenir liveAt={video.live_at} nbSupports={video.supports.length} accent={CAT.accent} fond={CAT.fond} />
+      ) : embedUrl ? (
         <BunnyVideoPlayer embedUrl={embedUrl} coursId={coursId} watermarkText={watermarkText} />
       ) : signedUrl ? (
         <VideoPlayer src={signedUrl} coursId={coursId} />

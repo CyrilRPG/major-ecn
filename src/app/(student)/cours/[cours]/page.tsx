@@ -17,6 +17,7 @@ import { videoVisible, supportVisible, eleveAutorise, eleveExclu, blocVideoOuver
 import { estOuverte } from '@/lib/videos/unlock';
 import { grouperParRubrique, rubriqueCommune, rubriqueParDefaut } from '@/lib/videos/rubriques';
 import { CATEGORIES_VIDEO, resumeCategorie, titreCategorie } from '@/lib/videos/categories';
+import { estSeanceAVenir, seanceMontrable } from '@/lib/videos/a-venir';
 import { RubriqueEditor } from '@/components/student/rubrique-editor';
 import { UpgradeBanner } from '@/components/student/upgrade-banner';
 import { DiscoveryLockedCard } from '@/components/espace-decouverte/discovery-locked-card';
@@ -199,7 +200,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any)
       .from('videos')
-      .select('id, bunny_video_id, titre, type, rubrique, order_index, serie_id, unlock_direct, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)')
+      .select('id, bunny_video_id, storage_path, titre, type, rubrique, order_index, serie_id, unlock_direct, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)')
       .eq('cours_id', coursId)
       .eq('type', 'seance_approfondie')
       // Ordre choisi par l'administrateur (Contenu › Séances approfondies).
@@ -255,10 +256,14 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     .filter((v) => (v.type ?? 'cours') === 'cours' && estVisible(v, !access || access.video))
     .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
   // Une vidéo Bunny n'a pas de storage_path : les deux hébergements comptent.
-  const coursVideosDisponibles = coursVideos.some((v) => !!v.storage_path || !!v.bunny_video_id);
+  // Une séance à venir (pas encore de vidéo) ouvre aussi la carte dès que
+  // l'élève a des dossiers à préparer (même règle que la page).
+  const coursVideosDisponibles = coursVideos.some(
+    (v) => seanceMontrable(v, supportsVisibles(v, !access || access.video).length),
+  );
 
   type SAVid = {
-    id: string; titre: string; bunny_video_id: string | null; serie_id: string | null;
+    id: string; titre: string; bunny_video_id: string | null; storage_path?: string | null; serie_id: string | null;
     type?: string | null; rubrique?: string | null; order_index?: number | null;
     unlock_direct?: boolean | null;
     voies?: string[] | null; offers?: string[] | null;
@@ -498,7 +503,9 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
                   ? v.titre.trim()
                   : plusieursSeances ? `Séance approfondie ${i + 1}` : 'Séance approfondie',
                 desc: unlocked
-                  ? 'Cours vidéo approfondi par le professeur pour aller plus loin.'
+                  ? estSeanceAVenir(v)
+                    ? 'Séance en direct à venir : préparez les documents, la vidéo sera ajoutée après la séance.'
+                    : 'Cours vidéo approfondi par le professeur pour aller plus loin.'
                   : gate
                     ? `Terminez « ${gate} » pour débloquer cette vidéo.`
                     : 'Terminez la séance du professeur (DP & QI) qui ouvre cette vidéo.',

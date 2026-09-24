@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { FileText, Lock, PlayCircle } from 'lucide-react';
+import { CalendarClock, FileText, Lock, PlayCircle } from 'lucide-react';
 import { CATEGORIES_VIDEO, type CategorieVideo } from '@/lib/videos/categories';
+import { estSeanceAVenir, formaterDateSeance } from '@/lib/videos/a-venir';
 import type { ReplayVideo } from '@/lib/videos/replays';
 
 export type SeanceListeItem = {
@@ -36,6 +37,9 @@ export function SeanceListe({
       {items.map(({ video: v, ouverte, motifFermeture }, i) => {
         const hrefVideo = `/cours/${coursId}/${d.segment}?v=${v.id}${embedQs}`;
         const titre = v.titre?.trim() || `Séance ${i + 1}`;
+        // Séance à venir : pas encore de vidéo, seulement les dossiers à préparer.
+        const aVenir = estSeanceAVenir(v);
+        const date = aVenir ? formaterDateSeance(v.live_at) : null;
         return (
           <li
             key={v.id}
@@ -63,8 +67,8 @@ export function SeanceListe({
                       className="inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold text-white transition-transform hover:scale-[1.02] focus-ring"
                       style={{ background: d.accent }}
                     >
-                      <PlayCircle className="h-3.5 w-3.5" />
-                      Regarder
+                      {aVenir ? <CalendarClock className="h-3.5 w-3.5" /> : <PlayCircle className="h-3.5 w-3.5" />}
+                      {aVenir ? 'Préparer' : 'Regarder'}
                     </Link>
                   ) : (
                     <span className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-(--color-border) px-3 py-1.5 text-xs font-semibold text-(--color-ink-soft)">
@@ -73,6 +77,11 @@ export function SeanceListe({
                     </span>
                   )}
                 </div>
+                {aVenir && (
+                  <p className="mt-1 text-xs font-semibold" style={{ color: d.accent }}>
+                    Séance en direct à venir{date ? ` — le ${date}` : ''} · la vidéo sera ajoutée après la séance
+                  </p>
+                )}
                 {!ouverte && motifFermeture && (
                   <p className="mt-1 text-xs text-(--color-ink-soft)">{motifFermeture}</p>
                 )}

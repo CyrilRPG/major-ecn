@@ -4,6 +4,7 @@ import { scopeOffers } from '@/lib/auth/permissions';
 import type { ContentAccess } from '@/lib/auth/permissions';
 import { supportVisible, videoVisible, eleveAutorise, eleveExclu } from './audience';
 import { categorieDeVideo, type CategorieVideo } from './categories';
+import { erreurColonneLiveAt } from './a-venir';
 
 /**
  * Replays d'un item, tels que CET élève les voit : chaque vidéo avec ses
@@ -26,6 +27,8 @@ export type ReplayVideo = {
   order_index: number | null;
   bunny_video_id: string | null;
   storage_path: string | null;
+  /** Date de la séance en direct (séance à venir, cf. `a-venir.ts`). */
+  live_at: string | null;
   serie_id: string | null;
   unlock_direct: boolean | null;
   voies: string[] | null;
@@ -44,8 +47,10 @@ export type Replays = {
   autoriseParVideo: boolean;
 };
 
-type Ligne = Omit<ReplayVideo, 'type' | 'supports'> & {
+type Ligne = Omit<ReplayVideo, 'type' | 'supports' | 'live_at'> & {
   type: string | null;
+  /** Absente tant que la migration « séance à venir » n'est pas appliquée. */
+  live_at?: string | null;
   video_supports?: { id: string; titre: string; order_index: number; voies: string[] | null; offers: string[] | null }[] | null;
 };
 
@@ -88,6 +93,7 @@ export function filtrerReplays(lignes: readonly Ligne[], ctx: ContexteEleve): Re
       order_index: v.order_index ?? null,
       bunny_video_id: v.bunny_video_id ?? null,
       storage_path: v.storage_path ?? null,
+      live_at: v.live_at ?? null,
       serie_id: v.serie_id ?? null,
       unlock_direct: v.unlock_direct ?? null,
       voies: v.voies ?? null,
@@ -106,14 +112,19 @@ export async function chargerReplays(
   coursId: string,
   ctx: ContexteEleve,
 ): Promise<Replays> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data } = await (supabase as any)
-    .from('videos')
-    .select('id, titre, type, rubrique, order_index, bunny_video_id, storage_path, serie_id, unlock_direct, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)')
-    .eq('cours_id', coursId)
-    .order('order_index', { ascending: true })
-    .order('created_at', { ascending: true });
-  return filtrerReplays((data ?? []) as Ligne[], ctx);
+  const lire = (colonnes: string) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any)
+      .from('videos')
+      .select(`id, titre, type, rubrique, order_index, bunny_video_id, storage_path, ${colonnes}serie_id, unlock_direct, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)`)
+      .eq('cours_id', coursId)
+      .order('order_index', { ascending: true })
+      .order('created_at', { ascending: true }) as Promise<{ data: unknown[] | null; error: { message?: string } | null }>;
+  // `live_at` (date d'une séance à venir) : relecture sans elle tant que la
+  // migration 20260924100000 n'est pas appliquée — jamais de replays perdus.
+  let res = await lire('live_at, ');
+  if (erreurColonneLiveAt(res.error)) res = await lire('');
+  return filtrerReplays((res.data ?? []) as Ligne[], ctx);
 }
 
 /** Nombre de vidéos et de supports visibles d'une catégorie. */

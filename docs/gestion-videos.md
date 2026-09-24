@@ -80,6 +80,44 @@ bucket privé : seule la route `/api/supports/[videoId]/pdf` peut le servir.
 Le support **hérite de l'audience de sa vidéo** — voies et formules cochées.
 Changer le public de la vidéo change celui de ses supports, sans autre geste.
 
+## Séance à venir : déposer les dossiers avant la vidéo
+
+Avant une séance en direct, les élèves doivent pouvoir préparer leurs dossiers
+alors que la vidéo n'existe pas encore. Pas besoin de lien Bunny pour cela :
+
+1. **Admin › Vidéos** : collège, item, catégorie, puis **Séance à venir
+   (dossiers d'abord)** — ou, dans le formulaire d'ajout, la case **Séance à
+   venir — pas encore de vidéo**.
+2. Renseigner le **nom**, les **voies** et **formules**, la **date de la séance
+   en direct** (facultative) et glisser les PDF dans **Dossiers à préparer**.
+   Le lien Bunny reste vide. **Enregistrer tout**.
+3. La ligne porte le badge **« Vidéo à venir »** (avec la date). On peut
+   prévenir les élèves : le dossier de la séance est en ligne.
+4. **Après la séance** : crayon sur la même ligne, champ **Ajouter la vidéo
+   (après la séance)**, coller le lien Bunny, **Enregistrer**. Les dossiers
+   restent attachés, rien à refaire ; la séance devient une vidéo ordinaire.
+
+Côté élève, la séance apparaît dans la liste de sa catégorie avec un bouton
+**Préparer** et, à la place du lecteur, l'annonce « Séance en direct à venir —
+le … : préparez les documents ci-dessous ; la vidéo sera ajoutée après la
+séance », suivie de ses supports (onglet **« Support de la séance <nom> »**
+compris). Mêmes règles d'audience que pour une vidéo (voies, formules, listes
+nominatives, statut « À valider » / programmation).
+
+À savoir :
+
+- une séance à venir n'est montrée aux élèves que si **au moins un dossier**
+  leur est visible (une ligne sans vidéo ni document reste cachée) ;
+- elle ne compte **pas** comme une vidéo à regarder : ni dans les compteurs de
+  contenu, ni dans la progression, ni dans le manifeste de l'application
+  mobile (qui ne liste que des vidéos lisibles) ;
+- la date est **indicative** : elle ne publie ni ne masque rien. Elle se
+  modifie depuis le crayon ;
+- la date est stockée dans `videos.live_at`, ajoutée par la migration
+  `20260924100000_videos_seance_a_venir.sql`. Sans cette migration, tout
+  fonctionne sauf la date (l'ajout avec une date est refusé avec un message
+  explicite).
+
 ## Règles à connaître
 
 - **La catégorie n'est pas modifiable après création** (cours vidéo ↔ séance
