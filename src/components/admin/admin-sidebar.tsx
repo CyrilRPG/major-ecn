@@ -7,16 +7,16 @@ import { AlertTriangle, BarChart3, BookOpen, CalendarCheck, CalendarClock, Calen
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
-import { hasAnyContentAccess, type ContentType, type PermissionLevel } from '@/lib/schemas/professor';
-import { lireScopeEquipe, type Modules } from '@/lib/auth/collaborateurs';
+import type { AccesOnglets } from '@/lib/auth/collaborateurs';
 
 /**
- * `module` : entrée ouverte à un membre du personnel dont ce module est actif
- * (cahier des charges 18/09/2026 — suivi élèves, contenus, blog). `staff` :
- * ouverte à tout le personnel. `profContent` : héritage (accès contenu). Sans
- * marqueur : administrateur seulement.
+ * `onglet` : entrée ouverte à un membre du personnel dont les permissions
+ * ouvrent cet onglet (cf. `accesOnglets` — même règle que les gardes de page :
+ * un monteur vidéo voit « Vidéos », pas « Contenu » ni les Q&R). `staff` :
+ * ouverte à tout le personnel (sécurité du compte). Sans marqueur :
+ * administrateur seulement.
  */
-type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean; profContent?: boolean; adminOnly?: boolean; module?: keyof Modules };
+type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean; adminOnly?: boolean; onglet?: keyof AccesOnglets };
 type Group = { key: string; label: string; Icon: typeof Users; items: Item[] };
 
 const GROUPS: Group[] = [
@@ -35,19 +35,19 @@ const GROUPS: Group[] = [
     label: 'Pédagogie',
     Icon: BookOpen,
     items: [
-      { href: '/admin/contenu', label: 'Contenu', Icon: Library, profContent: true },
+      { href: '/admin/contenu', label: 'Contenu', Icon: Library, onglet: 'contenu' },
       // Propositions d'élèves (flashcards / QCM) à verser dans la base commune :
-      // visibles de tout le staff, l'action est bornée au périmètre du professeur.
-      { href: '/admin/entrainements-eleves', label: 'Entraînements d’élèves', Icon: Sparkles, staff: true },
+      // enseignants QCM / flashcards, l'action est bornée à leur périmètre.
+      { href: '/admin/entrainements-eleves', label: 'Entraînements d’élèves', Icon: Sparkles, onglet: 'entrainements' },
       { href: '/admin/import-exercices', label: 'Import d’exercices', Icon: Upload, adminOnly: true },
       { href: '/admin/audit-corriges', label: 'Audit des corrigés', Icon: ShieldCheck, adminOnly: true },
-      { href: '/admin/videos', label: 'Vidéos', Icon: Clapperboard, profContent: true },
+      { href: '/admin/videos', label: 'Vidéos', Icon: Clapperboard, onglet: 'videos' },
       { href: '/admin/epreuves-blanches', label: 'Épreuves blanches', Icon: PencilRuler, adminOnly: true },
       { href: '/admin/interrogations', label: 'Interrogations de spécialité', Icon: ClipboardList, adminOnly: true },
       { href: '/admin/parcours', label: 'Parcours du Major', Icon: Trophy, adminOnly: true },
       { href: '/admin/planificateur', label: 'Planificateur EVC', Icon: CalendarRange, adminOnly: true },
       { href: '/admin/arena', label: 'EVC Arena', Icon: Timer, adminOnly: true },
-      { href: '/admin/qa', label: 'Questions / Réponses', Icon: MessagesSquare, staff: true },
+      { href: '/admin/qa', label: 'Questions / Réponses', Icon: MessagesSquare, onglet: 'qa' },
     ],
   },
   {
@@ -65,7 +65,7 @@ const GROUPS: Group[] = [
     Icon: MessageCircle,
     items: [
       { href: '/admin/annonces', label: 'Annonces', Icon: Megaphone },
-      { href: '/admin/blog', label: 'Blog', Icon: Newspaper, module: 'blog' },
+      { href: '/admin/blog', label: 'Blog', Icon: Newspaper, onglet: 'blog' },
       { href: '/admin/popups', label: 'Popups', Icon: MonitorPlay, adminOnly: true },
       { href: '/admin/emails', label: 'Envoi d’emails', Icon: Mail },
       { href: '/admin/formulaires', label: 'Formulaires', Icon: ClipboardList },
@@ -78,8 +78,8 @@ const GROUPS: Group[] = [
     items: [
       { href: '/admin/alertes', label: 'Alertes pédagogiques', Icon: AlertTriangle },
       { href: '/admin/crm', label: 'CRM pédagogique', Icon: UserCog },
-      // Module de suivi individuel : visible du staff, les droits fins sont contrôlés dans le module.
-      { href: '/admin/suivi', label: 'Suivi individuel', Icon: CalendarCheck, staff: true },
+      // Module de suivi individuel : visible du personnel doté du module, les droits fins sont contrôlés dans le module.
+      { href: '/admin/suivi', label: 'Suivi individuel', Icon: CalendarCheck, onglet: 'suivi' },
       { href: '/admin/stats', label: 'Stats', Icon: BarChart3 },
       { href: '/admin/facturation', label: 'Facturation IA', Icon: Receipt },
       { href: '/admin/logs', label: 'Logs', Icon: ScrollText, adminOnly: true },
@@ -100,48 +100,25 @@ const GROUPS: Group[] = [
 // Item spécial affiché à part (bascule de vue, hors catégories).
 const STUDENT_VIEW: Item = { href: '/accueil', label: 'Vue étudiant', Icon: Eye, adminOnly: true };
 
-type ProfScopeRaw = {
-  role?: 'professor';
-  content_permissions?: Partial<Record<ContentType, PermissionLevel>>;
-  content_types?: ContentType[];
-};
-function readProfContentAccess(scope: unknown): boolean {
-  if (!scope || typeof scope !== 'object') return false;
-  const s = scope as ProfScopeRaw;
-  if (s.content_permissions && Object.values(s.content_permissions).some((p) => p && p !== 'none')) return true;
-  if (s.content_types && s.content_types.length > 0) return true;
-  return hasAnyContentAccess(s as never);
-}
-
 const BG = 'linear-gradient(180deg, #0E1626 0%, #161336 40%, #2A1130 75%, #2D0518 100%)';
 
-function filterItems(items: Item[], isProf: boolean, profHasContent: boolean, modules: Modules | null): Item[] {
+function filterItems(items: Item[], isProf: boolean, onglets: AccesOnglets): Item[] {
   if (!isProf) return items;
-  return items.filter((i) =>
-    i.staff
-    || (i.profContent && profHasContent)
-    || (i.module && modules?.[i.module].actif),
-  );
+  return items.filter((i) => i.staff || (i.onglet && onglets[i.onglet]));
 }
 
-export function AdminSidebar({ profile }: { profile: Profile }) {
+export function AdminSidebar({ profile, onglets }: { profile: Profile; onglets: AccesOnglets }) {
   const path = usePathname();
   const isActive = (href: string) => path === href || path.startsWith(href + '/');
 
   const isProf = profile.role === 'professor';
-  const profHasContent = isProf && readProfContentAccess(profile.permission_scope);
-  // Modules du cahier des charges (suivi / contenus / blog) de ce membre du personnel.
-  const modules = useMemo(
-    () => (isProf ? lireScopeEquipe(profile.permission_scope)?.modules ?? null : null),
-    [isProf, profile.permission_scope],
-  );
 
   // Groupes visibles (au moins un item accessible après filtrage) + item Vue étudiant.
   const visibleGroups = useMemo(
     () =>
-      GROUPS.map((g) => ({ ...g, items: filterItems(g.items, isProf, profHasContent, modules) }))
+      GROUPS.map((g) => ({ ...g, items: filterItems(g.items, isProf, onglets) }))
         .filter((g) => g.items.length > 0),
-    [isProf, profHasContent, modules],
+    [isProf, onglets],
   );
   const showStudentView = !isProf; // adminOnly
 

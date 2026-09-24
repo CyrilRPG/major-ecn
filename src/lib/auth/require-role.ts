@@ -7,7 +7,8 @@ import {
   type ContentType, type ProfessorScope,
 } from '@/lib/schemas/professor';
 import { getProfessorScope, profCanAccessCours } from './prof-content-access';
-import { accesEquipeExpire, lireScopeEquipe, premierePage } from './collaborateurs';
+import { accesEquipeExpire, lireScopeEquipe, type AccesOnglets } from './collaborateurs';
+import { atterrissageEquipe, ongletsDe } from './onglets-equipe';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 /**
@@ -17,12 +18,6 @@ import { createAdminClient } from '@/lib/supabase/admin';
  */
 function bloquerSiEquipeExpiree(profile: { role?: string | null; access_end?: string | null } | null): void {
   if (profile && accesEquipeExpire(profile)) redirect('/login?expired=1');
-}
-
-/** Page d'atterrissage d'un membre du personnel non administrateur, selon ses modules. */
-function atterrissageEquipe(profile: { role?: string | null; permission_scope?: unknown } | null): string {
-  if (profile?.role !== 'professor') return '/app';
-  return premierePage(lireScopeEquipe(profile.permission_scope));
 }
 
 // Règles pures (portée collège/item d'un professeur) : définies dans
@@ -50,7 +45,7 @@ export async function requireAdmin() {
   if (profile?.role !== 'admin') {
     // Un membre du personnel est renvoyé vers la première page que ses
     // modules lui ouvrent ; tout autre compte vers l'espace élève.
-    redirect(atterrissageEquipe(profile));
+    redirect(await atterrissageEquipe(profile));
   }
   return { user, profile };
 }
@@ -78,10 +73,36 @@ export async function requireContentEditor() {
   if (profile.role === 'admin') return { user, profile, isAdmin: true as const, scope: null };
   if (profile.role === 'professor') {
     const scope = getProfessorScope(profile.permission_scope);
-    if (!scope || !hasAnyContentAccess(scope)) redirect(atterrissageEquipe(profile));
+    if (!scope || !hasAnyContentAccess(scope)) redirect(await atterrissageEquipe(profile));
     return { user, profile, isAdmin: false as const, scope };
   }
   redirect('/app');
+}
+
+/**
+ * Pages « Contenu » (fiches, QCM, flashcards…) : `requireContentEditor` PLUS
+ * au moins un type pédagogique. Un compte vidéo seule (monteur) n'a rien à y
+ * faire : il est renvoyé vers « Vidéos ». Séparé de `requireContentEditor`,
+ * que la page Vidéos et les server actions de contenu continuent d'utiliser.
+ */
+export async function requireContenuPedagogique() {
+  const r = await requireContentEditor();
+  if (r.isAdmin) return r;
+  const acces = await ongletsDe(r.profile);
+  if (!acces.contenu) redirect(acces.videos ? '/admin/videos' : await atterrissageEquipe(r.profile));
+  return r;
+}
+
+/**
+ * Garde de PAGE par onglet d'administration (cf. `accesOnglets`) : un
+ * administrateur passe toujours ; un collaborateur sans cet onglet est renvoyé
+ * vers la première page que ses modules lui ouvrent.
+ */
+export async function requireOnglet(onglet: keyof AccesOnglets) {
+  const r = await requireStaff();
+  if (r.isAdmin) return r;
+  if (!(await ongletsDe(r.profile))[onglet]) redirect(await atterrissageEquipe(r.profile));
+  return r;
 }
 
 /**

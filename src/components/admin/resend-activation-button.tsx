@@ -20,7 +20,12 @@ type Reponse = {
  * plus l'erreur technique brute : on donne le LIEN D'ACTIVATION à copier, pour
  * que l'équipe puisse débloquer l'élève par un autre moyen.
  */
-export function ResendActivationButton({ userId, displayName }: { userId: string; displayName: string }) {
+export function ResendActivationButton({ userId, displayName, cible = 'l’élève' }: {
+  userId: string;
+  displayName: string;
+  /** Destinataire dans les messages (« l’élève », « la personne »…). */
+  cible?: string;
+}) {
   const [pending, start] = useTransition();
   const [done, setDone] = useState<null | 'ok' | 'error'>(null);
   const [msg, setMsg] = useState<string | null>(null);
@@ -51,8 +56,8 @@ export function ResendActivationButton({ userId, displayName }: { userId: string
       setMsg(
         j.setupUrl
           ? j.reason === 'quota'
-            ? 'Quota d’e-mails du jour atteint — transmettez ce lien à l’élève :'
-            : 'Envoi impossible pour le moment — transmettez ce lien à l’élève :'
+            ? `Quota d’e-mails du jour atteint — transmettez ce lien à ${cible} :`
+            : `Envoi impossible pour le moment — transmettez ce lien à ${cible} :`
           : j.error ?? `Échec (${res.status})`,
       );
     });

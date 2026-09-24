@@ -6,8 +6,8 @@ export const metadata = { title: 'Suivi individuel' };
 
 /**
  * Module de suivi pédagogique individuel : accès réservé aux administrateurs et
- * aux professeurs dotés d'un rôle du module (§18). Un professeur sans rôle est
- * renvoyé vers son panneau Q&R.
+ * aux professeurs dotés d'un rôle du module (§18). Un collaborateur sans rôle
+ * est renvoyé vers la première page que ses modules lui ouvrent.
  */
 export default async function SuiviLayout({ children }: { children: React.ReactNode }) {
   const { role } = await requireSuiviPage('view');

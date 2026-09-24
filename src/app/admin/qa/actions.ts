@@ -1,13 +1,35 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { requireStaff } from '@/lib/auth/require-role';
+import { requireOnglet } from '@/lib/auth/require-role';
+import { questionDansPerimetre } from '@/lib/auth/collaborateurs';
+import { scopeEquipeResolu } from '@/lib/auth/onglets-equipe';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { forumNewAnswerEmail } from '@/lib/email/templates';
 
 type Result = { ok: true } | { error: string };
+
+const HORS_PERIMETRE_QA = 'Cette question ne relève pas de votre périmètre.';
+
+/**
+ * Garde commune des actions Q&R : réservées aux enseignants et aux
+ * administrateurs (`requireOnglet('qa')`), et, pour un enseignant, bornées aux
+ * questions des collèges de son périmètre. Les actions passent par le client
+ * de session : on revérifie ici la question visée, sans se fier au navigateur.
+ */
+async function acteurQa(questionId: string | null) {
+  const acteur = await requireOnglet('qa');
+  if (acteur.isAdmin) return { ...acteur, refus: null as string | null };
+  if (!questionId) return { ...acteur, refus: 'Question introuvable.' };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: q } = await (createAdminClient() as any)
+    .from('forum_questions').select('matiere_id').eq('id', questionId).maybeSingle();
+  if (!q) return { ...acteur, refus: 'Question introuvable.' };
+  const scope = await scopeEquipeResolu(acteur.profile);
+  return { ...acteur, refus: questionDansPerimetre(scope, (q as { matiere_id: string | null }).matiere_id) ? null : HORS_PERIMETRE_QA };
+}
 
 function professorName(p: { first_name: string | null; last_name: string | null; email: string | null; pseudo?: string | null; role?: string | null }) {
   // 1) Pseudo public (ex: "Professeur Cardiologie") s'il est défini.
@@ -32,7 +54,8 @@ export async function answerQuestionAction(input: {
   if (!body || body.length < 4) return { error: 'Réponse trop courte.' };
   if (body.length > 8000) return { error: 'Réponse trop longue (8000 caractères max).' };
 
-  const { user, profile } = await requireStaff();
+  const { user, profile, refus } = await acteurQa(input.questionId);
+  if (refus) return { error: refus };
   const supabase = await createClient();
   const name = professorName(profile);
 
@@ -84,7 +107,8 @@ async function notifyStudentOfAnswer(args: { questionId: string; professorName: 
 }
 
 export async function togglePublicAction(input: { questionId: string; isPublic: boolean }): Promise<Result> {
-  await requireStaff();
+  const { refus } = await acteurQa(input.questionId);
+  if (refus) return { error: refus };
   const supabase = await createClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await (supabase as any)
@@ -98,7 +122,8 @@ export async function togglePublicAction(input: { questionId: string; isPublic: 
 }
 
 export async function deleteQuestionAction(questionId: string): Promise<Result> {
-  await requireStaff();
+  const { refus } = await acteurQa(questionId);
+  if (refus) return { error: refus };
   const supabase = await createClient();
   const { error } = await supabase.from('forum_questions').delete().eq('id', questionId);
   if (error) return { error: error.message };
@@ -108,7 +133,12 @@ export async function deleteQuestionAction(questionId: string): Promise<Result> 
 }
 
 export async function deleteAnswerAction(answerId: string): Promise<Result> {
-  await requireStaff();
+  await requireOnglet('qa'); // authentifier avant toute lecture
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: reponse } = await (createAdminClient() as any)
+    .from('forum_answers').select('question_id').eq('id', answerId).maybeSingle();
+  const { refus } = await acteurQa((reponse as { question_id: string } | null)?.question_id ?? null);
+  if (refus) return { error: refus };
   const supabase = await createClient();
   const { error } = await supabase.from('forum_answers').delete().eq('id', answerId);
   if (error) return { error: error.message };
@@ -118,7 +148,8 @@ export async function deleteAnswerAction(answerId: string): Promise<Result> {
 }
 
 export async function archiveQuestionAction(questionId: string): Promise<Result> {
-  await requireStaff();
+  const { refus } = await acteurQa(questionId);
+  if (refus) return { error: refus };
   const supabase = await createClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await (supabase as any)

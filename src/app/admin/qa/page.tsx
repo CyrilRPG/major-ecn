@@ -1,5 +1,6 @@
 import { Bot, MessagesSquare } from 'lucide-react';
-import { requireStaff } from '@/lib/auth/require-role';
+import { requireOnglet } from '@/lib/auth/require-role';
+import { scopeEquipeResolu } from '@/lib/auth/onglets-equipe';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { loadStudentIdentities } from '@/lib/admin/student-identity';
@@ -15,7 +16,13 @@ export default async function AdminQaPage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  await requireStaff();
+  // Réservé aux enseignants (et aux administrateurs) : un monteur vidéo, un
+  // commercial ou un rédacteur n'ont pas à lire ni à répondre au forum.
+  const { profile, isAdmin } = await requireOnglet('qa');
+  // Périmètre d'un enseignant : les questions des collèges qui lui sont
+  // ouverts (colonne `matiere_id` de la question). 'toutes' = sans filtre ;
+  // une question hors cours ne revient qu'aux enseignants « toutes spécialités ».
+  const perimetre = isAdmin ? 'toutes' : ((await scopeEquipeResolu(profile))?.perimetre.specialites ?? []);
   const sp = await searchParams;
   const section: 'forum' | 'ia' = sp.section === 'ia' ? 'ia' : 'forum';
   const supabase = await createClient();
@@ -36,6 +43,7 @@ export default async function AdminQaPage({
       .select('id, body, ai_context, created_at, student_id, student_pseudo, cours_titre, matiere_nom, status, is_public, forum_answers(id, body, created_at, professor_name)')
       .order('created_at', { ascending: false });
     if (forumStatus !== 'all') query = query.eq('status', forumStatus);
+    if (perimetre !== 'toutes') query = query.in('matiere_id', perimetre.length > 0 ? perimetre : ['__aucun__']);
     const { data } = await query;
     // Le pseudo automatique ne dit pas QUI écrit : l'équipe doit pouvoir
     // répondre par mail et ouvrir le profil (spécialité, voie, formule).
@@ -65,8 +73,10 @@ export default async function AdminQaPage({
     }));
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { count } = await (supabase as any)
+    let enAttente = (supabase as any)
       .from('forum_questions').select('id', { count: 'exact', head: true }).eq('status', 'pending');
+    if (perimetre !== 'toutes') enAttente = enAttente.in('matiere_id', perimetre.length > 0 ? perimetre : ['__aucun__']);
+    const { count } = await enAttente;
     pendingCount = count ?? 0;
   }
 

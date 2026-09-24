@@ -3,7 +3,8 @@ import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { AddProfessorSchema, CONTENT_TYPES, PERMISSION_LEVELS, QCM_KINDS, type ContentType, type PermissionLevel } from '@/lib/schemas/professor';
 import { sendEmail, siteUrl } from '@/lib/email/send';
-import { welcomeEmail } from '@/lib/email/templates';
+import { invitationEquipeEmail } from '@/lib/email/templates';
+import { lireScopeEquipe } from '@/lib/auth/collaborateurs';
 
 /** URL publique : siteUrl() (NEXT_PUBLIC_SITE_URL / Vercel) en priorité,
  *  sinon on tente de reconstruire depuis les en-têtes de la requête. */
@@ -172,7 +173,11 @@ export async function POST(req: Request) {
 
   // -- Tentative 1 : Resend
   try {
-    const { subject, html, text } = welcomeEmail({ firstName: first_name, setupUrl, role: 'professor' });
+    // Invitation adaptée aux permissions réellement accordées (compte historique
+    // traduit en modules) : enseignant si contenus pédagogiques, sinon neutre.
+    const { subject, html, text } = invitationEquipeEmail({
+      firstName: first_name, setupUrl, scope: lireScopeEquipe(permission_scope),
+    });
     const sent = await sendEmail({ to: email, subject, html, text });
     if (sent.ok) {
       emailVia = 'resend';

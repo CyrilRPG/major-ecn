@@ -1,4 +1,4 @@
-import { requireContentEditor } from '@/lib/auth/require-role';
+import { requireContentEditor, requireOnglet } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { VideoLibrary, type LibraryCollege } from '@/components/admin/videos/video-library';
 import { TOUS_DROITS, type DroitsVideo } from '@/components/admin/videos/video-manager';
@@ -15,6 +15,8 @@ export const metadata = { title: 'Vidéos' };
  * Cours vidéo → Formule Intensive, Séance approfondie → Programme Approfondi.
  */
 export default async function AdminVideosPage() {
+  // Onglet ouvert seulement si le type « vidéo » fait partie des droits.
+  await requireOnglet('videos');
   const { profile, isAdmin } = await requireContentEditor();
   // Droits fins du cahier des charges (§5) : créer / modifier / publier /
   // supprimer, lus depuis le module « Contenus » du scope d'équipe.

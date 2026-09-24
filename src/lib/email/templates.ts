@@ -4,6 +4,8 @@
  * couleurs en hex, pas d'images externes obligatoires.
  */
 
+import { presentationPoste, type ScopeEquipe } from '@/lib/auth/collaborateurs';
+
 /**
  * Durée de validité annoncée dans les e-mails, en heures.
  *
@@ -146,6 +148,102 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
     intro,
     '',
     `Choisissez votre mot de passe : ${setupUrl}`,
+    '',
+    `Lien valable ${dureeLien()} et à usage unique. Pour toute question : contact@major-ecn.fr`,
+    '— Major ECN',
+  ].join('\n');
+
+  return { subject, html, text };
+}
+
+/* ============================================================
+   Invitation d'un membre de l'équipe (Équipe & Permissions)
+   ============================================================ */
+type InvitationEquipeArgs = {
+  firstName: string;
+  setupUrl: string;
+  /** Scope du collaborateur (modules + périmètre) ; ignoré pour un administrateur. */
+  scope: ScopeEquipe | null;
+  /** Compte administrateur (tous droits). */
+  administrateur?: boolean;
+  /** Date de fin d'accès (YYYY-MM-DD ou ISO), pour un prestataire. */
+  accesJusquau?: string | null;
+};
+
+/**
+ * Invitation adaptée au POSTE de la personne : un monteur vidéo n'est pas
+ * accueilli comme un « professeur ». Intitulé = sa fonction saisie, sinon son
+ * rôle modèle (Commercial, Gestionnaire vidéo…), sinon « Collaborateur » ; la
+ * liste de ce à quoi il aura accès suit ses permissions réelles (pagesDuScope).
+ */
+export function invitationEquipeEmail({ firstName, setupUrl, scope, administrateur = false, accesJusquau = null }: InvitationEquipeArgs): { subject: string; html: string; text: string } {
+  const p = administrateur
+    ? {
+        intitule: 'Administrateur',
+        enseignant: false,
+        mission: 'administrer l’ensemble de la plateforme Major ECN.',
+        acces: ['Toute l’administration Major ECN (élèves, contenus, équipe, configuration)'],
+      }
+    : presentationPoste(scope);
+  const prenom = firstName?.trim() || '';
+  const eyebrow = p.enseignant ? 'Bienvenue dans l’équipe pédagogique' : 'Bienvenue dans l’équipe Major ECN';
+  const title = p.enseignant ? 'Activez votre espace enseignant' : 'Activez votre accès collaborateur';
+  const subject = p.enseignant
+    ? '🩺 Activez votre espace enseignant — Major ECN'
+    : `Activez votre accès collaborateur (${p.intitule}) — Major ECN`;
+  const intro = `Un accès à l’administration Major ECN vient d’être créé pour vous en tant que « ${p.intitule} ». Votre rôle : ${p.mission}`;
+  const mfa = !administrateur && scope?.mfa_obligatoire;
+  const finAcces = accesJusquau ? new Date(accesJusquau.length === 10 ? `${accesJusquau}T12:00:00` : accesJusquau) : null;
+  const finLisible = finAcces && Number.isFinite(finAcces.getTime())
+    ? finAcces.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris' })
+    : null;
+  const notes = [
+    mfa ? 'La double authentification (2FA) vous sera demandée à votre première connexion.' : null,
+    finLisible ? `Votre accès est ouvert jusqu’au ${finLisible}.` : null,
+  ].filter((x): x is string => !!x);
+
+  const puce = (l: string) =>
+    `<tr><td style="padding:3px 0;font-size:13px;color:#3D3D3D;line-height:1.55;"><strong style="color:#6B1A2A;">•</strong> ${escapeHtml(l)}</td></tr>`;
+  const bodyHtml = `
+                <p style="margin:0 0 22px;font-size:15px;line-height:1.65;color:#4A5568;">
+                  Bonjour <strong style="color:#2D2D2D;">${escapeHtml(prenom || 'et bienvenue')}</strong>,<br />
+                  ${escapeHtml(intro)}<br />
+                  Cliquez sur le bouton ci-dessous pour choisir votre mot de passe.
+                </p>
+                ${buttonHtml(setupUrl, 'Choisir mon mot de passe')}
+                <p style="margin:0 0 6px;font-size:12px;line-height:1.6;color:#7A7A7A;">
+                  Si le bouton ne fonctionne pas, copiez-collez ce lien dans votre navigateur :
+                </p>
+                <p style="margin:0 0 26px;word-break:break-all;font-family:'IBM Plex Mono',Menlo,Consolas,monospace;font-size:11px;line-height:1.5;">
+                  <a href="${escapeAttr(setupUrl)}" style="color:#6B1A2A;text-decoration:underline;font-weight:600;">${escapeHtml(setupUrl)}</a>
+                </p>
+                ${p.acces.length > 0 ? `
+                <div style="background-color:#F9F0F2;border:1px solid #F2D5DA;border-radius:14px;padding:16px 18px;margin:0 0 22px;">
+                  <p style="margin:0 0 10px;font-size:12px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#6B1A2A;">
+                    ✓ Ce à quoi vous aurez accès
+                  </p>
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                    ${p.acces.map(puce).join('\n                    ')}
+                  </table>
+                  ${notes.length > 0 ? `<p style="margin:10px 0 0;font-size:12px;line-height:1.55;color:#6B6B6B;font-style:italic;">${notes.map(escapeHtml).join('<br />')}</p>` : ''}
+                </div>` : notes.length > 0 ? `
+                <p style="margin:0 0 22px;font-size:12px;line-height:1.55;color:#6B6B6B;font-style:italic;">${notes.map(escapeHtml).join('<br />')}</p>` : ''}
+                <p style="margin:0;font-size:12px;line-height:1.6;color:#7A7A7A;">
+                  Lien valable ${dureeLien()} et à usage unique. Une question ? Écrivez-nous à
+                  <a href="mailto:contact@major-ecn.fr" style="color:#6B1A2A;font-weight:600;text-decoration:none;">contact@major-ecn.fr</a>.
+                </p>`;
+  const html = layout({ subject, eyebrow, title, bodyHtml });
+
+  const text = [
+    title,
+    '',
+    `Bonjour ${prenom},`,
+    '',
+    intro,
+    '',
+    `Choisissez votre mot de passe : ${setupUrl}`,
+    ...(p.acces.length > 0 ? ['', 'Ce à quoi vous aurez accès :', ...p.acces.map((l) => `• ${l}`)] : []),
+    ...(notes.length > 0 ? ['', ...notes] : []),
     '',
     `Lien valable ${dureeLien()} et à usage unique. Pour toute question : contact@major-ecn.fr`,
     '— Major ECN',

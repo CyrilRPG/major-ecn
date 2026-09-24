@@ -2,7 +2,7 @@ import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Clapperboard, ClipboardList, Eye, FileText, GraduationCap, History, Layers3, Lock, PlayCircle } from 'lucide-react';
-import { profCanAccessCours, requireContentEditor } from '@/lib/auth/require-role';
+import { profCanAccessCours, requireContenuPedagogique } from '@/lib/auth/require-role';
 import { serieQcmKind } from '@/lib/data/qcm-access-rules';
 import { canRead, canWrite, type ContentType } from '@/lib/schemas/professor';
 import { createClient } from '@/lib/supabase/server';
@@ -97,7 +97,7 @@ export default async function AdminCoursPage({
 }) {
   const { cours: coursId } = await params;
   const { tab: tabParam, serie: serieInitiale } = await searchParams;
-  const { scope } = await requireContentEditor();
+  const { scope } = await requireContenuPedagogique();
   // Helpers per content type (admin = tout autorisé)
   const allow = (t: ContentType): { read: boolean; write: boolean } =>
     scope === null ? { read: true, write: true } : { read: canRead(scope, t), write: canWrite(scope, t) };

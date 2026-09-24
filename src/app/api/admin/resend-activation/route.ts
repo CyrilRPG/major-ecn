@@ -3,7 +3,9 @@
  *
  * Renvoie un email d'activation (set-password) à un user existant.
  * Utile pour débloquer un étudiant qui n'a pas reçu son email après
- * un paiement Stripe (Resend non configuré, fallback Supabase rate-limité, etc.).
+ * un paiement Stripe (Resend non configuré, fallback Supabase rate-limité, etc.),
+ * ou pour renvoyer son invitation à un membre de l'équipe — qui reçoit alors
+ * l'invitation adaptée à son poste, jamais le gabarit élève.
  *
  * Body : { userId: string }
  * Réservé aux admins.
@@ -13,7 +15,8 @@ import { createClient as createSupabasePublicClient } from '@supabase/supabase-j
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, siteUrl } from '@/lib/email/send';
-import { purchaseConfirmationEmail, resetPasswordEmail, welcomeEmail } from '@/lib/email/templates';
+import { invitationEquipeEmail, purchaseConfirmationEmail, resetPasswordEmail, welcomeEmail } from '@/lib/email/templates';
+import { scopeEquipeResolu } from '@/lib/auth/onglets-equipe';
 import { FORMULES, type FormuleId } from '@/lib/stripe';
 
 type ScopeWithFormule = { paid_formule?: string; paid_offer?: string; paid_specialty?: string };
@@ -39,14 +42,18 @@ export async function POST(req: Request) {
   // 1) Récupérer email + first_name + formule éventuelle pour personnaliser.
   const { data: prof } = await admin
     .from('profiles')
-    .select('id, email, first_name, last_name, permission_scope')
+    .select('id, email, first_name, last_name, role, access_end, permission_scope')
     .eq('id', body.userId)
     .maybeSingle();
   if (!prof?.email) return NextResponse.json({ error: 'Profil introuvable ou sans email' }, { status: 404 });
 
+  const role = prof.role ?? null;
+  const equipe = role === 'professor' || role === 'admin';
   const scope = (prof.permission_scope ?? {}) as ScopeWithFormule;
   const formuleId = scope.paid_formule as FormuleId | undefined;
-  const formule = formuleId && formuleId in FORMULES ? FORMULES[formuleId] : null;
+  // Une formule achetée ne concerne qu'un élève : jamais de récapitulatif
+  // d'achat pour un membre de l'équipe.
+  const formule = !equipe && formuleId && formuleId in FORMULES ? FORMULES[formuleId] : null;
 
   const base = siteUrl();
   const redirectTo = `${base}/auth/setup-password`;
@@ -97,6 +104,19 @@ export async function POST(req: Request) {
         installments: 1,
         setupUrl,
         specialty: scope.paid_specialty ?? null,
+      });
+      const r = await sendEmail({ to: prof.email, subject: tmpl.subject, html: tmpl.html, text: tmpl.text });
+      if (r.ok) { emailVia = 'resend'; }
+      else { emailError = r.error; }
+    } else if (equipe && !dejaActive) {
+      // Membre de l'équipe pas encore activé : son invitation, adaptée à son
+      // poste (monteur, commercial, enseignant…), avec son propre objet.
+      const tmpl = invitationEquipeEmail({
+        firstName: prof.first_name ?? '',
+        setupUrl,
+        scope: role === 'professor' ? await scopeEquipeResolu({ id: prof.id, role, permission_scope: prof.permission_scope }) : null,
+        administrateur: role === 'admin',
+        accesJusquau: prof.access_end ?? null,
       });
       const r = await sendEmail({ to: prof.email, subject: tmpl.subject, html: tmpl.html, text: tmpl.text });
       if (r.ok) { emailVia = 'resend'; }

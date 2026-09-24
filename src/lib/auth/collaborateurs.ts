@@ -449,31 +449,180 @@ export function accesEquipeExpire(profile: { role?: string | null; access_end?: 
   return Number.isFinite(t) && t < now;
 }
 
+/* ─────────────────────────────── onglets ─────────────────────────────── */
+
+/**
+ * Types « pédagogiques » : tout sauf la vidéo (fiches, QCM / DP / QROC,
+ * annales, flashcards). C'est ce qui fait d'une personne un enseignant : elle
+ * édite le fond et répond aux questions des élèves. Un monteur vidéo, lui,
+ * n'a que le type `video`.
+ */
+export const TYPES_PEDAGOGIQUES: readonly ContentType[] = CONTENT_TYPES.filter((t) => t !== 'video');
+/** Types relus dans « Entraînements d'élèves » (flashcards et QCM proposés par les élèves). */
+const TYPES_ENTRAINEMENT: readonly ContentType[] = ['qcm', 'dp', 'qroc', 'flashcards'];
+
+/**
+ * Onglets d'administration ouverts à un membre du personnel. SOURCE UNIQUE
+ * pour la barre latérale, les gardes de page et l'atterrissage : on n'ouvre
+ * jamais une page « parce que c'est du staff ».
+ */
+export type AccesOnglets = {
+  /** « Contenu » (fiches, QCM, flashcards…) : au moins un type pédagogique. */
+  contenu: boolean;
+  /** « Vidéos » : le type vidéo. */
+  videos: boolean;
+  /** « Questions / Réponses » : réservé aux enseignants (type pédagogique). */
+  qa: boolean;
+  /** « Entraînements d'élèves » : QCM / DP / QROC ou flashcards. */
+  entrainements: boolean;
+  /** « Suivi individuel » / suivi élèves. */
+  suivi: boolean;
+  blog: boolean;
+};
+
+/** Un administrateur voit tout. */
+export const ACCES_ADMIN: Readonly<AccesOnglets> = {
+  contenu: true, videos: true, qa: true, entrainements: true, suivi: true, blog: true,
+};
+
+/**
+ * Onglets ouverts par ce scope. Un compte historique passe d'abord par
+ * `lireScopeEquipe` (content_permissions → module Contenus, rôle de suivi
+ * hérité → module Suivi) : la règle est la même pour tous.
+ */
+export function accesOnglets(scope: ScopeEquipe | null): AccesOnglets {
+  const types = scope && scope.modules.contenus.actif ? scope.modules.contenus.types : [];
+  const pedagogique = types.some((t) => TYPES_PEDAGOGIQUES.includes(t));
+  return {
+    contenu: pedagogique,
+    videos: types.includes('video'),
+    qa: pedagogique,
+    entrainements: types.some((t) => TYPES_ENTRAINEMENT.includes(t)),
+    suivi: !!scope?.modules.suivi.actif,
+    blog: !!scope?.modules.blog.actif,
+  };
+}
+
+/**
+ * Une question du forum relève-t-elle de ce collaborateur ? Il faut répondre
+ * aux questions (enseignant) ET que le collège de la question soit dans son
+ * périmètre. Une question hors cours (sans collège) ne revient qu'aux
+ * enseignants « toutes spécialités ».
+ */
+export function questionDansPerimetre(scope: ScopeEquipe | null, matiereId: string | null | undefined): boolean {
+  if (!scope || !accesOnglets(scope).qa) return false;
+  if (!matiereId) return scope.perimetre.specialites === 'toutes';
+  return specialiteAutorisee(scope.perimetre, matiereId);
+}
+
 /* ─────────────────────────────── navigation ─────────────────────────────── */
 
 export type PageEquipe = { href: string; label: string; module: keyof Modules | 'commun' };
 
+/** Page de sécurité du compte : ouverte à tout le personnel (2FA). */
+export const PAGE_SECURITE = '/admin/securite';
+
 /** Pages d'administration ouvertes par ce scope, dans l'ordre de présentation. */
 export function pagesDuScope(scope: ScopeEquipe | null): PageEquipe[] {
   if (!scope) return [];
+  const acces = accesOnglets(scope);
   const pages: PageEquipe[] = [];
-  if (scope.modules.suivi.actif) {
+  if (acces.suivi) {
     pages.push({ href: '/admin/suivi/eleves', label: 'Suivi élèves — tableau de travail', module: 'suivi' });
     pages.push({ href: '/admin/suivi', label: 'Suivi individuel (agenda, campagnes, candidats)', module: 'suivi' });
   }
-  if (scope.modules.contenus.actif) {
-    pages.push({ href: '/admin/contenu', label: 'Contenu pédagogique', module: 'contenus' });
-    if (scope.modules.contenus.types.includes('video')) pages.push({ href: '/admin/videos', label: 'Vidéos', module: 'contenus' });
-  }
-  if (scope.modules.blog.actif) pages.push({ href: '/admin/blog', label: 'Blog', module: 'blog' });
-  pages.push({ href: '/admin/qa', label: 'Questions / Réponses', module: 'commun' });
-  pages.push({ href: '/admin/securite', label: 'Sécurité du compte (2FA)', module: 'commun' });
+  if (acces.contenu) pages.push({ href: '/admin/contenu', label: 'Contenu pédagogique', module: 'contenus' });
+  if (acces.videos) pages.push({ href: '/admin/videos', label: 'Vidéos, replays et supports', module: 'contenus' });
+  if (acces.entrainements) pages.push({ href: '/admin/entrainements-eleves', label: 'Entraînements d’élèves', module: 'contenus' });
+  if (acces.qa) pages.push({ href: '/admin/qa', label: 'Questions / Réponses des élèves', module: 'contenus' });
+  if (acces.blog) pages.push({ href: '/admin/blog', label: 'Blog', module: 'blog' });
+  pages.push({ href: PAGE_SECURITE, label: 'Sécurité du compte (2FA)', module: 'commun' });
   return pages;
 }
 
 /** Première page à ouvrir pour ce compte (atterrissage après connexion). */
 export function premierePage(scope: ScopeEquipe | null): string {
-  return pagesDuScope(scope)[0]?.href ?? '/admin/qa';
+  return pagesDuScope(scope)[0]?.href ?? PAGE_SECURITE;
+}
+
+/* ─────────────────────────────── poste ─────────────────────────────── */
+
+/** Poste d'une personne de l'équipe : son rôle modèle, ou « personnalisé ». */
+export type PosteEquipe = RoleModele | 'personnalise';
+
+export const POSTE_LABEL: Record<PosteEquipe, string> = {
+  commercial: ROLES_MODELES.commercial.label,
+  gestionnaire_video: ROLES_MODELES.gestionnaire_video.label,
+  redacteur_blog: ROLES_MODELES.redacteur_blog.label,
+  enseignant_relecteur: ROLES_MODELES.enseignant_relecteur.label,
+  responsable_complet: ROLES_MODELES.responsable_complet.label,
+  personnalise: 'Personnalisé',
+};
+
+/**
+ * Poste d'un collaborateur : le rôle modèle choisi à la création, sinon
+ * déduit de ses modules (suivi seul → commercial, vidéo seule → gestionnaire
+ * vidéo, blog seul → rédacteur, contenus pédagogiques → enseignant, les trois
+ * → responsable). Toute autre combinaison est « personnalisée ».
+ */
+export function posteDuScope(scope: ScopeEquipe | null): PosteEquipe {
+  if (!scope) return 'personnalise';
+  if (scope.modele) return scope.modele;
+  const { suivi, contenus, blog } = scope.modules;
+  const acces = accesOnglets(scope);
+  if (suivi.actif && contenus.actif && blog.actif) return 'responsable_complet';
+  if (suivi.actif && !contenus.actif && !blog.actif) return 'commercial';
+  if (blog.actif && !contenus.actif && !suivi.actif) return 'redacteur_blog';
+  if (contenus.actif && !suivi.actif && !blog.actif) {
+    if (acces.contenu) return 'enseignant_relecteur';
+    if (acces.videos) return 'gestionnaire_video';
+  }
+  return 'personnalise';
+}
+
+/**
+ * Présentation d'un collaborateur dans son invitation : l'intitulé de son
+ * poste (sa fonction saisie, sinon son rôle), une phrase de mission, et la
+ * liste de ce à quoi il aura accès (hors page de sécurité, commune à tous).
+ */
+export function presentationPoste(scope: ScopeEquipe | null): {
+  poste: PosteEquipe; intitule: string; enseignant: boolean; mission: string; acces: string[];
+} {
+  const poste = posteDuScope(scope);
+  const intitule = scope?.fonction ?? (poste === 'personnalise' ? 'Collaborateur' : POSTE_LABEL[poste]);
+  const c = scope?.modules.contenus;
+  const b = scope?.modules.blog;
+  let mission: string;
+  switch (poste) {
+    case 'commercial':
+      mission = 'suivre les élèves de votre périmètre : tableau de travail, comptes rendus d’appel et relances.';
+      break;
+    case 'gestionnaire_video':
+      mission = c?.publier
+        ? 'déposer, ranger et publier les vidéos, replays et supports de cours.'
+        : 'déposer et ranger les vidéos, replays et supports — vos dépôts passent « À valider » avant publication.';
+      break;
+    case 'redacteur_blog':
+      mission = b?.publier
+        ? 'rédiger et publier les articles du blog Major ECN.'
+        : 'rédiger les articles du blog — vos brouillons passent « En attente de validation » avant publication.';
+      break;
+    case 'enseignant_relecteur':
+      mission = 'enrichir et relire les contenus pédagogiques de votre spécialité (fiches, QCM, flashcards…) et répondre aux questions des élèves.';
+      break;
+    case 'responsable_complet':
+      mission = 'piloter le suivi des élèves, les contenus pédagogiques et le blog, sur tout votre périmètre.';
+      break;
+    default:
+      mission = 'utiliser les outils d’administration qui vous ont été ouverts.';
+  }
+  return {
+    poste,
+    intitule,
+    enseignant: poste === 'enseignant_relecteur',
+    mission,
+    acces: pagesDuScope(scope).filter((p) => p.href !== PAGE_SECURITE).map((p) => p.label),
+  };
 }
 
 /* ─────────────────────────────── résumé ─────────────────────────────── */
@@ -494,7 +643,7 @@ export function resumeModules(scope: ScopeEquipe): string[] {
       .filter((d) => blog[d]).map((d) => DROIT_BLOG_LABEL[d].toLowerCase());
     out.push(`Blog : ${droits.join(' / ') || 'consultation seule'}`);
   }
-  if (out.length === 0) out.push('Aucun module — accès limité aux Questions / Réponses.');
+  if (out.length === 0) out.push('Aucun module — accès limité à la sécurité du compte.');
   return out;
 }
 

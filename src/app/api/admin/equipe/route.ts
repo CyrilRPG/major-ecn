@@ -7,7 +7,7 @@ import { composerScope, resumeModules } from '@/lib/auth/collaborateurs';
 import { appliquerScope } from '@/lib/equipe/server';
 import { logAudit } from '@/lib/audit/log';
 import { sendEmail, siteUrl } from '@/lib/email/send';
-import { welcomeEmail } from '@/lib/email/templates';
+import { invitationEquipeEmail } from '@/lib/email/templates';
 
 /**
  * Équipe & Permissions — création (POST) et modification (PATCH) d'un membre
@@ -94,8 +94,9 @@ export async function POST(req: Request) {
     await admin.auth.admin.deleteUser(created.user.id).catch(() => null);
     return NextResponse.json({ error: upsertErr.message }, { status: 500 });
   }
-  // Miroir du module de suivi (suivi_staff_roles).
-  await appliquerScope(created.user.id, {
+  // Miroir du module de suivi (suivi_staff_roles). Le scope enregistré (périmètre
+  // déployé sur les sous-collèges) est celui que décrit l'invitation.
+  const scopeEnregistre = await appliquerScope(created.user.id, {
     fonction: p.fonction ?? null, modele: p.modele ?? null, modules: p.modules, perimetre: p.perimetre, mfa_obligatoire: !!p.mfa_obligatoire,
   });
 
@@ -109,7 +110,11 @@ export async function POST(req: Request) {
   let emailVia: 'resend' | 'supabase' | null = null;
   let emailError: string | null = null;
   try {
-    const { subject, html, text } = welcomeEmail({ firstName: p.first_name, setupUrl, role: 'professor' });
+    // Invitation adaptée au poste (monteur, commercial, enseignant…), jamais
+    // un « espace professeur » générique.
+    const { subject, html, text } = invitationEquipeEmail({
+      firstName: p.first_name, setupUrl, scope: scopeEnregistre, accesJusquau: p.access_end ?? null,
+    });
     const sent = await sendEmail({ to: p.email, subject, html, text });
     if (sent.ok) emailVia = 'resend'; else emailError = sent.error;
   } catch (e) {

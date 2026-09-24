@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
 import { canRead, canWrite } from '@/lib/schemas/professor';
+import { TYPES_PEDAGOGIQUES } from '@/lib/auth/collaborateurs';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { ForumView, type ForumQuestionRow, type ForumCollege } from '@/components/forum/forum-view';
 
@@ -52,8 +53,8 @@ export default async function ForumPage({
   if (role === 'professor') {
     const ps = getProfessorScope(profile.permission_scope);
     if (ps) {
-      const hasAnyPerm = (['qcm', 'fiche', 'video', 'annale', 'flashcards'] as const)
-        .some((t) => canRead(ps, t) || canWrite(ps, t));
+      // Enseignants seulement : la vidéo seule (monteur) n'ouvre pas le forum.
+      const hasAnyPerm = TYPES_PEDAGOGIQUES.some((t) => canRead(ps, t) || canWrite(ps, t));
       if (!hasAnyPerm) profAccessibleMatiereIds = [];
       else if (ps.type === 'all') profAccessibleMatiereIds = 'all';
       else profAccessibleMatiereIds = ps.colleges;

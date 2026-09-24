@@ -1,4 +1,4 @@
-import { profCanAccessCours, requireContentEditor } from '@/lib/auth/require-role';
+import { profCanAccessCours, requireContenuPedagogique } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { coursRelus } from '@/lib/data/relectures';
@@ -34,7 +34,7 @@ const SANS_COMPTEURS = {
 };
 
 export default async function AdminContenuPage() {
-  const { scope, isAdmin } = await requireContentEditor();
+  const { scope, isAdmin } = await requireContenuPedagogique();
   const supabase = await createClient();
 
   // Requête « cœur » volontairement légère (id + titre uniquement). Les compteurs

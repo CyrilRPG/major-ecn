@@ -8,6 +8,7 @@ import { getCurrentUserAndProfile, type Profile } from '@/lib/auth/get-profile';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { roleCan, type SuiviCapability, type SuiviRole } from './types';
 import { lireScopeEquipe, roleSuiviDeScope } from '@/lib/auth/collaborateurs';
+import { atterrissageEquipe } from '@/lib/auth/onglets-equipe';
 
 /**
  * Rôles du module (§18). L'administrateur de la plateforme a tous les droits ;
@@ -34,13 +35,14 @@ export const getSuiviRole = cache(async (profile: Pick<Profile, 'id' | 'role'> &
 export type SuiviActor = { user: { id: string }; profile: Profile; role: SuiviRole };
 
 /**
- * Garde de PAGE : redirige les comptes sans rôle (professeur hors module) vers
- * leur panneau Q&R, et un rôle insuffisant vers le tableau de bord du module.
+ * Garde de PAGE : redirige les comptes sans rôle (collaborateur hors module)
+ * vers la première page que leurs modules leur ouvrent, et un rôle
+ * insuffisant vers le tableau de bord du module.
  */
 export async function requireSuiviPage(cap: SuiviCapability = 'view'): Promise<SuiviActor> {
   const { user, profile } = await requireStaff();
   const role = await getSuiviRole(profile);
-  if (!role) redirect('/admin/qa');
+  if (!role) redirect(await atterrissageEquipe(profile));
   if (!roleCan(role, cap)) redirect('/admin/suivi');
   return { user, profile, role };
 }

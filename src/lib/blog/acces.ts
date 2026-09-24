@@ -2,7 +2,8 @@ import 'server-only';
 import { redirect } from 'next/navigation';
 import { requireStaff } from '@/lib/auth/require-role';
 import { getCurrentUserAndProfile, type Profile } from '@/lib/auth/get-profile';
-import { lireScopeEquipe, peutBlog, premierePage, type DroitBlog } from '@/lib/auth/collaborateurs';
+import { lireScopeEquipe, peutBlog, type DroitBlog } from '@/lib/auth/collaborateurs';
+import { atterrissageEquipe } from '@/lib/auth/onglets-equipe';
 
 /**
  * Module « Blog » (cahier des charges 18/09/2026, §6) : permissions
@@ -41,7 +42,7 @@ export type ActeurBlog = { user: { id: string }; profile: Profile; isAdmin: bool
 export async function requireBlogPage(): Promise<ActeurBlog> {
   const { user, profile, isAdmin } = await requireStaff();
   const droits = droitsBlogDe(profile);
-  if (!droits.voir) redirect(isAdmin ? '/admin' : premierePage(lireScopeEquipe(profile.permission_scope)));
+  if (!droits.voir) redirect(isAdmin ? '/admin' : await atterrissageEquipe(profile));
   return { user, profile, isAdmin, droits };
 }
 

@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import {
   ArrowRight, ClipboardCheck, Clock, FileText, Layers3, Play, RefreshCcw, Target,
@@ -14,6 +15,7 @@ import { DiscoveryGateLink } from '@/components/espace-decouverte/discovery-gate
 import { EDN_FACULTE_ID, getNavigatorTree } from '@/lib/data/navigator';
 import { getFaculteContentTotals } from '@/lib/data/faculte-totals';
 import { ProfWelcome } from '@/components/professor/prof-welcome';
+import { ongletsDe } from '@/lib/auth/onglets-equipe';
 import { startOfUtcIsoWeek, sumTrackedSeconds, type StudyTimeRow } from '@/lib/student/study-time';
 import { getMaintienStats, getStudiedSpecialties } from '@/lib/pedago/maintien';
 import { sessionSizesFor } from '@/lib/pedago/status';
@@ -41,6 +43,10 @@ export default async function AccueilPage() {
   // accessibles + items + accès rapide au forum. Pas de dashboard
   // QCM/flashcards (qui n'a aucun sens pour un prof).
   if (profile.role === 'professor') {
+    // Cette page d'accueil est celle des enseignants (collèges, items, forum).
+    // Un monteur vidéo, un commercial ou un rédacteur blog repart vers la
+    // première page que ses modules lui ouvrent dans l'administration.
+    if (!(await ongletsDe(profile)).contenu) redirect('/admin');
     const tree = await getNavigatorTree(profile);
     return <ProfWelcome profile={profile} tree={tree} />;
   }

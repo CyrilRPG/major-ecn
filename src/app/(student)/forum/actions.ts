@@ -12,6 +12,7 @@ import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { identityContext, identityFromProfile } from '@/lib/admin/student-identity';
 import { canRead, canWrite, type ProfessorScope } from '@/lib/schemas/professor';
 import { logAudit } from '@/lib/audit/log';
+import { TYPES_PEDAGOGIQUES, accesOnglets, lireScopeEquipe } from '@/lib/auth/collaborateurs';
 
 type Result = { ok: true; id: string } | { error: string };
 
@@ -19,9 +20,8 @@ type Result = { ok: true; id: string } | { error: string };
 function profCanAccessForumMatiere(scope: ProfessorScope | null, matiereId: string | null): boolean {
   if (!scope) return false;
   if (matiereId == null) return scope.type === 'all'; // question hors-cours : seuls les profs 'tous collèges'
-  const hasAnyPerm = (['qcm', 'fiche', 'video', 'annale', 'flashcards'] as const).some(
-    (t) => canRead(scope, t) || canWrite(scope, t)
-  );
+  // Enseignants seulement : la vidéo seule (monteur) ne donne pas voix au forum.
+  const hasAnyPerm = TYPES_PEDAGOGIQUES.some((t) => canRead(scope, t) || canWrite(scope, t));
   if (!hasAnyPerm) return false;
   if (scope.type === 'all') return true;
   return scope.colleges.includes(matiereId);
@@ -130,6 +130,9 @@ async function notifyProfessorsOfNewQuestion(args: {
 
   const targets = profs.filter((p) => {
     if (!p.email) return false;
+    // Seuls les enseignants répondent au forum : ni le monteur vidéo, ni le
+    // commercial, ni le rédacteur blog ne reçoivent ces notifications.
+    if (!accesOnglets(lireScopeEquipe(p.permission_scope)).qa) return false;
     if (!args.matiereId) return true; // question sans cours → tous les profs
     const scope = parseScope(p.permission_scope);
     return canAccessCollege(scope, args.matiereId);

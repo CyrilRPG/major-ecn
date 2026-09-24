@@ -2,6 +2,7 @@ import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { requireStaff } from '@/lib/auth/require-role';
 import { exigenceMfa } from '@/lib/auth/mfa';
+import { ongletsDe } from '@/lib/auth/onglets-equipe';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { UserMenu } from '@/components/user-menu';
 import { ImpersonationBanner } from '@/components/impersonation-banner';
@@ -20,6 +21,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (exigence === 'verifier') redirect(`/admin/securite/verifier?next=${encodeURIComponent(pathname || '/admin')}`);
   if (exigence === 'activer') redirect('/admin/securite?obligatoire=1');
 
+  // Onglets ouverts (cf. `accesOnglets`) : résolus côté serveur, y compris le
+  // rôle de suivi hérité d'un compte historique (suivi_staff_roles).
+  const onglets = await ongletsDe(profile);
+
   // « Se connecter en tant que » un membre de l'équipe : le bandeau de retour
   // doit exister aussi dans l'administration, pas seulement en vue élève.
   const cookieStore = await cookies();
@@ -30,7 +35,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="flex min-h-screen flex-col">
       {impersonating && <ImpersonationBanner targetName={impersonatedName} />}
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <AdminSidebar profile={profile} />
+        <AdminSidebar profile={profile} onglets={onglets} />
         <div className="flex min-w-0 flex-1 flex-col bg-(--color-surface-soft)">
           <header className="flex h-16 shrink-0 items-center justify-end gap-3 border-b border-(--color-border) bg-(--color-surface) px-4">
             <UserMenu profile={profile} />

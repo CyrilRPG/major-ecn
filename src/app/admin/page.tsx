@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { requireStaff } from '@/lib/auth/require-role';
-import { lireScopeEquipe, premierePage } from '@/lib/auth/collaborateurs';
+import { atterrissageEquipe } from '@/lib/auth/onglets-equipe';
 
 /**
  * Atterrissage de l'administration : l'administrateur ouvre les élèves, un
@@ -10,5 +10,5 @@ import { lireScopeEquipe, premierePage } from '@/lib/auth/collaborateurs';
  */
 export default async function AdminRoot() {
   const { profile, isAdmin } = await requireStaff();
-  redirect(isAdmin ? '/admin/eleves' : premierePage(lireScopeEquipe(profile.permission_scope)));
+  redirect(isAdmin ? '/admin/eleves' : await atterrissageEquipe(profile));
 }

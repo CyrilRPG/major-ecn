@@ -1,14 +1,18 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useMemo, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Eye, Loader2, LogIn, ShieldCheck, ShieldOff } from 'lucide-react';
+import { Eye, Loader2, LogIn, Search, ShieldCheck, ShieldOff, X } from 'lucide-react';
 import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 import { Button } from '@/components/ui/button';
 import { ToggleActiveButton } from '@/components/admin/toggle-active-button';
+import { ResendActivationButton } from '@/components/admin/resend-activation-button';
 import { CollaborateurDialog, type CollaborateurInitial } from './collaborateur-dialog';
-import { FORMULES, formulesPour, replierPerimetre, type Perimetre, type ScopeEquipe } from '@/lib/auth/collaborateurs';
+import {
+  FORMULES, POSTE_LABEL, formulesPour, posteDuScope, replierPerimetre,
+  type Perimetre, type PosteEquipe, type ScopeEquipe,
+} from '@/lib/auth/collaborateurs';
 
 type CollegeArbre = { id: string; nom: string; enfants?: { id: string; nom: string }[] };
 
@@ -36,6 +40,44 @@ export type LigneEquipe = {
   mfa_facteurs: number;
   scope: ScopeEquipe | null;
 };
+
+/* ───────────────────────── recherche & filtres ───────────────────────── */
+
+type FiltreRole = 'tous' | 'admin' | PosteEquipe;
+type Statut = 'actifs' | 'desactives' | 'expires';
+type FiltreStatut = 'tous' | Statut;
+
+const FILTRES_ROLE: { key: FiltreRole; label: string }[] = [
+  { key: 'tous', label: 'Tous' },
+  { key: 'admin', label: 'Administrateurs' },
+  { key: 'enseignant_relecteur', label: 'Enseignants' },
+  { key: 'commercial', label: 'Commerciaux' },
+  { key: 'gestionnaire_video', label: 'Gestionnaires vidéo' },
+  { key: 'redacteur_blog', label: 'Rédacteurs blog' },
+  { key: 'responsable_complet', label: 'Responsables complets' },
+  { key: 'personnalise', label: 'Personnalisés' },
+];
+
+const FILTRES_STATUT: { key: FiltreStatut; label: string }[] = [
+  { key: 'tous', label: 'Tous les statuts' },
+  { key: 'actifs', label: 'Actifs' },
+  { key: 'desactives', label: 'Désactivés' },
+  { key: 'expires', label: 'Accès expirés' },
+];
+
+/** Minuscules sans accents : « Médecine » se trouve en tapant « medecine ». */
+const normaliser = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+const chiffres = (s: string) => s.replace(/\D/g, '');
+
+/** Rôle d'une ligne : administrateur, ou poste du collaborateur (modèle, sinon déduit de ses modules). */
+function roleDe(r: LigneEquipe): Exclude<FiltreRole, 'tous'> {
+  return r.role === 'admin' ? 'admin' : posteDuScope(r.scope);
+}
+
+function statutDe(r: LigneEquipe, maintenant: number): Statut {
+  if (!r.is_active) return 'desactives';
+  return r.access_end && new Date(r.access_end).getTime() < maintenant ? 'expires' : 'actifs';
+}
 
 const fmt = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) : '—');
 
@@ -87,81 +129,197 @@ export function EquipeList({ rows, colleges }: { rows: LigneEquipe[]; colleges: 
   // sans appel impur pendant le rendu.
   const [maintenant] = useState(() => Date.now());
 
+  const [recherche, setRecherche] = useState('');
+  const [filtreRole, setFiltreRole] = useState<FiltreRole>('tous');
+  const [filtreStatut, setFiltreStatut] = useState<FiltreStatut>('tous');
+
+  // Recherche + statut d'abord : les compteurs des filtres de rôle reflètent
+  // ce qui reste visible, puis le rôle choisi restreint la liste.
+  const avantRole = useMemo(() => {
+    const q = normaliser(recherche);
+    const qChiffres = chiffres(recherche);
+    return rows.filter((r) => {
+      if (filtreStatut !== 'tous' && statutDe(r, maintenant) !== filtreStatut) return false;
+      if (!q) return true;
+      const role = roleDe(r);
+      const texte = normaliser([
+        r.first_name, r.last_name, r.email, r.phone, r.scope?.fonction,
+        role === 'admin' ? 'administrateur' : POSTE_LABEL[role],
+      ].filter(Boolean).join(' '));
+      if (q.split(/\s+/).every((mot) => texte.includes(mot))) return true;
+      // Téléphone saisi avec ou sans espaces / points.
+      return qChiffres.length >= 3 && !!r.phone && chiffres(r.phone).includes(qChiffres);
+    });
+  }, [rows, recherche, filtreStatut, maintenant]);
+
+  const compteurs = useMemo(() => {
+    const c: Record<FiltreRole, number> = {
+      tous: avantRole.length, admin: 0, enseignant_relecteur: 0, commercial: 0, gestionnaire_video: 0,
+      redacteur_blog: 0, responsable_complet: 0, personnalise: 0,
+    };
+    for (const r of avantRole) c[roleDe(r)] += 1;
+    return c;
+  }, [avantRole]);
+
+  const visibles = filtreRole === 'tous' ? avantRole : avantRole.filter((r) => roleDe(r) === filtreRole);
+  const filtreActif = recherche.trim() !== '' || filtreRole !== 'tous' || filtreStatut !== 'tous';
+  const reinitialiser = () => { setRecherche(''); setFiltreRole('tous'); setFiltreStatut('tous'); };
+
   return (
-    <div className="overflow-x-auto rounded-2xl border border-(--color-border) bg-(--color-surface)">
-      <table className="w-full text-sm">
-        <thead className="bg-(--color-surface-soft) text-left text-[11px] uppercase tracking-wide text-(--color-ink-muted)">
-          <tr>
-            <th className="px-4 py-3 font-semibold">Collaborateur</th>
-            <th className="px-4 py-3 font-semibold">Permissions</th>
-            <th className="px-4 py-3 font-semibold">Périmètre</th>
-            <th className="px-4 py-3 font-semibold">Statut</th>
-            <th className="px-4 py-3 font-semibold">2FA</th>
-            <th className="px-4 py-3 font-semibold">Dernière connexion</th>
-            <th className="px-4 py-3 font-semibold text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => {
-            const expire = !!r.access_end && new Date(r.access_end).getTime() < maintenant;
-            const s = r.scope;
-            const initial: CollaborateurInitial | undefined = s ? {
-              userId: r.id, first_name: r.first_name, last_name: r.last_name, email: r.email, phone: r.phone,
-              fonction: s.fonction, modele: s.modele, modules: s.modules, perimetre: s.perimetre,
-              mfa_obligatoire: s.mfa_obligatoire, access_end: r.access_end ? r.access_end.slice(0, 10) : null, is_active: r.is_active,
-            } : undefined;
+    <div className="space-y-3">
+      <div className="space-y-3 rounded-2xl border border-(--color-border) bg-(--color-surface) p-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="relative flex-1">
+            <span className="sr-only">Rechercher un collaborateur</span>
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--color-ink-muted)" />
+            <input
+              type="search"
+              value={recherche}
+              onChange={(e) => setRecherche(e.target.value)}
+              placeholder="Rechercher par nom, email, téléphone ou fonction…"
+              className="h-10 w-full rounded-xl border border-(--color-border) bg-(--color-surface) pl-9 pr-3 text-sm text-(--color-ink) outline-none placeholder:text-(--color-ink-muted) focus:border-(--color-primary)"
+            />
+          </label>
+          <select
+            value={filtreStatut}
+            onChange={(e) => setFiltreStatut(e.target.value as FiltreStatut)}
+            aria-label="Filtrer par statut"
+            className="h-10 rounded-xl border border-(--color-border) bg-(--color-surface) px-3 text-sm text-(--color-ink) outline-none focus:border-(--color-primary)"
+          >
+            {FILTRES_STATUT.map((f) => <option key={f.key} value={f.key}>{f.label}</option>)}
+          </select>
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filtrer par rôle">
+          {FILTRES_ROLE.map((f) => {
+            const actif = filtreRole === f.key;
+            const n = compteurs[f.key];
+            if (f.key !== 'tous' && n === 0 && !actif) return null;
             return (
-              <tr key={r.id} className="border-t border-(--color-border) align-top">
-                <td className="px-4 py-3">
-                  <p className="font-semibold text-(--color-ink)">{nom(r)}</p>
-                  <p className="text-xs text-(--color-ink-muted)">{r.email}</p>
-                  {r.role === 'admin'
-                    ? <Badge tone="danger">Administrateur</Badge>
-                    : s?.fonction ? <p className="mt-0.5 text-xs font-medium text-(--color-ink-soft)">{s.fonction}</p> : null}
-                </td>
-                <td className="px-4 py-3">
-                  {r.role === 'admin' ? (
-                    <span className="text-xs text-(--color-ink-muted)">Tous droits, y compris zones réservées.</span>
-                  ) : s ? (
-                    <div className="flex flex-wrap gap-1">
-                      {s.modules.suivi.actif && <Badge tone="primary">Suivi élèves{s.modules.suivi.gerer ? ' · gère' : s.modules.suivi.rediger ? ' · rédige' : ' · lit'}</Badge>}
-                      {s.modules.contenus.actif && <Badge tone="primary">Contenus · {(['creer', 'modifier', 'publier', 'supprimer'] as const).filter((d) => s.modules.contenus[d]).map((d) => d.slice(0, 4)).join('/') || 'lecture'}</Badge>}
-                      {s.modules.blog.actif && <Badge tone="primary">Blog{s.modules.blog.publier ? ' · publie' : ' · à valider'}</Badge>}
-                      {!s.modules.suivi.actif && !s.modules.contenus.actif && !s.modules.blog.actif && <Badge>Aucun module</Badge>}
-                      {s.modele && <Badge>modèle : {s.modele.replace(/_/g, ' ')}</Badge>}
-                    </div>
-                  ) : <Badge>—</Badge>}
-                </td>
-                <td className="px-4 py-3 text-xs text-(--color-ink-soft)">
-                  {r.role === 'admin' ? 'Tout' : s ? resumeCourt(replierPerimetre(s.perimetre, parentDe), nomCollege) : '—'}
-                </td>
-                <td className="px-4 py-3">
-                  {!r.is_active ? <Badge tone="danger">Inactif</Badge> : expire ? <Badge tone="danger">Expiré le {fmt(r.access_end)}</Badge> : r.access_end ? <Badge tone="warn">Actif · fin le {fmt(r.access_end)}</Badge> : <Badge tone="ok">Actif</Badge>}
-                </td>
-                <td className="px-4 py-3">
-                  {r.mfa_facteurs > 0
-                    ? <Badge tone="ok"><ShieldCheck className="h-3 w-3" /> Activée</Badge>
-                    : s?.mfa_obligatoire ? <Badge tone="warn"><ShieldOff className="h-3 w-3" /> Obligatoire · non activée</Badge>
-                    : <Badge><ShieldOff className="h-3 w-3" /> Non activée</Badge>}
-                </td>
-                <td className="px-4 py-3 text-xs text-(--color-ink-soft)">{r.last_sign_in ? new Date(r.last_sign_in).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Jamais'}</td>
-                <td className="px-4 py-3">
-                  {r.role === 'professor' && initial && (
-                    <div className="flex flex-wrap justify-end gap-1.5">
-                      <CollaborateurDialog mode="modifier" initial={initial} colleges={colleges} />
-                      <Button asChild size="sm" variant="outline" className="gap-1.5">
-                        <Link href={`/admin/equipe/${r.id}`}><Eye className="h-3.5 w-3.5" /> Voir ses permissions</Link>
-                      </Button>
-                      <ImpersonateEquipe userId={r.id} nom={nom(r)} />
-                      <ToggleActiveButton userId={r.id} displayName={nom(r)} isActive={r.is_active} />
-                    </div>
+              <button
+                key={f.key}
+                type="button"
+                aria-pressed={actif}
+                onClick={() => setFiltreRole(f.key)}
+                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
+                  actif
+                    ? 'border-(--color-primary) bg-(--color-primary) text-white'
+                    : 'border-(--color-border) bg-(--color-surface) text-(--color-ink-soft) hover:text-(--color-ink)'
+                }`}
+              >
+                {f.label}
+                <span className={`rounded-full px-1.5 text-[10px] ${actif ? 'bg-white/20' : 'bg-(--color-sand-100)'}`}>{n}</span>
+              </button>
+            );
+          })}
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-(--color-ink-muted)">
+          <span>
+            {visibles.length} résultat{visibles.length > 1 ? 's' : ''}{filtreActif ? ` sur ${rows.length}` : ''}
+          </span>
+          {filtreActif && (
+            <button type="button" onClick={reinitialiser} className="inline-flex items-center gap-1 font-semibold text-(--color-ink-soft) hover:text-(--color-ink)">
+              <X className="h-3.5 w-3.5" /> Réinitialiser les filtres
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="overflow-x-auto rounded-2xl border border-(--color-border) bg-(--color-surface)">
+        <table className="w-full text-sm">
+          <thead className="bg-(--color-surface-soft) text-left text-[11px] uppercase tracking-wide text-(--color-ink-muted)">
+            <tr>
+              <th className="px-4 py-3 font-semibold">Collaborateur</th>
+              <th className="px-4 py-3 font-semibold">Permissions</th>
+              <th className="px-4 py-3 font-semibold">Périmètre</th>
+              <th className="px-4 py-3 font-semibold">Statut</th>
+              <th className="px-4 py-3 font-semibold">2FA</th>
+              <th className="px-4 py-3 font-semibold">Dernière connexion</th>
+              <th className="px-4 py-3 font-semibold text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {visibles.length === 0 && (
+              <tr>
+                <td colSpan={7} className="px-4 py-10 text-center text-sm text-(--color-ink-soft)">
+                  Aucun collaborateur ne correspond à ces critères.
+                  {filtreActif && (
+                    <button type="button" onClick={reinitialiser} className="ml-1 font-semibold text-(--color-primary-deep) underline-offset-2 hover:underline">
+                      Réinitialiser les filtres
+                    </button>
                   )}
                 </td>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            )}
+            {visibles.map((r) => {
+              const expire = statutDe(r, maintenant) === 'expires';
+              const poste = roleDe(r);
+              const s = r.scope;
+              const initial: CollaborateurInitial | undefined = s ? {
+                userId: r.id, first_name: r.first_name, last_name: r.last_name, email: r.email, phone: r.phone,
+                fonction: s.fonction, modele: s.modele, modules: s.modules, perimetre: s.perimetre,
+                mfa_obligatoire: s.mfa_obligatoire, access_end: r.access_end ? r.access_end.slice(0, 10) : null, is_active: r.is_active,
+              } : undefined;
+              return (
+                <tr key={r.id} className="border-t border-(--color-border) align-top">
+                  <td className="px-4 py-3">
+                    <p className="font-semibold text-(--color-ink)">{nom(r)}</p>
+                    <p className="text-xs text-(--color-ink-muted)">{r.email}</p>
+                    {poste === 'admin'
+                      ? <Badge tone="danger">Administrateur</Badge>
+                      : (
+                        <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                          <Badge tone={poste === 'personnalise' ? 'muted' : 'primary'}>{POSTE_LABEL[poste]}</Badge>
+                          {s?.fonction && <span className="text-xs font-medium text-(--color-ink-soft)">{s.fonction}</span>}
+                        </div>
+                      )}
+                  </td>
+                  <td className="px-4 py-3">
+                    {r.role === 'admin' ? (
+                      <span className="text-xs text-(--color-ink-muted)">Tous droits, y compris zones réservées.</span>
+                    ) : s ? (
+                      <div className="flex flex-wrap gap-1">
+                        {s.modules.suivi.actif && <Badge tone="primary">Suivi élèves{s.modules.suivi.gerer ? ' · gère' : s.modules.suivi.rediger ? ' · rédige' : ' · lit'}</Badge>}
+                        {s.modules.contenus.actif && <Badge tone="primary">Contenus · {(['creer', 'modifier', 'publier', 'supprimer'] as const).filter((d) => s.modules.contenus[d]).map((d) => d.slice(0, 4)).join('/') || 'lecture'}</Badge>}
+                        {s.modules.blog.actif && <Badge tone="primary">Blog{s.modules.blog.publier ? ' · publie' : ' · à valider'}</Badge>}
+                        {!s.modules.suivi.actif && !s.modules.contenus.actif && !s.modules.blog.actif && <Badge>Aucun module</Badge>}
+                        {s.modele && <Badge>modèle : {POSTE_LABEL[s.modele].toLowerCase()}</Badge>}
+                      </div>
+                    ) : <Badge>—</Badge>}
+                  </td>
+                  <td className="px-4 py-3 text-xs text-(--color-ink-soft)">
+                    {r.role === 'admin' ? 'Tout' : s ? resumeCourt(replierPerimetre(s.perimetre, parentDe), nomCollege) : '—'}
+                  </td>
+                  <td className="px-4 py-3">
+                    {!r.is_active ? <Badge tone="danger">Inactif</Badge> : expire ? <Badge tone="danger">Expiré le {fmt(r.access_end)}</Badge> : r.access_end ? <Badge tone="warn">Actif · fin le {fmt(r.access_end)}</Badge> : <Badge tone="ok">Actif</Badge>}
+                  </td>
+                  <td className="px-4 py-3">
+                    {r.mfa_facteurs > 0
+                      ? <Badge tone="ok"><ShieldCheck className="h-3 w-3" /> Activée</Badge>
+                      : s?.mfa_obligatoire ? <Badge tone="warn"><ShieldOff className="h-3 w-3" /> Obligatoire · non activée</Badge>
+                      : <Badge><ShieldOff className="h-3 w-3" /> Non activée</Badge>}
+                  </td>
+                  <td className="px-4 py-3 text-xs text-(--color-ink-soft)">{r.last_sign_in ? new Date(r.last_sign_in).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Jamais'}</td>
+                  <td className="px-4 py-3">
+                    {r.role === 'professor' && initial && (
+                      <div className="flex flex-wrap justify-end gap-1.5">
+                        <CollaborateurDialog mode="modifier" initial={initial} colleges={colleges} />
+                        <Button asChild size="sm" variant="outline" className="gap-1.5">
+                          <Link href={`/admin/equipe/${r.id}`}><Eye className="h-3.5 w-3.5" /> Voir ses permissions</Link>
+                        </Button>
+                        {!r.last_sign_in && (
+                          <ResendActivationButton userId={r.id} displayName={nom(r)} cible="la personne" />
+                        )}
+                        <ImpersonateEquipe userId={r.id} nom={nom(r)} />
+                        <ToggleActiveButton userId={r.id} displayName={nom(r)} isActive={r.is_active} />
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Sparkles } from 'lucide-react';
-import { requireStaff, canEditCoursContent, canViewCoursContent } from '@/lib/auth/require-role';
+import { requireOnglet, canEditCoursContent, canViewCoursContent } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { EmptyState } from '@/components/empty-state';
 import { StudentExercisesTable, type FiltreStatut, type StudentExerciseRow } from '@/components/admin/student-exercises/student-exercises-table';
@@ -19,7 +19,9 @@ export const dynamic = 'force-dynamic';
  * (`canEditCoursContent`) — même règle que « Contenu ».
  */
 export default async function EntrainementsElevesPage({ searchParams }: { searchParams: Promise<{ statut?: string }> }) {
-  const { profile, isAdmin } = await requireStaff();
+  // Réservé aux collaborateurs qui ont QCM / DP / QROC ou flashcards (et aux
+  // administrateurs) : un monteur vidéo ou un commercial n'y a pas accès.
+  const { profile, isAdmin } = await requireOnglet('entrainements');
   const sp = await searchParams;
   const filtre: FiltreStatut = (['private', 'published', 'rejected', 'all'] as const).includes(sp.statut as FiltreStatut) ? (sp.statut as FiltreStatut) : 'private';
 
