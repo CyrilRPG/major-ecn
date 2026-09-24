@@ -54,15 +54,27 @@ export async function chargerRelectures(coursId: string): Promise<RelecturesItem
 /** Items entièrement relus parmi une liste (badge des listes d'administration). */
 export async function coursRelus(coursIds: string[]): Promise<Set<string>> {
   if (coursIds.length === 0) return new Set();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (createAdminClient() as any)
-    .from('content_reviews')
-    .select('cours_id')
-    .eq('scope', 'cours')
-    .in('cours_id', coursIds);
-  if (error) {
-    if (estTableRelecturesAbsente(error)) return new Set();
-    throw error;
+  // Lecture par tranches : la liste passe dans l'URL (`in.(…)`), et les
+  // 1 293 items de /admin/contenu (≈ 48 Ko) faisaient répondre 400 à
+  // PostgREST — la page entière tombait en erreur (24/09/2026).
+  const TRANCHE = 200;
+  const admin = createAdminClient();
+  const tranches: string[][] = [];
+  for (let i = 0; i < coursIds.length; i += TRANCHE) tranches.push(coursIds.slice(i, i + TRANCHE));
+  const resultats = await Promise.all(tranches.map((ids) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (admin as any)
+      .from('content_reviews')
+      .select('cours_id')
+      .eq('scope', 'cours')
+      .in('cours_id', ids)));
+  const out = new Set<string>();
+  for (const { data, error } of resultats as { data: { cours_id: string }[] | null; error: unknown }[]) {
+    if (error) {
+      if (estTableRelecturesAbsente(error)) return new Set();
+      throw error;
+    }
+    for (const r of data ?? []) out.add(r.cours_id);
   }
-  return new Set(((data ?? []) as { cours_id: string }[]).map((r) => r.cours_id));
+  return out;
 }

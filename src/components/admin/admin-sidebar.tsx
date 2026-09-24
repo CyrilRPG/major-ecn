@@ -35,7 +35,6 @@ const GROUPS: Group[] = [
     label: 'Pédagogie',
     Icon: BookOpen,
     items: [
-      { href: '/admin/arborescence', label: 'Arborescence', Icon: ListTree },
       { href: '/admin/contenu', label: 'Contenu', Icon: Library, profContent: true },
       // Propositions d'élèves (flashcards / QCM) à verser dans la base commune :
       // visibles de tout le staff, l'action est bornée au périmètre du professeur.
