@@ -91,3 +91,13 @@ test('profCanAccessCours reflète accessible_cours_ids() : collège ET item', ()
   assert.equal(profCanAccessCours(scope, 'col-mg-hematologie', 'item-inconnu'), false);
   assert.equal(profCanAccessCours(null, 'col-inconnu', 'item-inconnu'), true); // admin
 });
+
+test('item de révisions : un collaborateur vidéo le crée dans son périmètre, jamais au-delà', async () => {
+  const { peutCreerItemRevisions } = await import('../src/lib/auth/prof-content-access');
+  const video = { video: 'rw' as const };
+  assert.equal(peutCreerItemRevisions({ role: 'professor', type: 'all', colleges: [], content_permissions: video }, 'col-gynecologie'), true);
+  const restreint = { role: 'professor' as const, type: 'college' as const, colleges: ['col-odontologie'], content_permissions: video };
+  assert.equal(peutCreerItemRevisions(restreint, 'col-odontologie'), true);
+  assert.equal(peutCreerItemRevisions(restreint, 'col-gynecologie'), false);
+  assert.equal(peutCreerItemRevisions({ ...restreint, cours: ['c1'] }, 'col-odontologie'), false);
+});

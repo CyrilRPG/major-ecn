@@ -48,6 +48,17 @@ export function profCanAccessCours(scope: ProfessorScope | null, collegeId: stri
   return true;
 }
 
+/**
+ * Un membre du personnel peut-il créer l'item « Replays - Révisions » de ce
+ * collège ? Oui s'il couvre tout le collège : accès à toutes les spécialités,
+ * ou collège dans son périmètre sans restriction à des items précis.
+ */
+export function peutCreerItemRevisions(scope: ProfessorScope, matiereId: string): boolean {
+  if (scope.type === 'all') return true;
+  if (scope.cours && scope.cours.length > 0) return false;
+  return scope.colleges.includes(matiereId);
+}
+
 type ProfileLike = { role?: string | null; permission_scope?: unknown };
 
 /**

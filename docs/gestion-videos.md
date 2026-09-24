@@ -124,8 +124,11 @@ nominatives, statut « À valider » / programmation).
   approfondie) : elle détermine l'onglet où la vidéo apparaît. Pour en changer,
   supprimer et recréer. En revanche le **public** (voies, formules) se modifie
   librement depuis le crayon.
-- **Créer un item est réservé aux administrateurs** (un professeur n'agit que
-  sur les items de son périmètre).
+- **L'item « Replays - Révisions » d'un collège** est créé au premier ajout de
+  vidéo par toute personne qui a le droit de déposer des vidéos (monteur vidéo
+  compris), si ce collège est dans son périmètre. Un compte limité à quelques
+  items précis ne crée rien. Un collaborateur ne voit dans la bibliothèque que
+  les collèges de son périmètre.
 - Le téléversement direct vers Bunny, sans passer par bunny.net, reste
   disponible sous « Autre méthode » : il ajoute une vidéo à la fin de la
   catégorie choisie.

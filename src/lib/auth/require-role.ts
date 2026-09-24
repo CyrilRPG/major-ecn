@@ -24,7 +24,7 @@ function bloquerSiEquipeExpiree(profile: { role?: string | null; access_end?: st
 // `prof-content-access.ts` pour rester testables hors serveur, ré-exportées ici
 // car c'est le point d'entrée historique de tous les appelants.
 export {
-  getProfessorScope, profCanAccessCours, canEditCoursContent, canViewCoursContent,
+  getProfessorScope, profCanAccessCours, peutCreerItemRevisions, canEditCoursContent, canViewCoursContent,
 } from './prof-content-access';
 
 export async function requireUser() {

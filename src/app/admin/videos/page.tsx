@@ -17,7 +17,7 @@ export const metadata = { title: 'Vidéos' };
 export default async function AdminVideosPage() {
   // Onglet ouvert seulement si le type « vidéo » fait partie des droits.
   await requireOnglet('videos');
-  const { profile, isAdmin } = await requireContentEditor();
+  const { profile, isAdmin, scope: portee } = await requireContentEditor();
   // Droits fins du cahier des charges (§5) : créer / modifier / publier /
   // supprimer, lus depuis le module « Contenus » du scope d'équipe.
   const scope = isAdmin ? null : lireScopeEquipe(profile.permission_scope);
@@ -38,15 +38,20 @@ export default async function AdminVideosPage() {
     id: string; nom: string; parent_matiere_id: string | null; order_index: number | null;
   }[];
 
+  // Un collaborateur ne voit que les collèges de son périmètre : proposer un
+  // collège hors périmètre menait à « Accès refusé » au moment d'enregistrer.
+  const dansPerimetre = (id: string) => portee === null || portee.type === 'all' || portee.colleges.includes(id);
   const colleges: LibraryCollege[] = rows
     .filter((m) => !m.parent_matiere_id)
     .map((m) => ({
       id: m.id,
       nom: m.nom,
       enfants: rows
-        .filter((e) => e.parent_matiere_id === m.id)
+        .filter((e) => e.parent_matiere_id === m.id && dansPerimetre(e.id))
         .map((e) => ({ id: e.id, nom: e.nom })),
-    }));
+    }))
+    .filter((c) => dansPerimetre(c.id) || c.enfants.length > 0);
+  const perimetreRestreint = portee !== null && portee.type !== 'all';
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
@@ -59,6 +64,12 @@ export default async function AdminVideosPage() {
         </p>
       </header>
 
+      {perimetreRestreint && (
+        <p className="mb-4 rounded-xl border border-(--color-border) bg-(--color-surface) px-4 py-3 text-xs text-(--color-ink-soft)">
+          Votre accès couvre {colleges.length} spécialité{colleges.length > 1 ? 's' : ''}. Pour en ajouter une,
+          un administrateur élargit votre périmètre dans « Équipe &amp; Permissions ».
+        </p>
+      )}
       <VideoLibrary colleges={colleges} droits={droits} />
     </main>
   );

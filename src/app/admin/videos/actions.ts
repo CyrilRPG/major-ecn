@@ -4,6 +4,7 @@ import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { revalidatePath } from 'next/cache';
 import {
   assertCanWrite,
+  peutCreerItemRevisions,
   profCanAccessCours,
   requireContentEditor,
 } from '@/lib/auth/require-role';
@@ -553,9 +554,18 @@ export async function addVideoToRevisionsAction(input: {
   } catch (e) {
     return { error: e instanceof Error ? e.message : 'Permission insuffisante.' };
   }
-  // Créer un item est une opération d'administrateur (un professeur n'agit que
-  // sur les items déjà inscrits dans son périmètre).
-  if (scope !== null) return { error: 'Seul un administrateur peut créer l’item de révisions.' };
+  // L'item de révisions n'est qu'un conteneur de vidéos : le créer fait partie
+  // de la mission de quiconque peut DÉPOSER une vidéo (monteur vidéo compris),
+  // pourvu que le collège soit dans son périmètre. Un compte restreint à
+  // quelques items précis (`scope.cours`) ne crée rien : ses items sont fixés.
+  if (!droitVideo(profile, 'creer')) return { error: REFUS_DROIT.creer };
+  if (scope !== null && !peutCreerItemRevisions(scope, input.matiereId)) {
+    return {
+      error: scope.type === 'college' && scope.cours && scope.cours.length > 0
+        ? 'Votre accès est limité à des items précis : demandez à un administrateur de créer l’item de révisions.'
+        : 'Ce collège ne fait pas partie de votre périmètre. Un administrateur peut l’y ajouter (Équipe & Permissions).',
+    };
+  }
 
   // Le lien est vérifié AVANT toute création : un lien invalide ne doit pas
   // laisser derrière lui un item vide. (Une séance à venir n'en a pas.)
