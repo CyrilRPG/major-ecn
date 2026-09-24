@@ -12,6 +12,8 @@ import {
 import { normalizeSpecialtyStatus } from '@/lib/pedago/status';
 import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
 import { estItemAnnales } from '@/lib/data/annales';
+import { chargerAnnonces } from '@/lib/annonces/server';
+import { TEXTES_COMMUNS, epreuvePassee, joursAvant, specialitesDeLEleve } from '@/lib/annonces/concours';
 
 export default async function MatierePage({ params }: { params: Promise<{ matiere: string }> }) {
   const { matiere } = await params;
@@ -179,37 +181,25 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
   const rows: IndexRow[] = [...actionRows, ...coursRows];
 
   // ── Date d'épreuve de cette spécialité ──────────────────────────────────
-  // On réutilise les annonces « countdown » ciblées sur ce collège (target_scope
-  // 'college' + target_colleges contenant ce collège), avec une date. Le compteur
-  // de jours restants est ainsi géré par le même système (et ses permissions).
-  const OFFER_RANK: Record<string, number> = { decouverte: 0, essentiel: 1, intensif: 2, approfondi: 3 };
-  const { data: examAnns } = await supabase
-    .from('homepage_announcements')
-    .select('id, title, data, min_offer, target_scope, target_colleges, kind, visible')
-    .eq('visible', true)
-    .eq('kind', 'countdown');
-  type ExamAnn = {
-    title: string; data: { target_date?: string; suffix_bottom?: string } | null;
-    min_offer: string | null; target_scope: string | null; target_colleges: string[] | null;
-  };
-  const examBanner = ((examAnns ?? []) as unknown as ExamAnn[])
-    .filter((a) => {
-      const date = a.data?.target_date;
-      if (!date || Number.isNaN(new Date(date).getTime())) return false;
-      if (a.min_offer && (OFFER_RANK[scope.offer] ?? 0) < (OFFER_RANK[a.min_offer] ?? 0)) return false;
-      // Ciblée précisément sur ce collège.
-      return (a.target_scope === 'college') && (a.target_colleges ?? []).includes(m.id);
-    })
-    .map((a) => ({
-      title: a.title,
-      date: a.data!.target_date as string,
-      note: a.data?.suffix_bottom ?? null,
-      days: Math.max(0, Math.ceil((new Date(a.data!.target_date as string).getTime() - Date.now()) / 86_400_000)),
-    }))
-    .sort((x, y) => new Date(x.date).getTime() - new Date(y.date).getTime())[0] ?? null;
+  // Lue dans la fiche concours de la spécialité (Admin › Annonces) — la même
+  // source que la carte de l'accueil. Un sous-collège prend la fiche de son
+  // collège parent.
+  const annonces = await chargerAnnonces(supabase);
+  const ficheId = annonces.parentDe.get(m.id) ?? m.id;
+  const fiche = annonces.fiches.get(ficheId);
+  const specialitesEleve = specialitesDeLEleve(scope, annonces.parentDe);
+  const concerne = profile.role !== 'student' || specialitesEleve === null || specialitesEleve.includes(ficheId);
+  const examBanner = fiche?.date_epreuve && concerne && !epreuvePassee(fiche)
+    ? {
+      title: `Épreuve écrite — ${TEXTES_COMMUNS.session}`,
+      date: fiche.date_epreuve,
+      note: null as string | null,
+      days: joursAvant(fiche.date_epreuve),
+    }
+    : null;
 
   const fmtExam = (iso: string) => {
-    try { return new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }); }
+    try { return new Date(`${iso.slice(0, 10)}T12:00:00`).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris' }); }
     catch { return iso; }
   };
 
