@@ -49,7 +49,9 @@ export function emailShell(opts: { title: string; bodyHtml: string; cta?: { labe
     eyebrow: 'Suivi individuel',
     tag: 'Suivi individuel',
     title: opts.title,
-    bodyHtml: opts.bodyHtml + (opts.cta ? button(opts.cta.url, opts.cta.label) : ''),
+    // Le message se lit à gauche de la photo (maquette) ; l'appel à l'action suit.
+    intro: opts.internal ? null : opts.bodyHtml,
+    bodyHtml: (opts.internal ? opts.bodyHtml : '') + (opts.cta ? button(opts.cta.url, opts.cta.label) : ''),
     audience: opts.internal ? 'internal' : 'service',
     reason: opts.internal ? null : 'Cet email est envoyé dans le cadre de votre accompagnement individuel Major ECN.',
   });

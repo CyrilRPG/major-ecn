@@ -10,7 +10,9 @@ import { COMMERCIAL_AFTER_M3, publicRules, UNDER_THRESHOLD_MESSAGE, WARNING_CONN
 import { DISTINCTION_LABEL, isPodiumRank, ordinalRank, type Distinction } from './performance';
 import { DEFAULT_SECONDS_PER_QUESTION, type EmailKind, type ParticipantRow, type TournamentRow } from './types';
 import { esc as escAttr } from '@/lib/email/layout';
-import { aButton, aFacts, aHello, aLabel, aLine, aList, aP, aPanel, aPHtml, aRule, aStats, ARENA_MAIL, arenaShell, arenaTextFooter } from './email-layout';
+import { aButton, aFacts, aHello, aLabel, aLine, aList, aP, aPanel, aPHtml, aRule, aStats, ARENA_MAIL, arenaShell, arenaTextFooter, type ArenaPlusLoin } from './email-layout';
+import { passerelleUrl, studentTrainingUrl, type PasserelleAudience } from './passerelle';
+import { collegeIdForSpecialty } from '@/lib/data/enrollable-colleges';
 
 /**
  * EVC Arena — emails (§11). Texte + HTML, envoi journalisé dans
@@ -38,7 +40,29 @@ function unsubscribeUrl(p: ParticipantRow | null): string | null {
   return p ? `${siteUrl()}/arena/desinscription?t=${signedLinkToken('unsub', p.id)}` : null;
 }
 
+/**
+ * Bloc « Pour aller plus loin » (passerelle §11-§20) : un élève Major ECN
+ * n'a jamais de CTA d'achat — il est renvoyé vers sa préparation ; un
+ * prospect vers la page de la spécialité (ou l'URL / le libellé fixés par
+ * l'administration). Statut inconnu : libellé neutre vers le site.
+ * `passerelle_enabled = false` masque le bloc.
+ */
+export function plusLoinBlock(t: TournamentRow, audience: PasserelleAudience | null | undefined, title: string): ArenaPlusLoin | null {
+  if (t.passerelle_enabled === false) return null;
+  const site = siteUrl();
+  const abs = (u: string) => (/^https?:\/\//.test(u) ? u : `${site}${u.startsWith('/') ? '' : '/'}${u}`);
+  if (audience === 'student') {
+    return { title, lead: 'Retrouvez votre préparation Major ECN et mettez toutes les chances de votre côté pour les EVC.', label: 'Continuer sur ma plateforme', href: abs(studentTrainingUrl(collegeIdForSpecialty(t.specialty))) };
+  }
+  const lead = 'Poursuivez votre préparation avec Major ECN et mettez toutes les chances de votre côté pour les EVC.';
+  if (audience === 'prospect') {
+    return { title, lead, label: (t.passerelle_cta ?? '').trim() || 'Poursuivre ma préparation', href: abs(passerelleUrl(t)) };
+  }
+  return { title, lead, label: 'Poursuivre ma préparation', href: site };
+}
+
 type ShellOptions = {
+  plusLoin?: ArenaPlusLoin | null;
   eyebrow?: string;
   preheader?: string;
   /** Lien « Mon espace » du pied de page (confirmation / connexion). */
@@ -63,6 +87,7 @@ function shell(t: TournamentRow, p: ParticipantRow | null, subject: string, titl
     reason: o.reason ?? null,
     legalNotice: o.noLegal ? null : WARNING_NATURE,
     siteUrl: siteUrl(),
+    plusLoin: o.plusLoin ?? null,
   });
 }
 
@@ -139,7 +164,7 @@ export function nextPlayableRound<R extends { number: number; opens_at: string |
  * `nextPlayableRound`) ; `null` = plus aucune manche à jouer. Sans `round`
  * (appel historique), `m1Open`/`m1Theme` décrivent la manche 1.
  */
-export function validatedEmail(t: TournamentRow, p: ParticipantRow, opts: { m1Open: Date | null; m1Theme: string; bareme: Bareme; qrpNs: number[]; round?: WelcomeRound | null }): Mail {
+export function validatedEmail(t: TournamentRow, p: ParticipantRow, opts: { m1Open: Date | null; m1Theme: string; bareme: Bareme; qrpNs: number[]; round?: WelcomeRound | null; audience?: PasserelleAudience | null }): Mail {
   const urls = arenaUrls(t);
   const round: WelcomeRound | null = opts.round === undefined
     ? { number: 1, open: false, opens_at: opts.m1Open, closes_at: null, theme: opts.m1Theme }
@@ -192,7 +217,7 @@ export function validatedEmail(t: TournamentRow, p: ParticipantRow, opts: { m1Op
     aPanel(aLine(escAttr(WARNING_NATURE)), { accent: 'red', title: 'Nature du dispositif' }),
     cta,
     aP('Invitez un collègue : partagez votre lien personnel depuis votre espace.', { size: 14, color: ARENA_MAIL.muted }),
-  ].join(''), { eyebrow: 'Bienvenue dans l’arène', preheader: `${annonce} Règles et barème à l’intérieur.`, noLegal: true });
+  ].join(''), { eyebrow: 'Bienvenue dans l’arène', preheader: `${annonce} Règles et barème à l’intérieur.`, noLegal: true, plusLoin: plusLoinBlock(t, opts.audience, 'Faites de chaque manche un véritable progrès') });
   const annonceText = round && !round.open ? `Manche ${round.number} : ${when}${theme ? ` — thème : ${theme}` : ''}.` : `${annonce}${round && theme ? ` Thème : ${theme}.` : ''}`;
   const text = textWithFooter(t, p, `Bonjour ${p.first_name},\n\nVotre inscription au tournoi EVC Arena ${t.specialty} est confirmée (pseudonyme : ${p.pseudo}).\n${annonceText}${round?.open ? `\nJouer : ${urls.round(round.number)}\n${WARNING_CONNECTION}` : ''}\n\nRègles :\n${publicRules(t).map((r: string) => `- ${r}`).join('\n')}\n\n${WARNING_NATURE}\n\nMon espace : ${urls.space}`, { noLegal: true });
   return { subject, html, text };
@@ -255,7 +280,7 @@ export function relanceEmail(t: TournamentRow, p: ParticipantRow, round: { numbe
 export function resultsEmail(
   t: TournamentRow,
   p: ParticipantRow,
-  r: { number: number; theme: string; score: number | null; max: number; cumulScore: number; cumulMax: number; cumulRounds: number; rank: number | null; distinction?: Distinction | null; isLast: boolean; next: { number: number; opens_at: Date | null; theme: string } | null },
+  r: { number: number; theme: string; score: number | null; max: number; cumulScore: number; cumulMax: number; cumulRounds: number; rank: number | null; distinction?: Distinction | null; isLast: boolean; next: { number: number; opens_at: Date | null; theme: string } | null; audience?: PasserelleAudience | null },
 ): Mail {
   const urls = arenaUrls(t);
   // Notes affichées sur 10 par manche (cf. lib/arena/note.ts).
@@ -283,7 +308,7 @@ export function resultsEmail(
       ...(r.rank !== null ? [{ label: 'Rang · cumul', value: String(r.rank), accent: 'red' as const }] : []),
     ]));
     if (r.rank === null) lines.push(aPanel(aLine(escAttr(UNDER_THRESHOLD_MESSAGE)), { accent: 'none', title: 'Classement' }));
-    else if (distinctionLine) lines.push(aPanel(aLine(escAttr(distinctionLine), { size: 15, color: ARENA_MAIL.text }), { accent: 'gold', title: r.distinction ? `Distinction ${DISTINCTION_LABEL[r.distinction]}` : 'Podium' }));
+    else if (distinctionLine) lines.push(aPanel(aLine(escAttr(distinctionLine), { size: 15, color: ARENA_MAIL.text }), { accent: 'gold', title: r.distinction ? `Distinction ${DISTINCTION_LABEL[r.distinction]}` : 'Podium', icon: { file: 'arena-trophee.png', alt: r.distinction ? `Trophée ${DISTINCTION_LABEL[r.distinction]}` : 'Podium' } }));
   } else {
     lines.push(aPanel(aLine(escAttr(`Vous n’avez pas joué la manche ${r.number}. Le classement général nécessite les trois manches. Vos résultats, vos rangs de manche et vos corrections détaillées restent disponibles pour les manches disputées.`)), { accent: 'none', title: `Manche ${r.number}` }));
   }
@@ -303,6 +328,7 @@ export function resultsEmail(
   const html = shell(t, p, subject, `Résultats de la manche ${r.number}`, lines.join(''), {
     eyebrow: `Manche ${r.number}${r.theme ? ` · ${r.theme}` : ''}`,
     preheader: played ? `Note de la manche ${r.number} : ${noteManche}. Votre correction détaillée vous attend.` : `Votre correction détaillée de la manche ${r.number} est disponible.`,
+    plusLoin: plusLoinBlock(t, r.audience, 'Faites de vos résultats un véritable progrès'),
   });
   const text = textWithFooter(t, p, [
     `Bonjour ${p.first_name},`,

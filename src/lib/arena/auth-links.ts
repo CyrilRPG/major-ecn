@@ -5,6 +5,7 @@ import { arenaDb, arenaLog, currentParticipant, currentPerson, effectiveBareme, 
 import { safeArenaNext, sameEmail } from './identity';
 import { confirmationEmail, loginEmail, nextPlayableRound, sendArenaEmail, validatedEmail } from './emails';
 import { hashToken, newToken, setSessionCookie } from './session';
+import { participantAudience } from './major-ecn';
 import { PUBLIC_STATUSES, toDate } from './time';
 import { qrpNs, type ParticipantRow, type TournamentRow } from './types';
 
@@ -57,7 +58,7 @@ export async function sendWelcomeEmail(t: TournamentRow, p: ParticipantRow): Pro
   // Prochaine manche réellement jouable : l'ouverte, sinon la prochaine à venir (jamais une manche passée).
   const next = nextPlayableRound(snap.rounds);
   const m = next?.round;
-  const mail = validatedEmail(t, p, { m1Open: toDate(m?.opens_at), m1Theme: m?.theme ?? '', bareme: m ? effectiveBareme(t, m) : t.bareme, qrpNs: qrpNs(m ? snap.questionsByRound.get(m.id) ?? [] : []), round: next?.info ?? null });
+  const mail = validatedEmail(t, p, { m1Open: toDate(m?.opens_at), m1Theme: m?.theme ?? '', bareme: m ? effectiveBareme(t, m) : t.bareme, qrpNs: qrpNs(m ? snap.questionsByRound.get(m.id) ?? [] : []), round: next?.info ?? null, audience: await participantAudience(p).catch(() => null) });
   await sendArenaEmail({ tournament: t, participant: p, to: p.email, kind: 'validated', mail, dedupeKey: 'validated:' + t.id + ':' + p.id });
 }
 

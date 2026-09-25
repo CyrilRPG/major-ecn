@@ -8,7 +8,7 @@
  * Module PUR : les URLs (espace, règles, désinscription signée) sont
  * calculées par `emails.ts` et passées en paramètre.
  */
-import { EMAIL_SITE, emailAsset, emailButton, emailDocument, esc, spacer } from '@/lib/email/layout';
+import { EMAIL_SITE, emailAsset, emailButton, emailDocument, esc, spacer, FONT_SERIF } from '@/lib/email/layout';
 
 export const ARENA_MAIL = {
   page: '#05070A',
@@ -66,7 +66,8 @@ export function aButton(label: string, href: string): string {
     height: 54,
     fontSize: 16,
     uppercase: true,
-    letterSpacing: '1.4px',
+    letterSpacing: '1.6px',
+    arrow: true,
   })}${spacer(26)}`;
 }
 
@@ -79,7 +80,7 @@ export function aLabel(text: string, color: string = A.gold): string {
 }
 
 /** Panneau surélevé à filet latéral (or par défaut, rouge pour l'urgence). */
-export function aPanel(html: string, o: { accent?: 'gold' | 'red' | 'none'; title?: string } = {}): string {
+export function aPanel(html: string, o: { accent?: 'gold' | 'red' | 'none'; title?: string; icon?: { file: string; alt: string } } = {}): string {
   const bar = o.accent === 'red' ? A.red : o.accent === 'none' ? A.line : A.gold;
   const title = o.title
     ? `<p style="margin:0 0 10px;font-family:${ARENA_BODY};font-size:11px;line-height:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${bar === A.line ? A.muted : bar};">${esc(o.title)}</p>`
@@ -87,9 +88,49 @@ export function aPanel(html: string, o: { accent?: 'gold' | 'red' | 'none'; titl
   return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
 <tr>
 <td width="3" style="width:3px;background-color:${bar};font-size:0;line-height:0;" bgcolor="${bar}">&nbsp;</td>
+${o.icon ? `<td width="96" valign="middle" align="center" class="em-hide-sm" style="width:96px;padding:16px 0 16px 16px;background-color:${A.raised};border-top:1px solid ${A.line};border-bottom:1px solid ${A.line};" bgcolor="${A.raised}"><img src="${emailAsset(o.icon.file)}" width="64" height="64" alt="${esc(o.icon.alt)}" style="display:block;width:64px;height:64px;border:0;margin:0 auto;"></td>
+<td width="18" class="em-hide-sm" style="width:18px;background-color:${A.raised};border-top:1px solid ${A.line};border-bottom:1px solid ${A.line};" bgcolor="${A.raised}"><table role="presentation" border="0" cellpadding="0" cellspacing="0" height="56" align="center"><tr><td width="2" style="width:2px;background-color:${bar};font-size:0;line-height:0;" bgcolor="${bar}">&nbsp;</td></tr></table></td>` : ''}
 <td style="padding:18px 20px;background-color:${A.raised};border:1px solid ${A.line};border-left:0;" bgcolor="${A.raised}">${title}${html}</td>
 </tr>
 </table>`;
+}
+
+/** Bloc crème « Pour aller plus loin » (passerelle Major ECN, cf. lib/arena/passerelle.ts). */
+export type ArenaPlusLoin = { title: string; lead: string; label: string; href: string };
+
+const CREAM = '#F5ECE2';
+const BORDEAUX = '#6E1426';
+
+function plusLoinHtml(o: ArenaPlusLoin): string {
+  const picto = (file: string, label: string) => `<td valign="middle" class="em-stack" style="padding:0 6px 10px 0;"><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>
+<td valign="middle" style="padding:0 7px 0 0;"><img src="${emailAsset(file)}" width="24" height="24" alt="" style="display:block;width:24px;height:24px;border:0;"></td>
+<td valign="middle" style="font-family:${ARENA_BODY};font-size:11px;line-height:15px;color:#4A3A3F;white-space:nowrap;">${label}</td>
+</tr></table></td>`;
+  return `<tr><td class="em-px" style="padding:4px 20px 8px;background-color:${A.panel};" bgcolor="${A.panel}">
+<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color:${CREAM};border:1px solid #E6D6C4;border-radius:12px;border-collapse:separate;overflow:hidden;" bgcolor="${CREAM}">
+<tr>
+<td valign="top" class="em-stack" style="padding:24px 8px 12px 26px;">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 14px;"><tr>
+<td width="26" style="width:26px;border-top:1px solid #B9955A;font-size:0;line-height:0;">&nbsp;</td>
+<td style="padding:0 10px;font-family:${ARENA_BODY};font-size:10.5px;line-height:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:${BORDEAUX};">Pour aller plus loin</td>
+<td width="26" style="width:26px;border-top:1px solid #B9955A;font-size:0;line-height:0;">&nbsp;</td>
+</tr></table>
+<h2 class="em-serif" style="margin:0 0 12px;font-family:${FONT_SERIF};font-size:27px;line-height:31px;font-weight:700;letter-spacing:-0.4px;color:${BORDEAUX};">${esc(o.title)}</h2>
+<p style="margin:0 0 18px;font-family:${ARENA_BODY};font-size:14px;line-height:21px;color:#3A2E33;">${esc(o.lead)}</p>
+${emailButton({ href: o.href, label: o.label, bg: BORDEAUX, color: '#FFFFFF', radius: 6, height: 46, fontSize: 13, uppercase: true, letterSpacing: '1.4px', padX: 22, arrow: true, align: 'left' })}
+</td>
+<td width="200" valign="top" class="em-hide-sm" style="width:200px;padding:0;"><img src="${emailAsset('arena-plus-loin.jpg')}" width="200" height="231" alt="Même ambition. Plus loin ensemble." style="display:block;width:200px;height:231px;border:0;"></td>
+</tr>
+<tr><td colspan="2" style="padding:6px 20px 14px 26px;">
+<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
+${picto('arena-ico-cours.png', 'Cours et fiches<br>de synthèse')}
+${picto('arena-ico-qcm.png', 'QCM ou QROC<br>selon votre voie')}
+${picto('arena-ico-cas.png', 'Cas cliniques<br>et annales')}
+${picto('arena-ico-suivi.png', 'Suivi de progression<br>personnalisé')}
+</tr></table>
+</td></tr>
+</table>
+</td></tr>`;
 }
 
 /** Ligne de texte dans un panneau. */
@@ -171,6 +212,8 @@ export type ArenaShellOptions = {
   legalNotice?: string | null;
   /** Site Major ECN (lien du pied de page). */
   siteUrl?: string;
+  /** Bloc crème « Pour aller plus loin » (résultats, inscription) ; absent des mails techniques. */
+  plusLoin?: ArenaPlusLoin | null;
 };
 
 /** E-mail complet à la charte EVC Arena. */
@@ -185,7 +228,7 @@ export function arenaShell(o: ArenaShellOptions): string {
     ? `<p style="margin:0 0 10px;font-family:${ARENA_BODY};font-size:12px;line-height:16px;font-weight:700;letter-spacing:2.4px;text-transform:uppercase;color:${A.gold};">${esc(o.eyebrow)}</p>`
     : '';
   const legal = o.legalNotice
-    ? `<tr><td class="em-px" style="padding:0 40px 28px;background-color:${A.panel};" bgcolor="${A.panel}">
+    ? `<tr><td class="em-px" style="padding:0 40px 22px;background-color:${A.panel};" bgcolor="${A.panel}">
 <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td style="padding:14px 16px;border:1px solid ${A.line};background-color:${A.bg};" bgcolor="${A.bg}">
 <p style="margin:0;font-family:${ARENA_BODY};font-size:12px;line-height:19px;color:${A.muted};"><strong style="color:${A.soft};letter-spacing:1.2px;text-transform:uppercase;font-size:10px;">Nature du dispositif&nbsp;&nbsp;</strong>${esc(o.legalNotice)}</p>
 </td></tr></table>
@@ -206,12 +249,18 @@ ${eyebrow}<h1 class="em-h1" style="margin:0 0 22px;font-family:${ARENA_HEAD};fon
 ${o.bodyHtml}
 </td></tr>
 ${legal}
-<tr><td align="center" style="padding:22px 24px;background-color:${A.bg};border-top:1px solid ${A.lineSoft};" bgcolor="${A.bg}">
-<p style="margin:0;font-family:${ARENA_HEAD};font-size:20px;line-height:24px;letter-spacing:5px;color:${A.gold};">APPRENDRE&nbsp;&nbsp;<span style="color:${A.red};">&#9670;</span>&nbsp;&nbsp;S’ÉVALUER&nbsp;&nbsp;<span style="color:${A.red};">&#9670;</span>&nbsp;&nbsp;PROGRESSER</p>
+${o.plusLoin ? plusLoinHtml(o.plusLoin) : ''}
+<tr><td align="center" style="padding:26px 24px 24px;background-color:${A.panel};" bgcolor="${A.panel}">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center"><tr>
+<td width="90" class="em-hide-sm" style="width:90px;border-top:1px solid ${A.gold};font-size:0;line-height:0;">&nbsp;</td>
+<td style="padding:0 22px;font-family:${ARENA_BODY};font-size:11px;line-height:16px;letter-spacing:4px;text-transform:uppercase;color:${A.soft};white-space:nowrap;">Ensemble vers votre réussite</td>
+<td width="90" class="em-hide-sm" style="width:90px;border-top:1px solid ${A.gold};font-size:0;line-height:0;">&nbsp;</td>
+</tr></table>
 </td></tr>
 <tr><td class="em-px" align="center" style="padding:28px 40px 32px;background-color:${A.page};" bgcolor="${A.page}">
 <img src="${emailAsset('evc-arena-helmet.png')}" width="27" height="36" alt="" style="display:block;width:27px;height:36px;border:0;margin:0 auto 10px;">
-<p style="margin:0 0 16px;font-family:${ARENA_HEAD};font-size:18px;line-height:22px;letter-spacing:2px;color:${A.text};">EVC <span style="color:${A.red};">ARENA</span> <span style="font-family:${ARENA_BODY};font-size:10px;letter-spacing:3px;color:${A.muted};font-weight:700;">&nbsp;BY MAJOR ECN</span></p>
+<p style="margin:0 0 6px;font-family:${ARENA_HEAD};font-size:18px;line-height:22px;letter-spacing:2px;color:${A.text};">EVC <span style="color:${A.red};">ARENA</span> <span style="font-family:${ARENA_BODY};font-size:10px;letter-spacing:3px;color:${A.muted};font-weight:700;">&nbsp;BY MAJOR ECN</span></p>
+<p style="margin:0 0 16px;font-family:${ARENA_BODY};font-size:10px;line-height:16px;letter-spacing:3px;text-transform:uppercase;color:${A.gold};">Apprendre · S’évaluer · Progresser</p>
 <p style="margin:0 0 18px;font-family:${ARENA_BODY};font-size:13px;line-height:20px;">${footLink(o.accessUrl ?? o.links.space, 'Mon espace')}${sep}${footLink(o.links.rules, 'Règles')}${sep}${footLink(site, 'major-ecn.fr')}</p>
 <p style="margin:20px 0 8px;font-family:${ARENA_BODY};font-size:11px;line-height:18px;color:${A.muted};">${esc(o.reason ?? 'Vous recevez cet email parce que vous êtes inscrit(e) au tournoi EVC Arena de Major ECN.')}${o.unsubscribeUrl ? `<br><a href="${esc(o.unsubscribeUrl)}" target="_blank" rel="noopener" style="color:${A.soft};text-decoration:underline;">Ne plus recevoir les informations Major ECN</a>` : ''}</p>
 <p style="margin:0;font-family:${ARENA_BODY};font-size:11px;line-height:18px;color:${A.faint};">Major ECN — préparation aux EVC depuis 2011. © ${new Date().getFullYear()} Major ECN — PAE Formation.</p>

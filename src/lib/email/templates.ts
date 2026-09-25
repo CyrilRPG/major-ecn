@@ -28,9 +28,21 @@ import {
   small,
   summaryTable,
   buttonSecondary,
+  chancesBlock,
+  contactCard,
+  preparationBlock,
+  secureNote,
+  spacer,
   EMAIL_SITE,
-  CONTACT_EMAIL,
+  FONT_SANS,
 } from './layout';
+
+/** Montant au format français : « 1 490,00 € ». */
+function euros(n: number): string {
+  const chiffres = n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  // Espaces insécables classiques : certains clients mail rendent mal U+202F.
+  return `${chiffres.replace(/[\u202F\u00A0]/g, '\u00A0')}\u00A0€`;
+}
 
 /**
  * Durée de validité annoncée dans les e-mails, en heures.
@@ -49,9 +61,6 @@ const TTL_LIEN_HEURES = Number(process.env.NEXT_PUBLIC_LINK_TTL_HOURS) || 1;
 export function dureeLien(): string {
   return TTL_LIEN_HEURES === 1 ? '1 heure' : `${TTL_LIEN_HEURES} heures`;
 }
-
-const contactLine = (lead: string) =>
-  note(`${esc(lead)} ${mailto(CONTACT_EMAIL, MAJOR.red)}.`);
 
 /* ============================================================
    Bienvenue — activation d'un compte (découverte ou professeur)
@@ -74,29 +83,30 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
     ? '🩺 Activez votre espace professeur — Major ECN'
     : '🎓 Bienvenue chez Major ECN — activez votre espace découverte';
 
+  const prenom = (firstName ?? '').trim();
   const bodyHtml = [
-    greeting(firstName, 'et bienvenue'),
-    p(intro),
     button(setupUrl, 'Choisir mon mot de passe'),
+    secureNote(`Lien sécurisé — valable ${dureeLien()} et à usage unique`),
     linkFallback(setupUrl),
     isProf ? '' : callout({
-      tone: 'brand',
+      tone: 'navy',
       title: 'Votre espace découverte est actif',
-      icon: '&#10003;',
       html: small('Aperçu concret de la plateforme et de notre méthode de préparation aux EVC :', { margin: '0 0 12px' })
         + iconList(['10 QCM EVC', '1 cas clinique', '1 fiche pédagogique', '10 flashcards'], { size: 14 })
         + small('Sans carte bancaire · Sans engagement.', { color: MAJOR.muted, italic: true }),
     }),
-    note(`Lien valable ${esc(dureeLien())} et à usage unique. Une question ? Écrivez-nous à ${mailto(CONTACT_EMAIL, MAJOR.red)}.`),
-    signature({ closing: 'À très bientôt,' }),
+    isProf ? '' : preparationBlock(),
+    isProf ? '' : chancesBlock(),
+    contactCard(isProf ? 'Une question ?' : 'Une question pour démarrer ?'),
   ].join('\n');
 
   const html = majorEmail({
     subject,
     preheader: isProf ? 'Choisissez votre mot de passe pour accéder à votre espace professeur.' : 'Choisissez votre mot de passe et découvrez la plateforme Major ECN.',
-    eyebrow,
-    title,
-    tag: isProf ? 'Espace professeur' : 'Espace découverte',
+    eyebrow: isProf ? 'Équipe pédagogique' : 'Espace découverte',
+    title: isProf ? title : `Bienvenue chez Major ECN${prenom ? `, ${prenom}` : ''}`,
+    lead: isProf ? eyebrow : title,
+    intro: greeting(firstName, 'et bienvenue') + p(intro),
     bodyHtml,
     reason: 'Vous recevez cet e-mail parce qu’un compte a été créé avec cette adresse.',
   });
@@ -166,24 +176,23 @@ export function invitationEquipeEmail({ firstName, setupUrl, scope, administrate
 
   const notesHtml = notes.length > 0 ? small(notes.map(esc).join('<br>'), { color: MAJOR.muted, italic: true, margin: '4px 0 0' }) : '';
   const bodyHtml = [
-    greeting(prenom, 'et bienvenue'),
-    p(intro),
-    p('Cliquez sur le bouton ci-dessous pour choisir votre mot de passe.'),
     button(setupUrl, 'Choisir mon mot de passe'),
+    secureNote(`Lien sécurisé — valable ${dureeLien()} et à usage unique`),
     linkFallback(setupUrl),
     p0.acces.length > 0
-      ? callout({ tone: 'navy', title: 'Ce à quoi vous aurez accès', icon: '&#10003;', html: iconList(p0.acces, { tone: 'navy', size: 14 }) + notesHtml })
+      ? callout({ tone: 'navy', title: 'Ce à quoi vous aurez accès', html: iconList(p0.acces, { tone: 'navy', size: 14 }) + notesHtml })
       : notes.length > 0 ? callout({ tone: 'neutral', html: notesHtml }) : '',
-    note(`Lien valable ${esc(dureeLien())} et à usage unique. Une question ? Écrivez-nous à ${mailto(CONTACT_EMAIL, MAJOR.red)}.`),
+    contactCard('Une question ?', 'Notre équipe est à votre écoute pour vous accompagner dans la prise en main de votre accès.'),
     signature({ closing: 'Bienvenue parmi nous,' }),
   ].join('\n');
 
   const html = majorEmail({
     subject,
     preheader: `Votre accès « ${p0.intitule} » est prêt : choisissez votre mot de passe.`,
-    eyebrow,
+    eyebrow: p0.enseignant ? 'Équipe pédagogique' : 'Équipe Major ECN',
     title,
-    tag: p0.intitule,
+    lead: eyebrow,
+    intro: greeting(prenom, 'et bienvenue') + p(intro) + p('Cliquez sur le bouton ci-dessous pour choisir votre mot de passe.'),
     bodyHtml,
     reason: 'Vous recevez cet e-mail parce qu’un accès à l’administration Major ECN a été créé pour cette adresse.',
   });
@@ -232,8 +241,6 @@ export function forumNewQuestionEmail({ professorFirstName, studentPseudo, stude
   const identiteText = [nom !== studentPseudo ? `(${studentPseudo})` : null, studentEmail, studentContext].filter(Boolean).join(' · ');
 
   const bodyHtml = [
-    greeting(professorFirstName),
-    pHtml(`${auteurHtml} vient de poser une question${ctx ? ` sur <em>${esc(ctx)}</em>` : ''}.`),
     summaryTable([
       ['Élève', `${esc(nom)}${nom !== studentPseudo ? ` <span style="color:${MAJOR.muted};font-weight:400;">(${esc(studentPseudo)})</span>` : ''}`],
       studentEmail ? ['E-mail', mailto(studentEmail)] : null,
@@ -249,6 +256,7 @@ export function forumNewQuestionEmail({ professorFirstName, studentPseudo, stude
     preheader: `${nom}${ctx ? ` · ${ctx}` : ''} : ${preview.slice(0, 90)}`,
     eyebrow: 'Forum — Questions / Réponses',
     title: 'Nouvelle question d’élève',
+    intro: greeting(professorFirstName) + pHtml(`${auteurHtml} vient de poser une question${ctx ? ` sur <em>${esc(ctx)}</em>` : ''}.`),
     tag: 'Questions / Réponses',
     bodyHtml,
     reason: 'Vous recevez cet e-mail car vous êtes intervenant sur ce collège.',
@@ -282,18 +290,18 @@ export function forumNewAnswerEmail({ studentFirstName, professorName, coursTitr
   const preview = answerBody.length > 280 ? answerBody.slice(0, 280) + '…' : answerBody;
 
   const bodyHtml = [
-    greeting(studentFirstName),
-    pHtml(`<strong style="color:${MAJOR.ink};">${esc(professorName)}</strong> a répondu à ta question${coursTitre ? ` sur <em>${esc(coursTitre)}</em>` : ''}.`),
     quote(preview, { label: `Réponse de ${professorName}`, tone: 'brand' }),
     button(forumUrl, 'Lire la réponse complète'),
+    spacer(12),
     signature({ closing: 'Bonnes révisions,' }),
   ].join('\n');
   const html = majorEmail({
     subject,
     preheader: `${professorName} : ${preview.slice(0, 100)}`,
-    eyebrow: 'Forum — Ta question a une réponse',
+    eyebrow: 'Forum — Questions / Réponses',
     title: 'Un prof t’a répondu',
-    tag: 'Questions / Réponses',
+    lead: 'Ta question a une réponse',
+    intro: greeting(studentFirstName) + pHtml(`<strong style="color:${MAJOR.ink};">${esc(professorName)}</strong> a répondu à ta question${coursTitre ? ` sur <em>${esc(coursTitre)}</em>` : ''}.`),
     bodyHtml,
     reason: 'Tu reçois cet e-mail car tu as posé une question sur le forum Major ECN.',
   });
@@ -483,7 +491,7 @@ export function purchaseConfirmationEmail({
   const subject = `✅ Confirmation d'inscription — ${formuleName} | Major ECN`;
   const installmentsText =
     installments > 1
-      ? ` (en ${installments} mensualités de ${(amountEuros / installments).toFixed(2)} €)`
+      ? ` (en ${installments} mensualités de ${euros(amountEuros / installments)})`
       : '';
   // Une seule voie de concours est ouverte (celle choisie à l'inscription) :
   // on ne mentionne donc aucune voie ici.
@@ -498,20 +506,23 @@ export function purchaseConfirmationEmail({
         ? `Accès à ${specialtyLabel} dès la mise en ligne des contenus.`
         : `Accès complet aux contenus de ${specialtyLabel}.`)
     : `Accès complet aux contenus de la spécialité choisie lors de votre inscription.`;
-  const amount = `${amountEuros.toFixed(2)} €`;
+  const amount = euros(amountEuros);
   const legalLink = (path: string, label: string) =>
     `<a href="${EMAIL_SITE}${path}" style="color:${MAJOR.red};text-decoration:underline;">${label}</a>`;
 
+  const sansSerif = (html: string) => `<span style="font-family:${FONT_SANS};font-size:14px;line-height:21px;font-weight:400;color:${MAJOR.body};">${html}</span>`;
+  const intro = greeting(firstName)
+    + pHtml(`Votre paiement pour la <strong style="color:${MAJOR.ink};">${esc(formuleName)}</strong> a bien été enregistré (montant : <strong style="color:${MAJOR.ink};">${amount}</strong>${esc(installmentsText)}).`)
+    + p('Votre compte étudiant a été créé automatiquement. Cliquez sur le bouton ci-dessous pour choisir votre mot de passe et accéder immédiatement à la plateforme.');
   const bodyHtml = [
-    greeting(firstName),
-    pHtml(`Votre paiement pour la <strong style="color:${MAJOR.ink};">${esc(formuleName)}</strong> a bien été enregistré (montant : <strong style="color:${MAJOR.ink};">${amount}</strong>${esc(installmentsText)}).`),
-    p('Votre compte étudiant a été créé automatiquement. Cliquez sur le bouton ci-dessous pour choisir votre mot de passe et accéder immédiatement à la plateforme.'),
     summaryTable([
-      ['Formule', `<span style="font-family:Georgia,'Times New Roman',serif;font-size:16px;">${esc(formuleName)}</span>`],
-      ['Montant total', `<span style="color:${MAJOR.red};font-size:17px;font-weight:800;">${amount}</span>${installmentsText ? `<br><span style="font-weight:400;color:${MAJOR.muted};font-size:13px;">${esc(installmentsText.trim())}</span>` : ''}`],
-      ['Accès', `<span style="font-weight:400;">${accessLine}</span>`],
-    ], { title: 'Récapitulatif' }),
+      ['Formule', esc(formuleName)],
+      specialtyLabel ? ['Spécialité', esc(specialtyLabel)] : null,
+      ['Montant total', `${amount}${installmentsText ? `<br>${sansSerif(esc(installmentsText.trim()))}` : ''}`],
+      ['Accès', sansSerif(accessLine)],
+    ], { title: 'Récapitulatif de votre inscription', grid: true }),
     button(setupUrl, 'Activer mon compte'),
+    secureNote('Lien sécurisé et personnel'),
     linkFallback(setupUrl, 'Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :'),
     callout({
       tone: 'navy',
@@ -519,17 +530,19 @@ export function purchaseConfirmationEmail({
       html: small(`<strong style="color:${MAJOR.ink};">Nous avons bien pris en compte votre renonciation au droit de rétractation.</strong> Elle vous ouvre l&rsquo;accès immédiat à la plateforme, conformément à l&rsquo;article L.&nbsp;221-28 13° du code de la consommation et aux CGS (§&nbsp;10.1).`, { margin: '0 0 10px' })
         + small(`Vous trouverez en pièces jointes les documents contractuels acceptés au moment de votre souscription : <strong>CGU</strong>, <strong>CGS</strong> et <strong>Conditions Particulières</strong>. Ils sont également consultables sur ${legalLink('/cgu', 'major-ecn.fr/cgu')}, ${legalLink('/cgs', '/cgs')} et ${legalLink('/conditions-particulieres', '/conditions-particulieres')}.`),
     }),
-    contactLine('Une question sur votre préparation ? Écrivez-nous à'),
-    signature({ closing: 'Bienvenue chez Major ECN,' }),
+    preparationBlock(),
+    chancesBlock(),
+    contactCard('Une question pour démarrer ?'),
   ].join('\n');
 
+  const prenom = (firstName ?? '').trim();
   const html = majorEmail({
     subject,
     preheader: `Paiement enregistré : ${formuleName} (${amount}). Activez votre compte étudiant.`,
-    eyebrow: 'Confirmation de paiement',
-    title: 'Activez votre compte étudiant',
-    lead: 'Bienvenue chez Major ECN.',
-    tag: 'Confirmation d’inscription',
+    eyebrow: 'Inscription confirmée',
+    title: `Bienvenue chez Major ECN${prenom ? `, ${prenom}` : ''}`,
+    lead: 'Votre préparation commence maintenant',
+    intro,
     bodyHtml,
     reason: 'Vous recevez cet e-mail suite à votre inscription payante sur Major ECN.',
   });
@@ -566,24 +579,22 @@ type ResetPasswordArgs = {
 export function resetPasswordEmail({ firstName, resetUrl }: ResetPasswordArgs) {
   const subject = '🔐 Réinitialisation de votre mot de passe — Major ECN';
   const bodyHtml = [
-    greeting(firstName),
-    p('Vous avez demandé à réinitialiser votre mot de passe Major ECN. Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe.'),
     button(resetUrl, 'Choisir un nouveau mot de passe'),
+    secureNote(`Lien sécurisé — valable ${dureeLien()}`),
     linkFallback(resetUrl),
     callout({
       tone: 'neutral',
       title: 'Sécurité',
       html: small(`Le lien est valable <strong style="color:${MAJOR.ink};">${esc(dureeLien())}</strong>. Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email — votre mot de passe actuel reste inchangé.`),
     }),
-    contactLine('Besoin d’aide ? Écrivez-nous à'),
-    signature({ closing: 'Bien cordialement,' }),
+    contactCard('Besoin d’aide ?', 'Notre équipe est à votre écoute pour vous aider à retrouver l’accès à votre espace.'),
   ].join('\n');
   const html = majorEmail({
     subject,
     preheader: `Choisissez un nouveau mot de passe. Lien valable ${dureeLien()}.`,
     eyebrow: 'Sécurité du compte',
     title: 'Réinitialisez votre mot de passe',
-    tag: 'Sécurité du compte',
+    intro: greeting(firstName) + p('Vous avez demandé à réinitialiser votre mot de passe Major ECN. Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe.'),
     bodyHtml,
     reason: 'Vous recevez cet e-mail suite à une demande de réinitialisation du mot de passe de votre compte Major ECN.',
   });
@@ -692,8 +703,8 @@ export function purchaseNotificationEmail({
   const subject = `💳 Souscription payante : ${formuleName} — ${fullName || email}`;
   const paymentLabel =
     installments > 1
-      ? `${amountEuros.toFixed(2)} € en ${installments}× (${(amountEuros / installments).toFixed(2)} €/mois)`
-      : `${amountEuros.toFixed(2)} € (comptant)`;
+      ? `${euros(amountEuros)} en ${installments}× (${euros(amountEuros / installments)}/mois)`
+      : `${euros(amountEuros)} (comptant)`;
   const row = (label: string, value: string | null | undefined): [string, string] | null => (value ? [label, esc(value)] : null);
   const bodyHtml = [
     pHtml(`Un étudiant vient de souscrire à une <strong style="color:${MAJOR.ink};">offre payante</strong>.`),
@@ -735,11 +746,10 @@ export function relanceInactiveEmail({ firstName, setupUrl }: RelanceArgs) {
   const hello = firstName && firstName.trim() ? firstName.trim() : 'et bienvenue';
   const subject = 'Votre accès Major ECN vous attend';
   const bodyHtml = [
-    greeting(hello),
-    pHtml('On ne vous a pas encore vu sur la plateforme et on tenait à vous le dire simplement&nbsp;: votre espace Major ECN est prêt et il n\'attend plus que vous.'),
-    p('Quelques minutes suffisent pour choisir votre mot de passe et commencer votre préparation aux EVC avec les fiches, les QCM et les dossiers progressifs. Chaque jour compte, et le meilleur moment pour s\'y mettre, c\'est maintenant.'),
     button(setupUrl, 'Activer mon espace'),
-    pHtml(`Une question ou un souci pour vous connecter&nbsp;? Répondez simplement à cet email ou écrivez-nous à ${mailto(CONTACT_EMAIL, MAJOR.red)}. Nous sommes là pour vous accompagner.`, { size: 14, color: MAJOR.muted }),
+    spacer(14),
+    preparationBlock(),
+    contactCard('Une question ou un souci pour vous connecter ?', 'Répondez simplement à cet email ou écrivez-nous. Nous sommes là pour vous accompagner.'),
     signature({ closing: 'À très vite,' }),
   ].join('\n');
   const html = majorEmail({
@@ -747,7 +757,10 @@ export function relanceInactiveEmail({ firstName, setupUrl }: RelanceArgs) {
     preheader: 'Votre espace Major ECN est prêt : quelques minutes suffisent pour commencer.',
     eyebrow: 'On pense à vous',
     title: 'Votre place vous attend',
-    tag: 'Votre espace',
+    lead: 'Votre espace est prêt',
+    intro: greeting(hello)
+      + pHtml('On ne vous a pas encore vu sur la plateforme et on tenait à vous le dire simplement&nbsp;: votre espace Major ECN est prêt et il n\'attend plus que vous.')
+      + p('Quelques minutes suffisent pour choisir votre mot de passe et commencer votre préparation aux EVC avec les fiches, les QCM et les dossiers progressifs. Chaque jour compte, et le meilleur moment pour s\'y mettre, c\'est maintenant.'),
     bodyHtml,
     reason: 'Vous recevez cet e-mail parce qu’un compte Major ECN a été créé pour vous et n’a pas encore été activé.',
   });
@@ -792,15 +805,13 @@ export function specialiteDisponibleEmail({ firstName, specialtyName, setupUrl, 
   const hello = firstName && firstName.trim() ? firstName.trim() : 'à vous';
   const subject = `${specialtyName} est en ligne — votre accès Major ECN est ouvert`;
   const bodyHtml = [
-    greeting(hello),
-    pHtml(`Lors de votre inscription, nous vous avions indiqué que les contenus d&rsquo;${esc(specialtyName)} n&rsquo;étaient pas encore disponibles sur la plateforme. C&rsquo;est désormais chose faite&nbsp;: ils sont en ligne, et votre compte a été paramétré avec les accès correspondant à votre formule.`),
-    p('Vous y retrouverez :'),
-    iconList(['Les fiches de cours', 'Les QCM', 'Les dossiers progressifs', 'Les flashcards de la spécialité']),
-    p(dejaActive
+    p(`Vous y retrouverez les fiches de cours, les QCM, les dossiers progressifs et les flashcards de la spécialité. ${dejaActive
       ? 'Connectez-vous avec vos identifiants habituels pour en profiter.'
-      : 'Cliquez ci-dessous pour choisir votre mot de passe et commencer votre préparation.'),
+      : 'Cliquez ci-dessous pour choisir votre mot de passe et commencer votre préparation.'}`),
     button(setupUrl, dejaActive ? 'Me connecter' : 'Activer mon espace'),
-    pHtml(`Une question, un souci de connexion&nbsp;? Répondez simplement à cet email ou écrivez-nous à ${mailto(CONTACT_EMAIL, MAJOR.red)}. Merci de votre patience.`, { size: 14, color: MAJOR.muted }),
+    spacer(14),
+    preparationBlock(),
+    contactCard('Une question, un souci de connexion ?', 'Répondez simplement à cet email ou écrivez-nous. Merci de votre patience.'),
     signature({ closing: 'À très vite,' }),
   ].join('\n');
   const html = majorEmail({
@@ -808,7 +819,8 @@ export function specialiteDisponibleEmail({ firstName, specialtyName, setupUrl, 
     preheader: `Les contenus d’${specialtyName} sont en ligne : fiches, QCM, dossiers progressifs et flashcards.`,
     eyebrow: 'Vos contenus sont disponibles',
     title: `${specialtyName} est en ligne`,
-    tag: 'Nouveaux contenus',
+    lead: 'Votre accès est ouvert',
+    intro: greeting(hello) + pHtml(`Lors de votre inscription, nous vous avions indiqué que les contenus d&rsquo;${esc(specialtyName)} n&rsquo;étaient pas encore disponibles sur la plateforme. C&rsquo;est désormais chose faite&nbsp;: ils sont en ligne, et votre compte a été paramétré avec les accès correspondant à votre formule.`),
     bodyHtml,
     reason: 'Vous recevez cet e-mail car vous êtes inscrit(e) à cette spécialité sur Major ECN.',
   });
@@ -956,15 +968,13 @@ export function guideLeadNotificationEmail({ firstName, lastName, email, phone, 
 export function guideDeliveryEmail({ firstName, guideUrl }: { firstName: string; guideUrl: string }) {
   const subject = `Votre Guide Méthodologie EVC 2026 — Major ECN`;
   const bodyHtml = [
-    greeting(firstName),
-    pHtml(`Nous vous remercions pour votre confiance. Votre <strong style="color:${MAJOR.ink};">Guide Méthodologie EVC 2026</strong> (39 pages) est prêt à être téléchargé.`),
-    p('Ce guide vous apporte les méthodes, les réflexes et les conseils les plus utiles pour mieux comprendre les attentes des EVC et structurer votre préparation.'),
     button(guideUrl, 'Télécharger mon guide'),
     pHtml('PDF&nbsp;&nbsp;•&nbsp;&nbsp;39 pages&nbsp;&nbsp;•&nbsp;&nbsp;Téléchargement immédiat', { size: 13, color: MAJOR.muted, align: 'center', margin: '-8px 0 28px' }),
     divider(),
     sectionTitle('Pour aller plus loin'),
     p('Ce guide vous apporte une méthode de travail solide. Pour transformer cette méthode en véritables automatismes, Major ECN met à votre disposition une plateforme complète avec des QCM, des cas cliniques, des corrections détaillées et un suivi personnalisé.', { size: 15 }),
     buttonSecondary(`${EMAIL_SITE}/plateforme`, 'Découvrir la plateforme'),
+    contactCard('Une question sur votre préparation ?', 'Notre équipe est à votre disposition pour vous accompagner et répondre à vos questions.'),
     signature({ closing: 'Nous vous souhaitons une excellente préparation !' }),
   ].join('\n');
   const html = majorEmail({
@@ -973,7 +983,9 @@ export function guideDeliveryEmail({ firstName, guideUrl }: { firstName: string;
     eyebrow: 'Guide offert',
     title: 'Votre Guide Méthodologie EVC 2026',
     lead: 'La méthode qui fait la différence aux EVC.',
-    tag: 'Guide EVC 2026',
+    intro: greeting(firstName)
+      + pHtml(`Nous vous remercions pour votre confiance. Votre <strong style="color:${MAJOR.ink};">Guide Méthodologie EVC 2026</strong> (39 pages) est prêt à être téléchargé.`)
+      + p('Ce guide vous apporte les méthodes, les réflexes et les conseils les plus utiles pour mieux comprendre les attentes des EVC et structurer votre préparation.'),
     bodyHtml,
     reason: 'Vous recevez cet e-mail car vous avez demandé le Guide Méthodologie EVC 2026 sur major-ecn.fr.',
   });
@@ -998,13 +1010,13 @@ export function guideDeliveryEmail({ firstName, guideUrl }: { firstName: string;
 export function adminBroadcastEmail({ subject, message }: { subject: string; message: string }) {
   const paragraphs = message.replace(/\r\n/g, '\n').split(/\n{2,}/).map((para) =>
     pHtml(esc(para).replace(/\n/g, '<br>').replace(/(https?:\/\/[^\s<]+)/g, (u) => `<a href="${u}" style="color:${MAJOR.red};font-weight:600;word-break:break-all;">${u}</a>`)));
-  const bodyHtml = [...paragraphs, signature({ closing: 'Bien à vous,' })].join('\n');
+  const bodyHtml = signature({ closing: 'Bien à vous,' });
   const html = majorEmail({
     subject,
     preheader: message.slice(0, 110),
     eyebrow: 'Message de l’équipe',
     title: subject,
-    tag: 'Information',
+    intro: paragraphs.join('\n'),
     bodyHtml,
     reason: 'Vous recevez cet e-mail en tant qu’élève inscrit(e) sur Major ECN.',
   });

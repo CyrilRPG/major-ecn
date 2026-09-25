@@ -50,10 +50,12 @@ import {
   isValidPseudo,
   pseudoKey,
   MAJOR_ECN_STATUSES,
+  normalizeEmail,
   qrpNs,
   type MajorEcnStatus,
   type SequenceKind,
 } from "@/lib/arena/types";
+import { majorEcnStudentEmails, resolveAudience } from "@/lib/arena/major-ecn";
 import { neutralizeQuestion } from "./questions-actions";
 
 /**
@@ -1095,6 +1097,13 @@ export async function sendSequenceEmailNow(
     const attempts = await listAttemptsForRounds([round.id]);
     const standings =
       kind === "results" ? await computeTournamentStandings(snap) : null;
+    // Passerelle : statut Major ECN (élève / prospect) pour le bloc « Pour aller plus loin ».
+    const students =
+      kind === "results" || kind === "validated"
+        ? await majorEcnStudentEmails(participants.map((x) => x.email))
+        : null;
+    const audienceOf = (x: (typeof participants)[number]) =>
+      resolveAudience(x.major_ecn_status ?? "auto", students?.has(normalizeEmail(x.email)) ?? false);
     let sent = 0,
       skipped = 0,
       errors = 0;
@@ -1111,6 +1120,7 @@ export async function sendSequenceEmailNow(
           bareme: m ? effectiveBareme(t, m) : t.bareme,
           qrpNs: qrpNs(snap.questionsByRound.get(m?.id ?? "") ?? []),
           round: next?.info ?? null,
+          audience: audienceOf(p),
         });
       }
       else if (kind === "j7" || kind === "j1") {
@@ -1172,6 +1182,7 @@ export async function sendSequenceEmailNow(
                 theme: next.theme,
               }
             : null,
+          audience: audienceOf(p),
         });
       }
       const dedupeKey =

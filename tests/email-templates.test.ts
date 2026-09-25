@@ -182,3 +182,42 @@ test('inscription validée : annonce la prochaine manche jouable, jamais une man
   assert.doesNotMatch(over.subject + over.text + visible(over.html), /[Mm]anche \d/);
   assert.doesNotMatch(visible(over.html), /\bundefined\b|\bnull\b/);
 });
+
+test('aucun réseau social dans les mails (consigne du 25/09/2026)', () => {
+  for (const [id, m] of Object.entries(all)) {
+    assert.doesNotMatch(m.html, /facebook\.com|linkedin\.com|youtube\.com|youtu\.be|tiktok\.com|instagram\.com|twitter\.com|x\.com\/|social-/i, id);
+  }
+});
+
+test('charte : bordeaux Major ECN, hero photo dans les mails élèves, blocs de préparation ciblés', () => {
+  const achat = all['purchase-confirmation'].html;
+  assert.match(achat, /major-hero\.jpg/);
+  assert.match(achat, /Votre préparation vous attend/);
+  assert.match(achat, /Nous mettons toutes les chances de votre côté/);
+  assert.match(achat, /01 47 34 35 71/);
+  assert.doesNotMatch(achat, /01 86 76 12 24|lundi au vendredi/i);
+  assert.doesNotMatch(achat, /#E4002B|#102C5F/i);
+  // Interne : même charte, sans photo ni bloc marketing.
+  const interne = all.diagnostic.html;
+  assert.doesNotMatch(interne, /major-hero\.jpg|Votre préparation vous attend/);
+  assert.match(interne, /Ensemble vers votre réussite/);
+});
+
+test('EVC Arena : bloc « Pour aller plus loin » selon le statut Major ECN (passerelle)', () => {
+  const base = { number: 2, theme: '', score: 14, max: 17, cumulScore: 14, cumulMax: 17, cumulRounds: 1, rank: 1, distinction: 'gold' as const, isLast: false, next: null };
+  const eleve = A.resultsEmail(t, p, { ...base, audience: 'student' }).html;
+  assert.match(eleve, /Continuer sur ma plateforme/);
+  assert.doesNotMatch(eleve, /Poursuivre ma préparation/);
+  const prospect = A.resultsEmail(t, p, { ...base, audience: 'prospect' }).html;
+  assert.match(prospect, /Poursuivre ma préparation/);
+  assert.match(prospect, /href="https:\/\/www\.major-ecn\.fr\/[^"]*psychiatrie[^"]*"/i);
+  const inconnu = A.resultsEmail(t, p, base).html;
+  assert.match(inconnu, /Poursuivre ma préparation/);
+  assert.match(inconnu, /arena-trophee\.png/);
+  const masque = A.resultsEmail({ ...t, passerelle_enabled: false } as typeof t, p, base).html;
+  assert.doesNotMatch(masque, /Pour aller plus loin/i);
+  // Mails techniques : jamais de bloc commercial.
+  for (const id of ['arena-login', 'arena-confirmation', 'arena-deleted', 'arena-report-ack', 'arena-report-update']) {
+    assert.doesNotMatch(all[id].html, /Pour aller plus loin/i, id);
+  }
+});

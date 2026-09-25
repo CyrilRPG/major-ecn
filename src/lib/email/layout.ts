@@ -2,6 +2,12 @@
  * Mise en page des e-mails — socle commun Major ECN (et primitives réutilisées
  * par EVC Arena, cf. src/lib/arena/email-layout.ts).
  *
+ * Charte « bordeaux » (maquette du 25/09/2026) : fond crème, bordeaux en
+ * couleur principale, titres serif (Georgia en repli), en-tête « La référence
+ * de votre préparation », hero photo fondu dans le crème, cartes blanches
+ * finement bordées, blocs rosés, pied « Ensemble vers votre réussite ».
+ * AUCUN réseau social (consigne de Cyril).
+ *
  * Règles de robustesse (Gmail, Outlook Windows/Mac, Apple Mail, iOS, Android) :
  * - structure 100 % en tables, styles EN LIGNE (le <style> du <head> ne sert
  *   qu'au responsive et aux clients qui le lisent) ;
@@ -9,11 +15,12 @@
  * - boutons « bulletproof » : cellule colorée + lien, et rectangle VML pour
  *   Outlook Windows qui ignore padding et border-radius des liens ;
  * - images PNG/JPG absolues (jamais de SVG), alt + width + height ;
- * - polices web-safe : Georgia pour les titres, pile système pour le texte ;
+ * - photo du hero en image de fond (Gmail, Apple Mail, Outlook.com) : Outlook
+ *   Windows affiche le fond crème, sans perte de texte ;
  * - `color-scheme` déclaré pour que les clients n'inversent pas la charte.
  *
  * Module PUR (aucun import serveur) : utilisable par les tests et la galerie
- * de prévisualisation (tmp/_emails-preview/render.ts).
+ * de prévisualisation (tmp/_emails-preview/render.mts).
  */
 
 /** Domaine canonique : liens de pied de page et visuels hébergés. */
@@ -26,7 +33,7 @@ export const LEGAL_ENTITY = 'Major ECN — PAE Formation';
 export const LEGAL_ADDRESS = '3 rue Rosa Bonheur, 75015 Paris';
 
 /**
- * Base des visuels (logos, bandeaux, pictogrammes) : toujours le domaine de
+ * Base des visuels (logos, photos, pictogrammes) : toujours le domaine de
  * production en https, que la messagerie du destinataire peut atteindre.
  * `EMAIL_ASSETS_URL` ne sert qu'à la prévisualisation locale.
  */
@@ -50,28 +57,41 @@ export function esc(s: unknown): string {
 /* Jetons                                                             */
 /* ================================================================== */
 
-/** Charte Major ECN : rouge #E4002B du site, marine du logo (#102C5F). */
+/**
+ * Charte Major ECN — bordeaux échantillonné sur la maquette (titres #6E0F28,
+ * bouton #8E1B35). Les anciens noms (`red`, `navy`…) restent exportés pour
+ * les gabarits existants et pointent désormais sur les bordeaux.
+ */
 export const MAJOR = {
-  red: '#E4002B',
-  redDeep: '#B8001F',
-  redSoft: '#FFF4F5',
-  redLine: '#F7D3D9',
-  navy: '#102C5F',
-  navyDeep: '#0A1D40',
-  navyInk: '#081733',
-  ink: '#141B2B',
-  body: '#3B4354',
-  muted: '#667085',
-  faint: '#98A2B3',
-  line: '#E6E8EE',
-  panel: '#F6F7F9',
-  page: '#EDEFF3',
+  bordeaux: '#6E0F28',
+  bordeauxBtn: '#8E1B35',
+  bordeauxDeep: '#560B1F',
+  bordeauxSoft: '#F6E7E7',
+  rose: '#F4ECE8',
+  cream: '#FAF7F3',
+  paper: '#FFFFFF',
+  sand: '#F5EFE9',
+  /* Compatibilité : ces clés sont lues par les gabarits. */
+  red: '#8E1B35',
+  redDeep: '#6E0F28',
+  redSoft: '#FBF3F2',
+  redLine: '#EFD9D9',
+  navy: '#6E0F28',
+  navyDeep: '#560B1F',
+  navyInk: '#3A0816',
+  ink: '#2B2233',
+  body: '#3D3540',
+  muted: '#716770',
+  faint: '#A39AA0',
+  line: '#EADFD8',
+  panel: '#F7F2ED',
+  page: '#F2ECE6',
   white: '#FFFFFF',
-  onNavy: '#C8D2E6',
-  onNavyMuted: '#8C9AB8',
-  success: '#0F7B4B',
-  successSoft: '#EEF8F2',
-  successLine: '#CBE9D7',
+  onNavy: '#F3E6E8',
+  onNavyMuted: '#D5BFC4',
+  success: '#2E6B4A',
+  successSoft: '#EFF6F1',
+  successLine: '#D3E6DA',
 } as const;
 
 export const FONT_SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
@@ -119,7 +139,7 @@ export function emailDocument(o: DocumentOptions): string {
 <title>${esc(o.title)}</title>
 <!--[if mso]>
 <noscript><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
-<style>table,td,div,p,a,span,h1,h2,h3{font-family:Arial,Helvetica,sans-serif !important;}</style>
+<style>table,td,div,p,a,span{font-family:Arial,Helvetica,sans-serif;} h1,h2,.em-serif{font-family:Georgia,serif !important;}</style>
 <![endif]-->
 ${o.headExtra ?? ''}
 <style>
@@ -134,15 +154,19 @@ u + #body a{color:inherit;text-decoration:none;}
   .em-container{width:100% !important;max-width:100% !important;}
   .em-outer{padding:0 !important;}
   .em-card{border-radius:0 !important;}
-  .em-px{padding-left:24px !important;padding-right:24px !important;}
-  .em-h1{font-size:27px !important;line-height:33px !important;}
+  .em-px{padding-left:20px !important;padding-right:20px !important;}
+  .em-h1{font-size:30px !important;line-height:35px !important;}
   .em-stack{display:block !important;width:100% !important;max-width:100% !important;box-sizing:border-box !important;}
   .em-stack-gap{padding:0 0 12px 0 !important;}
-  .em-hide-sm{display:none !important;max-height:0 !important;overflow:hidden !important;}
+  .em-hide-sm{display:none !important;max-height:0 !important;overflow:hidden !important;mso-hide:all !important;}
+  .em-show-sm{display:block !important;max-height:none !important;overflow:visible !important;font-size:inherit !important;line-height:inherit !important;}
+  .em-hero-bg{background-image:none !important;height:auto !important;}
+  .em-full{width:100% !important;max-width:100% !important;}
   .em-btn{width:100% !important;}
   .em-btn a{display:block !important;}
   .em-fluid{width:100% !important;height:auto !important;}
   .em-center-sm{text-align:center !important;}
+  .em-nopad-sm{padding-left:0 !important;padding-right:0 !important;}
 }
 ${o.css ?? ''}
 </style>
@@ -165,11 +189,16 @@ export type ButtonOptions = {
   radius?: number;
   fontFamily?: string;
   fontSize?: number;
+  fontWeight?: number;
   /** Hauteur totale (VML Outlook) — le padding des autres clients s'y aligne. */
   height?: number;
+  /** Marge intérieure horizontale du lien. */
+  padX?: number;
   align?: 'left' | 'center';
   uppercase?: boolean;
   letterSpacing?: string;
+  /** Flèche → après le libellé. */
+  arrow?: boolean;
 };
 
 /**
@@ -177,33 +206,36 @@ export type ButtonOptions = {
  * arrondi pour Outlook Windows (qui ignore padding/border-radius des <a>).
  */
 export function emailButton(o: ButtonOptions): string {
-  const bg = o.bg ?? MAJOR.red;
+  const bg = o.bg ?? MAJOR.bordeauxBtn;
   const color = o.color ?? MAJOR.white;
-  const radius = o.radius ?? 10;
+  const radius = o.radius ?? 6;
   const height = o.height ?? 52;
   const fontSize = o.fontSize ?? 16;
   const font = o.fontFamily ?? FONT_SANS;
+  const weight = o.fontWeight ?? 700;
   const border = o.outline ? (o.borderColor ?? color) : bg;
   const fill = o.outline ? 'transparent' : bg;
   const label = esc(o.label);
+  const arrow = o.arrow ? '&nbsp;&nbsp;&nbsp;&rarr;' : '';
   const href = esc(o.href);
+  const padX = o.padX ?? 34;
   // Largeur estimée du VML (Outlook ne sait pas « s'adapter au texte »).
-  const vmlWidth = Math.max(200, Math.min(520, Math.round(o.label.length * fontSize * 0.62 + 64)));
+  const vmlWidth = Math.max(220, Math.min(520, Math.round(o.label.length * fontSize * 0.6 + padX * 2 + (o.arrow ? 36 : 0))));
   const arc = Math.round((radius / height) * 100);
   const padV = Math.max(10, Math.round((height - fontSize * 1.25) / 2) - (o.outline ? 2 : 0));
   const transform = o.uppercase ? 'text-transform:uppercase;' : '';
   const spacing = o.letterSpacing ? `letter-spacing:${o.letterSpacing};` : '';
   const align = o.align ?? 'center';
   return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" align="${align}" class="em-btn" style="margin:${align === 'center' ? '0 auto' : '0'};">
-<tr><td align="center" ${o.outline ? '' : `bgcolor="${bg}"`} style="border-radius:${radius}px;background-color:${fill};${o.outline ? `border:2px solid ${border};` : ''}">
+<tr><td align="center" ${o.outline ? '' : `bgcolor="${bg}"`} style="border-radius:${radius}px;background-color:${fill};${o.outline ? `border:1.5px solid ${border};` : ''}">
 <!--[if mso]>
-<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${href}" style="height:${height}px;v-text-anchor:middle;width:${vmlWidth}px;" arcsize="${arc}%" ${o.outline ? `strokecolor="${border}" strokeweight="2px" filled="f"` : `stroke="f" fillcolor="${bg}"`}>
+<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${href}" style="height:${height}px;v-text-anchor:middle;width:${vmlWidth}px;" arcsize="${arc}%" ${o.outline ? `strokecolor="${border}" strokeweight="1.5px" filled="f"` : `stroke="f" fillcolor="${bg}"`}>
 <w:anchorlock/>
-<center style="color:${color};font-family:Arial,Helvetica,sans-serif;font-size:${fontSize}px;font-weight:bold;${transform}">${label}</center>
+<center style="color:${color};font-family:${o.fontFamily === FONT_SERIF ? 'Georgia,serif' : 'Arial,Helvetica,sans-serif'};font-size:${fontSize}px;font-weight:bold;${transform}${spacing}">${label}${arrow}</center>
 </v:roundrect>
 <![endif]-->
 <!--[if !mso]><!-- -->
-<a href="${href}" target="_blank" rel="noopener" style="display:inline-block;padding:${padV}px 34px;font-family:${font};font-size:${fontSize}px;line-height:${Math.round(fontSize * 1.25)}px;font-weight:700;color:${color};text-decoration:none;border-radius:${radius}px;${transform}${spacing}mso-hide:all;"><span style="color:${color};">${label}</span></a>
+<a href="${href}" target="_blank" rel="noopener" style="display:inline-block;padding:${padV}px ${padX}px;font-family:${font};font-size:${fontSize}px;line-height:${Math.round(fontSize * 1.25)}px;font-weight:${weight};color:${color};text-decoration:none;border-radius:${radius}px;${transform}${spacing}mso-hide:all;"><span style="color:${color};">${label}${arrow}</span></a>
 <!--<![endif]-->
 </td></tr>
 </table>`;
@@ -214,16 +246,21 @@ export function spacer(px: number): string {
   return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td height="${px}" style="height:${px}px;font-size:0;line-height:0;">&nbsp;</td></tr></table>`;
 }
 
+/** Image absolue décrite (alt + dimensions), bloc. */
+function img(file: string, w: number, h: number, alt = '', style = ''): string {
+  return `<img src="${emailAsset(file)}" width="${w}" height="${h}" alt="${esc(alt)}" style="display:block;width:${w}px;height:${h}px;border:0;${style}">`;
+}
+
 /* ================================================================== */
 /* Composants Major ECN (corps de message)                            */
 /* ================================================================== */
 
-const P_STYLE = `margin:0 0 16px;font-family:${FONT_SANS};font-size:16px;line-height:26px;color:${MAJOR.body};`;
+const P_STYLE = `margin:0 0 14px;font-family:${FONT_SANS};font-size:15px;line-height:24px;color:${MAJOR.body};`;
 
 /** Paragraphe à partir de HTML déjà sûr. */
 export function pHtml(html: string, opts: { size?: number; color?: string; margin?: string; align?: 'left' | 'center' } = {}): string {
-  const size = opts.size ?? 16;
-  return `<p style="margin:${opts.margin ?? '0 0 16px'};font-family:${FONT_SANS};font-size:${size}px;line-height:${Math.round(size * 1.62)}px;color:${opts.color ?? MAJOR.body};${opts.align ? `text-align:${opts.align};` : ''}">${html}</p>`;
+  const size = opts.size ?? 15;
+  return `<p style="margin:${opts.margin ?? '0 0 14px'};font-family:${FONT_SANS};font-size:${size}px;line-height:${Math.round(size * 1.6)}px;color:${opts.color ?? MAJOR.body};${opts.align ? `text-align:${opts.align};` : ''}">${html}</p>`;
 }
 /** Paragraphe de texte brut (échappé). */
 export function p(text: string, opts?: Parameters<typeof pHtml>[1]): string {
@@ -233,57 +270,60 @@ export function p(text: string, opts?: Parameters<typeof pHtml>[1]): string {
 /** « Bonjour Prénom, » — le prénom en gras, formule neutre sans prénom. */
 export function greeting(name: string | null | undefined, fallback = ''): string {
   const n = (name ?? '').trim() || fallback;
-  return `<p style="${P_STYLE}">Bonjour${n ? ` <strong style="color:${MAJOR.ink};">${esc(n)}</strong>` : ''},</p>`;
+  return `<p style="${P_STYLE}font-size:16px;color:${MAJOR.ink};">Bonjour${n ? ` <strong style="color:${MAJOR.ink};">${esc(n)}</strong>` : ''},</p>`;
 }
 
-/** Intertitre de section (petites capitales rouges + filet). */
-export function sectionTitle(text: string, color: string = MAJOR.red): string {
-  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:8px 0 14px;">
-<tr><td style="font-family:${FONT_SANS};font-size:12px;line-height:16px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:${color};padding:0 0 8px;border-bottom:1px solid ${MAJOR.line};">${esc(text)}</td></tr>
+/** Intertitre de section : capitales espacées bordeaux + filet. */
+export function sectionTitle(text: string, color: string = MAJOR.bordeaux): string {
+  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:10px 0 14px;">
+<tr><td style="font-family:${FONT_SANS};font-size:11px;line-height:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:${color};padding:0 0 8px;border-bottom:1px solid ${MAJOR.line};">${esc(text)}</td></tr>
 </table>`;
 }
 
-/** Titre d'article en serif (campagnes, encadrés éditoriaux). */
+/** Titre d'article en serif. */
 export function heading(text: string, size = 22): string {
-  return `<h2 style="margin:6px 0 14px;font-family:${FONT_SERIF};font-size:${size}px;line-height:${Math.round(size * 1.3)}px;font-weight:700;color:${MAJOR.ink};">${esc(text)}</h2>`;
+  return `<h2 class="em-serif" style="margin:6px 0 14px;font-family:${FONT_SERIF};font-size:${size}px;line-height:${Math.round(size * 1.3)}px;font-weight:700;color:${MAJOR.bordeaux};">${esc(text)}</h2>`;
 }
 
-/** Bouton principal centré, avec respiration. */
+/** Bouton principal : bordeaux plein, texte serif blanc et flèche. */
 export function button(href: string, label: string, opts: Partial<ButtonOptions> = {}): string {
-  return `${spacer(8)}${emailButton({ href, label, ...opts })}${spacer(24)}`;
+  return `${spacer(6)}${emailButton({ href, label, fontFamily: FONT_SERIF, fontSize: 19, fontWeight: 400, height: 54, padX: 56, arrow: true, ...opts })}${spacer(opts.outline ? 24 : 10)}`;
 }
-/** Bouton secondaire (contour marine). */
+/** Bouton secondaire (contour bordeaux). */
 export function buttonSecondary(href: string, label: string): string {
-  return button(href, label, { outline: true, color: MAJOR.navy, borderColor: MAJOR.navy, height: 48, fontSize: 15 });
+  return button(href, label, { outline: true, color: MAJOR.bordeaux, borderColor: MAJOR.bordeaux, height: 46, fontSize: 16, padX: 32 });
 }
 
-/** « Si le bouton ne fonctionne pas… » + URL cliquable, dans un cartouche discret. */
+/** « 🔒 Lien sécurisé — valable … » sous un bouton (texte réel de validité seulement). */
+export function secureNote(text: string): string {
+  return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto 24px;"><tr>
+<td valign="middle" style="padding:0 6px 0 0;">${img('ico-lock.png', 14, 14, '')}</td>
+<td valign="middle" style="font-family:${FONT_SANS};font-size:13px;line-height:18px;color:${MAJOR.muted};">${esc(text)}</td>
+</tr></table>`;
+}
+
+/** « Si le bouton ne fonctionne pas… » + URL cliquable, discret. */
 export function linkFallback(href: string, lead = 'Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :'): string {
-  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
-<tr><td style="padding:14px 16px;background-color:${MAJOR.panel};border:1px solid ${MAJOR.line};border-radius:10px;" bgcolor="${MAJOR.panel}">
-<p style="margin:0 0 6px;font-family:${FONT_SANS};font-size:12px;line-height:18px;color:${MAJOR.muted};">${esc(lead)}</p>
-<p style="margin:0;font-family:${FONT_MONO};font-size:12px;line-height:18px;word-break:break-all;"><a href="${esc(href)}" target="_blank" rel="noopener" style="color:${MAJOR.navy};text-decoration:underline;">${esc(href)}</a></p>
-</td></tr>
-</table>`;
+  return `<p style="margin:0 0 22px;font-family:${FONT_SANS};font-size:12px;line-height:18px;color:${MAJOR.faint};text-align:center;">${esc(lead)}<br><a href="${esc(href)}" target="_blank" rel="noopener" style="color:${MAJOR.bordeaux};text-decoration:underline;word-break:break-all;font-family:${FONT_MONO};font-size:11px;">${esc(href)}</a></p>`;
 }
 
 export type CalloutTone = 'brand' | 'navy' | 'neutral' | 'success';
 const TONES: Record<CalloutTone, { bg: string; border: string; bar: string; title: string }> = {
-  brand: { bg: MAJOR.redSoft, border: MAJOR.redLine, bar: MAJOR.red, title: MAJOR.redDeep },
-  navy: { bg: '#F3F6FB', border: '#DCE3EF', bar: MAJOR.navy, title: MAJOR.navy },
-  neutral: { bg: MAJOR.panel, border: MAJOR.line, bar: '#C5CBD6', title: MAJOR.muted },
+  brand: { bg: MAJOR.rose, border: MAJOR.line, bar: MAJOR.bordeaux, title: MAJOR.bordeaux },
+  navy: { bg: MAJOR.paper, border: MAJOR.line, bar: MAJOR.bordeaux, title: MAJOR.bordeaux },
+  neutral: { bg: MAJOR.panel, border: MAJOR.line, bar: '#CDBFB8', title: MAJOR.muted },
   success: { bg: MAJOR.successSoft, border: MAJOR.successLine, bar: MAJOR.success, title: MAJOR.success },
 };
 
-/** Encadré à filet latéral : titre en petites capitales + contenu HTML. */
+/** Encadré à filet latéral : titre en capitales espacées + contenu HTML. */
 export function callout(o: { title?: string; html: string; tone?: CalloutTone; icon?: string }): string {
   const t = TONES[o.tone ?? 'brand'];
   const title = o.title
-    ? `<p style="margin:0 0 10px;font-family:${FONT_SANS};font-size:12px;line-height:16px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:${t.title};">${o.icon ? `${o.icon}&nbsp; ` : ''}${esc(o.title)}</p>`
+    ? `<p style="margin:0 0 10px;font-family:${FONT_SANS};font-size:11px;line-height:16px;font-weight:700;letter-spacing:2.4px;text-transform:uppercase;color:${t.title};">${o.icon ? `${o.icon}&nbsp; ` : ''}${esc(o.title)}</p>`
     : '';
-  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 22px;">
 <tr>
-<td width="4" style="width:4px;background-color:${t.bar};border-radius:10px 0 0 10px;font-size:0;line-height:0;" bgcolor="${t.bar}">&nbsp;</td>
+<td width="3" style="width:3px;background-color:${t.bar};font-size:0;line-height:0;" bgcolor="${t.bar}">&nbsp;</td>
 <td style="padding:18px 20px;background-color:${t.bg};border:1px solid ${t.border};border-left:0;border-radius:0 10px 10px 0;" bgcolor="${t.bg}">
 ${title}${o.html}
 </td>
@@ -291,70 +331,91 @@ ${title}${o.html}
 </table>`;
 }
 
-/** Petit texte dans un encadré (lignes internes d'un callout). */
+/** Petit texte dans un encadré. */
 export function small(html: string, opts: { color?: string; margin?: string; italic?: boolean } = {}): string {
   return `<p style="margin:${opts.margin ?? '0'};font-family:${FONT_SANS};font-size:14px;line-height:22px;color:${opts.color ?? MAJOR.body};${opts.italic ? 'font-style:italic;' : ''}">${html}</p>`;
 }
 
-/**
- * Liste à pastilles iconographiées (✓ par défaut) : une table par ligne pour
- * un alignement parfait partout, y compris Outlook.
- */
+/** Liste à pastilles (✓ par défaut), une ligne par table pour l'alignement Outlook. */
 export function iconList(items: string[], o: { icon?: string; tone?: 'brand' | 'navy' | 'danger' | 'success'; size?: number; html?: boolean } = {}): string {
   const icon = o.icon ?? '&#10003;';
   const palette = {
-    brand: { bg: '#FDE7EA', fg: MAJOR.red },
-    navy: { bg: '#E6ECF6', fg: MAJOR.navy },
-    danger: { bg: '#FDE7EA', fg: MAJOR.redDeep },
-    success: { bg: '#E3F4EA', fg: MAJOR.success },
+    brand: { bg: MAJOR.bordeauxSoft, fg: MAJOR.bordeaux },
+    navy: { bg: MAJOR.bordeauxSoft, fg: MAJOR.bordeaux },
+    danger: { bg: MAJOR.bordeauxSoft, fg: MAJOR.bordeauxBtn },
+    success: { bg: '#E6F1EA', fg: MAJOR.success },
   }[o.tone ?? 'brand'];
   const size = o.size ?? 15;
   return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 8px;">
 ${items.map((it) => `<tr>
-<td width="34" valign="top" style="width:34px;padding:0 0 12px;">
+<td width="34" valign="top" style="width:34px;padding:0 0 11px;">
 <table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td width="22" height="22" align="center" valign="middle" style="width:22px;height:22px;border-radius:11px;background-color:${palette.bg};font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:22px;font-weight:700;color:${palette.fg};" bgcolor="${palette.bg}">${icon}</td></tr></table>
 </td>
-<td valign="top" style="padding:1px 0 12px;font-family:${FONT_SANS};font-size:${size}px;line-height:${Math.round(size * 1.47)}px;color:${MAJOR.body};">${o.html ? it : esc(it)}</td>
+<td valign="top" style="padding:1px 0 11px;font-family:${FONT_SANS};font-size:${size}px;line-height:${Math.round(size * 1.47)}px;color:${MAJOR.body};">${o.html ? it : esc(it)}</td>
 </tr>`).join('\n')}
 </table>`;
 }
 
-/** Tableau récapitulatif libellé → valeur (valeurs en HTML sûr). */
-export function summaryTable(rows: Array<[string, string] | null | false | undefined>, o: { title?: string; labelWidth?: number } = {}): string {
+/** En-tête de carte : pictogramme + titre en capitales espacées bordeaux. */
+function cardHeader(title: string, icon: string | null): string {
+  return `<tr><td colspan="2" style="padding:16px 20px 14px;border-bottom:1px solid ${MAJOR.line};">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>
+${icon ? `<td valign="middle" style="padding:0 14px 0 0;">${img(icon, 24, 24, '')}</td>` : ''}
+<td valign="middle" style="font-family:${FONT_SANS};font-size:11px;line-height:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:${MAJOR.bordeaux};">${esc(title)}</td>
+</tr></table>
+</td></tr>`;
+}
+
+/**
+ * Carte récapitulative à fond blanc, bordée finement.
+ * - mode liste (défaut) : libellé à gauche, valeur à droite ;
+ * - `grid: true` : grille 2 colonnes, libellé au-dessus d'une valeur serif bordeaux (maquette).
+ */
+export function summaryTable(rows: Array<[string, string] | null | false | undefined>, o: { title?: string; labelWidth?: number; grid?: boolean; icon?: string | null } = {}): string {
   const list = rows.filter((r): r is [string, string] => Array.isArray(r));
   if (list.length === 0) return '';
-  const lw = o.labelWidth ?? 36;
-  const head = o.title
-    ? `<tr><td colspan="2" style="padding:14px 18px;background-color:${MAJOR.panel};border-bottom:1px solid ${MAJOR.line};font-family:${FONT_SANS};font-size:12px;line-height:16px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:${MAJOR.muted};" bgcolor="${MAJOR.panel}">${esc(o.title)}</td></tr>`
-    : '';
-  const body = list.map(([label, value], i) => `<tr>
-<td width="${lw}%" valign="top" style="width:${lw}%;padding:12px 12px 12px 18px;${i < list.length - 1 ? `border-bottom:1px solid ${MAJOR.line};` : ''}font-family:${FONT_SANS};font-size:13px;line-height:20px;color:${MAJOR.muted};">${esc(label)}</td>
-<td valign="top" style="padding:12px 18px 12px 12px;${i < list.length - 1 ? `border-bottom:1px solid ${MAJOR.line};` : ''}font-family:${FONT_SANS};font-size:14px;line-height:21px;font-weight:600;color:${MAJOR.ink};word-break:break-word;">${value}</td>
+  const head = o.title ? cardHeader(o.title, o.icon === undefined ? 'ico-recap.png' : o.icon) : '';
+  let body: string;
+  if (o.grid) {
+    const cell = ([label, value]: [string, string], last: boolean) =>
+      `<p style="margin:0 0 4px;font-family:${FONT_SANS};font-size:13px;line-height:18px;color:${MAJOR.muted};">${esc(label)}</p>
+<div class="em-serif" style="font-family:${FONT_SERIF};font-size:19px;line-height:26px;font-weight:700;color:${MAJOR.bordeaux};${last ? '' : `padding:0 0 14px;margin:0 0 14px;border-bottom:1px solid ${MAJOR.line};`}">${value}</div>`;
+    const half = Math.ceil(list.length / 2);
+    const left = list.slice(0, half), right = list.slice(half);
+    body = `<tr>
+<td width="50%" valign="top" class="em-stack" style="width:50%;padding:18px 20px;">${left.map((r, i) => cell(r, i === left.length - 1)).join('')}</td>
+<td width="50%" valign="top" class="em-stack" style="width:50%;padding:18px 20px;border-left:1px solid ${MAJOR.line};">${right.map((r, i) => cell(r, i === right.length - 1)).join('')}</td>
+</tr>`;
+  } else {
+    const lw = o.labelWidth ?? 36;
+    body = list.map(([label, value], i) => `<tr>
+<td width="${lw}%" valign="top" style="width:${lw}%;padding:12px 12px 12px 20px;${i < list.length - 1 ? `border-bottom:1px solid ${MAJOR.line};` : ''}font-family:${FONT_SANS};font-size:13px;line-height:20px;color:${MAJOR.muted};">${esc(label)}</td>
+<td valign="top" style="padding:12px 20px 12px 12px;${i < list.length - 1 ? `border-bottom:1px solid ${MAJOR.line};` : ''}font-family:${FONT_SANS};font-size:14px;line-height:21px;font-weight:600;color:${MAJOR.ink};word-break:break-word;">${value}</td>
 </tr>`).join('\n');
-  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 24px;border:1px solid ${MAJOR.line};border-radius:12px;border-collapse:separate;overflow:hidden;">
+  }
+  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 22px;background-color:${MAJOR.paper};border:1px solid ${MAJOR.line};border-radius:12px;border-collapse:separate;overflow:hidden;" bgcolor="${MAJOR.paper}">
 ${head}${body}
 </table>`;
 }
 
-/** Valeur monospace (adresses e-mail, identifiants). */
+/** Valeur monospace (identifiants). */
 export function mono(s: string): string {
   return `<span style="font-family:${FONT_MONO};font-size:13px;font-weight:500;">${esc(s)}</span>`;
 }
 /** Lien mailto. */
-export function mailto(email: string, color: string = MAJOR.navy): string {
+export function mailto(email: string, color: string = MAJOR.bordeaux): string {
   return `<a href="mailto:${esc(email)}" style="color:${color};text-decoration:underline;font-weight:600;">${esc(email)}</a>`;
 }
 
 /** Citation / message rapporté (texte brut, retours à la ligne conservés). */
 export function quote(text: string, o: { label?: string; tone?: 'neutral' | 'brand' } = {}): string {
   const brand = o.tone === 'brand';
-  const bg = brand ? MAJOR.redSoft : MAJOR.panel;
-  const bd = brand ? MAJOR.redLine : MAJOR.line;
+  const bg = brand ? MAJOR.rose : MAJOR.paper;
   const label = o.label
-    ? `<p style="margin:0 0 8px;font-family:${FONT_SANS};font-size:11px;line-height:16px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:${brand ? MAJOR.redDeep : MAJOR.muted};">${esc(o.label)}</p>`
+    ? `<p style="margin:0 0 8px;font-family:${FONT_SANS};font-size:11px;line-height:16px;font-weight:700;letter-spacing:2.4px;text-transform:uppercase;color:${MAJOR.bordeaux};">${esc(o.label)}</p>`
     : '';
-  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
-<tr><td style="padding:18px 20px 18px 20px;background-color:${bg};border:1px solid ${bd};border-radius:12px;" bgcolor="${bg}">
+  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 22px;">
+<tr><td style="padding:18px 20px;background-color:${bg};border:1px solid ${MAJOR.line};border-radius:12px;" bgcolor="${bg}">
 ${label}<p style="margin:0;font-family:${FONT_SANS};font-size:15px;line-height:24px;color:${MAJOR.ink};white-space:pre-wrap;">${esc(text).replace(/\r?\n/g, '<br>')}</p>
 </td></tr>
 </table>`;
@@ -362,46 +423,87 @@ ${label}<p style="margin:0;font-family:${FONT_SANS};font-size:15px;line-height:2
 
 /** Citation éditoriale mise en exergue (campagnes). */
 export function pullQuote(lineA: string, lineB: string): string {
-  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:4px 0 28px;">
-<tr><td align="center" style="padding:26px 28px;background-color:${MAJOR.navy};border-radius:14px;" bgcolor="${MAJOR.navy}">
-<p style="margin:0 0 6px;font-family:${FONT_SERIF};font-size:30px;line-height:30px;color:${MAJOR.red};">&ldquo;</p>
-<p style="margin:0 0 8px;font-family:${FONT_SERIF};font-size:17px;line-height:26px;font-style:italic;color:${MAJOR.onNavy};">${esc(lineA)}</p>
-<p style="margin:0;font-family:${FONT_SERIF};font-size:20px;line-height:28px;font-weight:700;color:${MAJOR.white};">${esc(lineB)}</p>
+  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:4px 0 26px;">
+<tr><td align="center" style="padding:26px 28px;background-color:${MAJOR.rose};border:1px solid ${MAJOR.line};border-radius:12px;" bgcolor="${MAJOR.rose}">
+<p class="em-serif" style="margin:0 0 4px;font-family:${FONT_SERIF};font-size:34px;line-height:30px;color:${MAJOR.bordeauxBtn};">&ldquo;</p>
+<p class="em-serif" style="margin:0 0 8px;font-family:${FONT_SERIF};font-size:17px;line-height:26px;font-style:italic;color:${MAJOR.body};">${esc(lineA)}</p>
+<p class="em-serif" style="margin:0;font-family:${FONT_SERIF};font-size:21px;line-height:29px;font-weight:700;color:${MAJOR.bordeaux};">${esc(lineB)}</p>
 </td></tr>
 </table>`;
 }
 
 /** Filet horizontal. */
-export function divider(margin = '8px 0 28px'): string {
+export function divider(margin = '6px 0 26px'): string {
   return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:${margin};"><tr><td style="border-top:1px solid ${MAJOR.line};font-size:0;line-height:0;height:1px;">&nbsp;</td></tr></table>`;
 }
 
-/** Mention discrète (conditions, validité d'un lien…). */
+/** Mention discrète. */
 export function note(html: string): string {
   return `<p style="margin:0 0 16px;font-family:${FONT_SANS};font-size:13px;line-height:21px;color:${MAJOR.muted};">${html}</p>`;
 }
 
-/** Bloc « Une question ? » avec téléphone et e-mail. */
-export function contactCard(title = 'Une question sur votre préparation ?', lead = 'Notre équipe est à votre disposition pour vous accompagner et répondre à vos questions.'): string {
-  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:4px 0 28px;">
-<tr><td style="padding:22px 24px;background-color:${MAJOR.panel};border:1px solid ${MAJOR.line};border-radius:14px;" bgcolor="${MAJOR.panel}">
-<p style="margin:0 0 6px;font-family:${FONT_SANS};font-size:16px;line-height:22px;font-weight:700;color:${MAJOR.ink};">${esc(title)}</p>
-<p style="margin:0 0 14px;font-family:${FONT_SANS};font-size:14px;line-height:22px;color:${MAJOR.body};">${esc(lead)}</p>
+/** Panneau rosé à pictogramme rond (blocs « chances », « contact »). */
+function iconPanel(icon: string, inner: string): string {
+  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 14px;background-color:${MAJOR.rose};border-radius:10px;" bgcolor="${MAJOR.rose}"><tr>
+<td width="92" valign="middle" align="center" class="em-hide-sm" style="width:92px;padding:18px 0 18px 18px;">${img(icon, 56, 56, '')}</td>
+<td width="1" class="em-hide-sm" style="width:1px;padding:18px 0;"><table role="presentation" border="0" cellpadding="0" cellspacing="0" height="60"><tr><td width="1" style="width:1px;background-color:#D9C8C4;font-size:0;line-height:0;" bgcolor="#D9C8C4">&nbsp;</td></tr></table></td>
+<td valign="middle" style="padding:18px 22px;">${inner}</td>
+</tr></table>`;
+}
+
+/** Bloc contact : casque, e-mail et téléphone réels du site (aucun horaire inventé). */
+export function contactCard(title = 'Une question pour démarrer ?', lead = 'Notre équipe est à votre écoute pour vous accompagner dans la prise en main de votre espace.'): string {
+  return iconPanel('ico-contact.png', `<p style="margin:0 0 4px;font-family:${FONT_SANS};font-size:16px;line-height:22px;font-weight:700;color:${MAJOR.ink};">${esc(title)}</p>
+<p style="margin:0 0 12px;font-family:${FONT_SANS};font-size:14px;line-height:21px;color:${MAJOR.body};">${esc(lead)}</p>
 <table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>
-<td class="em-stack em-stack-gap" style="padding:0 24px 0 0;font-family:${FONT_SANS};font-size:14px;line-height:20px;"><a href="tel:${CONTACT_PHONE_INTL}" style="color:${MAJOR.navy};font-weight:700;text-decoration:none;">&#9990;&nbsp; ${CONTACT_PHONE}</a></td>
-<td class="em-stack" style="font-family:${FONT_SANS};font-size:14px;line-height:20px;"><a href="mailto:${CONTACT_EMAIL}" style="color:${MAJOR.navy};font-weight:700;text-decoration:none;">&#9993;&nbsp; ${CONTACT_EMAIL}</a></td>
-</tr></table>
-</td></tr>
-</table>`;
+<td class="em-stack em-stack-gap" style="padding:0 22px 0 0;"><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td valign="middle" style="padding:0 8px 0 0;">${img('ico-mail.png', 20, 20, '')}</td><td valign="middle" style="font-family:${FONT_SANS};font-size:14px;line-height:20px;"><a href="mailto:${CONTACT_EMAIL}" style="color:${MAJOR.ink};text-decoration:none;">${CONTACT_EMAIL}</a></td></tr></table></td>
+<td class="em-stack"><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td valign="middle" style="padding:0 8px 0 0;">${img('ico-phone.png', 20, 20, '')}</td><td valign="middle" style="font-family:${FONT_SANS};font-size:14px;line-height:20px;"><a href="tel:${CONTACT_PHONE_INTL}" style="color:${MAJOR.ink};text-decoration:none;">${CONTACT_PHONE}</a></td></tr></table></td>
+</tr></table>`);
+}
+
+/** Bloc « Nous mettons toutes les chances de votre côté » (accueil, achat). */
+export function chancesBlock(): string {
+  return iconPanel('ico-cible.png', `<p style="margin:0 0 4px;font-family:${FONT_SANS};font-size:16px;line-height:22px;font-weight:700;color:${MAJOR.bordeaux};">Nous mettons toutes les chances de votre côté</p>
+<p style="margin:0 0 6px;font-family:${FONT_SANS};font-size:14px;line-height:21px;color:${MAJOR.body};">Votre espace a été pensé pour vous offrir les meilleures conditions de préparation : contenus structurés, entraînements, révisions, accompagnement et suivi de votre progression.</p>
+<p style="margin:0 0 4px;font-family:${FONT_SANS};font-size:14px;line-height:21px;font-weight:700;color:${MAJOR.bordeaux};">Votre régularité et votre travail personnel feront toute la différence.</p>
+<p style="margin:0;font-family:${FONT_SANS};font-size:14px;line-height:21px;color:${MAJOR.body};">Avancez à votre rythme, mais gardez le cap : nous sommes à vos côtés tout au long de votre préparation.</p>`);
+}
+
+/** Rangée « Votre préparation vous attend » : 6 pictogrammes (grille 3 × 2 sur mobile). */
+export function preparationBlock(): string {
+  const items: Array<[string, string]> = [
+    ['ico-cours.png', 'Cours live<br>et replays'],
+    ['ico-fiches.png', 'Fiches<br>de synthèse'],
+    ['ico-qcm.png', 'QCM / QROC<br>(selon votre voie)'],
+    ['ico-cas.png', 'Cas cliniques<br>et annales'],
+    ['ico-suivi.png', 'Suivi de votre<br>progression'],
+    ['ico-ia.png', 'Outils IA<br>et flashcards'],
+  ];
+  const cell = ([icon, label]: [string, string]) => `<td width="66" valign="top" align="center" style="width:66px;padding:0;">
+${img(icon, 44, 44, '', 'margin:0 auto 6px;')}
+<p style="margin:0;font-family:${FONT_SANS};font-size:10px;line-height:13px;color:${MAJOR.body};text-align:center;">${label}</p>
+</td>`;
+  // Deux tables flottantes de 3 pictogrammes : côte à côte à 600 px, empilées (grille 3 × 2) sur mobile.
+  const group = (list: Array<[string, string]>) => `<table role="presentation" width="198" border="0" cellpadding="0" cellspacing="0" align="left" class="em-full" style="width:198px;margin:0 0 6px;"><tr>${list.map(cell).join('')}</tr></table>`;
+  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:6px 0 14px;background-color:${MAJOR.panel};border-radius:10px;" bgcolor="${MAJOR.panel}"><tr>
+<td width="106" valign="middle" class="em-stack" style="width:106px;padding:18px 2px 18px 16px;">
+<p style="margin:0 0 10px;font-family:${FONT_SANS};font-size:11px;line-height:18px;font-weight:700;letter-spacing:2.2px;text-transform:uppercase;color:${MAJOR.bordeaux};">Votre préparation vous attend</p>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td width="32" style="width:32px;border-top:2px solid ${MAJOR.bordeaux};font-size:0;line-height:0;">&nbsp;</td></tr></table>
+</td>
+<td width="412" valign="middle" class="em-stack" style="width:412px;padding:16px 4px 10px;">
+${group(items.slice(0, 3))}
+${group(items.slice(3))}
+</td>
+</tr></table>`;
 }
 
 /** Signature d'équipe. */
 export function signature(o: { closing?: string; team?: string; role?: string } = {}): string {
-  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:12px 0 0;">
-<tr><td style="padding:20px 0 0;border-top:1px solid ${MAJOR.line};">
+  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:10px 0 0;">
+<tr><td style="padding:18px 0 4px;">
 <p style="margin:0 0 4px;font-family:${FONT_SANS};font-size:15px;line-height:22px;color:${MAJOR.body};">${esc(o.closing ?? 'À très bientôt,')}</p>
-<p style="margin:0;font-family:${FONT_SERIF};font-size:18px;line-height:26px;font-weight:700;color:${MAJOR.ink};">${esc(o.team ?? 'L’équipe Major ECN')}</p>
-<p style="margin:2px 0 0;font-family:${FONT_SANS};font-size:12px;line-height:18px;letter-spacing:1.2px;text-transform:uppercase;color:${MAJOR.red};font-weight:700;">${esc(o.role ?? 'Préparation aux EVC')}</p>
+<p class="em-serif" style="margin:0;font-family:${FONT_SERIF};font-size:19px;line-height:26px;font-weight:700;color:${MAJOR.bordeaux};">${esc(o.team ?? 'L’équipe Major ECN')}</p>
+<p style="margin:3px 0 0;font-family:${FONT_SANS};font-size:10px;line-height:16px;letter-spacing:3px;text-transform:uppercase;color:${MAJOR.muted};">${esc(o.role ?? 'La référence de votre préparation')}</p>
 </td></tr>
 </table>`;
 }
@@ -413,7 +515,7 @@ export function signature(o: { closing?: string; team?: string; role?: string } 
 /**
  * - `service` : e-mail transactionnel (compte, paiement, forum, suivi) ;
  * - `marketing` : prospection — lien de désinscription OBLIGATOIRE ;
- * - `internal` : notification réservée à l'équipe.
+ * - `internal` : notification réservée à l'équipe (version allégée, sans photo).
  */
 export type MajorAudience = 'service' | 'marketing' | 'internal';
 
@@ -422,99 +524,128 @@ export type MajorEmailOptions = {
   subject: string;
   /** Texte d'aperçu dans la boîte de réception. */
   preheader?: string | null;
-  /** Petite ligne au-dessus du titre (catégorie). */
+  /** Sur-titre bordeaux espacé (ex. « Inscription confirmée »). */
   eyebrow?: string | null;
-  /** Grand titre du bandeau. */
+  /** Grand titre serif du hero. */
   title?: string | null;
-  /** Chapô sous le titre (texte brut). */
+  /** Sous-titre en capitales très espacées. */
   lead?: string | null;
-  /** Visuel pleine largeur à la place du bandeau marine (campagnes). */
+  /** Premiers paragraphes, à gauche de la photo (salutation, message principal). */
+  intro?: string | null;
+  /** Visuel d'article (campagnes), affiché en tête du corps. */
   heroImage?: { src: string; alt: string; width: number; height: number; href?: string } | null;
-  /** Étiquette à droite du logo (ex. « Sécurité du compte »). */
+  /** Ancienne étiquette d'en-tête (conservée pour compatibilité, sans effet visuel). */
   tag?: string | null;
   bodyHtml: string;
   audience?: MajorAudience;
+  /** Photo du hero ; `false` pour une version allégée (défaut : sans photo pour l'interne). */
+  photo?: boolean;
   /** « Vous recevez cet e-mail parce que… » */
   reason?: string | null;
   /** Lien de désinscription (marketing). */
   unsubscribeUrl?: string | null;
 };
 
+const CAPS = (size: number, spacing: number, color: string, weight = 400) =>
+  `font-family:${FONT_SANS};font-size:${size}px;line-height:${Math.round(size * 1.6)}px;letter-spacing:${spacing}px;text-transform:uppercase;font-weight:${weight};color:${color};`;
+
+function majorHeaderInner(): string {
+  return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
+<td valign="middle" width="130" style="width:130px;"><a href="${EMAIL_SITE}" target="_blank" rel="noopener">${img('major-ecn-logo-bordeaux.png', 130, 65, 'Major ECN')}</a></td>
+<td valign="middle" width="20" style="width:20px;">&nbsp;</td>
+<td valign="middle" width="1" class="em-hide-sm" style="width:1px;"><table role="presentation" border="0" cellpadding="0" cellspacing="0" height="46"><tr><td width="1" style="width:1px;background-color:#D8CBC5;font-size:0;line-height:0;" bgcolor="#D8CBC5">&nbsp;</td></tr></table></td>
+<td valign="middle" class="em-hide-sm" style="padding:0 0 0 18px;${CAPS(10, 3, '#5A4E55')}">La référence<br>de votre préparation</td>
+<td valign="top" align="right" class="em-hide-sm">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" align="right">
+<tr><td style="${CAPS(9, 2.6, '#6E6268')}text-align:left;">Exigence<br>Bienveillance<br>Réussite</td></tr>
+<tr><td style="padding:7px 0 0;"><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td width="30" style="width:30px;border-top:2px solid ${MAJOR.bordeauxBtn};font-size:0;line-height:0;">&nbsp;</td></tr></table></td></tr>
+</table></td>
+</tr></table>`;
+}
+
+function majorHeader(): string {
+  return `<tr><td class="em-px" style="padding:24px 32px 18px;background-color:${MAJOR.cream};" bgcolor="${MAJOR.cream}">${majorHeaderInner()}</td></tr>`;
+}
+
+function majorHero(o: MajorEmailOptions, photo: boolean): string {
+  if (!o.title) return '';
+  const len = (o.title ?? '').length;
+  const size = photo ? (len > 58 ? 25 : len > 34 ? 30 : 36) : (len > 58 ? 24 : 28);
+  const eyebrow = o.eyebrow
+    ? `<p style="margin:0 0 10px;${CAPS(11, 3.5, MAJOR.bordeauxBtn)}">${esc(o.eyebrow)}</p>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 18px;"><tr><td width="40" style="width:40px;border-top:1.5px solid ${MAJOR.bordeauxBtn};font-size:0;line-height:0;">&nbsp;</td></tr></table>`
+    : '';
+  const title = `<h1 class="em-h1 em-serif" style="margin:0;font-family:${FONT_SERIF};font-size:${size}px;line-height:${Math.round(size * 1.14)}px;font-weight:700;letter-spacing:-0.4px;color:${MAJOR.bordeaux};">${esc(o.title)}</h1>`;
+  const lead = o.lead
+    ? `<p style="margin:16px 0 0;${CAPS(11, 3.6, '#3D3439')}">${esc(o.lead.replace(/\.\s*$/, ''))}</p>`
+    : '';
+  const intro = o.intro ? `<div style="margin:22px 0 0;">${o.intro}</div>` : '';
+  if (!photo) {
+    return `<tr><td class="em-px" style="padding:10px 32px 26px;background-color:${MAJOR.cream};border-bottom:1px solid ${MAJOR.line};" bgcolor="${MAJOR.cream}">${eyebrow}${title}${lead}${intro}</td></tr>`;
+  }
+  const hero = emailAsset('major-hero.jpg');
+  return `<tr><td class="em-hero-bg" valign="top" height="440" style="height:440px;background-color:${MAJOR.cream};background-image:url('${hero}');background-repeat:no-repeat;background-position:right top;background-size:600px 440px;" bgcolor="${MAJOR.cream}">
+<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr><td class="em-px" colspan="2" style="padding:24px 32px 12px;">${majorHeaderInner()}</td></tr>
+<tr><td colspan="2" class="em-show-sm" style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:0;line-height:0;">
+<img src="${emailAsset('major-hero-mobile.jpg')}" width="600" height="300" alt="" class="em-fluid" style="display:block;width:100%;max-width:600px;height:auto;border:0;">
+</td></tr>
+<tr><td class="em-px em-full" width="340" valign="top" style="width:340px;padding:26px 0 0 32px;">${eyebrow}${title}</td><td class="em-hide-sm" style="font-size:0;line-height:0;">&nbsp;</td></tr>
+<tr><td class="em-px" colspan="2" style="padding:0 32px;">${lead}</td></tr>
+<tr><td class="em-px em-full" width="352" valign="top" style="width:352px;padding:0 0 6px 32px;font-family:${FONT_SANS};font-size:15px;line-height:24px;color:${MAJOR.body};">${intro}</td><td class="em-hide-sm" style="font-size:0;line-height:0;">&nbsp;</td></tr>
+</table>
+</td></tr>`;
+}
+
 function majorFooter(o: { audience: MajorAudience; reason?: string | null; unsubscribeUrl?: string | null }): string {
   const year = new Date().getFullYear();
-  const link = (href: string, label: string) =>
-    `<a href="${href}" target="_blank" rel="noopener" style="color:${MAJOR.white};text-decoration:none;font-weight:600;">${label}</a>`;
-  const sep = `<span style="color:${MAJOR.onNavyMuted};">&nbsp;&nbsp;·&nbsp;&nbsp;</span>`;
-  if (o.audience === 'internal') {
-    return `<tr><td class="em-px" style="padding:22px 40px;background-color:${MAJOR.navyDeep};" bgcolor="${MAJOR.navyDeep}">
-<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
-<td valign="middle" width="96" style="width:96px;"><img src="${emailAsset('major-ecn-logo-white.png')}" width="84" height="42" alt="Major ECN" style="display:block;width:84px;height:42px;border:0;"></td>
-<td valign="middle" style="font-family:${FONT_SANS};font-size:12px;line-height:18px;color:${MAJOR.onNavy};">${esc(o.reason ?? 'Notification interne générée automatiquement par la plateforme Major ECN.')}<br><span style="color:${MAJOR.onNavyMuted};">Document réservé à l’équipe — ne pas transférer.</span></td>
-</tr></table>
-</td></tr>`;
-  }
-  const reason = o.reason ?? (o.audience === 'marketing'
-    ? 'Vous recevez cet e-mail car vous vous êtes inscrit(e) sur Major ECN.'
-    : 'Cet e-mail de service concerne votre compte Major ECN.');
+  const sep = `<span style="color:#C9BBB5;">&nbsp;&nbsp;·&nbsp;&nbsp;</span>`;
+  const internal = o.audience === 'internal';
+  const reason = o.reason ?? (internal
+    ? 'Notification interne générée automatiquement par la plateforme Major ECN — document réservé à l’équipe.'
+    : o.audience === 'marketing'
+      ? 'Vous recevez cet e-mail car vous vous êtes inscrit(e) sur Major ECN.'
+      : 'Cet e-mail de service concerne votre compte Major ECN.');
   const unsub = o.unsubscribeUrl
-    ? `<br><a href="${esc(o.unsubscribeUrl)}" target="_blank" rel="noopener" style="color:${MAJOR.onNavy};text-decoration:underline;">Se désabonner</a>`
+    ? `<br><a href="${esc(o.unsubscribeUrl)}" target="_blank" rel="noopener" style="color:${MAJOR.muted};text-decoration:underline;">Se désabonner</a>`
     : '';
-  return `<tr><td class="em-px" align="center" style="padding:36px 40px 32px;background-color:${MAJOR.navyDeep};" bgcolor="${MAJOR.navyDeep}">
-<a href="${EMAIL_SITE}" target="_blank" rel="noopener"><img src="${emailAsset('major-ecn-logo-white.png')}" width="120" height="60" alt="Major ECN" style="display:block;width:120px;height:60px;border:0;margin:0 auto;"></a>
-<p style="margin:14px 0 20px;font-family:${FONT_SERIF};font-size:15px;line-height:22px;font-style:italic;color:${MAJOR.onNavy};">La préparation aux EVC depuis 2011</p>
-<p style="margin:0 0 20px;font-family:${FONT_SANS};font-size:13px;line-height:20px;">${link(EMAIL_SITE, 'Le site')}${sep}${link(`${EMAIL_SITE}/plateforme`, 'La plateforme')}${sep}${link(`${EMAIL_SITE}/contact`, 'Nous contacter')}${sep}${link(`${EMAIL_SITE}/faq`, 'FAQ')}</p>
-<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:24px 0 0;"><tr><td style="border-top:1px solid #1E3563;font-size:0;line-height:0;height:1px;">&nbsp;</td></tr></table>
-<p style="margin:20px 0 6px;font-family:${FONT_SANS};font-size:12px;line-height:19px;color:${MAJOR.onNavy};"><a href="mailto:${CONTACT_EMAIL}" style="color:${MAJOR.onNavy};text-decoration:none;">${CONTACT_EMAIL}</a>${sep}<a href="tel:${CONTACT_PHONE_INTL}" style="color:${MAJOR.onNavy};text-decoration:none;">${CONTACT_PHONE}</a></p>
-<p style="margin:0 0 14px;font-family:${FONT_SANS};font-size:12px;line-height:19px;color:${MAJOR.onNavyMuted};">${esc(LEGAL_ENTITY)} · ${esc(LEGAL_ADDRESS)}</p>
-<p style="margin:0 0 14px;font-family:${FONT_SANS};font-size:11px;line-height:18px;color:${MAJOR.onNavyMuted};">${esc(reason)}${unsub}</p>
-<p style="margin:0;font-family:${FONT_SANS};font-size:11px;line-height:18px;color:${MAJOR.onNavyMuted};">© ${year} Major ECN&nbsp;·&nbsp;<a href="${EMAIL_SITE}/mentions-legales" style="color:${MAJOR.onNavyMuted};text-decoration:underline;">Mentions légales</a>&nbsp;·&nbsp;<a href="${EMAIL_SITE}/confidentialite" style="color:${MAJOR.onNavyMuted};text-decoration:underline;">Confidentialité</a></p>
+  return `<tr><td class="em-px" style="padding:26px 32px 12px;background-color:${MAJOR.cream};border-top:1px solid ${MAJOR.line};" bgcolor="${MAJOR.cream}">
+<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
+<td width="120" valign="middle" class="em-stack" style="width:120px;"><a href="${EMAIL_SITE}" target="_blank" rel="noopener">${img('major-ecn-logo-bordeaux.png', 110, 55, 'Major ECN', 'margin:0 auto;')}</a></td>
+<td valign="middle" align="center" class="em-stack" style="padding:10px 0 0;">
+<p style="margin:0 0 10px;${CAPS(10, 4, '#4A4046')}text-align:center;">Ensemble vers votre réussite</p>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center"><tr><td width="44" style="width:44px;border-top:2px solid ${MAJOR.bordeauxBtn};font-size:0;line-height:0;">&nbsp;</td></tr></table>
+</td>
+<td width="120" class="em-hide-sm" style="width:120px;">&nbsp;</td>
+</tr></table>
+</td></tr>
+<tr><td class="em-px" align="center" style="padding:14px 32px 30px;background-color:${MAJOR.cream};" bgcolor="${MAJOR.cream}">
+${internal ? '' : `<p style="margin:0 0 6px;font-family:${FONT_SANS};font-size:12px;line-height:19px;color:${MAJOR.muted};"><a href="mailto:${CONTACT_EMAIL}" style="color:${MAJOR.muted};text-decoration:none;">${CONTACT_EMAIL}</a>${sep}<a href="tel:${CONTACT_PHONE_INTL}" style="color:${MAJOR.muted};text-decoration:none;">${CONTACT_PHONE}</a>${sep}<a href="${EMAIL_SITE}" style="color:${MAJOR.muted};text-decoration:none;">www.major-ecn.fr</a></p>
+<p style="margin:0 0 10px;font-family:${FONT_SANS};font-size:11px;line-height:18px;color:${MAJOR.faint};">${esc(LEGAL_ENTITY)} · ${esc(LEGAL_ADDRESS)}</p>`}
+<p style="margin:0 0 10px;font-family:${FONT_SANS};font-size:11px;line-height:18px;color:${MAJOR.faint};">${esc(reason)}${unsub}</p>
+<p style="margin:0;font-family:${FONT_SANS};font-size:11px;line-height:18px;color:${MAJOR.faint};">© ${year} Major ECN&nbsp;·&nbsp;<a href="${EMAIL_SITE}/mentions-legales" style="color:${MAJOR.faint};text-decoration:underline;">Mentions légales</a>&nbsp;·&nbsp;<a href="${EMAIL_SITE}/confidentialite" style="color:${MAJOR.faint};text-decoration:underline;">Confidentialité</a></p>
 </td></tr>`;
 }
 
 /** E-mail complet à la charte Major ECN. */
 export function majorEmail(o: MajorEmailOptions): string {
   const audience = o.audience ?? 'service';
-  const tag = o.tag ?? (audience === 'internal' ? 'Notification interne' : o.eyebrow ?? null);
-  const header = `<tr><td style="height:4px;background-color:${MAJOR.red};font-size:0;line-height:0;" bgcolor="${MAJOR.red}">&nbsp;</td></tr>
-<tr><td class="em-px" style="padding:${o.heroImage ? '16px 40px' : '22px 40px'};background-color:${MAJOR.white};" bgcolor="${MAJOR.white}">
-<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
-${o.heroImage
-  ? `<td valign="middle" style="font-family:${FONT_SERIF};font-size:15px;line-height:20px;font-weight:700;color:${MAJOR.navy};"><a href="${EMAIL_SITE}" target="_blank" rel="noopener" style="color:${MAJOR.navy};text-decoration:none;">La lettre <span style="color:${MAJOR.red};">Major ECN</span></a></td>`
-  : `<td valign="middle"><a href="${EMAIL_SITE}" target="_blank" rel="noopener"><img src="${emailAsset('major-ecn-logo.png')}" width="112" height="56" alt="Major ECN" style="display:block;width:112px;height:56px;border:0;"></a></td>`}
-${tag ? `<td valign="middle" align="right" class="em-hide-sm" style="font-family:${FONT_SANS};font-size:11px;line-height:16px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:${MAJOR.muted};">${esc(tag)}</td>` : ''}
-</tr></table>
-</td></tr>`;
-
-  let hero = '';
-  if (o.heroImage) {
-    const img = `<img src="${esc(o.heroImage.src)}" width="${o.heroImage.width}" height="${o.heroImage.height}" alt="${esc(o.heroImage.alt)}" class="em-fluid" style="display:block;width:100%;max-width:${o.heroImage.width}px;height:auto;border:0;">`;
-    hero = `<tr><td style="padding:0;background-color:${MAJOR.panel};" bgcolor="${MAJOR.panel}">${o.heroImage.href ? `<a href="${esc(o.heroImage.href)}" target="_blank" rel="noopener">${img}</a>` : img}</td></tr>`;
-  } else if (o.title) {
-    const eyebrow = o.eyebrow
-      ? `<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 16px;"><tr>
-<td width="28" style="width:28px;border-top:2px solid ${MAJOR.red};font-size:0;line-height:0;">&nbsp;</td>
-<td style="padding:0 0 0 10px;font-family:${FONT_SANS};font-size:12px;line-height:16px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:#FF8FA0;">${esc(o.eyebrow)}</td>
-</tr></table>`
-      : '';
-    const lead = o.lead
-      ? `<p style="margin:14px 0 0;font-family:${FONT_SANS};font-size:16px;line-height:25px;color:${MAJOR.onNavy};">${esc(o.lead)}</p>`
-      : '';
-    const pad = audience === 'internal' ? '28px 40px 28px' : '40px 40px 38px';
-    hero = `<tr><td class="em-px" style="padding:${pad};background-color:${MAJOR.navy};background-image:linear-gradient(135deg,${MAJOR.navy} 0%,${MAJOR.navyDeep} 100%);" bgcolor="${MAJOR.navy}">
-${eyebrow}<h1 class="em-h1" style="margin:0;font-family:${FONT_SERIF};font-size:${audience === 'internal' ? 26 : 32}px;line-height:${audience === 'internal' ? 32 : 39}px;font-weight:700;color:${MAJOR.white};">${esc(o.title)}</h1>
-${lead}
-</td></tr>
-<tr><td style="height:3px;font-size:0;line-height:0;background-color:${MAJOR.red};" bgcolor="${MAJOR.red}">&nbsp;</td></tr>`;
-  }
-
+  const photo = o.photo ?? audience !== 'internal';
+  const cover = o.heroImage
+    ? (() => {
+        const w = 536, h = Math.round((o.heroImage.height / o.heroImage.width) * w);
+        const im = `<img src="${esc(o.heroImage.src)}" width="${w}" height="${h}" alt="${esc(o.heroImage.alt)}" class="em-fluid" style="display:block;width:100%;max-width:${w}px;height:auto;border:0;border-radius:10px;">`;
+        return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 24px;"><tr><td>${o.heroImage.href ? `<a href="${esc(o.heroImage.href)}" target="_blank" rel="noopener">${im}</a>` : im}</td></tr></table>`;
+      })()
+    : '';
   const body = `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color:${MAJOR.page};" bgcolor="${MAJOR.page}">
-<tr><td align="center" class="em-outer" style="padding:32px 12px 40px;">
+<tr><td align="center" class="em-outer" style="padding:28px 12px 36px;">
 <!--[if mso]><table role="presentation" width="600" align="center" border="0" cellpadding="0" cellspacing="0"><tr><td><![endif]-->
-<table role="presentation" width="600" border="0" cellpadding="0" cellspacing="0" class="em-container em-card" style="width:100%;max-width:600px;background-color:${MAJOR.white};border-radius:16px;overflow:hidden;border-collapse:separate;box-shadow:0 12px 40px rgba(16,44,95,0.10);" bgcolor="${MAJOR.white}">
-${header}
-${hero}
-<tr><td class="em-px" style="padding:40px 40px 36px;background-color:${MAJOR.white};font-family:${FONT_SANS};font-size:16px;line-height:26px;color:${MAJOR.body};" bgcolor="${MAJOR.white}">
-${o.bodyHtml}
+<table role="presentation" width="600" border="0" cellpadding="0" cellspacing="0" class="em-container em-card" style="width:100%;max-width:600px;background-color:${MAJOR.cream};border:1px solid ${MAJOR.line};border-radius:14px;overflow:hidden;border-collapse:separate;" bgcolor="${MAJOR.cream}">
+${photo && o.title ? '' : majorHeader()}
+${majorHero(o, photo)}
+<tr><td class="em-px" style="padding:${photo && o.title ? '14px' : '26px'} 32px 18px;background-color:${MAJOR.cream};font-family:${FONT_SANS};font-size:15px;line-height:24px;color:${MAJOR.body};" bgcolor="${MAJOR.cream}">
+${cover}${o.bodyHtml}
 </td></tr>
 ${majorFooter({ audience, reason: o.reason, unsubscribeUrl: o.unsubscribeUrl })}
 </table>
@@ -526,8 +657,8 @@ ${majorFooter({ audience, reason: o.reason, unsubscribeUrl: o.unsubscribeUrl })}
 }
 
 /**
- * Version texte : corps + pied de page cohérent avec le HTML (signature,
- * coordonnées, désinscription pour le marketing).
+ * Version texte : corps + pied de page cohérent avec le HTML (coordonnées,
+ * désinscription pour le marketing).
  */
 export function majorText(lines: Array<string | null | false | undefined>, o: { audience?: MajorAudience; unsubscribeUrl?: string | null } = {}): string {
   const body = lines.filter((l): l is string => typeof l === 'string').join('\n').replace(/\n{3,}/g, '\n\n').trim();
@@ -535,7 +666,7 @@ export function majorText(lines: Array<string | null | false | undefined>, o: { 
   if (audience === 'internal') return `${body}\n\n—\nNotification interne Major ECN.`;
   const foot = [
     '—',
-    `Major ECN · ${EMAIL_SITE.replace('https://', '')}`,
+    `Major ECN · Ensemble vers votre réussite · ${EMAIL_SITE.replace('https://', '')}`,
     `${CONTACT_EMAIL} · ${CONTACT_PHONE}`,
     o.unsubscribeUrl ? `Se désabonner : ${o.unsubscribeUrl}` : null,
   ].filter(Boolean).join('\n');

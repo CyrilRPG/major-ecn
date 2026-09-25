@@ -7,6 +7,8 @@ import { relanceEmail, resultsEmail, roundOpeningEmail, roundReminderEmail, send
 import { remainingLabel, toDate } from './time';
 import type { AttemptRow, ParticipantRow, RoundRow, TournamentRow } from './types';
 import { isQaSandboxSlug } from './qa-sandbox';
+import { majorEcnStudentEmails, resolveAudience } from './major-ecn';
+import { normalizeEmail } from './types';
 
 /**
  * EVC Arena — balayage périodique (cron `arena-sweep`, toutes les 5 minutes).
@@ -131,6 +133,7 @@ async function sendDueEmails(snap: TournamentSnapshot, now: Date, report: SweepR
   const attempts = await listAttemptsForRounds(snap.rounds.map((r) => r.id));
   const played = new Set(attempts.map((a) => `${a.round_id}:${a.participant_id}`));
   let standings: Awaited<ReturnType<typeof computeTournamentStandings>> | null = null;
+  let students: Set<string> | null = null;
   // Clés déjà envoyées, lues une fois : sans elles, chaque balayage retentait
   // (et voyait refuser par l'index unique) un email de résultats par participant
   // et par manche publiée, toutes les 5 minutes, jusqu'à l'archivage.
@@ -174,6 +177,8 @@ async function sendDueEmails(snap: TournamentSnapshot, now: Date, report: SweepR
       }
       if (seq.results.enabled && r.results_published_at && registeredAt < closes.getTime() && !sentKeys.has(`results:${r.id}:${p.id}`)) {
         standings ??= await computeTournamentStandings(snap);
+        // Passerelle : un élève Major ECN n'a pas de CTA d'achat dans le bloc « Pour aller plus loin ».
+        students ??= await majorEcnStudentEmails(participants.map((x) => x.email));
         const st = standings.standings.find((s) => s.participantId === p.id);
         const mine = attempts.find((a) => a.round_id === r.id && a.participant_id === p.id) as AttemptRow | undefined;
         const nextRound = snap.rounds.find((x) => x.number === r.number + 1) ?? null;
@@ -191,6 +196,7 @@ async function sendDueEmails(snap: TournamentSnapshot, now: Date, report: SweepR
           distinction: st?.distinction ?? null,
           isLast: r.number === Math.max(...snap.rounds.map((x) => x.number)),
           next: nextRound ? { number: nextRound.number, opens_at: toDate(nextRound.opens_at), theme: nextRound.theme } : null,
+          audience: resolveAudience(p.major_ecn_status ?? 'auto', students?.has(normalizeEmail(p.email)) ?? false),
         }));
       }
     }

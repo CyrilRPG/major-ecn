@@ -51,7 +51,8 @@ function banner(file: string) {
   return `${emailAssetsBase()}/emails/${file}`;
 }
 
-const CAMPAIGNS: Record<CampaignContentKey, Campaign> = {
+// Construit à l'appel (et non au chargement du module) : la base des visuels et l'année sont lues au moment du rendu.
+const CAMPAIGNS = (): Record<CampaignContentKey, Campaign> => ({
   j1: {
     subject: 'Pourquoi des médecins excellents échouent aux EVC ?',
     preheader: 'Ce n’est pas une question de connaissances. Les erreurs qui reviennent à chaque session.',
@@ -82,7 +83,7 @@ const CAMPAIGNS: Record<CampaignContentKey, Campaign> = {
       divider(),
       para('En attendant, retenez simplement cette idée :'),
       pullQuote('Vous n\'avez pas besoin d\'être le meilleur médecin pour réussir les EVC.', 'Vous devez être le candidat le mieux préparé.'),
-      contactCard(),
+      contactCard('Une question sur votre préparation ?', 'Notre équipe est à votre disposition pour vous accompagner et répondre à vos questions.'),
       signature(),
     ],
     text: [
@@ -132,7 +133,7 @@ const CAMPAIGNS: Record<CampaignContentKey, Campaign> = {
       button('https://www.major-ecn.fr/blog/7-erreurs-points-evc', 'Lire l’article complet'),
       divider(),
       para('Prenez quelques minutes pour le parcourir. Si une seule de ces erreurs vous permet de gagner quelques points le jour J, cette lecture aura déjà été utile.'),
-      contactCard(),
+      contactCard('Une question sur votre préparation ?', 'Notre équipe est à votre disposition pour vous accompagner et répondre à vos questions.'),
       signature(),
       callout({ tone: 'neutral', html: small(`<strong style="color:${MAJOR.ink};">P.S.</strong> Les EVC ne récompensent pas toujours les médecins les plus expérimentés. Elles récompensent surtout ceux qui ont compris les attentes de l'épreuve. C'est précisément ce que nous cherchons à vous transmettre, étape après étape.`, { italic: true }) }),
     ],
@@ -181,7 +182,7 @@ const CAMPAIGNS: Record<CampaignContentKey, Campaign> = {
       button('https://www.major-ecn.fr/blog/comment-reussir-les-evc-conseils-laureats', 'Lire l’article complet'),
       divider(),
       para('Nous espérons que cette lecture vous donnera des clés pour préparer les EVC avec davantage de confiance, de régularité et de sérénité.'),
-      contactCard(),
+      contactCard('Une question sur votre préparation ?', 'Notre équipe est à votre disposition pour vous accompagner et répondre à vos questions.'),
       signature(),
       callout({ tone: 'neutral', html: small(`<strong style="color:${MAJOR.ink};">P.S.</strong> Les connaissances et la méthode sont indispensables. Mais elles ne produisent leurs effets que si vous allez jusqu'au bout de votre préparation. C'est souvent cette capacité à tenir dans la durée qui sépare les candidats qui abandonnent de ceux qui figurent sur la liste des admis.`, { italic: true }) }),
     ],
@@ -257,18 +258,21 @@ const CAMPAIGNS: Record<CampaignContentKey, Campaign> = {
       'L\'équipe Major ECN',
     ],
   },
-};
+});
 
 /** HTML complet d'une étape de la campagne. */
 export function renderCampaignHtml(key: CampaignContentKey): string {
-  const c = CAMPAIGNS[key];
+  const c = CAMPAIGNS()[key];
   return majorEmail({
     subject: c.subject,
     preheader: c.preheader,
-    tag: c.step,
+    eyebrow: c.step,
+    title: c.subject,
     heroImage: { src: banner(c.banner.file), alt: c.banner.alt, width: 600, height: c.banner.height },
     bodyHtml: c.body.join('\n'),
     audience: 'marketing',
+    // Le bandeau illustré de l'article tient lieu de visuel : pas de photo de bureau en plus.
+    photo: false,
     reason: 'Vous recevez cet email car vous vous êtes inscrit(e) sur Major ECN.',
     unsubscribeUrl: CAMPAIGN_UNSUBSCRIBE_URL,
   });
@@ -276,5 +280,5 @@ export function renderCampaignHtml(key: CampaignContentKey): string {
 
 /** Version texte d'une étape de la campagne. */
 export function renderCampaignText(key: CampaignContentKey): string {
-  return majorText(CAMPAIGNS[key].text, { audience: 'marketing', unsubscribeUrl: CAMPAIGN_UNSUBSCRIBE_URL });
+  return majorText(CAMPAIGNS()[key].text, { audience: 'marketing', unsubscribeUrl: CAMPAIGN_UNSUBSCRIBE_URL });
 }
