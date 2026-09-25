@@ -38,3 +38,14 @@ Recadrées et compressées pour le web le 07/09/2026.
 | rules-scene-2026.jpg, rules-scene-2026-1024.jpg | Scène de la page Règles fournie par le client le 10/09/2026 (`ChatGPT Image 10 sept. 2026 à 11_35_08.png`, 1024 × 1536) : Lanczos-3 à 1536 × 2304, JPEG q90 ; variante 1024 px pour mobile. Remplace `rules-scene-2026.png`. |
 | laurel-gold.png | Couronne de lauriers dorée détourée (canal alpha calculé par chromie or / bordeaux) depuis `lobby-banner-season-2026.png`, 485 × 412. Pied de page des Règles, page de garde des corrigés. |
 | specialites/{stethoscope,poumons,rein,cerveau,coeur,intestin}.png | Visuels des cartes « Choisissez votre tournoi », découpés dans la maquette client (`ChatGPT Image 10 sept. 2026 à 13_38_29.png`), Lanczos-3 ×4, bords fondus (alpha elliptique). Visuel par défaut par spécialité ; un tournoi peut déposer le sien (`arena_tournaments.cover_image_path`, bucket `arena-public`). |
+
+## Refonte du 24/09/2026 — découpes des maquettes client (`tmp/_arena-img/refonte-assets.mjs`)
+
+Sources : `templates/evc arena/ChatGPT Image 24 sept. 2026, *.png` (maquettes fournies par Major ECN). Lanczos-3 + accentuation légère ; aucun outil de génération d'images.
+
+| Fichier | Origine |
+|---|---|
+| refonte/passerelle-livres.jpg | Visuel « Même ambition. Plus loin ensemble. » (livres Apprendre · S'entraîner · Progresser · Réussir) fourni par le client le 25/09/2026 pour la bannière Major ECN de l'espace ; remplace passerelle-couloir.jpg. |
+| refonte/trophee-coupe.png | Coupe dorée de la carte « Meilleurs scores » (15_10_06), 108 × 182 px ×3 ; le filet de la carte qui traversait le pied est effacé par interpolation, bords fondus en CSS (mask-image). |
+| refonte/helmet-gold.png | Casque doré monochrome des séparateurs et pieds de page : `helmet.png` recoloré en dégradé or (luminance → or), 120 px. |
+| specialites/thorax.png | Cage thoracique (Radiologie) de la carte « Tournois terminés » (15_06_19), 84 × 80 px ×4, fond fondu en ellipse comme les autres visuels de spécialité. |

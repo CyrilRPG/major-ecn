@@ -1,7 +1,9 @@
 import 'server-only';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { registrationOpen, visibleSnapshot, type StaffInfo } from './access';
-import { computeTournamentStandings, currentParticipant, type TournamentSnapshot } from './db';
+import { computeTournamentStandings, currentParticipant, currentPerson, getTournament, type TournamentSnapshot } from './db';
+import { accessRedirect } from './identity';
+import { PUBLIC_STATUSES } from './time';
 import type { ShellNav } from '@/components/arena/arena-shell';
 import type { ParticipantRow } from './types';
 import { roundState } from './time';
@@ -15,6 +17,8 @@ export type ArenaPageContext = {
   snap: TournamentSnapshot;
   staff: StaffInfo;
   participant: ParticipantRow | null;
+  /** Personne connectée (session EVC Arena), inscrite ou non à ce tournoi. */
+  person: ParticipantRow | null;
   nav: ShellNav;
   registrationOpen: boolean;
 };
@@ -24,6 +28,7 @@ export async function loadArenaPage(slug: string, opts: { preview?: boolean } = 
   if (!v) notFound();
   const { snap, staff } = v;
   const participant = await currentParticipant(snap.tournament.id);
+  const person = participant ?? await currentPerson();
   const me = participant ? (await computeTournamentStandings(snap)).standings.find(s => s.participantId === participant.id) ?? null : null;
   const rank = me?.rank ?? null;
   const distinction = me?.distinction ?? null;
@@ -32,12 +37,14 @@ export async function loadArenaPage(slug: string, opts: { preview?: boolean } = 
     snap,
     staff,
     participant,
+    person,
     registrationOpen: open,
     nav: {
       slug,
       title: snap.tournament.title,
       editionLabel: snap.tournament.edition_label,
       participant: participant ? { pseudo: participant.pseudo, avatar_seed: participant.avatar_seed, rank, distinction } : null,
+      account: !participant && person ? { pseudo: person.pseudo, avatar_seed: person.avatar_seed, href: open ? `/arena/${slug}/inscription` : await personSpaceHref(person) } : null,
       registrationOpen: open,
       leaderboardEnabled: snap.tournament.leaderboard_enabled,
       staffPreview: Boolean(opts.preview && staff),
@@ -51,6 +58,21 @@ export async function loadArenaPage(slug: string, opts: { preview?: boolean } = 
       }),
     },
   };
+}
+
+/** Espace du tournoi de la session (ou la liste des tournois s'il n'est plus public). */
+async function personSpaceHref(person: ParticipantRow): Promise<string> {
+  const t = await getTournament(person.tournament_id);
+  return t && PUBLIC_STATUSES.has(t.status) ? `/arena/${t.slug}/espace` : '/arena';
+}
+
+/**
+ * Page réservée (espace, manche, corrections) ouverte par quelqu'un qui n'est
+ * pas inscrit à CE tournoi : inscription en un clic s'il est connecté, sinon
+ * connexion en gardant le tournoi et la page visée.
+ */
+export function redirectToAccess(ctx: ArenaPageContext, next?: string): never {
+  redirect(accessRedirect(ctx.snap.tournament.slug, { signedIn: Boolean(ctx.person), next }));
 }
 
 /** Métadonnées : jamais indexé tant que le tournoi n'est pas marqué indexable. */

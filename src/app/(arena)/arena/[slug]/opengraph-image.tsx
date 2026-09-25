@@ -2,25 +2,40 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { ImageResponse } from 'next/og';
 import { getTournamentBySlug } from '@/lib/arena/db';
+import { isPublicStatus } from '@/lib/arena/access';
+import { siteUrl } from '@/lib/email/send';
 
 export const runtime = 'nodejs';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 export const alt = 'EVC Arena — tournoi de QCM Major ECN';
 
+/**
+ * Visuel en data URL. Sur Vercel, `public/**` est exclu du bundle des fonctions
+ * (next.config.ts) : la lecture disque échoue, on passe alors par le CDN qui
+ * sert déjà ces fichiers — sinon l'image partagée perdait photo et casque.
+ */
 async function dataUrl(file: string, mime: string): Promise<string | null> {
   try {
     const buf = await readFile(path.join(process.cwd(), 'public', 'arena', file));
     return `data:${mime};base64,${buf.toString('base64')}`;
   } catch {
-    return null;
+    try {
+      const res = await fetch(`${siteUrl()}/arena/${file}`, { signal: AbortSignal.timeout(5_000) });
+      if (!res.ok) return null;
+      return `data:${mime};base64,${Buffer.from(await res.arrayBuffer()).toString('base64')}`;
+    } catch {
+      return null;
+    }
   }
 }
 
 /** Image Open Graph dédiée, 1200 × 630 (§8.1) : visuel de l'arène, casque, EVC ARENA by Major ECN, spécialité. */
 export default async function OpenGraphImage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const t = await getTournamentBySlug(slug);
+  const found = await getTournamentBySlug(slug);
+  // Un brouillon ou un tournoi programmé ne se dévoile pas par son image de partage.
+  const t = found && isPublicStatus(found) ? found : null;
   const specialty = t?.specialty ?? 'Tournoi de QCM';
   const edition = t?.edition_label ?? '';
   const [photo, helmet] = await Promise.all([dataUrl('hero-arena.jpg', 'image/jpeg'), dataUrl('helmet-320.png', 'image/png')]);

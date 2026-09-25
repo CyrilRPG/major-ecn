@@ -1,11 +1,12 @@
 "use server";
 
 import { unstable_rethrow } from "next/navigation";
+import { after } from "next/server";
 
 import { revalidatePath } from "next/cache";
 import { estAvatarPlanche } from "@/components/arena/avatars";
-import { canoniserAvatar, estAvatarCompose } from "@/lib/avatars/traits";
-import { avatarEstLibre, type SondeAvatars } from "@/lib/avatars/unicite";
+import { avatarDepuisChaine, canoniserAvatar, estAvatarCompose } from "@/lib/avatars/traits";
+import { avatarEstLibre, trouverAvatarLibre, type SondeAvatars } from "@/lib/avatars/unicite";
 import { z } from "zod";
 import { siteUrl } from "@/lib/email/send";
 import {
@@ -18,6 +19,8 @@ import {
   arenaDb,
   arenaLog,
   currentParticipant,
+  currentPerson,
+  getParticipant,
   effectiveBareme,
   findParticipantByEmail,
   getAttempt,
@@ -37,12 +40,13 @@ import {
   reportAckEmail,
   sendArenaEmail,
 } from "@/lib/arena/emails";
-import { issueConfirmationLink, issueLoginLink } from "@/lib/arena/auth-links";
+import { issueConfirmationLink, issueLoginLink, sendWelcomeEmail } from "@/lib/arena/auth-links";
+import { joinDecision, safeArenaNext } from "@/lib/arena/identity";
 import { finalizeAttempt, gradeOne } from "@/lib/arena/grading";
 import { attemptProgress } from "@/lib/arena/attempt-progress";
 import type { Bareme } from "@/lib/arena/scoring";
-import { anonymizeParticipant } from "@/lib/arena/sequence";
-import { clearSessionCookie } from "@/lib/arena/session";
+import { anonymizeParticipant, scrubEmailJournal } from "@/lib/arena/sequence";
+import { clearSessionCookie, setSessionCookie } from "@/lib/arena/session";
 import {
   attemptDeadline,
   questionDeadline,
@@ -55,7 +59,10 @@ import {
   normalizeEmail,
   pseudoKey,
   randomAvatarSeed,
+  toPublicQuestion,
   type AttemptRow,
+  type PublicQuestion,
+  type ParticipantRow,
   type QuestionRow,
   type TournamentRow,
 } from "@/lib/arena/types";
@@ -274,6 +281,151 @@ export async function registerParticipant(
   return { ok: true, participantId: created.id, alreadyConfirmed: false };
 }
 
+/* ------------------------------------------------------------------ */
+/* Inscription en un clic d'une personne déjà connectée                */
+/* ------------------------------------------------------------------ */
+
+const JoinSchema = z.object({
+  pseudo: z.string().trim().min(3, "Pseudonyme : 3 caractères minimum").max(24, "Pseudonyme : 24 caractères maximum"),
+  consentTournament: z.literal(true, {
+    message: "Le consentement au traitement des données est obligatoire.",
+  }),
+  consentMarketing: z.boolean().default(false),
+  timezone: z.string().trim().max(64).nullable().optional(),
+  source: z.string().trim().max(64).nullable().optional(),
+  utm: z.record(z.string(), z.string().max(200)).nullable().optional(),
+  inviteCode: z.string().trim().max(32).nullable().optional(),
+  next: z.string().trim().max(300).nullable().optional(),
+});
+
+export type JoinInput = z.input<typeof JoinSchema>;
+export type JoinResult = Ok<{ participantId: string; href: string; already: boolean }> | Err;
+
+/**
+ * Une personne connectée (adresse déjà confirmée dans un autre tournoi)
+ * rejoint CE tournoi sans ressaisir son identité : prénom, nom, spécialité et
+ * médaillon repris de son inscription, pseudonyme proposé (modifiable). Le
+ * consentement au tournoi reste une case explicite (§3.1, une inscription =
+ * un consentement) et la prospection n'est jamais reprise d'office. Aucune
+ * confirmation par email : la session prouve déjà la possession de l'adresse.
+ */
+export async function joinTournament(slug: string, raw: JoinInput): Promise<JoinResult> {
+  try {
+    const parsed = JoinSchema.safeParse(raw);
+    if (!parsed.success) return err(parsed.error.issues[0]?.message ?? "Formulaire invalide.");
+    const input = parsed.data;
+    const v = await visibleSnapshot(slug);
+    if (!v) return err("Tournoi introuvable.");
+    if (!registrationOpen(v.snap) && !v.staff) return err("Les inscriptions sont closes.");
+    const t = v.snap.tournament;
+    const person = await currentPerson();
+    if (!person) return err("Votre session a expiré : reconnectez-vous pour rejoindre ce tournoi.");
+    const openRound = v.snap.rounds.find((r) => roundState(r) === "open") ?? null;
+    const suite = safeArenaNext(input.next ?? null);
+    const hrefFor = (fresh: boolean) =>
+      suite && suite.startsWith(`/arena/${slug}/`) ? suite
+        : openRound ? `/arena/${slug}/manche/${openRound.number}`
+          : `/arena/${slug}/espace${fresh ? "?bienvenue=1" : ""}`;
+
+    const pseudo = input.pseudo.trim();
+    if (!isValidPseudo(pseudo)) return err("Pseudonyme invalide : lettres, chiffres, espaces, tirets et points uniquement.");
+    if (pseudoForbidden(pseudo)) return err("Ce pseudonyme n’est pas autorisé.");
+
+    const db = arenaDb();
+    const existing = person.tournament_id === t.id ? person : await findParticipantByEmail(t.id, person.email);
+    const decision = joinDecision(existing);
+    if (decision.kind === "blocked") return err("Ce compte a été suspendu par l’organisation. Contactez Major ECN.");
+    if (decision.kind === "already") {
+      await setSessionCookie(decision.participant.id, t.id);
+      return { ok: true, participantId: decision.participant.id, href: hrefFor(false), already: true };
+    }
+
+    const key = pseudoKey(pseudo);
+    const { data: clash } = await db.from("arena_participants").select("id")
+      .eq("tournament_id", t.id).eq("pseudo_key", key).maybeSingle();
+    if (clash && clash.id !== (decision.kind === "complete_pending" ? decision.participant.id : null))
+      return err("Ce pseudonyme est déjà pris dans ce tournoi. Choisissez-en un autre.");
+
+    const now = new Date().toISOString();
+    const consent = {
+      consent_tournament_at: now,
+      consent_tournament_version: CONSENT_VERSION,
+      consent_marketing: input.consentMarketing,
+      consent_marketing_at: input.consentMarketing ? now : null,
+      consent_marketing_version: input.consentMarketing ? CONSENT_VERSION : null,
+      marketing_unsubscribed_at: null,
+    };
+    let joined: { id: string; pseudo: string } | null = null;
+    if (decision.kind === "complete_pending") {
+      // Inscription commencée sans confirmation : la session prouve l'adresse, on la complète.
+      const { data, error } = await db.from("arena_participants").update({
+        first_name: person.first_name,
+        last_name: person.last_name,
+        specialty: person.specialty,
+        pseudo,
+        pseudo_key: key,
+        ...consent,
+        email_confirmed_at: now,
+        confirmation_token_hash: null,
+        last_login_at: now,
+      }).eq("id", decision.participant.id).is("email_confirmed_at", null).select("id, pseudo").maybeSingle();
+      if (error) return err(String(error.code) === "23505" ? "Ce pseudonyme est déjà pris dans ce tournoi." : "Inscription impossible pour le moment. Réessayez.");
+      joined = data ?? (await findParticipantByEmail(t.id, person.email));
+    } else {
+      let invitedBy: string | null = null;
+      if (input.inviteCode) {
+        const { data: inviter } = await db.from("arena_participants").select("id")
+          .eq("tournament_id", t.id).eq("invite_code", input.inviteCode).maybeSingle();
+        invitedBy = inviter?.id ?? null;
+      }
+      // Même médaillon que dans l'autre tournoi s'il est libre ici, sinon la variante libre la plus proche.
+      const wanted = estAvatarCompose(person.avatar_seed) ? person.avatar_seed : avatarDepuisChaine(person.email, "arena");
+      for (let attempt = 0; attempt < 3 && !joined; attempt++) {
+        const avatar = (await trouverAvatarLibre(wanted, sondeAvatars(t.id))) ?? randomAvatarSeed();
+        const { data, error } = await db.from("arena_participants").insert({
+          tournament_id: t.id,
+          first_name: person.first_name,
+          last_name: person.last_name,
+          email: person.email,
+          specialty: person.specialty,
+          pseudo,
+          pseudo_key: key,
+          avatar_seed: avatar,
+          timezone: input.timezone ?? person.timezone ?? null,
+          ...consent,
+          email_confirmed_at: now,
+          last_login_at: now,
+          acquisition_source: invitedBy ? "invitation" : (input.source ?? "autre_tournoi"),
+          utm: input.utm ?? null,
+          invited_by: invitedBy,
+          invite_code: inviteCode(),
+        }).select("id, pseudo").single();
+        if (!error && data) { joined = data; break; }
+        if (String(error?.code) !== "23505") return err("Inscription impossible pour le moment. Réessayez.");
+        const detail = `${error?.message} ${error?.details ?? ""}`;
+        // Double clic : l'inscription de cette adresse existe déjà.
+        const again = await findParticipantByEmail(t.id, person.email);
+        if (again?.email_confirmed_at) { joined = again; break; }
+        if (/pseudo/i.test(detail)) return err("Ce pseudonyme est déjà pris dans ce tournoi. Choisissez-en un autre.");
+        if (!/avatar|invite/i.test(detail)) return err("Inscription impossible pour le moment. Réessayez.");
+      }
+    }
+    if (!joined) return err("Inscription impossible pour le moment. Réessayez.");
+    await setSessionCookie(joined.id, t.id);
+    await arenaLog({ tournamentId: t.id, kind: "participant_joined", details: `Inscription en un clic de ${joined.pseudo} (déjà inscrit à un autre tournoi).` });
+    const fresh = await getParticipant(joined.id);
+    if (fresh) after(async () => {
+      try { await sendWelcomeEmail(t, fresh); } catch (error) { console.error("[arena] bienvenue", error); }
+    });
+    revalidatePath(`/arena/${slug}`);
+    return { ok: true, participantId: joined.id, href: hrefFor(true), already: false };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("[arena] action échouée", error);
+    return err("L’inscription n’a pas pu aboutir. Réessayez.");
+  }
+}
+
 export async function resendConfirmation(
   slug: string,
   rawEmail: string,
@@ -460,6 +612,8 @@ export type AnswerResult =
       answeredCount: number;
       expired?: boolean;
       lastValidatedAt?: string | null;
+      /** Question suivante, envoyée seulement maintenant (jamais à l'avance). */
+      next?: PublicQuestion | null;
     }>
   | Err;
 
@@ -472,12 +626,20 @@ async function savedAnswerResult(
     await listAnswers(attempt.id),
   );
   if (progress.finished) await finalizeAttempt(attempt.id, "submitted");
+  let next: PublicQuestion | null = null;
+  if (!progress.finished && progress.nextId) {
+    const q = await getQuestion(progress.nextId);
+    const round = q ? await getRound(attempt.round_id) : null;
+    const t = round ? await getTournament(round.tournament_id) : null;
+    if (q && t) next = toPublicQuestion(q, t.seconds_per_question);
+  }
   return {
     ok: true,
     finished: progress.finished,
     answeredCount: progress.answeredIds.length,
     lastValidatedAt: progress.lastValidatedAt,
     expired,
+    next,
   };
 }
 
@@ -1004,7 +1166,22 @@ export async function deleteMyAccount(slug: string): Promise<Ok | Err> {
     const p = await currentParticipant(v.tournament.id);
     if (!p) return err("Session expirée.");
     const mail = deletedEmail(v.tournament, p.first_name);
-    await anonymizeParticipant(p, "request");
+    // « Supprimer mon compte » : le compte EVC Arena est la personne (même
+    // adresse) — toutes ses inscriptions sont effacées, pas seulement celle-ci.
+    const { data: rows } = await arenaDb()
+      .from("arena_participants")
+      .select("*")
+      .eq("email", p.email)
+      .is("anonymized_at", null);
+    const all = ((rows ?? []) as ParticipantRow[]).some((x) => x.id === p.id) ? (rows as ParticipantRow[]) : [p, ...((rows ?? []) as ParticipantRow[])];
+    for (const row of all) {
+      await anonymizeParticipant(row, "request");
+      await arenaLog({
+        tournamentId: row.tournament_id,
+        kind: "participant_deleted",
+        details: `Suppression à la demande du participant ${row.pseudo}.`,
+      });
+    }
     await sendArenaEmail({
       tournament: v.tournament,
       participant: p,
@@ -1012,11 +1189,8 @@ export async function deleteMyAccount(slug: string): Promise<Ok | Err> {
       kind: "deleted",
       mail,
     });
-    await arenaLog({
-      tournamentId: v.tournament.id,
-      kind: "participant_deleted",
-      details: `Suppression à la demande du participant ${p.pseudo}.`,
-    });
+    // L'accusé de suppression vient d'être journalisé avec l'adresse : on l'efface aussi.
+    await scrubEmailJournal(p.id);
     await clearSessionCookie();
     return { ok: true };
   } catch (error) {

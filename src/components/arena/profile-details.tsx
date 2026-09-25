@@ -32,5 +32,6 @@ export function ProfileDetails({ children }: { children: ReactNode }) {
       document.removeEventListener('click', onProfileLink, true);
     };
   }, []);
-  return <details ref={ref} className="af-profile af-panel" id="compte"><summary>MON PROFIL ET MON PALMARÈS</summary><div className="af-profile-content">{children}</div></details>;
+  // Déplié par défaut (maquette du 24/09/2026, 14_50_00) ; repliable d'un clic.
+  return <details ref={ref} className="af-profile af-panel" id="compte" open><summary>MON PROFIL ET MON PALMARÈS</summary><div className="af-profile-content">{children}</div></details>;
 }

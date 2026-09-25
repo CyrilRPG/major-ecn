@@ -1,6 +1,4 @@
 import { ArenaPage, Notice } from '@/components/arena/arena-shell';
-import { Container, Eyebrow } from '@/components/arena/arena-ui';
-import { ARENA, BODY, CAPS } from '@/components/arena/tokens';
 import { Leaderboard } from '@/components/arena/leaderboard';
 import { computeTournamentStandings, effectiveBareme, roundMaxScore } from '@/lib/arena/db';
 import { leaderboardRows } from '@/lib/arena/ranking';
@@ -44,31 +42,32 @@ export default async function LeaderboardPage({ params, searchParams }: Params) 
     : [];
   // §10 : personne n'atteint le seuil → aucun podium, message d'encouragement.
   const nobodyRanked = last ? (
-    <div className="mx-auto max-w-xl">
-      <p className="text-[1.3rem] leading-tight" style={{ ...CAPS, color: ARENA.text }}>{NO_RANKED_TITLE}</p>
-      {NO_RANKED_BODY.map((line, i) => (
-        <p key={line} className={i === 0 ? 'mt-3' : 'mt-2'} style={{ color: i === NO_RANKED_BODY.length - 1 ? ARENA.gold : ARENA.textSoft, fontFamily: BODY }}>{line}</p>
-      ))}
+    <div className="ev-board-nobody">
+      <p className="ev-board-nobody-title">{NO_RANKED_TITLE}</p>
+      {NO_RANKED_BODY.map((line, i) => <p key={line} className={i === NO_RANKED_BODY.length - 1 ? 'ev-gold' : undefined}>{line}</p>)}
     </div>
   ) : undefined;
 
   return (
     <ArenaPage nav={ctx.nav} immersive>
-      <Container className="ae-document max-w-3xl py-12 sm:py-16">
-        <Eyebrow>{t.specialty}{t.edition_label ? ` · ${t.edition_label}` : ''}</Eyebrow>
-        <h1 className="mt-4 text-[2.4rem] leading-[0.95] sm:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Meilleurs scores</h1>
-        <p className="mt-3 text-[15px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-          Classement cumulé, provisoire après chaque manche et final après la dernière. Les trophées Or, Argent et Bronze exigent le podium et un score d’au moins {t.distinction_pct} %.
-        </p>
-        <nav aria-label="Classements" className="flex flex-wrap gap-4 mt-6"><Link aria-current={!round ? 'page' : undefined} className="underline" href={`/arena/${slug}/classement`}>{standings.isFinal ? 'Classement général' : 'Cumul provisoire'}</Link>{standings.countedRounds.map(r => <Link key={r.id} className="underline" aria-current={r.id === round?.id ? 'page' : undefined} href={`/arena/${slug}/classement?manche=${r.number}`}>Manche {r.number}</Link>)}</nav>
-        <div className="mt-8">
+      <section className="ev-scores" aria-labelledby="ev-scores-title">
+        <div className="ev-wrap ev-scores-wrap">
+          <header className="ev-scores-head">
+            <p className="ev-eyebrow"><span aria-hidden className="ev-rule" />{t.specialty}{t.edition_label ? ` · ${t.edition_label}` : ''}</p>
+            <h1 id="ev-scores-title" className="ev-title-xl">Meilleurs <span className="ev-gold">scores</span></h1>
+            <p>Classement cumulé, provisoire après chaque manche et final après la dernière. Les trophées Or, Argent et Bronze exigent le podium et un score d’au moins {t.distinction_pct} %.</p>
+            <nav aria-label="Classements" className="ev-scores-tabs">
+              <Link aria-current={!round ? 'page' : undefined} href={`/arena/${slug}/classement`}>{standings.isFinal ? 'Classement général' : 'Cumul provisoire'}</Link>
+              {standings.countedRounds.map(r => <Link key={r.id} aria-current={r.id === round?.id ? 'page' : undefined} href={`/arena/${slug}/classement?manche=${r.number}`}>Manche {r.number}</Link>)}
+            </nav>
+          </header>
           {!t.leaderboard_enabled ? (
             <Notice>Le classement public n’est pas publié pour ce tournoi. Votre rang personnel reste visible dans votre espace.</Notice>
           ) : (
             <Leaderboard
               rows={rows}
-              subtitle={round ? `Classement de la manche ${round.number}` : standings.isFinal ? 'Classement général final' : last ? `Classement provisoire cumulé · après M${last}` : 'En attente de la première manche'}
-              effectif={effectif} general={standings.isFinal && !round} roundOnly={Boolean(round)}
+              subtitle={round ? `Classement de la manche ${round.number}` : standings.isFinal ? 'Classement final (cumulé)' : last ? `Classement provisoire (cumulé) · après M${last}` : 'En attente de la première manche'}
+              effectif={t.afficher_effectif_general ? effectif : undefined} general={standings.isFinal && !round} roundOnly={Boolean(round)}
               totalMax={totalMax}
               roundsCount={round ? 1 : standings.countedRounds.length}
               rulesHref={`/arena/${slug}/regles#classement`}
@@ -76,25 +75,23 @@ export default async function LeaderboardPage({ params, searchParams }: Params) 
               distinctionPct={t.distinction_pct}
             />
           )}
+          {correctionRounds.length > 0 && (
+            <section aria-labelledby="mes-corrections" className="ev-scores-corrections">
+              <p id="mes-corrections" className="ev-eyebrow"><span aria-hidden className="ev-rule" />Ma correction détaillée</p>
+              <p>Vos réponses face aux réponses attendues, avec les explications, les pièges et les erreurs les plus fréquentes. Consultable à tout moment dans votre espace.</p>
+              <div>
+                {correctionRounds.map((r) => (
+                  <Link key={r.id} className="ev-btn ev-btn--gold ev-btn--sm ev-btn--square" href={`/arena/${slug}/manche/${r.number}/corrections`}>
+                    <FileText aria-hidden />
+                    <span>Voir ma correction détaillée{correctionRounds.length > 1 || !round ? ` · manche ${r.number}` : ''}</span>
+                    <ArrowRight aria-hidden />
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
-        {correctionRounds.length > 0 && (
-          <section aria-labelledby="mes-corrections" className="mt-8 rounded-2xl p-5 sm:p-7" style={{ background: ARENA.surface, boxShadow: `inset 0 0 0 1px ${ARENA.line}` }}>
-            <p id="mes-corrections" className="text-[11px]" style={{ ...CAPS, color: ARENA.redSoft, letterSpacing: '0.24em' }}>Ma correction détaillée</p>
-            <p className="mt-2 text-[13.5px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-              Vos réponses face aux réponses attendues, avec les explications, les pièges et les erreurs les plus fréquentes. Consultable à tout moment dans votre espace.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              {correctionRounds.map((r) => (
-                <Link key={r.id} className="ae-button ae-button-outline" href={`/arena/${slug}/manche/${r.number}/corrections`}>
-                  <FileText aria-hidden />
-                  <span>Voir ma correction détaillée{correctionRounds.length > 1 || !round ? ` · manche ${r.number}` : ''}</span>
-                  <ArrowRight aria-hidden />
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-      </Container>
+      </section>
     </ArenaPage>
   );
 }

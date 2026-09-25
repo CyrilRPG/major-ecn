@@ -15,14 +15,14 @@ export const metadata = { title: 'Connexion — EVC Arena', robots: { index: fal
  * les antivirus de messagerie ouvrent les liens avant l'utilisateur. Un bouton
  * ouvre la session (action serveur). Lien expiré ou inconnu : nouveau lien.
  */
-export default async function LoginLandingPage({ searchParams }: { searchParams: Promise<{ t?: string }> }) {
-  const { t } = await searchParams;
+export default async function LoginLandingPage({ searchParams }: { searchParams: Promise<{ t?: string; suite?: string }> }) {
+  const { t, suite } = await searchParams;
   const found = await lookupLoginToken(t ?? '');
 
   // Un lien déjà utilisé reste une entrée vers l'espace dans le navigateur connecté.
   // Un lien valide d'un autre participant conserve son propre parcours de connexion.
   if (found.status !== 'blocked') {
-    const space = await activeArenaSpace(found.status === 'ok' ? found.participant.id : undefined);
+    const space = await activeArenaSpace({ participantId: found.status === 'ok' ? found.participant.id : undefined, next: suite });
     if (space) redirect(space);
   }
 
@@ -55,6 +55,7 @@ export default async function LoginLandingPage({ searchParams }: { searchParams:
     >
       <form action={loginWithTokenAction}>
         <input type="hidden" name="t" value={t} />
+        {suite && <input type="hidden" name="suite" value={suite} />}
         <AccessSubmit>Ouvrir mon espace</AccessSubmit>
       </form>
     </AuthCard>

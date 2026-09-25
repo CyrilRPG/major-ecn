@@ -1,8 +1,7 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { ArrowRight, FileText } from 'lucide-react';
 import { ArenaPage } from '@/components/arena/arena-shell';
-import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
+import { arenaMetadata, loadArenaPage, redirectToAccess } from '@/lib/arena/page-context';
 import { correctionsAccess, correctionsDenialMessage } from '@/lib/arena/corrections-access';
 import { listAttemptsForRounds } from '@/lib/arena/db';
 
@@ -16,15 +15,28 @@ export async function generateMetadata({ params }: Props) {
 export default async function CorrectionsOverview({ params }: Props) {
   const { slug } = await params;
   const ctx = await loadArenaPage(slug);
-  if (!ctx.participant) redirect('/arena/connexion');
+  if (!ctx.participant) redirectToAccess(ctx, `/arena/${slug}/corrections`);
   const t = ctx.snap.tournament;
   const played = new Set((await listAttemptsForRounds(ctx.snap.rounds.map(r => r.id))).filter(a => a.participant_id === ctx.participant!.id && a.status !== 'in_progress').map(a => a.round_id));
-  return <ArenaPage nav={ctx.nav} immersive><section className="ae-document max-w-4xl mx-auto my-10 p-8">
-    <h1 className="text-3xl font-bold">Mes corrections détaillées</h1><p className="mt-3 mb-6">Revivez vos manches en détail et retrouvez les explications de chaque réponse. Chaque correction reste consultable ici, dans votre espace, sans téléchargement.</p>
-    <div className="grid gap-4">{ctx.snap.rounds.map(r => {
-      const access = correctionsAccess({ round: r, tournamentId: t.id, participant: ctx.participant });
-      return <article key={r.id} className="rounded-xl border border-slate-600 p-5"><h2 className="text-xl font-semibold">Manche {r.number} — {r.theme}</h2><p className="mt-2 text-slate-300">{played.has(r.id) ? 'Manche disputée · vos réponses sont conservées.' : 'Manche non jouée.'}</p>{access.allowed ? <Link className="ae-button mt-4" href={`/arena/${slug}/manche/${r.number}/corrections`}><FileText aria-hidden />Voir ma correction détaillée<ArrowRight aria-hidden /></Link> : <p className="mt-4">{correctionsDenialMessage(access.reason, r.number)}</p>}</article>;
-    })}</div>
-    <Link className="inline-block mt-6 underline" href={`/arena/${slug}/espace`}>Revenir à mon bilan</Link>
-  </section></ArenaPage>;
+  return <ArenaPage nav={ctx.nav} immersive>
+    <section className="ev-doc" aria-labelledby="ev-corrections-list-title">
+      <div className="ev-wrap ev-doc-wrap">
+        <p className="ev-eyebrow"><span aria-hidden className="ev-rule" />{t.specialty}{t.edition_label ? ` · ${t.edition_label}` : ''}</p>
+        <h1 id="ev-corrections-list-title" className="ev-title-xl">Mes corrections <em>détaillées</em></h1>
+        <p className="ev-doc-lead">Revivez vos manches en détail et retrouvez les explications de chaque réponse. Chaque correction reste consultable ici, dans votre espace, sans téléchargement.</p>
+        <ol className="ev-doc-list">{ctx.snap.rounds.map(r => {
+          const access = correctionsAccess({ round: r, tournamentId: t.id, participant: ctx.participant });
+          return <li key={r.id} className={`ev-doc-item${access.allowed ? ' is-open' : ''}`}>
+            <span className="ev-doc-num" aria-hidden>{r.number}</span>
+            <h2>Manche {r.number}{r.theme ? <> — <span>{r.theme}</span></> : null}</h2>
+            <p>{played.has(r.id) ? 'Manche disputée · vos réponses sont conservées.' : 'Manche non jouée.'}</p>
+            {access.allowed
+              ? <Link className="ev-btn ev-btn--gold ev-btn--sm ev-btn--square" href={`/arena/${slug}/manche/${r.number}/corrections`}><FileText aria-hidden />Voir ma correction détaillée<ArrowRight aria-hidden /></Link>
+              : <p>{correctionsDenialMessage(access.reason, r.number)}</p>}
+          </li>;
+        })}</ol>
+        <div className="ev-doc-actions"><Link className="ev-link-caps" href={`/arena/${slug}/espace`}>Revenir à mon bilan <ArrowRight aria-hidden /></Link></div>
+      </div>
+    </section>
+  </ArenaPage>;
 }

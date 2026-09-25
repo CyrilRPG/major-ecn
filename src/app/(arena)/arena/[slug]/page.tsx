@@ -1,22 +1,20 @@
 import { ArenaBackdropPhoto } from '@/components/arena/arena-backdrop';
 import { ArenaPage } from '@/components/arena/arena-shell';
-import { Container } from '@/components/arena/arena-ui';
-import { ARENA, BODY, CAPS, HEADLINE, PHOTOS } from '@/components/arena/tokens';
-import { Stadium } from '@/components/arena/stadium';
-import { LandingBareme, type BaremeCard } from '@/components/arena/landing/bareme-board';
+import { PHOTOS } from '@/components/arena/tokens';
+import { LandingBareme, LandingRulesTeaser, type BaremeCard } from '@/components/arena/landing/bareme-board';
 import { LandingCorrections } from '@/components/arena/landing/corrections';
-import { ArenaFxStyles, GoldEyebrow, Reveal } from '@/components/arena/landing/fx';
+import { ArenaFxStyles } from '@/components/arena/landing/fx';
 import { LandingHero, type HeroState } from '@/components/arena/landing/hero';
 import { LandingRounds, type RoundCard } from '@/components/arena/landing/rounds';
 import { LandingSteps } from '@/components/arena/landing/steps';
 import { TournamentPicker } from '@/components/arena/landing/tournament-picker';
 import { loadTournamentCards } from '@/lib/arena/cards-data';
-import { computeTournamentStandings, effectiveBareme, roundMaxScore } from '@/lib/arena/db';
+import { computeTournamentStandings, effectiveBareme, listTournaments, roundMaxScore } from '@/lib/arena/db';
 import { leaderboardRows } from '@/lib/arena/ranking';
 import { NO_RANKED_BODY, NO_RANKED_TITLE } from '@/lib/arena/performance-texts';
 import { describeBareme } from '@/lib/arena/scoring';
 import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
-import { publicRules, WARNING_CONNECTION, WARNING_NATURE } from '@/lib/arena/texts';
+import { correctionsAccess } from '@/lib/arena/corrections-access';
 import { roundState } from '@/lib/arena/time';
 import { qrpNs } from '@/lib/arena/types';
 
@@ -74,16 +72,24 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
   const ns = qrpNs(baremeRound ? snap.questionsByRound.get(baremeRound.id) ?? [] : []);
   const cards: BaremeCard[] = (['QRM', 'QRU', 'QRP'] as const).map((k) => ({ type: k, ...describeBareme(k, bareme, ns) }));
 
-  const roundCards: RoundCard[] = rounds.map((r) => {
+  const roundCards: RoundCard[] = rounds.map((r, i) => {
     const st = roundState(r, now);
+    const own = (snap.questionsByRound.get(r.id) ?? []).filter((q) => !q.neutralized_at).some((q) => q.duration_seconds && q.duration_seconds !== t.seconds_per_question);
     return {
       number: r.number, theme: r.theme, opensAt: r.opens_at, closesAt: r.closes_at, state: st,
+      questions: questionCounts[i], seconds: own ? null : t.seconds_per_question,
       href: st === 'open' ? (participant ? `${base}/manche/${r.number}` : registerHref) : st === 'closed' && r.results_published_at ? `${base}/manche/${r.number}/corrections` : null,
     };
   });
 
+  // « Voir un exemple de correction » (maquette) : il n'existe pas d'exemple public ; le participant qui a
+  // accès à ses corrections y va directement, les autres lisent la règle des corrections.
+  const myCorrections = participant && rounds.some((r) => correctionsAccess({ round: r, tournamentId: t.id, participant, now }).allowed);
+  const correctionsCta = myCorrections ? { href: `${base}/corrections`, label: 'Voir mes corrections' } : { href: `${base}/regles#regle-03`, label: 'Découvrir les corrections' };
+  const editions = Object.fromEntries((await listTournaments()).map((x) => [x.slug, x.edition_label]));
+
   return (
-    <ArenaPage nav={nav}>
+    <ArenaPage nav={nav} immersive footer="details">
       {/* Landing du tournoi : l'image d'origine (médecin au Colisée) remplace la plaque commune. */}
       <ArenaBackdropPhoto src={PHOTOS.heroArena} srcMobile={PHOTOS.heroArenaMobile} veil="light" />
       <ArenaFxStyles />
@@ -102,9 +108,9 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
       {/* « Choisissez votre tournoi » (maquette client du 10/09/2026) : les
           autres arènes ouvertes ou à venir, juste sous le hero ; le reste de la
           page est inchangé. */}
-      <TournamentPicker groups={await loadTournamentCards(now)} currentSlug={slug} calendarHref={`${base}#manches`} source={`arena:${slug}`} />
+      <TournamentPicker groups={await loadTournamentCards(now)} editions={editions} currentSlug={slug} calendarHref={`${base}#manches`} source={`arena:${slug}`} />
 
-      <LandingSteps questions={formatQuestions} secondsPerQuestion={t.seconds_per_question} />
+      <LandingSteps questions={questionCounts} seconds={[t.seconds_per_question]} />
 
       <LandingRounds
         rounds={roundCards}
@@ -116,49 +122,18 @@ export default async function TournamentLandingPage({ params, searchParams }: Pa
         boardRounds={standings?.countedRounds.length ?? 1}
         boardEmpty={lastCounted ? `${NO_RANKED_TITLE}. ${NO_RANKED_BODY[0]} ${NO_RANKED_BODY[2]}` : 'Le tableau s’allumera après la publication des résultats de la première manche.'}
         leaderboardEnabled={t.leaderboard_enabled}
-        general={standings?.isFinal} effectif={standings?.isFinal ? standings.effectifGeneral : undefined}
+        distinctionPct={t.distinction_pct}
+        general={standings?.isFinal} effectif={standings?.isFinal && t.afficher_effectif_general ? standings.effectifGeneral : undefined}
       />
 
-      <LandingCorrections specialty={t.specialty} href={`${base}/regles`} />
+      <LandingCorrections specialty={t.specialty} cta={correctionsCta} />
+
+      <LandingRulesTeaser rulesHref={`${base}/regles`} />
 
       <LandingBareme
         cards={cards}
         roundLabel={baremeRound ? `Barème affiché : manche ${baremeRound.number}${baremeRound.bareme_locked_at ? ' (verrouillé)' : ''}.` : ''}
       />
-
-      {/* RÈGLEMENT — sur l'amphithéâtre */}
-      <Stadium photo="amphitheatre" darken={0.7} tint={0.35} position="center 60%" className="py-16 sm:py-24">
-        <section id="regles">
-          <Container>
-            <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
-              <div>
-                <GoldEyebrow>Règlement</GoldEyebrow>
-                <h2 className="mt-4 text-[2.1rem] leading-[0.98] sm:text-[2.9rem] lg:text-[3.4rem]" style={{ ...CAPS, color: ARENA.text }}>Les règles <span style={{ color: ARENA.red }}>de l’arène.</span></h2>
-                <ol className="mt-8 space-y-3">
-                  {publicRules(t).map((r: string, i: number) => (
-                    <li key={i} className="flex gap-4 text-[14.5px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-                      <span className="shrink-0 pt-0.5 text-[15px] leading-none" style={{ fontFamily: HEADLINE, color: ARENA.gold, letterSpacing: '0.06em' }}>{(i + 1).toString().padStart(2, '0')}</span>
-                      <span>{r}</span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-              <Reveal delay={0.15}>
-              <div className="rounded-2xl p-6 sm:p-8" style={{ background: 'rgba(11,15,20,0.78)', boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}, 0 0 0 1px rgba(212,169,74,0.12)`, backdropFilter: 'blur(8px)' }}>
-                <p className="text-[11px]" style={{ ...CAPS, color: ARENA.redSoft, letterSpacing: '0.22em' }}>Nature du dispositif</p>
-                <p className="mt-3 text-[15px] leading-relaxed" style={{ fontFamily: BODY, color: ARENA.text }}>{WARNING_NATURE}</p>
-                <p className="mt-7 text-[11px]" style={{ ...CAPS, color: ARENA.gold, letterSpacing: '0.22em' }}>Connexion</p>
-                <p className="mt-3 text-[15px] leading-relaxed" style={{ fontFamily: BODY, color: ARENA.text }}>{WARNING_CONNECTION}</p>
-                <p className="mt-7 text-[11px]" style={{ ...CAPS, color: ARENA.textMuted, letterSpacing: '0.22em' }}>Le score est cumulatif</p>
-                <p className="mt-3 text-[15px] leading-relaxed" style={{ fontFamily: BODY, color: ARENA.textSoft }}>
-                  Chaque manche jouée ajoute ses points à votre total ; une manche non jouée compte pour zéro. Le classement se lit sur ce total, provisoire après M1 et M2, final après M3, avec au moins {t.min_rounds_final} manches jouées.
-                </p>
-              </div>
-              </Reveal>
-            </div>
-          </Container>
-        </section>
-      </Stadium>
     </ArenaPage>
   );
 }

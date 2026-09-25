@@ -37,6 +37,9 @@ const fmt = (iso: string | null) => (iso ? new Intl.DateTimeFormat('fr-FR', { da
 const pct = (a: number, b: number) => (b > 0 ? `${Math.round((a / b) * 100)} %` : '—');
 
 /** Tableau de bord d'un tournoi (§15) : parcours guidé de préparation, onglets d'exploitation. */
+// Les actions de cette page (envois manuels à tous les inscrits, recalculs) peuvent durer plusieurs minutes.
+export const maxDuration = 300;
+
 export default async function TournamentAdminPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ onglet?: string }> }) {
   await requireAdmin();
   const { id } = await params;

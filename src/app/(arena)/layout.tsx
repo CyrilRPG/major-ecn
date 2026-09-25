@@ -4,6 +4,7 @@ import '@/components/arena/experience.css';
 import '@/components/arena/arena-navigation.css';
 import '@/components/arena/avatar-progression.css';
 import '@/components/arena/arena-scene.css';
+import '@/components/arena/arena-refonte.css';
 import { ArenaBackdrop } from '@/components/arena/arena-backdrop';
 
 /**

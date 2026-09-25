@@ -22,9 +22,10 @@ const ERRORS: Record<string, string> = {
  * lien invalide ou expiré, compte suspendu, « mot de passe oublié » (il n'y a
  * pas de mot de passe), adresse déjà inscrite (renvoi depuis l'inscription).
  */
-export default async function ArenaLoginPage({ searchParams }: { searchParams: Promise<{ erreur?: string; info?: string; deja?: string; e?: string; tournoi?: string }> }) {
-  const { erreur, info, deja, e, tournoi } = await searchParams;
-  const space = await activeArenaSpace();
+export default async function ArenaLoginPage({ searchParams }: { searchParams: Promise<{ erreur?: string; info?: string; deja?: string; e?: string; tournoi?: string; suite?: string }> }) {
+  const { erreur, info, deja, e, tournoi, suite } = await searchParams;
+  // Connecté : l'espace (ou l'inscription en un clic) du tournoi DEMANDÉ, jamais celui d'un autre tournoi.
+  const space = await activeArenaSpace({ slug: tournoi, next: suite });
   if (space && erreur !== 'bloque' && deja !== '1') redirect(space);
   const alreadyRegistered = deja === '1';
   return (
@@ -41,7 +42,7 @@ export default async function ArenaLoginPage({ searchParams }: { searchParams: P
           <strong>Mot de passe oublié ?</strong> Il n’y en a pas : EVC Arena vous connecte par un lien envoyé à votre adresse email. Indiquez-la ci-dessous.
         </Notice>
       )}
-      <LoginForm defaultEmail={e ?? ''} />
+      <LoginForm defaultEmail={e ?? ''} tournamentSlug={tournoi} next={suite} />
       <p className="text-center text-[13px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>
         Pas encore inscrit ? <Link href="/arena" className="font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft }}>Voir les tournois</Link>
       </p>

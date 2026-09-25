@@ -13,6 +13,8 @@ import {
   type AnswerRow, type AttemptRow, type MajorEcnStatus, type ParticipantRow, type QuestionRow, type ReportRow, type RoundRow, type TournamentRow,
 } from './types';
 import { DEFAULT_DISTINCTION_PCT } from './performance';
+import { isActiveIdentity, resolveTournamentParticipant } from './identity';
+import { sandboxStatus } from './qa-sandbox';
 
 /**
  * EVC Arena — accès aux données (service role). Les tables `arena_*` sont
@@ -28,6 +30,8 @@ export function arenaDb(): any {
 export function normalizeTournament(row: Record<string, unknown>): TournamentRow {
   return {
     ...(row as unknown as TournamentRow),
+    // Bac à sable de recette locale : brouillon en base, ouvert ici (jamais en production).
+    status: sandboxStatus(row.slug as string, row.status as TournamentRow['status']),
     bareme: sanitizeBareme(row.bareme),
     email_sequence: defaultEmailSequence(row.email_sequence),
     texts: (row.texts && typeof row.texts === 'object' ? row.texts : {}) as Record<string, string>,
@@ -305,14 +309,27 @@ export const computeTournamentStandings = cache(async function computeTournament
 /* ------------------------------------------------------------------ */
 
 /**
- * Participant authentifié pour ce tournoi (cookie signé + compte confirmé,
- * non bloqué, non anonymisé). Null sinon : l'appelant redirige vers la
- * connexion.
+ * Personne connectée : la ligne du cookie signé, confirmée, ni bloquée ni
+ * anonymisée. Elle vaut pour TOUS les tournois de la même adresse (voir
+ * `identity.ts`) ; mémorisée pour la requête.
  */
-export async function currentParticipant(tournamentId: string): Promise<ParticipantRow | null> {
+export const currentPerson = cache(async function currentPerson(): Promise<ParticipantRow | null> {
   const s = await readSession();
-  if (!s || s.tournamentId !== tournamentId) return null;
+  if (!s) return null;
   const p = await getParticipant(s.participantId);
-  if (!p || p.tournament_id !== tournamentId || !p.email_confirmed_at || p.blocked_at || p.anonymized_at) return null;
+  if (!p || p.tournament_id !== s.tournamentId || !isActiveIdentity(p)) return null;
   return p;
-}
+});
+
+/**
+ * Participant authentifié pour ce tournoi : la personne connectée si son
+ * cookie porte sur ce tournoi, sinon son inscription confirmée de la même
+ * adresse dans ce tournoi. Null sinon : l'appelant propose l'inscription en
+ * un clic (personne connectée) ou la connexion (`accessRedirect`).
+ */
+export const currentParticipant = cache(async function currentParticipant(tournamentId: string): Promise<ParticipantRow | null> {
+  const person = await currentPerson();
+  if (!person) return null;
+  if (person.tournament_id === tournamentId) return person;
+  return resolveTournamentParticipant(person, tournamentId, await findParticipantByEmail(tournamentId, person.email));
+});

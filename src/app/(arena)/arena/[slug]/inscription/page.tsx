@@ -4,6 +4,8 @@ import { ArenaPage, Notice } from '@/components/arena/arena-shell';
 import { Container } from '@/components/arena/arena-ui';
 import { LocalTime } from '@/components/arena/countdown';
 import { RegisterForm } from '@/components/arena/register-form';
+import { JoinForm } from '@/components/arena/join-form';
+import { maskEmail, safeArenaNext } from '@/lib/arena/identity';
 import { Stadium } from '@/components/arena/stadium';
 import { ARENA, BODY, CAPS } from '@/components/arena/tokens';
 import { ENROLLABLE_SPECIALTIES } from '@/lib/data/enrollable-colleges';
@@ -29,7 +31,11 @@ export default async function RegisterPage({ params, searchParams }: Params) {
   const { slug } = await params;
   const sp = await searchParams;
   const ctx = await loadArenaPage(slug);
-  if (ctx.participant) redirect(`/arena/${slug}/espace`);
+  const suite = safeArenaNext(sp.suite);
+  if (ctx.participant) redirect(suite && suite.startsWith(`/arena/${slug}/`) ? suite : `/arena/${slug}/espace`);
+  // Connecté par un autre tournoi : inscription en un clic, jamais le formulaire complet.
+  const person = ctx.person;
+  const openRound = ctx.snap.rounds.find((r) => roundState(r) === 'open') ?? null;
   const t = ctx.snap.tournament;
   const now = new Date();
   const playable = ctx.snap.rounds.filter((r) => roundState(r, now) !== 'closed');
@@ -75,7 +81,16 @@ export default async function RegisterPage({ params, searchParams }: Params) {
                   </Notice>
                 </div>
                 <div className="mt-6">
+                  {person ? (
+                    <JoinForm
+                      slug={slug} pseudo={person.pseudo} avatarSeed={person.avatar_seed} firstName={person.first_name}
+                      maskedEmail={maskEmail(person.email)}
+                      cta={openRound ? `Je participe à la manche ${openRound.number}` : 'Je rejoins ce tournoi'}
+                      inviteCode={sp.i ?? null} source={source} utm={Object.keys(utm).length ? utm : null} next={suite}
+                    />
+                  ) : (
                   <RegisterForm slug={slug} specialties={specialties} defaultSpecialty={t.specialty} inviteCode={sp.i ?? null} source={source} utm={Object.keys(utm).length ? utm : null} />
+                  )}
                 </div>
               </>
             )}

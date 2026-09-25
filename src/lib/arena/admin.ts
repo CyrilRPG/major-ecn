@@ -65,12 +65,16 @@ export async function tournamentIdOfRound(roundId: string): Promise<string | nul
   return data?.tournament_id ?? null;
 }
 
+/** Segments de `/arena/…` pris par des pages fixes : un tournoi de ce nom serait inaccessible. */
+export const RESERVED_ARENA_SLUGS = ['calendrier', 'confirmer', 'connecter', 'connexion', 'desinscription', 'mot-de-passe-oublie'];
+
 export function slugify(s: string): string {
-  return s
+  const slug = s
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 60);
+  return RESERVED_ARENA_SLUGS.includes(slug) ? `${slug}-tournoi` : slug;
 }

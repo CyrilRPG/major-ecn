@@ -57,6 +57,30 @@
 .arena-account-popover p { margin: 10px 0; color: var(--ae-muted); }
 .arena-account-popover a { color: var(--ae-gold); }
 .arena-account-popover small { display: block; margin-top: 4px; line-height: 1.5; }
+/* Menus déroulants (cloche, compte) — maquettes du 24/09/2026. */
+.arena-profile-menu { position: static; }
+.arena-profile-menu > summary { list-style: none; cursor: pointer; min-height: 44px; }
+.arena-profile-menu > summary::-webkit-details-marker { display: none; }
+.arena-profile-menu[open] > summary > svg { transform: rotate(180deg); }
+.arena-profile-menu > summary > svg { transition: transform .2s; }
+.arena-notifications summary { position: relative; }
+.arena-bell-dot { position: absolute; top: 9px; right: 9px; width: 9px; height: 9px; border-radius: 50%; background: #e4002b; box-shadow: 0 0 0 2px rgba(0, 14, 23, .98); }
+.arena-menu { display: grid; gap: 12px; padding: 18px; font-size: 14px; }
+.arena-menu-title { margin: 0 !important; padding-bottom: 12px; border-bottom: 1px solid #1f333f; color: #f5f5f6 !important; font-family: var(--font-oswald), sans-serif; font-size: 15px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
+.arena-menu-empty { margin: 0 !important; }
+.arena-menu-updates, .arena-menu-list { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.arena-menu-updates a { display: grid; gap: 3px; padding: 10px 12px; border-radius: 10px; color: #f5f5f6 !important; }
+.arena-menu-updates a:hover, .arena-menu-updates a:focus-visible { background: rgba(255, 202, 76, .08); }
+.arena-menu-updates strong { color: var(--ae-gold); font-weight: 600; }
+.arena-menu-updates small { margin: 0; color: var(--ae-muted); }
+.arena-menu-list :is(a, button) { display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 12px; border: 0; border-radius: 10px; background: none; color: #f5f5f6 !important; font: inherit; text-align: left; cursor: pointer; }
+.arena-menu-list :is(a, button):hover, .arena-menu-list :is(a, button):focus-visible { background: rgba(255, 202, 76, .08); color: var(--ae-gold) !important; }
+.arena-menu-list :is(a, button) svg { width: 19px; height: 19px; flex-shrink: 0; color: var(--ae-gold); }
+.arena-menu-list li:last-child { margin-top: 4px; padding-top: 6px; border-top: 1px solid #1f333f; }
+.arena-menu-list button:disabled { opacity: .6; cursor: progress; }
+.arena-menu-more { display: flex; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid #1f333f; font-weight: 600; }
+.arena-menu-more svg { width: 18px; height: 18px; }
+.arena-menu--account { width: 270px; }
 .arena-preview-strip { position: absolute; top: 100%; left: 0; right: 0; text-align: center; background: #322615; color: #ffda7f; font-size: 11px; letter-spacing: .05em; padding: 4px; z-index: 2; }
 @media (max-width: 1280px) {
   .arena-experience-brand { min-width: 210px; }

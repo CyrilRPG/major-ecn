@@ -1,6 +1,7 @@
 import { Users } from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { UnifiedLeadsTable, type UnifiedLead } from '@/components/admin/unified-leads-table';
 
@@ -17,10 +18,14 @@ export default async function LeadsPage() {
     (admin as any).from('diagnostic_leads').select('*').order('created_at', { ascending: false }),
     // Inscrits EVC Arena. Les comptes anonymisés (droit à l'effacement, §12) ne
     // remontent pas : leur adresse n'existe plus, la ligne ne servirait à rien.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (admin as any).from('arena_participants').select('*')
-      .eq('faculte_id', EDN_FACULTE_ID).is('anonymized_at', null)
-      .order('created_at', { ascending: false }),
+    // Lecture paginée : PostgREST tronque en silence à 1 000 lignes, et une
+    // saison de plusieurs tournois les dépasse.
+    fetchAllRows((from, to) =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (admin as any).from('arena_participants').select('*')
+        .eq('faculte_id', EDN_FACULTE_ID).is('anonymized_at', null)
+        .order('created_at', { ascending: false }).order('id').range(from, to),
+    ).then((data) => ({ data })),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (admin as any).from('arena_tournaments').select('id, title, edition_label, specialty'),
   ]);

@@ -118,7 +118,7 @@ export function RegisterForm({
             const e = encodeURIComponent(email.trim().toLowerCase());
             if (r.alreadyConfirmed) {
               // L'écran indique comment retrouver l'accès sans promettre un nouvel envoi en cas de délai de renvoi.
-              router.push(`/arena/connexion?deja=1&e=${e}`);
+              router.push(`/arena/connexion?deja=1&e=${e}&tournoi=${encodeURIComponent(slug)}`);
               return;
             }
             router.push(`/arena/${slug}/confirmez-votre-email?e=${e}${r.alreadyPending ? '&deja=1' : ''}`);
@@ -201,7 +201,7 @@ export function RegisterForm({
         </p>
       )}
       <p className="text-center text-[13px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>
-        Déjà inscrit ? <Link href="/arena/connexion" className="font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft }}>Se connecter</Link>
+        Déjà inscrit ? <Link href={`/arena/connexion?tournoi=${encodeURIComponent(slug)}`} className="font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft }}>Se connecter</Link>
       </p>
       <p className="text-center text-[11.5px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Aucun numéro de téléphone demandé pour simplifier votre inscription.</p>
     </form>

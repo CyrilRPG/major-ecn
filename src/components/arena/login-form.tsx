@@ -6,7 +6,7 @@ import { requestLoginLinkAny } from '@/app/(arena)/arena/connexion/actions';
 import { ArenaButton, ARENA, BODY } from './arena-ui';
 import { Field, FormError, TextInput } from './form-ui';
 
-export function LoginForm({ defaultEmail = '' }: { defaultEmail?: string }) {
+export function LoginForm({ defaultEmail = '', tournamentSlug, next }: { defaultEmail?: string; tournamentSlug?: string; next?: string }) {
   const [email, setEmail] = useState(defaultEmail);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +30,7 @@ export function LoginForm({ defaultEmail = '' }: { defaultEmail?: string }) {
     setError(null);
     start(async () => {
       try {
-        const result = await requestLoginLinkAny(email);
+        const result = await requestLoginLinkAny(email, { tournamentSlug, next });
         if (!result.ok) { setError(result.error); return; }
         setSubmitted(true);
         setRemaining(result.retryAfter);

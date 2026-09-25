@@ -2,8 +2,7 @@ import { NextResponse } from 'next/server';
 import { currentStaff } from '@/lib/arena/access';
 import { correctionsAccess } from '@/lib/arena/corrections-access';
 import { burnWatermark, readCorrectionPage } from '@/lib/arena/corrections-pages';
-import { getParticipant, getRound } from '@/lib/arena/db';
-import { readSession } from '@/lib/arena/session';
+import { currentParticipant, getRound } from '@/lib/arena/db';
 import { staffWatermarkLabel, watermarkLabel } from '@/lib/arena/watermark';
 
 export const runtime = 'nodejs';
@@ -27,8 +26,8 @@ export async function GET(_req: Request, ctx: { params: Promise<{ roundId: strin
   if (!round || !round.corrections_pages || page > round.corrections_pages) return new NextResponse(null, { status: 404 });
 
   let label: string | null = null;
-  const session = await readSession();
-  const participant = session ? await getParticipant(session.participantId) : null;
+  // La session vaut pour tous les tournois de la même adresse : on résout le participant DE CE tournoi.
+  const participant = await currentParticipant(round.tournament_id);
   const access = correctionsAccess({ round, tournamentId: round.tournament_id, participant });
   if (access.allowed) label = watermarkLabel(participant!);
   else {

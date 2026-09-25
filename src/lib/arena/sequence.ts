@@ -1,10 +1,12 @@
 import 'server-only';
+import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { arenaDb, arenaLog, computeTournamentStandings, effectiveBareme, listAttemptsForRounds, listParticipants, listTournaments, loadTournamentSnapshot, roundMaxScore, type TournamentSnapshot } from './db';
 import { finalizeAttempt } from './grading';
 import { publishArenaRound } from './rank-history-db';
 import { relanceEmail, resultsEmail, roundOpeningEmail, roundReminderEmail, sendArenaEmail } from './emails';
 import { remainingLabel, toDate } from './time';
 import type { AttemptRow, ParticipantRow, RoundRow, TournamentRow } from './types';
+import { isQaSandboxSlug } from './qa-sandbox';
 
 /**
  * EVC Arena — balayage périodique (cron `arena-sweep`, toutes les 5 minutes).
@@ -35,7 +37,7 @@ const GRACE_MS = 15_000;
 const H = 3_600_000;
 const D = 24 * H;
 
-export async function runArenaSweep(now = new Date()): Promise<SweepReport> {
+export async function runArenaSweep(now = new Date(), opts: { onlySlug?: string | null } = {}): Promise<SweepReport> {
   const report: SweepReport = { expiredAttempts: 0, transitions: [], emailsSent: 0, emailsSkipped: 0, errors: [], anonymized: 0 };
   const db = arenaDb();
 
@@ -59,6 +61,7 @@ export async function runArenaSweep(now = new Date()): Promise<SweepReport> {
   const tournaments = await listTournaments();
   for (const t of tournaments) {
     if (t.status === 'draft' || t.status === 'scheduled' || t.status === 'archived') continue;
+    if (opts.onlySlug && t.slug !== opts.onlySlug) continue;
     try {
       await sweepTournament(t, now, report);
     } catch (e) {
@@ -73,7 +76,8 @@ async function sweepTournament(t: TournamentRow, now: Date, report: SweepReport)
   let snap = await loadTournamentSnapshot(t, now);
 
   // Statut effectif journalisé
-  if (snap.status !== t.status) {
+  // Bac à sable de recette : le statut reste « Brouillon » en base, pour que le cron de production l'ignore.
+  if (snap.status !== t.status && !isQaSandboxSlug(t.slug)) {
     await db.from('arena_tournaments').update({ status: snap.status }).eq('id', t.id).throwOnError();
     await arenaLog({ tournamentId: t.id, kind: 'status', oldValue: t.status, newValue: snap.status, actorLabel: 'cron', details: 'Transition automatique pilotée par les dates.' });
     report.transitions.push(`${t.slug}: ${t.status} → ${snap.status}`);
@@ -96,7 +100,14 @@ async function sweepTournament(t: TournamentRow, now: Date, report: SweepReport)
       // Toute tentative encore ouverte est close avant publication.
       const open = await listAttemptsForRounds([r.id], true);
       for (const a of open) if (a.status === 'in_progress') await finalizeAttempt(a.id, 'expired', now);
-      await publishArenaRound(r.id, now);
+      try {
+        await publishArenaRound(r.id, now);
+      } catch (e) {
+        // La base refuse une publication un peu trop tôt (horloges décalées de quelques
+        // secondes) : on réessaiera au prochain balayage, sans priver ce tournoi de ses emails.
+        report.errors.push(`publication M${r.number} ${t.slug}: ${e instanceof Error ? e.message : String(e)}`);
+        continue;
+      }
       await arenaLog({ tournamentId: t.id, roundId: r.id, kind: 'results_published', actorLabel: 'cron', details: `Résultats de la manche ${r.number} publiés.` });
       report.transitions.push(`${t.slug}: résultats M${r.number} publiés`);
       changed = true;
@@ -114,14 +125,25 @@ async function sweepTournament(t: TournamentRow, now: Date, report: SweepReport)
 async function sendDueEmails(snap: TournamentSnapshot, now: Date, report: SweepReport): Promise<void> {
   const t = snap.tournament;
   const seq = t.email_sequence;
+  const db = arenaDb();
   const participants = (await listParticipants(t.id)).filter((p) => p.email_confirmed_at && !p.blocked_at && !p.anonymized_at);
   if (participants.length === 0) return;
   const attempts = await listAttemptsForRounds(snap.rounds.map((r) => r.id));
   const played = new Set(attempts.map((a) => `${a.round_id}:${a.participant_id}`));
   let standings: Awaited<ReturnType<typeof computeTournamentStandings>> | null = null;
+  // Clés déjà envoyées, lues une fois : sans elles, chaque balayage retentait
+  // (et voyait refuser par l'index unique) un email de résultats par participant
+  // et par manche publiée, toutes les 5 minutes, jusqu'à l'archivage.
+  const sentKeys = new Set(
+    (await fetchAllRows<{ dedupe_key: string }>((from, to) => db.from('arena_emails').select('dedupe_key')
+      .eq('tournament_id', t.id).not('dedupe_key', 'is', null).order('id').range(from, to))).map((row) => row.dedupe_key),
+  );
 
-  const send = async (p: ParticipantRow, kind: 'j7' | 'j1' | 'opening' | 'relance' | 'results', r: RoundRow, mail: Parameters<typeof sendArenaEmail>[0]['mail']) => {
-    const res = await sendArenaEmail({ tournament: t, participant: p, to: p.email, kind, mail, roundId: r.id, dedupeKey: `${kind}:${r.id}:${p.id}` });
+  const send = async (p: ParticipantRow, kind: 'j7' | 'j1' | 'opening' | 'relance' | 'results', r: RoundRow, mail: () => Parameters<typeof sendArenaEmail>[0]['mail']) => {
+    const dedupeKey = `${kind}:${r.id}:${p.id}`;
+    if (sentKeys.has(dedupeKey)) { report.emailsSkipped++; return; }
+    const res = await sendArenaEmail({ tournament: t, participant: p, to: p.email, kind, mail: mail(), roundId: r.id, dedupeKey });
+    sentKeys.add(dedupeKey);
     if (res.ok) report.emailsSent++;
     else if (res.skipped) report.emailsSkipped++;
     else report.errors.push(`${kind} ${p.email}: ${res.error}`);
@@ -138,32 +160,33 @@ async function sendDueEmails(snap: TournamentSnapshot, now: Date, report: SweepR
       const registeredAt = new Date(p.created_at).getTime();
       // J-7 : fenêtre [J-7, J-1) — jamais rattrapé après J-1 (le rappel J-1 prend le relais).
       if (seq.j7.enabled && ms >= opens.getTime() - 7 * D && ms < opens.getTime() - D) {
-        await send(p, 'j7', r, roundReminderEmail(t, p, 'j7', roundInfo));
+        await send(p, 'j7', r, () => roundReminderEmail(t, p, 'j7', roundInfo));
       }
       if (seq.j1.enabled && ms >= opens.getTime() - D && ms < opens.getTime()) {
-        await send(p, 'j1', r, roundReminderEmail(t, p, 'j1', roundInfo));
+        await send(p, 'j1', r, () => roundReminderEmail(t, p, 'j1', roundInfo));
       }
       const hasPlayed = played.has(`${r.id}:${p.id}`);
       if (seq.opening.enabled && ms >= opens.getTime() && ms < closes.getTime() - 3 * H && !hasPlayed) {
-        await send(p, 'opening', r, roundOpeningEmail(t, p, roundInfo, remainingLabel(closes.getTime() - ms)));
+        await send(p, 'opening', r, () => roundOpeningEmail(t, p, roundInfo, remainingLabel(closes.getTime() - ms)));
       }
       if (seq.relance.enabled && ms >= closes.getTime() - 3 * H && ms < closes.getTime() && !hasPlayed && registeredAt < closes.getTime()) {
-        await send(p, 'relance', r, relanceEmail(t, p, roundInfo, remainingLabel(closes.getTime() - ms)));
+        await send(p, 'relance', r, () => relanceEmail(t, p, roundInfo, remainingLabel(closes.getTime() - ms)));
       }
-      if (seq.results.enabled && r.results_published_at && registeredAt < closes.getTime()) {
+      if (seq.results.enabled && r.results_published_at && registeredAt < closes.getTime() && !sentKeys.has(`results:${r.id}:${p.id}`)) {
         standings ??= await computeTournamentStandings(snap);
         const st = standings.standings.find((s) => s.participantId === p.id);
         const mine = attempts.find((a) => a.round_id === r.id && a.participant_id === p.id) as AttemptRow | undefined;
         const nextRound = snap.rounds.find((x) => x.number === r.number + 1) ?? null;
         // Jamais de PDF ni de lien de fichier : la correction détaillée se consulte dans l'espace.
-        await send(p, 'results', r, resultsEmail(t, p, {
+        const ranking = standings;
+        await send(p, 'results', r, () => resultsEmail(t, p, {
           number: r.number,
           theme: r.theme,
           score: mine && mine.status !== 'in_progress' ? Number(mine.score ?? 0) : null,
           max: roundMaxScore(snap.questionsByRound.get(r.id) ?? [], effectiveBareme(t, r)),
           cumulScore: st?.totalScore ?? 0,
           cumulMax: st?.totalMax ?? 0,
-          cumulRounds: standings.countedRounds.length,
+          cumulRounds: ranking.countedRounds.length,
           rank: st?.rank ?? null,
           distinction: st?.distinction ?? null,
           isLast: r.number === Math.max(...snap.rounds.map((x) => x.number)),
@@ -203,4 +226,15 @@ export async function anonymizeParticipant(p: ParticipantRow, reason: 'retention
     consent_marketing: false,
     anonymized_at: new Date().toISOString(),
   }).eq('id', p.id).throwOnError();
+  await scrubEmailJournal(p.id);
+}
+
+/**
+ * Le journal des emails gardait l'adresse d'un participant effacé (§3.1,
+ * droit à l'effacement) : elle est remplacée par l'adresse anonyme. Les
+ * lignes restent pour les statistiques d'envoi.
+ */
+export async function scrubEmailJournal(participantId: string): Promise<void> {
+  await arenaDb().from('arena_emails').update({ to_email: `anonyme-${participantId}@anonymise.invalid` })
+    .eq('participant_id', participantId).neq('kind', 'invite').throwOnError();
 }

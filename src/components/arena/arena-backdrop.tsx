@@ -73,23 +73,25 @@ export function ArenaBackdrop() {
  * l'image d'origine de la médecin au Colisée (`hero-arena.jpg`) tandis que les
  * autres pages Arena restent sur la plaque du colisée.
  */
-export function ArenaBackdropPhoto({ src, srcMobile, veil = 'default' }: { src: string; srcMobile?: string; /** `light` : voile très léger (photo claire, lisibilité par ombres portées). */ veil?: 'default' | 'light' }) {
+export function ArenaBackdropPhoto({ src, srcMobile, veil = 'default', position, size }: {
+  src: string; srcMobile?: string;
+  /** `light` : voile très léger (photo claire, lisibilité par ombres portées) ; `dark` : voile nuit appuyé (pages denses, maquette 15_06_19). */
+  veil?: 'default' | 'light' | 'dark';
+  /** Cadrage de la photo sur bureau (`background-position` / `background-size`). */
+  position?: string; size?: string;
+}) {
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty('--arena-photo', `url("${src}")`);
     root.style.setProperty('--arena-photo-mobile', `url("${srcMobile ?? src}")`);
-    if (veil === 'light') {
-      root.style.setProperty('--arena-veil-a', 'rgba(6, 10, 20, 0.12)');
-      root.style.setProperty('--arena-veil-b', 'rgba(6, 10, 20, 0.2)');
-      root.style.setProperty('--arena-veil-c', 'rgba(6, 10, 20, 0.55)');
-    }
+    if (position) root.style.setProperty('--arena-photo-pos', position);
+    if (size) root.style.setProperty('--arena-photo-size', size);
+    const veils = veil === 'light' ? ['rgba(6, 10, 20, 0.12)', 'rgba(6, 10, 20, 0.2)', 'rgba(6, 10, 20, 0.55)']
+      : veil === 'dark' ? ['rgba(4, 8, 14, 0.66)', 'rgba(4, 8, 14, 0.8)', 'rgba(4, 8, 14, 0.9)'] : null;
+    if (veils) veils.forEach((v, i) => root.style.setProperty(`--arena-veil-${'abc'[i]}`, v));
     return () => {
-      root.style.removeProperty('--arena-photo');
-      root.style.removeProperty('--arena-photo-mobile');
-      root.style.removeProperty('--arena-veil-a');
-      root.style.removeProperty('--arena-veil-b');
-      root.style.removeProperty('--arena-veil-c');
+      for (const k of ['--arena-photo', '--arena-photo-mobile', '--arena-photo-pos', '--arena-photo-size', '--arena-veil-a', '--arena-veil-b', '--arena-veil-c']) root.style.removeProperty(k);
     };
-  }, [src, srcMobile, veil]);
+  }, [src, srcMobile, veil, position, size]);
   return null;
 }

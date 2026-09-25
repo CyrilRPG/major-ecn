@@ -23,7 +23,7 @@ import {
   roundDuration,
   roundMaxScore,
 } from "@/lib/arena/db";
-import { arenaMetadata, loadArenaPage } from "@/lib/arena/page-context";
+import { arenaMetadata, loadArenaPage, redirectToAccess } from "@/lib/arena/page-context";
 import { MODE_LABEL } from "@/lib/arena/scoring";
 import { buttonTruncated, warningTruncated } from "@/lib/arena/texts";
 import { roundOutcome } from "@/lib/arena/performance";
@@ -45,6 +45,13 @@ export async function generateMetadata({ params }: Params) {
   return arenaMetadata(ctx.snap, { title: "Manche " + n, noindex: true });
 }
 
+/** Nombre de questions à envoyer : les validées (en tête, l'ordre est imposé) + la courante. */
+function currentIndex(ordered: readonly { id: string }[], answers: readonly { question_id: string }[]): number {
+  const done = new Set(answers.map((a) => a.question_id));
+  const k = ordered.findIndex((q) => !done.has(q.id));
+  return k === -1 ? ordered.length : k + 1;
+}
+
 export default async function RoundPage({ params, searchParams }: Params) {
   const { slug, n } = await params;
   const { preview: previewParam } = await searchParams;
@@ -55,7 +62,7 @@ export default async function RoundPage({ params, searchParams }: Params) {
   const preview = wantPreview && Boolean(ctx.staff);
   if (wantPreview && !ctx.staff)
     redirect("/arena/" + slug + "/manche/" + number);
-  if (!preview && !ctx.participant) redirect("/arena/connexion");
+  if (!preview && !ctx.participant) redirectToAccess(ctx, "/arena/" + slug + "/manche/" + number);
   const t = ctx.snap.tournament;
   const round = ctx.snap.rounds.find((r) => r.number === number);
   if (!round) notFound();
@@ -110,9 +117,12 @@ export default async function RoundPage({ params, searchParams }: Params) {
             deadlineIso={attempt.deadline_at}
             startedIso={attempt.started_at}
             lastValidatedIso={lastValidated}
-            questions={ordered.map((q) =>
-              toPublicQuestion(q, t.seconds_per_question),
-            )}
+            // Anti-triche : seules les questions validées et la question en
+            // cours partent au navigateur ; la suivante arrive avec la validation.
+            questions={ordered
+              .slice(0, currentIndex(ordered, answers))
+              .map((q) => toPublicQuestion(q, t.seconds_per_question))}
+            questionTotal={ordered.length}
             answeredIds={answers.map((a) => a.question_id)}
             markedIds={await listQuestionMarks(attempt.id)}
             baremeLabel={{
@@ -237,7 +247,8 @@ export default async function RoundPage({ params, searchParams }: Params) {
     : duration * 60;
   const truncated = !preview && remainingSec < duration * 60;
   const gateBlocked = !preview && state !== "open";
-  const { count } = await arenaDb()
+  // §7 : aucun effectif affiché, sauf si l'administration l'a explicitement activé.
+  const { count } = !t.afficher_effectif_general ? { count: null } : await arenaDb()
     .from("arena_participants")
     .select("id", { count: "exact", head: true })
     .eq("tournament_id", t.id)
@@ -255,7 +266,7 @@ export default async function RoundPage({ params, searchParams }: Params) {
         duration={duration}
         bareme={bareme}
         ns={qrpNs(questions)}
-        participantCount={count ?? 0}
+        participantCount={t.afficher_effectif_general ? count ?? 0 : null}
         nowIso={now.toISOString()}
         preview={preview}
         notices={

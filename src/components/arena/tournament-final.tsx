@@ -54,6 +54,7 @@ export function TournamentFinal({
   const podium = ["champion", "silver", "bronze"].includes(s.variant);
   const edition = `EVC ARENA ${s.edition}`.trim();
   const average = durationText(s.meanSeconds);
+  const lastPlayed = [...s.rounds].reverse().find((r) => r.played)?.number ?? null;
   return (
     <section
       className={`af-final af-${s.variant}`}
@@ -290,6 +291,7 @@ export function TournamentFinal({
             className={`af-round af-panel ${r.played ? "" : "is-unplayed"}`}
           >
             <h2>MANCHE {r.number}</h2>
+            {r.played && <span className="af-round-badge"><CheckCircle2 aria-hidden />Validée</span>}
             <p className="af-round-date">{date(r.date)}</p>
             <div className="af-round-content">
               <div
@@ -410,84 +412,41 @@ export function TournamentFinal({
         )}
       </div>
       <p className="af-notice af-totals-notice">{GENERAL_RANKING_NOTICE}</p>
-      <div className={`af-bottom ${incomplete ? "af-bottom-incomplete" : ""}`}>
-        {incomplete && (
-          <section className="af-analysis af-panel">
-            <h2>
-              <FileText aria-hidden />
-              VOTRE ANALYSE
-            </h2>
-            {s.analysis ? (
-              <div>
-                <p>
-                  <Star aria-hidden />
-                  <span>
-                    Point fort<strong>{s.analysis.strong}</strong>Continuez à
-                    consolider ces acquis.
-                  </span>
-                </p>
-                <p>
-                  <ArenaBars aria-hidden />
-                  <span>
-                    À renforcer<strong>{s.analysis.weak}</strong>Reprenez les
-                    corrections pour cibler vos révisions.
-                  </span>
-                </p>
-              </div>
-            ) : (
-              <p>
-                Retrouvez vos réponses et les explications détaillées dans les
-                corrections des manches.
-              </p>
-            )}
-          </section>
-        )}
-        <div className="af-actions">
-          <Link
-            className={`af-action ${incomplete ? "af-action-red" : ""}`}
-            href={`${base}/corrections`}
-          >
+      {incomplete ? (
+        <div className="af-bottom af-bottom-row">
+          <Link className="af-action af-action-analysis" href={lastPlayed ? `${base}/manche/${lastPlayed}` : `${base}/corrections`}>
             <FileText aria-hidden />
             <span>
-              <strong>
-                {incomplete
-                  ? "VOIR LES CORRECTIONS"
-                  : "VOIR TOUTES LES CORRECTIONS"}
-              </strong>
+              <strong>VOTRE ANALYSE</strong>
+              <small>
+                {s.analysis
+                  ? <>Point fort : {s.analysis.strong}. À renforcer : {s.analysis.weak}.</>
+                  : "Retrouvez vos réponses et les explications détaillées dans les corrections des manches."}
+              </small>
+            </span>
+            <ArrowRight aria-hidden />
+          </Link>
+          <Link className="af-action af-action-red" href={`${base}/corrections`}>
+            <FileText aria-hidden />
+            <span>
+              <strong>VOIR LES CORRECTIONS</strong>
               <small>
                 {s.played
-                  ? `Revivez vos ${s.played} manche${s.played > 1 ? "s" : ""} en détail`
+                  ? s.played > 1 ? `Revivez vos ${s.played} manches en détail` : "Revivez votre manche en détail"
                   : "Découvrez les explications détaillées"}
               </small>
             </span>
             <ArrowRight aria-hidden />
           </Link>
-          {incomplete ? (
-            <Link className="af-action" href="/arena">
-              <CalendarDays aria-hidden />
-              <strong>
-                DÉCOUVRIR
-                <br />
-                LES PROCHAINES ÉDITIONS
-              </strong>
-              <ArrowRight aria-hidden />
-            </Link>
-          ) : (
-            leaderboardEnabled && (
-              <Link
-                className="af-action af-action-red"
-                href={`${base}/classement`}
-              >
-                <ArenaBars aria-hidden />
-                <span>
-                  <strong>CONSULTER LE CLASSEMENT FINAL</strong>
-                  <small>Voir le classement complet</small>
-                </span>
-                <ArrowRight aria-hidden />
-              </Link>
-            )
-          )}
-          {incomplete && !passerelle && (
+          <Link className="af-action af-action-gold" href="/arena/calendrier">
+            <CalendarDays aria-hidden />
+            <span>
+              <strong>DÉCOUVRIR<br />LES PROCHAINES ÉDITIONS</strong>
+              <small>Ne manquez pas la prochaine manche</small>
+            </span>
+            <ArrowRight aria-hidden />
+          </Link>
+          {!passerelle && (
             <Link className="af-continue" href="/">
               <GraduationCap aria-hidden />
               <span>
@@ -501,8 +460,35 @@ export function TournamentFinal({
             </Link>
           )}
         </div>
-      </div>
-      {passerelle && <PasserelleBlock content={passerelle} />}
+      ) : (
+        <div className="af-bottom">
+          <div className="af-actions">
+            <Link className="af-action" href={`${base}/corrections`}>
+              <FileText aria-hidden />
+              <span>
+                <strong>VOIR TOUTES LES CORRECTIONS</strong>
+                <small>
+                  {s.played
+                    ? `Revivez vos ${s.played} manche${s.played > 1 ? "s" : ""} en détail`
+                    : "Découvrez les explications détaillées"}
+                </small>
+              </span>
+              <ArrowRight aria-hidden />
+            </Link>
+            {leaderboardEnabled && (
+              <Link className="af-action af-action-red" href={`${base}/classement`}>
+                <ArenaBars aria-hidden />
+                <span>
+                  <strong>CONSULTER LE CLASSEMENT FINAL</strong>
+                  <small>Voir le classement complet</small>
+                </span>
+                <ArrowRight aria-hidden />
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
+      {passerelle && <PasserelleBlock content={passerelle} variant="cream" />}
     </section>
   );
 }

@@ -1,58 +1,60 @@
+import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, FileText } from 'lucide-react';
-import { Helmet } from '../arena-logo';
-import { Container } from '../arena-ui';
-import { Stadium } from '../stadium';
-import { ARENA, BODY, CAPS, DISPLAY, HEADLINE, buttonClass, buttonStyle } from '../tokens';
-import { GoldEyebrow, Reveal } from './fx';
+import { ArrowRight, FileText, GraduationCap, Target, Trophy } from 'lucide-react';
+import { ArenaBars } from '../experience-icons';
+import { Reveal } from './fx';
 
-/** Présentation du contenu disponible après publication des corrections. */
-export function LandingCorrections({ specialty, href }: { specialty: string; href: string }) {
+const STEPS = ['Vos réponses et le score obtenu', 'Les réponses attendues', 'Des commentaires pédagogiques', 'Des ressources pour progresser'];
+const TAGS = [
+  { label: 'Apprendre', icon: <GraduationCap aria-hidden strokeWidth={1.7} /> },
+  { label: 'Comprendre', icon: <ArenaBars aria-hidden /> },
+  { label: 'Progresser', icon: <Target aria-hidden strokeWidth={1.7} /> },
+  { label: 'Réussir', icon: <Trophy aria-hidden strokeWidth={1.7} /> },
+];
+
+/**
+ * « Après chaque manche — vous recevez les corrections détaillées » —
+ * maquette client du 24/09/2026 (15_12_13, moitié haute) : sur la photo de
+ * l'arène, pictogramme, titre bicolore, accroche, appel à l'action, et carte
+ * « Corrections détaillées » (quatre contenus, quatre verbes, citation).
+ * Le bouton mène aux corrections du participant quand il y a accès, sinon au
+ * règlement (aucun exemple public de correction n'existe : pas de faux lien).
+ */
+export function LandingCorrections({ specialty, cta }: { specialty: string; cta: { href: string; label: string } }) {
   return (
-    <Stadium photo="lightsFog" darken={0.55} tint={0.08} position="center 60%" className="py-14 sm:py-20">
-      <Container>
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-14">
-          <Reveal className="flex gap-6">
-            <span className="hidden h-[5.5rem] w-[5.5rem] shrink-0 items-center justify-center rounded-2xl sm:flex" style={{ background: 'rgba(255,255,255,0.06)', boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}` }}>
-              <span className="relative">
-                <FileText className="h-12 w-12" style={{ color: ARENA.text }} strokeWidth={1.4} />
-              </span>
-            </span>
-            <div>
-              <GoldEyebrow>Après chaque manche</GoldEyebrow>
-              <h2 className="mt-3 text-[1.9rem] leading-[0.98] sm:text-[2.6rem]" style={{ ...CAPS, color: ARENA.text }}>Vous recevez les corrections détaillées</h2>
-              <p className="mt-4 max-w-xl text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-                Quel que soit votre classement, retrouvez les réponses attendues et vos réponses enregistrées. Les commentaires de l’équipe pédagogique accompagnent chaque question pour guider vos révisions.
-              </p>
-              <Link href={href} className={`${buttonClass('primary')} mt-6`} style={buttonStyle('primary')}>Comment ça marche <ArrowRight className="h-4 w-4" /></Link>
-            </div>
-          </Reveal>
+    <section className="ev-corrections" aria-labelledby="ev-corrections-title">
+      <div className="ev-wrap ev-corrections-grid">
+        <Reveal className="ev-corrections-copy">
+          <span className="ev-corrections-icon"><FileText aria-hidden strokeWidth={1.4} /></span>
+          <div>
+            <p className="ev-eyebrow"><span aria-hidden className="ev-rule" />Après chaque manche</p>
+            <h2 id="ev-corrections-title">Vous recevez les<br /><em>corrections</em> détaillées</h2>
+            <p className="ev-corrections-lead">Quel que soit votre classement, retrouvez vos réponses, les réponses attendues et des commentaires pédagogiques détaillés. Notre équipe vous accompagne pour comprendre vos erreurs et progresser.</p>
+            <Link href={cta.href} className="ev-btn ev-btn--red">{cta.label} <ArrowRight aria-hidden /></Link>
+          </div>
+        </Reveal>
 
-          <Reveal delay={0.15} className="relative mx-auto w-full max-w-md">
-            <div className="rounded-xl bg-white p-5 text-left shadow-[0_40px_80px_-30px_rgba(0,0,0,0.9)] sm:p-6" style={{ color: '#14254E' }}>
-              <div className="flex items-center gap-2">
-                <Helmet size={26} />
-                <span className="text-[18px] leading-none" style={{ fontFamily: HEADLINE, letterSpacing: '0.04em', color: '#14254E' }}>EVC <span style={{ color: ARENA.red }}>ARENA</span></span>
-              </div>
-              <p className="mt-2 text-[13px] font-bold" style={{ fontFamily: BODY }}>Corrections détaillées</p>
-              <p className="text-[12px]" style={{ color: '#4B5563', fontFamily: BODY }}>{specialty}</p>
-              <div className="mt-4 space-y-3">
-                {['Vos réponses et le score obtenu', 'Les réponses attendues', 'Vos questions marquées'].map((q, i) => (
-                  <div key={q} className="flex items-start gap-3">
-                    <span className="w-7 text-[13px] font-extrabold" style={{ fontFamily: BODY }}>{i + 1}.</span>
-                    <p className="text-[13px]" style={{ fontFamily: BODY }}>{q}</p>
-                  </div>
-                ))}
-              </div>
+        <Reveal delay={0.12} className="ev-corrections-card">
+          <div className="ev-corrections-card-grid">
+            <div>
+              <p className="ev-mini-logo"><Image src="/arena/helmet-320.png" alt="" width={237} height={320} sizes="24px" />EVC <span>Arena</span></p>
+              <p className="ev-corrections-card-title">Corrections détaillées</p>
+              <p className="ev-corrections-card-sub">{specialty}</p>
+              <ol>
+                {STEPS.map((s, i) => <li key={s}><span>{i + 1}</span>{s}</li>)}
+              </ol>
             </div>
-            <div aria-hidden className="absolute -right-4 top-6 hidden flex-col gap-1.5 lg:flex xl:-right-10">
-              {['Apprendre', 'Comprendre', 'Progresser', 'Réussir'].map((w, i) => (
-                <span key={w} className="rounded-sm px-3 py-2 text-[11px] font-semibold uppercase" style={{ background: ['#2A1C14', '#1B2431', '#2E1719', '#20222B'][i], color: ARENA.goldSoft, fontFamily: DISPLAY, letterSpacing: '0.24em', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.08)' }}>{w}</span>
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </Container>
-    </Stadium>
+            <ul className="ev-corrections-tags" aria-label="Apprendre, comprendre, progresser, réussir">
+              {TAGS.map((t) => <li key={t.label}>{t.icon}{t.label}</li>)}
+            </ul>
+          </div>
+          <div className="ev-quote">
+            <span className="ev-quote-mark" aria-hidden>“</span>
+            <p>Une erreur aujourd’hui,<br />une compétence demain.</p>
+            <span className="ev-quote-sign">EVC Arena<br />By Major ECN</span>
+          </div>
+        </Reveal>
+      </div>
+    </section>
   );
 }

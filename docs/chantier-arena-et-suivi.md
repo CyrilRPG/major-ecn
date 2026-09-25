@@ -175,6 +175,34 @@ protocole de test : `docs/bilan-cahiers-des-charges-2026-09-16.md`. Tests : `tes
   (journal `arena_emails`, `suivi_history`) : c'est attendu.
 - La génération du PDF de corrections (Chromium) n'a pas été testée en local (binaire Linux) : à vérifier sur Vercel.
 
+## Session = une personne, pas un tournoi (25/09/2026)
+
+Bug « Interniste » : le cookie `arena_session` porte `participantId.tournamentId` et
+`currentParticipant(t)` exigeait `session.tournamentId === t`. Connecté par le tournoi A,
+on était traité en inconnu sur B (« Je participe » → formulaire complet, pages de manche →
+`/arena/connexion` nu), alors que « Connexion » de l'en-tête renvoyait dans l'espace de A.
+
+- `src/lib/arena/identity.ts` (pur, `tests/arena-identity.test.ts`) : la personne de la
+  session est reconnue dans tout tournoi où la même adresse a une inscription CONFIRMÉE ;
+  `joinDecision`, `pickLoginParticipant` (un seul lien magique par demande),
+  `safeArenaNext` (retour après connexion), `accessRedirect`.
+- `db.ts` : `currentPerson()` + `currentParticipant(t)` résolu par l'adresse.
+- `page-context.ts` : `ctx.person`, `nav.account` (en-tête : pseudonyme + « M'inscrire à ce
+  tournoi »), `redirectToAccess(ctx, suite)` : inscription en un clic si connecté, sinon
+  `/arena/connexion?tournoi=<slug>&suite=<page>` — jamais `/arena/connexion` nu.
+- `joinTournament` (actions du tournoi) + `components/arena/join-form.tsx` : identité reprise,
+  pseudonyme modifiable, consentement tournoi explicite, prospection jamais pré-cochée,
+  inscription en attente de la même adresse complétée, cookie basculé sur la nouvelle ligne.
+- « Supprimer mon compte » efface toutes les inscriptions de l'adresse.
+
+## Recette à grande échelle (25/09/2026)
+
+`node tmp/_arena-sim/run.mjs` (≈ 45 min, 150 participants, rapport `tmp/_arena-sim/rapport.md`)
+et `node tmp/_arena-sim/smoke.mjs` (1 min). Tournois `qa-sim-*` stockés en BROUILLON : le cron
+et les pages de production les ignorent ; hors production, `lib/arena/qa-sandbox.ts` les ouvre,
+journalise leurs emails à blanc (copie dans `tmp/_arena-sim/mails`) et `?only=<slug>` limite le
+cron local. Nettoyage garanti (try/finally) et vérifié par comptage.
+
 ## Points ouverts à confirmer avec le client
 
 1. Arena §12.1 : PDF fourni ou généré → les deux sont possibles (choix par manche).

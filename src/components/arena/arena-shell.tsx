@@ -1,11 +1,9 @@
-import { ArenaBars as ChartNoAxesColumnIncreasing, ArenaTarget as Target } from './experience-icons';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { Trophy } from 'lucide-react';
+import { ArenaValuesFooter } from './arena-footers';
 import { ExperienceNavigation } from './experience-navigation';
 import { ArenaWordmark } from './arena-logo';
 import type { ArenaNavigation } from '@/lib/arena/navigation';
-import { Container } from './arena-ui';
 import { ARENA, BODY } from './tokens';
 import { WARNING_NATURE } from '@/lib/arena/texts';
 
@@ -38,50 +36,46 @@ export function ArenaTopBar({ nav }: { nav: ShellNav }) {
   return <ExperienceNavigation nav={nav} />;
 }
 
+/** Pied de page complet (maquette 15_18_15) : logo, liens légaux, réseaux, devise, avertissement §9. */
 export function ArenaFooter({ slug }: { slug: string }) {
-  const social = 'flex h-9 w-9 items-center justify-center rounded-md transition-colors hover:bg-white/[0.08]';
   return (
-    <footer style={{ borderTop: `1px solid ${ARENA.line}`, background: '#05080D' }}>
-      <Container className="flex flex-col gap-8 py-10">
-        <div className="grid items-center gap-8 lg:grid-cols-[auto_1fr_auto_auto]">
-          <ArenaWordmark />
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] lg:justify-center" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-            <Link href="/mentions-legales" className="hover:text-white">Mentions légales</Link>
-            <span aria-hidden style={{ color: ARENA.textMuted }}>|</span>
-            <Link href="/cgu" className="hover:text-white">CGU</Link>
-            <span aria-hidden style={{ color: ARENA.textMuted }}>|</span>
-            <Link href="/confidentialite" className="hover:text-white">Confidentialité</Link>
-            <span aria-hidden style={{ color: ARENA.textMuted }}>|</span>
-            <Link href="/contact" className="hover:text-white">Contact</Link>
-            {slug && (<><span aria-hidden style={{ color: ARENA.textMuted }}>|</span><Link href={`/arena/${slug}/regles`} className="hover:text-white">Règles</Link></>)}
-          </div>
-          <div className="flex items-center gap-2" style={{ color: ARENA.text }}>
-            <a href="https://www.linkedin.com/company/major-ecn" target="_blank" rel="noreferrer" aria-label="LinkedIn" className={social} style={{ boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}` }}><Linkedin className="h-4 w-4" /></a>
-            <a href="https://www.youtube.com/@majorecn" target="_blank" rel="noreferrer" aria-label="YouTube" className={social} style={{ boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}` }}><Youtube className="h-4 w-4" /></a>
-            <a href="https://www.instagram.com/majorecn" target="_blank" rel="noreferrer" aria-label="Instagram" className={social} style={{ boxShadow: `inset 0 0 0 1px ${ARENA.lineStrong}` }}><Instagram className="h-4 w-4" /></a>
-          </div>
-          <p className="text-left text-[10.5px] font-bold uppercase leading-relaxed lg:text-right" style={{ letterSpacing: '0.2em', color: ARENA.goldSoft, fontFamily: BODY }}>Des médecins<br />pour les médecins</p>
+    <footer className="ev-full-footer">
+      <div className="ev-full-footer-row">
+        <Link href={slug ? `/arena/${slug}` : '/arena'} aria-label="EVC Arena — accueil"><ArenaWordmark /></Link>
+        <nav aria-label="Informations légales" className="ev-full-footer-links">
+          <Link href="/mentions-legales">Mentions légales</Link>
+          <Link href="/cgu">CGU</Link>
+          <Link href="/confidentialite">Confidentialité</Link>
+          <Link href="/contact">Contact</Link>
+          {slug && <Link href={`/arena/${slug}/regles`}>Règles</Link>}
+        </nav>
+        <div className="ev-full-footer-social">
+          <a href="https://www.linkedin.com/company/major-ecn" target="_blank" rel="noreferrer" aria-label="LinkedIn (nouvel onglet)"><Linkedin /></a>
+          <a href="https://www.youtube.com/@majorecn" target="_blank" rel="noreferrer" aria-label="YouTube (nouvel onglet)"><Youtube /></a>
+          <a href="https://www.instagram.com/majorecn" target="_blank" rel="noreferrer" aria-label="Instagram (nouvel onglet)"><Instagram /></a>
         </div>
-        <p className="max-w-3xl text-[12.5px] leading-relaxed" style={{ color: ARENA.textMuted, fontFamily: BODY }}>
-          {WARNING_NATURE} EVC Arena est un dispositif Major ECN — préparation aux EVC depuis 2011. <Link href="/" className="underline-offset-4 hover:underline">major-ecn.fr</Link>
-        </p>
-      </Container>
+        <p className="ev-full-footer-motto">Des médecins<br />pour les médecins</p>
+      </div>
+      <p className="ev-full-footer-legal">
+        {WARNING_NATURE} EVC Arena est un dispositif Major ECN — préparation aux EVC depuis 2011. <Link href="/">major-ecn.fr</Link>
+      </p>
     </footer>
   );
 }
 
-export function ArenaPage({ nav, children, bare = false, immersive = false }: { nav: ShellNav; children: ReactNode; bare?: boolean; immersive?: boolean }) {
+/**
+ * `footer` (pages immersives, maquettes du 24/09/2026) : `values` = signature ·
+ * Apprendre / S'évaluer / Progresser · devise (14_50_00) ; `details` = mêmes
+ * valeurs avec leurs sous-titres (15_10_06) ; `full` = pied de page complet
+ * (liens, réseaux, « Des médecins pour les médecins », 15_18_15).
+ */
+export function ArenaPage({ nav, children, bare = false, immersive = false, footer = 'values' }: { nav: ShellNav; children: ReactNode; bare?: boolean; immersive?: boolean; footer?: 'values' | 'details' | 'full' }) {
   if (immersive) return <div className="arena-experience">
     <ExperienceNavigation nav={nav} />
     <main className="arena-experience-main">
       {children}
     </main>
-    <footer className="arena-experience-footer">
-      <Link href={`/arena/${nav.slug}`} className="arena-footer-signature">EVC ARENA<br />BY MAJOR ECN</Link>
-      <div className="arena-values"><span><Trophy aria-hidden />Apprendre</span><span><ChartNoAxesColumnIncreasing aria-hidden />S’évaluer</span><span><Target aria-hidden />Progresser</span></div>
-      <p className="arena-footer-motto">LA RIGUEUR<br />AU SERVICE<br />DE VOTRE RÉUSSITE</p>
-    </footer>
-    {!bare && <div className="arena-experience-legal"><p>{WARNING_NATURE}</p><nav aria-label="Informations légales"><Link href="/mentions-legales">Mentions légales</Link><Link href="/confidentialite">Confidentialité</Link><Link href="/contact">Contact</Link></nav></div>}
+    {footer === 'full' ? <ArenaFooter slug={nav.slug} /> : <ArenaValuesFooter slug={nav.slug} details={footer === 'details'} legal={!bare} />}
   </div>;
 
   return (

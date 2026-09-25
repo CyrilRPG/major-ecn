@@ -1,11 +1,6 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
-import { ArenaPage, Notice, Panel } from '@/components/arena/arena-shell';
-import { BigScore, Container } from '@/components/arena/arena-ui';
-import { formatNote, noteMax, noteSur10 } from '@/lib/arena/note';
-import { buttonClass, buttonStyle } from '@/components/arena/tokens';
-import { Countdown, LocalTime } from '@/components/arena/countdown';
+import { ArenaPage, Notice } from '@/components/arena/arena-shell';
 import { InviteBox } from '@/components/arena/invite-box';
 import { SpaceSettings } from '@/components/arena/space-settings';
 import { ProfileDetails } from '@/components/arena/profile-details';
@@ -16,20 +11,20 @@ import { AvatarRankHistory } from '@/components/arena/avatar-rank-history';
 import { participantRankHistory } from '@/lib/arena/rank-history-db';
 import { qrpNs } from '@/lib/arena/types';
 import { StartRoundButton } from '@/components/arena/start-round-button';
-import { ARENA, BODY, CAPS, HEADLINE, TABULAR } from '@/components/arena/tokens';
 import { arenaDb, computeTournamentStandings, effectiveBareme, listAnswers, listAttemptsForRounds, roundDuration, roundMaxScore } from '@/lib/arena/db';
 import { questionMaxUnit } from '@/lib/arena/scoring';
 import { performanceAnalysis } from '@/lib/arena/result-summary';
-import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
+import { arenaMetadata, loadArenaPage, redirectToAccess } from '@/lib/arena/page-context';
 import { correctionsAccess } from '@/lib/arena/corrections-access';
-import { UNDER_THRESHOLD_MESSAGE, buttonTruncated, warningTruncated } from '@/lib/arena/texts';
-import { clockLabel, minutesLabel, roundState } from '@/lib/arena/time';
+import { buttonTruncated, warningTruncated } from '@/lib/arena/texts';
+import { minutesLabel, roundState } from '@/lib/arena/time';
 import { siteUrl } from '@/lib/email/send';
-import { DISTINCTION_LABEL, isPodiumRank, roundOutcome } from '@/lib/arena/performance';
+import { roundOutcome } from '@/lib/arena/performance';
 import { passerelleContent, passerelleUrl, studentTrainingUrl } from '@/lib/arena/passerelle';
 import { participantAudience } from '@/lib/arena/major-ecn';
 import { collegeIdForSpecialty } from '@/lib/data/enrollable-colleges';
 import { PasserelleBlock } from '@/components/arena/passerelle-block';
+import { SpaceProgress } from '@/components/arena/space-progress';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,14 +36,12 @@ export async function generateMetadata({ params }: Params) {
   return arenaMetadata(ctx.snap, { title: 'Mon espace', noindex: true });
 }
 
-const STATE_LABEL = { open: 'Ouverte', upcoming: 'À venir', closed: 'Clôturée', unscheduled: 'À programmer' } as const;
-
 /** Espace participant (maquette 7) : position, manches, scores, rang (si seuil), corrections, invitation, réglages. */
 export default async function SpacePage({ params, searchParams }: Params) {
   const { slug } = await params;
   const { bienvenue } = await searchParams;
   const ctx = await loadArenaPage(slug);
-  if (!ctx.participant) redirect(`/arena/connexion`);
+  if (!ctx.participant) redirectToAccess(ctx, `/arena/${slug}/espace`);
   const p = ctx.participant;
   const t = ctx.snap.tournament;
   const now = new Date();
@@ -67,6 +60,11 @@ export default async function SpacePage({ params, searchParams }: Params) {
         prospectUrl: passerelleUrl(t), studentUrl: studentTrainingUrl(collegeIdForSpecialty(t.specialty)), ctaOverride: t.passerelle_cta,
       })
     : null;
+  // Profil (maquette du 24/09/2026, 14_50_00) : dates des manches et participation réelle.
+  const roundDates = Object.fromEntries(ctx.snap.rounds.map((r) => [r.number, r.opens_at]));
+  // Manches comptées au cumul à chaque publication : l'échelle de la note (10 × n) d'une ligne du palmarès.
+  const countedAt = Object.fromEntries(ctx.snap.rounds.map((r) => [r.number, standings.countedRounds.filter((c) => c.number <= r.number).length]));
+  const playedCount = attempts.filter((a) => a.status !== 'in_progress').length;
   if (standings.isFinal) {
     const playedAttempts = attempts.filter(a => me?.perRound[a.round_id]);
     const answers = (await Promise.all(playedAttempts.map(a => listAnswers(a.id)))).flat();
@@ -85,8 +83,9 @@ export default async function SpacePage({ params, searchParams }: Params) {
     return <ArenaPage nav={ctx.nav} immersive>
       <TournamentFinal summary={summary} base={base} leaderboardEnabled={t.leaderboard_enabled} passerelle={passerelle} />
       <ProfileDetails>
-        <AvatarRankHistory seed={p.avatar_seed} pseudo={p.pseudo} rank={me?.rank ?? null} distinction={me?.distinction ?? null} thresholds={thresholds} entries={rankHistory} final general={summary.general} />
-        <SpaceSettings slug={slug} pseudo={p.pseudo} avatarSeed={p.avatar_seed} rank={me?.rank} distinction={me?.distinction ?? null} marketing={p.consent_marketing && !p.marketing_unsubscribed_at} canChangePseudo={attempts.length === 0} email={p.email} />
+        <AvatarRankHistory seed={p.avatar_seed} pseudo={p.pseudo} rank={me?.rank ?? null} distinction={me?.distinction ?? null} thresholds={thresholds} entries={rankHistory} final general={summary.general} base={base} roundDates={roundDates} countedAt={countedAt} />
+        <SpaceSettings slug={slug} pseudo={p.pseudo} avatarSeed={p.avatar_seed} rank={me?.rank} distinction={me?.distinction ?? null} marketing={p.consent_marketing && !p.marketing_unsubscribed_at} canChangePseudo={attempts.length === 0} email={p.email}
+          specialty={p.specialty || t.specialty} edition={t.edition_label} played={playedCount} roundsTotal={ctx.snap.rounds.length} />
       </ProfileDetails>
     </ArenaPage>;
   }
@@ -98,130 +97,40 @@ export default async function SpacePage({ params, searchParams }: Params) {
   const featuredTruncated = featured && roundState(featured, now) === 'open' && featuredRemaining < roundDuration(t, featured, ctx.snap.questionsByRound.get(featured.id)) * 60;
   const featuredAttempt = featured ? attempts.find((a) => a.round_id === featured.id) : null;
   const featuredQuestions = featured ? (ctx.snap.questionsByRound.get(featured.id) ?? []).filter((q) => !q.neutralized_at) : [];
-  const { count: participantCount } = await arenaDb().from('arena_participants').select('id', { count: 'exact', head: true }).eq('tournament_id', t.id).not('email_confirmed_at', 'is', null).is('blocked_at', null).is('anonymized_at', null);
+  // §7 : aucun effectif affiché, sauf activation explicite par l'administration.
+  const { count: participantCount } = !t.afficher_effectif_general ? { count: null } : await arenaDb().from('arena_participants').select('id', { count: 'exact', head: true }).eq('tournament_id', t.id).not('email_confirmed_at', 'is', null).is('blocked_at', null).is('anonymized_at', null);
   const lastCounted = standings.countedRounds.length ? Math.max(...standings.countedRounds.map((r) => r.number)) : null;
 
   return (
     <ArenaPage nav={ctx.nav} immersive>
       {featured && <RoundLobby slug={slug} round={featured} rounds={ctx.snap.rounds} participant={ctx.nav.participant}
-        questionCount={featuredQuestions.length} duration={roundDuration(t, featured, featuredQuestions)} bareme={effectiveBareme(t, featured)} ns={qrpNs(featuredQuestions)} participantCount={participantCount ?? 0} nowIso={now.toISOString()}
+        questionCount={featuredQuestions.length} duration={roundDuration(t, featured, featuredQuestions)} bareme={effectiveBareme(t, featured)} ns={qrpNs(featuredQuestions)} participantCount={t.afficher_effectif_general ? participantCount ?? 0 : null} nowIso={now.toISOString()}
         notices={<div className="space-y-3">{bienvenue && <Notice tone="ok">Votre adresse est confirmée : vous êtes officiellement dans l’arène sous le pseudonyme « {p.pseudo} ».</Notice>}{featuredTruncated && !featuredAttempt && <Notice tone="amber">{warningTruncated(minutesLabel(featuredRemaining))}</Notice>}</div>}
       >{featuredAttempt ? <Link className="ae-button" href={base + '/manche/' + featured.number}>{featuredAttempt.status === 'in_progress' ? 'Reprendre la manche' : 'Voir mes résultats'}<ArrowRight aria-hidden /></Link> : roundState(featured, now) === 'open' && featuredQuestions.length > 0 ? <StartRoundButton slug={slug} roundNumber={featured.number} preview={false} immersive label={featuredTruncated ? buttonTruncated(Math.max(1, Math.floor(featuredRemaining / 60))) : 'Entrer dans l’arène — manche ' + featured.number} /> : <Link className="ae-button" href={base + '/manche/' + featured.number}>Voir la manche {featured.number}<ArrowRight aria-hidden /></Link>}</RoundLobby>}
 
-      <Container className="py-8 sm:py-12">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
-          <div className="min-w-0 space-y-4">
-            {ctx.snap.rounds.map((r) => {
-              const st = roundState(r, now);
-              const a = attempts.find((x) => x.round_id === r.id);
-              const max = roundMaxScore(ctx.snap.questionsByRound.get(r.id) ?? [], effectiveBareme(t, r));
-              const played = a && a.status !== 'in_progress';
-              const open = st === 'open' && !played;
-              return (
-                <Panel key={r.id} accent={open}>
-                  <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <p className="flex flex-wrap items-center gap-2">
-                        <span className="text-[11px]" style={{ ...CAPS, color: ARENA.redSoft, letterSpacing: '0.24em' }}>Manche {r.number}</span>
-                        <span className="rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em]" style={{ background: open ? ARENA.red : ARENA.raised2, color: open ? '#fff' : ARENA.textSoft, fontFamily: BODY }}>{played ? 'Jouée' : STATE_LABEL[st]}</span>
-                      </p>
-                      <p className="mt-1.5 text-[1.3rem] leading-tight" style={{ ...CAPS, color: ARENA.text }}>{r.theme || `Manche ${r.number}`}</p>
-                      <p className="mt-1 text-[13px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-                        {r.opens_at ? <LocalTime iso={r.opens_at} withYear /> : 'Date annoncée prochainement'}
-                      </p>
-                    </div>
-                    <span className="text-[3rem] leading-none" style={{ fontFamily: HEADLINE, letterSpacing: '0.04em', color: open ? ARENA.redSoft : ARENA.textMuted }}>M{r.number}</span>
-                  </div>
-
-                  <div className="mt-5 flex flex-wrap items-center gap-4">
-                    {played ? (
-                      <>
-                        <BigScore value={formatNote(noteSur10(Number(a.score ?? 0), max))} max={formatNote(noteMax())} color={ARENA.text} size="md" />
-                        <span className="text-[13px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>temps {clockLabel(a.duration_seconds ?? 0)}{a.truncated ? ' (fenêtre réduite)' : ''}</span>
-                        <Link href={`${base}/manche/${r.number}`} className="text-[13px] font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Résultats</Link>
-                        {correctionsAccess({ round: r, tournamentId: t.id, participant: p, now }).allowed ? (
-                          <Link href={`${base}/manche/${r.number}/corrections`} className="text-[13px] font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft, fontFamily: BODY }}>Voir ma correction détaillée</Link>
-                        ) : (
-                          <span className="text-[12px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Correction détaillée après la clôture</span>
-                        )}
-                      </>
-                    ) : a ? (
-                      <Link href={`${base}/manche/${r.number}`} className={buttonClass('primary')} style={buttonStyle('primary')}>Reprendre la manche <ArrowRight className="h-4 w-4" /></Link>
-                    ) : st === 'open' ? (
-                      <>
-                        <Link href={`${base}/manche/${r.number}`} className={buttonClass('primary')} style={buttonStyle('primary')}>Jouer la manche {r.number} <ArrowRight className="h-4 w-4" /></Link>
-                        {r.closes_at && <p className="text-[13px]" style={{ fontFamily: BODY }}><Countdown target={r.closes_at} label="Se termine dans" /></p>}
-                      </>
-                    ) : st === 'upcoming' && r.opens_at ? (
-                      <p className="text-[13px]" style={{ fontFamily: BODY }}><Countdown target={r.opens_at} label="Ouvre dans" /></p>
-                    ) : st === 'closed' ? (
-                      <p className="text-[13px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-                        Manche non jouée (compte pour zéro).{' '}
-                        {correctionsAccess({ round: r, tournamentId: t.id, participant: p, now }).allowed && <Link href={`${base}/manche/${r.number}/corrections`} className="font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft }}>Voir ma correction détaillée</Link>}
-                      </p>
-                    ) : (
-                      <p className="text-[13px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>En attente de programmation.</p>
-                    )}
-                  </div>
-                </Panel>
-              );
-            })}
-          </div>
-
-          <div className="min-w-0 space-y-4">
-            <Panel accent>
-              <p className="text-[11px]" style={{ ...CAPS, color: ARENA.redSoft, letterSpacing: '0.24em' }}>Ma position</p>
-              {standings.countedRounds.length === 0 ? (
-                <p className="mt-3 text-[13.5px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Le classement apparaît après la publication des résultats de la première manche.</p>
-              ) : (
-                <>
-                  <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Score cumulé{lastCounted ? ` · après M${lastCounted}` : ''}</p>
-                  <div className="mt-1"><BigScore value={formatNote(noteSur10(me?.totalScore ?? 0, cumulMax, standings.countedRounds.length))} max={formatNote(noteMax(standings.countedRounds.length))} color={ARENA.text} size="md" /></div>
-                  {me?.rank ? (
-                    <>
-                      <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Classement {standings.isFinal ? 'final' : 'provisoire'}</p>
-                      <p className="mt-1 text-[3.6rem] leading-none" style={{ fontFamily: HEADLINE, color: ARENA.ok, letterSpacing: '0.04em' }}>{me.rank}<span className="text-[0.5em]">{me.rank === 1 ? 'er' : 'e'}</span></p>
-                      <p className="mt-2 text-[13px] leading-relaxed" style={{ color: me.distinction ? ARENA.gold : ARENA.textSoft, fontFamily: BODY }}>
-                        {me.distinction
-                          ? `Distinction ${DISTINCTION_LABEL[me.distinction]} EVC Arena : podium et score cumulé au niveau de distinction.`
-                          : isPodiumRank(me.rank)
-                            ? `Podium sans trophée : le trophée EVC Arena exige un score cumulé d’au moins ${t.distinction_pct} %.`
-                            : `Prochain objectif : gagner des places, viser le podium et décrocher un trophée (dès ${t.distinction_pct} %).`}
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="mt-3 text-[13.5px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>{UNDER_THRESHOLD_MESSAGE}</p>
-                      <p className="mt-2 text-[12.5px] leading-relaxed" style={{ color: ARENA.gold, fontFamily: BODY }}>Prochain objectif : intégrer le classement EVC Arena (dès {t.threshold_pct} %) et partir à la conquête des trophées de la saison.</p>
-                    </>
-                  )}
-                </>
-              )}
-              <Link href={`${base}/regles#classement`} className="mt-4 inline-block text-[12px] font-semibold underline-offset-4 hover:underline" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Comment est calculé le classement ?</Link>
-            </Panel>
-
-            {passerelle && <PasserelleBlock content={passerelle} compact />}
-
-            <Panel>
-              <h2 id="inviter" className="text-[1.4rem] leading-none" style={{ ...CAPS, color: ARENA.text }}>Invitez un collègue à rejoindre l’Arena</h2>
-              <p className="mt-2 mb-5 text-[13px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Plus on est de médecins, plus le défi est stimulant. Votre lien d’invitation personnalisé :</p>
-              <InviteBox slug={slug} inviteUrl={inviteUrl} specialty={t.specialty} questions={t.questions_per_round} secondsPerQuestion={t.seconds_per_question ?? 60} />
-            </Panel>
-
-            <Panel>
-              <AvatarRankHistory seed={p.avatar_seed} pseudo={p.pseudo} rank={me?.rank ?? null} distinction={me?.distinction ?? null} thresholds={thresholds} entries={rankHistory} />
-            </Panel>
-
-            <Panel>
-              <h2 id="compte" className="text-[1.4rem] leading-none" style={{ ...CAPS, color: ARENA.text }}>Mon compte</h2>
-              <div className="mt-5">
-                <SpaceSettings slug={slug} pseudo={p.pseudo} avatarSeed={p.avatar_seed} rank={me?.rank} distinction={me?.distinction ?? null} marketing={p.consent_marketing && !p.marketing_unsubscribed_at} canChangePseudo={attempts.length === 0} email={p.email} />
-              </div>
-            </Panel>
-          </div>
-        </div>
-        <p className="mt-8 text-[12px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}><span style={{ ...TABULAR }}>{attempts.filter((a) => a.status !== 'in_progress').length}</span> manche(s) jouée(s) sur {ctx.snap.rounds.length}.</p>
-      </Container>
+      <SpaceProgress
+        base={base}
+        rounds={ctx.snap.rounds.map((r) => {
+          const a = attempts.find((x) => x.round_id === r.id);
+          const questions = (ctx.snap.questionsByRound.get(r.id) ?? []).filter((q) => !q.neutralized_at);
+          const done = a && a.status !== 'in_progress';
+          return {
+            number: r.number, theme: r.theme, opensAt: r.opens_at, closesAt: r.closes_at, state: roundState(r, now), questionCount: questions.length,
+            played: done ? { score: Number(a.score ?? 0), max: roundMaxScore(ctx.snap.questionsByRound.get(r.id) ?? [], effectiveBareme(t, r)), seconds: a.duration_seconds ?? 0, truncated: Boolean(a.truncated) } : null,
+            inProgress: Boolean(a && a.status === 'in_progress'),
+            correctionsAllowed: correctionsAccess({ round: r, tournamentId: t.id, participant: p, now }).allowed,
+          };
+        })}
+        cumul={{ score: me?.totalScore ?? 0, max: cumulMax, counted: standings.countedRounds.length, lastCounted, rank: me?.rank ?? null, distinction: me?.distinction ?? null, final: standings.isFinal, thresholdPct: t.threshold_pct, distinctionPct: t.distinction_pct }}
+        invite={<InviteBox slug={slug} inviteUrl={inviteUrl} specialty={t.specialty} questions={t.questions_per_round} secondsPerQuestion={t.seconds_per_question ?? 60} />}
+      >
+        {passerelle && <PasserelleBlock content={passerelle} variant="cream" />}
+      </SpaceProgress>
+      <ProfileDetails>
+        <AvatarRankHistory seed={p.avatar_seed} pseudo={p.pseudo} rank={me?.rank ?? null} distinction={me?.distinction ?? null} thresholds={thresholds} entries={rankHistory} base={base} roundDates={roundDates} countedAt={countedAt} />
+        <SpaceSettings slug={slug} pseudo={p.pseudo} avatarSeed={p.avatar_seed} rank={me?.rank} distinction={me?.distinction ?? null} marketing={p.consent_marketing && !p.marketing_unsubscribed_at} canChangePseudo={attempts.length === 0} email={p.email}
+          specialty={p.specialty || t.specialty} edition={t.edition_label} played={playedCount} roundsTotal={ctx.snap.rounds.length} />
+      </ProfileDetails>
     </ArenaPage>
   );
 }

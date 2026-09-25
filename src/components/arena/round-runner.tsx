@@ -24,7 +24,7 @@ import { Ring } from './ring';
  */
 
 export function RoundRunner({
-  attemptId, deadlineIso, startedIso, lastValidatedIso, questions, answeredIds, markedIds, baremeLabel, roundNumber, roundTotal, roundTheme, preview,
+  attemptId, deadlineIso, startedIso, lastValidatedIso, questions: initialQuestions, questionTotal, answeredIds, markedIds, baremeLabel, roundNumber, roundTotal, roundTheme, preview,
 }: {
   attemptId: string;
   /** Échéance de la tentative entière : clôture de manche, filet de sécurité. */
@@ -34,7 +34,11 @@ export function RoundRunner({
   /** Dernière validation connue du serveur : point de départ de la question en
    *  cours après une reprise. `null` si aucune question n'a encore été validée. */
   lastValidatedIso: string | null;
+  /** Questions déjà validées + la question en cours : les suivantes ne sont
+   *  envoyées qu'une fois la précédente validée (réponse du serveur). */
   questions: PublicQuestion[];
+  /** Nombre total de questions de la manche (les suivantes ne sont pas encore connues du navigateur). */
+  questionTotal?: number;
   answeredIds: string[];
   markedIds: string[];
   baremeLabel: Record<'QRM' | 'QRU' | 'QRP', string>;
@@ -44,6 +48,11 @@ export function RoundRunner({
   preview: boolean;
 }) {
   const router = useRouter();
+  const [questions, setQuestions] = useState<PublicQuestion[]>(initialQuestions);
+  const total = questionTotal ?? questions.length;
+  const appendNext = useCallback((next: PublicQuestion | null | undefined) => {
+    if (next) setQuestions((prev) => (prev.some((q) => q.id === next.id) ? prev : [...prev, next]));
+  }, []);
   const [answered, setAnswered] = useState<Set<string>>(() => new Set(answeredIds));
   const [selected, setSelected] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -116,6 +125,7 @@ export function RoundRunner({
             if (!r.ok || !r.expired) { expiringQuestion.current = null; return; }
             setSelected([]);
             setError(null);
+            appendNext(r.next);
             setAnswered((prev) => new Set([...prev, id]));
             setQuestionStart(r.lastValidatedAt ? new Date(r.lastValidatedAt).getTime() : Date.now());
             if (r.finished) finish();
@@ -126,7 +136,7 @@ export function RoundRunner({
     const t0 = window.setTimeout(tick, 0);
     const idt = window.setInterval(tick, 500);
     return () => { window.clearTimeout(t0); window.clearInterval(idt); };
-  }, [attemptId, deadline, questionEnd, current, finish]);
+  }, [attemptId, deadline, questionEnd, current, finish, appendNext]);
 
   // Connexion perdue (maquette 13) : le timer continue, les réponses validées sont sauvegardées.
   useEffect(() => {
@@ -168,7 +178,7 @@ export function RoundRunner({
         <Ring progress={progress} size={150} stroke={8} urgent={urgent} className="mt-4">
           <span className="text-[2.4rem] leading-none" style={{ fontFamily: HEADLINE, letterSpacing: '0.04em', color: urgent ? ARENA.redSoft : ARENA.text }}>{clock}</span>
         </Ring>
-        <p className="mt-4 text-[15px] font-semibold" style={{ fontFamily: BODY }}>Question {index + 1} / {questions.length}</p>
+        <p className="mt-4 text-[15px] font-semibold" style={{ fontFamily: BODY }}>Question {index + 1} / {total}</p>
         <p className="mt-2 text-[13.5px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Vos réponses sont sauvegardées. Le chronomètre a continué de tourner.</p>
         <ArenaButton className="mt-7 w-full sm:w-auto" onClick={() => setResumed(true)}>Reprendre la partie</ArenaButton>
       </Screen>
@@ -206,6 +216,7 @@ export function RoundRunner({
       setConfirmedOnce(true);
       try { sessionStorage.setItem('arena-confirmed-' + attemptId, '1'); } catch { /* optional persistence */ }
       setSelected([]);
+      appendNext(r.next);
       setAnswered((prev) => new Set([...prev, current.id]));
       setQuestionStart(r.lastValidatedAt ? new Date(r.lastValidatedAt).getTime() : Date.now());
       expiringQuestion.current = null;
@@ -217,7 +228,7 @@ export function RoundRunner({
     <div className="relative">
       <QuestionView key={current.id}
         question={current} roundNumber={roundNumber} roundTotal={roundTotal} roundTheme={roundTheme}
-        questionIndex={index} questionTotal={questions.length} clock={clock} progress={progress} urgent={urgent}
+        questionIndex={index} questionTotal={total} clock={clock} progress={progress} urgent={urgent}
         selected={selected} pending={pending} canValidate={canValidate} confirmationRequired={!confirmedOnce}
         baremeLabel={baremeLabel[current.type]} error={error} onToggle={toggle} onValidate={validate}
         marked={marked.has(current.id)} markPending={markPending} onMark={async () => {

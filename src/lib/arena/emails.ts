@@ -108,9 +108,45 @@ export function loginEmail(t: TournamentRow, p: ParticipantRow, loginUrl: string
   return { subject, html, text: textWithFooter(t, p, `Bonjour ${p.first_name},\n\nVotre lien de connexion (valable deux heures) :\n${loginUrl}`, { space: loginUrl }) };
 }
 
-export function validatedEmail(t: TournamentRow, p: ParticipantRow, opts: { m1Open: Date | null; m1Theme: string; bareme: Bareme; qrpNs: number[] }): Mail {
+/** Manche à annoncer à un nouvel inscrit : `open` = jouable maintenant. */
+export type WelcomeRound = { number: number; open: boolean; opens_at: Date | null; closes_at: Date | null; theme: string };
+
+/**
+ * Prochaine manche réellement jouable pour une inscription faite maintenant :
+ * la manche ouverte s'il y en a une, sinon la prochaine à venir (puis une
+ * manche pas encore programmée). `null` quand toutes les manches sont closes.
+ * On n'annonce jamais une manche passée (inscription pendant M2/M3, §2.4).
+ */
+export function nextPlayableRound<R extends { number: number; opens_at: string | Date | null; closes_at: string | Date | null; theme?: string | null }>(
+  rounds: readonly R[],
+  now: Date = new Date(),
+): { round: R; info: WelcomeRound } | null {
+  const date = (v: string | Date | null) => (v ? new Date(v) : null);
+  const valid = (d: Date | null) => (d && Number.isFinite(d.getTime()) ? d : null);
+  const sorted = [...rounds].sort((x, y) => x.number - y.number);
+  const withDates = sorted.map((r) => ({ r, o: valid(date(r.opens_at)), c: valid(date(r.closes_at)) }));
+  const pick = (x: (typeof withDates)[number] | undefined, open: boolean) =>
+    x ? { round: x.r, info: { number: x.r.number, open, opens_at: x.o, closes_at: x.c, theme: x.r.theme ?? '' } } : null;
+  const open = withDates.find((x) => x.o && x.c && x.o <= now && now < x.c);
+  if (open) return pick(open, true);
+  const upcoming = withDates.filter((x) => x.o && x.o > now).sort((x, y) => x.o!.getTime() - y.o!.getTime())[0];
+  if (upcoming) return pick(upcoming, false);
+  return pick(withDates.find((x) => !x.o || !x.c), false);
+}
+
+/**
+ * Email « inscription validée ». `round` désigne la manche à annoncer (cf.
+ * `nextPlayableRound`) ; `null` = plus aucune manche à jouer. Sans `round`
+ * (appel historique), `m1Open`/`m1Theme` décrivent la manche 1.
+ */
+export function validatedEmail(t: TournamentRow, p: ParticipantRow, opts: { m1Open: Date | null; m1Theme: string; bareme: Bareme; qrpNs: number[]; round?: WelcomeRound | null }): Mail {
   const urls = arenaUrls(t);
-  const when = opts.m1Open ? parisAndLocalLabel(opts.m1Open, p.timezone, true) : 'date annoncée prochainement';
+  const round: WelcomeRound | null = opts.round === undefined
+    ? { number: 1, open: false, opens_at: opts.m1Open, closes_at: null, theme: opts.m1Theme }
+    : opts.round;
+  const theme = round ? (round.theme || '') : '';
+  const when = round?.opens_at ? parisAndLocalLabel(round.opens_at, p.timezone, true) : 'date annoncée prochainement';
+  const closeLabel = round?.closes_at ? parisAndLocalLabel(round.closes_at, p.timezone, true) : null;
   const baremeHtml = (['QRM', 'QRU', 'QRP'] as const)
     .map((k) => {
       const d = describeBareme(k, opts.bareme, opts.qrpNs);
@@ -121,23 +157,44 @@ export function validatedEmail(t: TournamentRow, p: ParticipantRow, opts: { m1Op
       );
     })
     .join('');
-  const subject = `Inscription confirmée — manche 1 le ${opts.m1Open ? parisAndLocalLabel(opts.m1Open, null).split(' à ')[0] : 'bientôt'}`;
+  const subject = !round
+    ? `Inscription confirmée — EVC Arena ${t.specialty}`
+    : round.open
+      ? `Inscription confirmée — la manche ${round.number} est ouverte`
+      : `Inscription confirmée — manche ${round.number} le ${round.opens_at ? parisAndLocalLabel(round.opens_at, null).split(' à ')[0] : 'bientôt'}`;
+  const annonce = !round
+    ? 'Toutes les manches du tournoi sont closes : vos résultats et le classement restent consultables depuis votre espace.'
+    : round.open
+      ? `La manche ${round.number} est ouverte${closeLabel ? `, fermeture le ${closeLabel}` : ''}.`
+      : `Manche ${round.number} : ${when}.`;
+  const facts = !round
+    ? ''
+    : aFacts(round.open
+      ? [
+          [`Manche ${round.number}`, strong('Ouverte maintenant')],
+          closeLabel ? ['Fermeture', strong(closeLabel)] : null,
+          theme ? ['Thème', escAttr(theme)] : null,
+        ]
+      : [
+          [`Manche ${round.number}`, strong(when)],
+          theme ? ['Thème', escAttr(theme)] : null,
+        ]);
+  const cta = round?.open ? aButton(`Jouer la manche ${round.number}`, urls.round(round.number)) : aButton('Ouvrir mon espace', urls.space);
   const html = shell(t, p, subject, 'Votre inscription est confirmée', [
     aHello(p.first_name),
     aPHtml(`Vous participez au tournoi EVC Arena ${escAttr(t.specialty)} sous le pseudonyme « ${gold(p.pseudo)} ».`),
-    aFacts([
-      ['Manche 1', strong(when)],
-      opts.m1Theme ? ['Thème', escAttr(opts.m1Theme)] : null,
-    ]),
+    round ? facts : aPanel(aLine(escAttr(annonce)), { accent: 'none' }),
+    round?.open ? aPanel(aLine(escAttr(WARNING_CONNECTION)), { accent: 'red', title: 'Avant de commencer' }) : '',
     aLabel('Les règles'),
     aList(publicRules(t), { numbered: true }),
-    aLabel('Le barème de la manche 1'),
+    aLabel(round ? `Le barème de la manche ${round.number}` : 'Le barème'),
     baremeHtml,
     aPanel(aLine(escAttr(WARNING_NATURE)), { accent: 'red', title: 'Nature du dispositif' }),
-    aButton('Ouvrir mon espace', urls.space),
+    cta,
     aP('Invitez un collègue : partagez votre lien personnel depuis votre espace.', { size: 14, color: ARENA_MAIL.muted }),
-  ].join(''), { eyebrow: 'Bienvenue dans l’arène', preheader: `Manche 1 : ${when}. Règles et barème de la manche à l’intérieur.`, noLegal: true });
-  const text = textWithFooter(t, p, `Bonjour ${p.first_name},\n\nVotre inscription au tournoi EVC Arena ${t.specialty} est confirmée (pseudonyme : ${p.pseudo}).\nManche 1 : ${when}${opts.m1Theme ? ` — thème : ${opts.m1Theme}` : ''}.\n\nRègles :\n${publicRules(t).map((r: string) => `- ${r}`).join('\n')}\n\n${WARNING_NATURE}\n\nMon espace : ${urls.space}`, { noLegal: true });
+  ].join(''), { eyebrow: 'Bienvenue dans l’arène', preheader: `${annonce} Règles et barème à l’intérieur.`, noLegal: true });
+  const annonceText = round && !round.open ? `Manche ${round.number} : ${when}${theme ? ` — thème : ${theme}` : ''}.` : `${annonce}${round && theme ? ` Thème : ${theme}.` : ''}`;
+  const text = textWithFooter(t, p, `Bonjour ${p.first_name},\n\nVotre inscription au tournoi EVC Arena ${t.specialty} est confirmée (pseudonyme : ${p.pseudo}).\n${annonceText}${round?.open ? `\nJouer : ${urls.round(round.number)}\n${WARNING_CONNECTION}` : ''}\n\nRègles :\n${publicRules(t).map((r: string) => `- ${r}`).join('\n')}\n\n${WARNING_NATURE}\n\nMon espace : ${urls.space}`, { noLegal: true });
   return { subject, html, text };
 }
 

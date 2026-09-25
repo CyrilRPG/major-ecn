@@ -15,12 +15,12 @@ export const metadata = { title: 'Confirmation de votre adresse — EVC Arena', 
  * antivirus de messagerie « cliquent » les liens avant l'utilisateur. Un bouton
  * confirme (action serveur), puis ouvre l'espace participant.
  */
-export default async function ConfirmLandingPage({ searchParams }: { searchParams: Promise<{ t?: string }> }) {
-  const { t } = await searchParams;
+export default async function ConfirmLandingPage({ searchParams }: { searchParams: Promise<{ t?: string; suite?: string }> }) {
+  const { t, suite } = await searchParams;
   const found = await lookupConfirmationToken(t ?? '');
 
   if (found.status !== 'blocked') {
-    const space = await activeArenaSpace(found.status === 'ok' ? found.participant.id : undefined);
+    const space = await activeArenaSpace({ participantId: found.status === 'ok' ? found.participant.id : undefined, next: suite });
     if (space) redirect(space);
   }
 
@@ -53,6 +53,7 @@ export default async function ConfirmLandingPage({ searchParams }: { searchParam
     >
       <form action={confirmEmailAction}>
         <input type="hidden" name="t" value={t} />
+        {suite && <input type="hidden" name="suite" value={suite} />}
         <AccessSubmit>{already ? 'Ouvrir mon espace' : 'Confirmer mon adresse'}</AccessSubmit>
       </form>
       <p className="text-center text-[12px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>

@@ -8,6 +8,7 @@ import { logAudit } from "@/lib/audit/log";
 import {
   ensureArenaAdmin,
   integrityCheck,
+  RESERVED_ARENA_SLUGS,
   logAdmin,
   slugify,
 } from "@/lib/arena/admin";
@@ -25,6 +26,7 @@ import {
   roundMaxScore,
 } from "@/lib/arena/db";
 import {
+  nextPlayableRound,
   relanceEmail,
   reportUpdateEmail,
   resultsEmail,
@@ -179,7 +181,8 @@ const SettingsSchema = z.object({
     .regex(
       /^[a-z0-9-]{3,60}$/,
       "Slug : lettres minuscules, chiffres, tirets (3 à 60).",
-    ),
+    )
+    .refine((s) => !RESERVED_ARENA_SLUGS.includes(s), "Cette URL est réservée par une page d’EVC Arena."),
   specialty: z.string().trim().min(2).max(120),
   specialty_id: z.string().trim().max(80).nullable(),
   edition_label: z.string().trim().max(60),
@@ -743,7 +746,7 @@ export async function setParticipantMajorEcnStatus(
     await logAdmin(actor, {
       tournamentId: p.tournament_id,
       kind: "participant_major_ecn_status",
-      details: `${p.pseudo} (${p.email}) : statut Major ECN « ${status} » (avant : « ${p.major_ecn_status} »).`,
+      details: `${p.pseudo} : statut Major ECN « ${status} » (avant : « ${p.major_ecn_status} »).`,
     });
     revalidate(p.tournament_id);
     return { ok: true };
@@ -777,7 +780,7 @@ export async function blockParticipant(
     await logAdmin(actor, {
       tournamentId: p.tournament_id,
       kind: block ? "participant_blocked" : "participant_unblocked",
-      details: `${p.pseudo} (${p.email})${reason ? ` : ${reason}` : ""}`,
+      details: `${p.pseudo}${reason ? ` : ${reason}` : ""}`,
     });
     revalidate(p.tournament_id);
     return { ok: true };
@@ -820,7 +823,7 @@ export async function renameParticipant(
       kind: "participant_renamed",
       oldValue: p.pseudo,
       newValue: pseudo,
-      details: `Pseudonyme modéré : « ${p.pseudo} » → « ${pseudo} » (${p.email}).`,
+      details: `Pseudonyme modéré : « ${p.pseudo} » → « ${pseudo} ».`,
     });
     revalidate(p.tournament_id);
     return { ok: true };
@@ -924,7 +927,8 @@ export async function resendArenaLink(
     await logAdmin(actor, {
       tournamentId: t.id,
       kind: "participant_email_resent",
-      details: `Lien de ${kind === "login" ? "connexion" : "confirmation"} renvoyé à ${p.email}.`,
+      // Jamais l'adresse au journal : elle y survivrait à un effacement (§3.1).
+      details: `Lien de ${kind === "login" ? "connexion" : "confirmation"} renvoyé à ${p.pseudo}.`,
     });
     revalidate(t.id);
     return { ok: true, kind };
@@ -1080,6 +1084,9 @@ export async function sendSequenceEmailNow(
       ? snap.rounds.find((r) => r.number === roundNumber)
       : snap.rounds[0];
     if (!round) return err("Manche introuvable.");
+    // Jamais de score ni de rang avant la publication (§11) : l'envoi manuel suit la même règle que le cron.
+    if (kind === "results" && !round.results_published_at)
+      return err("Les résultats de cette manche ne sont pas encore publiés.");
     const opens = toDate(round.opens_at);
     const closes = toDate(round.closes_at);
     const participants = (await listParticipants(t.id)).filter(
@@ -1094,15 +1101,18 @@ export async function sendSequenceEmailNow(
     for (const p of participants) {
       const played = attempts.some((a) => a.participant_id === p.id);
       let mail;
-      if (kind === "validated")
+      if (kind === "validated") {
+        // Prochaine manche réellement jouable (ouverte, sinon à venir), pas la manche 1 d'office.
+        const next = nextPlayableRound(snap.rounds);
+        const m = next?.round;
         mail = validatedEmail(t, p, {
-          m1Open: toDate(snap.rounds[0]?.opens_at),
-          m1Theme: snap.rounds[0]?.theme ?? "",
-          bareme: t.bareme,
-          qrpNs: qrpNs(
-            snap.questionsByRound.get(snap.rounds[0]?.id ?? "") ?? [],
-          ),
+          m1Open: toDate(m?.opens_at),
+          m1Theme: m?.theme ?? "",
+          bareme: m ? effectiveBareme(t, m) : t.bareme,
+          qrpNs: qrpNs(snap.questionsByRound.get(m?.id ?? "") ?? []),
+          round: next?.info ?? null,
         });
+      }
       else if (kind === "j7" || kind === "j1") {
         if (!opens || !closes) return err("Dates de la manche manquantes.");
         mail = roundReminderEmail(t, p, kind, {

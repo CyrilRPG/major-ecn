@@ -16,6 +16,8 @@ const VISUALS = {
   cerveau: { src: '/arena/specialites/cerveau.png', alt: 'Cerveau' },
   coeur: { src: '/arena/specialites/coeur.png', alt: 'Cœur' },
   intestin: { src: '/arena/specialites/intestin.png', alt: 'Intestin' },
+  /** Cage thoracique (Radiologie), découpée dans la maquette client du 24/09/2026. */
+  thorax: { src: '/arena/specialites/thorax.png', alt: 'Cage thoracique' },
 } as const satisfies Record<string, SpecialtyVisual>;
 
 export type SpecialtyVisualKey = keyof typeof VISUALS;
@@ -24,10 +26,12 @@ const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCa
 
 /** Mots-clés (libellé ou identifiant de collège) → visuel. Premier trouvé gagne. */
 const RULES: [RegExp, SpecialtyVisualKey][] = [
+  [/radio|imagerie/, 'thorax'],
   [/cardio|coeur|cœur/, 'coeur'],
   [/pneumo|poumon|respir/, 'poumons'],
-  [/nephro|rein|urolog/, 'rein'],
+  // « neurologie » contient « urolog » : le cerveau passe avant le rein.
   [/psy|neuro|cerveau/, 'cerveau'],
+  [/nephro|rein|urolog/, 'rein'],
   [/hepato|gastro|digest|intestin/, 'intestin'],
 ];
 

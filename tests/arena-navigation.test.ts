@@ -6,9 +6,10 @@ test('chaque menu conserve le tournoi et mène à une destination réelle', () =
   assert.equal(arenaSectionHref('interne', 'accueil'), '/arena/interne');
   assert.equal(arenaSectionHref('interne', 'accueil', true), '/arena/interne/espace');
   assert.equal(arenaSectionHref('interne', 'regles'), '/arena/interne/regles');
-  assert.equal(arenaSectionHref('interne', 'calendrier'), '/arena/interne#manches');
+  assert.equal(arenaSectionHref('interne', 'calendrier'), '/arena/calendrier?tournoi=interne');
+  assert.equal(arenaSectionHref('', 'calendrier'), '/arena/calendrier');
   assert.equal(arenaSectionHref('interne', 'classement'), '/arena/interne/classement');
-  for (const section of ['regles', 'calendrier', 'classement'] as const) {
+  for (const section of ['regles', 'classement'] as const) {
     assert.equal(arenaSectionHref('', section), `/arena?vue=${section}#tournois`);
     assert.equal(activeArenaSection('/arena', '#tournois', section), section);
   }
@@ -17,6 +18,8 @@ test('chaque menu conserve le tournoi et mène à une destination réelle', () =
 
 test('le calendrier est actif seul et le retour à l’accueil retire son état actif', () => {
   assert.equal(activeArenaSection('/arena/interne', '#manches'), 'calendrier');
+  assert.equal(activeArenaSection('/arena/calendrier', ''), 'calendrier');
+  assert.equal(activeArenaSection('/arena', '', 'calendrier'), 'calendrier');
   assert.equal(activeArenaSection('/arena/interne', ''), 'accueil');
   assert.equal(activeArenaSection('/arena/interne/espace', '#compte'), 'accueil');
   assert.equal(activeArenaSection('/arena/interne/regles', '#classement'), 'regles');

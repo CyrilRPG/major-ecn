@@ -1,9 +1,10 @@
 import 'server-only';
 import { after } from 'next/server';
 import { siteUrl } from '@/lib/email/send';
-import { arenaDb, arenaLog, currentParticipant, getParticipant, getTournament, loadTournamentSnapshot } from './db';
-import { confirmationEmail, loginEmail, sendArenaEmail, validatedEmail } from './emails';
-import { hashToken, newToken, readSession, setSessionCookie } from './session';
+import { arenaDb, arenaLog, currentParticipant, currentPerson, effectiveBareme, getParticipant, getTournament, getTournamentBySlug, loadTournamentSnapshot } from './db';
+import { safeArenaNext, sameEmail } from './identity';
+import { confirmationEmail, loginEmail, nextPlayableRound, sendArenaEmail, validatedEmail } from './emails';
+import { hashToken, newToken, setSessionCookie } from './session';
 import { PUBLIC_STATUSES, toDate } from './time';
 import { qrpNs, type ParticipantRow, type TournamentRow } from './types';
 
@@ -13,18 +14,55 @@ type AccessKind = 'login' | 'confirmation';
 type TokenStatus = 'unknown' | 'expired' | 'blocked';
 export type TokenLookup = { status: 'ok'; participant: ParticipantRow; tournament: TournamentRow } | { status: TokenStatus };
 
-export async function activeArenaSpace(expectedParticipantId?: string): Promise<string | null> {
-  const session = await readSession();
-  if (!session || (expectedParticipantId && session.participantId !== expectedParticipantId)) return null;
-  const participant = await currentParticipant(session.tournamentId);
-  if (!participant) return null;
-  const tournament = await getTournament(session.tournamentId);
-  if (!tournament || !PUBLIC_STATUSES.has(tournament.status)) return null;
-  return '/arena/' + tournament.slug + '/espace';
+/**
+ * Destination d'une personne DÉJÀ connectée qui arrive sur une page d'accès
+ * (connexion, atterrissage d'un lien), ou null pour afficher la page.
+ *
+ *  - `participantId` : lien reçu par email. S'il appartient à la même
+ *    personne (même adresse) et que cette inscription est active, on ouvre son
+ *    espace ; sinon (autre personne, confirmation en attente) le lien suit son
+ *    propre parcours.
+ *  - `slug` : tournoi demandé (« Connexion » de l'en-tête d'un tournoi). Inscrit →
+ *    son espace de CE tournoi ; pas encore inscrit → inscription en un clic.
+ *    Jamais l'espace d'un autre tournoi (bug « Interniste » du 25/09/2026).
+ *  - rien : l'espace du tournoi de la session.
+ */
+export async function activeArenaSpace(opts: { participantId?: string; slug?: string | null; next?: string | null } = {}): Promise<string | null> {
+  const person = await currentPerson();
+  if (!person) return null;
+  const next = safeArenaNext(opts.next);
+  let target: TournamentRow | null = null;
+  if (opts.participantId) {
+    const linked = opts.participantId === person.id ? person : await getParticipant(opts.participantId);
+    if (!linked || !sameEmail(linked.email, person.email)) return null;
+    target = await getTournament(linked.tournament_id);
+  } else if (opts.slug) {
+    target = await getTournamentBySlug(opts.slug);
+  }
+  if (target) {
+    if (!PUBLIC_STATUSES.has(target.status)) return null;
+    if (await currentParticipant(target.id)) return next ?? '/arena/' + target.slug + '/espace';
+    if (opts.participantId) return null;
+    return '/arena/' + target.slug + '/inscription' + (next ? '?suite=' + encodeURIComponent(next) : '');
+  }
+  const own = await getTournament(person.tournament_id);
+  if (!own || !PUBLIC_STATUSES.has(own.status)) return null;
+  return next ?? '/arena/' + own.slug + '/espace';
+}
+
+/** Email de bienvenue (« inscription validée »), dédoublonné : une fois par inscription. */
+export async function sendWelcomeEmail(t: TournamentRow, p: ParticipantRow): Promise<void> {
+  if (!t.email_sequence.validated.enabled) return;
+  const snap = await loadTournamentSnapshot(t);
+  // Prochaine manche réellement jouable : l'ouverte, sinon la prochaine à venir (jamais une manche passée).
+  const next = nextPlayableRound(snap.rounds);
+  const m = next?.round;
+  const mail = validatedEmail(t, p, { m1Open: toDate(m?.opens_at), m1Theme: m?.theme ?? '', bareme: m ? effectiveBareme(t, m) : t.bareme, qrpNs: qrpNs(m ? snap.questionsByRound.get(m.id) ?? [] : []), round: next?.info ?? null });
+  await sendArenaEmail({ tournament: t, participant: p, to: p.email, kind: 'validated', mail, dedupeKey: 'validated:' + t.id + ':' + p.id });
 }
 
 /** Chaque envoi garde son propre jeton ; un renvoi ne révoque aucun lien précédent. */
-async function issueToken(t: TournamentRow, p: ParticipantRow, kind: AccessKind, triggeredBy?: string): Promise<IssueResult> {
+async function issueToken(t: TournamentRow, p: ParticipantRow, kind: AccessKind, triggeredBy?: string, next?: string | null): Promise<IssueResult> {
   const db = arenaDb();
   const { token, hash } = newToken();
   const { data: reservation, error } = await db.rpc('arena_reserve_access_token', {
@@ -36,7 +74,8 @@ async function issueToken(t: TournamentRow, p: ParticipantRow, kind: AccessKind,
   }
   if (!reservation?.ok) return { ok: false, error: 'Ce compte ne peut pas recevoir de lien. Contactez Major ECN.' };
   if (reservation.throttled) return { ok: true, throttled: true, retryAfter: reservation.retryAfter };
-  const url = siteUrl() + '/arena/' + (kind === 'login' ? 'connecter' : 'confirmer') + '?t=' + encodeURIComponent(token);
+  const suite = safeArenaNext(next);
+  const url = siteUrl() + '/arena/' + (kind === 'login' ? 'connecter' : 'confirmer') + '?t=' + encodeURIComponent(token) + (suite ? '&suite=' + encodeURIComponent(suite) : '');
   const sent = await sendArenaEmail({
     tournament: t, participant: p, to: p.email, kind, triggeredBy,
     mail: kind === 'login' ? loginEmail(t, p, url) : confirmationEmail(t, p, url),
@@ -54,12 +93,12 @@ async function issueToken(t: TournamentRow, p: ParticipantRow, kind: AccessKind,
 export function issueConfirmationLink(t: TournamentRow, p: ParticipantRow, triggeredBy?: string): Promise<IssueResult> {
   return issueToken(t, p, 'confirmation', triggeredBy);
 }
-export function issueLoginLink(t: TournamentRow, p: ParticipantRow, triggeredBy?: string): Promise<IssueResult> {
-  return issueToken(t, p, 'login', triggeredBy);
+export function issueLoginLink(t: TournamentRow, p: ParticipantRow, triggeredBy?: string, next?: string | null): Promise<IssueResult> {
+  return issueToken(t, p, 'login', triggeredBy, next);
 }
-export async function issueAccessLink(t: TournamentRow, p: ParticipantRow, triggeredBy?: string): Promise<IssueResult> {
+export async function issueAccessLink(t: TournamentRow, p: ParticipantRow, triggeredBy?: string, next?: string | null): Promise<IssueResult> {
   if (p.blocked_at || p.anonymized_at) return { ok: true };
-  return p.email_confirmed_at ? issueLoginLink(t, p, triggeredBy) : issueConfirmationLink(t, p, triggeredBy);
+  return p.email_confirmed_at ? issueLoginLink(t, p, triggeredBy, next) : issueToken(t, p, 'confirmation', triggeredBy, next);
 }
 
 /** Lecture seule : ni les antivirus ni les aperçus d'email ne consomment les liens. */
@@ -104,12 +143,7 @@ async function consumeToken(token: string, kind: AccessKind): Promise<
   if (consumed.first) after(async () => {
     try {
       await arenaLog({ tournamentId: t.id, kind: 'participant_confirmed', details: 'Adresse confirmée pour ' + p.pseudo + '.' });
-      if (t.email_sequence.validated.enabled) {
-        const snap = await loadTournamentSnapshot(t);
-        const m1 = snap.rounds[0];
-        const mail = validatedEmail(t, p, { m1Open: toDate(m1?.opens_at), m1Theme: m1?.theme ?? '', bareme: t.bareme, qrpNs: qrpNs(m1 ? snap.questionsByRound.get(m1.id) ?? [] : []) });
-        await sendArenaEmail({ tournament: t, participant: p, to: p.email, kind: 'validated', mail, dedupeKey: 'validated:' + t.id + ':' + p.id });
-      }
+      await sendWelcomeEmail(t, p);
     } catch (error) {
       console.error('[arena:auth] welcome_email_failed', { participantId: p.id, error: error instanceof Error ? error.message : 'unknown' });
     }

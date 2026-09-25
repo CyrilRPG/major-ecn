@@ -57,7 +57,8 @@ export function RoundLobby({
   duration: number;
   bareme: Bareme;
   ns: number[];
-  participantCount: number;
+  /** Effectif inscrit : null tant que l'administration ne l'autorise pas (§7, jamais d'effectif par défaut). */
+  participantCount: number | null;
   nowIso: string;
   children: ReactNode;
   notices?: ReactNode;
@@ -249,6 +250,7 @@ export function RoundLobby({
             Informations et progression
           </h2>
           <div className="ae-info-tiles">
+            {participantCount !== null && (
             <div className="ae-info-tile">
               <UsersRound aria-hidden />
               <b>{participantCount}</b>
@@ -258,6 +260,7 @@ export function RoundLobby({
                 inscrits et confirmés
               </span>
             </div>
+            )}
             <div className="ae-info-tile">
               <Trophy aria-hidden />
               <strong>Classement</strong>

@@ -1,6 +1,6 @@
 import { MarkedQuestion } from '@/components/arena/marked-question';
 import Link from 'next/link';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { ArrowLeft, Check, ListOrdered, X } from 'lucide-react';
 import { ArenaPage, Notice, Panel } from '@/components/arena/arena-shell';
 import { Container, Eyebrow } from '@/components/arena/arena-ui';
@@ -12,7 +12,7 @@ import { ZoomableImage } from '@/components/qcm/image-zoom';
 import { correctionsAccess, correctionsDenialMessage } from '@/lib/arena/corrections-access';
 import { effectiveBareme, getAttempt, getPreviewAttempt, listAnswers, listQuestionMarks, listReportsForParticipant } from '@/lib/arena/db';
 import { gradeOne } from '@/lib/arena/grading';
-import { arenaMetadata, loadArenaPage } from '@/lib/arena/page-context';
+import { arenaMetadata, loadArenaPage, redirectToAccess } from '@/lib/arena/page-context';
 import { COMMERCIAL_AFTER_M3 } from '@/lib/arena/texts';
 import { staffWatermarkLabel, watermarkLabel } from '@/lib/arena/watermark';
 
@@ -47,7 +47,7 @@ export default async function CorrectionsPage({ params, searchParams }: Params) 
   const wantPreview = previewParam === '1';
   const ctx = await loadArenaPage(slug, { preview: wantPreview });
   const preview = wantPreview && Boolean(ctx.staff);
-  if (!preview && !ctx.participant) redirect('/arena/connexion');
+  if (!preview && !ctx.participant) redirectToAccess(ctx, `/arena/${slug}/manche/${number}/corrections`);
   const t = ctx.snap.tournament;
   const round = ctx.snap.rounds.find((r) => r.number === number);
   if (!round) notFound();

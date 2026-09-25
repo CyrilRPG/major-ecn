@@ -6,7 +6,9 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 function csvCell(v: unknown): string {
-  const s = v === null || v === undefined ? '' : String(v);
+  let s = v === null || v === undefined ? '' : String(v);
+  // Injection de formule (tableur) : un nom saisi « =HYPERLINK(...) » ne doit pas s'exécuter à l'ouverture.
+  if (/^[=+\-@\t\r]/.test(s) && !/^-?\d+(,\d+)?$/.test(s)) s = `'${s}`;
   return /[;"\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
@@ -27,7 +29,9 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
   const participants = (await listParticipants(t.id)).filter((p) => !p.anonymized_at);
   const attempts = await listAttemptsForRounds(snap.rounds.map((r) => r.id));
   const { standings, byRound, effectifGeneral, isFinal } = await computeTournamentStandings(snap);
-  const rows = participants.filter((p) => !marketingOnly || (p.consent_marketing && !p.marketing_unsubscribed_at));
+  // Prospection : seulement des adresses CONFIRMÉES et non bloquées — une case cochée sur une
+  // adresse jamais vérifiée a pu l'être par un tiers (§3.1).
+  const rows = participants.filter((p) => !marketingOnly || (p.consent_marketing && !p.marketing_unsubscribed_at && p.email_confirmed_at && !p.blocked_at));
 
   const header = ['Pseudonyme', 'Prénom', 'Nom', 'Email', 'Spécialité', 'Email confirmé', 'Consentement tournoi (date)', 'Version', 'Consentement marketing', 'Consentement marketing (date)', 'Désinscrit marketing', 'Source', 'Invité par', 'Inscription', 'Dernière connexion', 'Bloqué',
     ...snap.rounds.map((r) => `M${r.number} score`), ...snap.rounds.map((r) => `M${r.number} temps (s)`),

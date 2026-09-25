@@ -151,3 +151,34 @@ test('mail aux professeurs : l’e-mail de l’élève n’est affiché que s’
   const avec = T.forumNewQuestionEmail({ professorFirstName: 'C', studentPseudo: 'H', studentEmail: 'eleve@example.test', coursTitre: null, matiereNom: null, questionBody: 'Q', qaUrl: 'https://www.major-ecn.fr/admin/qa' });
   assert.match(avec.html, /mailto:eleve@example\.test/);
 });
+
+test('inscription validée : annonce la prochaine manche jouable, jamais une manche passée', () => {
+  const now = d('2026-10-13T12:00:00Z');
+  const rounds = [
+    { id: 'r1', number: 1, opens_at: '2026-10-05T16:00:00Z', closes_at: '2026-10-07T21:59:00Z', theme: 'Humeur' },
+    { id: 'r2', number: 2, opens_at: '2026-10-12T16:00:00Z', closes_at: '2026-10-14T21:59:00Z', theme: 'Addictologie' },
+    { id: 'r3', number: 3, opens_at: '2026-10-19T16:00:00Z', closes_at: '2026-10-21T21:59:00Z', theme: 'Pédopsychiatrie' },
+  ];
+  // Inscription pendant M2 : la manche 2 est ouverte, avec sa fermeture.
+  const during = A.nextPlayableRound(rounds, now);
+  assert.equal(during?.round.id, 'r2');
+  assert.equal(during?.info.open, true);
+  const open = A.validatedEmail(t, p, { m1Open: during!.info.opens_at, m1Theme: during!.info.theme, bareme: DEFAULT_BAREME, qrpNs: [], round: during!.info });
+  assert.match(open.subject, /la manche 2 est ouverte/);
+  assert.match(open.text, /La manche 2 est ouverte, fermeture le 14 octobre 2026/);
+  assert.match(open.html, /\/manche\/2"/);
+  for (const s of [open.subject, open.text, visible(open.html)]) assert.doesNotMatch(s, /[Mm]anche 1\b/);
+  // Entre M2 et M3 : la prochaine à venir.
+  const between = A.nextPlayableRound(rounds, d('2026-10-16T12:00:00Z'));
+  assert.equal(between?.round.id, 'r3');
+  const up = A.validatedEmail(t, p, { m1Open: between!.info.opens_at, m1Theme: between!.info.theme, bareme: DEFAULT_BAREME, qrpNs: [], round: between!.info });
+  assert.match(up.subject, /manche 3 le .*19 octobre/);
+  assert.match(up.text, /Manche 3 : 19 octobre 2026/);
+  for (const s of [up.subject, up.text, visible(up.html)]) assert.doesNotMatch(s, /[Mm]anche [12]\b/);
+  // Avant M1 : manche 1 ; tout est clos : aucune manche annoncée.
+  assert.equal(A.nextPlayableRound(rounds, d('2026-10-01T00:00:00Z'))?.round.id, 'r1');
+  assert.equal(A.nextPlayableRound(rounds, d('2026-11-01T00:00:00Z')), null);
+  const over = A.validatedEmail(t, p, { m1Open: null, m1Theme: '', bareme: DEFAULT_BAREME, qrpNs: [], round: null });
+  assert.doesNotMatch(over.subject + over.text + visible(over.html), /[Mm]anche \d/);
+  assert.doesNotMatch(visible(over.html), /\bundefined\b|\bnull\b/);
+});

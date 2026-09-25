@@ -4,7 +4,7 @@ import { useEffect, useState, useTransition } from 'react';
 import { ArrowRight, Check } from 'lucide-react';
 import { subscribeArenaNews } from '@/app/(arena)/arena/actions';
 import { formatRemaining } from '@/lib/arena/tournament-cards';
-import { ARENA, BODY, DISPLAY } from '../tokens';
+import { ARENA, BODY } from '../tokens';
 
 /** « Ferme dans 1 j 08 h 24 min » / « Ouvre dans 12 h 17 min », mis à jour chaque seconde. */
 export function CardCountdown({ kind, at }: { kind: 'closes' | 'opens'; at: string }) {
@@ -18,9 +18,9 @@ export function CardCountdown({ kind, at }: { kind: 'closes' | 'opens'; at: stri
   const target = new Date(at).getTime();
   const label = kind === 'closes' ? 'Ferme dans' : 'Ouvre dans';
   return (
-    <p className="mt-1.5 text-[14px] font-semibold" style={{ color: ARENA.text, fontFamily: BODY }}>
+    <p className="ev-countdown">
       {label}{' '}
-      <span suppressHydrationWarning style={{ color: ARENA.goldSoft, fontVariantNumeric: 'tabular-nums' }}>{now === null ? '…' : formatRemaining(target - now)}</span>
+      <span suppressHydrationWarning>{now === null ? '…' : formatRemaining(target - now)}</span>
     </p>
   );
 }
@@ -43,7 +43,7 @@ export function ArenaNewsForm({ source }: { source: string }) {
 
   return (
     <form
-      className="flex flex-col gap-3"
+      className="ev-news-form"
       onSubmit={(e) => {
         e.preventDefault();
         start(async () => {
@@ -52,37 +52,30 @@ export function ArenaNewsForm({ source }: { source: string }) {
         });
       }}
     >
-      <p className="text-[13.5px]" style={{ color: ARENA.text, fontFamily: BODY }}>Soyez informé de l’ouverture des prochains tournois.</p>
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <label className="sr-only" htmlFor="arena-news-email">Votre adresse e-mail</label>
+      <p className="ev-news-lead">Soyez informé de l’ouverture des prochains tournois.</p>
+      <div className="ev-news-row">
+        <label className="sr-only" htmlFor={`arena-news-email-${source}`}>Votre adresse e-mail</label>
         <input
-          id="arena-news-email"
+          id={`arena-news-email-${source}`}
           type="email"
           required
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Votre adresse e-mail"
-          className="h-12 min-w-0 flex-1 rounded-lg px-4 text-[15px] outline-none"
-          style={{ background: '#F5F6F8', color: '#14254E', fontFamily: BODY, boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.4)' }}
         />
-        <button
-          type="submit"
-          disabled={pending}
-          className="inline-flex h-12 shrink-0 items-center justify-center gap-2.5 rounded-lg px-6 text-[13.5px] uppercase tracking-[0.14em] text-white transition-[filter] hover:brightness-110 disabled:opacity-60"
-          style={{ background: 'linear-gradient(180deg, #A8102F 0%, #7A0A21 100%)', boxShadow: 'inset 0 0 0 1px rgba(212,169,74,0.55)', fontFamily: DISPLAY, fontWeight: 600 }}
-        >
-          {pending ? 'Envoi…' : 'M’informer'} <ArrowRight className="h-4 w-4" />
+        <button type="submit" disabled={pending} className="ev-btn ev-btn--red ev-btn--sm">
+          {pending ? 'Envoi…' : 'M’informer'} <ArrowRight aria-hidden />
         </button>
       </div>
-      <label className="flex items-start gap-3 text-[12px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-        <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-[#E4002B]" />
+      <label className="ev-news-consent">
+        <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
         <span>
           J’accepte de recevoir les informations relatives aux prochains tournois EVC Arena. Vous pouvez vous désinscrire à tout moment.{' '}
-          <a href="/confidentialite" className="underline underline-offset-2" style={{ color: ARENA.goldSoft }}>En savoir plus sur notre politique de confidentialité.</a>
+          <a href="/confidentialite">En savoir plus sur notre politique de confidentialité.</a>
         </span>
       </label>
-      {state.kind === 'error' && <p role="alert" className="text-[13px] font-semibold" style={{ color: ARENA.redSoft, fontFamily: BODY }}>{state.message}</p>}
+      {state.kind === 'error' && <p role="alert" className="ev-news-error">{state.message}</p>}
     </form>
   );
 }

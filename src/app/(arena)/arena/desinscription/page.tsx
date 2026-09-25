@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { arenaDb, getParticipant } from '@/lib/arena/db';
 import { verifySignedLinkToken } from '@/lib/arena/session';
-import { ArenaFooter, Panel } from '@/components/arena/arena-shell';
+import { unsubscribeAction } from './actions';
+import { ArrowRight } from 'lucide-react';
+import { ArenaFooter } from '@/components/arena/arena-shell';
 import { ArenaNavigation } from '@/components/arena/arena-navigation';
-import { Container } from '@/components/arena/arena-ui';
-import { ARENA, BODY, CAPS } from '@/components/arena/tokens';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Désinscription — EVC Arena', robots: { index: false, follow: false } };
@@ -15,41 +15,51 @@ export const metadata = { title: 'Désinscription — EVC Arena', robots: { inde
  * ne sont pas concernés : pour ne plus rien recevoir, le participant supprime
  * son compte depuis son espace.
  */
-export default async function UnsubscribePage({ searchParams }: { searchParams: Promise<{ t?: string }> }) {
-  const { t } = await searchParams;
+export default async function UnsubscribePage({ searchParams }: { searchParams: Promise<{ t?: string; fait?: string }> }) {
+  const { t, fait } = await searchParams;
   const participantId = t ? verifySignedLinkToken(t, 'unsub') : null;
-  let done = false;
+  // Le GET ne modifie rien (antivirus de messagerie) : un bouton confirme, l'action enregistre.
+  let valid = false;
   let slug: string | null = null;
   if (participantId) {
     const p = await getParticipant(participantId);
     if (p && !p.anonymized_at) {
-      await arenaDb().from('arena_participants').update({ consent_marketing: false, marketing_unsubscribed_at: new Date().toISOString() }).eq('id', p.id);
       const { data } = await arenaDb().from('arena_tournaments').select('slug').eq('id', p.tournament_id).maybeSingle();
       slug = data?.slug ?? null;
-      done = true;
+      valid = true;
     }
   }
+  const done = valid && (fait === '1');
   return (
     <>
       <ArenaNavigation slug={slug ?? undefined} />
-      <main className="flex-1">
-        <Container className="max-w-lg py-14">
-          <h1 className="text-3xl font-extrabold" style={{ ...CAPS, color: ARENA.text }}>
-            {done ? 'Vous êtes désinscrit(e)' : 'Lien invalide'}
+      <main className="flex-1 ev-doc">
+        <div className="ev-wrap ev-doc-wrap">
+          <p className="ev-eyebrow"><span aria-hidden className="ev-rule" />Informations Major ECN</p>
+          <h1 className="ev-title-xl">
+            {done ? <>Vous êtes <em>désinscrit(e)</em></> : valid ? <>Se <em>désinscrire</em></> : <>Lien <em>invalide</em></>}
           </h1>
-          <Panel className="mt-6">
-            <p className="text-[15px] leading-relaxed" style={{ color: ARENA.textSoft, fontFamily: BODY }}>
-              {done
+          <div className="ev-doc-panel">
+            <p>
+              {!done && valid
+                ? 'Confirmez que vous ne souhaitez plus recevoir les informations de Major ECN sur la préparation aux EVC. Les emails nécessaires au déroulement du tournoi (convocations, résultats, corrections) continuent de vous parvenir tant que votre inscription est active.'
+                : done
                 ? 'Vous ne recevrez plus les informations de Major ECN sur la préparation aux EVC. Les emails nécessaires au déroulement du tournoi (convocations, résultats, corrections) continuent de vous parvenir tant que votre inscription est active.'
                 : 'Ce lien de désinscription n’est pas reconnu. Vous pouvez gérer vos préférences depuis votre espace participant.'}
             </p>
-            {slug && (
-              <Link href={`/arena/${slug}/espace`} className="mt-5 inline-block text-sm font-bold underline-offset-4 hover:underline" style={{ color: ARENA.redSoft, fontFamily: BODY }}>
-                Ouvrir mon espace
-              </Link>
+            {((valid && !done) || slug) && (
+              <div className="ev-doc-actions">
+                {valid && !done && (
+                  <form action={unsubscribeAction}>
+                    <input type="hidden" name="t" value={t} />
+                    <button type="submit" className="ev-btn ev-btn--red">Confirmer ma désinscription <ArrowRight aria-hidden /></button>
+                  </form>
+                )}
+                {slug && <Link href={`/arena/${slug}/espace`} className="ev-link-caps">Ouvrir mon espace <ArrowRight aria-hidden /></Link>}
+              </div>
             )}
-          </Panel>
-        </Container>
+          </div>
+        </div>
       </main>
       <ArenaFooter slug={slug ?? ''} />
     </>

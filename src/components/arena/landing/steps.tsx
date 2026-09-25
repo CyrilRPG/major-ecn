@@ -1,31 +1,61 @@
-import { BarChart3, FilePenLine, Timer } from 'lucide-react';
-import { Container } from '../arena-ui';
-import { ARENA, BODY, HEADLINE, LIGHT } from '../tokens';
-import { Reveal } from './fx';
+import { FilePenLine, Timer } from 'lucide-react';
+import { HelmetDivider } from '../arena-footers';
 
-/** Section claire « 01 · 02 · 03 » du modèle : inscription, manche, corrections et classement. */
-export function LandingSteps({ questions, secondsPerQuestion }: { questions: number | string; secondsPerQuestion: number }) {
+/** « 12 à 20 questions » / « 20 questions » depuis les manches réelles. */
+function questionsText(counts: readonly number[]): string {
+  const real = counts.filter((n) => n > 0);
+  if (!real.length) return 'Des questions chronométrées une par une.';
+  const min = Math.min(...real), max = Math.max(...real);
+  return min === max ? `${min} questions par manche.` : `${min} à ${max} questions selon la manche.`;
+}
+
+function secondsText(seconds: readonly number[]): string {
+  const real = [...new Set(seconds.filter((s) => s > 0))];
+  if (real.length === 1) return `${real[0]} secondes par question.`;
+  return 'Durée indiquée à chaque question.';
+}
+
+function Bars() {
+  return <svg viewBox="0 0 48 48" aria-hidden className="ev-steps-icon" fill="currentColor"><path d="M6 42h36v3H6z" /><rect x="10" y="24" width="7" height="16" rx="1" /><rect x="20.5" y="14" width="7" height="26" rx="1" /><rect x="31" y="19" width="7" height="21" rx="1" /></svg>;
+}
+
+/**
+ * « Comment se déroule un Battle ? » — section claire de la maquette client
+ * du 24/09/2026 (15_08_21) : casque au milieu du filet doré, titre bicolore,
+ * devise, trois étapes 01 · 02 · 03. Le nombre de questions et la durée
+ * viennent des manches réelles. `signature` : signatures EVC Arena / devise en
+ * bas de section (page Calendrier, où la section clôt la page).
+ */
+export function LandingSteps({ questions, seconds, signature = false }: { questions: readonly number[]; seconds: readonly number[]; signature?: boolean }) {
   const steps = [
-    { n: '01', icon: FilePenLine, title: 'Je m’inscris à la manche', text: 'Je rejoins la manche le jour J en quelques clics, sous pseudonyme.' },
-    { n: '02', icon: Timer, title: `Je réponds à ${questions} questions`, text: `Durée par défaut : ${secondsPerQuestion} s par question. Chaque question a son propre chronomètre : le temps écoulé, on passe à la suivante. Une seule tentative.` },
-    { n: '03', icon: BarChart3, title: 'Je reçois mes corrections et mon classement', text: 'Je comprends mes erreurs, je découvre mon classement anonymisé et je suis ma progression.' },
+    { n: '01', icon: <FilePenLine aria-hidden className="ev-steps-icon" strokeWidth={1.7} />, title: 'Je m’inscris à la manche', text: ['Je rejoins la manche le jour J en quelques clics, sous pseudonyme.'] },
+    { n: '02', icon: <Timer aria-hidden className="ev-steps-icon" strokeWidth={1.8} />, title: 'Je dispute la manche', text: [questionsText(questions), secondsText(seconds), 'Une seule tentative.'] },
+    { n: '03', icon: <Bars />, title: 'J’analyse ma performance', text: ['Je reçois mes corrections détaillées, je découvre mon classement anonymisé et je suis ma progression.'] },
   ];
   return (
-    <section style={{ background: LIGHT.bg, color: LIGHT.text, borderTop: '3px solid', borderImage: 'linear-gradient(90deg, rgba(212,169,74,0), #D4A94A 30%, #E8C878 50%, #D4A94A 70%, rgba(212,169,74,0)) 1' }}>
-      <Container className="py-12 sm:py-16">
-        <div className="grid gap-10 md:grid-cols-3 md:gap-0 md:divide-x" style={{ borderColor: LIGHT.lineStrong }}>
-          {steps.map((s, i) => (
-            <Reveal key={s.n} delay={i * 0.12} className={`flex flex-col items-center text-center md:px-8 ${i > 0 ? 'md:border-l' : ''}`}>
-              <div className="flex items-end gap-4">
-                <span className="text-[4.6rem] leading-none sm:text-[5.4rem]" style={{ fontFamily: HEADLINE, color: ARENA.goldDeep, letterSpacing: '0.02em' }}>{s.n}</span>
-                <s.icon className="mb-3 h-11 w-11" style={{ color: LIGHT.red }} strokeWidth={1.7} />
-              </div>
-              <h3 className="mt-3 text-[1.25rem] font-extrabold leading-tight sm:text-[1.4rem]" style={{ fontFamily: BODY, color: LIGHT.text }}>{s.title}</h3>
-              <p className="mt-3 max-w-xs text-[15px] leading-relaxed" style={{ color: LIGHT.textSoft, fontFamily: BODY }}>{s.text}</p>
-            </Reveal>
-          ))}
+    <section className="ev-steps" aria-labelledby="ev-steps-title">
+      <HelmetDivider />
+      <div className="ev-wrap">
+        <div className="ev-steps-head">
+          <h2 id="ev-steps-title"><span>Comment se déroule un <em>Battle</em>&nbsp;?</span></h2>
+          <p>Trois étapes. Une seule tentative. Une vraie progression.</p>
         </div>
-      </Container>
+        <ol className="ev-steps-list">
+          {steps.map((s) => (
+            <li key={s.n}>
+              <div className="ev-steps-mark"><span className="ev-steps-number">{s.n}</span>{s.icon}</div>
+              <h3>{s.title}</h3>
+              <p>{s.text.map((line, i) => <span key={line}>{i > 0 && <br />}{line}</span>)}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+      {signature && (
+        <div className="ev-steps-signature">
+          <p className="ev-sign-left">EVC Arena<span aria-hidden /><br />By Major ECN</p>
+          <p className="ev-sign-right">La rigueur<br />au service<br />de votre réussite</p>
+        </div>
+      )}
     </section>
   );
 }

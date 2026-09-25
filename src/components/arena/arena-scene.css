@@ -17,7 +17,7 @@
   position: absolute;
   inset: 0 0 -10% 0; /* réserve pour la parallaxe (translateY ≤ 10 %) */
   /* Photo par défaut ; une page peut la remplacer via ArenaBackdropPhoto (variable sur <html>). */
-  background: var(--arena-photo, url("/arena/colosseum-plate.jpg")) center top / cover no-repeat;
+  background: var(--arena-photo, url("/arena/colosseum-plate.jpg")) var(--arena-photo-pos, center top) / var(--arena-photo-size, cover) no-repeat;
   will-change: transform;
 }
 /* Voile nuit : trois arrêts surchargeables par page (ArenaBackdropPhoto veil="light"

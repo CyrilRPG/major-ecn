@@ -17,6 +17,8 @@ export async function GET(req: Request) {
   if (!secret || authHeader !== `Bearer ${secret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  const report = await runArenaSweep();
+  // Recette locale : `?only=<slug>` limite le balayage à un tournoi (jamais en production).
+  const only = process.env.NODE_ENV !== 'production' ? new URL(req.url).searchParams.get('only') : null;
+  const report = await runArenaSweep(new Date(), { onlySlug: only });
   return NextResponse.json({ ok: true, ...report });
 }

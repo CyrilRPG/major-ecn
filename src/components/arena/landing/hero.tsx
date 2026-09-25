@@ -54,10 +54,18 @@ export function LandingHero({
   const cell = (v: number | null) => (v === null ? '--' : v.toString().padStart(2, '0'));
   const shadow = '0 6px 24px rgba(0,0,0,0.7)';
 
+  // Nombre de questions variable selon la manche (« 12 / 20 / 20 ») : fourchette « 12–20 » en grand
+  // chiffre, détail par manche en légende, jamais trois nombres empilés.
+  const counts = String(questions).split('/').map((x) => Number(x.trim())).filter((x) => x > 0);
+  const qMin = counts.length ? Math.min(...counts) : null;
+  const qMax = counts.length ? Math.max(...counts) : null;
+  const varied = qMin !== null && qMax !== null && qMin !== qMax;
+  const questionsBig = varied ? `${qMin}–${qMax}` : String(qMin ?? questions);
+  const questionsLine = varied ? `${qMin} à ${qMax}` : String(qMin ?? questions);
   const stats = [
-    { n: rounds, label: 'manches', text: 'dates dans le calendrier' },
-    { n: questions, label: 'questions', text: 'QRM · QRU · QRP' },
-    { n: secondsPerQuestion, label: 'secondes par défaut', text: 'durée indiquée à chaque question' },
+    { n: String(rounds), label: 'manches', text: 'dates dans le calendrier' },
+    { n: questionsBig, label: 'questions', text: varied ? `${counts.join(' · ')} selon la manche` : 'QRM · QRU · QRP' },
+    { n: String(secondsPerQuestion), label: 'secondes par défaut', text: 'durée indiquée à chaque question' },
   ];
   const promises = [
     'Une seule tentative par manche',
@@ -90,7 +98,7 @@ export function LandingHero({
           </p>
           <GoldRule align="center" width={140} className="mt-3" />
           <p className="mt-3 text-[12px] sm:text-[14px]" style={{ ...CAPS, color: ARENA.text, letterSpacing: '0.16em', fontWeight: 500, textShadow: shadow }}>
-            {rounds} manches · {questions} questions · {secondsPerQuestion} s par défaut
+            {rounds} manches · {questionsLine} questions · {secondsPerQuestion} s par défaut
           </p>
           <p className="text-[12px] sm:text-[14px]" style={{ ...CAPS, color: ARENA.goldSoft, letterSpacing: '0.16em', fontWeight: 500, textShadow: shadow }}>
             Une seule tentative · un classement cumulé
@@ -102,12 +110,12 @@ export function LandingHero({
           <Enter delay={0.55} className="hidden lg:block">
             <ul className="flex flex-col items-end gap-5 text-right">
               {stats.map((s) => (
-                <li key={s.label} className="flex items-center gap-4">
-                  <span>
+                <li key={s.label} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-5">
+                  <span className="min-w-0">
                     <span className="block text-[13px]" style={{ ...CAPS, color: ARENA.text, letterSpacing: '0.24em' }}>{s.label}</span>
                     <span className="block text-[12px]" style={{ color: ARENA.textSoft, fontFamily: BODY }}>{s.text}</span>
                   </span>
-                  <span className="text-[4.4rem] leading-none" style={{ fontFamily: HEADLINE, color: ARENA.gold, letterSpacing: '0.02em', textShadow: '0 0 40px rgba(212,169,74,0.35)' }}>{s.n}</span>
+                  <span className={`whitespace-nowrap leading-none ${s.n.length > 3 ? 'text-[3.2rem] xl:text-[3.7rem]' : 'text-[4.4rem]'}`} style={{ fontFamily: HEADLINE, color: ARENA.gold, letterSpacing: '0.02em', textShadow: '0 0 40px rgba(212,169,74,0.35)' }}>{s.n}</span>
                 </li>
               ))}
             </ul>
