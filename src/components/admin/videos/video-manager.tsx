@@ -1,9 +1,9 @@
 'use client';
 
-import { useCallback, useMemo, useRef, useState, useTransition } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  CalendarClock, Check, ChevronDown, ChevronUp, FileText, Loader2, Paperclip, Pencil,
+  CalendarClock, Check, ChevronDown, ChevronUp, FileText, GripVertical, Loader2, Paperclip, Pencil,
   Plus, Search, Trash2, UserMinus, UserPlus, Video, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,7 @@ import { extractBunnyVideoId } from '@/lib/bunny-link';
 import { BunnyApercu } from './bunny-apercu';
 import {
   addVideoAction, addVideoSupportAction, deleteVideoAction, deleteVideosAction, listStudentsAction,
-  moveVideoAction, moveVideoSupportAction, publishVideoAction, removeVideoSupportAction, renameVideoAction, unpublishVideoAction,
+  moveVideoSupportAction, publishVideoAction, removeVideoSupportAction, renameVideoAction, reorderVideosAction, unpublishVideoAction,
   renameVideoSupportAction, replaceVideoLinkAction, updateVideoAudienceAction,
   updateVideoLiveAtAction, updateVideoRubriqueAction, updateVideoSupportAudienceAction,
   type AddResult, type StudentLite, type VideoSupportDoc, type VideoType,
@@ -20,6 +20,24 @@ import {
 import { resumeAudience, VIDEO_OFFERS, VOIES } from '@/lib/videos/audience';
 import { rubriqueParDefaut } from '@/lib/videos/rubriques';
 import { formaterDateSeance } from '@/lib/videos/a-venir';
+import { decalagePendantGlisser, deplacerElement, indiceDeDepot } from '@/lib/videos/ordre';
+
+/** Glisser-déposer en cours dans la liste (coordonnées de la page, en px). */
+type Glisser = {
+  id: string;
+  de: number;
+  vers: number;
+  dy: number;
+  /** Faux tant que le pointeur n'a pas bougé de quelques pixels (simple clic). */
+  actif: boolean;
+  pointerId: number;
+  departY: number;
+  tops: number[];
+  hauteurs: number[];
+  milieux: number[];
+  ecart: number;
+  ulTop: number;
+};
 
 /** Droits fins du cahier des charges (§5) de la personne connectée. */
 export type DroitsVideo = { creer: boolean; modifier: boolean; publier: boolean; supprimer: boolean };
@@ -698,16 +716,164 @@ export function VideoManager({
   const avec = (s: ReadonlySet<string>, ids: string[]) => new Set([...s, ...ids]);
   const sans = (s: ReadonlySet<string>, ids: string[]) => { const n = new Set(s); ids.forEach((id) => n.delete(id)); return n; };
 
-  const affichees = useMemo(
-    () => videos
+  /* Ordre optimiste (glisser-déposer, flèches) : valable tant que la liste
+     reçue du serveur est celle sur laquelle il a été calculé ; le
+     rechargement qui suit l'enregistrement le remplace naturellement. */
+  const [ordreLocal, setOrdreLocal] = useState<{ source: ManagedVideo[]; ids: string[] } | null>(null);
+  const ordreActif = ordreLocal && ordreLocal.source === videos ? ordreLocal.ids : null;
+
+  const affichees = useMemo(() => {
+    const liste = videos
       .filter((v) => !videosMasquees.has(v.id))
       .map((v) => (v.supports.some((s) => supportsMasques.has(s.id))
         ? { ...v, supports: v.supports.filter((s) => !supportsMasques.has(s.id)) }
-        : v)),
-    [videos, videosMasquees, supportsMasques],
-  );
+        : v));
+    if (!ordreActif) return liste;
+    const rang = new Map(ordreActif.map((id, i) => [id, i]));
+    return liste
+      .map((v, i) => ({ v, i }))
+      .sort((x, y) => ((rang.get(x.v.id) ?? Infinity) - (rang.get(y.v.id) ?? Infinity)) || (x.i - y.i))
+      .map((r) => r.v);
+  }, [videos, videosMasquees, supportsMasques, ordreActif]);
   const selectionnees = affichees.filter((v) => selection.has(v.id));
   const toutSelectionne = affichees.length > 0 && selectionnees.length === affichees.length;
+
+  /* ── Réordonnancement : glisser-déposer (souris, tactile) + clavier ──
+     Mise à jour optimiste, puis UNE action serveur avec l'ordre complet.
+     Les envois sont mis en file (plusieurs déplacements rapides partent dans
+     l'ordre) ; la liste n'est rechargée qu'une fois la file vide. En cas
+     d'échec : ordre du serveur rétabli + message. */
+  const [annonce, setAnnonce] = useState('');
+  const [glisse, setGlisse] = useState<Glisser | null>(null);
+  const glisseRef = useRef<Glisser | null>(null);
+  const fileOrdre = useRef<Promise<unknown>>(Promise.resolve());
+  const enAttente = useRef(0);
+  const carteRefs = useRef(new Map<string, HTMLLIElement>());
+  const poigneeRefs = useRef(new Map<string, HTMLButtonElement>());
+  const listeRef = useRef<HTMLUListElement>(null);
+  const focusApres = useRef<string | null>(null);
+  const peutOrdonner = droits.modifier && !!coursId && !suppressionEnCours;
+  const aideOrdreId = useId();
+
+  useEffect(() => {
+    // Après un déplacement au clavier, la poignée garde le focus (le nœud a bougé).
+    const id = focusApres.current;
+    if (!id) return;
+    focusApres.current = null;
+    poigneeRefs.current.get(id)?.focus();
+  });
+
+  function appliquerOrdre(de: number, vers: number, focus = false) {
+    if (!peutOrdonner || de === vers || vers < 0 || vers >= affichees.length) return;
+    const idsAvant = affichees.map((v) => v.id);
+    const ids = deplacerElement(idsAvant, de, vers);
+    const titre = affichees[de].titre;
+    setOrdreLocal({ source: videos, ids });
+    setAlerteListe(null);
+    setAnnonce(`« ${titre} » déplacée en position ${vers + 1} sur ${ids.length}.`);
+    if (focus) focusApres.current = idsAvant[de];
+
+    enAttente.current++;
+    const envoi = fileOrdre.current.then(() => reorderVideosAction({ coursId, type, orderedIds: ids, deplaceeId: idsAvant[de] }));
+    fileOrdre.current = envoi.catch(() => undefined);
+    envoi
+      .then((res) => {
+        enAttente.current--;
+        if ('error' in res) {
+          setOrdreLocal(null);
+          setAnnonce(`Ordre non enregistré : ${res.error}`);
+          resynchroniser(`Ordre non enregistré — l’ordre précédent est rétabli. ${res.error}`);
+          return;
+        }
+        if (enAttente.current === 0) apresModification();
+      })
+      .catch(() => {
+        enAttente.current--;
+        setOrdreLocal(null);
+        resynchroniser('L’ordre n’a pas pu être enregistré (connexion ?). La liste a été actualisée : vérifiez-la.');
+      });
+  }
+
+  function debutGlisser(e: React.PointerEvent<HTMLButtonElement>, index: number) {
+    if (!peutOrdonner || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    const ul = listeRef.current;
+    if (!ul) return;
+    const rects = affichees.map((v) => carteRefs.current.get(v.id)?.getBoundingClientRect() ?? null);
+    if (rects.some((r) => !r)) return;
+    const sy = window.scrollY;
+    const tops = rects.map((r) => r!.top + sy);
+    const hauteurs = rects.map((r) => r!.height);
+    const ecart = tops.length > 1 ? Math.max(0, tops[1] - (tops[0] + hauteurs[0])) : 8;
+    e.preventDefault();
+    // Focus sur la poignée : Échap annule le glisser en cours.
+    e.currentTarget.focus({ preventScroll: true });
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const g: Glisser = {
+      id: affichees[index].id, de: index, vers: index, dy: 0, actif: false,
+      pointerId: e.pointerId, departY: e.clientY + sy,
+      tops, hauteurs, ecart, milieux: tops.map((t, i) => t + hauteurs[i] / 2),
+      ulTop: ul.getBoundingClientRect().top + sy,
+    };
+    glisseRef.current = g;
+  }
+
+  function pendantGlisser(e: React.PointerEvent<HTMLButtonElement>) {
+    const g = glisseRef.current;
+    if (!g || e.pointerId !== g.pointerId) return;
+    // Défilement automatique près des bords (longues listes, tactile).
+    if (e.clientY < 70) window.scrollBy(0, -14);
+    else if (e.clientY > window.innerHeight - 70) window.scrollBy(0, 14);
+    const dy = e.clientY + window.scrollY - g.departY;
+    if (!g.actif && Math.abs(dy) < 4) return;
+    const vers = indiceDeDepot(g.milieux, g.de, g.milieux[g.de] + dy);
+    const suivant = { ...g, dy, vers, actif: true };
+    glisseRef.current = suivant;
+    setGlisse(suivant);
+  }
+
+  function finGlisser(e: React.PointerEvent<HTMLButtonElement>, annuler = false) {
+    const g = glisseRef.current;
+    if (!g || e.pointerId !== g.pointerId) return;
+    glisseRef.current = null;
+    setGlisse(null);
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+    if (!annuler && g.actif && g.vers !== g.de) appliquerOrdre(g.de, g.vers);
+  }
+
+  function clavierPoignee(e: React.KeyboardEvent<HTMLButtonElement>, index: number) {
+    if (e.key === 'Escape' && glisseRef.current) {
+      glisseRef.current = null;
+      setGlisse(null);
+      setAnnonce('Déplacement annulé.');
+      return;
+    }
+    const vers = e.key === 'ArrowUp' ? index - 1
+      : e.key === 'ArrowDown' ? index + 1
+        : e.key === 'Home' ? 0
+          : e.key === 'End' ? affichees.length - 1
+            : null;
+    if (vers === null) return;
+    e.preventDefault();
+    appliquerOrdre(index, vers, true);
+  }
+
+  /** Style d'une carte pendant un glisser (carte soulevée, voisines décalées). */
+  function styleCarte(i: number): React.CSSProperties | undefined {
+    if (!glisse?.actif) return undefined;
+    if (i === glisse.de) return { transform: `translateY(${glisse.dy}px)`, zIndex: 20, position: 'relative' };
+    const d = decalagePendantGlisser(i, glisse.de, glisse.vers, glisse.hauteurs[glisse.de] + glisse.ecart);
+    return { transform: `translateY(${d}px)`, transition: 'transform 160ms ease' };
+  }
+
+  /** Emplacement de dépôt (pointillés violets) à la place que prendra la carte. */
+  const emplacement = glisse?.actif
+    ? {
+        top: (glisse.vers > glisse.de
+          ? glisse.tops[glisse.vers] + glisse.hauteurs[glisse.vers] - glisse.hauteurs[glisse.de]
+          : glisse.tops[glisse.vers]) - glisse.ulTop,
+        height: glisse.hauteurs[glisse.de],
+      }
+    : null;
 
   /** Resynchronise la liste sur le serveur quand l'issue d'une suppression est incertaine. */
   const resynchroniser = (message: string) => {
@@ -818,6 +984,13 @@ export function VideoManager({
     <div className="space-y-4">
       <p className="text-[12.5px] text-(--color-ink-soft)">
         {copy.audience}{' '}L&apos;ordre ci-dessous est celui que voient les élèves.
+        {droits.modifier && affichees.length > 1 && (
+          <span id={aideOrdreId}>
+            {' '}Pour le changer, glissez une {copy.unite} par sa poignée
+            <GripVertical className="mx-0.5 inline h-3.5 w-3.5 align-[-2px] text-(--color-ink-muted)" aria-hidden />
+            (ou, poignée sélectionnée, flèches ↑/↓ du clavier).
+          </span>
+        )}
       </p>
       {notice && (
         <p className="rounded-xl border border-[#7C3AED]/30 bg-[#F3EAFF] px-3 py-2 text-[12.5px] text-[#5B21B6]">
@@ -888,15 +1061,48 @@ export function VideoManager({
           Aucune {copy.unite} pour l&apos;instant.
         </p>
       ) : (
-        <ul className="space-y-2">
+        <div className="relative">
+        {emplacement && (
+          <div
+            aria-hidden
+            data-testid="emplacement-depot"
+            className="pointer-events-none absolute inset-x-0 rounded-xl border-2 border-dashed border-[#7C3AED]/50 bg-[#F3EAFF]/70"
+            style={{ top: emplacement.top, height: emplacement.height }}
+          />
+        )}
+        <ul ref={listeRef} className={`space-y-2 ${glisse?.actif ? 'select-none' : ''}`}>
           {affichees.map((v, i) => (
             <li
               key={v.id}
+              ref={(el) => { if (el) carteRefs.current.set(v.id, el); else carteRefs.current.delete(v.id); }}
+              style={styleCarte(i)}
               className={`rounded-xl border bg-(--color-surface) transition-colors ${
-                selection.has(v.id) ? 'border-[#7C3AED]/60 ring-1 ring-[#7C3AED]/30' : 'border-(--color-border)'
+                glisse?.actif && glisse.de === i
+                  ? 'cursor-grabbing border-[#7C3AED] shadow-[0_18px_40px_-12px_rgba(91,33,182,0.45)] ring-2 ring-[#7C3AED]/30'
+                  : selection.has(v.id) ? 'border-[#7C3AED]/60 ring-1 ring-[#7C3AED]/30' : 'border-(--color-border)'
               }`}
             >
               <div className="flex items-center gap-2 px-3 py-2.5">
+                {droits.modifier && (
+                  <button
+                    type="button"
+                    ref={(el) => { if (el) poigneeRefs.current.set(v.id, el); else poigneeRefs.current.delete(v.id); }}
+                    disabled={!peutOrdonner || affichees.length < 2}
+                    onPointerDown={(e) => debutGlisser(e, i)}
+                    onPointerMove={pendantGlisser}
+                    onPointerUp={(e) => finGlisser(e)}
+                    onPointerCancel={(e) => finGlisser(e, true)}
+                    onKeyDown={(e) => clavierPoignee(e, i)}
+                    aria-label={`Réordonner « ${v.titre} », position ${i + 1} sur ${affichees.length}`}
+                    aria-describedby={aideOrdreId}
+                    title="Glisser pour changer l’ordre (ou flèches ↑/↓ au clavier)"
+                    className={`-ml-1 shrink-0 touch-none rounded-md p-1 text-(--color-ink-muted) hover:bg-[#F3EAFF] hover:text-[#7C3AED] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7C3AED]/50 disabled:cursor-not-allowed disabled:opacity-30 ${
+                      glisse?.actif && glisse.de === i ? 'cursor-grabbing text-[#7C3AED]' : 'cursor-grab'
+                    }`}
+                  >
+                    <GripVertical className="h-4 w-4" />
+                  </button>
+                )}
                 {droits.supprimer && (
                   <input
                     type="checkbox"
@@ -910,18 +1116,18 @@ export function VideoManager({
                 <div className="flex flex-col">
                   <button
                     type="button"
-                    aria-label="Monter"
-                    disabled={pending || i === 0}
-                    onClick={() => run(() => moveVideoAction({ videoId: v.id, direction: 'up' }))}
+                    aria-label={`Monter « ${v.titre} »`}
+                    disabled={!peutOrdonner || i === 0}
+                    onClick={() => appliquerOrdre(i, i - 1)}
                     className="rounded p-0.5 text-(--color-ink-muted) hover:bg-(--color-sand-100) hover:text-(--color-ink) disabled:opacity-30"
                   >
                     <ChevronUp className="h-4 w-4" />
                   </button>
                   <button
                     type="button"
-                    aria-label="Descendre"
-                    disabled={pending || i === affichees.length - 1}
-                    onClick={() => run(() => moveVideoAction({ videoId: v.id, direction: 'down' }))}
+                    aria-label={`Descendre « ${v.titre} »`}
+                    disabled={!peutOrdonner || i === affichees.length - 1}
+                    onClick={() => appliquerOrdre(i, i + 1)}
                     className="rounded p-0.5 text-(--color-ink-muted) hover:bg-(--color-sand-100) hover:text-(--color-ink) disabled:opacity-30"
                   >
                     <ChevronDown className="h-4 w-4" />
@@ -1079,7 +1285,10 @@ export function VideoManager({
             </li>
           ))}
         </ul>
+        </div>
       )}
+      {/* Annonce des déplacements pour les lecteurs d'écran. */}
+      <p aria-live="polite" role="status" className="sr-only">{annonce}</p>
 
       {/* ── Ajout par lot ── */}
       {adding ? (

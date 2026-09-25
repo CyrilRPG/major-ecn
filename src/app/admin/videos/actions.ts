@@ -22,6 +22,7 @@ import { logAudit } from '@/lib/audit/log';
 import { accesOnglets, lireScopeEquipe, peutContenu, type DroitContenu } from '@/lib/auth/collaborateurs';
 import { bunnyEmbedLibraryId, bunnyEmbedUrl } from '@/lib/bunny';
 import { dureeIsoEnSecondes } from '@/lib/videos/bibliotheque';
+import { deplacerElement, ecrituresOrdre, elementDeplace, memesIdentifiants } from '@/lib/videos/ordre';
 
 /**
  * Bibliothèque vidéo de l'administration (onglet « Vidéos ») : navigation
@@ -1280,6 +1281,81 @@ export async function moveVideoAction(input: {
     matiereNom: ctx.cours.matiereNom,
     description: `Ordre modifié : « ${ctx.video.titre} » en position ${target + 1}`,
     diff: { de: pos + 1, vers: target + 1 },
+  });
+
+  refresh(ctx.cours.id);
+  return { ok: true };
+}
+
+/**
+ * Nouvel ordre COMPLET d'une liste (un item × une catégorie), en un seul
+ * appel : glisser-déposer et flèches ↑/↓ de la bibliothèque. `orderedIds` doit
+ * contenir exactement les vidéos actuelles de la liste — sinon (vidéo ajoutée
+ * ou supprimée ailleurs entre-temps) rien n'est écrit et l'interface se
+ * resynchronise. Chaque vidéo est vérifiée : elle appartient bien à cet item
+ * et à cette catégorie, item dans le périmètre de la personne (guard).
+ * Les `order_index` sont réécrits 0..n-1 (trous et doublons anciens compris).
+ */
+export async function reorderVideosAction(input: {
+  coursId: string;
+  type: VideoType;
+  orderedIds: string[];
+  /** Vidéo glissée (pour le journal) ; facultatif. */
+  deplaceeId?: string;
+}): Promise<{ ok: true } | { error: string }> {
+  if (input.type !== 'cours' && input.type !== 'seance_approfondie') return { error: 'Type de vidéo inconnu.' };
+  const ctx = await guard(input.coursId);
+  if ('error' in ctx) return ctx;
+  const ids = Array.isArray(input.orderedIds) ? input.orderedIds.filter((x) => typeof x === 'string') : [];
+  if (ids.length > LOT_MAX) return { error: `Liste trop longue (${LOT_MAX} vidéos au plus).` };
+
+  const { data: rows, error: errLecture } = await ctx.a
+    .from('videos')
+    .select('id, titre, order_index')
+    .eq('cours_id', ctx.cours.id)
+    .eq('type', input.type)
+    .order('order_index', { ascending: true })
+    .order('created_at', { ascending: true });
+  if (errLecture) return { error: errLecture.message };
+  const list = (rows ?? []) as { id: string; titre: string; order_index: number | null }[];
+  if (!memesIdentifiants(ids, list.map((v) => v.id))) {
+    return { error: 'La liste a changé entre-temps (vidéo ajoutée ou supprimée ailleurs) : elle vient d’être actualisée, recommencez le déplacement.' };
+  }
+
+  const ecritures = ecrituresOrdre(list, ids);
+  if (ecritures.length === 0) return { ok: true };
+  const resultats = await Promise.all(
+    ecritures.map((e) => ctx.a.from('videos').update({ order_index: e.order_index }).eq('id', e.id).eq('cours_id', ctx.cours.id)),
+  );
+  const echec = resultats.find((r: { error?: { message?: string } | null }) => r.error);
+  if (echec) {
+    // Écriture partielle possible : on recompacte dans l'ordre enregistré
+    // pour ne jamais laisser de doublons, puis l'interface se resynchronise.
+    await renumber(ctx.a, ctx.cours.id, input.type);
+    return { error: `Ordre non enregistré : ${echec.error.message ?? 'erreur inconnue'}.` };
+  }
+
+  const avant = list.map((v) => v.id);
+  // Deux voisines échangées : les deux lectures sont justes ; on nomme celle
+  // que la personne a déplacée (indiquée par l'interface) si elle concorde.
+  const indiquee = input.deplaceeId ? { id: input.deplaceeId, de: avant.indexOf(input.deplaceeId), vers: ids.indexOf(input.deplaceeId) } : null;
+  const bouge = indiquee && indiquee.de >= 0 && indiquee.vers >= 0
+    && deplacerElement(avant, indiquee.de, indiquee.vers).every((id, i) => id === ids[i])
+    ? { id: indiquee.id, de: indiquee.de + 1, vers: indiquee.vers + 1 }
+    : elementDeplace(avant, ids);
+  const titreDe = (id: string) => list.find((v) => v.id === id)?.titre ?? id;
+  await logAudit({
+    actor: ctx.profile,
+    action: 'update',
+    entity: 'video',
+    entityId: bouge?.id ?? ctx.cours.id,
+    coursId: ctx.cours.id,
+    coursTitre: ctx.cours.titre,
+    matiereNom: ctx.cours.matiereNom,
+    description: bouge
+      ? `Ordre modifié : « ${titreDe(bouge.id)} » de la position ${bouge.de} à la position ${bouge.vers} (${LABEL[input.type]})`
+      : `Ordre modifié : ${ecritures.length} vidéo(s) renumérotée(s) (${LABEL[input.type]})`,
+    diff: { type: input.type, avant, apres: ids, ...(bouge ? { de: bouge.de, vers: bouge.vers } : {}) },
   });
 
   refresh(ctx.cours.id);
