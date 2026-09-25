@@ -1,9 +1,9 @@
-import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
+import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
-import { canRead, canWrite } from '@/lib/schemas/professor';
-import { TYPES_PEDAGOGIQUES } from '@/lib/auth/collaborateurs';
+import { collegesDesQuestions, lireScopeEquipe, questionDansPerimetre } from '@/lib/auth/collaborateurs';
+import { loadStudentScopes } from '@/lib/admin/student-identity';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { ForumView, type ForumQuestionRow, type ForumCollege } from '@/components/forum/forum-view';
 
@@ -49,18 +49,15 @@ export default async function ForumPage({
     : [];
 
   // ─── Périmètre prof : ids de collèges accessibles avec ≥ une permission ───
+  // Même règle que la page Q&R et le mail « Nouvelle question »
+  // (`collegesDesQuestions`) : enseignants seulement — un monteur vidéo, un
+  // commercial ou un rédacteur blog ne voit aucune question — bornés aux
+  // collèges de leur périmètre (questions hors cours : spécialité de l'élève).
   let profAccessibleMatiereIds: string[] | 'all' | null = null;
+  const scopeEquipe = role === 'professor' ? lireScopeEquipe(profile.permission_scope) : null;
   if (role === 'professor') {
-    const ps = getProfessorScope(profile.permission_scope);
-    if (ps) {
-      // Enseignants seulement : la vidéo seule (monteur) n'ouvre pas le forum.
-      const hasAnyPerm = TYPES_PEDAGOGIQUES.some((t) => canRead(ps, t) || canWrite(ps, t));
-      if (!hasAnyPerm) profAccessibleMatiereIds = [];
-      else if (ps.type === 'all') profAccessibleMatiereIds = 'all';
-      else profAccessibleMatiereIds = ps.colleges;
-    } else {
-      profAccessibleMatiereIds = [];
-    }
+    const c = collegesDesQuestions(scopeEquipe);
+    profAccessibleMatiereIds = c === 'toutes' ? 'all' : c;
   }
 
   // ─── Onglet public/privé ───
@@ -91,7 +88,8 @@ export default async function ForumPage({
       // Aucun collège accessible : aucune question
       query = query.eq('id', '00000000-0000-0000-0000-000000000000');
     } else if (Array.isArray(profAccessibleMatiereIds)) {
-      query = query.in('matiere_id', profAccessibleMatiereIds);
+      // Collèges du périmètre + questions hors cours, triées plus bas.
+      query = query.or(`matiere_id.in.(${profAccessibleMatiereIds.join(',')}),matiere_id.is.null`);
     }
     // 'all' → pas de filtre supplémentaire (admin-like)
     // Onglet appliqué aussi pour le prof : public seul / privé seul.
@@ -107,6 +105,16 @@ export default async function ForumPage({
 
   const { data } = await query;
   let rows = (data ?? []) as ForumQuestionRow[];
+
+  // Enseignant restreint : une question hors cours n'est gardée que si
+  // l'élève appartient à l'une de ses spécialités (`questionDansPerimetre`).
+  if (role === 'professor' && Array.isArray(profAccessibleMatiereIds) && profAccessibleMatiereIds.length > 0) {
+    const horsCours = rows.filter((r) => !r.matiere_id);
+    if (horsCours.length > 0) {
+      const scopes = await loadStudentScopes(createAdminClient(), horsCours.map((r) => r.student_id));
+      rows = rows.filter((r) => r.matiere_id || questionDansPerimetre(scopeEquipe, null, r.student_id ? scopes.get(r.student_id) : undefined));
+    }
+  }
 
   // Filtre client-side : recherche texte
   if (sp.q) {

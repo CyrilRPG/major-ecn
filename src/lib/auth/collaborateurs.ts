@@ -1,5 +1,6 @@
 import { CONTENT_TYPES, QCM_KINDS, type ContentType, type PermissionLevel } from '@/lib/schemas/professor';
 import type { Offer } from '@/types/domain';
+import { parseScope, scopeOffers } from './permissions';
 
 /**
  * Gestion des accès collaborateurs — cahier des charges du 18/09/2026.
@@ -142,6 +143,17 @@ export function perimetreComplet(): Perimetre {
 }
 
 /**
+ * Périmètre VIDE (aucune spécialité) : point de départ d'un nouveau
+ * collaborateur et repli d'un périmètre absent ou illisible. « Toutes les
+ * spécialités » doit toujours être un choix explicite de l'administrateur —
+ * le monteur vidéo créé le 24/09/2026 avait hérité de ce défaut et voyait
+ * tous les collèges.
+ */
+export function perimetreVide(): Perimetre {
+  return { specialites: [], formules: { '*': [...FORMULES] } };
+}
+
+/**
  * Rôles modèles (cahier §8) : on part d'un modèle, puis on personnalise
  * exceptionnellement les droits d'une personne. Le modèle ne fige rien.
  */
@@ -232,12 +244,15 @@ export function normaliserModules(raw: unknown): Modules {
 }
 
 export function normaliserPerimetre(raw: unknown): Perimetre {
-  const complet = perimetreComplet();
-  if (!raw || typeof raw !== 'object') return complet;
+  // Fermé par défaut : un périmètre absent ou mal formé n'ouvre AUCUNE
+  // spécialité. Seul `specialites: 'toutes'` écrit en toutes lettres ouvre tout.
+  if (!raw || typeof raw !== 'object') return perimetreVide();
   const r = raw as { specialites?: unknown; formules?: unknown };
-  const specialites: 'toutes' | string[] = Array.isArray(r.specialites)
-    ? Array.from(new Set(r.specialites.filter((x): x is string => typeof x === 'string' && x.length > 0)))
-    : 'toutes';
+  const specialites: 'toutes' | string[] = r.specialites === 'toutes'
+    ? 'toutes'
+    : Array.isArray(r.specialites)
+      ? Array.from(new Set(r.specialites.filter((x): x is string => typeof x === 'string' && x.length > 0)))
+      : [];
   const out: Record<string, Formule[]> = {};
   if (r.formules && typeof r.formules === 'object') {
     for (const [k, v] of Object.entries(r.formules as Record<string, unknown>)) {
@@ -305,7 +320,9 @@ export function lireScopeEquipe(
       };
     }
     perimetre = {
-      specialites: s.type === 'college' ? (Array.isArray(s.colleges) ? s.colleges.filter((x): x is string => typeof x === 'string') : []) : 'toutes',
+      // `type: 'all'` explicite seulement ; tout autre cas (college, absent)
+      // se lit comme la liste des collèges, vide au besoin — fermé par défaut.
+      specialites: s.type === 'all' ? 'toutes' : (Array.isArray(s.colleges) ? s.colleges.filter((x): x is string => typeof x === 'string') : []),
       formules: { '*': [...FORMULES] },
     };
   }
@@ -435,6 +452,19 @@ export function eleveDansPerimetre(
   return eleve.colleges.some((c) => specialiteAutorisee(perimetre, c) && offres.some((o) => formulesPour(perimetre, c).includes(o)));
 }
 
+/**
+ * Un élève (son `permission_scope` brut) est-il visible de ce collaborateur ?
+ * `null` = pas de scope d'équipe lisible → rien de visible (l'administrateur
+ * ne passe pas par ici). Même lecture que le tableau de travail du suivi :
+ * le collège « Découverte » ne compte pas, un accès intégral couvre tout.
+ */
+export function eleveVisiblePourScope(scope: ScopeEquipe | null, eleveScope: unknown): boolean {
+  if (!scope) return false;
+  const ps = parseScope(eleveScope);
+  const colleges: string[] | 'all' = ps.type === 'all' ? 'all' : ps.colleges.filter((c) => c !== 'col-decouverte');
+  return eleveDansPerimetre(scope.perimetre, { colleges, offers: scopeOffers(ps) });
+}
+
 /* ─────────────────────────────── expiration ─────────────────────────────── */
 
 /**
@@ -509,10 +539,69 @@ export function accesOnglets(scope: ScopeEquipe | null): AccesOnglets {
  * périmètre. Une question hors cours (sans collège) ne revient qu'aux
  * enseignants « toutes spécialités ».
  */
-export function questionDansPerimetre(scope: ScopeEquipe | null, matiereId: string | null | undefined): boolean {
+export function questionDansPerimetre(
+  scope: ScopeEquipe | null,
+  matiereId: string | null | undefined,
+  eleveScope?: unknown,
+): boolean {
   if (!scope || !accesOnglets(scope).qa) return false;
-  if (!matiereId) return scope.perimetre.specialites === 'toutes';
-  return specialiteAutorisee(scope.perimetre, matiereId);
+  if (matiereId) return specialiteAutorisee(scope.perimetre, matiereId);
+  if (scope.perimetre.specialites === 'toutes') return true;
+  // Question hors cours (forum général, assistant IA) : elle revient aux
+  // enseignants de la spécialité de l'élève — ses collèges, hors Découverte.
+  // Élève inconnu ou en accès intégral : « toutes spécialités » seulement.
+  return collegesDeLEleve(eleveScope).some((c) => specialiteAutorisee(scope.perimetre, c));
+}
+
+/** Collèges d'un élève pour le routage d'une question hors cours ([] si accès intégral ou inconnu). */
+export function collegesDeLEleve(eleveScope: unknown): string[] {
+  if (!eleveScope || typeof eleveScope !== 'object') return [];
+  const ps = parseScope(eleveScope);
+  if (ps.type !== 'college') return [];
+  return ps.colleges.filter((c) => c !== 'col-decouverte');
+}
+
+/** Profil lu en base pour décider des destinataires d'une question d'élève. */
+export type ProfilDestinataireQuestion = {
+  role?: string | null;
+  email?: string | null;
+  is_active?: boolean | null;
+  access_end?: string | null;
+  permission_scope?: unknown;
+};
+
+/**
+ * Ce membre du personnel doit-il RECEVOIR le mail « Nouvelle question
+ * d'élève » ? SOURCE UNIQUE du routage des questions (mail, page Q&R, forum
+ * côté équipe) : un compte actif, non expiré, qui répond aux questions
+ * (au moins un type pédagogique — jamais un monteur vidéo, un commercial ni un
+ * rédacteur blog) et dont le périmètre couvre le collège de la question — ou,
+ * pour une question hors cours, l'un des collèges de l'élève (`eleveScope` =
+ * son `permission_scope`).
+ */
+export function recoitQuestionEleve(
+  p: ProfilDestinataireQuestion,
+  matiereId: string | null | undefined,
+  eleveScope?: unknown,
+  now = Date.now(),
+): boolean {
+  if (p.role !== 'professor') return false;
+  if (!p.email) return false;
+  if (p.is_active === false) return false;
+  if (accesEquipeExpire(p, now)) return false;
+  return questionDansPerimetre(lireScopeEquipe(p.permission_scope), matiereId, eleveScope);
+}
+
+/**
+ * Filtre SQL des questions AVEC collège pour un membre du personnel :
+ * `'toutes'` (aucun filtre), ou la liste des collèges dont il voit les
+ * questions — vide pour qui ne répond pas aux questions. Les questions hors
+ * cours se filtrent ensuite une à une avec `questionDansPerimetre(scope,
+ * null, scopeDeLEleve)`.
+ */
+export function collegesDesQuestions(scope: ScopeEquipe | null): 'toutes' | string[] {
+  if (!scope || !accesOnglets(scope).qa) return [];
+  return scope.perimetre.specialites === 'toutes' ? 'toutes' : [...scope.perimetre.specialites];
 }
 
 /* ─────────────────────────────── navigation ─────────────────────────────── */

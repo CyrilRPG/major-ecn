@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { AlertCircle, Check, Eye, EyeOff, Loader2, MessagesSquare, Send, Trash2, Archive } from 'lucide-react';
+import { AlertCircle, Eye, EyeOff, Loader2, Send, Trash2, Archive } from 'lucide-react';
 import {
   answerQuestionAction,
   togglePublicAction,
@@ -11,7 +11,7 @@ import {
 } from '@/app/admin/qa/actions';
 import { Markdown } from '@/components/ui/markdown';
 import { StudentIdentityBadge } from '@/components/admin/qa/student-identity-badge';
-import type { StudentIdentity } from '@/lib/admin/student-identity';
+import type { StudentIdentity } from '@/lib/admin/student-identity-pure';
 
 export type QaAnswerView = {
   id: string;

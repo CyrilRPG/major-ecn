@@ -2,14 +2,14 @@
 
 import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, Plus, ShieldCheck, UserCog } from 'lucide-react';
+import { AlertTriangle, Loader2, Plus, ShieldCheck, UserCog } from 'lucide-react';
 import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { CONTENT_TYPES, CONTENT_TYPE_LABEL, type ContentType } from '@/lib/schemas/professor';
 import {
-  DROIT_BLOG_LABEL, DROIT_CONTENU_LABEL, FORMULES, FORMULE_LABEL, MODULE_LABEL, POPULATION_LABEL, ROLES_MODELES,
-  modulesVides, perimetreComplet, replierPerimetre,
+  DROIT_BLOG_LABEL, DROIT_CONTENU_LABEL, FORMULES, FORMULE_LABEL, MODULE_LABEL, PAGE_SECURITE, POPULATION_LABEL, ROLES_MODELES,
+  accesOnglets, composerScope, modulesVides, pagesDuScope, perimetreVide, replierPerimetre,
   type Formule, type Modules, type Perimetre, type RoleModele,
 } from '@/lib/auth/collaborateurs';
 
@@ -66,7 +66,10 @@ export function CollaborateurDialog({
     return out;
   }, [colleges]);
   const nomsPlats = useMemo(() => new Map(colleges.flatMap((c) => [[c.id, c.nom] as const, ...(c.enfants ?? []).map((e) => [e.id, e.nom] as const)])), [colleges]);
-  const [perimetre, setPerimetre] = useState<Perimetre>(() => (initial?.perimetre ? replierPerimetre(initial.perimetre, parentDe) : perimetreComplet()));
+  // Nouveau collaborateur : AUCUNE spécialité au départ. « Toutes les
+  // spécialités » est un choix explicite — le défaut « toutes » avait ouvert
+  // tous les collèges au monteur vidéo créé le 24/09/2026.
+  const [perimetre, setPerimetre] = useState<Perimetre>(() => (initial?.perimetre ? replierPerimetre(initial.perimetre, parentDe) : perimetreVide()));
   const [mfa, setMfa] = useState(initial?.mfa_obligatoire ?? false);
   const [accessEnd, setAccessEnd] = useState(initial?.access_end ?? '');
   const [actif, setActif] = useState(initial?.is_active ?? true);
@@ -110,6 +113,18 @@ export function CollaborateurDialog({
   const basculerType = (t: ContentType) => majContenus({
     types: modules.contenus.types.includes(t) ? modules.contenus.types.filter((x) => x !== t) : [...modules.contenus.types, t],
   });
+
+  // Aperçu de ce que la personne verra réellement, calculé avec les mêmes
+  // règles que les gardes du serveur (`accesOnglets`, `pagesDuScope`).
+  const apercu = useMemo(() => {
+    const scope = composerScope({ modules, perimetre });
+    const acces = accesOnglets(scope);
+    return {
+      pages: pagesDuScope(scope).filter((pg) => pg.href !== PAGE_SECURITE).map((pg) => pg.label),
+      questions: acces.qa,
+    };
+  }, [modules, perimetre]);
+  const nbSpecialites = specialitesChoisies.length;
 
   const enregistrer = () => {
     setError(null); setInfo(null);
@@ -225,9 +240,21 @@ export function CollaborateurDialog({
             <section className="space-y-3">
               <h3 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-(--color-ink-muted)">Périmètre</h3>
               <div className="flex flex-wrap gap-4 text-sm">
-                <label className="flex items-center gap-2"><input type="radio" checked={toutesSpecialites} onChange={() => setPerimetre((p) => ({ ...p, specialites: 'toutes' }))} /> Toutes les spécialités</label>
                 <label className="flex items-center gap-2"><input type="radio" checked={!toutesSpecialites} onChange={() => setPerimetre((p) => ({ ...p, specialites: p.specialites === 'toutes' ? [] : p.specialites }))} /> Certaines spécialités</label>
+                <label className="flex items-center gap-2"><input type="radio" checked={toutesSpecialites} onChange={() => setPerimetre((p) => ({ ...p, specialites: 'toutes' }))} /> Toutes les spécialités (y compris les futures)</label>
               </div>
+              {toutesSpecialites ? (
+                <p className="flex items-start gap-2 rounded-xl bg-[#FEF3E2] px-3 py-2 text-xs text-[#B26A00]">
+                  <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                  La personne verra tous les collèges, comme un administrateur, dans chacun des modules cochés ci-dessus. Ne choisissez ce périmètre que pour un responsable qui intervient réellement partout.
+                </p>
+              ) : (
+                <p className="text-xs text-(--color-ink-muted)">
+                  {nbSpecialites === 0
+                    ? 'Cochez les spécialités sur lesquelles la personne intervient : elle ne verra que celles-ci.'
+                    : `${nbSpecialites} spécialité${nbSpecialites > 1 ? 's' : ''} cochée${nbSpecialites > 1 ? 's' : ''} : la personne ne verra que ${nbSpecialites > 1 ? 'celles-ci' : 'celle-ci'}.`}
+                </p>
+              )}
               {!toutesSpecialites && (
                 <div className="grid max-h-48 gap-1 overflow-y-auto rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-3 sm:grid-cols-2">
                   {colleges.map((c) => {
@@ -283,6 +310,25 @@ export function CollaborateurDialog({
                   </tbody>
                 </table>
               </div>
+            </section>
+
+            {/* ── Aperçu : ce que la personne verra ── */}
+            <section className="rounded-xl border border-(--color-border) bg-white px-3 py-2.5 text-xs text-(--color-ink-soft)">
+              <p className="mb-1 font-semibold uppercase tracking-wide text-(--color-ink-muted)">Ce que la personne verra</p>
+              <p>
+                <span className="font-semibold text-(--color-ink)">Pages : </span>
+                {apercu.pages.length > 0 ? apercu.pages.join(' · ') : 'aucune (seulement la sécurité de son compte)'}
+              </p>
+              <p className="mt-0.5">
+                <span className="font-semibold text-(--color-ink)">Questions des élèves : </span>
+                {apercu.questions
+                  ? `${toutesSpecialites ? 'reçues et visibles pour toutes les spécialités' : 'reçues et visibles pour les spécialités cochées seulement'} — avec le nom et le prénom de l’élève, jamais son adresse e-mail.`
+                  : 'jamais — ni mail, ni page Questions / Réponses (réservé aux enseignants : fiches, QCM, DP, QROC, annales ou flashcards).'}
+              </p>
+              <p className="mt-0.5">
+                <span className="font-semibold text-(--color-ink)">Collèges : </span>
+                {toutesSpecialites ? 'tous' : nbSpecialites === 0 ? 'aucun pour l’instant' : specialitesChoisies.map((id) => nomsPlats.get(id) ?? id).join(', ')}
+              </p>
             </section>
 
             <p className="flex items-start gap-2 rounded-xl bg-(--color-surface-soft) px-3 py-2 text-xs text-(--color-ink-soft)">

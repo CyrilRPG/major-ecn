@@ -32,11 +32,27 @@ export function getProfessorScope(scope: unknown): ProfessorScope | null {
   const cours = Array.isArray(s.cours) ? s.cours.filter((x): x is string => typeof x === 'string') : undefined;
   return {
     role: 'professor',
-    type: s.type ?? 'all',
+    // Fermé par défaut : seul `type: 'all'` écrit en toutes lettres ouvre tous
+    // les collèges ; un type absent ou inconnu se lit comme la liste `colleges`.
+    type: s.type === 'all' ? 'all' : 'college',
     colleges: Array.isArray(s.colleges) ? s.colleges : [],
     ...(cours && cours.length > 0 ? { cours } : {}),
     content_permissions: content_permissions as Partial<Record<ContentType, PermissionLevel>>,
   };
+}
+
+/**
+ * Ce collège (ou sous-collège) est-il dans la portée du membre du personnel ?
+ * `null` = administrateur. À utiliser pour FILTRER une liste de collèges
+ * (sélecteur de la bibliothèque vidéo, arbre de navigation…) ; pour agir sur
+ * un item précis, `profCanAccessCours` (qui tient compte de `cours[]`).
+ * Un collège parent n'est ouvert que s'il est lui-même listé : le périmètre
+ * enregistré déploie déjà les sous-collèges d'un parent coché.
+ */
+export function profCanAccessCollege(scope: ProfessorScope | null, collegeId: string): boolean {
+  if (scope === null) return true; // admin
+  if (scope.type === 'all') return true;
+  return scope.colleges.includes(collegeId);
 }
 
 /** Vérifie qu'un prof a accès au cours (et à son collège). Renvoie true/false. */

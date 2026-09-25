@@ -25,10 +25,17 @@ async function acteurQa(questionId: string | null) {
   if (!questionId) return { ...acteur, refus: 'Question introuvable.' };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: q } = await (createAdminClient() as any)
-    .from('forum_questions').select('matiere_id').eq('id', questionId).maybeSingle();
+    .from('forum_questions').select('matiere_id, student_id').eq('id', questionId).maybeSingle();
   if (!q) return { ...acteur, refus: 'Question introuvable.' };
+  const { matiere_id: matiereId, student_id: eleveId } = q as { matiere_id: string | null; student_id: string | null };
+  // Question hors cours : elle suit la spécialité de l'élève.
+  let eleveScope: unknown;
+  if (!matiereId && eleveId) {
+    const { data: e } = await createAdminClient().from('profiles').select('permission_scope').eq('id', eleveId).maybeSingle();
+    eleveScope = (e as { permission_scope?: unknown } | null)?.permission_scope;
+  }
   const scope = await scopeEquipeResolu(acteur.profile);
-  return { ...acteur, refus: questionDansPerimetre(scope, (q as { matiere_id: string | null }).matiere_id) ? null : HORS_PERIMETRE_QA };
+  return { ...acteur, refus: questionDansPerimetre(scope, matiereId, eleveScope) ? null : HORS_PERIMETRE_QA };
 }
 
 function professorName(p: { first_name: string | null; last_name: string | null; email: string | null; pseudo?: string | null; role?: string | null }) {

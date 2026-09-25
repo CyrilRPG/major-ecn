@@ -4,6 +4,7 @@ import { loadFiche, type Fiche } from '@/lib/suivi/fiche';
 import { fichesDocumentHtml } from '@/lib/suivi/pdf';
 import { htmlToPdf } from '@/lib/suivi/pdf-render';
 import { loadCandidates } from '@/lib/suivi/candidates';
+import { filtreElevesSuivi } from '@/lib/suivi/perimetre';
 import { filterCandidates } from '@/lib/suivi/stats';
 import { roleCan } from '@/lib/suivi/types';
 import { parseCandidateFilters } from '@/lib/suivi/export-filters';
@@ -26,8 +27,9 @@ export async function GET(req: Request) {
     const url = new URL(req.url);
     const filters = parseCandidateFilters(url);
     let ids = filters.ids ?? [];
+    const filtre = await filtreElevesSuivi(guard.userId, guard.role);
     if (ids.length === 0) {
-      const bundle = await loadCandidates();
+      const bundle = await loadCandidates(filtre);
       ids = filterCandidates(bundle.candidates, filters, bundle.appointments).map((c) => c.id);
     }
     if (ids.length === 0) return NextResponse.json({ error: 'Aucun candidat sélectionné' }, { status: 400 });
@@ -40,7 +42,8 @@ export async function GET(req: Request) {
     // de quelques candidats pour rester sous la durée maximale.
     for (const id of ids) {
       const f = await loadFiche(id, { internalNotes: internal, withActivity: ids.length <= 5 });
-      if (f) fiches.push(f);
+      // Sélection explicite (`?ids=`) : un élève hors périmètre est ignoré.
+      if (f && (!filtre || filtre(f.student.permission_scope))) fiches.push(f);
     }
     if (fiches.length === 0) return NextResponse.json({ error: 'Candidats introuvables' }, { status: 404 });
     const pdf = await htmlToPdf(fichesDocumentHtml(fiches));

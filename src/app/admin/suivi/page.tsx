@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { requireSuiviPage } from '@/lib/suivi/roles';
 import { loadCandidates } from '@/lib/suivi/candidates';
+import { filtreElevesSuivi } from '@/lib/suivi/perimetre';
 import { listActions, listAlerts } from '@/lib/suivi/db';
 import { computeDashboard, type DashboardFilters } from '@/lib/suivi/stats';
 import { fmtDateMedium, fmtDateTime, fmtMinutes, isValidDayKey, addDays, todayKey, dayKeyOf } from '@/lib/suivi/format';
@@ -15,7 +16,7 @@ const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) 
 
 /** Tableau de bord (§16) : indicateurs filtrables par spécialité, formule, voie, campagne, période. */
 export default async function SuiviDashboardPage({ searchParams }: { searchParams: Promise<Search> }) {
-  await requireSuiviPage('view');
+  const actor = await requireSuiviPage('view');
   const sp = await searchParams;
   const filters: DashboardFilters = {
     specialty: one(sp.specialty) || undefined,
@@ -26,7 +27,7 @@ export default async function SuiviDashboardPage({ searchParams }: { searchParam
     to: isValidDayKey(one(sp.to)) ? one(sp.to) : undefined,
   };
 
-  const [bundle, actions, alerts] = await Promise.all([loadCandidates(), listActions(), listAlerts()]);
+  const [bundle, actions, alerts] = await Promise.all([loadCandidates(await filtreElevesSuivi(actor.profile.id, actor.role)), listActions(), listAlerts()]);
   const stats = computeDashboard({
     candidates: bundle.candidates, members: bundle.members, appointments: bundle.appointments, actions, alerts, campaigns: bundle.campaigns, filters,
   });

@@ -52,7 +52,8 @@ export default async function EntrainementsElevesPage({ searchParams }: { search
       const nom = [r.profiles?.first_name, r.profiles?.last_name].filter(Boolean).join(' ').trim() || r.profiles?.pseudo || 'Élève';
       return {
         ...e,
-        eleve: { nom, email: r.profiles?.email ?? null },
+        // L'adresse de l'élève reste réservée aux administrateurs.
+        eleve: { nom, email: isAdmin ? (r.profiles?.email ?? null) : null },
         cours: { id: cours.id, titre: cours.titre, college: m?.parent?.nom ? `${m.parent.nom} › ${m.nom}` : (m?.nom ?? '') },
         peutAgir: isAdmin || canEditCoursContent(profile, type, cours.matiere_id, cours.id),
         visible: isAdmin || canViewCoursContent(profile, type, cours.matiere_id, cours.id),

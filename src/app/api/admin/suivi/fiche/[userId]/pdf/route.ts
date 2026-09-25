@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireSuiviRequest } from '@/lib/suivi/roles';
 import { loadFiche } from '@/lib/suivi/fiche';
+import { HORS_PERIMETRE_SUIVI, filtreElevesSuivi } from '@/lib/suivi/perimetre';
 import { fichesDocumentHtml } from '@/lib/suivi/pdf';
 import { htmlToPdf } from '@/lib/suivi/pdf-render';
 import { roleCan } from '@/lib/suivi/types';
@@ -17,6 +18,8 @@ export async function GET(req: Request, ctx: { params: Promise<{ userId: string 
   try {
     const fiche = await loadFiche(userId, { internalNotes: roleCan(guard.role, 'internal_notes') });
     if (!fiche) return NextResponse.json({ error: 'Candidat introuvable' }, { status: 404 });
+    const filtre = await filtreElevesSuivi(guard.userId, guard.role);
+    if (filtre && !filtre(fiche.student.permission_scope)) return NextResponse.json({ error: HORS_PERIMETRE_SUIVI }, { status: 403 });
     const pdf = await htmlToPdf(fichesDocumentHtml([fiche]));
     const safe = fiche.name.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase();
     return new NextResponse(Buffer.from(pdf), {

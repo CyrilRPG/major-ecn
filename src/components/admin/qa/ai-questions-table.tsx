@@ -5,7 +5,7 @@ import { ChevronDown, ChevronUp, Bot, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Markdown } from '@/components/ui/markdown';
 import { StudentIdentityBadge } from '@/components/admin/qa/student-identity-badge';
-import type { StudentIdentity } from '@/lib/admin/student-identity';
+import type { StudentIdentity } from '@/lib/admin/student-identity-pure';
 
 export type AiQuestionRow = {
   id: string;
@@ -46,7 +46,7 @@ export function AiQuestionsTable({ rows }: { rows: AiQuestionRow[] }) {
   if (rows.length === 0) {
     return (
       <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) px-5 py-12 text-center text-sm text-(--color-ink-soft)">
-        Aucune question IA enregistrée pour l'instant.
+        Aucune question IA enregistrée pour l’instant.
       </div>
     );
   }
@@ -107,7 +107,7 @@ export function AiQuestionsTable({ rows }: { rows: AiQuestionRow[] }) {
                 {r.user_question && (
                   <div className="rounded-xl border border-(--color-border) bg-(--color-surface) p-3">
                     <div className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-(--color-ink-muted)">
-                      <User className="h-3 w-3" /> Question de l'élève
+                      <User className="h-3 w-3" /> Question de l’élève
                     </div>
                     <p className="whitespace-pre-wrap text-sm leading-relaxed text-(--color-ink)">
                       {r.user_question}
@@ -117,7 +117,7 @@ export function AiQuestionsTable({ rows }: { rows: AiQuestionRow[] }) {
                 {r.ai_answer && (
                   <div className="rounded-xl border border-blue-200 bg-blue-50/50 p-3">
                     <div className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-blue-600">
-                      <Bot className="h-3 w-3" /> Réponse de l'IA
+                      <Bot className="h-3 w-3" /> Réponse de l’IA
                     </div>
                     <div className="text-sm leading-relaxed text-(--color-ink) prose prose-sm max-w-none">
                       <Markdown>{r.ai_answer}</Markdown>

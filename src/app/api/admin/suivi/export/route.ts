@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireSuiviRequest } from '@/lib/suivi/roles';
 import { loadCandidates } from '@/lib/suivi/candidates';
+import { filtreElevesSuivi } from '@/lib/suivi/perimetre';
 import { CANDIDATE_STATUS_LABEL, filterCandidates } from '@/lib/suivi/stats';
 import { fmtDateTime } from '@/lib/suivi/format';
 import { parseCandidateFilters } from '@/lib/suivi/export-filters';
@@ -22,7 +23,7 @@ export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
     const filters = parseCandidateFilters(url);
-    const bundle = await loadCandidates();
+    const bundle = await loadCandidates(await filtreElevesSuivi(guard.userId, guard.role));
     const rows = filterCandidates(bundle.candidates, filters, bundle.appointments);
     const campaignName = new Map(bundle.campaigns.map((c) => [c.id, c.name]));
     const header = ['Nom', 'Email', 'Spécialité', 'Formule', 'Voie', 'Statut', 'Dernier suivi', 'Suivis réalisés', 'Prochain rendez-vous', 'Dernière connexion', 'Actions ouvertes', 'Actions en retard', 'Campagnes'];

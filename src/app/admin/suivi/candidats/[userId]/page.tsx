@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireSuiviPage } from '@/lib/suivi/roles';
+import { filtreElevesSuivi } from '@/lib/suivi/perimetre';
 import { loadFiche } from '@/lib/suivi/fiche';
 import { getSettings, listTemplates } from '@/lib/suivi/db';
 import { fmtDateShort, fmtDateTime, todayKey } from '@/lib/suivi/format';
@@ -25,6 +26,19 @@ export default async function FicheCandidatPage({ params }: { params: Promise<{ 
   const internal = roleCan(role, 'internal_notes');
   const [fiche, settings, templates] = await Promise.all([loadFiche(userId, { internalNotes: internal }), getSettings(), listTemplates()]);
   if (!fiche) notFound();
+  // Élève hors du périmètre du collaborateur : la fiche (e-mail, téléphone,
+  // comptes rendus) ne s'ouvre pas, même par son adresse directe.
+  const filtre = await filtreElevesSuivi(profile.id, role);
+  if (filtre && !filtre(fiche.student.permission_scope)) {
+    return (
+      <main className="mx-auto w-full max-w-3xl px-4 py-10 lg:px-8">
+        <p className="rounded-xl border border-(--color-border) bg-(--color-surface) px-4 py-6 text-center text-sm text-(--color-ink-soft)">
+          Cet élève ne fait pas partie de votre périmètre.{' '}
+          <Link href="/admin/suivi/candidats" className="font-semibold text-(--color-primary) hover:underline">Revenir aux candidats</Link>
+        </p>
+      </main>
+    );
+  }
   const tpl = Object.fromEntries(templates.map((t) => [t.key, { subject: t.subject, body: t.body }])) as Record<string, { subject: string; body: string }>;
   const can = { manage: roleCan(role, 'manage'), book: roleCan(role, 'book'), report: roleCan(role, 'report') };
   const staff = fiche.staff.map((s) => ({ id: s.id, name: s.name }));

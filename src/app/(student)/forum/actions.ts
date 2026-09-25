@@ -2,29 +2,35 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
+import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { generatePseudo } from '@/lib/auth/pseudo';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { forumNewQuestionEmail } from '@/lib/email/templates';
-import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
-import { identityContext, identityFromProfile } from '@/lib/admin/student-identity';
-import { canRead, canWrite, type ProfessorScope } from '@/lib/schemas/professor';
+import { ELEVE_SANS_NOM, identityContext, identityFromProfile } from '@/lib/admin/student-identity';
 import { logAudit } from '@/lib/audit/log';
-import { TYPES_PEDAGOGIQUES, accesOnglets, lireScopeEquipe } from '@/lib/auth/collaborateurs';
+import { lireScopeEquipe, questionDansPerimetre, recoitQuestionEleve } from '@/lib/auth/collaborateurs';
 
 type Result = { ok: true; id: string } | { error: string };
 
-/** Vrai si le prof a au moins une lecture sur un type de contenu pour ce collège. */
-function profCanAccessForumMatiere(scope: ProfessorScope | null, matiereId: string | null): boolean {
-  if (!scope) return false;
-  if (matiereId == null) return scope.type === 'all'; // question hors-cours : seuls les profs 'tous collèges'
-  // Enseignants seulement : la vidéo seule (monteur) ne donne pas voix au forum.
-  const hasAnyPerm = TYPES_PEDAGOGIQUES.some((t) => canRead(scope, t) || canWrite(scope, t));
-  if (!hasAnyPerm) return false;
-  if (scope.type === 'all') return true;
-  return scope.colleges.includes(matiereId);
+/**
+ * Un membre du personnel (non administrateur) peut-il agir sur cette
+ * question ? Même règle que la page Q&R et le mail de notification
+ * (`questionDansPerimetre`) : enseignant — jamais un monteur vidéo, un
+ * commercial ni un rédacteur blog — ET collège de la question dans son
+ * périmètre ; une question hors cours suit la spécialité de l'élève.
+ */
+async function profCanAccessForumQuestion(
+  permissionScope: unknown,
+  q: { matiere_id: string | null; student_id?: string | null },
+): Promise<boolean> {
+  let eleveScope: unknown;
+  if (!q.matiere_id && q.student_id) {
+    const { data } = await createAdminClient().from('profiles').select('permission_scope').eq('id', q.student_id).maybeSingle();
+    eleveScope = (data as { permission_scope?: unknown } | null)?.permission_scope;
+  }
+  return questionDansPerimetre(lireScopeEquipe(permissionScope), q.matiere_id, eleveScope);
 }
 
 export async function askQuestionAction(input: {
@@ -92,9 +98,11 @@ export async function askQuestionAction(input: {
   notifyProfessorsOfNewQuestion({
     questionId: data.id,
     matiereId,
+    eleveScope: profile.permission_scope,
     studentPseudo: pseudo,
-    studentName: identite.name,
-    studentEmail: identite.email,
+    // Nom et prénom seulement : l'adresse de l'élève n'est jamais transmise
+    // aux collaborateurs (demande de Cyril, 25/09/2026).
+    studentName: identite.name === ELEVE_SANS_NOM ? pseudo : identite.name,
     studentContext: identityContext(identite),
     coursTitre,
     matiereNom,
@@ -106,15 +114,19 @@ export async function askQuestionAction(input: {
 }
 
 /**
- * Envoie un email à chaque professeur ayant accès au collège concerné.
- * Si pas de collège (question hors-cours), on alerte tous les professeurs.
+ * Envoie un email à chaque enseignant dont le périmètre couvre le collège de
+ * la question (`recoitQuestionEleve`) : comptes actifs et non expirés, avec au
+ * moins un type pédagogique — jamais un monteur vidéo, un commercial ni un
+ * rédacteur blog. Une question hors cours part aux enseignants de la
+ * spécialité de l'élève. Le mail ne porte PAS l'adresse de l'élève.
  */
 async function notifyProfessorsOfNewQuestion(args: {
   questionId: string;
   matiereId: string | null;
+  /** `permission_scope` de l'élève : routage d'une question hors cours. */
+  eleveScope: unknown;
   studentPseudo: string;
   studentName: string;
-  studentEmail: string | null;
   studentContext: string;
   coursTitre: string | null;
   matiereNom: string | null;
@@ -123,20 +135,12 @@ async function notifyProfessorsOfNewQuestion(args: {
   const admin = createAdminClient();
   const { data: profs } = await admin
     .from('profiles')
-    .select('id, first_name, email, permission_scope')
+    .select('id, role, first_name, email, permission_scope, is_active, access_end')
     .eq('role', 'professor');
 
   if (!profs?.length) return;
 
-  const targets = profs.filter((p) => {
-    if (!p.email) return false;
-    // Seuls les enseignants répondent au forum : ni le monteur vidéo, ni le
-    // commercial, ni le rédacteur blog ne reçoivent ces notifications.
-    if (!accesOnglets(lireScopeEquipe(p.permission_scope)).qa) return false;
-    if (!args.matiereId) return true; // question sans cours → tous les profs
-    const scope = parseScope(p.permission_scope);
-    return canAccessCollege(scope, args.matiereId);
-  });
+  const targets = profs.filter((p) => recoitQuestionEleve(p, args.matiereId, args.eleveScope));
 
   if (targets.length === 0) return;
 
@@ -147,7 +151,7 @@ async function notifyProfessorsOfNewQuestion(args: {
         professorFirstName: p.first_name ?? '',
         studentPseudo: args.studentPseudo,
         studentName: args.studentName,
-        studentEmail: args.studentEmail,
+        studentEmail: null,
         studentContext: args.studentContext,
         coursTitre: args.coursTitre,
         matiereNom: args.matiereNom,
@@ -173,14 +177,13 @@ export async function toggleQuestionPublicAction(questionId: string): Promise<{ 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: q } = await (admin as any)
     .from('forum_questions')
-    .select('id, is_public, matiere_id, body')
+    .select('id, is_public, matiere_id, student_id, body')
     .eq('id', questionId)
     .maybeSingle();
   if (!q) return { error: 'Question introuvable.' };
 
   if (profile.role === 'professor') {
-    const scope = getProfessorScope(profile.permission_scope);
-    if (!profCanAccessForumMatiere(scope, q.matiere_id)) {
+    if (!(await profCanAccessForumQuestion(profile.permission_scope, q))) {
       return { error: 'Vous n\'avez pas accès au collège de cette question.' };
     }
   }
@@ -227,14 +230,13 @@ export async function postProfessorAnswerAction(input: z.infer<typeof AnswerSche
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: q } = await (admin as any)
     .from('forum_questions')
-    .select('id, matiere_id, body, is_public')
+    .select('id, matiere_id, student_id, body, is_public')
     .eq('id', parsed.data.questionId)
     .maybeSingle();
   if (!q) return { error: 'Question introuvable.' };
 
   if (profile.role === 'professor') {
-    const scope = getProfessorScope(profile.permission_scope);
-    if (!profCanAccessForumMatiere(scope, q.matiere_id)) {
+    if (!(await profCanAccessForumQuestion(profile.permission_scope, q))) {
       return { error: 'Vous n\'avez pas accès au collège de cette question.' };
     }
   }
@@ -308,8 +310,7 @@ export async function addReplyAction(input: z.infer<typeof ReplySchema>): Promis
     return { error: 'Vous ne pouvez répondre que dans vos propres discussions.' };
   }
   if (profile.role === 'professor') {
-    const scope = getProfessorScope(profile.permission_scope);
-    if (!profCanAccessForumMatiere(scope, q.matiere_id)) {
+    if (!(await profCanAccessForumQuestion(profile.permission_scope, q))) {
       return { error: 'Vous n\'avez pas accès au collège de cette question.' };
     }
   }

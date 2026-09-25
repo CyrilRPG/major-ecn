@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { ExternalLink, Mail } from 'lucide-react';
-import type { StudentIdentity } from '@/lib/admin/student-identity';
+import type { StudentIdentity } from '@/lib/admin/student-identity-pure';
 
 /**
- * Qui a écrit ? Nom réel, adresse pour répondre, spécialité / voie / formule,
- * et le lien vers le profil — le pseudo automatique reste affiché en second,
- * parce que c'est lui que l'élève voit sur le forum public.
+ * Qui a écrit ? Nom réel, spécialité / voie / formule — et, selon le lecteur
+ * (`identitePourLecteur`), l'adresse (administrateurs seulement) et le lien
+ * vers la fiche (accès au suivi). Le pseudo automatique reste affiché en
+ * second, parce que c'est lui que l'élève voit sur le forum public.
  */
 export function StudentIdentityBadge({
   student,
@@ -35,14 +36,19 @@ export function StudentIdentityBadge({
   return (
     <div className="min-w-0">
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-        <Link
-          href={student.href}
-          className="inline-flex items-center gap-1 text-sm font-semibold text-(--color-ink) underline-offset-4 hover:underline"
-          title="Ouvrir le profil de l’élève"
-        >
-          {student.name}
-          <ExternalLink className="h-3 w-3 text-(--color-ink-muted)" />
-        </Link>
+        {student.href ? (
+          <Link
+            href={student.href}
+            className="inline-flex items-center gap-1 text-sm font-semibold text-(--color-ink) underline-offset-4 hover:underline"
+            title="Ouvrir le profil de l’élève"
+          >
+            {student.name}
+            <ExternalLink className="h-3 w-3 text-(--color-ink-muted)" />
+          </Link>
+        ) : (
+          // Sans accès au suivi élèves : le nom seul, sans lien vers la fiche.
+          <span className="text-sm font-semibold text-(--color-ink)">{student.name}</span>
+        )}
         <span className="font-mono text-[11px] text-(--color-ink-muted)">{pseudo}</span>
         {student.email && (
           <a

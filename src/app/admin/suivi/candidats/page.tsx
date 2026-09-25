@@ -1,15 +1,17 @@
 import { requireSuiviPage } from '@/lib/suivi/roles';
 import { loadCandidates } from '@/lib/suivi/candidates';
+import { filtreElevesSuivi } from '@/lib/suivi/perimetre';
 import { CandidatesTable } from '@/components/admin/suivi/candidates-table';
 
 export const dynamic = 'force-dynamic';
 
 /** Vue globale des candidats (§10) + recherche par nom ou email (§11) + exports (§17). */
 export default async function CandidatsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  await requireSuiviPage('view');
+  const actor = await requireSuiviPage('view');
   const sp = await searchParams;
   const q = typeof sp.q === 'string' ? sp.q : '';
-  const bundle = await loadCandidates();
+  // Collaborateur : seuls les élèves de son périmètre (spécialités, formules).
+  const bundle = await loadCandidates(await filtreElevesSuivi(actor.profile.id, actor.role));
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 lg:px-8">
       <header className="mb-6 border-b border-(--color-border) pb-5">
