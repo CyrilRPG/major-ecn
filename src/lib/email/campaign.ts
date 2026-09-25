@@ -1,6 +1,5 @@
 import 'server-only';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { renderCampaignHtml } from './campaigns';
 
 export type CampaignKey = 'j1' | 'j3' | 'j5' | 'j7';
 
@@ -16,12 +15,9 @@ export const CAMPAIGNS: Record<
 
 const RESEND_URL = 'https://api.resend.com/emails';
 
+/** HTML de l'étape `key` (gabarit commun Major ECN, cf. ./campaigns/index.ts). */
 export function loadTemplate(key: CampaignKey): string {
-  const campaign = CAMPAIGNS[key];
-  return readFileSync(
-    join(process.cwd(), 'src', 'lib', 'email', 'campaigns', campaign.file),
-    'utf-8',
-  );
+  return renderCampaignHtml(key);
 }
 
 export async function sendCampaignEmail(

@@ -2,6 +2,7 @@ import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { NextResponse } from 'next/server';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { sendEmail } from '@/lib/email/send';
+import { adminBroadcastEmail } from '@/lib/email/templates';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -13,23 +14,6 @@ export const maxDuration = 60;
  * Body : { studentIds: string[], subject: string, message: string }
  * Chaque élève reçoit son propre email (pas d'exposition des autres adresses).
  */
-function escapeHtml(s: string): string {
-  return s.replace(/[&<>"']/g, (c) =>
-    c === '&' ? '&amp;' : c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '"' ? '&quot;' : '&#39;',
-  );
-}
-
-function htmlBody(message: string): string {
-  const safe = escapeHtml(message).replace(/\n/g, '<br/>');
-  return (
-    `<div style="font-family:'Manrope',Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1F2937;">` +
-    `<div style="border-top:4px solid #C0112E;border-radius:2px;margin-bottom:16px;"></div>` +
-    `<div style="font-size:15px;line-height:1.6;">${safe}</div>` +
-    `<p style="margin-top:24px;font-size:12px;color:#7A8499;">— L'équipe Major ECN</p>` +
-    `</div>`
-  );
-}
-
 export async function POST(req: Request) {
   const guard = await requireAdminRequest(req);
   if (!guard.ok) return guard.error;
@@ -58,7 +42,7 @@ export async function POST(req: Request) {
     .map((s) => s.email)
     .filter((e): e is string => !!e);
 
-  const html = htmlBody(message);
+  const { html, text } = adminBroadcastEmail({ subject, message });
   let sent = 0;
   let failed = 0;
   const CHUNK = 15;
@@ -66,7 +50,7 @@ export async function POST(req: Request) {
     const slice = recipients.slice(i, i + CHUNK);
     const results = await Promise.all(
       slice.map((to) =>
-        sendEmail({ to, subject, html, text: message }).catch(() => ({ ok: false as const, error: 'throw' })),
+        sendEmail({ to, subject, html, text }).catch(() => ({ ok: false as const, error: 'throw' })),
       ),
     );
     for (const r of results) { if (r.ok) sent++; else failed++; }

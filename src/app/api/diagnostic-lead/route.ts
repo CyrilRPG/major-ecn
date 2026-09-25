@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { sendEmail, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
+import { diagnosticLeadEmail } from '@/lib/email/templates';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 const Schema = z.object({
@@ -18,11 +19,6 @@ const Schema = z.object({
   obstacle: z.string().trim().max(200).optional().default(''),
   answers: z.record(z.string(), z.string()).optional().default({}),
 });
-
-function escapeHtml(s: string): string {
-  return s.replace(/[&<>"']/g, (c) =>
-    c === '&' ? '&amp;' : c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '"' ? '&quot;' : '&#39;');
-}
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
@@ -56,45 +52,7 @@ export async function POST(req: Request) {
   }
 
   // ── Notification interne ──
-  const subject = `📊 Diagnostic EVC — ${d.firstName} ${d.lastName || ''} · ${d.profileLabel} (${d.score}/${d.maxScore})`.trim();
-  const rows: [string, string][] = [
-    ['Nom', `${d.firstName} ${d.lastName || ''}`.trim()],
-    ['Email', d.email],
-    ['Téléphone', d.phone || '—'],
-    ['Spécialité', d.specialty || '—'],
-    ['Voie', d.voie || '—'],
-    ['Session EVC visée', d.sessionEvc || '—'],
-    ['Score', `${d.score} / ${d.maxScore}`],
-    ['Profil', d.profileLabel],
-    ['Principal obstacle', d.obstacle || '—'],
-  ];
-  const answerRows = Object.entries(d.answers)
-    .map(([k, v]) => `<tr><td style="padding:4px 0;font-size:12px;color:#7A7A7A;width:42%;">${escapeHtml(k)}</td><td style="padding:4px 0;font-size:12px;color:#1F2937;">${escapeHtml(v)}</td></tr>`)
-    .join('');
-
-  const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8" /></head>
-<body style="margin:0;background:#FAFAF8;font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#2D2D2D;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FAFAF8;padding:32px 16px;"><tr><td align="center">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#FFF;border:1px solid #ECEEF1;border-radius:20px;overflow:hidden;">
-      <tr><td style="background:#0F1F4D;padding:20px 28px;text-align:center;"><span style="font-size:18px;font-weight:800;color:#FFF;">📊 Nouveau diagnostic — Profil EVC</span></td></tr>
-      <tr><td style="height:3px;background:linear-gradient(90deg,#6B1A2A,#C0112E,#E8742C);font-size:0;line-height:0;">&nbsp;</td></tr>
-      <tr><td style="padding:28px;">
-        <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;">
-          ${rows.map(([k, v]) => `<tr><td style="padding:7px 0;font-size:13px;color:#7A7A7A;width:38%;">${escapeHtml(k)}</td><td style="padding:7px 0;font-size:13px;color:#1F2937;font-weight:600;">${escapeHtml(v)}</td></tr>`).join('')}
-        </table>
-        <p style="margin:22px 0 8px;font-size:12px;font-weight:700;color:#0F1F4D;text-transform:uppercase;letter-spacing:.05em;">Détail des réponses</p>
-        <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;">${answerRows}</table>
-        <p style="margin:22px 0 0;font-size:12px;color:#7A7A7A;">Répondez à cet email pour contacter ${escapeHtml(d.firstName)} (${escapeHtml(d.email)}).</p>
-      </td></tr>
-    </table>
-  </td></tr></table>
-</body></html>`;
-
-  const text = [
-    'Nouveau diagnostic — Profil EVC',
-    '',
-    ...rows.map(([k, v]) => `${k} : ${v}`),
-  ].join('\n');
+  const { subject, html, text } = diagnosticLeadEmail(d);
 
   const r = await sendEmail({ to: INTERNAL_NOTIFY_EMAILS, subject, html, text, replyTo: d.email });
   if (!r.ok) console.error('[diagnostic-lead] notification échouée :', r.error);

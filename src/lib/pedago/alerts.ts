@@ -31,6 +31,7 @@ import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
+import { majorEmail, note as emailNote, sectionTitle as emailSectionTitle, small as emailSmall } from '@/lib/email/layout';
 import { normalizeSpecialtyStatus } from '@/lib/pedago/status';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -140,32 +141,32 @@ export async function sendDailyAlertDigest(): Promise<{ sent: boolean; p1: numbe
     const rows = list.map((a) => {
       const s = nameOf(a.user_id);
       const lines = (a.details?.email_lines ?? [])
-        .map((l) => `<p style="font-size:13px;color:#374151;margin:1px 0 0 0">${escapeHtml(l)}</p>`)
+        .map((l) => emailSmall(escapeHtml(l), { margin: '2px 0 0' }))
         .join('');
-      return `<div style="border:1px solid #E5E7EB;border-left:4px solid ${color};border-radius:8px;padding:12px 16px;margin:0 0 10px">
-  <p style="font-size:14px;color:#111;margin:0"><strong>${escapeHtml(s.name)}</strong> <span style="color:#6B7280">${escapeHtml(s.email)}</span></p>
-  <p style="font-size:13px;color:#111;margin:4px 0 0"><strong>Motif :</strong> ${escapeHtml(a.motif)}</p>
-  ${lines}
-</div>`;
+      return `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 10px;"><tr>
+<td width="4" style="width:4px;background-color:${color};font-size:0;line-height:0;" bgcolor="${color}">&nbsp;</td>
+<td style="padding:14px 16px;border:1px solid #E6E8EE;border-left:0;background-color:#FFFFFF;" bgcolor="#FFFFFF">
+${emailSmall(`<strong style="color:#141B2B;font-size:15px;">${escapeHtml(s.name)}</strong>&nbsp; <span style="color:#667085;">${escapeHtml(s.email)}</span>`)}
+${emailSmall(`<strong style="color:#141B2B;">Motif :</strong> ${escapeHtml(a.motif)}`, { margin: '4px 0 0' })}
+${lines}
+</td></tr></table>`;
     }).join('');
-    return `<p style="font-size:12px;font-weight:700;letter-spacing:0.1em;color:${color};text-transform:uppercase;margin:20px 0 10px">${label} (${list.length})</p>${rows}`;
+    return emailSectionTitle(`${label} (${list.length})`, color) + rows;
   };
 
-  const html = `<!doctype html>
-<html lang="fr"><head><meta charset="utf-8"/></head>
-<body style="font-family:sans-serif;margin:0;padding:24px;background:#F9FAFB">
-<div style="max-width:640px;margin:0 auto;background:#fff;border-radius:12px;border:1px solid #E5E7EB;padding:32px">
-  <h1 style="font-size:18px;color:#111;margin:0">Récapitulatif quotidien des alertes pédagogiques</h1>
-  <p style="font-size:13px;color:#6B7280;margin:6px 0 0">${escapeHtml(dateLabel)} — ${alerts.length} nouvelle${alerts.length > 1 ? 's' : ''} alerte${alerts.length > 1 ? 's' : ''}</p>
-  ${sectionHtml(p1, 'Priorité 1 — prise de contact pédagogique recommandée', '#A91D2C')}
-  ${sectionHtml(p2, 'Priorité 2 — à surveiller', '#E8742C')}
-  <hr style="border:none;border-top:1px solid #E5E7EB;margin:20px 0"/>
-  <p style="font-size:12px;color:#6B7280;margin:0">
-    Détail et résolution : Admin → Alertes pédagogiques. Les Priorité 1 non résolues
-    apparaissent dans « Candidats à contacter » (CRM).
-  </p>
-</div>
-</body></html>`;
+  const html = majorEmail({
+    subject,
+    preheader: `${alerts.length} nouvelle${alerts.length > 1 ? 's' : ''} alerte${alerts.length > 1 ? 's' : ''} — ${p1.length} P1 · ${p2.length} P2`,
+    eyebrow: 'Alertes pédagogiques',
+    title: 'Récapitulatif quotidien des alertes pédagogiques',
+    lead: `${dateLabel} — ${alerts.length} nouvelle${alerts.length > 1 ? 's' : ''} alerte${alerts.length > 1 ? 's' : ''}`,
+    bodyHtml: [
+      sectionHtml(p1, 'Priorité 1 — prise de contact pédagogique recommandée', '#A91D2C'),
+      sectionHtml(p2, 'Priorité 2 — à surveiller', '#E8742C'),
+      emailNote('Détail et résolution : Admin → Alertes pédagogiques. Les Priorité 1 non résolues apparaissent dans « Candidats à contacter » (CRM).'),
+    ].join('\n'),
+    audience: 'internal',
+  });
 
   const sectionText = (list: AlertRow[], label: string) =>
     list.length === 0 ? [] : [

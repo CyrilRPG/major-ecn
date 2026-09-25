@@ -2,37 +2,24 @@ import 'server-only';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { arenaDb } from './db';
 import { signedLinkToken } from './session';
+import { isQaSandboxSlug } from './qa-sandbox';
 import { describeBareme, type Bareme } from './scoring';
 import { formatNote, noteMax, noteSur10 } from './note';
 import { parisAndLocalLabel } from './time';
 import { COMMERCIAL_AFTER_M3, publicRules, UNDER_THRESHOLD_MESSAGE, WARNING_CONNECTION, WARNING_NATURE } from './texts';
 import { DISTINCTION_LABEL, isPodiumRank, ordinalRank, type Distinction } from './performance';
 import { DEFAULT_SECONDS_PER_QUESTION, type EmailKind, type ParticipantRow, type TournamentRow } from './types';
+import { esc as escAttr } from '@/lib/email/layout';
+import { aButton, aFacts, aHello, aLabel, aLine, aList, aP, aPanel, aPHtml, aRule, aStats, ARENA_MAIL, arenaShell, arenaTextFooter } from './email-layout';
 
 /**
- * EVC Arena — emails (§11). Modèles sobres, texte + HTML, envoi journalisé
- * dans `arena_emails` avec clé de dédoublonnage pour les envois automatiques :
+ * EVC Arena — emails (§11). Texte + HTML, envoi journalisé dans
+ * `arena_emails` avec clé de dédoublonnage pour les envois automatiques :
  * un cron relancé n'envoie jamais deux fois le même email.
+ *
+ * Présentation (bandeau, grands chiffres, panneaux, pied de page) :
+ * `./email-layout.ts`. Ce fichier ne porte que le contenu des messages.
  */
-
-const RED = '#E4002B';
-const NAVY = '#14254E';
-
-function esc(s: string): string {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-function para(s: string): string {
-  return `<p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#1F2937">${esc(s)}</p>`;
-}
-
-function button(label: string, url: string): string {
-  return `<p style="margin:22px 0"><a href="${esc(url)}" style="display:inline-block;background:${RED};color:#fff;text-decoration:none;font-weight:700;padding:13px 22px;border-radius:10px;font-size:15px">${esc(label)}</a></p>`;
-}
-
-function box(html: string): string {
-  return `<div style="border-left:4px solid ${RED};background:#FBF7F7;padding:12px 16px;margin:16px 0;border-radius:6px">${html}</div>`;
-}
 
 export function arenaUrls(t: TournamentRow) {
   const base = `${siteUrl()}/arena/${t.slug}`;
@@ -47,31 +34,49 @@ export function arenaUrls(t: TournamentRow) {
   };
 }
 
-function shell(t: TournamentRow, p: ParticipantRow | null, title: string, bodyHtml: string, accessUrl?: string): string {
-  const unsub = p ? `${siteUrl()}/arena/desinscription?t=${signedLinkToken('unsub', p.id)}` : null;
-  const urls = arenaUrls(t);
-  return `<!doctype html><html lang="fr"><body style="margin:0;background:#F3F4F6;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F3F4F6;padding:24px 0"><tr><td align="center">
-<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:14px;overflow:hidden">
-<tr><td style="background:#0B0F14;padding:24px 28px;border-bottom:4px solid #E4002B">
-  <span style="font-family:Impact,'Arial Narrow',Oswald,sans-serif;font-size:26px;font-weight:700;color:#fff;letter-spacing:0.02em;text-transform:uppercase">EVC</span>
-  <span style="font-family:Impact,'Arial Narrow',Oswald,sans-serif;font-size:26px;font-weight:700;color:#E4002B;letter-spacing:0.08em;margin-left:8px;text-transform:uppercase">ARENA</span>
-  <span style="font-size:10px;font-weight:700;color:#B8BEC8;letter-spacing:0.3em;margin-left:12px;text-transform:uppercase">Major ECN</span>
-  <span style="display:block;font-size:12px;color:#B8BEC8;margin-top:6px">${esc(t.title)}${t.edition_label ? ` · ${esc(t.edition_label)}` : ''}</span>
-</td></tr>
-<tr><td style="padding:28px">
-  <h1 style="margin:0 0 18px;font-size:22px;line-height:1.25;color:${NAVY}">${esc(title)}</h1>
-  ${bodyHtml}
-</td></tr>
-<tr><td style="padding:18px 28px;border-top:1px solid #E5E7EB;font-size:12px;line-height:1.6;color:#6B7280">
-  Vous recevez cet email parce que vous êtes inscrit(e) au tournoi EVC Arena de Major ECN.
-  <a href="${esc(accessUrl ?? urls.space)}" style="color:#6B7280">Mon espace</a> ·
-  <a href="${esc(urls.rules)}" style="color:#6B7280">Règles</a>
-  ${unsub ? ` · <a href="${esc(unsub)}" style="color:#6B7280">Ne plus recevoir les informations Major ECN</a>` : ''}
-  <br>Major ECN — préparation aux EVC depuis 2011.
-</td></tr>
-</table></td></tr></table></body></html>`;
+function unsubscribeUrl(p: ParticipantRow | null): string | null {
+  return p ? `${siteUrl()}/arena/desinscription?t=${signedLinkToken('unsub', p.id)}` : null;
 }
+
+type ShellOptions = {
+  eyebrow?: string;
+  preheader?: string;
+  /** Lien « Mon espace » du pied de page (confirmation / connexion). */
+  accessUrl?: string;
+  /** La mention §9 figure déjà dans le corps : pas de doublon en pied de page. */
+  noLegal?: boolean;
+  reason?: string;
+};
+
+function shell(t: TournamentRow, p: ParticipantRow | null, subject: string, title: string, bodyHtml: string, o: ShellOptions = {}): string {
+  const urls = arenaUrls(t);
+  return arenaShell({
+    subject,
+    preheader: o.preheader,
+    eyebrow: o.eyebrow,
+    title,
+    bodyHtml,
+    tournament: { title: t.title, edition_label: t.edition_label, specialty: t.specialty },
+    links: { landing: urls.landing, space: urls.space, rules: urls.rules },
+    accessUrl: o.accessUrl ?? null,
+    unsubscribeUrl: unsubscribeUrl(p),
+    reason: o.reason ?? null,
+    legalNotice: o.noLegal ? null : WARNING_NATURE,
+    siteUrl: siteUrl(),
+  });
+}
+
+function textWithFooter(t: TournamentRow, p: ParticipantRow | null, body: string, o: { noLegal?: boolean; space?: string } = {}): string {
+  return `${body}\n${arenaTextFooter({ space: o.space ?? arenaUrls(t).space, unsubscribeUrl: unsubscribeUrl(p), legalNotice: o.noLegal ? null : WARNING_NATURE })}`;
+}
+
+/** Lien de secours sous un bouton d'accès. */
+function fallback(url: string): string {
+  return aPHtml(`Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br><a href="${escAttr(url)}" style="color:${ARENA_MAIL.gold};text-decoration:underline;word-break:break-all;font-size:12px;">${escAttr(url)}</a>`, { size: 13, color: ARENA_MAIL.muted, margin: '-6px 0 20px' });
+}
+
+const strong = (s: string) => `<strong style="color:${ARENA_MAIL.text};">${escAttr(s)}</strong>`;
+const gold = (s: string) => `<strong style="color:${ARENA_MAIL.gold};">${escAttr(s)}</strong>`;
 
 export type Mail = { subject: string; html: string; text: string };
 
@@ -81,24 +86,26 @@ export type Mail = { subject: string; html: string; text: string };
 
 export function confirmationEmail(t: TournamentRow, p: ParticipantRow, confirmUrl: string): Mail {
   const subject = `Confirmez votre adresse email — EVC Arena ${t.specialty}`;
-  const html = shell(t, null, 'Confirmez votre adresse email', [
-    para(`Bonjour ${p.first_name},`),
-    para(`Votre inscription au tournoi EVC Arena (${t.specialty}) est enregistrée sous le pseudonyme « ${p.pseudo} ». Pour accéder aux manches, confirmez votre adresse email en cliquant sur le bouton ci-dessous.`),
-    button('Confirmer mon adresse email', confirmUrl),
-    para('Ce lien est personnel et valable sept jours. Si vous n’êtes pas à l’origine de cette inscription, ignorez simplement cet email.'),
-  ].join(''), confirmUrl);
-  const text = `Bonjour ${p.first_name},\n\nConfirmez votre adresse email pour accéder aux manches du tournoi EVC Arena (${t.specialty}) :\n${confirmUrl}\n\nCe lien est valable sept jours. Si vous n'êtes pas à l'origine de cette inscription, ignorez cet email.`;
+  const html = shell(t, null, subject, 'Confirmez votre adresse email', [
+    aHello(p.first_name),
+    aPHtml(`Votre inscription au tournoi EVC Arena (${escAttr(t.specialty)}) est enregistrée sous le pseudonyme « ${gold(p.pseudo)} ». Pour accéder aux manches, confirmez votre adresse email en cliquant sur le bouton ci-dessous.`),
+    aButton('Confirmer mon adresse email', confirmUrl),
+    fallback(confirmUrl),
+    aPanel(aLine('Ce lien est personnel et valable sept jours. Si vous n’êtes pas à l’origine de cette inscription, ignorez simplement cet email.'), { accent: 'none' }),
+  ].join(''), { eyebrow: 'Inscription · Dernière étape', preheader: `Une dernière étape pour entrer dans l’arène : confirmez votre adresse (pseudonyme « ${p.pseudo} »).`, accessUrl: confirmUrl, reason: 'Vous recevez cet email suite à votre inscription au tournoi EVC Arena de Major ECN.' });
+  const text = textWithFooter(t, null, `Bonjour ${p.first_name},\n\nConfirmez votre adresse email pour accéder aux manches du tournoi EVC Arena (${t.specialty}) :\n${confirmUrl}\n\nCe lien est valable sept jours. Si vous n'êtes pas à l'origine de cette inscription, ignorez cet email.`, { space: confirmUrl });
   return { subject, html, text };
 }
 
 export function loginEmail(t: TournamentRow, p: ParticipantRow, loginUrl: string): Mail {
   const subject = `Votre lien de connexion — EVC Arena`;
-  const html = shell(t, p, 'Votre lien de connexion', [
-    para(`Bonjour ${p.first_name},`),
-    para('Cliquez sur le bouton ci-dessous pour ouvrir votre espace EVC Arena. Le lien est valable deux heures et s’ouvre d’un clic sur « Ouvrir mon espace ».'),
-    button('Ouvrir mon espace', loginUrl),
-  ].join(''), loginUrl);
-  return { subject, html, text: `Bonjour ${p.first_name},\n\nVotre lien de connexion (valable deux heures) :\n${loginUrl}` };
+  const html = shell(t, p, subject, 'Votre lien de connexion', [
+    aHello(p.first_name),
+    aP('Cliquez sur le bouton ci-dessous pour ouvrir votre espace EVC Arena. Le lien est valable deux heures et s’ouvre d’un clic sur « Ouvrir mon espace ».'),
+    aButton('Ouvrir mon espace', loginUrl),
+    fallback(loginUrl),
+  ].join(''), { eyebrow: 'Connexion sécurisée', preheader: 'Votre lien personnel pour ouvrir votre espace EVC Arena (valable deux heures).', accessUrl: loginUrl });
+  return { subject, html, text: textWithFooter(t, p, `Bonjour ${p.first_name},\n\nVotre lien de connexion (valable deux heures) :\n${loginUrl}`, { space: loginUrl }) };
 }
 
 export function validatedEmail(t: TournamentRow, p: ParticipantRow, opts: { m1Open: Date | null; m1Theme: string; bareme: Bareme; qrpNs: number[] }): Mail {
@@ -107,21 +114,30 @@ export function validatedEmail(t: TournamentRow, p: ParticipantRow, opts: { m1Op
   const baremeHtml = (['QRM', 'QRU', 'QRP'] as const)
     .map((k) => {
       const d = describeBareme(k, opts.bareme, opts.qrpNs);
-      return `<p style="margin:10px 0 4px;font-weight:700;color:${NAVY}">${k} — ${esc(d.title)}</p><ul style="margin:0;padding-left:18px;color:#374151;font-size:14px">${d.lines.map((l) => `<li>${esc(l.situation)} : <strong>${esc(l.points)}</strong></li>`).join('')}</ul>`;
+      return aPanel(
+        aLine(`${escAttr(k)} — ${escAttr(d.title)}`, { strong: true, margin: '0 0 8px', size: 15 })
+        + d.lines.map((l) => aLine(`${escAttr(l.situation)} : <strong style="color:${ARENA_MAIL.text};">${escAttr(l.points)}</strong>`, { margin: '0 0 4px' })).join(''),
+        { accent: 'none' },
+      );
     })
     .join('');
   const subject = `Inscription confirmée — manche 1 le ${opts.m1Open ? parisAndLocalLabel(opts.m1Open, null).split(' à ')[0] : 'bientôt'}`;
-  const html = shell(t, p, 'Votre inscription est confirmée', [
-    para(`Bonjour ${p.first_name},`),
-    para(`Vous participez au tournoi EVC Arena ${t.specialty} sous le pseudonyme « ${p.pseudo} ».`),
-    box(`<p style="margin:0;font-weight:700;color:${NAVY}">Manche 1 : ${esc(when)}</p>${opts.m1Theme ? `<p style="margin:6px 0 0;color:#374151">Thème : ${esc(opts.m1Theme)}</p>` : ''}`),
-    `<p style="margin:18px 0 6px;font-weight:700;color:${NAVY}">Les règles</p><ul style="margin:0;padding-left:18px;color:#374151;font-size:14px">${publicRules(t).map((r: string) => `<li>${esc(r)}</li>`).join('')}</ul>`,
-    `<p style="margin:18px 0 6px;font-weight:700;color:${NAVY}">Le barème de la manche 1</p>${baremeHtml}`,
-    box(`<p style="margin:0;color:#374151;font-size:14px">${esc(WARNING_NATURE)}</p>`),
-    button('Ouvrir mon espace', urls.space),
-    para('Invitez un collègue : partagez votre lien personnel depuis votre espace.'),
-  ].join(''));
-  const text = `Bonjour ${p.first_name},\n\nVotre inscription au tournoi EVC Arena ${t.specialty} est confirmée (pseudonyme : ${p.pseudo}).\nManche 1 : ${when}${opts.m1Theme ? ` — thème : ${opts.m1Theme}` : ''}.\n\nRègles :\n${publicRules(t).map((r: string) => `- ${r}`).join('\n')}\n\n${WARNING_NATURE}\n\nMon espace : ${urls.space}`;
+  const html = shell(t, p, subject, 'Votre inscription est confirmée', [
+    aHello(p.first_name),
+    aPHtml(`Vous participez au tournoi EVC Arena ${escAttr(t.specialty)} sous le pseudonyme « ${gold(p.pseudo)} ».`),
+    aFacts([
+      ['Manche 1', strong(when)],
+      opts.m1Theme ? ['Thème', escAttr(opts.m1Theme)] : null,
+    ]),
+    aLabel('Les règles'),
+    aList(publicRules(t), { numbered: true }),
+    aLabel('Le barème de la manche 1'),
+    baremeHtml,
+    aPanel(aLine(escAttr(WARNING_NATURE)), { accent: 'red', title: 'Nature du dispositif' }),
+    aButton('Ouvrir mon espace', urls.space),
+    aP('Invitez un collègue : partagez votre lien personnel depuis votre espace.', { size: 14, color: ARENA_MAIL.muted }),
+  ].join(''), { eyebrow: 'Bienvenue dans l’arène', preheader: `Manche 1 : ${when}. Règles et barème de la manche à l’intérieur.`, noLegal: true });
+  const text = textWithFooter(t, p, `Bonjour ${p.first_name},\n\nVotre inscription au tournoi EVC Arena ${t.specialty} est confirmée (pseudonyme : ${p.pseudo}).\nManche 1 : ${when}${opts.m1Theme ? ` — thème : ${opts.m1Theme}` : ''}.\n\nRègles :\n${publicRules(t).map((r: string) => `- ${r}`).join('\n')}\n\n${WARNING_NATURE}\n\nMon espace : ${urls.space}`, { noLegal: true });
   return { subject, html, text };
 }
 
@@ -132,38 +148,45 @@ export function roundReminderEmail(t: TournamentRow, p: ParticipantRow, kind: 'j
   const subject = kind === 'j7'
     ? `Manche ${round.number} dans 7 jours — ${round.theme || t.specialty}`
     : `Demain : manche ${round.number} — ${round.theme || t.specialty}`;
-  const html = shell(t, p, kind === 'j7' ? `Manche ${round.number} : rendez-vous dans une semaine` : `Manche ${round.number} : c’est demain`, [
-    para(`Bonjour ${p.first_name},`),
-    box(`<p style="margin:0;font-weight:700;color:${NAVY}">Ouverture : ${esc(open)}</p><p style="margin:6px 0 0;color:#374151">Clôture : ${esc(close)}. Questions chronométrées une par une, une seule tentative. Retrouvez le nombre de questions et les durées sur l’écran de la manche.</p>${round.theme ? `<p style="margin:6px 0 0;color:#374151">Thème : ${esc(round.theme)}</p>` : ''}`),
-    para(WARNING_CONNECTION),
-    button('Voir mon espace', urls.space),
-  ].join(''));
-  const text = `Bonjour ${p.first_name},\n\nManche ${round.number}${round.theme ? ` — ${round.theme}` : ''}\nOuverture : ${open}\nClôture : ${close}. Questions chronométrées une par une, une seule tentative. Le nombre de questions et les durées sont indiqués sur l’écran de la manche.\n\n${WARNING_CONNECTION}\n\nMon espace : ${urls.space}`;
+  const title = kind === 'j7' ? `Manche ${round.number} : rendez-vous dans une semaine` : `Manche ${round.number} : c’est demain`;
+  const html = shell(t, p, subject, title, [
+    aHello(p.first_name),
+    aFacts([
+      ['Ouverture', strong(open)],
+      ['Clôture', escAttr(close)],
+      round.theme ? ['Thème', escAttr(round.theme)] : null,
+    ]),
+    aP('Questions chronométrées une par une, une seule tentative. Retrouvez le nombre de questions et les durées sur l’écran de la manche.'),
+    aPanel(aLine(escAttr(WARNING_CONNECTION)), { accent: 'red', title: 'Avant de commencer' }),
+    aButton('Voir mon espace', urls.space),
+  ].join(''), { eyebrow: `Manche ${round.number} · ${kind === 'j7' ? 'J-7' : 'J-1'}`, preheader: `Ouverture : ${open}.` });
+  const text = textWithFooter(t, p, `Bonjour ${p.first_name},\n\nManche ${round.number}${round.theme ? ` — ${round.theme}` : ''}\nOuverture : ${open}\nClôture : ${close}. Questions chronométrées une par une, une seule tentative. Le nombre de questions et les durées sont indiqués sur l’écran de la manche.\n\n${WARNING_CONNECTION}\n\nMon espace : ${urls.space}`);
   return { subject, html, text };
 }
 
 export function roundOpeningEmail(t: TournamentRow, p: ParticipantRow, round: { number: number; theme: string; closes_at: Date }, remaining: string): Mail {
   const urls = arenaUrls(t);
   const subject = `La manche ${round.number} est ouverte — ${remaining} restantes`;
-  const html = shell(t, p, `La manche ${round.number} est ouverte`, [
-    para(`Bonjour ${p.first_name},`),
-    para(`Vous pouvez jouer la manche ${round.number}${round.theme ? ` (${round.theme})` : ''} dès maintenant. Il vous reste ${remaining} avant la clôture.`),
-    box(`<p style="margin:0;color:#374151;font-size:14px">${esc(WARNING_CONNECTION)}</p>`),
-    button('Commencer la manche', urls.round(round.number)),
-  ].join(''));
-  return { subject, html, text: `Bonjour ${p.first_name},\n\nLa manche ${round.number} est ouverte. Il vous reste ${remaining} avant la clôture.\n${WARNING_CONNECTION}\n\nJouer : ${urls.round(round.number)}` };
+  const html = shell(t, p, subject, `La manche ${round.number} est ouverte`, [
+    aHello(p.first_name),
+    aStats([{ label: 'Temps restant avant la clôture', value: remaining, accent: 'gold' }]),
+    aP(`Vous pouvez jouer la manche ${round.number}${round.theme ? ` (${round.theme})` : ''} dès maintenant. Il vous reste ${remaining} avant la clôture.`),
+    aPanel(aLine(escAttr(WARNING_CONNECTION)), { accent: 'red', title: 'Avant de commencer' }),
+    aButton('Commencer la manche', urls.round(round.number)),
+  ].join(''), { eyebrow: `Manche ${round.number}${round.theme ? ` · ${round.theme}` : ''}`, preheader: `Il vous reste ${remaining} pour jouer la manche ${round.number}.` });
+  return { subject, html, text: textWithFooter(t, p, `Bonjour ${p.first_name},\n\nLa manche ${round.number} est ouverte. Il vous reste ${remaining} avant la clôture.\n${WARNING_CONNECTION}\n\nJouer : ${urls.round(round.number)}`) };
 }
 
 export function relanceEmail(t: TournamentRow, p: ParticipantRow, round: { number: number; theme: string }, remaining: string): Mail {
   const urls = arenaUrls(t);
   const subject = `Manche ${round.number} : il reste ${remaining}`;
-  const html = shell(t, p, `Il reste ${remaining} pour jouer la manche ${round.number}`, [
-    para(`Bonjour ${p.first_name},`),
-    para(`Vous n’avez pas encore joué la manche ${round.number}. La manche se termine dans ${remaining}. La participation aux trois manches est nécessaire pour figurer au classement général.`),
-    para(`Chaque question est chronométrée séparément (${t.seconds_per_question ?? DEFAULT_SECONDS_PER_QUESTION} s par défaut ; une durée spécifique peut être indiquée). Si vous commencez trop près de la clôture, votre temps sera limité au temps restant.`),
-    button('Jouer maintenant', urls.round(round.number)),
-  ].join(''));
-  return { subject, html, text: `Bonjour ${p.first_name},\n\nVous n'avez pas encore joué la manche ${round.number}. Elle se termine dans ${remaining}.\n\nJouer : ${urls.round(round.number)}` };
+  const html = shell(t, p, subject, `Il reste ${remaining} pour jouer la manche ${round.number}`, [
+    aHello(p.first_name),
+    aP(`Vous n’avez pas encore joué la manche ${round.number}. La manche se termine dans ${remaining}. La participation aux trois manches est nécessaire pour figurer au classement général.`),
+    aPanel(aLine(escAttr(`Chaque question est chronométrée séparément (${t.seconds_per_question ?? DEFAULT_SECONDS_PER_QUESTION} s par défaut ; une durée spécifique peut être indiquée). Si vous commencez trop près de la clôture, votre temps sera limité au temps restant.`)), { accent: 'red', title: 'Chronométrage' }),
+    aButton('Jouer maintenant', urls.round(round.number)),
+  ].join(''), { eyebrow: `Manche ${round.number} · Dernier rappel`, preheader: `La manche ${round.number} se termine dans ${remaining}.` });
+  return { subject, html, text: textWithFooter(t, p, `Bonjour ${p.first_name},\n\nVous n'avez pas encore joué la manche ${round.number}. Elle se termine dans ${remaining}.\n\nJouer : ${urls.round(round.number)}`) };
 }
 
 /**
@@ -179,8 +202,11 @@ export function resultsEmail(
 ): Mail {
   const urls = arenaUrls(t);
   // Notes affichées sur 10 par manche (cf. lib/arena/note.ts).
-  const noteManche = `${formatNote(noteSur10(r.score ?? 0, r.max))} / ${formatNote(noteMax())}`;
-  const noteCumul = `${formatNote(noteSur10(r.cumulScore, r.cumulMax, r.cumulRounds))} / ${formatNote(noteMax(r.cumulRounds))}`;
+  const valManche = formatNote(noteSur10(r.score ?? 0, r.max));
+  const valCumul = formatNote(noteSur10(r.cumulScore, r.cumulMax, r.cumulRounds));
+  const maxCumul = formatNote(noteMax(r.cumulRounds));
+  const noteManche = `${valManche} / ${formatNote(noteMax())}`;
+  const noteCumul = `${valCumul} / ${maxCumul}`;
   const subject = `Résultats de la manche ${r.number} — votre correction détaillée est disponible`;
   const played = r.score !== null;
   // Cahier des charges complémentaire §5-§9 : être classé ≠ trophée. Le trophée
@@ -192,23 +218,36 @@ export function resultsEmail(
         ? `Vous occupez la ${ordinalRank(r.rank)} place du classement cumulé. Le trophée EVC Arena reste à conquérir : il exige un score d’au moins ${t.distinction_pct} %.`
         : null
     : null;
-  const lines: string[] = [para(`Bonjour ${p.first_name},`)];
+  const lines: string[] = [aHello(p.first_name)];
   if (played) {
-    lines.push(box(`<p style="margin:0;font-weight:700;color:${NAVY}">Note de la manche ${r.number} : ${noteManche}</p><p style="margin:6px 0 0;color:#374151">Note cumulée : ${noteCumul}${r.rank !== null ? ` — rang ${r.rank}` : ''}</p>`));
-    if (r.rank === null) lines.push(para(UNDER_THRESHOLD_MESSAGE));
-    else if (distinctionLine) lines.push(para(distinctionLine));
+    lines.push(aStats([
+      { label: `Note · manche ${r.number}`, value: valManche, unit: `/ ${formatNote(noteMax())}`, accent: 'gold' },
+      { label: 'Note · cumul', value: valCumul, unit: `/ ${maxCumul}`, accent: 'text' },
+      ...(r.rank !== null ? [{ label: 'Rang · cumul', value: String(r.rank), accent: 'red' as const }] : []),
+    ]));
+    if (r.rank === null) lines.push(aPanel(aLine(escAttr(UNDER_THRESHOLD_MESSAGE)), { accent: 'none', title: 'Classement' }));
+    else if (distinctionLine) lines.push(aPanel(aLine(escAttr(distinctionLine), { size: 15, color: ARENA_MAIL.text }), { accent: 'gold', title: r.distinction ? `Distinction ${DISTINCTION_LABEL[r.distinction]}` : 'Podium' }));
   } else {
-    lines.push(para(`Vous n’avez pas joué la manche ${r.number}. Le classement général nécessite les trois manches. Vos résultats, vos rangs de manche et vos corrections détaillées restent disponibles pour les manches disputées.`));
+    lines.push(aPanel(aLine(escAttr(`Vous n’avez pas joué la manche ${r.number}. Le classement général nécessite les trois manches. Vos résultats, vos rangs de manche et vos corrections détaillées restent disponibles pour les manches disputées.`)), { accent: 'none', title: `Manche ${r.number}` }));
   }
-  lines.push(para(`Votre correction détaillée de la manche ${r.number} est maintenant disponible dans votre espace EVC Arena : réponses attendues, explications, pièges de l’énoncé et erreurs les plus fréquentes, en regard de vos réponses.`));
-  lines.push(para(`Elle reste consultable à tout moment depuis votre espace : Mon espace → Manche ${r.number} → Résultats → Correction détaillée.`));
-  lines.push(button('Ouvrir mon espace EVC Arena', urls.space));
+  lines.push(aLabel('Correction détaillée'));
+  lines.push(aP(`Votre correction détaillée de la manche ${r.number} est maintenant disponible dans votre espace EVC Arena : réponses attendues, explications, pièges de l’énoncé et erreurs les plus fréquentes, en regard de vos réponses.`));
+  lines.push(aPHtml(`Elle reste consultable à tout moment depuis votre espace : ${strong(`Mon espace → Manche ${r.number} → Résultats → Correction détaillée`)}.`, { size: 14 }));
+  lines.push(aButton('Ouvrir mon espace EVC Arena', urls.space));
   if (r.next) {
-    lines.push(box(`<p style="margin:0;font-weight:700;color:${NAVY}">Prochaine manche : M${r.next.number}${r.next.opens_at ? ` — ${esc(parisAndLocalLabel(r.next.opens_at, p.timezone, true))}` : ''}</p>${r.next.theme ? `<p style="margin:6px 0 0;color:#374151">Thème : ${esc(r.next.theme)}</p>` : ''}`));
+    lines.push(aFacts([
+      ['Prochaine manche', `${strong(`M${r.next.number}`)}${r.next.opens_at ? ` — ${escAttr(parisAndLocalLabel(r.next.opens_at, p.timezone, true))}` : ''}`],
+      r.next.theme ? ['Thème', escAttr(r.next.theme)] : null,
+    ]));
   }
-  if (r.isLast) lines.push(para(COMMERCIAL_AFTER_M3), `<p style="margin:0"><a href="${esc(siteUrl())}" style="color:${RED}">major-ecn.fr</a></p>`);
-  const html = shell(t, p, `Résultats de la manche ${r.number}`, lines.join(''));
-  const text = [
+  if (r.isLast) {
+    lines.push(aRule(), aPHtml(`${escAttr(COMMERCIAL_AFTER_M3)} <a href="${escAttr(siteUrl())}" style="color:${ARENA_MAIL.red};font-weight:700;text-decoration:none;">major-ecn.fr&nbsp;→</a>`, { size: 14, color: ARENA_MAIL.muted }));
+  }
+  const html = shell(t, p, subject, `Résultats de la manche ${r.number}`, lines.join(''), {
+    eyebrow: `Manche ${r.number}${r.theme ? ` · ${r.theme}` : ''}`,
+    preheader: played ? `Note de la manche ${r.number} : ${noteManche}. Votre correction détaillée vous attend.` : `Votre correction détaillée de la manche ${r.number} est disponible.`,
+  });
+  const text = textWithFooter(t, p, [
     `Bonjour ${p.first_name},`,
     played ? `Note de la manche ${r.number} : ${noteManche}\nNote cumulée : ${noteCumul}${r.rank !== null ? ` — rang ${r.rank}` : ''}` : `Vous n'avez pas joué la manche ${r.number}.`,
     r.rank === null && played ? UNDER_THRESHOLD_MESSAGE : '',
@@ -216,55 +255,66 @@ export function resultsEmail(
     `Votre correction détaillée de la manche ${r.number} est maintenant disponible dans votre espace EVC Arena (Mon espace → Manche ${r.number} → Résultats → Correction détaillée).\nOuvrir mon espace : ${urls.space}`,
     r.next ? `Prochaine manche : M${r.next.number}${r.next.opens_at ? ` — ${parisAndLocalLabel(r.next.opens_at, p.timezone, true)}` : ''}` : '',
     r.isLast ? `${COMMERCIAL_AFTER_M3} ${siteUrl()}` : '',
-  ].filter(Boolean).join('\n\n');
+  ].filter(Boolean).join('\n\n'));
   return { subject, html, text };
 }
 
 export function inviteEmail(t: TournamentRow, from: ParticipantRow | null, landingUrl: string, message: string | null): Mail {
   const who = from ? `${from.first_name} vous invite` : 'Un confrère vous invite';
   const subject = `${who} au tournoi EVC Arena ${t.specialty}`;
-  const html = shell(t, null, `${who} à entrer dans l’arène`, [
-    para(`Le tournoi EVC Arena ${t.specialty} de Major ECN : trois manches de QCM chronométrés, une seule tentative, un classement cumulé entre médecins candidats aux EVC. Le format de chaque manche est indiqué sur la page du tournoi.`),
-    message ? box(`<p style="margin:0;color:#374151;font-style:italic">${esc(message)}</p>`) : '',
-    button('Découvrir le tournoi', landingUrl),
-    para(WARNING_NATURE),
-  ].join(''));
-  return { subject, html, text: `${who} au tournoi EVC Arena ${t.specialty} (Major ECN).\n${message ? `\n« ${message} »\n` : ''}\n${landingUrl}\n\n${WARNING_NATURE}` };
+  const html = shell(t, null, subject, `${who} à entrer dans l’arène`, [
+    aP(`Le tournoi EVC Arena ${t.specialty} de Major ECN : trois manches de QCM chronométrés, une seule tentative, un classement cumulé entre médecins candidats aux EVC. Le format de chaque manche est indiqué sur la page du tournoi.`),
+    message ? aPanel(aLine(`<em>« ${escAttr(message)} »</em>`, { size: 15, color: ARENA_MAIL.text }), { accent: 'gold', title: from ? `Message de ${from.first_name}` : 'Message' }) : '',
+    aButton('Découvrir le tournoi', landingUrl),
+    aPanel(aLine(escAttr(WARNING_NATURE), { size: 13 }), { accent: 'none', title: 'Nature du dispositif' }),
+  ].join(''), {
+    eyebrow: `Invitation · ${t.specialty}`,
+    preheader: 'Trois manches de QCM chronométrés, un classement cumulé entre médecins candidats aux EVC.',
+    noLegal: true,
+    reason: 'Vous recevez cet email car un participant du tournoi EVC Arena de Major ECN a souhaité vous le faire découvrir.',
+  });
+  return { subject, html, text: textWithFooter(t, null, `${who} au tournoi EVC Arena ${t.specialty} (Major ECN).\n${message ? `\n« ${message} »\n` : ''}\n${landingUrl}\n\n${WARNING_NATURE}`, { noLegal: true, space: landingUrl }) };
 }
 
 export function reportAckEmail(t: TournamentRow, p: ParticipantRow, roundNumber: number, questionIndex: number): Mail {
   const subject = `Signalement reçu — manche ${roundNumber}, question ${questionIndex}`;
-  const html = shell(t, p, 'Votre signalement a bien été reçu', [
-    para(`Bonjour ${p.first_name},`),
-    para(`Nous avons bien reçu votre signalement concernant la question ${questionIndex} de la manche ${roundNumber}. Il sera examiné par l’équipe pédagogique de Major ECN. Si la question est neutralisée, tous les participants de la manche en seront informés et les scores seront recalculés.`),
-  ].join(''));
-  return { subject, html, text: `Bonjour ${p.first_name},\n\nNous avons bien reçu votre signalement (manche ${roundNumber}, question ${questionIndex}). Il sera examiné par l'équipe pédagogique.` };
+  const html = shell(t, p, subject, 'Votre signalement a bien été reçu', [
+    aHello(p.first_name),
+    aFacts([['Manche', strong(String(roundNumber))], ['Question', strong(String(questionIndex))]]),
+    aP(`Nous avons bien reçu votre signalement concernant la question ${questionIndex} de la manche ${roundNumber}. Il sera examiné par l’équipe pédagogique de Major ECN. Si la question est neutralisée, tous les participants de la manche en seront informés et les scores seront recalculés.`),
+  ].join(''), { eyebrow: 'Signalement', preheader: `Votre signalement (manche ${roundNumber}, question ${questionIndex}) sera examiné par l’équipe pédagogique.` });
+  return { subject, html, text: textWithFooter(t, p, `Bonjour ${p.first_name},\n\nNous avons bien reçu votre signalement (manche ${roundNumber}, question ${questionIndex}). Il sera examiné par l'équipe pédagogique.`) };
 }
 
 export function reportUpdateEmail(t: TournamentRow, p: ParticipantRow, roundNumber: number, questionIndex: number, status: 'validated' | 'rejected', response: string): Mail {
   const subject = `Suite à votre signalement — manche ${roundNumber}, question ${questionIndex}`;
-  const html = shell(t, p, status === 'validated' ? 'Votre signalement a été retenu' : 'Réponse à votre signalement', [
-    para(`Bonjour ${p.first_name},`),
-    para(status === 'validated' ? `La question ${questionIndex} de la manche ${roundNumber} a été neutralisée : elle est retirée du barème et les scores de la manche ont été recalculés.` : `Après examen, la question ${questionIndex} de la manche ${roundNumber} est maintenue.`),
-    response ? box(`<p style="margin:0;color:#374151">${esc(response)}</p>`) : '',
-  ].join(''));
-  return { subject, html, text: `Bonjour ${p.first_name},\n\n${status === 'validated' ? `La question ${questionIndex} de la manche ${roundNumber} a été neutralisée et les scores recalculés.` : `La question ${questionIndex} de la manche ${roundNumber} est maintenue.`}${response ? `\n\n${response}` : ''}` };
+  const html = shell(t, p, subject, status === 'validated' ? 'Votre signalement a été retenu' : 'Réponse à votre signalement', [
+    aHello(p.first_name),
+    aP(status === 'validated' ? `La question ${questionIndex} de la manche ${roundNumber} a été neutralisée : elle est retirée du barème et les scores de la manche ont été recalculés.` : `Après examen, la question ${questionIndex} de la manche ${roundNumber} est maintenue.`),
+    response ? aPanel(aLine(escAttr(response), { color: ARENA_MAIL.text }), { accent: 'gold', title: 'Réponse de l’équipe pédagogique' }) : '',
+  ].join(''), { eyebrow: `Signalement · ${status === 'validated' ? 'Retenu' : 'Examiné'}`, preheader: status === 'validated' ? `Question ${questionIndex} neutralisée, scores recalculés.` : `La question ${questionIndex} de la manche ${roundNumber} est maintenue.` });
+  return { subject, html, text: textWithFooter(t, p, `Bonjour ${p.first_name},\n\n${status === 'validated' ? `La question ${questionIndex} de la manche ${roundNumber} a été neutralisée et les scores recalculés.` : `La question ${questionIndex} de la manche ${roundNumber} est maintenue.`}${response ? `\n\n${response}` : ''}`) };
 }
 
 export function neutralizedEmail(t: TournamentRow, p: ParticipantRow, roundNumber: number, questionIndex: number, reason: string): Mail {
   const urls = arenaUrls(t);
   const subject = `Manche ${roundNumber} : une question a été neutralisée`;
-  const html = shell(t, p, `Une question de la manche ${roundNumber} a été neutralisée`, [
-    para(`Bonjour ${p.first_name},`),
-    para(`La question ${questionIndex} de la manche ${roundNumber} a été retirée du barème${reason ? ` (${reason})` : ''}. Les scores de la manche et le classement cumulé ont été recalculés pour tous les participants.`),
-    button('Voir mon espace', urls.space),
-  ].join(''));
-  return { subject, html, text: `Bonjour ${p.first_name},\n\nLa question ${questionIndex} de la manche ${roundNumber} a été retirée du barème${reason ? ` (${reason})` : ''}. Les scores ont été recalculés.\n\n${urls.space}` };
+  const html = shell(t, p, subject, `Une question de la manche ${roundNumber} a été neutralisée`, [
+    aHello(p.first_name),
+    aP(`La question ${questionIndex} de la manche ${roundNumber} a été retirée du barème${reason ? ` (${reason})` : ''}. Les scores de la manche et le classement cumulé ont été recalculés pour tous les participants.`),
+    aButton('Voir mon espace', urls.space),
+  ].join(''), { eyebrow: `Manche ${roundNumber} · Mise à jour`, preheader: 'Les scores et le classement cumulé ont été recalculés.' });
+  return { subject, html, text: textWithFooter(t, p, `Bonjour ${p.first_name},\n\nLa question ${questionIndex} de la manche ${roundNumber} a été retirée du barème${reason ? ` (${reason})` : ''}. Les scores ont été recalculés.\n\n${urls.space}`) };
 }
 
 export function deletedEmail(t: TournamentRow, firstName: string): Mail {
   const subject = 'Votre compte EVC Arena a été supprimé';
-  const html = shell(t, null, 'Compte supprimé', [para(`Bonjour ${firstName},`), para('Votre compte EVC Arena et vos données personnelles ont été supprimés conformément à votre demande. Vos réponses éventuelles ont été anonymisées.')].join(''));
+  const html = shell(t, null, subject, 'Compte supprimé', [aHello(firstName), aP('Votre compte EVC Arena et vos données personnelles ont été supprimés conformément à votre demande. Vos réponses éventuelles ont été anonymisées.')].join(''), {
+    eyebrow: 'Données personnelles',
+    preheader: 'Votre compte EVC Arena et vos données personnelles ont été supprimés.',
+    noLegal: true,
+    reason: 'Vous recevez cet email suite à votre demande de suppression de compte EVC Arena.',
+  });
   return { subject, html, text: `Bonjour ${firstName},\n\nVotre compte EVC Arena et vos données personnelles ont été supprimés.` };
 }
 
@@ -287,7 +337,11 @@ export type SendArenaInput = {
 export type SendArenaResult = { ok: true; id: string } | { ok: false; skipped?: boolean; uncertain?: boolean; error: string };
 
 export async function sendArenaEmail(input: SendArenaInput): Promise<SendArenaResult> {
-  if (process.env.EMAIL_DRY_RUN === '1' && process.env.NODE_ENV !== 'production') {
+  // Envoi à blanc en local : la base est celle de la production, on ne consomme
+  // aucune clé de dédoublonnage d'un vrai tournoi. Seul le bac à sable de
+  // recette (`qa-sim-*`) est journalisé, avec une copie locale du contenu.
+  const dryRun = process.env.EMAIL_DRY_RUN === '1' && process.env.NODE_ENV !== 'production';
+  if (dryRun && !isQaSandboxSlug(input.tournament.slug)) {
     return { ok: false, error: 'Les emails sont en mode simulation. Activez le service d’envoi pour utiliser cette action.' };
   }
   const db = arenaDb();
@@ -314,13 +368,49 @@ export async function sendArenaEmail(input: SendArenaInput): Promise<SendArenaRe
   }
   let res;
   try {
-    res = await sendEmail({ to: input.to, subject: input.mail.subject, html: input.mail.html, text: input.mail.text, timeoutMs: 15_000 });
+    // Resend limite le débit (2 requêtes/s par défaut) : un balayage qui envoie
+    // des centaines d'ouvertures prend des 429. On patiente et on réessaie.
+    for (let attempt = 0; ; attempt++) {
+      res = await sendEmail({ to: input.to, subject: input.mail.subject, html: input.mail.html, text: input.mail.text, timeoutMs: 15_000 });
+      if (res.ok || attempt >= 3 || transientStatus(res.error) !== 429) break;
+      await new Promise((resolve) => setTimeout(resolve, 1_100 * (attempt + 1)));
+    }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Erreur réseau';
     await db.from('arena_emails').update({ error: 'Envoi non confirmé : ' + message }).eq('id', logRow.id);
     console.error('[arena:email] delivery_unconfirmed', { emailId: logRow.id, kind: input.kind });
     return { ok: false, uncertain: true, error: 'Le service d’email n’a pas confirmé l’envoi.' };
   }
-  await db.from('arena_emails').update(res.ok ? { resend_id: res.id } : { error: res.error }).eq('id', logRow.id);
+  // Échec passager (débit, panne du fournisseur) : la clé de dédoublonnage est
+  // libérée pour que le prochain balayage réessaie ; la ligne reste au journal.
+  // Un refus définitif (adresse invalide…) garde sa clé : pas de relance infinie.
+  const retryLater = !res.ok && transientStatus(res.error) !== null;
+  await db.from('arena_emails').update(res.ok ? { resend_id: res.id } : { error: res.error, ...(retryLater ? { dedupe_key: null } : {}) }).eq('id', logRow.id);
+  if (dryRun) await dumpSandboxMail(logRow.id, input);
   return res.ok ? { ok: true, id: res.id } : { ok: false, error: res.error };
+}
+
+/** Copie locale d'un email à blanc du bac à sable (`tmp/_arena-sim/mails`), pour contrôler liens et variables. */
+async function dumpSandboxMail(id: string, input: SendArenaInput): Promise<void> {
+  try {
+    const { mkdir, writeFile } = await import('node:fs/promises');
+    const path = await import('node:path');
+    const dir = path.join(process.cwd(), 'tmp', '_arena-sim', 'mails');
+    await mkdir(dir, { recursive: true });
+    await writeFile(path.join(dir, `${id}.json`), JSON.stringify({
+      id, kind: input.kind, to: input.to, tournament: input.tournament.slug, participantId: input.participant?.id ?? null,
+      roundId: input.roundId ?? null, dedupeKey: input.dedupeKey ?? null, subject: input.mail.subject, html: input.mail.html, text: input.mail.text,
+      at: new Date().toISOString(),
+    }));
+  } catch (error) {
+    console.error('[arena:email] dump', error);
+  }
+}
+
+/** Statut HTTP d'un échec Resend passager (429 ou 5xx), sinon null. */
+export function transientStatus(error: string | undefined): number | null {
+  const m = /^Resend (\d{3})/.exec(error ?? '');
+  if (!m) return null;
+  const status = Number(m[1]);
+  return status === 429 || status >= 500 ? status : null;
 }

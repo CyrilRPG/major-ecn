@@ -4,6 +4,7 @@ import { renderTemplate, type TemplateVars } from './templates';
 import { addHistory, getTemplate } from './db';
 import { fmtDateLong, fmtTime } from './format';
 import type { AlertRow, AppointmentRow, EmailTemplateKey, SuiviSettings } from './types';
+import { button, majorEmail, MAJOR } from '@/lib/email/layout';
 
 /**
  * Envoi des emails du module (§15) : rendu des variables, habillage HTML
@@ -11,8 +12,7 @@ import type { AlertRow, AppointmentRow, EmailTemplateKey, SuiviSettings } from '
  * (kind `invite` / `announce` / `relance` / `email`, payload = modèle, objet,
  * identifiant Resend ou erreur). Un envoi non tracé n'existe pas (§15).
  */
-const RED = '#C0112E';
-const NAVY = '#14254E';
+const RED = MAJOR.red;
 
 export function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -31,31 +31,28 @@ export function textToHtml(text: string): string {
     .join('');
 }
 
-export function emailShell(opts: { title: string; bodyHtml: string; cta?: { label: string; url: string } | null }): string {
-  const cta = opts.cta
-    ? `<table role="presentation" cellspacing="0" cellpadding="0" style="margin:22px 0 8px"><tr><td style="background:${RED};border-radius:10px">
-        <a href="${opts.cta.url}" style="display:inline-block;padding:12px 22px;color:#fff;text-decoration:none;font-weight:600;font-family:Arial,Helvetica,sans-serif;font-size:15px">${escapeHtml(opts.cta.label)}</a>
-      </td></tr></table>`
-    : '';
-  return `<!doctype html><html lang="fr"><body style="margin:0;padding:0;background:#F4F5F8;font-family:Arial,Helvetica,sans-serif;color:${NAVY}">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#F4F5F8;padding:28px 12px">
-    <tr><td align="center">
-      <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #E6E8EE">
-        <tr><td style="background:${NAVY};padding:18px 28px">
-          <span style="color:#fff;font-size:18px;font-weight:700;letter-spacing:.02em">Major ECN</span>
-          <span style="color:#fff;opacity:.75;font-size:13px;margin-left:10px">Suivi individuel</span>
-        </td></tr>
-        <tr><td style="padding:28px 28px 8px">
-          <h1 style="margin:0 0 18px;font-size:20px;line-height:1.3;color:${NAVY}">${escapeHtml(opts.title)}</h1>
-          <div style="font-size:15px;color:#1F2937">${opts.bodyHtml}</div>
-          ${cta}
-        </td></tr>
-        <tr><td style="padding:16px 28px 26px;font-size:12px;color:#6B7280;border-top:1px solid #EEF0F4">
-          Major ECN — préparation aux EVC. Cet email est envoyé dans le cadre de votre accompagnement individuel.
-        </td></tr>
-      </table>
-    </td></tr>
-  </table></body></html>`;
+/**
+ * Habillage Major ECN commun (src/lib/email/layout.ts) : en-tête, bandeau
+ * marine, bouton bulletproof et pied de page. Les administrateurs reçoivent
+ * la variante « interne » (alertes).
+ */
+export function emailShell(opts: { title: string; bodyHtml: string; cta?: { label: string; url: string } | null; internal?: boolean }): string {
+  return majorEmail({
+    subject: opts.title,
+    preheader: opts.bodyHtml
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/&(amp|lt|gt|quot|#39);/g, (_m, e: string) => ({ amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'" })[e as 'amp'] ?? '')
+      .replace(/\s+/g, ' ')
+      .replace(/^\s*Bonjour[^,]*,\s*/, '')
+      .trim()
+      .slice(0, 120),
+    eyebrow: 'Suivi individuel',
+    tag: 'Suivi individuel',
+    title: opts.title,
+    bodyHtml: opts.bodyHtml + (opts.cta ? button(opts.cta.url, opts.cta.label) : ''),
+    audience: opts.internal ? 'internal' : 'service',
+    reason: opts.internal ? null : 'Cet email est envoyé dans le cadre de votre accompagnement individuel Major ECN.',
+  });
 }
 
 function historyKindFor(key: EmailTemplateKey): string {
@@ -165,7 +162,7 @@ export async function sendAlertEmail(alert: AlertRow, settings: SuiviSettings): 
     `Titre : ${alert.title}\nÉchéance : ${fmtDateLong(alert.due_at)} à ${fmtTime(alert.due_at)}\n` +
     (alert.note ? `Note : ${alert.note}\n` : '') +
     `\nL’alerte reste affichée dans l’espace d’administration jusqu’à son traitement, son report ou sa clôture :\n${url}`;
-  const html = emailShell({ title: subject, bodyHtml: textToHtml(text), cta: { label: 'Ouvrir les alertes', url } });
+  const html = emailShell({ title: subject, bodyHtml: textToHtml(text), cta: { label: 'Ouvrir les alertes', url }, internal: true });
   const res = await sendEmail({ to, subject, html, text });
   await addHistory({
     campaign_id: alert.campaign_id,
