@@ -1,8 +1,10 @@
 import { requireContentEditor, requireOnglet } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { VideoLibrary, type LibraryCollege } from '@/components/admin/videos/video-library';
 import { TOUS_DROITS, type DroitsVideo } from '@/components/admin/videos/video-manager';
 import { lireScopeEquipe, peutContenu } from '@/lib/auth/collaborateurs';
+import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 
 export const metadata = { title: 'Vidéos' };
 
@@ -29,9 +31,19 @@ export default async function AdminVideosPage() {
   };
   const supabase = await createClient();
 
+  // Collèges de Major ECN seulement : la base est partagée avec Major
+  // Odontologie et Major Pharma, dont les collèges (un second « Odontologie »)
+  // n'atteignent jamais les élèves de cette plateforme.
+  // (Client service : la liste des semestres n'est pas une donnée sensible et
+  // ne doit pas dépendre des policies de lecture d'un collaborateur.)
+  const { data: semestres } = await createAdminClient()
+    .from('semestres')
+    .select('id')
+    .eq('faculte_id', EDN_FACULTE_ID);
   const { data } = await supabase
     .from('matieres')
     .select('id, nom, parent_matiere_id, order_index')
+    .in('semestre_id', ((semestres ?? []) as { id: string }[]).map((x) => x.id))
     .order('order_index', { ascending: true });
 
   const rows = (data ?? []) as unknown as {

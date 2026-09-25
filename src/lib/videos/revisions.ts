@@ -24,6 +24,26 @@ export function estItemRevisions(titre: string, collegeNom: string): boolean {
 }
 
 /**
+ * Collèges dont CHAQUE sous-collège a son propre item de révisions. Ailleurs
+ * (Imagerie médicale, Odontologie…), un collège à sous-collèges n'en a qu'un,
+ * porté par le collège lui-même.
+ */
+export const COLLEGES_REVISIONS_PAR_SOUS_COLLEGE: readonly string[] = ['col-medecine-generale'];
+
+/**
+ * La matière `matiereId`, choisie dans le collège racine `collegeId`, est-elle
+ * le niveau où vit l'item de révisions de ce collège ? Sans cette règle, un
+ * collège à sous-collèges (Odontologie) ne proposait jamais de le créer.
+ */
+export function porteItemRevisions(collegeId: string, matiereId: string, aDesEnfants: boolean): boolean {
+  if (!collegeId || !matiereId) return false;
+  if (!aDesEnfants) return matiereId === collegeId;
+  return COLLEGES_REVISIONS_PAR_SOUS_COLLEGE.includes(collegeId)
+    ? matiereId !== collegeId
+    : matiereId === collegeId;
+}
+
+/**
  * Item de révisions, quel que soit le collège (« Replays - Révisions »,
  * « Révisions - … », « Révision …»).
  *

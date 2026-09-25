@@ -6,14 +6,14 @@ import {
   addVideoToRevisionsAction, listItemsAction, listVideosAction,
   type VideoLibraryItem, type VideoLibraryVideo, type VideoType,
 } from '@/app/admin/videos/actions';
-import { estItemRevisions, revisionsTitre } from '@/lib/videos/revisions';
+import { estItemRevisions, porteItemRevisions, revisionsTitre } from '@/lib/videos/revisions';
 import { BunnyVideoUpload } from '@/components/admin/content/bunny-video-upload';
 import { VideoManager, type DroitsVideo } from './video-manager';
 
 export type LibraryCollege = {
   id: string;
   nom: string;
-  /** Sous-collèges (Médecine générale). Vide pour les spécialités simples. */
+  /** Sous-collèges (Médecine générale, Odontologie, Imagerie médicale). Vide pour les spécialités simples. */
   enfants: { id: string; nom: string }[];
 };
 
@@ -96,10 +96,14 @@ export function VideoLibrary({ colleges, droits }: { colleges: LibraryCollege[];
 
   const item = items?.find((i) => i.id === coursId) ?? null;
 
-  // « Replays - Révisions » : proposé pour les collèges hors Médecine
-  // générale (ceux qui portent directement leurs items) tant que l'item
-  // n'existe pas. Il sera créé au moment d'ajouter la première vidéo.
-  const nomCollege = college && !aDesEnfants ? college.nom : '';
+  // « Replays - Révisions » : proposé tant que l'item n'existe pas, au niveau
+  // où il vit (`porteItemRevisions`) : le collège lui-même, ou chaque
+  // sous-collège en Médecine générale. Il sera créé au moment d'ajouter la
+  // première vidéo.
+  const nomMatiere = matiereId === collegeId
+    ? college?.nom ?? ''
+    : college?.enfants.find((e) => e.id === matiereId)?.nom ?? '';
+  const nomCollege = porteItemRevisions(collegeId, matiereId, aDesEnfants) ? nomMatiere : '';
   const titreRevisions = nomCollege ? revisionsTitre(nomCollege) : '';
   const revisionsExiste = (items ?? []).some((i) => estItemRevisions(i.titre, nomCollege));
   const proposerRevisions = !!titreRevisions && !!items && !revisionsExiste;
@@ -154,7 +158,12 @@ export function VideoLibrary({ colleges, droits }: { colleges: LibraryCollege[];
               <option value="">Choisir un sous-collège…</option>
               {/* Items portés par le collège lui-même, au-dessus de ses sous-collèges
                   (« Replays - Révisions » d'Imagerie médicale, annales de MG). */}
-              {college && <option value={college.id}>{college.nom} — items du collège</option>}
+              {college && (
+                <option value={college.id}>
+                  {college.nom} — items du collège
+                  {porteItemRevisions(college.id, college.id, true) ? ' (dont Replays - Révisions)' : ''}
+                </option>
+              )}
               {college?.enfants.map((e) => (
                 <option key={e.id} value={e.id}>{e.nom}</option>
               ))}

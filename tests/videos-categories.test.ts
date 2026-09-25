@@ -120,3 +120,16 @@ test('administration : tout est visible, supports compris', () => {
   assert.equal(r.cours.length, 2);
   assert.equal(r.cours[0].supports.length, 2);
 });
+
+test('item de révisions : au niveau du collège, sauf en Médecine générale (un par sous-collège)', async () => {
+  const { porteItemRevisions } = await import('../src/lib/videos/revisions');
+  // Collège simple (Gynécologie-obstétrique).
+  assert.equal(porteItemRevisions('col-gynecologie', 'col-gynecologie', false), true);
+  // Collège à sous-collèges (Odontologie) : au niveau du collège, jamais dans un sous-collège.
+  assert.equal(porteItemRevisions('col-ecn-odontologie', 'col-ecn-odontologie', true), true);
+  assert.equal(porteItemRevisions('col-ecn-odontologie', 'col-ecn-odonto-paro', true), false);
+  // Médecine générale : un par sous-collège, aucun à la racine.
+  assert.equal(porteItemRevisions('col-medecine-generale', 'col-mg-gynecologie', true), true);
+  assert.equal(porteItemRevisions('col-medecine-generale', 'col-medecine-generale', true), false);
+  assert.equal(porteItemRevisions('', '', false), false);
+});

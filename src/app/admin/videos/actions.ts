@@ -10,7 +10,7 @@ import {
 } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { extractBunnyVideoId } from '@/lib/bunny-link';
-import { estItemRevisions, revisionsTitre } from '@/lib/videos/revisions';
+import { estItemRevisions, porteItemRevisions, revisionsTitre } from '@/lib/videos/revisions';
 import {
   normaliserOffres, normaliserVoies, resumeAudience, VIDEO_OFFERS,
 } from '@/lib/videos/audience';
@@ -584,6 +584,16 @@ export async function addVideoToRevisionsAction(input: {
     .maybeSingle();
   if (!matiere) return { error: 'Collège introuvable.' };
   const nomCollege = (matiere as { nom: string }).nom;
+  // Même règle que la bibliothèque : un seul item de révisions par collège, à
+  // son niveau (sauf Médecine générale : un par sous-collège). Jamais de
+  // second item dans un sous-collège d'Odontologie ou d'Imagerie.
+  const parentId = (matiere as { parent_matiere_id: string | null }).parent_matiere_id;
+  const { count: nbEnfants } = parentId
+    ? { count: 1 }
+    : await a.from('matieres').select('id', { count: 'exact', head: true }).eq('parent_matiere_id', input.matiereId);
+  if (!porteItemRevisions(parentId ?? input.matiereId, input.matiereId, (nbEnfants ?? 0) > 0)) {
+    return { error: 'L’item « Replays - Révisions » de ce collège se crée au niveau du collège (« items du collège »), pas dans un sous-collège.' };
+  }
   const titreItem = revisionsTitre(nomCollege);
 
   // Item existant ? (nouveau libellé « Replays - Révisions » OU ancien
