@@ -236,15 +236,16 @@ export function AdminSidebar({ profile, onglets }: { profile: Profile; onglets: 
       <p className="px-5 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
         Administration
       </p>
-      <div className="min-h-0 flex-1 overflow-y-auto">{groupsList('desktop')}</div>
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">{groupsList('desktop')}</div>
     </>
   );
 
   return (
     <>
-      {/* Desktop : rail sombre à gauche */}
+      {/* Desktop : rail sombre à gauche, fixé à la hauteur de l'écran — la
+          page défile sans lui, et le menu défile seul s'il est plus long. */}
       <aside
-        className="hidden w-60 shrink-0 flex-col text-white lg:flex"
+        className="hidden w-60 shrink-0 flex-col text-white lg:sticky lg:top-0 lg:flex lg:h-dvh lg:self-start"
         style={{ background: BG }}
       >
         {sidebarBody}

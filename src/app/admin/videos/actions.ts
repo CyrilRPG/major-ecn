@@ -19,7 +19,9 @@ import {
   erreurColonneLiveAt, estSeanceAVenir, formaterDateSeance, MIGRATION_SEANCE_A_VENIR, normaliserDateSeance,
 } from '@/lib/videos/a-venir';
 import { logAudit } from '@/lib/audit/log';
-import { lireScopeEquipe, peutContenu, type DroitContenu } from '@/lib/auth/collaborateurs';
+import { accesOnglets, lireScopeEquipe, peutContenu, type DroitContenu } from '@/lib/auth/collaborateurs';
+import { bunnyEmbedLibraryId, bunnyEmbedUrl } from '@/lib/bunny';
+import { dureeIsoEnSecondes } from '@/lib/videos/bibliotheque';
 
 /**
  * Bibliothèque vidéo de l'administration (onglet « Vidéos ») : navigation
@@ -103,9 +105,21 @@ async function guard(coursId: string, droit: DroitContenu = 'modifier'): Promise
   };
 }
 
+/**
+ * Consultation de la bibliothèque : même règle que l'onglet « Vidéos »
+ * (`requireOnglet('videos')` de la page) — un collaborateur sans le type
+ * « vidéo » n'a pas à lister les vidéos, même en appelant l'action à la main.
+ */
+function lectureVideosAutorisee(profile: Ctx['profile']): boolean {
+  if (profile.role === 'admin') return true;
+  return accesOnglets(lireScopeEquipe(profile.permission_scope)).videos;
+}
+const REFUS_LECTURE = 'Votre accès ne comprend pas les vidéos.';
+
 /** Contrôles de LECTURE seule (consultation de la bibliothèque). */
 async function guardRead(coursId: string): Promise<Ctx | { error: string }> {
   const { profile, scope } = await requireContentEditor();
+  if (!lectureVideosAutorisee(profile)) return { error: REFUS_LECTURE };
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
@@ -211,7 +225,12 @@ export type StudentLite = {
 export async function listItemsAction(
   matiereId: string,
 ): Promise<{ items: VideoLibraryItem[] } | { error: string }> {
-  const { scope } = await requireContentEditor();
+  const { profile, scope } = await requireContentEditor();
+  if (!lectureVideosAutorisee(profile)) return { error: REFUS_LECTURE };
+  // Collège hors périmètre : refus explicite (le sélecteur ne le propose pas).
+  if (scope !== null && scope.type !== 'all' && !scope.colleges.includes(matiereId)) {
+    return { error: 'Ce collège ne fait pas partie de votre périmètre.' };
+  }
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
@@ -959,36 +978,198 @@ export async function deleteVideoAction(input: {
   const ctx = await guardVideo(input.videoId, 'supprimer');
   if ('error' in ctx) return ctx;
 
-  // Retire les fichiers de tous ses supports (les lignes partent en cascade).
-  const { data: docs } = await ctx.a
-    .from('video_supports')
-    .select('storage_path')
-    .eq('video_id', input.videoId);
-  const chemins = ((docs ?? []) as { storage_path: string }[]).map((d) => d.storage_path);
-  if (ctx.video.support_path) chemins.push(ctx.video.support_path);
-  if (chemins.length > 0) {
-    await ctx.admin.storage.from('supports').remove(chemins);
-  }
-  const { error } = await ctx.a.from('videos').delete().eq('id', input.videoId);
-  if (error) return { error: error.message };
+  const res = await supprimerVideo(ctx, ctx.video, ctx.cours);
+  if ('error' in res) return res;
 
   // Renumérote la liste pour éviter les trous.
   await renumber(ctx.a, ctx.cours.id, ctx.video.type);
+  refresh(ctx.cours.id);
+  return { ok: true };
+}
+
+type VideoASupprimer = { id: string; titre: string; type: VideoType; support_path: string | null };
+
+/**
+ * Suppression effective d'une séance/vidéo, APRÈS contrôle des droits : ses
+ * supports (fichiers du bucket `supports` compris — les lignes partent en
+ * cascade), puis la vidéo, puis le journal d'audit. La vidéo hébergée sur
+ * bunny.net n'est pas touchée. Ne renumérote pas : l'appelant le fait une
+ * fois par liste (suppression unitaire ou par lot).
+ */
+async function supprimerVideo(
+  ctx: Pick<Ctx, 'a' | 'admin' | 'profile'>,
+  video: VideoASupprimer,
+  cours: Ctx['cours'],
+  contexte?: string,
+): Promise<{ ok: true } | { error: string }> {
+  const { data: docs } = await ctx.a
+    .from('video_supports')
+    .select('storage_path')
+    .eq('video_id', video.id);
+  const chemins = ((docs ?? []) as { storage_path: string | null }[])
+    .map((d) => d.storage_path)
+    .filter((p): p is string => !!p);
+  if (video.support_path) chemins.push(video.support_path);
+  if (chemins.length > 0) {
+    await ctx.admin.storage.from('supports').remove(chemins);
+  }
+  const { error } = await ctx.a.from('videos').delete().eq('id', video.id);
+  if (error) return { error: error.message };
 
   await logAudit({
     actor: ctx.profile,
     action: 'delete',
     entity: 'video',
-    entityId: input.videoId,
-    coursId: ctx.cours.id,
-    coursTitre: ctx.cours.titre,
-    matiereNom: ctx.cours.matiereNom,
-    description: `Suppression de « ${ctx.video.titre} » (${LABEL[ctx.video.type]})`,
+    entityId: video.id,
+    coursId: cours.id,
+    coursTitre: cours.titre,
+    matiereNom: cours.matiereNom,
+    description: `Suppression de « ${video.titre} » (${LABEL[video.type]})${contexte ? ` — ${contexte}` : ''}`,
     diff: { supports_supprimes: chemins.length },
   });
-
-  refresh(ctx.cours.id);
   return { ok: true };
+}
+
+/** Plafond d'une suppression groupée (une liste d'item dépasse rarement 60 séances). */
+const LOT_MAX = 200;
+
+export type DeleteVideosResult =
+  | { ok: true; supprimees: string[]; refus: { id: string; titre: string | null; error: string }[] }
+  | { error: string };
+
+/**
+ * Suppression GROUPÉE (cases à cocher de la liste) : chaque vidéo passe les
+ * mêmes contrôles que la suppression unitaire — droit « supprimer » sur le
+ * type vidéo ET item dans le périmètre de la personne —, puis la même
+ * suppression (supports et fichiers compris), une entrée de journal par
+ * vidéo. Les vidéos refusées sont renvoyées avec leur motif ; les autres
+ * partent. Les listes touchées sont renumérotées une seule fois chacune.
+ */
+export async function deleteVideosAction(input: {
+  videoIds: string[];
+}): Promise<DeleteVideosResult> {
+  const { profile, scope } = await requireContentEditor();
+  try {
+    assertCanWrite(scope, 'video');
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Permission insuffisante.' };
+  }
+  if (!droitVideo(profile, 'supprimer')) return { error: REFUS_DROIT.supprimer };
+
+  const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const ids = Array.from(new Set((input.videoIds ?? []).filter((x) => typeof x === 'string' && uuid.test(x))));
+  if (ids.length === 0) return { error: 'Aucune vidéo sélectionnée.' };
+  if (ids.length > LOT_MAX) return { error: `Sélectionnez au plus ${LOT_MAX} vidéos à la fois.` };
+
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const a = admin as any;
+  const { data: vids, error: errVids } = await a
+    .from('videos')
+    .select('id, cours_id, titre, type, support_path')
+    .in('id', ids);
+  if (errVids) return { error: errVids.message };
+  const videos = (vids ?? []) as (VideoASupprimer & { cours_id: string })[];
+
+  const coursIds = Array.from(new Set(videos.map((v) => v.cours_id)));
+  const { data: coursRows, error: errCours } = coursIds.length > 0
+    ? await a.from('cours').select('id, titre, matiere_id, matieres(nom)').in('id', coursIds)
+    : { data: [], error: null };
+  if (errCours) return { error: errCours.message };
+  const coursParId = new Map<string, Ctx['cours']>(
+    ((coursRows ?? []) as { id: string; titre: string; matiere_id: string; matieres?: { nom?: string } | null }[])
+      .map((c) => [c.id, { id: c.id, titre: c.titre, matiere_id: c.matiere_id, matiereNom: c.matieres?.nom ?? null }]),
+  );
+
+  const supprimees: string[] = [];
+  const refus: { id: string; titre: string | null; error: string }[] = [];
+  const listesTouchees = new Map<string, { coursId: string; type: VideoType }>();
+  const contexte = ids.length > 1 ? `suppression groupée (${ids.length} sélectionnées)` : undefined;
+
+  for (const id of ids) {
+    const video = videos.find((v) => v.id === id);
+    // Déjà supprimée (autre onglet, double clic) : le but est atteint.
+    if (!video) { supprimees.push(id); continue; }
+    const cours = coursParId.get(video.cours_id);
+    if (!cours) { refus.push({ id, titre: video.titre, error: 'Item introuvable.' }); continue; }
+    // Périmètre vérifié pour CHAQUE vidéo : une sélection ne contourne rien.
+    if (!profCanAccessCours(scope, cours.matiere_id, cours.id)) {
+      refus.push({ id, titre: video.titre, error: 'Accès refusé à cet item.' });
+      continue;
+    }
+    const res = await supprimerVideo({ a, admin, profile }, video, cours, contexte);
+    if ('error' in res) { refus.push({ id, titre: video.titre, error: res.error }); continue; }
+    supprimees.push(id);
+    listesTouchees.set(`${cours.id}|${video.type}`, { coursId: cours.id, type: video.type });
+  }
+
+  for (const { coursId, type } of listesTouchees.values()) {
+    await renumber(a, coursId, type);
+    refresh(coursId);
+  }
+  return { ok: true, supprimees, refus };
+}
+
+/* ------------------------------------------------------------------ */
+/*  Aperçu d'un lien Bunny (avant enregistrement)                      */
+/* ------------------------------------------------------------------ */
+
+export type ApercuBunny = {
+  videoId: string;
+  /** URL d'embed que liront les élèves (bibliothèque de la plateforme, signée si besoin). */
+  embedUrl: string;
+  /** Titre du fichier sur bunny.net, quand la page publique d'embed le donne. */
+  titre: string | null;
+  dureeSecondes: number | null;
+  /** true : bunny.net ne connaît pas cette vidéo dans la bibliothèque de la plateforme. */
+  introuvable: boolean;
+  /** Bibliothèque citée dans le lien collé, si elle diffère de celle de la plateforme. */
+  autreBibliotheque: string | null;
+  bibliotheque: string;
+};
+
+/**
+ * Aperçu d'un lien collé : l'iframe que verront les élèves + le titre et la
+ * durée lus sur la page PUBLIQUE d'embed de bunny.net (données JSON-LD), sans
+ * clé d'API — la lecture ne doit jamais dépendre de la configuration serveur
+ * (repli de bibliothèque 691475, cf. lib/bunny). Rien n'est écrit.
+ */
+export async function apercuLienBunnyAction(lien: string): Promise<ApercuBunny | { error: string }> {
+  const { profile } = await requireContentEditor();
+  if (!lectureVideosAutorisee(profile)) return { error: REFUS_LECTURE };
+  const brut = (lien ?? '').trim().slice(0, 2000);
+  const videoId = extractBunnyVideoId(brut);
+  if (!videoId) return { error: 'Lien Bunny.net non reconnu. Collez le lien de la vidéo (ou son identifiant).' };
+
+  const bibliotheque = bunnyEmbedLibraryId();
+  const citee = /(?:embed|play|stream|library)\/(\d{3,})(?:\/|\b)/i.exec(brut)?.[1] ?? null;
+  const autreBibliotheque = citee && citee !== bibliotheque ? citee : null;
+  // Aperçu : pas de préchargement (la vidéo ne part qu'au clic sur lecture).
+  const embedUrl = bunnyEmbedUrl(videoId, { libraryId: bibliotheque }).replace('preload=true', 'preload=false');
+
+  let titre: string | null = null;
+  let dureeSecondes: number | null = null;
+  let introuvable = false;
+  try {
+    const res = await fetch(`https://iframe.mediadelivery.net/embed/${bibliotheque}/${videoId}`, {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(6000),
+    });
+    const html = res.ok ? await res.text() : '';
+    const ld = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/i.exec(html)?.[1];
+    if (ld) {
+      const d = JSON.parse(ld) as { name?: unknown; duration?: unknown };
+      titre = typeof d.name === 'string' && d.name.trim() ? d.name.trim().slice(0, 300) : null;
+      dureeSecondes = dureeIsoEnSecondes(typeof d.duration === 'string' ? d.duration : null);
+    } else {
+      // Page d'erreur de bunny.net (« 404 ») : la vidéo n'existe pas dans
+      // cette bibliothèque — l'élève verrait la même erreur.
+      introuvable = res.status === 404 || /<title>\s*404\s*<\/title>/i.test(html);
+    }
+  } catch {
+    // Réseau indisponible : l'iframe reste le juge, sans titre ni durée.
+  }
+  return { videoId, embedUrl, titre, dureeSecondes, introuvable, autreBibliotheque, bibliotheque };
 }
 
 /**

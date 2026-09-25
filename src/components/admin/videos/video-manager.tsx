@@ -3,14 +3,15 @@
 import { useCallback, useMemo, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  CalendarClock, Check, ChevronDown, ChevronUp, FileText, Link2, Loader2, Paperclip, Pencil,
+  CalendarClock, Check, ChevronDown, ChevronUp, FileText, Loader2, Paperclip, Pencil,
   Plus, Search, Trash2, UserMinus, UserPlus, Video, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 import { extractBunnyVideoId } from '@/lib/bunny-link';
+import { BunnyApercu } from './bunny-apercu';
 import {
-  addVideoAction, addVideoSupportAction, deleteVideoAction, listStudentsAction,
+  addVideoAction, addVideoSupportAction, deleteVideoAction, deleteVideosAction, listStudentsAction,
   moveVideoAction, moveVideoSupportAction, publishVideoAction, removeVideoSupportAction, renameVideoAction, unpublishVideoAction,
   renameVideoSupportAction, replaceVideoLinkAction, updateVideoAudienceAction,
   updateVideoLiveAtAction, updateVideoRubriqueAction, updateVideoSupportAudienceAction,
@@ -682,10 +683,141 @@ export function VideoManager({
     });
   }
 
+  /* ── Suppressions sans rechargement ────────────────────────────────
+     Les éléments supprimés sont MASQUÉS tout de suite (mise à jour
+     optimiste), puis l'action serveur part. En cas d'échec, on les
+     démasque : ils réapparaissent à leur place, avec le motif. Rien ne
+     démonte la liste : formulaire « Nouvelle vidéo » ouvert, saisies non
+     enregistrées et défilement sont conservés. */
+  const [videosMasquees, setVideosMasquees] = useState<ReadonlySet<string>>(() => new Set());
+  const [supportsMasques, setSupportsMasques] = useState<ReadonlySet<string>>(() => new Set());
+  const [selection, setSelection] = useState<ReadonlySet<string>>(() => new Set());
+  const [suppressionEnCours, setSuppressionEnCours] = useState(false);
+  const [alerteListe, setAlerteListe] = useState<string | null>(null);
+
+  const avec = (s: ReadonlySet<string>, ids: string[]) => new Set([...s, ...ids]);
+  const sans = (s: ReadonlySet<string>, ids: string[]) => { const n = new Set(s); ids.forEach((id) => n.delete(id)); return n; };
+
+  const affichees = useMemo(
+    () => videos
+      .filter((v) => !videosMasquees.has(v.id))
+      .map((v) => (v.supports.some((s) => supportsMasques.has(s.id))
+        ? { ...v, supports: v.supports.filter((s) => !supportsMasques.has(s.id)) }
+        : v)),
+    [videos, videosMasquees, supportsMasques],
+  );
+  const selectionnees = affichees.filter((v) => selection.has(v.id));
+  const toutSelectionne = affichees.length > 0 && selectionnees.length === affichees.length;
+
+  /** Resynchronise la liste sur le serveur quand l'issue d'une suppression est incertaine. */
+  const resynchroniser = (message: string) => {
+    setAlerteListe(message);
+    apresModification();
+  };
+
+  function retirerSupport(supportId: string) {
+    setAlerteListe(null);
+    setSupportsMasques((s) => avec(s, [supportId]));
+    removeVideoSupportAction({ supportId })
+      .then((res) => {
+        if ('error' in res) {
+          setSupportsMasques((s) => sans(s, [supportId]));
+          setAlerteListe(`Support non supprimé : ${res.error}`);
+        }
+      })
+      .catch(() => {
+        setSupportsMasques((s) => sans(s, [supportId]));
+        resynchroniser('La suppression du support n’a pas pu être confirmée (connexion ?). La liste a été actualisée : vérifiez-la.');
+      });
+  }
+
+  function libelleSupports(n: number): string {
+    return `${n} support${n > 1 ? 's' : ''} PDF (fichier${n > 1 ? 's' : ''} compris)`;
+  }
+
+  function supprimerSeance(v: ManagedVideo) {
+    const nb = v.supports.length;
+    const ok = confirm(
+      `Supprimer définitivement la ${copy.unite} « ${v.titre} » ?\n\n`
+      + (nb > 0
+        ? `Seront supprimés : la ${copy.unite} et ${nb > 1 ? `ses ${libelleSupports(nb)}` : 'son support PDF (fichier compris)'}.\n`
+        : `Aucun support n’y est attaché.\n`)
+      + 'La vidéo hébergée sur bunny.net n’est pas effacée.\n\nCette action est irréversible.',
+    );
+    if (!ok) return;
+    setAlerteListe(null);
+    setVideosMasquees((s) => avec(s, [v.id]));
+    setSelection((s) => sans(s, [v.id]));
+    if (editing === v.id) setEditing(null);
+    setSuppressionEnCours(true);
+    deleteVideoAction({ videoId: v.id })
+      .then((res) => {
+        if ('error' in res) {
+          setVideosMasquees((s) => sans(s, [v.id]));
+          setAlerteListe(`« ${v.titre} » n’a pas été supprimée : ${res.error}`);
+          return;
+        }
+        apresModification();
+      })
+      .catch(() => {
+        setVideosMasquees((s) => sans(s, [v.id]));
+        resynchroniser('La suppression n’a pas pu être confirmée (connexion ?). La liste a été actualisée : vérifiez-la.');
+      })
+      .finally(() => setSuppressionEnCours(false));
+  }
+
+  function supprimerSelection() {
+    const cibles = selectionnees;
+    if (cibles.length === 0) return;
+    const ids = cibles.map((v) => v.id);
+    const nbSupports = cibles.reduce((acc, v) => acc + v.supports.length, 0);
+    const pluriel = cibles.length > 1 ? 's' : '';
+    const noms = cibles.slice(0, 8).map((v) => `• ${v.titre}`).join('\n')
+      + (cibles.length > 8 ? `\n… et ${cibles.length - 8} autre${cibles.length - 8 > 1 ? 's' : ''}` : '');
+    const ok = confirm(
+      `Supprimer définitivement ${cibles.length} ${copy.unite}${pluriel} ?\n\n${noms}\n\n`
+      + (nbSupports > 0
+        ? `Seront supprimés avec elle${pluriel} : ${libelleSupports(nbSupports)}.\n`
+        : 'Aucun support n’y est attaché.\n')
+      + 'Les vidéos hébergées sur bunny.net ne sont pas effacées.\n\nCette action est irréversible.',
+    );
+    if (!ok) return;
+    setAlerteListe(null);
+    setVideosMasquees((s) => avec(s, ids));
+    setSelection(new Set());
+    if (editing && ids.includes(editing)) setEditing(null);
+    setSuppressionEnCours(true);
+    deleteVideosAction({ videoIds: ids })
+      .then((res) => {
+        if ('error' in res) {
+          setVideosMasquees((s) => sans(s, ids));
+          setSelection(new Set(ids));
+          setAlerteListe(`Rien n’a été supprimé : ${res.error}`);
+          return;
+        }
+        if (res.refus.length > 0) {
+          const refuses = res.refus.map((r) => r.id);
+          setVideosMasquees((s) => sans(s, refuses));
+          setSelection(new Set(refuses));
+          setAlerteListe(
+            `${res.supprimees.length} supprimée${res.supprimees.length > 1 ? 's' : ''}, `
+            + `${res.refus.length} non supprimée${res.refus.length > 1 ? 's' : ''} (restée${res.refus.length > 1 ? 's' : ''} cochée${res.refus.length > 1 ? 's' : ''}) : `
+            + res.refus.map((r) => `« ${r.titre ?? r.id} » — ${r.error}`).join(' ; '),
+          );
+        }
+        if (res.supprimees.length > 0) apresModification();
+      })
+      .catch(() => {
+        setVideosMasquees((s) => sans(s, ids));
+        resynchroniser('La suppression n’a pas pu être confirmée (connexion ?). La liste a été actualisée : vérifiez ce qui reste.');
+      })
+      .finally(() => setSuppressionEnCours(false));
+  }
+
   return (
     <div className="space-y-4">
       <p className="text-[12.5px] text-(--color-ink-soft)">
-        {copy.audience} L'ordre ci-dessous est celui que voient les élèves.
+        {copy.audience}{' '}L&apos;ordre ci-dessous est celui que voient les élèves.
       </p>
       {notice && (
         <p className="rounded-xl border border-[#7C3AED]/30 bg-[#F3EAFF] px-3 py-2 text-[12.5px] text-[#5B21B6]">
@@ -693,16 +825,88 @@ export function VideoManager({
         </p>
       )}
 
+      {alerteListe && (
+        <div role="alert" className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-[12.5px] font-medium text-red-700">
+          <p className="min-w-0 flex-1">{alerteListe}</p>
+          <button
+            type="button"
+            onClick={() => setAlerteListe(null)}
+            aria-label="Fermer le message"
+            className="rounded p-0.5 text-red-500 hover:bg-red-100"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
+
+      {/* ── Sélection multiple (suppression groupée) ── */}
+      {droits.supprimer && affichees.length > 0 && (
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-3 py-2">
+          <label className="flex cursor-pointer items-center gap-2 text-[12.5px] font-semibold text-(--color-ink-soft)">
+            <input
+              type="checkbox"
+              checked={toutSelectionne}
+              ref={(el) => { if (el) el.indeterminate = selectionnees.length > 0 && !toutSelectionne; }}
+              disabled={suppressionEnCours}
+              onChange={() => setSelection(toutSelectionne ? new Set() : new Set(affichees.map((v) => v.id)))}
+              className="h-4 w-4 accent-[#7C3AED]"
+            />
+            Tout sélectionner
+          </label>
+          <span className="text-[12px] tabular-nums text-(--color-ink-muted)">
+            {selectionnees.length > 0
+              ? `${selectionnees.length} ${copy.unite}${selectionnees.length > 1 ? 's' : ''} sélectionnée${selectionnees.length > 1 ? 's' : ''}`
+              : `Cochez des ${copy.unite}s pour les supprimer ensemble`}
+          </span>
+          {selectionnees.length > 0 && (
+            <div className="ml-auto flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setSelection(new Set())}
+                disabled={suppressionEnCours}
+                className="rounded-lg px-2 py-1 text-[12px] font-semibold text-(--color-ink-soft) hover:bg-(--color-sand-100) disabled:opacity-50"
+              >
+                Désélectionner
+              </button>
+              <button
+                type="button"
+                onClick={supprimerSelection}
+                disabled={suppressionEnCours}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-(--color-surface) px-3 py-1.5 text-[12.5px] font-semibold text-red-600 hover:border-red-300 hover:bg-red-50 disabled:opacity-50"
+              >
+                {suppressionEnCours ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
+                Supprimer la sélection ({selectionnees.length})
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* ── Liste des vidéos existantes ── */}
-      {videos.length === 0 ? (
+      {affichees.length === 0 ? (
         <p className="rounded-xl border border-dashed border-(--color-border) bg-(--color-surface-soft) px-3 py-4 text-sm text-(--color-ink-muted)">
-          Aucune {copy.unite} pour l'instant.
+          Aucune {copy.unite} pour l&apos;instant.
         </p>
       ) : (
         <ul className="space-y-2">
-          {videos.map((v, i) => (
-            <li key={v.id} className="rounded-xl border border-(--color-border) bg-(--color-surface)">
+          {affichees.map((v, i) => (
+            <li
+              key={v.id}
+              className={`rounded-xl border bg-(--color-surface) transition-colors ${
+                selection.has(v.id) ? 'border-[#7C3AED]/60 ring-1 ring-[#7C3AED]/30' : 'border-(--color-border)'
+              }`}
+            >
               <div className="flex items-center gap-2 px-3 py-2.5">
+                {droits.supprimer && (
+                  <input
+                    type="checkbox"
+                    checked={selection.has(v.id)}
+                    disabled={suppressionEnCours}
+                    onChange={() => setSelection((s) => (s.has(v.id) ? sans(s, [v.id]) : avec(s, [v.id])))}
+                    aria-label={`Sélectionner « ${v.titre} »`}
+                    className="h-4 w-4 shrink-0 accent-[#7C3AED]"
+                  />
+                )}
                 <div className="flex flex-col">
                   <button
                     type="button"
@@ -716,7 +920,7 @@ export function VideoManager({
                   <button
                     type="button"
                     aria-label="Descendre"
-                    disabled={pending || i === videos.length - 1}
+                    disabled={pending || i === affichees.length - 1}
                     onClick={() => run(() => moveVideoAction({ videoId: v.id, direction: 'down' }))}
                     className="rounded p-0.5 text-(--color-ink-muted) hover:bg-(--color-sand-100) hover:text-(--color-ink) disabled:opacity-30"
                   >
@@ -802,14 +1006,11 @@ export function VideoManager({
                 {droits.supprimer && (
                   <button
                     type="button"
-                    disabled={pending}
-                    onClick={() => {
-                      if (confirm(`Supprimer « ${v.titre} » ?${v.supports.length > 0 ? ' Ses supports seront également supprimés.' : ''}`)) {
-                        run(() => deleteVideoAction({ videoId: v.id }));
-                      }
-                    }}
-                    className="rounded-lg p-1.5 text-(--color-ink-muted) hover:bg-red-50 hover:text-red-600"
-                    aria-label="Supprimer"
+                    disabled={pending || suppressionEnCours}
+                    onClick={() => supprimerSeance(v)}
+                    className="rounded-lg p-1.5 text-(--color-ink-muted) hover:bg-red-50 hover:text-red-600 disabled:opacity-40"
+                    aria-label={`Supprimer la ${copy.unite}`}
+                    title={`Supprimer la ${copy.unite} (${copy.unite} + supports)`}
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -865,10 +1066,13 @@ export function VideoManager({
                       return err ? { error: err } : { ok: true };
                     })
                   }
-                  onRemoveSupport={(supportId) => run(() => removeVideoSupportAction({ supportId }))}
+                  onRemoveSupport={retirerSupport}
                   onMoveSupport={(supportId, direction) =>
                     run(() => moveVideoSupportAction({ supportId, direction }))
                   }
+                  onDeleteSeance={droits.supprimer ? () => supprimerSeance(v) : undefined}
+                  unite={copy.unite}
+                  deleting={suppressionEnCours}
                   studentPickerProps={studentPickerProps}
                 />
               )}
@@ -1138,6 +1342,8 @@ function BatchSeanceCard({
                 onChange={(e) => onUpdate({ lien: e.target.value })}
                 className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 font-mono text-sm focus:border-[#7C3AED] focus:outline-none focus:ring-1 focus:ring-[#7C3AED]"
               />
+              {/* Aperçu dès qu'un lien est collé : la bonne vidéo, avant d'enregistrer. */}
+              <BunnyApercu lien={seance.lien} />
             </div>
           </div>
 
@@ -1272,7 +1478,7 @@ function BatchSeanceCard({
             />
             <p className="mt-1 text-[11px] text-(--color-ink-muted)">
               Chaque support prend pour nom celui de son fichier. Renommez-le ci-dessus si besoin.
-              L'élève retrouve les documents dans l'onglet « Support de la séance ».
+              L&apos;élève retrouve les documents dans l&apos;onglet « Support de la séance ».
             </p>
           </div>
         </div>
@@ -1339,6 +1545,9 @@ function VideoEditPanel({
   onAddSupports,
   onRemoveSupport,
   onMoveSupport,
+  onDeleteSeance,
+  unite,
+  deleting = false,
   studentPickerProps,
 }: {
   video: ManagedVideo;
@@ -1348,6 +1557,11 @@ function VideoEditPanel({
   onAddSupports: (files: File[]) => void;
   onRemoveSupport: (supportId: string) => void;
   onMoveSupport: (supportId: string, direction: 'up' | 'down') => void;
+  /** Suppression de la séance entière (absent sans le droit « supprimer »). */
+  onDeleteSeance?: () => void;
+  /** « séance » ou « vidéo », pour les libellés. */
+  unite: string;
+  deleting?: boolean;
   studentPickerProps: {
     students: StudentLite[] | null; loading: boolean; error: string | null; onLoad: () => void;
   };
@@ -1489,6 +1703,7 @@ function VideoEditPanel({
           <p className="mt-1 text-[11px] text-(--color-ink-soft)">
             Les dossiers déjà déposés restent attachés : rien à refaire.
           </p>
+          <BunnyApercu lien={lien} />
         </div>
       ) : (
         <div>
@@ -1502,6 +1717,7 @@ function VideoEditPanel({
             onChange={(e) => setLien(e.target.value)}
             className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 font-mono text-sm"
           />
+          <BunnyApercu lien={lien} />
         </div>
       )}
 
@@ -1595,6 +1811,17 @@ function VideoEditPanel({
             Modifications non enregistrées
           </p>
         )}
+        {onDeleteSeance && (
+          <button
+            type="button"
+            onClick={onDeleteSeance}
+            disabled={pending || deleting}
+            className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-(--color-surface) px-3 py-1.5 text-[12.5px] font-semibold text-red-600 hover:border-red-300 hover:bg-red-50 disabled:opacity-50"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+            Supprimer la {unite}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -1653,7 +1880,7 @@ function SupportLigne({
         <button
           type="button"
           disabled={pending}
-          onClick={() => { if (confirm(`Retirer le support « ${doc.titre} » ?`)) onRemove(); }}
+          onClick={() => { if (confirm(`Retirer le support « ${doc.titre} » ? Son fichier PDF sera supprimé.`)) onRemove(); }}
           aria-label="Retirer ce support"
           className="rounded-lg p-1 text-(--color-ink-muted) hover:bg-red-50 hover:text-red-600"
         >

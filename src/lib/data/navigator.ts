@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import type { Profile } from '@/lib/auth/get-profile';
 import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
 import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
+import { comparerNomsFr } from '@/lib/videos/bibliotheque';
 
 export { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
@@ -155,7 +156,10 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
 
   let tree = colleges
     .filter((m) => !m.parent_matiere_id && canAccessCollege(scope, m.id))
-    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+    // Collèges et sous-collèges par ordre alphabétique (demande du 25/09/2026,
+    // même ordre que la bibliothèque vidéo de l'administration) ; les items
+    // gardent l'ordre du programme.
+    .sort((a, b) => comparerNomsFr(a.nom, b.nom))
     .map((m) => {
       const children = (childMap.get(m.id) ?? [])
         // Chaque sous-collège (spécialité MG) est filtré individuellement selon
@@ -163,7 +167,7 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
         // spécialité ne l'ouvre plus. Permet de restreindre les spécialités
         // accordées à un élève (le provisioning liste toujours les spécialités).
         .filter((ch) => canAccessCollege(scope, ch.id))
-        .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
+        .sort((a, b) => comparerNomsFr(a.nom, b.nom))
         .map((ch) => ({
           id: ch.id,
           nom: ch.nom,

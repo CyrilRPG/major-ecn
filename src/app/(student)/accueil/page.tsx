@@ -9,6 +9,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
 import { AnnouncementsWidget } from '@/components/student/announcements-widget';
+import { Planning30Jours, Planning30JoursSkeleton } from '@/components/student/planning-30-jours';
 import { NouveauxContenusBanner } from '@/components/espace-decouverte/nouveaux-contenus-modal';
 import { DiscoveryUpgradeCta } from '@/components/espace-decouverte/discovery-upgrade-cta';
 import { DiscoveryGateLink } from '@/components/espace-decouverte/discovery-gate-link';
@@ -96,6 +97,11 @@ export default async function AccueilPage() {
 
       {/* ============ SIDEBAR DROITE ============ */}
       <aside className="space-y-3">
+        {/* Planning « Mes 30 prochains jours » : séances en direct ciblées
+            (mêmes règles que /agenda) + évènements personnels. Streamé à part. */}
+        <Suspense fallback={<Planning30JoursSkeleton />}>
+          <Planning30Jours userId={user.id} scope={scope} />
+        </Suspense>
         <Suspense fallback={<SidebarSkeleton />}>
           <AnnouncementsWidget scope={scope} />
         </Suspense>

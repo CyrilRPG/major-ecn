@@ -5,6 +5,7 @@ import { VideoLibrary, type LibraryCollege } from '@/components/admin/videos/vid
 import { TOUS_DROITS, type DroitsVideo } from '@/components/admin/videos/video-manager';
 import { lireScopeEquipe, peutContenu } from '@/lib/auth/collaborateurs';
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
+import { collegesBibliotheque } from '@/lib/videos/bibliotheque';
 
 export const metadata = { title: 'Vidéos' };
 
@@ -52,17 +53,9 @@ export default async function AdminVideosPage() {
 
   // Un collaborateur ne voit que les collèges de son périmètre : proposer un
   // collège hors périmètre menait à « Accès refusé » au moment d'enregistrer.
-  const dansPerimetre = (id: string) => portee === null || portee.type === 'all' || portee.colleges.includes(id);
-  const colleges: LibraryCollege[] = rows
-    .filter((m) => !m.parent_matiere_id)
-    .map((m) => ({
-      id: m.id,
-      nom: m.nom,
-      enfants: rows
-        .filter((e) => e.parent_matiere_id === m.id && dansPerimetre(e.id))
-        .map((e) => ({ id: e.id, nom: e.nom })),
-    }))
-    .filter((c) => dansPerimetre(c.id) || c.enfants.length > 0);
+  // Collèges et sous-collèges par ordre alphabétique (demande du monteur
+  // vidéo) ; les items gardent l'ordre du programme (cf. lib/videos/bibliotheque).
+  const colleges: LibraryCollege[] = collegesBibliotheque(rows, portee);
   const perimetreRestreint = portee !== null && portee.type !== 'all';
 
   return (

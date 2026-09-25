@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Loader2, Video } from 'lucide-react';
 import {
   addVideoToRevisionsAction, listItemsAction, listVideosAction,
@@ -8,14 +8,11 @@ import {
 } from '@/app/admin/videos/actions';
 import { estItemRevisions, porteItemRevisions, revisionsTitre } from '@/lib/videos/revisions';
 import { BunnyVideoUpload } from '@/components/admin/content/bunny-video-upload';
+import type { LibraryCollege } from '@/lib/videos/bibliotheque';
 import { VideoManager, type DroitsVideo } from './video-manager';
 
-export type LibraryCollege = {
-  id: string;
-  nom: string;
-  /** Sous-collèges (Médecine générale, Odontologie, Imagerie médicale). Vide pour les spécialités simples. */
-  enfants: { id: string; nom: string }[];
-};
+// Construit côté serveur (périmètre + ordre alphabétique) : voir lib/videos/bibliotheque.
+export type { LibraryCollege };
 
 /** Valeur sentinelle du sélecteur d'item pour « Replays - Révisions ». */
 const REVISIONS_VALUE = '__revisions__';
@@ -71,22 +68,37 @@ export function VideoLibrary({ colleges, droits }: { colleges: LibraryCollege[];
       .finally(() => setLoading(false));
   }, []);
 
-  const chargerVideos = useCallback((cid: string, t: VideoType) => {
+  // Numéro de la dernière demande : une réponse arrivée après un changement
+  // d'item ou de catégorie ne doit pas écraser la liste affichée.
+  const demande = useRef(0);
+  const derniereVisible = useRef(0);
+  /**
+   * `silencieux` : rechargement APRÈS une modification. La liste en place reste
+   * affichée (pas d'écran « Chargement… ») : le gestionnaire n'est pas démonté,
+   * si bien que le formulaire « Nouvelle vidéo » ouvert, le panneau d'édition,
+   * les saisies non enregistrées et le défilement sont conservés.
+   */
+  const chargerVideos = useCallback((cid: string, t: VideoType, silencieux = false) => {
     if (!cid) { setVideos(null); return; }
-    setLoading(true);
-    setError(null);
+    const n = ++demande.current;
+    if (!silencieux) { derniereVisible.current = n; setLoading(true); setError(null); }
     listVideosAction(cid, t)
       .then((res) => {
-        if ('error' in res) { setError(res.error); setVideos([]); return; }
+        if (n !== demande.current) return;
+        if ('error' in res) { setError(res.error); if (!silencieux) setVideos([]); return; }
         setVideos(res.videos);
       })
-      .catch(() => { setError('Chargement des vidéos impossible. Rechargez la page.'); setVideos([]); })
-      .finally(() => setLoading(false));
+      .catch(() => {
+        if (n !== demande.current) return;
+        if (silencieux) { setError('La liste n’a pas pu être actualisée. Rechargez la page pour la voir à jour.'); return; }
+        setError('Chargement des vidéos impossible. Rechargez la page.'); setVideos([]);
+      })
+      .finally(() => { if (!silencieux && n === derniereVisible.current) setLoading(false); });
   }, []);
 
-  /** Après une modification : la liste ET les compteurs d'items. */
+  /** Après une modification : la liste ET les compteurs d'items, sans démonter la liste. */
   const rechargerTout = useCallback(() => {
-    chargerVideos(coursId, type);
+    chargerVideos(coursId, type, true);
     if (matiereId) {
       listItemsAction(matiereId)
         .then((res) => { if (!('error' in res)) setItems(res.items); })
@@ -158,7 +170,7 @@ export function VideoLibrary({ colleges, droits }: { colleges: LibraryCollege[];
               <option value="">Choisir un sous-collège…</option>
               {/* Items portés par le collège lui-même, au-dessus de ses sous-collèges
                   (« Replays - Révisions » d'Imagerie médicale, annales de MG). */}
-              {college && (
+              {college?.accesDirect && (
                 <option value={college.id}>
                   {college.nom} — items du collège
                   {porteItemRevisions(college.id, college.id, true) ? ' (dont Replays - Révisions)' : ''}

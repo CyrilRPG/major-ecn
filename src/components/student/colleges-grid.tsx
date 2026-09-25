@@ -5,6 +5,7 @@ import { getVerifiedUserId } from '@/lib/auth/verified-user';
 import { iconFromKey } from '@/lib/icons';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { canAccessCollege } from '@/lib/auth/permissions';
+import { comparerNomsFr } from '@/lib/videos/bibliotheque';
 import { calculerProgressionAgregee } from '@/lib/progress/course-progress';
 import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
 import type { PermissionScope } from '@/types/domain';
@@ -42,7 +43,8 @@ export async function CollegesGrid({ scope, isAdmin = false }: {
   )
     .flatMap((s) => s.matieres ?? [])
     .filter((m) => !m.parent_matiere_id && (isAdmin || canAccessCollege(scope, m.id)))
-    .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+    // Ordre alphabétique, comme le navigateur et la bibliothèque vidéo.
+    .sort((a, b) => comparerNomsFr(a.nom, b.nom));
 
   // Progression : LA formule commune (lib/progress), agrégée par collège —
   // questions accessibles pour la voie/formule de l'élève (85 %) + couverture
