@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2, Plus, UserPlus, Users } from 'lucide-react';
+import { AlertTriangle, Loader2, Plus, UserPlus, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader,
@@ -27,6 +27,31 @@ const IdentitySchema = z.object({
   phone: z.string().optional(),
 });
 type IdentityInput = z.infer<typeof IdentitySchema>;
+
+type Confirmation =
+  | { kind: 'single'; identity: IdentityInput }
+  | { kind: 'bulk'; emails: string[] };
+
+/** Nombre d'emails listés en clair dans le récapitulatif d'une invitation en masse. */
+const EMAILS_AFFICHES = 8;
+
+/** Libellés lisibles des collèges accordés : un collège parent coché s'affiche
+ *  une seule fois avec le compte de ses sous-collèges ; un sous-collège coché
+ *  sans son parent s'affiche seul. */
+function libellesColleges(colleges: College[], selection: string[]): string[] {
+  const sel = new Set(selection);
+  const parNom = (a: College, b: College) => a.nom.localeCompare(b.nom, 'fr');
+  const out: string[] = [];
+  for (const c of colleges.filter((x) => !x.parentId && sel.has(x.id)).sort(parNom)) {
+    const enfants = colleges.filter((x) => x.parentId === c.id);
+    const coches = enfants.filter((x) => sel.has(x.id)).length;
+    out.push(enfants.length > 0 ? `${c.nom} (${coches}/${enfants.length} sous-collèges)` : c.nom);
+  }
+  for (const c of colleges.filter((x) => x.parentId && sel.has(x.id) && !sel.has(x.parentId)).sort(parNom)) {
+    out.push(c.nom);
+  }
+  return out;
+}
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -53,9 +78,13 @@ export function AddStudentDialog({
   const [pending, start] = useTransition();
 
   const [offersSel, setOffersSel] = useState<OfferId[]>(['essentiel']);
-  // Voie obligatoire pour toute spécialité → défaut 'interne'.
-  const [access, setAccess] = useState<AccessValue>({ permissionType: 'all', colleges: [], voie: 'interne' });
+  // Voie obligatoire pour toute spécialité → défaut 'interne'. Portée par défaut
+  // = « Collèges spécifiques » : le défaut « tous les collèges » a ouvert toute
+  // la plateforme à une élève MG invitée le 23/09/2026.
+  const [access, setAccess] = useState<AccessValue>({ permissionType: 'college', colleges: [], voie: 'interne' });
   const [emailsText, setEmailsText] = useState('');
+  // Récapitulatif à valider avant tout envoi d'invitation.
+  const [confirmation, setConfirmation] = useState<Confirmation | null>(null);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<IdentityInput>({
     resolver: zodResolver(IdentitySchema),
@@ -64,11 +93,21 @@ export function AddStudentDialog({
   const resetAll = () => {
     reset();
     setOffersSel(['essentiel']);
-    setAccess({ permissionType: 'all', colleges: [], voie: 'interne' });
+    setAccess({ permissionType: 'college', colleges: [], voie: 'interne' });
     setEmailsText('');
     setSubmitError(null);
     setBulkResult(null);
+    setConfirmation(null);
     setMode('single');
+  };
+
+  /** Contrôles communs aux deux modes ; renvoie un message d'erreur ou null. */
+  const accessError = (): string | null => {
+    if (offersSel.length === 0) return 'Sélectionnez au moins une formule.';
+    if (access.permissionType === 'college' && access.colleges.length === 0) {
+      return 'Cochez au moins un collège (ou choisissez « Toute l’offre »).';
+    }
+    return null;
   };
 
   const accessPayload = () => ({
@@ -84,7 +123,12 @@ export function AddStudentDialog({
   // ---- Mode « un élève » ----
   const onSubmitSingle = (identity: IdentityInput) => {
     setSubmitError(null);
-    if (offersSel.length === 0) { setSubmitError('Sélectionnez au moins une formule.'); return; }
+    const err = accessError();
+    if (err) { setSubmitError(err); return; }
+    setConfirmation({ kind: 'single', identity });
+  };
+
+  const sendSingle = (identity: IdentityInput) => {
     start(async () => {
       const res = await fetchAvecJetonFrais('/api/admin/create-student', { ...identity, ...accessPayload() });
       const j = (await res.json().catch(() => ({}))) as { error?: string; warning?: string };
@@ -101,7 +145,12 @@ export function AddStudentDialog({
     setBulkResult(null);
     const valid = parseEmails(emailsText);
     if (valid.length === 0) { setSubmitError('Ajoutez au moins un email valide (séparés par des virgules).'); return; }
-    if (offersSel.length === 0) { setSubmitError('Sélectionnez au moins une formule.'); return; }
+    const err = accessError();
+    if (err) { setSubmitError(err); return; }
+    setConfirmation({ kind: 'bulk', emails: valid });
+  };
+
+  const sendBulk = (valid: string[]) => {
     start(async () => {
       const res = await fetchAvecJetonFrais('/api/admin/create-students-bulk', { emails: valid, ...accessPayload() });
       const j = (await res.json().catch(() => ({}))) as {
@@ -122,6 +171,20 @@ export function AddStudentDialog({
   };
 
   const detectedCount = parseEmails(emailsText).length;
+
+  // Récapitulatif affiché dans la confirmation.
+  const toutLOffre = access.permissionType === 'all';
+  const formulesChoisies = offersSel.map((id) => offers.find((o) => o.id === id)?.label ?? id);
+  const collegesChoisis = toutLOffre ? [] : libellesColleges(colleges, access.colleges);
+  const voieLibelle = (access.voie ?? 'interne') === 'interne' ? 'Voie interne (QCM / DP)' : 'Voie externe (QROC / DP-QROC)';
+
+  const confirmer = () => {
+    const c = confirmation;
+    setConfirmation(null);
+    if (!c) return;
+    if (c.kind === 'single') sendSingle(c.identity);
+    else sendBulk(c.emails);
+  };
 
   return (
     <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) resetAll(); }}>
@@ -250,6 +313,79 @@ export function AddStudentDialog({
             </DialogFooter>
           </div>
         )}
+
+        {/* Confirmation obligatoire avant tout envoi (individuel ou en masse). */}
+        <Dialog open={confirmation !== null} onOpenChange={(v) => { if (!v) setConfirmation(null); }}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Confirmer l’invitation</DialogTitle>
+              <DialogDescription>
+                {confirmation?.kind === 'bulk'
+                  ? `Vous souhaitez bien inviter ces ${confirmation.emails.length} élève${confirmation.emails.length > 1 ? 's' : ''} avec les accès suivants ?`
+                  : 'Vous souhaitez bien inviter cet élève avec les accès suivants ?'}
+              </DialogDescription>
+            </DialogHeader>
+
+            <dl className="space-y-3 text-sm">
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-wide text-(--color-ink-muted)">
+                  {confirmation?.kind === 'bulk' ? 'Élèves' : 'Élève'}
+                </dt>
+                <dd className="mt-0.5 text-(--color-ink)">
+                  {confirmation?.kind === 'single' && (
+                    <>
+                      <strong>{confirmation.identity.first_name} {confirmation.identity.last_name}</strong>
+                      <span className="text-(--color-ink-soft)"> · {confirmation.identity.email}</span>
+                    </>
+                  )}
+                  {confirmation?.kind === 'bulk' && (
+                    <span className="break-all font-mono text-xs">
+                      {confirmation.emails.slice(0, EMAILS_AFFICHES).join(', ')}
+                      {confirmation.emails.length > EMAILS_AFFICHES && ` … et ${confirmation.emails.length - EMAILS_AFFICHES} autre(s)`}
+                    </span>
+                  )}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-wide text-(--color-ink-muted)">Formule</dt>
+                <dd className="mt-0.5 text-(--color-ink)">{formulesChoisies.join(' + ')}</dd>
+              </div>
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-wide text-(--color-ink-muted)">Voie</dt>
+                <dd className="mt-0.5 text-(--color-ink)">{voieLibelle}</dd>
+              </div>
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-wide text-(--color-ink-muted)">Collèges</dt>
+                <dd className="mt-0.5 text-(--color-ink)">
+                  {toutLOffre ? (
+                    <span className="font-bold text-red-600">TOUS LES COLLÈGES</span>
+                  ) : (
+                    <ul className="list-disc space-y-0.5 pl-5">
+                      {collegesChoisis.map((nom) => <li key={nom}>{nom}</li>)}
+                    </ul>
+                  )}
+                </dd>
+              </div>
+            </dl>
+
+            {toutLOffre && (
+              <div role="alert" className="flex gap-3 rounded-xl border-2 border-red-600 bg-red-50 p-3 text-red-700 dark:bg-red-950/40 dark:text-red-300">
+                <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
+                <p className="text-sm font-bold uppercase leading-snug">
+                  Attention : {confirmation?.kind === 'bulk' ? 'ces élèves auront' : 'cet élève aura'} accès à TOUS
+                  LES COLLÈGES de la plateforme, sans exception. Vérifiez que c’est bien voulu.
+                </p>
+              </div>
+            )}
+
+            <DialogFooter>
+              <Button type="button" variant="ghost" onClick={() => setConfirmation(null)}>Modifier</Button>
+              <Button type="button" variant={toutLOffre ? 'danger' : 'primary'} onClick={confirmer}>
+                {toutLOffre ? 'Oui, inviter sur TOUS les collèges' : 'Confirmer l’invitation'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </DialogContent>
     </Dialog>
   );
