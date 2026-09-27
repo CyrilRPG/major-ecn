@@ -5,6 +5,7 @@ import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
 import { EDN_FACULTE_ID, getNavigatorTree } from '@/lib/data/navigator';
 import { TargetedSession, type TQuestion } from '@/components/student/targeted-session';
 import { aplatirUnites, choisirUnites, dossiersDepuisSeries, formeDeSerie, regrouperEnUnites, type SerieRowForme } from '@/lib/pedago/dossiers';
+import { uniteIncomplete } from '@/lib/qcm/donnees-manquantes';
 
 const MAX_Q = 12;
 /**
@@ -169,7 +170,11 @@ export default async function TargetedSessionPage({
 
   // Unité de sélection : dossier complet ou question isolée ; un dossier
   // incomplet (limite du vivier, question sans items) est écarté, jamais tronqué.
-  const { unites, dossiersIncomplets } = regrouperEnUnites([...parId.values()], dossiers);
+  const regroupees = regrouperEnUnites([...parId.values()], dossiers);
+  const { dossiersIncomplets } = regroupees;
+  // Filet de sécurité : jamais d'unité dont une question demande un document
+  // ou des résultats invisibles (lib/qcm/donnees-manquantes).
+  const unites = regroupees.unites.filter((u) => !uniteIncomplete(u.questions, u.serieId !== null));
   if (dossiersIncomplets.length > 0) {
     console.warn('[entrainement] dossiers incomplets écartés du vivier', dossiersIncomplets.length);
   }

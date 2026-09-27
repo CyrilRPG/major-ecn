@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { aplatirUnites, choisirUnites, dossiersDepuisSeries, formeDeSerie, regrouperEnUnites, type PositionDossier, type SerieRowForme } from '@/lib/pedago/dossiers';
+import { questionsAEcarter } from '@/lib/qcm/donnees-manquantes';
 import { loadStudentAttempts } from '@/lib/pedago/maintien';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { RenforcementFlow } from './renforcement-flow';
@@ -168,10 +169,15 @@ export default async function RenforcementPage({ params }: { params: Promise<{ m
       .filter((r) => r.dossier && !parId.has(r.question.id))
       .map((r) => r.dossier!.serieId),
   );
+
+  // Filet de sécurité : jamais de question qui demande un document ou des
+  // résultats invisibles (« Interprétez les gaz du sang » sans gaz) — voir
+  // lib/qcm/donnees-manquantes. Le dossier entier est écarté.
+  const incompletes = questionsAEcarter([...suiteQcm, ...suiteEval], parId);
   const mapQ = (suite: { question: PoolRow; dossier: PositionDossier | null }[]) =>
     suite.flatMap(({ question, dossier }) => {
       const q = parId.get(question.id);
-      if (!q || (dossier && seriesAmputees.has(dossier.serieId))) return [];
+      if (!q || (dossier && seriesAmputees.has(dossier.serieId)) || incompletes.has(question.id)) return [];
       return [{
         id: q.id,
         enonce: q.enonce,

@@ -26,6 +26,12 @@ ambre **Annales**.
     sans que le tracé soit reproduit). Ce qu'il signale s'arbitre à l'œil, puis
     se solde soit par un rattachement, soit par un motif dans
     `sujetFiguresCouvertes`.
+- **Aucune question intraitable** : une question qui demande d'exploiter un
+  document ou des résultats (« Interprétez les gaz du sang », « Décrivez l'IRM »)
+  doit les montrer — image rattachée, ou données du sujet officiel intercalées
+  dans l'énoncé. `publier.mjs` refuse sinon (garde
+  `src/lib/qcm/donnees-manquantes.ts`) ; `npm run audit:dossiers` contrôle toute
+  la base, toutes séries confondues.
 - **Pas de `allowed_voies`** sur les séries : renseigner la colonne masquerait
   la série aux élèves dont la voie n'est pas renseignée, alors même que les
   annales sont ouvertes aux deux voies.

@@ -45,6 +45,22 @@ for (const s of retirees) console.log('  (retirée, non publiée) ' + s.label);
 data.series = data.series.filter((s) => s.publication !== 'retiree');
 const cheminFigure = (p) => (isAbsolute(p) ? p : join(ATELIER, p));
 
+// ------------------------------------------------ 0. données visibles (garde)
+// « Interprétez les gaz du sang » sans les gaz (Urgence 2021 EVCP Sujet 2,
+// signalé par des élèves le 27/09/2026) : une question qui demande un document
+// ou des résultats doit les montrer (image, ou données intercalées depuis le
+// sujet officiel). Rien n'est publié tant qu'une question reste intraitable.
+const { manquesDuDossier } = await import('../../src/lib/qcm/donnees-manquantes.ts');
+const intraitables = data.series.flatMap((s) => manquesDuDossier(s.vignette, s.questions.map((q) => ({
+  enonce: q.enonce,
+  images: [...(q.images ?? []), ...(q.items ?? []).flatMap((it) => it.images ?? [])],
+}))).map((m) => `${s.label} — question ${m.index + 1} : « ${m.objet} » sans ${m.genre === 'document' ? 'document' : 'résultats'}`));
+if (intraitables.length) {
+  console.error('Questions intraitables (document ou résultats absents) :\n  ' + intraitables.join('\n  '));
+  console.error('Intercaler les données du sujet officiel dans l\'énoncé, ou rattacher le document (sync-images).');
+  process.exit(1);
+}
+
 // ---------------------------------------------------------------- 1. figures
 // Toutes les figures citées, question par question et item par item : c'est le
 // décompte qui sert ensuite de contrôle de parité « aucune image omise ».

@@ -8,6 +8,7 @@ import { getMaintienStats, getStudiedSpecialties, loadStudentAttempts } from '@/
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { transversalSessionSize, requiredReevaluationKind, SEUIL_REEVALUATION } from '@/lib/pedago/status';
 import { aplatirUnites, choisirUnites, dossiersDepuisSeries, formeDeSerie, regrouperEnUnites, type SerieRowForme } from '@/lib/pedago/dossiers';
+import { questionsAEcarter } from '@/lib/qcm/donnees-manquantes';
 import {
   TransversalSession,
   type TransversalQuestion,
@@ -255,9 +256,14 @@ export default async function TransversalSessionPage({
     suite.filter((r) => r.dossier && !parId.has(r.question.id)).map((r) => r.dossier!.serieId),
   );
 
+  // Filet de sécurité : jamais de question qui demande un document ou des
+  // résultats invisibles (« Interprétez les gaz du sang » sans gaz) — voir
+  // lib/qcm/donnees-manquantes. Le dossier entier est écarté.
+  const incompletes = questionsAEcarter(suite, parId);
+
   const questions: TransversalQuestion[] = suite.flatMap(({ question, dossier }) => {
     const q = parId.get(question.id);
-    if (!q || (dossier && seriesAmputees.has(dossier.serieId))) return [];
+    if (!q || (dossier && seriesAmputees.has(dossier.serieId)) || incompletes.has(question.id)) return [];
     return [{
       id: q.id,
       enonce: q.enonce,

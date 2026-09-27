@@ -12,7 +12,8 @@
     "create-admin": "tsx scripts/create-admin.ts",
     "upload-fiches": "tsx scripts/upload-fiches.ts",
     "seed-fiches": "pnpm generate-pdfs && pnpm upload-fiches",
-    "verifier:images-qcm": "node scripts/verifier-images-qcm.mjs"
+    "verifier:images-qcm": "node scripts/verifier-images-qcm.mjs",
+    "audit:dossiers": "tsx scripts/audit-dossiers-incomplets.mts --visibles"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.124.0",
