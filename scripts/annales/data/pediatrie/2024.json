@@ -3,7 +3,9 @@
     "ANNALES PEDIATRIE/Correction EVC 2024 Pediatrie.pdf": {
       "atelier": "annales-pediatrie/correction-evc-2024-pediatrie",
       "sujetOfficiel": null,
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-071-289.jpg": "schéma de cours de la classification de Chandler (réponse de la question 3 du cas pratique 8) : pas document d’énoncé"
+      },
       "remarque": "Diaporama de correction de la session 2024. Le sujet officiel 2024 n’est pas présent dans le dépôt ; les énoncés reproduits ici sont ceux repris par le diaporama lui-même."
     }
   },
@@ -557,9 +559,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nQuelles sont les complications selon la classification de Chandler ?",
-          "images": [
-            "annales-pediatrie/correction-evc-2024-pediatrie/figures/img-071-289.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Cellulite préseptale (groupe I), cellulite orbitaire (groupe II), abcès sous-périosté (groupe III), abcès orbitaire (groupe IV), thrombose du sinus caverneux (groupe V).",
           "correctionGenerale": "<b>Classification de Chandler</b>\n• <b>Groupe I</b> : cellulite préseptale\n• <b>Groupe II</b> : cellulite orbitaire\n• <b>Groupe III</b> : abcès sous-périosté\n• <b>Groupe IV</b> : abcès orbitaire\n• <b>Groupe V</b> : thrombose du sinus caverneux"
         },

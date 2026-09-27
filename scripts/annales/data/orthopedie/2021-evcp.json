@@ -6,7 +6,7 @@
       "figuresIgnorees": {
         "img-001-003.jpg": "fond géométrique décoratif de la diapositive de titre, sans contenu médical"
       },
-      "remarque": "Les radiographies de la vignette du sujet n°7 ne sont pas extractibles du diaporama (aucune image n’y est décodable) ; la question 7-3 est par ailleurs restée sans réponse rédigée dans le corrigé."
+      "remarque": "Les radiographies de la vignette du sujet n°7 (img-025-106, reprises p. 26-27 et 31-32) sont répétées sur plus de trois diapositives : l’extraction les écarte comme gabarit, elles ont été rattachées à la main aux questions 7-1 et 7-3 ; la question 7-3 est par ailleurs restée sans réponse rédigée dans le corrigé."
     }
   },
   "series": [
@@ -122,7 +122,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°7-1</b>\n\nQuel est votre diagnostic ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2021/figures/img-025-106.jpg"
+          ],
           "reponseAttendue": "Une fracture péri-prothétique sur PTH.",
           "correctionGenerale": "Fracture péri-prothétique sur PTH."
         },
@@ -142,7 +144,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°7-3</b>\n\nÀ quel stade correspond-elle ?",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2021/figures/img-025-106.jpg"
+          ],
           "reponseAttendue": "Au stade B2 : la fracture siège autour de la tige, qui est descellée — ce qui impose son changement.",
           "correctionGenerale": "• <b>Stade B2</b> de la classification de Vancouver\n• <b>B</b> : la fracture siège autour de la tige fémorale\n• <b>2</b> : la tige est descellée, le capital osseux restant satisfaisant\n• D’où le changement de tige pour une tige longue, traité à la question suivante"
         },

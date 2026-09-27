@@ -1,0 +1,714 @@
+{
+  "hostname": "mrrgfnirpwsknuyiwcqy.supabase.co",
+  "date": "2026-09-27",
+  "operations": [
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "eddcf16b-b9eb-44f4-bb5a-0c896baae0cc",
+      "before": {
+        "vignette": "Une patiente âgée de 42 kg pour 1,58 m présentant une anémie microcytaire arégénérative et une dénutrition grave."
+      },
+      "after": {
+        "vignette": "Une femme âgée de 76 ans a des antécédents de :\n• Cardiomyopathie hypertensive\n• Dyslipidémie\n• Gonarthrose bilatérale.\n\nElle vous est adressée par son médecin pour une asthénie. La patiente présente une diarrhée fécale, non glairo-sanglante et des douleurs abdominales péri-ombilicales. Il existe un amaigrissement de 5 kg durant les six derniers mois.\n\nLe traitement comporte : ramipril (2,5 mg/j), aténolol (1,25 mg/j), simvastatine (20 mg/j), tramadol (50 mg x 3/j), paracétamol (2 g/j) et kétoprofène (100 mg/j).\n\nLa patiente est veuve depuis 6 mois et vit seule en appartement au 1er étage. Son ADL (Activity Daily Life) est à 6/6 et l’IADL (Instrument Activity Daily Life) à 3/8.\n\nÀ l’examen clinique :\n• Le poids est à 42 kg pour 1,58 m, sa pression artérielle à 120/80 mmHg,\n• il existe une pâleur cutanéo-muqueuse et des douleurs abdominales provoquées par la palpation de la région péri-ombilicale, sans contracture ni défense.\n\nLa patiente vous montre également les résultats récents d’examens biologiques :\n• NFS : hémoglobine : 9,1 g/dL, VGM : 79 µm³, hématocrite : 23 %, leucocytes totaux : 7,7 G/L, plaquettes : 207 000/mm³ ;\n• réticulocytes : 70 000/mm³,\n• C-réactive protéine < 5 mg/L ;\n• urée : 3,4 mmol/L, créatinine : 61 µmol/L, natrémie : 136 mmol/L, kaliémie : 4,1 mmol/L, protidémie : 54 g/L ; TGO 24 UI/L, TGP 25 UI/L, GGT 35 U/L.\n• glycémie à jeun : 5 mmol/L."
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 1 — vignette : cas clinique du sujet officiel restitué (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 162)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "caf61431-e19a-4b57-b907-ee55aaf72fd3",
+      "before": {
+        "enonce": "<b>Question n° 1</b>\n\nInterprétez l’hémogramme."
+      },
+      "after": {
+        "enonce": "<b>Question n° 1</b>\n\nInterprétez les résultats de l’hémogramme."
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 1 — Q1 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 162)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "336c9cfe-6b89-4a04-bb97-96f67a25e222",
+      "before": {
+        "enonce": "<b>Question n° 2</b>\n\nQuel bilan martial demandez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 2</b>\n\nAu vu des résultats biologiques, quels sont les 2 examens biologiques que vous demandez ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 1 — Q2 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 163)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "0f2ab332-a4d7-4cbf-9bb9-52578c065ac8",
+      "before": {
+        "enonce": "<b>Question n° 3</b>\n\nCalculez et interprétez l’indice de masse corporelle."
+      },
+      "after": {
+        "enonce": "<b>Question n° 3</b>\n\nCalculez l’indice de masse corporelle (IMC). Comment l’interprétez-vous ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 1 — Q3 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 163)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "6308f1f1-7965-40d9-9a27-17a94ca1f9a6",
+      "before": {
+        "enonce": "<b>Question n° 4</b>\n\nRetenez-vous le diagnostic de dénutrition ? Précisez sa sévérité et justifiez votre réponse."
+      },
+      "after": {
+        "enonce": "<b>Question n° 4</b>\n\nComment évaluez-vous l’état nutritionnel, sur le plan clinique, de cette patiente ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 1 — Q4 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 163)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "072f7891-94e2-4890-b06c-1245acbb41a1",
+      "before": {
+        "enonce": "<b>Question n° 5</b>\n\nQuels sont les critères de la sarcopénie ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 5</b>\n\nQuels sont les 2 principaux signes à l’examen clinique que vous recherchez en faveur d’une dénutrition ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 1 — Q5 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 163)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "abcaea71-823d-493a-8685-7b59e0d8eab1",
+      "before": {
+        "enonce": "<b>Question n° 6</b>\n\nQuelles anomalies biologiques caractérisent le syndrome de renutrition inappropriée ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 6</b>\n\nQuels sont les 4 signes de gravité biologiques de dénutrition que vous recherchez chez votre patiente ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 1 — Q6 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 163)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "235e777c-c114-4a27-aa0e-7d68dcf79766",
+      "before": {
+        "enonce": "<b>Question n° 7</b>\n\nQuels facteurs de risque de dénutrition recherchez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 7</b>\n\nQuels sont les 8 facteurs de risque de dénutrition à rechercher chez cette patiente ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 1 — Q7 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 163)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "54d164b7-140b-4d87-a308-5793359e75bf",
+      "before": {
+        "enonce": "<b>Question n° 8</b>\n\nParmi les médicaments du traitement, lesquels peuvent favoriser l’anorexie ou une anémie par saignement occulte ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 8</b>\n\nParmi les médicaments pris par la patiente, quels sont les 2 potentiellement responsables d’un amaigrissement ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 1 — Q8 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 163)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "44b275c9-e5b4-413f-8da6-e9edb856a1da",
+      "before": {
+        "enonce": "<b>Question n° 9</b>\n\nQuel médicament déprescrivez-vous en priorité ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 9</b>\n\nVotre bilan comportant scanner thoraco-abdomino-pelvien, gastroscopie et colonoscopie (avec biopsies étagées), coproculture et examen parasitologique des selles et bilan endocrinien, s’est révélé normal. Vous reprenez l’interrogatoire de la patiente qui indique la présence de myalgies depuis plus d’un an.\n\nQuel médicament suspectez-vous ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 1 — Q9 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 163)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "417b2ee7-249f-45cc-9801-c19558b28c89",
+      "before": {
+        "enonce": "<b>Question n° 10</b>\n\nQuelles mesures diététiques mettez-vous en place dans la prise en charge de la dénutrition ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 10</b>\n\nLors de son retour à domicile, quelles sont les 5 propositions que vous préconisez à votre patiente pour améliorer son état nutritionnel, en accord avec les recommandations de l’HAS (Haute Autorité de Santé) ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 1 — Q10 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 163)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "427f690d-3f8a-4016-a894-ba7e86bd1c07",
+      "before": {
+        "vignette": "Une patiente âgée confuse, fébrile et hyperglycémique, traitée par Previscan®, bromazépam, metformine et codéine."
+      },
+      "after": {
+        "vignette": "Une femme de 85 ans, vivant seule, habituellement autonome, est amenée au SAU par sa fille. Cette dernière signale une agitation inhabituelle, elle ne la reconnaît plus, tient des propos incohérents et elle est désorientée.\n\nL’IDE d’accueil retrouve une fièvre à 38,5 °C, la patiente est normotendue, présente un dextro à 3 g/L, une bonne saturation pulpaire. Il y a de vagues douleurs abdominales signalées.\n\nAntécédents :\n• ACFA anticoagulée\n• Diabète non insulinodépendant\n• Cancer du sein en rémission\n• Polyarthrose\n\nTraitement :\n• PREVISCAN (FLUINDIONE)\n• BISOCE 5 mg (BISOPROLOL)\n• EFFERALGAN (PARACETAMOL) CODEINE 500 mg x 3/j\n• LEXOMIL (BROMAZEPAM) : ¼ de cp au coucher et si besoin en journée\n• METFORMINE (GLUCOPHAGE) 500 mg : 1-1-1"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 2 — vignette : cas clinique du sujet officiel restitué (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 164)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "8b8a4725-7eeb-49d0-9c24-d9f15733c1aa",
+      "before": {
+        "enonce": "<b>Question n° 1</b>\n\nQuels arguments retenez-vous en faveur d’un syndrome confusionnel ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 1</b>\n\nDans les données du cas clinique, quelles sont celles qui évoquent une confusion ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 2 — Q1 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 164)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "564c28f4-baa8-497c-8481-d5f904ea48ac",
+      "before": {
+        "enonce": "<b>Question n° 2</b>\n\nQue complétez-vous à l’interrogatoire ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 2</b>\n\nCitez 2 éléments d’anamnèse complémentaires à rechercher par l’interrogatoire de la fille."
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 2 — Q2 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 164)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "82ee9aa6-91e5-4787-a10d-d8fd46426c05",
+      "before": {
+        "enonce": "<b>Question n° 3</b>\n\nQuels facteurs précipitants sont déjà connus ? Lesquels recherchez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 3</b>\n\nCitez 6 éléments cliniques connus ou à rechercher pouvant être à l’origine du syndrome confusionnel."
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 2 — Q3 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 164)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "89ef35ce-d537-4e35-b4e9-9ea8c31e5b31",
+      "before": {
+        "enonce": "<b>Question n° 4</b>\n\nQuels examens complémentaires réalisez-vous ? Que recherchez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 4</b>\n\nOn retrouve une bandelette urinaire positive, la NFS montre 17 000 GB/mm³ et une CRP à 200 mg/L. On évoque en priorité une infection urinaire fébrile.\n\nVous souhaitez néanmoins éliminer une autre cause à la confusion. Quels examens biologiques et radiologiques sont nécessaires (maximum 10) ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 2 — Q4 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 164)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "73727209-6252-48b3-af5d-64f7ebb85d60",
+      "before": {
+        "enonce": "<b>Question n° 5</b>\n\nQuelle antibiothérapie instaurez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 5</b>\n\nQuelle classe d’antibiotiques prescrivez-vous ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 2 — Q5 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 164)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "7a3cc4d3-fbc0-4bcd-9140-c8911b7a9a14",
+      "before": {
+        "enonce": "<b>Question n° 6</b>\n\nComment révisez-vous le traitement habituel de cette patiente ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 6</b>\n\nConcernant le traitement du domicile, quelles modifications s’imposent d’emblée ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 2 — Q6 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 164)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "d89df048-fc10-466c-916d-e2e88b18437c",
+      "before": {
+        "vignette": "Une thrombose veineuse profonde du membre inférieur droit dans un contexte d’alitement récent, chez une personne âgée insuffisante rénale."
+      },
+      "after": {
+        "vignette": "Monsieur T., 92 ans, est adressé par son médecin traitant pour douleur du membre inférieur droit dans un contexte d’alitement depuis 3 jours pour des lombalgies mécaniques.\n\nSes antécédents comprennent une insuffisance rénale chronique (clairance de Cockroft à 14 mL/min), hypertension artérielle, tabagisme sevré. Le traitement habituel comprend amlodipine 10 mg (1 cp par jour).\n\nAux urgences : température 37,8 °C, TA 110/60 mmHg, pouls 102/min, SaO₂ = 95 %, poids 63 kg.\n\nÀ l’examen clinique, il existe un œdème du membre inférieur droit, les pouls périphériques sont perçus, l’auscultation cardiopulmonaire est normale."
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 3 — vignette : cas clinique du sujet officiel restitué (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 165)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "f8accd1e-c798-4bf6-8b54-ad3d3ca25e60",
+      "before": {
+        "enonce": "<b>Question n° 1</b>\n\nQuel diagnostic évoquez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 1</b>\n\nQuel est le diagnostic le plus probable ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 3 — Q1 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 165)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "fbbeba68-8b4b-41de-ba8b-41cef8b0f374",
+      "before": {
+        "enonce": "<b>Question n° 2</b>\n\nCalculez le score de probabilité clinique. Quelle stratégie diagnostique en découle ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 2</b>\n\nQuel examen complémentaire demandez-vous pour confirmer le diagnostic ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 3 — Q2 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 165)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "5f6e92b9-5be8-4b5e-ae64-94a0b8fb9de1",
+      "before": {
+        "enonce": "<b>Question n° 3</b>\n\nQuel bilan biologique réalisez-vous avant d’introduire une anticoagulation ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 3</b>\n\nQuel bilan biologique minimal (4 examens maximum) prescrivez-vous avant de débuter le traitement ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 3 — Q3 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 165)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "c716808a-c7c6-4a5e-9a70-b445c602549c",
+      "before": {
+        "enonce": "<b>Question n° 4</b>\n\nQuelle est votre prise en charge thérapeutique ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 4</b>\n\nQuelle prise en charge immédiate préconisez-vous ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 3 — Q4 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 165)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "9fd47e2e-e4c9-4125-896d-35a87f0ba2e7",
+      "before": {
+        "enonce": "<b>Question n° 5</b>\n\nQuelle surveillance biologique mettez-vous en place sous ce traitement ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 5</b>\n\nQuels sont les trois principaux paramètres biologiques à surveiller durant la première semaine ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 3 — Q5 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 165)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "49266688-7b63-4b36-83d2-36e44595257e",
+      "before": {
+        "vignette": "Une patiente âgée diabétique et hypertendue, retrouvée au sol après une chute avec fracture du poignet et rhabdomyolyse."
+      },
+      "after": {
+        "vignette": "Madame G., 87 ans, veuve, vivant seule sans enfant, est retrouvée au sol le matin par son aide ménagère à 10 heures. Elle est adressée aux urgences.\n\nAntécédents :\n• Chutes à répétition\n• Diabète de type 2\n• Hypertension artérielle\n• Cataracte non opérée\n• Prothèse totale de genou\n• Dyslipidémie\n\nTraitement actuel :\n• Bisoprolol 5 mg x 1\n• Nicardipine 20 mg x 1\n• Rilménidine 1 mg x 1\n• Metformine 1000 mg x 3\n• Répaglinide 1 mg x 3\n• Zopiclone 7,5 mg le soir\n• Atorvastatine 40 mg x 1\n\nLa patiente explique qu’elle est tombée vers 2 heures du matin en se levant du lit en se rendant aux toilettes.\n\nÀ l’examen clinique, elle présente une impotence fonctionnelle et une douleur du poignet gauche. Le reste de l’examen clinique est normal. Température corporelle 35,8 °C, TA = 100/60 mmHg, pouls 55/min, poids 51 kg."
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 4 — vignette : cas clinique du sujet officiel restitué (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 166)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "11acf0ff-c7b5-441b-b80e-514ae970a8fa",
+      "before": {
+        "enonce": "<b>Question n° 1</b>\n\nComment définit-on les chutes à répétition ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 1</b>\n\nQuelle est la définition de la chute à répétition ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 4 — Q1 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 166)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "0a84a9d4-8ea7-468f-b52b-9e7b9ab2f971",
+      "before": {
+        "enonce": "<b>Question n° 2</b>\n\nQuels critères de gravité retenez-vous pour cette chute ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 2</b>\n\nQuels sont les 3 éléments en faveur d’une chute grave chez cette patiente ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 4 — Q2 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 167)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "d3f699b8-71bf-43c5-a441-54b92168207e",
+      "before": {
+        "enonce": "<b>Question n° 3</b>\n\nQuels examens complémentaires réalisez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 3</b>\n\nQuels sont les 3 examens paracliniques à prescrire en 1re intention (hors biologie) ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 4 — Q3 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 167)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "748760bf-a2ad-4f3c-a647-aef7ea9fee7b",
+      "before": {
+        "enonce": "<b>Question n° 4</b>\n\nInterprétez le bilan biologique."
+      },
+      "after": {
+        "enonce": "<b>Question n° 4</b>\n\nSur le plan biologique, on constate : CPK = 12 x N, clairance de la créatinine = 35 mL/min (Cockroft), NFS normale, natrémie = 146 mmol/L, urée = 0,6 g/L, glycémie = 0,6 g/L, albuminémie = 30 g/L, CRP = 5 mg/L.\n\nQuelles sont les anomalies dans ces examens biologiques ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 4 — Q4 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 167)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "d93591bb-56e7-4fb7-8fdc-c4b730eba70b",
+      "before": {
+        "enonce": "<b>Question n° 5</b>\n\nComment révisez-vous le traitement de cette patiente ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 5</b>\n\nQuels sont les médicaments à réévaluer chez cette patiente ? Justifiez."
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 4 — Q5 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 167)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "99c7a2b4-681c-4c54-85c4-38ecd76f9a36",
+      "before": {
+        "enonce": "<b>Question n° 6</b>\n\nQuelle complication de la chute redoutez-vous ? Quelle prise en charge rééducative en découle ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 6</b>\n\nQuelle conséquence psychologique est à craindre ?"
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCP - Sujet 4 — Q6 : énoncé et données du sujet officiel restitués (Annales/Sujets/2018_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 167)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "ad4dc407-b9f0-4351-a5dd-d543bebdd429",
+      "before": {
+        "vignette": "Un syndrome confusionnel révélant un SCA ST+ antérieur chez une patiente âgée polymédiquée (bithérapie antihypertensive, gliclazide, paroxétine, hydrochlorothiazide, IPP, hydroxyzine)."
+      },
+      "after": {
+        "vignette": "Une patiente de 91 ans vous est adressée par son médecin traitant, dans le service d’accueil des urgences dans lequel vous travaillez. Elle présente depuis 48 heures un tableau clinique associant agitation, hétéro-agressivité envers son auxiliaire de vie qu’elle semble ne plus reconnaître. Elle ne sait pas où elle se trouve et ne peut pas vous donner la date du jour. Ses propos sont incohérents."
+      },
+      "reason": "Annales - Gériatrie - 2019 - EVCP — vignette : cas clinique du sujet officiel restitué (Annales/Sujets/2019_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 179)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "e473251b-6282-411a-be25-8f8359eaa88f",
+      "before": {
+        "enonce": "<b>Question n° 1</b>\n\nQuels arguments retenez-vous en faveur d’un syndrome confusionnel ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 1</b>\n\nVous suspectez un syndrome confusionnel. Quels sont les éléments dans l’énoncé en faveur du diagnostic ?"
+      },
+      "reason": "Annales - Gériatrie - 2019 - EVCP — Q1 : énoncé et données du sujet officiel restitués (Annales/Sujets/2019_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 179)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "24247913-1087-43f9-a7a3-975d09069061",
+      "before": {
+        "enonce": "<b>Question n° 2</b>\n\nQuels autres éléments sémiologiques du syndrome confusionnel recherchez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 2</b>\n\nQuels autres éléments cliniques recherchez-vous en faveur du diagnostic de confusion selon le DSM-5 ?"
+      },
+      "reason": "Annales - Gériatrie - 2019 - EVCP — Q2 : énoncé et données du sujet officiel restitués (Annales/Sujets/2019_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 179)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "f2ccd255-4a33-4ad1-b9fc-0df8e04832b1",
+      "before": {
+        "enonce": "<b>Question n° 3</b>\n\nQuelles sont les formes cliniques du syndrome confusionnel ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 3</b>\n\nQuelles sont les formes cliniques de confusion que vous connaissez ?"
+      },
+      "reason": "Annales - Gériatrie - 2019 - EVCP — Q3 : énoncé et données du sujet officiel restitués (Annales/Sujets/2019_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 179)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "cff8a6e5-52e9-40fe-90b4-5c363c4e1836",
+      "before": {
+        "enonce": "<b>Question n° 4</b>\n\nQuels facteurs précipitants iatrogènes retenez-vous chez ce patient ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 4</b>\n\nVous avez joint le médecin traitant qui vous a précisé les antécédents de la patiente : hypertension artérielle, diabète de type 2, incontinence urinaire, dépression. Son traitement actuel associe : hydrochlorothiazide + valsartan (COTAREG®), paroxétine (DEROXAT®), oxybutynine (DITROPAN®), oméprazole (MOPRAL®), gliclazide (DIAMICRON®), hydroxyzine (ATARAX®). L’hydroxyzine a été introduite depuis quelques jours, après plusieurs essais infructueux de traitements pour ses troubles du sommeil.\n\nDétaillez les facteurs précipitants de la confusion, à la lumière de ces nouvelles informations, et détaillez les causes de chaque facteur précipitant."
+      },
+      "reason": "Annales - Gériatrie - 2019 - EVCP — Q4 : énoncé et données du sujet officiel restitués (Annales/Sujets/2019_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 179)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "c0b187d3-1e6d-4162-9260-65b6cc68ec20",
+      "before": {
+        "enonce": "<b>Question n° 5</b>\n\nQuels éléments d’examen clinique et quels gestes réalisez-vous en première intention ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 5</b>\n\nLes constantes de la patiente sont les suivantes : T° = 36,8 °C ; PA = 102/65 mmHg ; pouls 95/min régulier. L’examen neurologique est considéré comme normal. L’auscultation cardiopulmonaire est normale.\n\nComment complétez-vous votre examen dans le box des urgences ? Justifiez."
+      },
+      "reason": "Annales - Gériatrie - 2019 - EVCP — Q5 : énoncé et données du sujet officiel restitués (Annales/Sujets/2019_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 180)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "2fdb3586-1a50-4e42-9777-32e0ed5e063f",
+      "before": {
+        "enonce": "<b>Question n° 6</b>\n\nInterprétez l’ECG réalisé chez ce patient."
+      },
+      "after": {
+        "enonce": "<b>Question n° 6</b>\n\nL’infirmière vous apporte l’ECG de votre patiente, présenté ci-dessous.\n\nQuelle est votre interprétation du tracé ?"
+      },
+      "reason": "Annales - Gériatrie - 2019 - EVCP — Q6 : énoncé et données du sujet officiel restitués (Annales/Sujets/2019_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 180)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "1194a9ba-392e-4551-8045-1d9ecd1c4f80",
+      "before": {
+        "enonce": "<b>Question n° 7</b>\n\nQuel diagnostic retenez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 7</b>\n\nQuel est votre diagnostic ?"
+      },
+      "reason": "Annales - Gériatrie - 2019 - EVCP — Q7 : énoncé et données du sujet officiel restitués (Annales/Sujets/2019_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 180)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "dc5aa01e-a0e0-423c-9387-cd81d7a68228",
+      "before": {
+        "enonce": "<b>Question n° 8</b>\n\nQuel bilan biologique demandez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 8</b>\n\nCompte tenu de l’ensemble de l’observation, quels examens biologiques demandez-vous en urgence ?"
+      },
+      "reason": "Annales - Gériatrie - 2019 - EVCP — Q8 : énoncé et données du sujet officiel restitués (Annales/Sujets/2019_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 180)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "5a1a39e8-b53b-47da-81de-8ab527b984f1",
+      "before": {
+        "enonce": "<b>Question n° 9</b>\n\nQuel traitement médicamenteux proposez-vous devant l’agitation de ce patient âgé confus ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 9</b>\n\nAprès une prise en charge adaptée de la pathologie cardiaque, votre patiente est transférée dans votre unité de gériatrie aiguë. Vous avez corrigé tous les troubles somatiques. Néanmoins, elle est toujours confuse, très agitée et anxieuse.\n\nAprès 48 heures passées dans le service et la mise en œuvre de mesures non médicamenteuses habituelles, l’équipe soignante de votre service vous demande de prescrire un traitement. Sur quels arguments décideriez-vous de l’introduction d’un traitement médicamenteux ? Quelle classe thérapeutique et selon quelles modalités ?"
+      },
+      "reason": "Annales - Gériatrie - 2019 - EVCP — Q9 : énoncé et données du sujet officiel restitués (Annales/Sujets/2019_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 181)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "899c752c-33a3-4bdc-9f32-79e4d8460cf4",
+      "before": {
+        "enonce": "<b>Question n° 10</b>\n\nQuels diagnostics différentiels évoquez-vous à distance de l’épisode ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 10</b>\n\nVous revoyez la patiente en consultation six mois après la guérison de son syndrome confusionnel. Elle est accompagnée de sa fille, qui s’inquiète d’« oublis fréquents de rendez-vous » et la trouve triste. Elle n’a pas repris ses activités de loisirs et sort moins de chez elle. Quel(s) diagnostic(s) syndromique(s) évoquez-vous avec ces éléments ?"
+      },
+      "reason": "Annales - Gériatrie - 2019 - EVCP — Q10 : énoncé et données du sujet officiel restitués (Annales/Sujets/2019_EVCP.pdf, section GERIATRIE (evcp.76.doc), p. 181)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "9bd1d4d5-a5f5-4910-b7bb-aeace7b7e467",
+      "before": {
+        "vignette": null
+      },
+      "after": {
+        "vignette": "Une femme âgée de 80 ans est admise en service de gériatrie pour impotence fonctionnelle rendant difficile son retour au domicile. Elle est adressée par le service-porte des urgences hospitalières où elle a été admise pour une fracture du poignet droit de type Pouteau-Colles survenue à la suite d’une chute. Cette chute s’est produite un jour de grand froid et elle a glissé sur le trottoir glacé. Vous apprenez qu’elle vit seule de manière indépendante à domicile. Elle ne déclare aucun proche à prévenir.\n\nElle a pour antécédents une hypertension artérielle essentielle traitée par lisinopril (20 mg/j) (un inhibiteur de l’enzyme de conversion), et une maladie de Horton traitée depuis un an par prednisone. La dose initiale était de 40 mg/j, et elle est actuellement de 7,5 mg/j. Elle prend par ailleurs un somnifère chaque soir, le zopiclone 7,5 mg (1 cp/j).\n\nÀ l’examen, la température est normale, la pression artérielle à 130/72 mmHg, sans hypotension orthostatique, le poids est à 37 kg pour une taille à 150 cm, alors que la taille indiquée sur ses papiers d’identité est de 1,58 m. La fracture a été réduite et ostéosynthésée par broche au bloc d’urgence.\n\nLe prélèvement sanguin montre : glycémie 5,2 mmol/L, Na⁺ 139 mmol/L, K⁺ 4,2 mmol/L, créatinine 65 µmol/L, calcium 2,4 mmol/L, CRP < 5 mg/L, transaminases dans les normes ainsi que les gamma GT, phosphatases alcalines à la limite supérieure de la normale, NFS : globules blancs 7000/mm³ dont 55 % de polynucléaires neutrophiles, Hb 11 g/dL, VGM 103 µ³, plaquettes 200 000/mm³."
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 1 — vignette : cas clinique du sujet officiel restitué (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 40)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "06b24d90-12e9-4d94-bd50-bb2610b10c1f",
+      "before": {
+        "enonce": "<b>Question n° 1</b>\n\nQuel diagnostic évoquez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 1</b>\n\nQuelle pathologie osseuse évoquez-vous devant ce tableau clinique ? Citez chaque élément du diagnostic clinique."
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 1 — Q1 : énoncé et données du sujet officiel restitués (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 40)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "62f963dc-bb1f-4d53-85ac-73afdba321cf",
+      "before": {
+        "enonce": "<b>Question n° 2</b>\n\nQuels facteurs de risque de fracture sont présents chez cette patiente ? Lesquels recherchez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 2</b>\n\nQuels sont chez cette patiente les facteurs de risque de cette maladie osseuse que vous notez à partir de l’observation ? Citez les autres facteurs de risque à rechercher."
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 1 — Q2 : énoncé et données du sujet officiel restitués (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 40)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "e6114803-6e6a-4a62-9d8d-6ec4aeec346c",
+      "before": {
+        "enonce": "<b>Question n° 3</b>\n\nQuel bilan réalisez-vous devant cette ostéoporose ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 3</b>\n\nQuels examens complémentaires réalisez-vous dans un premier temps pour explorer cette ostéopathie (justifiez vos réponses) ? Quel(s) traitement(s) proposez-vous dans un premier temps ?"
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 1 — Q3 : énoncé et données du sujet officiel restitués (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 40)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "f91c4744-bf18-49c2-af48-b937e1bd6776",
+      "before": {
+        "enonce": "<b>Question n° 4</b>\n\nUne ostéodensitométrie est-elle indiquée ? Justifiez votre réponse."
+      },
+      "after": {
+        "enonce": "<b>Question n° 4</b>\n\nVous avez organisé une sortie à son domicile avec des aides appropriées (auxiliaire de vie et portage de repas à domicile) et un contact a été pris avec la voisine qui viendra lui rendre visite et vérifiera que tout se passe bien. Elle quitte l’hôpital avec une ordonnance, un courrier pour le médecin traitant et un rendez-vous en orthopédie pour son suivi.\n\nVous la revoyez en consultation 3 mois plus tard. Le traitement de sortie n’a pas été modifié et a été bien suivi. La consolidation de sa fracture est obtenue. Le bilan biologique que vous avez prescrit est normal et ne montre pas de carence vitaminique. L’état fonctionnel du membre supérieur est satisfaisant et la patiente a retrouvé toute son indépendance pour les actes de la vie quotidienne. La pression artérielle est de 140/85 mmHg.\n\nFaut-il faire d’autres investigations ?"
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 1 — Q4 : énoncé et données du sujet officiel restitués (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 40-41)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "cb00b72c-aa10-458b-90f3-2f97b07f2883",
+      "before": {
+        "enonce": "<b>Question n° 5</b>\n\nQuelles mesures non médicamenteuses proposez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 5</b>\n\nQuelle prise en charge non médicamenteuse allez-vous entreprendre ?"
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 1 — Q5 : énoncé et données du sujet officiel restitués (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 41)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "79a68144-4cb5-4345-bbbb-6a5dfc419e0f",
+      "before": {
+        "enonce": "<b>Question n° 6</b>\n\nInstaurez-vous un traitement médicamenteux de l’ostéoporose ? Précisez ses modalités."
+      },
+      "after": {
+        "enonce": "<b>Question n° 6</b>\n\nFaut-il entreprendre d’autres traitements pour la pathologie osseuse ? Justifiez vos réponses."
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 1 — Q6 : énoncé et données du sujet officiel restitués (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 41)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "8f58fdc3-bb18-47bd-97a2-b6dfb3d4a97b",
+      "before": {
+        "vignette": null
+      },
+      "after": {
+        "vignette": "Une femme de 81 ans consulte pour des douleurs de la région trochantérienne droite apparues il y a 2 ans sans qu’une circonstance déclenchante ne soit retrouvée. Lors d’une précédente consultation aux urgences, une radiographie avait été réalisée. Le diagnostic de coxarthrose droite avait été annoncé à la malade et une ordonnance de paracétamol 500 mg (antalgique) à la demande a été réalisée."
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 2 — vignette : cas clinique du sujet officiel restitué (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 41)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "8ebe77b2-6b21-4e8d-ad7f-f2928ee69a2c",
+      "before": {
+        "enonce": "<b>Question n° 1</b>\n\nQuelles sont les caractéristiques de la douleur de coxarthrose ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 1</b>\n\nQuelles sont les caractéristiques des douleurs provoquées par une coxarthrose ?"
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 2 — Q1 : énoncé et données du sujet officiel restitués (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 41)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "32cfe2ec-5c7e-4ba1-a0e3-03af8e8cd7fe",
+      "before": {
+        "enonce": "<b>Question n° 2</b>\n\nQuels signes recherchez-vous à l’examen physique ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 2</b>\n\nQuels signes recherchez-vous à l’examen physique de cette personne compatibles avec le diagnostic de coxarthrose ?"
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 2 — Q2 : énoncé et données du sujet officiel restitués (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 41)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "00f8170a-4d94-4842-a34e-70da500a46c8",
+      "before": {
+        "enonce": "<b>Question n° 3</b>\n\nComment évaluez-vous la douleur et son retentissement fonctionnel ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 3</b>\n\nComment évaluez-vous l’intensité de la douleur ?"
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 2 — Q3 : énoncé et données du sujet officiel restitués (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 41)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "d97d57e3-fa65-4e08-838d-dbebeed8582b",
+      "before": {
+        "enonce": "<b>Question n° 4</b>\n\nQuel est le retentissement de cette coxarthrose ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 4</b>\n\nQuelles conséquences médico-sociales de cette coxarthrose, autres que la douleur, recherchez-vous ?"
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 2 — Q4 : énoncé et données du sujet officiel restitués (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 41)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "1c0ef858-2417-4943-a5dc-759ed011cc28",
+      "before": {
+        "enonce": "<b>Question n° 5</b>\n\nQuels signes radiographiques caractérisent l’arthrose ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 5</b>\n\nQuelles anomalies sur une radiographie de hanche sont en faveur du diagnostic d’une coxarthrose ?"
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 2 — Q5 : énoncé et données du sujet officiel restitués (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 41)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "1d7bc012-7788-4f47-ab4f-c76e61e65eb7",
+      "before": {
+        "enonce": "<b>Question n° 6</b>\n\nQuels diagnostics différentiels évoquez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 6</b>\n\nCitez 2 causes de douleurs de hanche autres que la coxarthrose, et indiquez leurs principales caractéristiques qui les différencient de la coxarthrose."
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 2 — Q6 : énoncé et données du sujet officiel restitués (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 41)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "6e90a60c-7bf7-49ba-b324-4fa185f70519",
+      "before": {
+        "enonce": "<b>Question n° 9</b>\n\nQuels traitements de seconde ligne proposez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 9</b>\n\nAprès avoir suivi vos conseils et les traitements prescrits pendant dix mois, la patiente garde des douleurs importantes et présente une gêne importante à la marche. Quelles thérapeutiques proposez-vous (justifiez vos réponses) ?"
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCF - Sujet 2 — Q9 : énoncé et données du sujet officiel restitués (Annales/Sujets/2020_EVCF pt1.pdf, section GERIATRIE (S-CF-GERIATRIE), p. 41)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "9904a4a2-6263-4faf-b1fe-77e8df97b708",
+      "before": {
+        "vignette": "Au titre de l’équipe mobile de gériatrie, vous êtes appelé pour donner votre avis sur une patiente de 87 ans, qui est hospitalisée depuis 2 jours. Elle est dans le service de chirurgie parce qu’il n’y avait plus de place dans le service de médecine. Elle est venue aux urgences pour une perte d’autonomie dans un contexte fébrile à 39 °C.\n\nDans le dossier figurent les antécédents médicaux suivants : hypertension artérielle, diabète de type 2, aucune allergie.\n\nTraitement habituel : metformine 1000 mg 2 fois par jour, amlodipine 10 mg 1 fois par jour, escitalopram 10 mg 1 fois par jour, ésoméprazole 20 mg 1 fois par jour, atorvastatine 20 mg 1 fois par jour, aspirine 100 mg 1 fois par jour."
+      },
+      "after": {
+        "vignette": "Au titre de l’équipe mobile de gériatrie, vous êtes appelé pour donner votre avis sur une patiente de 87 ans venant de son domicile, qui est hospitalisée depuis 2 jours. Elle est dans le service de chirurgie parce qu’il n’y avait plus de place dans le service de médecine. Elle est venue aux urgences pour une perte d’autonomie dans un contexte fébrile à 39 °C.\n\nDans le dossier figurent les antécédents médicaux suivants : hypertension artérielle, diabète de type 2, aucune allergie.\n\nTraitement habituel : metformine 1000 mg 2 fois par jour, amlodipine 10 mg 1 fois par jour, escitalopram 10 mg 1 fois par jour, ésoméprazole 20 mg 1 fois par jour, atorvastatine 20 mg 1 fois par jour, aspirine 100 mg 1 fois par jour."
+      },
+      "reason": "Annales - Gériatrie - 2024 - EVCP - Sujet 1 — vignette : « venant de son domicile », omis à la restitution, rétabli (Proposition de correction des annales 2024.pdf, p. 54)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "8137d610-bfee-4148-922d-aeb49ffca873",
+      "before": {
+        "enonce": "<b>Question n° 12</b>\n\nMadame est sortie de l’hôpital, tous les psychotropes ont été arrêtés, et vous la recevez en consultation 6 mois plus tard. Vous notez une akinésie, elle marche à petits pas et sa fille rapporte 3 chutes le mois dernier. Sa fille dit qu’elle l’a appelée car elle voyait des chats dans sa cuisine alors qu’elle n’a pas d’animaux. Elle se plaint de faire des cauchemars et d’être tombée de son lit.\n\nQuelle est votre hypothèse diagnostique ? Justifiez."
+      },
+      "after": {
+        "enonce": "<b>Question n° 12</b>\n\nMadame est sortie de l’hôpital, tous les psychotropes ont été arrêtés, et vous la recevez en consultation 6 mois plus tard. Vous notez une akinésie, elle marche à petits pas et sa fille rapporte 3 chutes le mois dernier. Sa fille dit qu’elle l’a appelée car elle voyait des chats dans sa cuisine et sa chambre alors qu’elle n’a pas d’animaux. Elle se plaint de faire des cauchemars et d’être tombée de son lit.\n\nQuelle est votre hypothèse diagnostique ? Justifiez."
+      },
+      "reason": "Annales - Gériatrie - 2024 - EVCP - Sujet 1 — Q12 : « et sa chambre », omis à la restitution, rétabli (Proposition de correction des annales 2024.pdf, p. 88)."
+    }
+  ]
+}

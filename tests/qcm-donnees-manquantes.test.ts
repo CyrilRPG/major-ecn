@@ -34,6 +34,15 @@ test("image vue plus tôt dans le dossier : l'élève l'a eue sous les yeux", ()
   ]), []);
 });
 
+test('une image ancienne ne vaut pas pour un nouveau document (Urgence 2021 EVCF Q12)', () => {
+  const manques = manquesDuDossier(null, [
+    q('Voici la radiographie de thorax.', ['https://x/rx.jpg']),
+    q('Quel traitement proposez-vous ?'),
+    q('Interprétez l’ECG.'),
+  ]);
+  assert.deepEqual(manques.map((m) => m.index), [2]);
+});
+
 test('vocabulaire médical et questions de cours : jamais signalés', () => {
   for (const enonce of [
     'Décrivez le tableau clinique du choc cardiogénique.',
@@ -47,5 +56,10 @@ test('vocabulaire médical et questions de cours : jamais signalés', () => {
     'Les résultats montrent : β-hCG négatif, NFS normale, CRP à 12 mg/L. Comment interprétez-vous ces données ?',
     'Parmi les anomalies ECG suivantes, lesquelles permettent le diagnostic étiologique immédiat ?',
     'Quel est le premier paramètre à analyser sur un gaz du sang ?',
+    'Que montre la courbe de dissociation de l’hémoglobine ?',
+    'Que montre le scanner des sacro-iliaques ?',
+    'Les EFR montrent un VEMS à 82 %. La gazométrie est normale. Comment interprétez-vous ces résultats et la gazométrie ?',
+    "Lors du traitement de l'état hyperosmolaire, comment interpréter l'élévation de la natrémie mesurée ?",
+    "L'antre est nettement visible et sa surface transverse est mesurable. Comment interpréter l'image obtenue ?",
   ]) assert.deepEqual(manquesDuDossier(null, [q(enonce)]), [], enonce);
 });

@@ -1,0 +1,354 @@
+{
+  "hostname": "mrrgfnirpwsknuyiwcqy.supabase.co",
+  "date": "2026-09-27",
+  "operations": [
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "bbb573c3-7759-4a8f-bd18-b82787f4caf7",
+      "before": {
+        "vignette": null
+      },
+      "after": {
+        "vignette": "Homme de 72 ans, 72 kilos, sans antécédent, hospitalisé en réanimation pour choc septique depuis 6 heures. Le tableau clinique évoque une perforation sigmoïdienne. Il est intubé, ventilé et sédaté."
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — vignette du cas (patient en choc septique, intubé, ventilé)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "a3e32b51-5d38-40f0-ba4d-46324aa797d5",
+      "before": {
+        "enonce": "<b>Question n°1</b>\n\nDonnez la formule du delta PP (variation respiratoire de la pression pulsée)."
+      },
+      "after": {
+        "enonce": "<b>Question n°1</b>\n\nLe monitorage hémodynamique fournit les données suivantes :\n• PA : 80/60 mmHg\n• FC : régulier à 120/min\n• Delta PP : 16 %.\n\nQuelle est la formule de calcul du delta PP ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q1 : intitulé officiel et données intercalées."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "262db251-0f3a-49a5-96f4-d39818bcd399",
+      "before": {
+        "enonce": "<b>Question n°2</b>\n\nQuel est le seuil de delta PP retenu ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°2</b>\n\nQuelle est la valeur limite du delta PP pour le diagnostic d’hypovolémie dans ce contexte ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q2 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "04fdc601-c7df-4d78-961c-b37f09e6d2eb",
+      "before": {
+        "enonce": "<b>Question n°3</b>\n\nInterprétez les gaz du sang."
+      },
+      "after": {
+        "enonce": "<b>Question n°3</b>\n\nLe bilan biologique (prélèvement artériel) montre les résultats suivants :\n• Na : 132 mmol/L ; chlore : 95 mmol/L ; bicarbonates : 10 mmol/L ;\n• pH : 7,14 ; PaCO₂ : 30 mmHg ; PaO₂ : 105 mmHg (FiO₂ à 50 %) ; SaO₂ : 99 % ;\n• hémoglobine : 9,2 g/100 mL ;\n• albuminémie : 15 g/L.\n\nQuel est le type de perturbation de l’équilibre acido-basique ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q3 : intitulé officiel et données intercalées."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "efaf16d7-f7d1-47d1-8b26-8a0c8fa7507b",
+      "before": {
+        "enonce": "<b>Question n°4</b>\n\nQuelle est la valeur normale du trou anionique ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°4</b>\n\nQuelle est la valeur du trou anionique normal ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q4 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "d6e8756a-e058-4468-a3a9-c85a1b594d30",
+      "before": {
+        "enonce": "<b>Question n°5</b>\n\nCalculez le trou anionique de ce patient."
+      },
+      "after": {
+        "enonce": "<b>Question n°5</b>\n\nQuelle est la valeur du trou anionique dans ce cas ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q5 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "05c573c1-e7bc-4e87-92e9-8bbf5e531181",
+      "before": {
+        "enonce": "<b>Question n°6</b>\n\nQuel dosage demandez-vous pour expliquer l’origine de l’acidose métabolique ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°6</b>\n\nQuel dosage sanguin vous manque pour affiner le diagnostic biologique de la perturbation acido-basique ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q6 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "eadb840b-e563-481a-8f01-a7ca64dc51de",
+      "before": {
+        "enonce": "<b>Question n°7</b>\n\nComment expliquez-vous cette anomalie ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°7</b>\n\nQuelle est l’hypothèse la plus probable pour expliquer le taux d’albumine ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q7 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "20ffe26c-56a1-41b9-b82a-a5db76b2fb56",
+      "before": {
+        "enonce": "<b>Question n°8</b>\n\nDonnez la formule de la compliance statique et calculez-la."
+      },
+      "after": {
+        "enonce": "<b>Question n°8</b>\n\nLe mode de ventilation est le suivant : volume contrôlé, volume courant : 650 mL ; fréquence : 18/min ; pression de plateau : 25 cmH₂O, PEP : 5 cmH₂O.\n\nQuelle est la compliance statique dans ce cas ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q8 : intitulé officiel et données intercalées."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "9bbfbc89-1c91-44c7-99ae-83895ba6fb1a",
+      "before": {
+        "enonce": "<b>Question n°9</b>\n\nDéfinissez la pression de plateau. Quelle en est l’unité ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°9</b>\n\nDéfinissez la pression de plateau."
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q9 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "90cc4e39-8b95-4715-9829-5a01aea482f7",
+      "before": {
+        "enonce": "<b>Question n°10</b>\n\nDéfinissez la pression expiratoire positive. Quelle en est l’unité ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°10</b>\n\nDéfinissez la PEP."
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q10 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "912602b7-0b02-4e2e-8008-c42bd5f6c7ba",
+      "before": {
+        "enonce": "<b>Question n°11</b>\n\nQuelles complications évoquez-vous ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°11</b>\n\nQuels sont les deux principaux risques du volo-traumatisme ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q11 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "3653a873-9fc7-47dd-9357-ef6399d829ae",
+      "before": {
+        "enonce": "<b>Question n°12</b>\n\nQuelle est la valeur attendue ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°12</b>\n\nQuel est le rapport PaO₂/FiO₂ ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q12 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "c55970df-008d-4834-936b-714071dd552a",
+      "before": {
+        "enonce": "<b>Question n°13</b>\n\nQuel est votre diagnostic ? Argumentez."
+      },
+      "after": {
+        "enonce": "<b>Question n°13</b>\n\nQuelle est la définition d’un SDRA ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q13 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "526ce2b7-125c-4cca-8414-2ee951fbe81a",
+      "before": {
+        "enonce": "<b>Question n°14</b>\n\nSur quel principe repose cette mesure du débit cardiaque ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°14</b>\n\nUn cathéter de Swan-Ganz a été mis en place. Les données sont notamment :\n• un débit cardiaque de 7 L/min ;\n• une saturation artérielle pulmonaire en oxygène de 80 %.\n\nQuelle est la technique utilisée par le cathéter de Swan-Ganz pour mesurer le débit cardiaque ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q14 : intitulé officiel et données intercalées."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "61d203f0-5fda-4933-85b9-36bb3465d3b5",
+      "before": {
+        "enonce": "<b>Question n°15</b>\n\nComment qualifiez-vous ce profil hémodynamique ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°15</b>\n\nCaractérisez le profil hémodynamique."
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q15 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "c9817405-cdd6-4f58-96a4-a149334e6227",
+      "before": {
+        "enonce": "<b>Question n°16</b>\n\nDonnez la formule des résistances vasculaires systémiques et son unité."
+      },
+      "after": {
+        "enonce": "<b>Question n°16</b>\n\nQuelle est la formule permettant le calcul des résistances vasculaires systémiques ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q16 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "dce46f4d-cffe-4ad2-ac93-7556785844ce",
+      "before": {
+        "enonce": "<b>Question n°17</b>\n\nDe quoi dépend le contenu artériel en oxygène ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°17</b>\n\nQuels sont les déterminants qui permettent le calcul du contenu artériel en oxygène ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q17 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "b840c873-ce58-451b-90f6-1a35c635ae51",
+      "before": {
+        "enonce": "<b>Question n°18</b>\n\nDonnez la formule de la consommation en oxygène."
+      },
+      "after": {
+        "enonce": "<b>Question n°18</b>\n\nQuels sont les déterminants qui permettent le calcul de la consommation en oxygène ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q18 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "3d62413b-9bed-4473-b8c9-595b4e5dbe63",
+      "before": {
+        "enonce": "<b>Question n°19</b>\n\nQuels abords vasculaires sont nécessaires ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°19</b>\n\nUn cathéter de Swan-Ganz n’a pas été mis en place. Un cathéter de thermodilution transpulmonaire (technique Picco) est mis en place.\n\nDécrivez le positionnement des cathéters."
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q19 : intitulé officiel et données intercalées."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "b477d304-5adb-4220-a56d-d48eb72903ca",
+      "before": {
+        "enonce": "<b>Question n°20</b>\n\nQuels paramètres de précharge sont mesurés ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°20</b>\n\nCitez deux paramètres de précharge fournis."
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q20 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "d5d681b9-c136-482c-9d1b-382860d2716e",
+      "before": {
+        "enonce": "<b>Question n°21</b>\n\nQuels paramètres de fonction systolique sont mesurés ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°21</b>\n\nCitez deux paramètres de la fonction cardiaque fournis."
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q21 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "566a1c97-af7c-4017-9fe8-420646a1d8ac",
+      "before": {
+        "enonce": "<b>Question n°22</b>\n\nQuelles épreuves permettent de tester la précharge-dépendance ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°22</b>\n\nUne épreuve de précharge est décidée.\n\nQuelles sont les techniques de réalisation ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q22 : intitulé officiel et données intercalées."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "a2637a1f-97dd-4d37-b5d0-26c8f5aa895c",
+      "before": {
+        "enonce": "<b>Question n°23</b>\n\nQuel résultat traduit une précharge-dépendance ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°23</b>\n\nQuelle est la définition d’un patient « répondeur » ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q23 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "61fdd586-dfa9-4da7-a008-4ae0b4193c98",
+      "before": {
+        "enonce": "<b>Question n°24</b>\n\nDe quoi dépend l’EtCO₂ ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°24</b>\n\nUne intervention par laparoscopie est décidée. La fraction expirée en gaz carbonique passe brutalement de 28 à 10 mmHg.\n\nQuels sont les déterminants de la fraction expirée en CO₂ ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q24 : intitulé officiel et données intercalées."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "c09c9673-4694-4e6f-9742-e43245089385",
+      "before": {
+        "enonce": "<b>Question n°25</b>\n\nQuelles causes évoquez-vous devant une baisse brutale de l’EtCO₂ ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°25</b>\n\nQuels sont les principaux diagnostics étiologiques à évoquer ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q25 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "714903a8-8b5e-48d6-b3dc-45d65c87bb6c",
+      "before": {
+        "enonce": "<b>Question n°26</b>\n\nQuelle est votre conduite à tenir immédiate ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°26</b>\n\nQuels sont les trois premiers gestes à pratiquer ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q26 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "a9d96c10-a0ef-4a32-922b-70c32a197cbf",
+      "before": {
+        "enonce": "<b>Question n°27</b>\n\nComment expliquez-vous la persistance des anomalies ?"
+      },
+      "after": {
+        "enonce": "<b>Question n°27</b>\n\nLa capnographie reste basse (< 15 mmHg). Quelle est sa signification ?"
+      },
+      "reason": "Sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, p. 2-3) : Annales - Anesthésie-Réanimation - 2010 - EVCF — Q27 : intitulé officiel."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "b05d2397-cd00-4744-a897-36ea7d4c1415",
+      "before": {
+        "enonce": "<b>Question n° 1</b>\n\nQuels autres éléments recherchez-vous à l’interrogatoire et à l’examen physique pour compléter l’évaluation de Madame M:"
+      },
+      "after": {
+        "enonce": "<b>Question n° 1</b>\n\nQuels autres éléments recherchez-vous à l’interrogatoire et à l’examen physique pour compléter l’évaluation de Madame M. ?"
+      },
+      "reason": "Alignement de la base sur le fichier de données (ponctuation de l’intitulé, corrigé Annale 2023 copie.pdf p. 79) : Annales - Anesthésie-Réanimation - 2023 - EVCP - Sujet 2 — Q1 : intitulé du fichier de données."
+    }
+  ]
+}

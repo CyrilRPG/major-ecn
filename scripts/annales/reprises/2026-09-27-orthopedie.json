@@ -1,0 +1,30 @@
+{
+  "hostname": "mrrgfnirpwsknuyiwcqy.supabase.co",
+  "date": "2026-09-27",
+  "operations": [
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "b0b12a88-7daa-4cd9-9b7e-89c2541b6c74",
+      "before": {
+        "vignette": "Patiente porteuse d’une prothèse totale de genou droit, sous Eliquis, dont l’évolution postopératoire précoce est marquée par une cicatrice inflammatoire avec écoulement (iconographie ci-dessous)."
+      },
+      "after": {
+        "vignette": "Madame F., âgée de 78 ans, se présente aux urgences de votre établissement pour une fièvre à 38,5 °C.\n\nElle présente dans ses antécédents médicaux une hypertension artérielle, une AC/FA traitée par Eliquis et Cordarone. Sur le plan morphologique, elle mesure 1,65 m et pèse 90 kg.\n\nSur le plan chirurgical, elle avait présenté il y a 15 ans une fracture de l’extrémité supérieure du tibia, traitée sans complication à l’époque (voie antérieure), et de façon plus récente, il y a 10 jours, la réalisation d’une prothèse totale de genou, posée par voie latérale dans votre établissement.\n\nL’examen aux urgences met en évidence l’aspect cicatriciel suivant (photo 1) et la radiographie du genou est la suivante (photo 2).\n\nLe bilan biologique effectué aux urgences montre une CRP à 95 mg/l, la numération plaquettaire montre 12 000 GB avec 85 % de polynucléaires neutrophiles et des plaquettes à 450 000/mm³. Le bilan d’hémostase montre une activité anti-Xa à 300 ng/ml.\n\nUn prélèvement par écouvillon a été effectué sur la cicatrice 48 heures auparavant et le résultat du laboratoire est Staphylocoque aureus méthicilline sensible."
+      },
+      "reason": "Annales - Orthopédie - 2019 - EVCP - Dossier 2 (Genou) — Vignette résumée : antécédents (AC/FA sous Eliquis et Cordarone, fracture du tibia proximal opérée par voie antérieure, PTG posée par voie latérale il y a 10 jours), morphologie (1,65 m, 90 kg), fièvre, biologie (CRP, GB, plaquettes, anti-Xa) et écouvillon à SAMS restaurés depuis le sujet officiel (Annales/Sujets/2019_EVCP.pdf, p. 150-151) ; les questions 3, 4 et 7 en dépendent."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "19d4f163-0b7f-4662-8d85-5d3668b4f72d",
+      "before": {
+        "vignette": "Patient adressé pour des lombalgies et une limitation du périmètre de marche. Antécédents notables : thyroïdectomie et prothèses totales de genou bilatérales."
+      },
+      "after": {
+        "vignette": "Patiente de 73 ans adressée par son médecin traitant pour des douleurs du dos avec irradiation dans les cuisses et dans les fesses, avec sciatique à bascule épisodique. Dans les antécédents, on retrouve : un bilan phosphocalcique où une hypovitaminose D a été découverte et traitée quelque temps par Uvedose, sans traitement d’ostéoporose prescrit ; une arythmie ; une hypertension artérielle ; des acouphènes traités par Rivotril ; une thyroïdectomie subtotale ; des insuffisances veineuses opérées ; deux PTG avec un très bon résultat."
+      },
+      "reason": "Annales - Orthopédie - 2020 - EVCP - Dossier canal lombaire étroit — Vignette reconstituée sans énoncé : même cas clinique que le sujet n°8 du diaporama « EVCP 2020 correction » (p. 84) — antécédents complets (hypovitaminose D, thyroïdectomie subtotale, deux PTG…) sur lesquels s’appuie la question 4 (carence en vitamine D)."
+    }
+  ]
+}

@@ -3,7 +3,12 @@
     "ANNALES PEDIATRIE/Annales 2017-2023 corrigées.pdf": {
       "atelier": "annales-pediatrie/annales-2017-2023-corrigees",
       "sujetOfficiel": "Annales/Sujets/EVCF_2017/EVCF__2017/EVCF.36.DOC ; Annales/Sujets/EVCP__2017 - 30 à 76/EVCP.36.DOC ; Annales/Sujets/EVCF 2019/EVCF 2019/evcf.36.doc",
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-043-097.jpg": "capture du texte de recommandation reproduit dans le corrigé de la question 1 (EVCF 2020) : réponse, pas document d’énoncé",
+        "img-060-140.jpg": "diapositive de réponse de la question 3 (EVCP 2020, sujet 6) : critères de qualité de la radiographie, pas document d’énoncé",
+        "img-060-141.png": "algorithme de cours « toux traînante chez un enfant » reproduit dans le corrigé (EVCP 2020, sujet 6) : pas document d’énoncé",
+        "img-063-148.jpg": "arbre décisionnel de cours de l’APLV reproduit dans le corrigé (EVCP 2020, sujet 8) : pas document d’énoncé"
+      },
       "remarque": "Ce corrigé couvre les sessions 2017, 2019, 2020, 2021 et 2023 ; il reproduit les énoncés officiels de chaque cas, qui sont donc restitués tels quels. Certains sujets ou questions ne sont pas corrigés dans le document (EVCP 2019 sujet 2, EVCF 2019 questions 10 et 13, EVCF 2017 sujet 3) et ne sont donc pas intégrés. Les sujets officiels 2020, 2021 et 2023 ne sont pas présents dans le dépôt."
     }
   },
@@ -19,9 +24,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 1</b>\n\nMme B, 26 ans, est enceinte de son premier enfant. La grossesse a été bien suivie ; les sérologies sont les suivantes : toxoplasmose et rubéole négatives, Ag HBs positif, Ag HBe négatif, Anti-HBc IgM (−), Anti-HBc IgG (+), Anti-HBe (+), Anti-HBs (−) et VIH (−). Accouchement par voie basse à 38 SA. Elle a donné naissance à une petite fille pesant 3200 g ; le score d’Apgar était à 10, 10 et 10 à 1, 5 et 10 min.\n\nComment devez-vous organiser la prophylaxie anti-hépatite B ?",
-          "images": [
-            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-043-097.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Pour les nouveau-nés de mère porteuse de l’antigène HBs, la vaccination doit être pratiquée impérativement à la naissance, selon un schéma en trois injections (une dose à la naissance, puis à 1 et 6 mois) avec le vaccin HBVAXPRO 5 µg ou le vaccin ENGERIX B 10 µg ; la première dose est associée à l’administration d’immunoglobulines anti-HBs. Un schéma à quatre doses (une dose à la naissance, puis à 1, 2 et 6 mois) est recommandé pour les prématurés de moins de 32 semaines et/ou de poids de naissance inférieur à 2 kg. Un contrôle sérologique à la recherche de l’antigène HBs et un titrage des anticorps anti-HBs sont préconisés à partir de l’âge de 9 mois, si possible un à quatre mois après la dernière dose vaccinale, pour s’assurer de la protection à long terme.",
           "correctionGenerale": "<b>Pour les nouveau-nés de mère porteuse de l’antigène HBs</b>, la vaccination doit être pratiquée impérativement à la naissance, selon un schéma en trois injections (une dose à la naissance, puis à 1 et 6 mois) avec le vaccin HBVAXPRO® 5 µg ou le vaccin ENGERIX B® 10 µg ; la première dose est associée à l’administration d’immunoglobulines anti-HBs.\n\n<b>Un schéma à quatre doses</b> (une dose à la naissance, puis à 1, 2 et 6 mois) est recommandé pour les prématurés de moins de 32 semaines et/ou de poids de naissance inférieur à 2 kg.\n\n<b>Un contrôle sérologique</b> à la recherche de l’antigène HBs et un titrage des anticorps anti-HBs sont préconisés à partir de l’âge de 9 mois (si possible un à quatre mois après la dernière dose vaccinale) pour s’assurer de la protection à long terme."
         },
@@ -169,9 +172,8 @@
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question 22</b>\n\nVoici la courbe de croissance staturo-pondérale d’un garçon de 8 ans (figures). Le développement psychomoteur et scolaire sont normaux.\n\nQuelles sont les 3 pathologies les plus fréquentes à rechercher ? Indiquez pour chacune d’entre elles quel examen vous prescrivez.",
+          "enonce": "<b>Question 22</b>\n\nVoici la courbe de croissance staturo-pondérale d’un garçon de 8 ans (figure). Le développement psychomoteur et scolaire sont normaux.\n\nQuelles sont les 3 pathologies les plus fréquentes à rechercher ? Indiquez pour chacune d’entre elles quel examen vous prescrivez.",
           "images": [
-            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-049-111.jpg",
             "annales-pediatrie/annales-2017-2023-corrigees/figures/img-049-112.jpg"
           ],
           "reponseAttendue": "Déficit en GH ou craniopharyngiome : test de stimulation de la GH et imagerie cérébrale. Hypothyroïdie : TSH, T4L, T3L. Hypercorticisme : cortisol libre urinaire des 24 h.",
@@ -179,8 +181,10 @@
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question 23</b>\n\nUne petite fille de 7 ans et 7 mois est adressée pour une accélération de sa croissance et l’apparition transitoire d’une petite tuméfaction de la glande mammaire à droite.\n\nCitez 3 diagnostics à évoquer chez cette enfant. Quel serait le premier signe de la puberté à rechercher chez cette petite fille ?",
-          "images": [],
+          "enonce": "<b>Question 23</b>\n\nUne petite fille de 7 ans et 7 mois est adressée pour une accélération de sa croissance et l’apparition transitoire d’une petite tuméfaction de la glande mammaire à droite (figure).\n\nCitez 3 diagnostics à évoquer chez cette enfant. Quel serait le premier signe de la puberté à rechercher chez cette petite fille ?",
+          "images": [
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-049-111.jpg"
+          ],
           "reponseAttendue": "Puberté précoce centrale, puberté précoce périphérique (pseudo-puberté précoce), hyperthyroïdie. Premier signe de puberté : le développement mammaire (S2 de Tanner), avec bourgeon mammaire et élargissement de l’aréole.",
           "correctionGenerale": "• Puberté précoce centrale\n• Puberté précoce périphérique (pseudo-puberté précoce)\n• Hyperthyroïdie ?\n\n<b>Premier signe de puberté</b> : développement mammaire (S2 de Tanner) — bourgeon mammaire avec élargissement de l’aréole."
         },
@@ -464,8 +468,7 @@
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nVous avez demandé la radiographie de thorax ci-dessous (figure). Quels sont les critères qui vous permettent d’évaluer la qualité de cette radiographie ?",
           "images": [
-            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-059-137.jpg",
-            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-060-140.jpg"
+            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-059-137.jpg"
           ],
           "reponseAttendue": "Visualiser l’ensemble de la cage thoracique ; cliché en inspiration profonde (7 arcs costaux antérieurs et 10 arcs costaux postérieurs au-dessus des coupoles diaphragmatiques) ; visualisation des coupoles diaphragmatiques ; cliché pris strictement de face (bords internes des clavicules à égale distance des épineuses dorsales) ; respect de l’alignement de la ligne des épineuses des vertèbres dorsales ; épaules bien dégagées afin que les omoplates ne se superposent pas au parenchyme pulmonaire ; si le sujet est debout, distance entre la poche à air de l’estomac et le sommet de la coupole gauche inférieure à 1 cm.",
           "correctionGenerale": "1. Visualiser l’ensemble de la cage thoracique\n2. Cliché en inspiration profonde : 7 arcs costaux antérieurs et 10 arcs costaux postérieurs au-dessus des coupoles diaphragmatiques\n3. Visualisation des coupoles diaphragmatiques\n4. S’assurer du cliché pris strictement de face : visualisation des bords internes des clavicules à égale distance des épineuses dorsales\n5. Respect de l’alignement de la ligne des épineuses des vertèbres dorsales\n6. Épaules bien dégagées afin que les omoplates ne se superposent pas au parenchyme pulmonaire\n7. Lorsque le sujet est debout, la distance entre la poche à air de l’estomac et le sommet de la coupole gauche est inférieure à 1 cm"
@@ -480,11 +483,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 5</b>\n\nQuel traitement probabiliste proposez-vous pour la toux à la fin de la consultation, en précisant son mode d’administration ? Justifiez.",
-          "images": [
-            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-060-141.png"
-          ],
+          "images": [],
           "reponseAttendue": "Un traitement d’épreuve par corticoïdes inhalés, devant une toux chronique (> 8 semaines), sans signe d’alerte, sans élément d’orientation, donc une toux non spécifique, après échec de l’antibiothérapie.",
-          "correctionGenerale": "• <b>Traitement d’épreuve par corticoïdes inhalés</b>\n• Présence d’une toux chronique (> 8 semaines)\n• Pas de signes d’alerte\n• Pas d’éléments d’orientation\n• Toux non spécifique\n• Échec de l’antibiothérapie\n\n<i>La figure reproduit l’algorithme de prise en charge d’une toux traînante chez un enfant, selon la durée (3-8 semaines ou > 8 semaines), la présence de signes de toux spécifique et de signes d’alerte.</i>"
+          "correctionGenerale": "• <b>Traitement d’épreuve par corticoïdes inhalés</b>\n• Présence d’une toux chronique (> 8 semaines)\n• Pas de signes d’alerte\n• Pas d’éléments d’orientation\n• Toux non spécifique\n• Échec de l’antibiothérapie"
         }
       ]
     },
@@ -551,11 +552,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\nQuel(s) examen(s) demandez-vous en première intention pour confirmer le diagnostic ?",
-          "images": [
-            "annales-pediatrie/annales-2017-2023-corrigees/figures/img-063-148.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Un prick-test et/ou le dosage des IgE spécifiques des protéines du lait de vache.",
-          "correctionGenerale": "<b>Prick-test et/ou IgE spécifiques PLV.</b>\n\n<i>La figure reproduit l’arbre décisionnel de l’allergie aux protéines du lait de vache selon l’histoire clinique évocatrice, distinguant les manifestations immédiates (prick-test et/ou IgE spécifiques PLV) des manifestations retardées (prick-test et/ou IgE spécifiques PLV, patch-test), puis la conduite selon la positivité, le régime d’éviction et la réintroduction.</i>"
+          "correctionGenerale": "<b>Prick-test et/ou IgE spécifiques PLV.</b>"
         },
         {
           "format": "qroc",

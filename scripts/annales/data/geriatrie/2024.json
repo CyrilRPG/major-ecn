@@ -245,7 +245,7 @@
       "type": "EVCP",
       "source": "ANNALES GERIATRIE/Proposition de correction des annales 2024.pdf",
       "orderIndex": 19,
-      "vignette": "Au titre de l’équipe mobile de gériatrie, vous êtes appelé pour donner votre avis sur une patiente de 87 ans, qui est hospitalisée depuis 2 jours. Elle est dans le service de chirurgie parce qu’il n’y avait plus de place dans le service de médecine. Elle est venue aux urgences pour une perte d’autonomie dans un contexte fébrile à 39 °C.\n\nDans le dossier figurent les antécédents médicaux suivants : hypertension artérielle, diabète de type 2, aucune allergie.\n\nTraitement habituel : metformine 1000 mg 2 fois par jour, amlodipine 10 mg 1 fois par jour, escitalopram 10 mg 1 fois par jour, ésoméprazole 20 mg 1 fois par jour, atorvastatine 20 mg 1 fois par jour, aspirine 100 mg 1 fois par jour.",
+      "vignette": "Au titre de l’équipe mobile de gériatrie, vous êtes appelé pour donner votre avis sur une patiente de 87 ans venant de son domicile, qui est hospitalisée depuis 2 jours. Elle est dans le service de chirurgie parce qu’il n’y avait plus de place dans le service de médecine. Elle est venue aux urgences pour une perte d’autonomie dans un contexte fébrile à 39 °C.\n\nDans le dossier figurent les antécédents médicaux suivants : hypertension artérielle, diabète de type 2, aucune allergie.\n\nTraitement habituel : metformine 1000 mg 2 fois par jour, amlodipine 10 mg 1 fois par jour, escitalopram 10 mg 1 fois par jour, ésoméprazole 20 mg 1 fois par jour, atorvastatine 20 mg 1 fois par jour, aspirine 100 mg 1 fois par jour.",
       "questions": [
         {
           "format": "qroc",
@@ -354,7 +354,7 @@
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 12</b>\n\nMadame est sortie de l’hôpital, tous les psychotropes ont été arrêtés, et vous la recevez en consultation 6 mois plus tard. Vous notez une akinésie, elle marche à petits pas et sa fille rapporte 3 chutes le mois dernier. Sa fille dit qu’elle l’a appelée car elle voyait des chats dans sa cuisine alors qu’elle n’a pas d’animaux. Elle se plaint de faire des cauchemars et d’être tombée de son lit.\n\nQuelle est votre hypothèse diagnostique ? Justifiez.",
+          "enonce": "<b>Question n° 12</b>\n\nMadame est sortie de l’hôpital, tous les psychotropes ont été arrêtés, et vous la recevez en consultation 6 mois plus tard. Vous notez une akinésie, elle marche à petits pas et sa fille rapporte 3 chutes le mois dernier. Sa fille dit qu’elle l’a appelée car elle voyait des chats dans sa cuisine et sa chambre alors qu’elle n’a pas d’animaux. Elle se plaint de faire des cauchemars et d’être tombée de son lit.\n\nQuelle est votre hypothèse diagnostique ? Justifiez.",
           "images": [
             "annales-geriatrie/proposition-de-correction-des-annales-2024/figures/img-088-466.jpg"
           ],

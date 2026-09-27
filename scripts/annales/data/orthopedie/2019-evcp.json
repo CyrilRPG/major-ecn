@@ -4,6 +4,8 @@
       "atelier": "annales-orthopedie/evcp2019correction",
       "sujetOfficiel": "Annales/Sujets/2019_EVCP.pdf",
       "figuresIgnorees": {
+        "img-081-369.png": "Capture de la diapositive du corrigé (Tumeurs, question 2) : la radiographie n’y est qu’une vignette entourée du texte de la correction. La radiographie est publiée depuis le sujet officiel (2019_EVCP.pdf, p. 153).",
+        "img-083-379.png": "Capture de la diapositive du corrigé (Tumeurs, question 3) : la radiographie n’y est qu’une vignette entourée du texte de la correction. La radiographie est publiée depuis le sujet officiel (2019_EVCP.pdf, p. 153).",
         "img-029-138.png": "Capture de la diapositive reproduisant le sujet officiel : la photographie de la cicatrice et les radiographies de prothèse n’y sont que des vignettes, avec la barre des tâches du poste du conférencier. Elles sont publiées depuis le sujet officiel (2019_EVCP.pdf, p. 151), en pleine résolution.",
         "img-029-139.png": "Capture de la diapositive reproduisant le sujet officiel : la photographie de la cicatrice et les radiographies de prothèse n’y sont que des vignettes, avec la barre des tâches du poste du conférencier. Elles sont publiées depuis le sujet officiel (2019_EVCP.pdf, p. 151), en pleine résolution."
       },
@@ -103,7 +105,7 @@
       "type": "EVCP",
       "source": "ANNALES ORTHOPEDIE/EVCP2019correction.pdf",
       "orderIndex": 36,
-      "vignette": "Patiente porteuse d’une prothèse totale de genou droit, sous Eliquis, dont l’évolution postopératoire précoce est marquée par une cicatrice inflammatoire avec écoulement (iconographie ci-dessous).",
+      "vignette": "Madame F., âgée de 78 ans, se présente aux urgences de votre établissement pour une fièvre à 38,5 °C.\n\nElle présente dans ses antécédents médicaux une hypertension artérielle, une AC/FA traitée par Eliquis et Cordarone. Sur le plan morphologique, elle mesure 1,65 m et pèse 90 kg.\n\nSur le plan chirurgical, elle avait présenté il y a 15 ans une fracture de l’extrémité supérieure du tibia, traitée sans complication à l’époque (voie antérieure), et de façon plus récente, il y a 10 jours, la réalisation d’une prothèse totale de genou, posée par voie latérale dans votre établissement.\n\nL’examen aux urgences met en évidence l’aspect cicatriciel suivant (photo 1) et la radiographie du genou est la suivante (photo 2).\n\nLe bilan biologique effectué aux urgences montre une CRP à 95 mg/l, la numération plaquettaire montre 12 000 GB avec 85 % de polynucléaires neutrophiles et des plaquettes à 450 000/mm³. Le bilan d’hémostase montre une activité anti-Xa à 300 ng/ml.\n\nUn prélèvement par écouvillon a été effectué sur la cicatrice 48 heures auparavant et le résultat du laboratoire est Staphylocoque aureus méthicilline sensible.",
       "questions": [
         {
           "format": "qroc",
@@ -280,7 +282,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nDécrivez la radiographie ci-jointe.",
           "images": [
-            "annales-orthopedie/evcp2019correction/figures/recadre/img-081-369.png"
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-tumeurs-radiographie-bassin.png"
           ],
           "reponseAttendue": "Radiographie du bassin de face : lésion ostéolytique du fémur proximal gauche, métaphyso-diaphysaire, avec amincissement des corticales osseuses et sans signe radiologique d’envahissement des parties molles — il existe un risque fracturaire.",
           "correctionGenerale": "• Radiographie du bassin de face\n• Lésion ostéolytique du fémur proximal gauche, métaphyso-diaphysaire\n• Amincissement des corticales osseuses\n• Pas de signes radiologiques d’envahissement des parties molles\n• Risque fracturaire"
@@ -289,7 +291,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nVoici sa radiographie 3 semaines plus tard. Quel est le diagnostic ?",
           "images": [
-            "annales-orthopedie/evcp2019correction/figures/recadre/img-083-379.png"
+            "annales-orthopedie/evcp2019correction/sujet/evcp-2019-tumeurs-radiographie-3-semaines.png"
           ],
           "reponseAttendue": "Une fracture pathologique de l’extrémité supérieure du fémur gauche, sous-trochantérienne.",
           "correctionGenerale": "Fracture <b>pathologique</b> de l’extrémité supérieure du fémur gauche, sous-trochantérienne."

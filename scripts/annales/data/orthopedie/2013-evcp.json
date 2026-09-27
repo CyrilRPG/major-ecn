@@ -170,7 +170,10 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nLe bilan biologique réalisé est normal. Donnez votre diagnostic.",
-          "images": [],
+          "images": [
+            "annales-orthopedie/evcp-2013-correction/figures/img-009-027.png",
+            "annales-orthopedie/evcp-2013-correction/figures/img-009-030.png"
+          ],
           "reponseAttendue": "Fracture pathologique sur tumeur osseuse présentant des critères de malignité (ostéosarcome ?).",
           "correctionGenerale": "Fracture pathologique sur tumeur osseuse avec critères de malignité (ostéosarcome ?)."
         },

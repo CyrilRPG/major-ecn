@@ -15,7 +15,7 @@
  * DOCUMENT (radiographie, ECG, image…) ou des RÉSULTATS (gaz du sang, bilan…)
  * que l'élève ne voit nulle part :
  *   - document : ni image sur la question ou ses propositions, ni image sur une
- *     question précédente du dossier (servi en entier, l'élève l'a vue) ;
+ *     question qui la précède immédiatement (« Voici l'ECG » puis « Interprétez-le ») ;
  *   - résultats : ni image, ni valeurs chiffrées correspondantes dans le texte
  *     visible jusqu'à elle (vignette + énoncés des questions 1 à n).
  * Le doute ne profite PAS à la question : un faux positif se lit en quelques
@@ -62,6 +62,13 @@ function intitule(enonce: string): string {
  * n'en font pas partie : « le tableau clinique », « le schéma thérapeutique »
  * sont du vocabulaire médical, pas des pièces jointes.
  */
+/** Bornes de mot Unicode : `\\b` (ASCII) ne voit pas la frontière avant « é ». */
+const BORNE = '(?:(?<![\\p{L}\\p{N}_])(?=[\\p{L}\\p{N}_])|(?<=[\\p{L}\\p{N}_])(?![\\p{L}\\p{N}_]))';
+function re(source: string | RegExp, drapeaux = 'i'): RegExp {
+  const texte = typeof source === 'string' ? source : source.source;
+  return new RegExp(texte.replaceAll('\\b', BORNE), drapeaux + 'u');
+}
+
 const NOM_DOCUMENT =
   "(?:radiographies?|radios?|clichés?|scanners?|tdm|irm|échographies?|echographies?|ecg|électrocardiogrammes?|electrocardiogrammes?|tracés?|images?|imageries?|iconographies?|photos?|photographies?|documents?|coupes?|courbes?|frottis|lames?|scintigraphies?|angiographies?|angio-?scanners?|artériographies?|coronarographies?|fonds? d['’]œil|fond d['’]oeil|dermatoscopies?|spirométries?|eeg|électroencéphalogrammes?|holters?|audiogrammes?|tympanogrammes?|partogrammes?|enregistrements?|rcf|cardiotocographies?|figures?)";
 
@@ -74,7 +81,7 @@ const DESIGNATION = "(?:ci-?dessous|ci-?joint(?:e|es|s)?|ci-?contre|ci-?après|s
  * désignation sont voisins (« la courbe expiratoire n'atteint plus zéro avant le
  * cycle suivant » ne désigne aucun document).
  */
-const RE_DOCUMENT_DESIGNE = new RegExp(
+const RE_DOCUMENT_DESIGNE = re(
   `\\b${NOM_DOCUMENT}\\b(?:\\s+[\\wàâçéèêëîïôûùüÿœ'’-]+){0,3}\\s+${DESIGNATION}\\b|\\b${DESIGNATION}\\s+(?:${NOM_DOCUMENT})\\b|\\bvoici\\b[^.?!\\n]{0,30}\\b${NOM_DOCUMENT}\\b`,
   'i',
 );
@@ -83,7 +90,7 @@ const RE_DOCUMENT_DESIGNE = new RegExp(
 const LIRE = "(?:interpr[ée]tez|comment interpr[ée]te(?:z-vous|r)|d[ée]crivez|analysez|commentez|lisez|que montre(?:nt)?|que voyez-vous|qu['’]objectivez-vous|quels? (?:signes?|anomalies?|l[ée]sions?) (?:voyez|objectivez|retrouvez|relevez)-vous)";
 
 /** « Interprétez / Décrivez… cette radiographie, ces images, cet ECG ». */
-const RE_DOCUMENT_DEMONSTRATIF = new RegExp(`\\b${LIRE}\\b[^.?!\\n]{0,40}\\b(?:cette|ces|cet|ce)\\s+${NOM_DOCUMENT}\\b`, 'i');
+const RE_DOCUMENT_DEMONSTRATIF = re(`\\b${LIRE}\\b[^.?!\\n]{0,40}\\b(?:cette|ces|cet|ce)\\s+${NOM_DOCUMENT}\\b`, 'i');
 
 /**
  * « Interprétez l'ECG. », « Décrivez l'IRM. », « Analysez la radiographie
@@ -91,8 +98,11 @@ const RE_DOCUMENT_DEMONSTRATIF = new RegExp(`\\b${LIRE}\\b[^.?!\\n]{0,40}\\b(?:c
  * consigne s'arrête là — « Que montrent les radiographies au cours d'un accès
  * goutteux ? » est une question de cours.
  */
-const RE_DOCUMENT_DEFINI = new RegExp(
-  `\\b${LIRE}\\b\\s+(?:la|le|les|l['’])\\s*${NOM_DOCUMENT}\\b(?:\\s+(?:de|du|des|d['’])\\s*[\\wàâçéèêëîïôûùüÿœ'’-]+){0,2}\\s*(?:(?:réalisée?s?|effectuée?s?|pratiquée?s?|obtenue?s?)\\b[^.?!\\n]{0,30})?\\s*[.?!]?\\s*$`,
+// « Que montre la courbe de dissociation de l'hémoglobine ? » est une question
+// de cours : avec l'article défini, « que montre » n'appelle pas de document.
+const LIRE_DEFINI = LIRE.replace('|que montre(?:nt)?', '');
+const RE_DOCUMENT_DEFINI = re(
+  `\\b${LIRE_DEFINI}\\b\\s+(?:la|le|les|l['’])\\s*${NOM_DOCUMENT}\\b(?:\\s+(?:de|du|des|d['’])\\s*[\\wàâçéèêëîïôûùüÿœ'’-]+){0,2}\\s*(?:(?:réalisée?s?|effectuée?s?|pratiquée?s?|obtenue?s?)\\b[^.?!\\n]{0,30})?\\s*[.?!]?\\s*$`,
   'i',
 );
 
@@ -100,26 +110,26 @@ const RE_DOCUMENT_DEFINI = new RegExp(
  * Résultats à interpréter, et ce qui prouve qu'ils sont donnés : une valeur
  * chiffrée du bon type dans le texte visible.
  */
-const UNITE_BIO = /\d[\d,.]*\s*(?:g\/l|mg\/l|mmol\/l|µmol\/l|umol\/l|ui\/l|u\/l|g\/dl|\/mm3|ng\/ml|pg\/ml|mui\/l|µg\/l|giga\/l|g\/l)/i;
+const UNITE_BIO = re(/\d[\d,.]*\s*(?:g\/l|mg\/l|mmol\/l|µmol\/l|umol\/l|ui\/l|u\/l|g\/dl|\/mm3|ng\/ml|pg\/ml|mui\/l|µg\/l|giga\/l|g\/l)/);
 const RESULTATS: { nom: RegExp; preuve: RegExp }[] = [
   {
-    nom: /\bgaz (?:du sang|artériels?)\b|\bgazom[ée]trie|\bgds\b/i,
-    preuve: /\bpH\s*[:=à]?\s*\d|\bPa\s?CO\s?2?\b[^.\n]{0,15}\d|\bPa\s?O\s?2?\b[^.\n]{0,15}\d|\bHCO3|\b(?:acidose|alcalose|hypoxémie|hypercapnie|hypocapnie)\b/i,
+    nom: re(/\bgaz (?:du sang|artériels?)\b|\bgazom[ée]trie|\bgds\b/),
+    preuve: re(/\bpH\s*[:=à]?\s*\d|\bPa\s?CO\s?2?\b[^.\n]{0,15}\d|\bPa\s?O\s?2?\b[^.\n]{0,15}\d|\bHCO3|\b(?:acidose|alcalose|hypoxémie|hypercapnie|hypocapnie)\b|\bgaz(?:om[ée]trie| du sang)\b[^.\n]{0,30}\bnorma(?:l|le|ux)\b/),
   },
   {
-    nom: /\bionogramme|\bnatrémie|\bkaliémie|\bchlorémie/i,
-    preuve: /\b(?:Na|K|Cl)\+?\s*[:=à]?\s*\d|\b(?:natrémie|kaliémie|chlorémie)\b[^.\n]{0,20}\d|\b(?:hypo|hyper)(?:natrémie|kaliémie|chlorémie)\b/i,
+    nom: re(/\bionogramme|\bnatrémie|\bkaliémie|\bchlorémie/),
+    preuve: re(/\b(?:Na|K|Cl)\+?\s*[:=à]?\s*\d|\b(?:natrémie|kaliémie|chlorémie)\b[^.\n]{0,20}\d|\b(?:hypo|hyper)(?:natrémie|kaliémie|chlorémie)\b|\b(?:élévation|baisse|augmentation|diminution|correction)\b[^.\n]{0,15}\b(?:natrémie|kaliémie|chlorémie)\b/),
   },
   {
-    nom: /\b(?:nfs|hémogramme|numération formule)\b/i,
-    preuve: /\b(?:hb|hémoglobine|leucocytes|plaquettes|gb|pnn|lymphocytes)\b[^.\n]{0,20}\d|\b(?:anémie|thrombopénie|leucopénie|neutropénie|lymphopénie|hyperleucocytose|polynucléose|pancytopénie|thrombocytose|leuconeutropénie)\b/i,
+    nom: re(/\b(?:nfs|hémogramme|numération formule)\b/),
+    preuve: re(/\b(?:hb|hémoglobine|leucocytes|plaquettes|gb|pnn|lymphocytes)\b[^.\n]{0,20}\d|\b(?:anémie|thrombopénie|leucopénie|neutropénie|lymphopénie|hyperleucocytose|polynucléose|pancytopénie|thrombocytose|leuconeutropénie|lymphocytose|hyperlymphocytose|syndrome mononucléosique)\b|\d[\d,.]*\s*G\/L/),
   },
   {
-    nom: /\bponction lombaire\b|\blcr\b|\bliquide céphalo-?rachidien\b/i,
-    preuve: /\b(?:éléments|cellules|protéinorachie|glycorachie|leucocytes)\b[^.\n]{0,25}\d|\b(?:hyperprotéinorachie|hypoglycorachie|pléiocytose|méningite)\b/i,
+    nom: re(/\bponction lombaire\b|\blcr\b|\bliquide céphalo-?rachidien\b/),
+    preuve: re(/\b(?:éléments|cellules|protéinorachie|glycorachie|leucocytes)\b[^.\n]{0,25}\d|\b(?:hyperprotéinorachie|hypoglycorachie|pléiocytose|méningite)\b/),
   },
   {
-    nom: /\bbilan (?:biologique|hépatique|rénal|phosphocalcique|thyroïdien|d['’]hémostase|martial|lipidique)\b|\brésultats? (?:biologiques?|du bilan|des examens|de l['’]examen)\b/i,
+    nom: re(/\bbilan (?:biologique|hépatique|rénal|phosphocalcique|thyroïdien|d['’]hémostase|martial|lipidique)\b|\brésultats? (?:biologiques?|du bilan|des examens|de l['’]examen)\b/),
     preuve: UNITE_BIO,
   },
 ];
@@ -129,7 +139,7 @@ const RESULTATS: { nom: RegExp; preuve: RegExp }[] = [
  * contrôle montre un liseré radioclair… Interprétez cette image », « les
  * résultats montrent : NFS normale… ») : l'élève a de quoi répondre.
  */
-const RE_CONSTAT = /\b(?:montre(?:nt)?|retrouve(?:nt)?|objective(?:nt)?|révèle(?:nt)?|mettent en évidence|met en évidence|reviennent|revient|présente(?:nt)?|dépasse(?:nt)?|observe|on note)\b\s*(?::|[^.?!\n]{8,})/i;
+const RE_CONSTAT = re(/\b(?:montre(?:nt)?|retrouve(?:nt)?|objective(?:nt)?|révèle(?:nt)?|mettent en évidence|met en évidence|reviennent|revient|présente(?:nt)?|dépasse(?:nt)?|observe|on note)\b\s*(?::|[^.?!\n]{8,})|\b(?:est|sont) (?:nettement |bien |clairement )?(?:visibles?|mesurables?)\b/);
 
 /** Tout l'énoncé sauf sa dernière phrase (la consigne). */
 function avantConsigne(question: string): string {
@@ -138,7 +148,7 @@ function avantConsigne(question: string): string {
 }
 
 /** Verbes qui demandent d'EXPLOITER des résultats (et non de les prescrire). */
-const RE_EXPLOITER = /\b(?:interpr[ée]tez|comment interpr[ée]te(?:z-vous|r)|analysez|commentez|que (?:montrent?|retenez-vous|concluez-vous)|quelle est votre (?:interprétation|analyse)|qu['’]en (?:pensez|concluez)-vous)\b/i;
+const RE_EXPLOITER = re(/\b(?:interpr[ée]tez|comment interpr[ée]te(?:z-vous|r)|analysez|commentez|que (?:montre(?:nt)?|retenez-vous|concluez-vous)|quelle est votre (?:interprétation|analyse)|qu['’]en (?:pensez|concluez)-vous)\b/);
 
 /**
  * Manques d'un dossier (série servie entière, dans l'ordre).
@@ -149,15 +159,19 @@ const RE_EXPLOITER = /\b(?:interpr[ée]tez|comment interpr[ée]te(?:z-vous|r)|an
 export function manquesDuDossier(vignette: string | null | undefined, questions: readonly QuestionPourAudit[]): Manque[] {
   const manques: Manque[] = [];
   let contexte = texteBrut(vignette);
-  let imageVue = false;
+  // Un document montré à la question PRÉCÉDENTE peut être commenté ensuite
+  // (« Voici l'ECG » puis « Interprétez-le ») ; une image plus ancienne, non :
+  // l'image de la question 5 ne vaut pas pour « Interprétez l'ECG » en question 12.
+  let imagePrecedente = false;
   questions.forEach((q, index) => {
     const texte = texteBrut(q.enonce);
     const question = intitule(texte);
     const aImage = q.images.length > 0 || /<img\b/i.test(String(q.enonce ?? ''));
     contexte += '\n' + texte;
-    if (aImage) imageVue = true;
+    const vue = aImage || imagePrecedente;
+    imagePrecedente = aImage;
 
-    if (aImage || imageVue || RE_CONSTAT.test(avantConsigne(question))) return;
+    if (vue || RE_CONSTAT.test(avantConsigne(question))) return;
     const derniere = question.split(/\n+/).map((l) => l.trim()).filter(Boolean).at(-1) ?? '';
     // « Parmi les signes ECG suivants… » : « suivants » désigne les propositions.
     const designe = /\bparmi\b/i.test(question) ? null : question.match(RE_DOCUMENT_DESIGNE);

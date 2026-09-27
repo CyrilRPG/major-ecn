@@ -1,0 +1,90 @@
+{
+  "hostname": "mrrgfnirpwsknuyiwcqy.supabase.co",
+  "date": "2026-09-27",
+  "operations": [
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "78ffba82-0e46-4a70-83a3-83b36d91663a",
+      "before": {
+        "enonce": "<b>Question n° 9</b>\n\nSix mois plus tard, la patiente est toujours essoufflée à la marche en montée ; une exploration fonctionnelle respiratoire est réalisée. Interprétez ces résultats.\n\n<i>Avant bêta-2-mimétique</i> — CV : norme 2,14 L, mesuré 1,05 L (49 %) ; VEMS : norme 1,62 L, mesuré 0,47 L (29 %) ; VEMS/CVF : norme 73,47 %, mesuré 55,26 % (75 %) ; VEMS/CVL : 45,11 % (61 %) ; DEM 25-75 : norme 2,15 L/s, mesuré 0,33 L/s (15 %) ; VR : norme 2,15 L, mesuré 1,73 L (80 %) ; CPT : norme 4,64 L, mesuré 2,80 L (60 %).\n<i>Après bêta-2-mimétique</i> — VEMS : 0,48 L (+1 %, 30 % des normes) ; VEMS/CVF : 55,85 % (+1 %, 76 % des normes) ; DEM 25-75 : 0,43 L/s (+29 %, 20 % des normes)."
+      },
+      "after": {
+        "enonce": "<b>Question n° 9</b>\n\nSix mois plus tard, la patiente est toujours essoufflée à la marche en montée ; une exploration fonctionnelle respiratoire est réalisée. Interprétez ces résultats.\n\n<i>Avant bêta-2-mimétique</i> — CV : norme 2,14 L, mesuré 1,05 L (49 %) ; VEMS : norme 1,62 L, mesuré 0,47 L (29 %) ; VEMS/CVF : norme 73,47 %, mesuré 55,26 % (75 %) ; VEMS/CVL : 45,11 % (61 %) ; DEM 25-75 : norme 2,15 L/s, mesuré 0,33 L/s (15 %) ; VR : norme 2,15 L, mesuré 1,73 L (80 %) ; CPT : norme 4,64 L, mesuré 2,80 L (60 %) ; VR/CPT : norme 46,47 %, mesuré 61,56 % (132 %).\n<i>Après bêta-2-mimétique</i> — VEMS : 0,48 L (+1 %, 30 % des normes) ; VEMS/CVF : 55,85 % (+1 %, 76 % des normes) ; DEM 25-75 : 0,43 L/s (+29 %, 20 % des normes)."
+      },
+      "reason": "Annales - Pneumologie - 2014 - EVCP Q9 : ligne VR/CPT du tableau d’EFR restituée (corrigé conférence 2, p. 132)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "15365bc0-035d-4846-8fef-03504282920f",
+      "before": {
+        "vignette": "Un patient de 57 ans vient vous voir en consultation pour une douleur latéro-thoracique droite évoluant depuis environ deux mois. Il se plaint également d’un essoufflement d’apparition progressive sur les deux dernières semaines, actuellement au moindre effort.\n\nIl présente également une toux désagréable aux changements de position, particulièrement lors du passage en position allongée. Il ne se sent pas fatigué. Son poids est stable à 72 kg pour 180 cm.\n\nParmi ses antécédents, on retrouve un tabagisme estimé à 25 paquets-années sevré depuis 17 ans et une allergie à la ceftriaxone. Il travaille comme chauffagiste.\n\nÀ l’examen clinique, vous retrouvez une fréquence respiratoire à 20/min, une température à 37,3 °C, une SpO2 à 93 % en air ambiant. À l’examen pulmonaire, il existe une diminution du murmure vésiculaire de la base droite."
+      },
+      "after": {
+        "vignette": "Un patient de 57 ans vient vous voir en consultation pour une douleur latéro-thoracique droite évoluant depuis environ deux mois. Il se plaint également d’un essoufflement d’apparition progressive sur les deux dernières semaines, actuellement au moindre effort.\n\nIl présente également une toux désagréable aux changements de position, particulièrement lors du passage en position allongée. Il ne se sent pas fatigué. Son poids est stable à 72 kg pour 180 cm.\n\nParmi ses antécédents, on retrouve un tabagisme estimé à 25 paquets-années sevré depuis 17 ans et une allergie à la ceftriaxone. Il travaille comme chauffagiste.\n\nÀ l’examen clinique, vous retrouvez une fréquence respiratoire à 20/min, une température à 37,3 °C, une SpO2 à 93 % en air ambiant. À l’examen pulmonaire, il existe une diminution du murmure vésiculaire et une matité à droite."
+      },
+      "reason": "Annales - Pneumologie - 2018 - EVCP - Sujet 1, vignette : matité droite restituée (sujet officiel 2018_EVCP.pdf, Pneumologie p. 1/8 ; corrigé conférence n°8, p. 80)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "99fc3d43-f4ac-4c5a-ad5f-0c5bb10b06d4",
+      "before": {
+        "vignette": "Mme X., 65 ans, vient vous voir en consultation pour la première fois pour dyspnée. Mme X. est fumeuse à 40 paquets-années et poursuit une consommation d’une vingtaine de cigarettes par jour. Elle présente une dyspnée apparue il y a environ 5 ans, d’aggravation progressive, pour laquelle son médecin traitant a introduit il y a quelques mois un traitement par bêta-2-agoniste de longue durée d’action. Ce traitement a permis une amélioration de la dyspnée."
+      },
+      "after": {
+        "vignette": "Mme X., 65 ans, vient vous voir en consultation pour la première fois pour dyspnée. Mme X. est fumeuse à 40 paquets-années et poursuit une consommation d’une vingtaine de cigarettes par jour. Elle présente une dyspnée apparue il y a environ 5 ans, d’aggravation progressive, pour laquelle son médecin traitant a introduit il y a quelques mois un traitement par bêta-2-agoniste de longue durée d’action. Ce traitement a permis une amélioration de la dyspnée mais Mme X. reste gênée à la marche en pente et lors de certaines activités ménagères. Elle maintient une activité physique régulière à type de marche trois fois par semaine et est particulièrement active au sein de différentes associations. Une radiographie thoracique réalisée récemment est sans particularité. La saturation mesurée à la consultation est à 98 %."
+      },
+      "reason": "Annales - Pneumologie - 2020 - EVCP, vignette : fin du cas clinique restituée (dyspnée résiduelle, activité, radiographie, SpO2 98 % ; corrigé conférences 11-12, p. 35)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "9dab619d-98ed-4d7c-a5d7-c3309b2ccfb1",
+      "before": {
+        "enonce": "<b>Question n° 25</b>\n\nQuelle anomalie radiologique retenez-vous ? Quel diagnostic évolutif traduit-elle ?"
+      },
+      "after": {
+        "enonce": "<b>Question n° 25</b>\n\nAu terme du bilan entrepris chez ce patient le diagnostic retenu est celui de Fibrose Pulmonaire Idiopathique (FPI). Un traitement anti-fibrosant est mis en route.\nQuelques mois plus tard le patient consulte en urgence pour une dyspnée sévère, apparue trois jours plus tôt. Voici l’imagerie.\n\nQuelle anomalie radiologique retenez-vous ? Quel diagnostic évolutif traduit-elle ?"
+      },
+      "reason": "Annales - Pneumologie - 2021 - EVCP Q25 : contexte (FPI sous antifibrosant, dyspnée aiguë) et imagerie du sujet restitués (corrigé conférences 11-12, p. 197-198)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "bfbf4b35-124f-4868-975f-330f365fb44e",
+      "before": {
+        "enonce": "<b>Question n° 4</b>\n\nVous revoyez Mme X. au bout de deux ans ; elle ne s’est pas rendue à ses rendez-vous de consultation de suivi. Sa situation s’est dégradée. Elle a présenté deux exacerbations sur l’année écoulée et a du mal à récupérer depuis le dernier épisode. Sa dyspnée s’est aggravée, concerne maintenant la marche sur terrain plat et est cotée à 2 sur l’échelle mMRC. Mme X. a fortement réduit son activité physique et ne sort de chez elle que pour faire ses courses.\n\nÀ quel stade de la classification GOLD se trouve Mme X:"
+      },
+      "after": {
+        "enonce": "<b>Question n° 4</b>\n\nVous revoyez Mme X. au bout de deux ans ; elle ne s’est pas rendue à ses rendez-vous de consultation de suivi. Sa situation s’est dégradée. Elle a présenté deux exacerbations sur l’année écoulée et a du mal à récupérer depuis le dernier épisode. Sa dyspnée s’est aggravée, concerne maintenant la marche sur terrain plat et est cotée à 2 sur l’échelle mMRC. Mme X. a fortement réduit son activité physique et ne sort de chez elle que pour faire ses courses.\n\nÀ quel stade de la classification GOLD se trouve Mme X. ?"
+      },
+      "reason": "Annales - Pneumologie - 2020 - EVCP Q4 : ponctuation finale « Mme X. ? » rétablie (altérée en « Mme X: » par le nettoyage des banques du 09/09) ; alignement sur le fichier de données."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "7744b3f2-0cca-41c5-b4b1-7e88a62258c7",
+      "before": {
+        "enonce": "<b>Question n° 9</b>\n\nDans le cadre de l’éducation thérapeutique, et concernant la prévention des exacerbations, quels objectifs allez-vous proposer à Mme X:"
+      },
+      "after": {
+        "enonce": "<b>Question n° 9</b>\n\nDans le cadre de l’éducation thérapeutique, et concernant la prévention des exacerbations, quels objectifs allez-vous proposer à Mme X. ?"
+      },
+      "reason": "Annales - Pneumologie - 2020 - EVCP Q9 : ponctuation finale « Mme X. ? » rétablie (altérée en « Mme X: » par le nettoyage des banques du 09/09) ; alignement sur le fichier de données."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "bc425bd6-cbe2-4685-b6f8-0cb683b3526d",
+      "before": {
+        "enonce": "<b>Question n° 5</b>\n\nQuelle prescription faites-vous en 1re intention pour aider au sevrage tabagique de Mme P:"
+      },
+      "after": {
+        "enonce": "<b>Question n° 5</b>\n\nQuelle prescription faites-vous en 1re intention pour aider au sevrage tabagique de Mme P. ?"
+      },
+      "reason": "Annales - Pneumologie - 2024 - EVCP - Cas 3 Q5 : ponctuation finale « Mme P. ? » rétablie (altérée en « Mme P: » par le nettoyage des banques du 09/09) ; alignement sur le fichier de données."
+    }
+  ]
+}

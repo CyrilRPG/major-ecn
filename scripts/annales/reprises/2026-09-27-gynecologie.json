@@ -1,0 +1,78 @@
+{
+  "hostname": "mrrgfnirpwsknuyiwcqy.supabase.co",
+  "date": "2026-09-27",
+  "operations": [
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "809002f0-9656-4877-8a2f-a1ab5c4e1782",
+      "before": {
+        "enonce": "<b>Question n° 5</b>\n\nLe bilan biologique initial montre : Hb 10,3 g/dL (norme 10,5), plaquettes 90 000/mm³ (norme 150 000), fibrinogène 1 g/L (norme 4 à 6), TP 60 % (norme 100 %), globules blancs 12 300/mm³, ASAT 27 UI/L, ALAT 25 UI/L, créatininémie 80 µmol/L, ratio protéinurie/créatininurie 0,80 g/g (normal < 0,3 g/g).\n\nQuelle est votre prise en charge ? Justifiez."
+      },
+      "after": {
+        "enonce": "<b>Question n° 5</b>\n\nL’enregistrement du rythme cardiaque fœtal à l’admission vous est donné ci-dessous et le bilan biologique initial montre les éléments suivants : Hb 10,3 g/dL (norme 10,5), plaquettes 90 000/mm³ (norme 150 000), fibrinogène 1 g/L (norme 4 à 6), TP 60 % (norme 100 %), globules blancs 12 300/mm³, ASAT 27 UI/L, ALAT 25 UI/L, créatininémie 80 µmol/L, ratio protéinurie/créatininurie 0,80 g/g (normal < 0,3 g/g).\n\nQuelle est votre prise en charge ? Justifiez."
+      },
+      "reason": "Restauration du sujet officiel (Annales/Sujets/2019_EVCP.pdf, EVCP.18, p. 3/4 ; corrigé « annales 2019 GYNECO.pdf » p. 17-18) : phrase annonçant l’enregistrement du RCF à l’admission, qui précède les résultats biologiques ; le tracé (img-018-073) est rattaché à la question. [Annales - Gynécologie-obstétrique - 2019 - EVCP - Sujet 2 · Q5]"
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "277646cc-cfc6-4e21-a098-a5df4910f4d1",
+      "before": {
+        "enonce": "<b>Question n° 9</b>\n\nQuels sont les antécédents personnels contre-indiquant une contraception œstroprogestative chez Mme V:"
+      },
+      "after": {
+        "enonce": "<b>Question n° 9</b>\n\nQuels sont les antécédents personnels contre-indiquant une contraception œstroprogestative chez Mme V. ?"
+      },
+      "reason": "Alignement de la base sur le fichier de données : ponctuation finale « . ? » altérée en « : » en base. [Annales - Gynécologie-obstétrique - 2020 - EVCP - Cas 2 · Q9]"
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "e295ddc1-1a3e-4ac2-bcdc-4ca3380f5e95",
+      "before": {
+        "enonce": "<b>Question 1</b>\n\nQuel(s) est (sont) le(s) facteur(s) de risque de pré-éclampsie présent(s) dans le dossier de Mme A:"
+      },
+      "after": {
+        "enonce": "<b>Question 1</b>\n\nQuel(s) est (sont) le(s) facteur(s) de risque de pré-éclampsie présent(s) dans le dossier de Mme A. ?"
+      },
+      "reason": "Alignement de la base sur le fichier de données : ponctuation finale « . ? » altérée en « : » en base. [Annales - Gynécologie-obstétrique - 2023 - EVCP - Cas 1 · Q1]"
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "679bbad9-5384-4da4-beba-3cc43cc42601",
+      "before": {
+        "enonce": "<b>Question 2</b>\n\nQuelle stratégie proposez-vous à Mme L:"
+      },
+      "after": {
+        "enonce": "<b>Question 2</b>\n\nQuelle stratégie proposez-vous à Mme L. ?"
+      },
+      "reason": "Alignement de la base sur le fichier de données : ponctuation finale « . ? » altérée en « : » en base. [Annales - Gynécologie-obstétrique - 2023 - EVCP - Cas 2 · Q2]"
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "1a82462b-ea71-497e-8784-e1c2617e12cd",
+      "before": {
+        "enonce": "<b>Question 5</b>\n\nMalheureusement, la situation se dégrade et une césarienne est réalisée à 33 semaines et 4 jours pour HTA sévère non contrôlée. La césarienne se déroule sans complication et Madame K. donne naissance à une fille de 1980 g, bien portante.\n\nQuelles sont vos prescriptions pour la prise en charge et la surveillance en post-partum immédiat de Mme K:"
+      },
+      "after": {
+        "enonce": "<b>Question 5</b>\n\nMalheureusement, la situation se dégrade et une césarienne est réalisée à 33 semaines et 4 jours pour HTA sévère non contrôlée. La césarienne se déroule sans complication et Madame K. donne naissance à une fille de 1980 g, bien portante.\n\nQuelles sont vos prescriptions pour la prise en charge et la surveillance en post-partum immédiat de Mme K. ?"
+      },
+      "reason": "Alignement de la base sur le fichier de données : ponctuation finale « . ? » altérée en « : » en base. [Annales - Gynécologie-obstétrique - 2024 - EVCP - Cas 1 · Q5]"
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "1abec040-bc1d-40a6-8899-b579933b7256",
+      "before": {
+        "enonce": "<b>Question 4</b>\n\nQuelle est votre prise en charge du diabète gestationnel chez Mme G:"
+      },
+      "after": {
+        "enonce": "<b>Question 4</b>\n\nQuelle est votre prise en charge du diabète gestationnel chez Mme G. ?"
+      },
+      "reason": "Alignement de la base sur le fichier de données : ponctuation finale « . ? » altérée en « : » en base. [Annales - Gynécologie-obstétrique - 2024 - EVCP - Cas 2 · Q4]"
+    }
+  ]
+}

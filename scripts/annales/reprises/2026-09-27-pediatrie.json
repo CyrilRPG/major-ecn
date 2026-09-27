@@ -1,0 +1,30 @@
+{
+  "hostname": "mrrgfnirpwsknuyiwcqy.supabase.co",
+  "date": "2026-09-27",
+  "operations": [
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "3508ba3a-d3ba-4e97-94ce-82e43b66d245",
+      "before": {
+        "enonce": "<b>Question 22</b>\n\nVoici la courbe de croissance staturo-pondérale d’un garçon de 8 ans (figures). Le développement psychomoteur et scolaire sont normaux.\n\nQuelles sont les 3 pathologies les plus fréquentes à rechercher ? Indiquez pour chacune d’entre elles quel examen vous prescrivez."
+      },
+      "after": {
+        "enonce": "<b>Question 22</b>\n\nVoici la courbe de croissance staturo-pondérale d’un garçon de 8 ans (figure). Le développement psychomoteur et scolaire sont normaux.\n\nQuelles sont les 3 pathologies les plus fréquentes à rechercher ? Indiquez pour chacune d’entre elles quel examen vous prescrivez."
+      },
+      "reason": "Annales - Pédiatrie - 2020 - EVCF Q22 : une seule courbe (garçon de 8 ans, corrigé 2017-2023 p. 48-49) désormais rattachée ; « (figures) » → « (figure) »."
+    },
+    {
+      "action": "update",
+      "table": "qcm_questions",
+      "id": "f43ed05b-58f5-4b18-8207-7e80050b7e3c",
+      "before": {
+        "enonce": "<b>Question 23</b>\n\nUne petite fille de 7 ans et 7 mois est adressée pour une accélération de sa croissance et l’apparition transitoire d’une petite tuméfaction de la glande mammaire à droite.\n\nCitez 3 diagnostics à évoquer chez cette enfant. Quel serait le premier signe de la puberté à rechercher chez cette petite fille ?"
+      },
+      "after": {
+        "enonce": "<b>Question 23</b>\n\nUne petite fille de 7 ans et 7 mois est adressée pour une accélération de sa croissance et l’apparition transitoire d’une petite tuméfaction de la glande mammaire à droite (figure).\n\nCitez 3 diagnostics à évoquer chez cette enfant. Quel serait le premier signe de la puberté à rechercher chez cette petite fille ?"
+      },
+      "reason": "Annales - Pédiatrie - 2020 - EVCF Q23 : courbe de croissance de la fillette (corrigé 2017-2023 p. 49, img-049-111) rattachée ; renvoi « (figure) »."
+    }
+  ]
+}

@@ -154,8 +154,6 @@
         "img-196-1000.jpg": "illustration de la diapositive de cours « FPI ou PIC secondaire ? – DIAGNOSTIC » (page 196) : support pédagogique du conférencier, hors iconographie de l’annale",
         "img-196-1001.png": "illustration de la diapositive de cours « FPI ou PIC secondaire ? – DIAGNOSTIC » (page 196) : support pédagogique du conférencier, hors iconographie de l’annale",
         "img-196-1002.jpg": "illustration de la diapositive de cours « FPI ou PIC secondaire ? – DIAGNOSTIC » (page 196) : support pédagogique du conférencier, hors iconographie de l’annale",
-        "img-197-1007.jpg": "illustration d’une diapositive de cours sans titre lisible (page 197) : support pédagogique du conférencier, hors iconographie de l’annale",
-        "img-198-1012.jpg": "illustration d’une diapositive de cours sans titre lisible (page 198) : support pédagogique du conférencier, hors iconographie de l’annale",
         "img-199-1017.jpg": "encadré de la recommandation 34 sur le traitement des exacerbations aiguës de FPI, projeté en appui de la question 25 de l’EVCP 2021 : son contenu est transcrit dans la correction de cette question",
         "img-199-1018.jpg": "encadré de la recommandation 33 sur la définition de l’exacerbation aiguë de FPI, projeté en appui de la question 25 de l’EVCP 2021 : son contenu est transcrit dans la correction de cette question",
         "img-204-1039.jpg": "illustration d’une diapositive de cours sans titre lisible (page 204) : support pédagogique du conférencier, hors iconographie de l’annale",
@@ -292,7 +290,7 @@
       "type": "EVCP",
       "source": "ANNALES PNEUMOLOGIE BON/conference_11_12_PAE_Formation_pneumo_30042025.pdf",
       "orderIndex": 231,
-      "vignette": "Mme X., 65 ans, vient vous voir en consultation pour la première fois pour dyspnée. Mme X. est fumeuse à 40 paquets-années et poursuit une consommation d’une vingtaine de cigarettes par jour. Elle présente une dyspnée apparue il y a environ 5 ans, d’aggravation progressive, pour laquelle son médecin traitant a introduit il y a quelques mois un traitement par bêta-2-agoniste de longue durée d’action. Ce traitement a permis une amélioration de la dyspnée.",
+      "vignette": "Mme X., 65 ans, vient vous voir en consultation pour la première fois pour dyspnée. Mme X. est fumeuse à 40 paquets-années et poursuit une consommation d’une vingtaine de cigarettes par jour. Elle présente une dyspnée apparue il y a environ 5 ans, d’aggravation progressive, pour laquelle son médecin traitant a introduit il y a quelques mois un traitement par bêta-2-agoniste de longue durée d’action. Ce traitement a permis une amélioration de la dyspnée mais Mme X. reste gênée à la marche en pente et lors de certaines activités ménagères. Elle maintient une activité physique régulière à type de marche trois fois par semaine et est particulièrement active au sein de différentes associations. Une radiographie thoracique réalisée récemment est sans particularité. La saturation mesurée à la consultation est à 98 %.",
       "questions": [
         {
           "format": "qroc",
@@ -732,8 +730,11 @@
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 25</b>\n\nQuelle anomalie radiologique retenez-vous ? Quel diagnostic évolutif traduit-elle ?",
-          "images": [],
+          "enonce": "<b>Question n° 25</b>\n\nAu terme du bilan entrepris chez ce patient le diagnostic retenu est celui de Fibrose Pulmonaire Idiopathique (FPI). Un traitement anti-fibrosant est mis en route.\nQuelques mois plus tard le patient consulte en urgence pour une dyspnée sévère, apparue trois jours plus tôt. Voici l’imagerie.\n\nQuelle anomalie radiologique retenez-vous ? Quel diagnostic évolutif traduit-elle ?",
+          "images": [
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-197-1007.jpg",
+            "annales-pneumologie-bon/conference-11-12-pae-formation-pneumo-30042025/figures/img-198-1012.jpg"
+          ],
           "reponseAttendue": "Du verre dépoli, traduisant une exacerbation aiguë de fibrose pulmonaire idiopathique.",
           "correctionGenerale": "• <b>Verre dépoli</b>\n• <b>Exacerbation aiguë de FPI</b>\n\n<i>Recommandations. Recommandation 33 : chez un patient ayant un diagnostic confirmé de FPI, il est recommandé de rechercher une exacerbation aiguë en cas d’aggravation récente de la dyspnée, depuis moins d’un mois environ, non liée à une cause extra-parenchymateuse (pneumothorax, pleurésie, embolie pulmonaire) et associée à de nouvelles opacités bilatérales en verre dépoli à l’imagerie, non totalement expliquées par une insuffisance cardiaque ou une surcharge hydrosodée ; un facteur déclenchant doit être recherché (infection, procédure diagnostique, cause médicamenteuse, inhalation). Recommandation 34 : il est proposé de traiter les exacerbations aiguës de la FPI par les corticoïdes.</i>"
         }

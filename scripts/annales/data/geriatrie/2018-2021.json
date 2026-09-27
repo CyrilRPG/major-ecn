@@ -256,74 +256,74 @@
       "type": "EVCP",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 5,
-      "vignette": "Une patiente âgée de 42 kg pour 1,58 m présentant une anémie microcytaire arégénérative et une dénutrition grave.",
+      "vignette": "Une femme âgée de 76 ans a des antécédents de :\n• Cardiomyopathie hypertensive\n• Dyslipidémie\n• Gonarthrose bilatérale.\n\nElle vous est adressée par son médecin pour une asthénie. La patiente présente une diarrhée fécale, non glairo-sanglante et des douleurs abdominales péri-ombilicales. Il existe un amaigrissement de 5 kg durant les six derniers mois.\n\nLe traitement comporte : ramipril (2,5 mg/j), aténolol (1,25 mg/j), simvastatine (20 mg/j), tramadol (50 mg x 3/j), paracétamol (2 g/j) et kétoprofène (100 mg/j).\n\nLa patiente est veuve depuis 6 mois et vit seule en appartement au 1er étage. Son ADL (Activity Daily Life) est à 6/6 et l’IADL (Instrument Activity Daily Life) à 3/8.\n\nÀ l’examen clinique :\n• Le poids est à 42 kg pour 1,58 m, sa pression artérielle à 120/80 mmHg,\n• il existe une pâleur cutanéo-muqueuse et des douleurs abdominales provoquées par la palpation de la région péri-ombilicale, sans contracture ni défense.\n\nLa patiente vous montre également les résultats récents d’examens biologiques :\n• NFS : hémoglobine : 9,1 g/dL, VGM : 79 µm³, hématocrite : 23 %, leucocytes totaux : 7,7 G/L, plaquettes : 207 000/mm³ ;\n• réticulocytes : 70 000/mm³,\n• C-réactive protéine < 5 mg/L ;\n• urée : 3,4 mmol/L, créatinine : 61 µmol/L, natrémie : 136 mmol/L, kaliémie : 4,1 mmol/L, protidémie : 54 g/L ; TGO 24 UI/L, TGP 25 UI/L, GGT 35 U/L.\n• glycémie à jeun : 5 mmol/L.",
       "questions": [
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 1</b>\n\nInterprétez l’hémogramme.",
+          "enonce": "<b>Question n° 1</b>\n\nInterprétez les résultats de l’hémogramme.",
           "images": [],
           "reponseAttendue": "Une anémie microcytaire arégénérative, avec des plaquettes et des globules blancs normaux.",
           "correctionGenerale": "<b>Anémie microcytaire arégénérative</b>, plaquettes normales, GB normaux."
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 2</b>\n\nQuel bilan martial demandez-vous ?",
+          "enonce": "<b>Question n° 2</b>\n\nAu vu des résultats biologiques, quels sont les 2 examens biologiques que vous demandez ?",
           "images": [],
           "reponseAttendue": "Le fer sérique et le coefficient de saturation de la transferrine.",
           "correctionGenerale": "• Fer sérique\n• Coefficient de saturation de la transferrine"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 3</b>\n\nCalculez et interprétez l’indice de masse corporelle.",
+          "enonce": "<b>Question n° 3</b>\n\nCalculez l’indice de masse corporelle (IMC). Comment l’interprétez-vous ?",
           "images": [],
           "reponseAttendue": "IMC = 42 / 1,58² = 16,8 kg/m², soit une maigreur.",
           "correctionGenerale": "<b>IMC = 42 / 1,58² = 16,8 kg/m²</b>, soit une <b>maigreur</b>."
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 4</b>\n\nRetenez-vous le diagnostic de dénutrition ? Précisez sa sévérité et justifiez votre réponse.",
+          "enonce": "<b>Question n° 4</b>\n\nComment évaluez-vous l’état nutritionnel, sur le plan clinique, de cette patiente ?",
           "images": [],
           "reponseAttendue": "Selon les critères HAS 2021 : perte de poids > 10 % en 6 mois et IMC < 22 kg/m² = 2 critères phénotypiques ; situation d’agression avec pathologie aiguë = 1 critère étiologique. Le diagnostic de dénutrition est posé, et un IMC < 20 kg/m² constitue un critère de dénutrition grave.",
           "correctionGenerale": "Selon les critères HAS 2021 :\n• Perte de poids > 10 % en 6 mois + IMC < 22 kg/m² = <b>2 critères phénotypiques</b>\n• Situation d’agression avec pathologie aiguë = <b>1 critère étiologique</b>\n\n→ <b>Diagnostic de dénutrition posé</b>\n→ IMC < 20 kg/m² = <b>1 critère de dénutrition grave</b>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 5</b>\n\nQuels sont les critères de la sarcopénie ?",
+          "enonce": "<b>Question n° 5</b>\n\nQuels sont les 2 principaux signes à l’examen clinique que vous recherchez en faveur d’une dénutrition ?",
           "images": [],
           "reponseAttendue": "La perte de la force musculaire et la perte de la masse musculaire.",
           "correctionGenerale": "• Perte de la force musculaire\n• Perte de la masse musculaire"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 6</b>\n\nQuelles anomalies biologiques caractérisent le syndrome de renutrition inappropriée ?",
+          "enonce": "<b>Question n° 6</b>\n\nQuels sont les 4 signes de gravité biologiques de dénutrition que vous recherchez chez votre patiente ?",
           "images": [],
           "reponseAttendue": "Hypokaliémie, hypophosphorémie, hypomagnésémie, albumine < 30 g/L, carence en vitamine B1.",
           "correctionGenerale": "• Hypokaliémie, hypophosphorémie, hypomagnésémie\n• Albumine < 30 g/L\n• Carence en vitamine B1\n\n<i>N’en citer que 4 !</i>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 7</b>\n\nQuels facteurs de risque de dénutrition recherchez-vous ?",
+          "enonce": "<b>Question n° 7</b>\n\nQuels sont les 8 facteurs de risque de dénutrition à rechercher chez cette patiente ?",
           "images": [],
           "reponseAttendue": "Isolement social, constipation, escarres, pathologie infectieuse, polymédication, régimes restrictifs, intervention chirurgicale, dysgueusie…",
           "correctionGenerale": "• Isolement social\n• Constipation\n• Escarres\n• Pathologie infectieuse\n• Polymédication\n• Régimes restrictifs\n• Intervention chirurgicale\n• Dysgueusie, etc.\n\n<i>N’en citer que 8 !</i>\n\n<i>Source : HAS, recommandations dénutrition de la personne âgée (2021).</i>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 8</b>\n\nParmi les médicaments du traitement, lesquels peuvent favoriser l’anorexie ou une anémie par saignement occulte ?",
+          "enonce": "<b>Question n° 8</b>\n\nParmi les médicaments pris par la patiente, quels sont les 2 potentiellement responsables d’un amaigrissement ?",
           "images": [],
           "reponseAttendue": "Le kétoprofène et le tramadol.",
           "correctionGenerale": "• Kétoprofène\n• Tramadol"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 9</b>\n\nQuel médicament déprescrivez-vous en priorité ?",
+          "enonce": "<b>Question n° 9</b>\n\nVotre bilan comportant scanner thoraco-abdomino-pelvien, gastroscopie et colonoscopie (avec biopsies étagées), coproculture et examen parasitologique des selles et bilan endocrinien, s’est révélé normal. Vous reprenez l’interrogatoire de la patiente qui indique la présence de myalgies depuis plus d’un an.\n\nQuel médicament suspectez-vous ?",
           "images": [],
           "reponseAttendue": "La simvastatine.",
           "correctionGenerale": "<b>Simvastatine.</b>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 10</b>\n\nQuelles mesures diététiques mettez-vous en place dans la prise en charge de la dénutrition ?",
+          "enonce": "<b>Question n° 10</b>\n\nLors de son retour à domicile, quelles sont les 5 propositions que vous préconisez à votre patiente pour améliorer son état nutritionnel, en accord avec les recommandations de l’HAS (Haute Autorité de Santé) ?",
           "images": [],
           "reponseAttendue": "Augmenter la fréquence des prises alimentaires, éviter une période de jeûne nocturne trop longue, privilégier les aliments riches en énergie et en protéines, enrichir l’alimentation, favoriser un environnement propice.",
           "correctionGenerale": "• Augmenter la fréquence des prises alimentaires\n• Éviter une période de jeûne nocturne trop longue\n• Privilégier les aliments riches en énergie et en protéines\n• Enrichir l’alimentation\n• Favoriser un environnement propice\n\n<i>Source : HAS, stratégie de prise en charge en cas de dénutrition protéino-énergétique chez la personne âgée.</i>"
@@ -336,46 +336,46 @@
       "type": "EVCP",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 6,
-      "vignette": "Une patiente âgée confuse, fébrile et hyperglycémique, traitée par Previscan®, bromazépam, metformine et codéine.",
+      "vignette": "Une femme de 85 ans, vivant seule, habituellement autonome, est amenée au SAU par sa fille. Cette dernière signale une agitation inhabituelle, elle ne la reconnaît plus, tient des propos incohérents et elle est désorientée.\n\nL’IDE d’accueil retrouve une fièvre à 38,5 °C, la patiente est normotendue, présente un dextro à 3 g/L, une bonne saturation pulpaire. Il y a de vagues douleurs abdominales signalées.\n\nAntécédents :\n• ACFA anticoagulée\n• Diabète non insulinodépendant\n• Cancer du sein en rémission\n• Polyarthrose\n\nTraitement :\n• PREVISCAN (FLUINDIONE)\n• BISOCE 5 mg (BISOPROLOL)\n• EFFERALGAN (PARACETAMOL) CODEINE 500 mg x 3/j\n• LEXOMIL (BROMAZEPAM) : ¼ de cp au coucher et si besoin en journée\n• METFORMINE (GLUCOPHAGE) 500 mg : 1-1-1",
       "questions": [
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 1</b>\n\nQuels arguments retenez-vous en faveur d’un syndrome confusionnel ?",
+          "enonce": "<b>Question n° 1</b>\n\nDans les données du cas clinique, quelles sont celles qui évoquent une confusion ?",
           "images": [],
           "reponseAttendue": "Le début brutal, la désorientation spatio-temporelle, l’agitation et la non-reconnaissance des proches.",
           "correctionGenerale": "• Début brutal\n• Désorientation spatio-temporelle, agitation, non-reconnaissance des proches"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 2</b>\n\nQue complétez-vous à l’interrogatoire ?",
+          "enonce": "<b>Question n° 2</b>\n\nCitez 2 éléments d’anamnèse complémentaires à rechercher par l’interrogatoire de la fille.",
           "images": [],
           "reponseAttendue": "La notion de traumatisme, le début des symptômes, l’observance thérapeutique…",
           "correctionGenerale": "• Notion de traumatisme\n• Début des symptômes\n• Observance thérapeutique, etc.\n\n<i>N’en citer que 2 !</i>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 3</b>\n\nQuels facteurs précipitants sont déjà connus ? Lesquels recherchez-vous ?",
+          "enonce": "<b>Question n° 3</b>\n\nCitez 6 éléments cliniques connus ou à rechercher pouvant être à l’origine du syndrome confusionnel.",
           "images": [],
           "reponseAttendue": "Éléments connus : fièvre, hyperglycémie. Éléments à rechercher : dysnatrémie, fécalome, rétention aiguë d’urines, hémorragie intracrânienne.",
           "correctionGenerale": "• <b>Éléments connus</b> : fièvre, hyperglycémie\n• <b>Éléments à rechercher</b> : dysnatrémie, fécalome, rétention aiguë d’urines, hémorragie intracrânienne"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 4</b>\n\nQuels examens complémentaires réalisez-vous ? Que recherchez-vous ?",
+          "enonce": "<b>Question n° 4</b>\n\nOn retrouve une bandelette urinaire positive, la NFS montre 17 000 GB/mm³ et une CRP à 200 mg/L. On évoque en priorité une infection urinaire fébrile.\n\nVous souhaitez néanmoins éliminer une autre cause à la confusion. Quels examens biologiques et radiologiques sont nécessaires (maximum 10) ?",
           "images": [],
           "reponseAttendue": "ECG à la recherche d’un trouble du rythme, de la conduction ou de la repolarisation ; scanner cérébral non injecté à la recherche d’une hémorragie intracrânienne ; INR à la recherche d’un sous- ou surdosage ; calcémie ; fonction rénale avec créatinine et clairance par CKD-EPI ; ionogramme sanguin avec Na et K.",
           "correctionGenerale": "• ECG à la recherche d’un trouble du rythme, de la conduction ou de la repolarisation\n• Scanner cérébral non injecté à la recherche d’une hémorragie intracrânienne\n• INR à la recherche d’un sous-/surdosage\n• Calcémie\n• Fonction rénale avec créatinine + clairance par CKD-EPI\n• Ionogramme sanguin avec Na et K"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 5</b>\n\nQuelle antibiothérapie instaurez-vous ?",
+          "enonce": "<b>Question n° 5</b>\n\nQuelle classe d’antibiotiques prescrivez-vous ?",
           "images": [],
           "reponseAttendue": "Une antibiothérapie par céphalosporine de 3ᵉ génération, par voie IV, en probabiliste, en l’absence d’allergie, après avoir effectué les prélèvements, avec réévaluation à 48-72 h et réadaptation secondaire à l’antibiogramme.",
           "correctionGenerale": "• Antibiothérapie par <b>céphalosporine de 3ᵉ génération</b>\n• Par voie IV, en probabiliste, en l’absence d’allergie\n• Après avoir effectué les prélèvements\n• Avec réévaluation à 48-72 h et réadaptation secondaire à l’antibiogramme"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 6</b>\n\nComment révisez-vous le traitement habituel de cette patiente ?",
+          "enonce": "<b>Question n° 6</b>\n\nConcernant le traitement du domicile, quelles modifications s’imposent d’emblée ?",
           "images": [],
           "reponseAttendue": "Arrêt du bromazépam car la patiente est confuse ; arrêt de la metformine car l’infection n’est pas contrôlée et il existe un risque d’acidose lactique ; arrêt de la codéine car la patiente est confuse ; adaptation de la posologie du Previscan® à l’INR.",
           "correctionGenerale": "• Arrêt du <b>bromazépam</b> car patiente confuse\n• Arrêt de la <b>metformine</b> car infection encore non contrôlée et risque d’acidose lactique\n• Arrêt de la <b>codéine</b> car patiente confuse\n• Adaptation de la posologie du <b>Previscan®</b> à l’INR"
@@ -388,39 +388,39 @@
       "type": "EVCP",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 7,
-      "vignette": "Une thrombose veineuse profonde du membre inférieur droit dans un contexte d’alitement récent, chez une personne âgée insuffisante rénale.",
+      "vignette": "Monsieur T., 92 ans, est adressé par son médecin traitant pour douleur du membre inférieur droit dans un contexte d’alitement depuis 3 jours pour des lombalgies mécaniques.\n\nSes antécédents comprennent une insuffisance rénale chronique (clairance de Cockroft à 14 mL/min), hypertension artérielle, tabagisme sevré. Le traitement habituel comprend amlodipine 10 mg (1 cp par jour).\n\nAux urgences : température 37,8 °C, TA 110/60 mmHg, pouls 102/min, SaO₂ = 95 %, poids 63 kg.\n\nÀ l’examen clinique, il existe un œdème du membre inférieur droit, les pouls périphériques sont perçus, l’auscultation cardiopulmonaire est normale.",
       "questions": [
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 1</b>\n\nQuel diagnostic évoquez-vous ?",
+          "enonce": "<b>Question n° 1</b>\n\nQuel est le diagnostic le plus probable ?",
           "images": [],
           "reponseAttendue": "Une thrombose veineuse profonde du membre inférieur droit dans un contexte d’alitement récent.",
           "correctionGenerale": "<b>Thrombose veineuse profonde du MID</b> dans un contexte d’alitement récent."
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 2</b>\n\nCalculez le score de probabilité clinique. Quelle stratégie diagnostique en découle ?",
+          "enonce": "<b>Question n° 2</b>\n\nQuel examen complémentaire demandez-vous pour confirmer le diagnostic ?",
           "images": [],
           "reponseAttendue": "Score de probabilité clinique d’une TVP : alitement de plus de 3 jours = +1, œdème de tout le membre inférieur = +1, soit un score ≥ 2. Il faut donc réaliser un écho-Doppler veineux des membres inférieurs en 1ʳᵉ intention, sans dosage des D-dimères.",
           "correctionGenerale": "<b>Score de probabilité clinique d’une TVP</b>\n• Alitement de plus de 3 jours = +1\n• Œdème de tout le membre inférieur = +1\n• <b>Score ≥ 2</b>\n\n→ <b>Écho-Doppler veineux des MI en 1ʳᵉ intention</b> (pas de D-dimères)."
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 3</b>\n\nQuel bilan biologique réalisez-vous avant d’introduire une anticoagulation ?",
+          "enonce": "<b>Question n° 3</b>\n\nQuel bilan biologique minimal (4 examens maximum) prescrivez-vous avant de débuter le traitement ?",
           "images": [],
           "reponseAttendue": "NFS-plaquettes, bilan de coagulation, fonction hépatique, fonction rénale.",
           "correctionGenerale": "• NFS-plaquettes\n• Bilan de coagulation\n• Fonction hépatique\n• Fonction rénale"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 4</b>\n\nQuelle est votre prise en charge thérapeutique ?",
+          "enonce": "<b>Question n° 4</b>\n\nQuelle prise en charge immédiate préconisez-vous ?",
           "images": [],
           "reponseAttendue": "Prise en charge en hospitalisation, vérification de l’absence d’embolie pulmonaire associée, anticoagulation curative à débuter en urgence par HNF de type Calciparine® avec introduction d’AVK dès J1 (AOD et HBPM contre-indiqués car clairance < 30 mL/min), bas de contention pendant au moins 6 mois, durée totale du traitement de 3 mois, bilan étiologique avec recherche d’une néoplasie au vu de l’âge.",
           "correctionGenerale": "• Prise en charge en hospitalisation\n• Vérification de l’absence d’EP associée\n• <b>Anticoagulation curative en urgence par HNF type Calciparine®</b> avec introduction d’AVK dès J1 (AOD et HBPM contre-indiqués car clairance < 30 mL/min)\n• Mise en place de bas de contention pendant au moins 6 mois\n• Durée totale du traitement : 3 mois\n• Bilan étiologique (recherche d’une néoplasie au vu de l’âge)"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 5</b>\n\nQuelle surveillance biologique mettez-vous en place sous ce traitement ?",
+          "enonce": "<b>Question n° 5</b>\n\nQuels sont les trois principaux paramètres biologiques à surveiller durant la première semaine ?",
           "images": [],
           "reponseAttendue": "TCA une fois par jour, objectif entre 2 et 3 ; INR dès J4, objectif entre 2 et 3 ; plaquettes pour vérifier l’absence de survenue d’une TIH.",
           "correctionGenerale": "• <b>TCA</b> 1/jour, objectif entre 2 et 3\n• <b>INR</b> dès J4, objectif entre 2 et 3\n• <b>Plaquettes</b> pour vérifier l’absence de survenue d’une TIH"
@@ -433,46 +433,46 @@
       "type": "EVCP",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 8,
-      "vignette": "Une patiente âgée diabétique et hypertendue, retrouvée au sol après une chute avec fracture du poignet et rhabdomyolyse.",
+      "vignette": "Madame G., 87 ans, veuve, vivant seule sans enfant, est retrouvée au sol le matin par son aide ménagère à 10 heures. Elle est adressée aux urgences.\n\nAntécédents :\n• Chutes à répétition\n• Diabète de type 2\n• Hypertension artérielle\n• Cataracte non opérée\n• Prothèse totale de genou\n• Dyslipidémie\n\nTraitement actuel :\n• Bisoprolol 5 mg x 1\n• Nicardipine 20 mg x 1\n• Rilménidine 1 mg x 1\n• Metformine 1000 mg x 3\n• Répaglinide 1 mg x 3\n• Zopiclone 7,5 mg le soir\n• Atorvastatine 40 mg x 1\n\nLa patiente explique qu’elle est tombée vers 2 heures du matin en se levant du lit en se rendant aux toilettes.\n\nÀ l’examen clinique, elle présente une impotence fonctionnelle et une douleur du poignet gauche. Le reste de l’examen clinique est normal. Température corporelle 35,8 °C, TA = 100/60 mmHg, pouls 55/min, poids 51 kg.",
       "questions": [
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 1</b>\n\nComment définit-on les chutes à répétition ?",
+          "enonce": "<b>Question n° 1</b>\n\nQuelle est la définition de la chute à répétition ?",
           "images": [],
           "reponseAttendue": "Au moins 2 épisodes de chutes sur au moins 12 mois consécutifs.",
           "correctionGenerale": "<b>Chutes à répétition</b> si ≥ 2 épisodes de chutes sur ≥ 12 mois consécutifs."
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 2</b>\n\nQuels critères de gravité retenez-vous pour cette chute ?",
+          "enonce": "<b>Question n° 2</b>\n\nQuels sont les 3 éléments en faveur d’une chute grave chez cette patiente ?",
           "images": [],
           "reponseAttendue": "Les chutes à répétition, le temps passé au sol supérieur à 1 heure, et la conséquence traumatique (fracture du poignet).",
           "correctionGenerale": "• Chutes à répétition\n• Temps passé au sol > 1 h\n• Conséquence traumatique (fracture du poignet)"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 3</b>\n\nQuels examens complémentaires réalisez-vous ?",
+          "enonce": "<b>Question n° 3</b>\n\nQuels sont les 3 examens paracliniques à prescrire en 1re intention (hors biologie) ?",
           "images": [],
           "reponseAttendue": "ECG, radiographie du poignet gauche à la recherche d’une fracture, glycémie capillaire.",
           "correctionGenerale": "• ECG\n• Radiographie du poignet gauche à la recherche d’une fracture\n• Glycémie capillaire"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 4</b>\n\nInterprétez le bilan biologique.",
+          "enonce": "<b>Question n° 4</b>\n\nSur le plan biologique, on constate : CPK = 12 x N, clairance de la créatinine = 35 mL/min (Cockroft), NFS normale, natrémie = 146 mmol/L, urée = 0,6 g/L, glycémie = 0,6 g/L, albuminémie = 30 g/L, CRP = 5 mg/L.\n\nQuelles sont les anomalies dans ces examens biologiques ?",
           "images": [],
           "reponseAttendue": "Élévation des CPK traduisant une rhabdomyolyse, insuffisance rénale aiguë, hypernatrémie, hypoglycémie chez une patiente diabétique, hypoalbuminémie en faveur d’une dénutrition.",
           "correctionGenerale": "• Élévation des CPK = <b>rhabdomyolyse</b>\n• <b>Insuffisance rénale aiguë</b>\n• Hypernatrémie car Na > 135 mmol/L\n• Hypoglycémie car patiente diabétique et glycémie limite à 0,6 g/L\n• Hypoalbuminémie en faveur d’une dénutrition"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 5</b>\n\nComment révisez-vous le traitement de cette patiente ?",
+          "enonce": "<b>Question n° 5</b>\n\nQuels sont les médicaments à réévaluer chez cette patiente ? Justifiez.",
           "images": [],
           "reponseAttendue": "Réévaluation du traitement antihypertenseur (bisoprolol, rilménidine, nicardipine) devant les chutes à répétition et l’hypotension actuelle, avec recherche d’une hypotension orthostatique ; réévaluation du traitement hypoglycémiant (metformine, répaglinide), le répaglinide étant pourvoyeur d’hypoglycémies ; zopiclone car psychotrope ; atorvastatine car pourvoyeuse de rhabdomyolyse.",
           "correctionGenerale": "• Réévaluation du traitement antihypertenseur (bisoprolol, rilménidine, nicardipine) car chutes à répétition, recherche d’hypotension orthostatique à effectuer, et patiente actuellement hypotendue\n• Réévaluation du traitement hypoglycémiant (metformine + répaglinide) car chutes à répétition, répaglinide pourvoyeur d’hypoglycémies, glycémie limite à 0,6 g/L\n• <b>Zopiclone</b> car psychotrope\n• <b>Atorvastatine</b> car pourvoyeuse de rhabdomyolyse"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 6</b>\n\nQuelle complication de la chute redoutez-vous ? Quelle prise en charge rééducative en découle ?",
+          "enonce": "<b>Question n° 6</b>\n\nQuelle conséquence psychologique est à craindre ?",
           "images": [],
           "reponseAttendue": "Un syndrome post-chute, imposant une kinésithérapie.",
           "correctionGenerale": "<b>Syndrome post-chute</b>, donc <b>kinésithérapie +++</b>."
@@ -626,46 +626,46 @@
       "type": "EVCP",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 11,
-      "vignette": "Un syndrome confusionnel révélant un SCA ST+ antérieur chez une patiente âgée polymédiquée (bithérapie antihypertensive, gliclazide, paroxétine, hydrochlorothiazide, IPP, hydroxyzine).",
+      "vignette": "Une patiente de 91 ans vous est adressée par son médecin traitant, dans le service d’accueil des urgences dans lequel vous travaillez. Elle présente depuis 48 heures un tableau clinique associant agitation, hétéro-agressivité envers son auxiliaire de vie qu’elle semble ne plus reconnaître. Elle ne sait pas où elle se trouve et ne peut pas vous donner la date du jour. Ses propos sont incohérents.",
       "questions": [
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 1</b>\n\nQuels arguments retenez-vous en faveur d’un syndrome confusionnel ?",
+          "enonce": "<b>Question n° 1</b>\n\nVous suspectez un syndrome confusionnel. Quels sont les éléments dans l’énoncé en faveur du diagnostic ?",
           "images": [],
           "reponseAttendue": "Le début brutal, l’agitation, l’agressivité, la non-reconnaissance de l’entourage, la désorientation spatio-temporelle et les propos incohérents.",
           "correctionGenerale": "• Début brutal\n• Agitation, agressivité, non-reconnaissance de l’entourage\n• Désorientation spatio-temporelle, propos incohérents"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 2</b>\n\nQuels autres éléments sémiologiques du syndrome confusionnel recherchez-vous ?",
+          "enonce": "<b>Question n° 2</b>\n\nQuels autres éléments cliniques recherchez-vous en faveur du diagnostic de confusion selon le DSM-5 ?",
           "images": [],
           "reponseAttendue": "Les troubles de la vigilance, la fluctuation des troubles sur le nycthémère et la recrudescence vespérale.",
           "correctionGenerale": "• Troubles de la vigilance\n• Fluctuation des troubles sur le nycthémère\n• Recrudescence vespérale"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 3</b>\n\nQuelles sont les formes cliniques du syndrome confusionnel ?",
+          "enonce": "<b>Question n° 3</b>\n\nQuelles sont les formes cliniques de confusion que vous connaissez ?",
           "images": [],
           "reponseAttendue": "La forme hyperactive, la forme hypoactive et la forme mixte.",
           "correctionGenerale": "• Forme hyperactive\n• Forme hypoactive\n• Forme mixte"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 4</b>\n\nQuels facteurs précipitants iatrogènes retenez-vous chez ce patient ?",
+          "enonce": "<b>Question n° 4</b>\n\nVous avez joint le médecin traitant qui vous a précisé les antécédents de la patiente : hypertension artérielle, diabète de type 2, incontinence urinaire, dépression. Son traitement actuel associe : hydrochlorothiazide + valsartan (COTAREG®), paroxétine (DEROXAT®), oxybutynine (DITROPAN®), oméprazole (MOPRAL®), gliclazide (DIAMICRON®), hydroxyzine (ATARAX®). L’hydroxyzine a été introduite depuis quelques jours, après plusieurs essais infructueux de traitements pour ses troubles du sommeil.\n\nDétaillez les facteurs précipitants de la confusion, à la lumière de ces nouvelles informations, et détaillez les causes de chaque facteur précipitant.",
           "images": [],
           "reponseAttendue": "Hypotension artérielle (bithérapie antihypertensive), hypoglycémie (sous gliclazide), troubles ioniques de type hyponatrémie (sous paroxétine, hydrochlorothiazide et IPP), introduction récente d’un psychotrope (Atarax®).",
           "correctionGenerale": "• Hypotension artérielle (bithérapie anti-HTA)\n• Hypoglycémie (sous gliclazide)\n• Troubles ioniques type hyponatrémie (sous paroxétine, hydrochlorothiazide et IPP)\n• Introduction récente d’un psychotrope (Atarax®)"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 5</b>\n\nQuels éléments d’examen clinique et quels gestes réalisez-vous en première intention ?",
+          "enonce": "<b>Question n° 5</b>\n\nLes constantes de la patiente sont les suivantes : T° = 36,8 °C ; PA = 102/65 mmHg ; pouls 95/min régulier. L’examen neurologique est considéré comme normal. L’auscultation cardiopulmonaire est normale.\n\nComment complétez-vous votre examen dans le box des urgences ? Justifiez.",
           "images": [],
           "reponseAttendue": "SpO₂, fréquence respiratoire et glycémie capillaire, bandelette urinaire, ECG ; recherche de douleur ; toucher rectal à la recherche d’un fécalome ; palpation abdominale à la recherche d’une rétention aiguë d’urines.",
           "correctionGenerale": "• SpO₂, FR et glycémie capillaire + bandelette urinaire + ECG\n• Recherche de douleur\n• Toucher rectal (fécalome)\n• Palpation abdominale (rétention aiguë d’urines)"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 6</b>\n\nInterprétez l’ECG réalisé chez ce patient.",
+          "enonce": "<b>Question n° 6</b>\n\nL’infirmière vous apporte l’ECG de votre patiente, présenté ci-dessous.\n\nQuelle est votre interprétation du tracé ?",
           "images": [
             "annales-geriatrie/sujet-officiel/evcp-2019-geriatrie-q6-ecg.png"
           ],
@@ -674,21 +674,21 @@
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 7</b>\n\nQuel diagnostic retenez-vous ?",
+          "enonce": "<b>Question n° 7</b>\n\nQuel est votre diagnostic ?",
           "images": [],
           "reponseAttendue": "Un syndrome confusionnel dans le cadre d’un SCA ST+ antérieur, par atteinte de l’IVA moyenne.",
           "correctionGenerale": "<b>Syndrome confusionnel dans le cadre d’un SCA ST+ antérieur, atteinte de l’IVA moyenne.</b>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 8</b>\n\nQuel bilan biologique demandez-vous ?",
+          "enonce": "<b>Question n° 8</b>\n\nCompte tenu de l’ensemble de l’observation, quels examens biologiques demandez-vous en urgence ?",
           "images": [],
           "reponseAttendue": "NFS-plaquettes, bilan de coagulation, ionogramme sanguin, créatinine avec CKD-EPI, bilan hépatique, troponine, BNP, bandelette urinaire, CRP.",
           "correctionGenerale": "• NFS-plaquettes, bilan de coagulation\n• Ionogramme sanguin, créatinine CKD-EPI, bilan hépatique\n• Troponine, BNP\n• BU, CRP"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 9</b>\n\nQuel traitement médicamenteux proposez-vous devant l’agitation de ce patient âgé confus ?",
+          "enonce": "<b>Question n° 9</b>\n\nAprès une prise en charge adaptée de la pathologie cardiaque, votre patiente est transférée dans votre unité de gériatrie aiguë. Vous avez corrigé tous les troubles somatiques. Néanmoins, elle est toujours confuse, très agitée et anxieuse.\n\nAprès 48 heures passées dans le service et la mise en œuvre de mesures non médicamenteuses habituelles, l’équipe soignante de votre service vous demande de prescrire un traitement. Sur quels arguments décideriez-vous de l’introduction d’un traitement médicamenteux ? Quelle classe thérapeutique et selon quelles modalités ?",
           "images": [
             "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-011-031.png"
           ],
@@ -697,7 +697,7 @@
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 10</b>\n\nQuels diagnostics différentiels évoquez-vous à distance de l’épisode ?",
+          "enonce": "<b>Question n° 10</b>\n\nVous revoyez la patiente en consultation six mois après la guérison de son syndrome confusionnel. Elle est accompagnée de sa fille, qui s’inquiète d’« oublis fréquents de rendez-vous » et la trouve triste. Elle n’a pas repris ses activités de loisirs et sort moins de chez elle. Quel(s) diagnostic(s) syndromique(s) évoquez-vous avec ces éléments ?",
           "images": [],
           "reponseAttendue": "Un syndrome dépressif et un syndrome démentiel.",
           "correctionGenerale": "• Syndrome dépressif\n• Syndrome démentiel"
@@ -710,18 +710,18 @@
       "type": "EVCF",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 12,
-      "vignette": null,
+      "vignette": "Une femme âgée de 80 ans est admise en service de gériatrie pour impotence fonctionnelle rendant difficile son retour au domicile. Elle est adressée par le service-porte des urgences hospitalières où elle a été admise pour une fracture du poignet droit de type Pouteau-Colles survenue à la suite d’une chute. Cette chute s’est produite un jour de grand froid et elle a glissé sur le trottoir glacé. Vous apprenez qu’elle vit seule de manière indépendante à domicile. Elle ne déclare aucun proche à prévenir.\n\nElle a pour antécédents une hypertension artérielle essentielle traitée par lisinopril (20 mg/j) (un inhibiteur de l’enzyme de conversion), et une maladie de Horton traitée depuis un an par prednisone. La dose initiale était de 40 mg/j, et elle est actuellement de 7,5 mg/j. Elle prend par ailleurs un somnifère chaque soir, le zopiclone 7,5 mg (1 cp/j).\n\nÀ l’examen, la température est normale, la pression artérielle à 130/72 mmHg, sans hypotension orthostatique, le poids est à 37 kg pour une taille à 150 cm, alors que la taille indiquée sur ses papiers d’identité est de 1,58 m. La fracture a été réduite et ostéosynthésée par broche au bloc d’urgence.\n\nLe prélèvement sanguin montre : glycémie 5,2 mmol/L, Na⁺ 139 mmol/L, K⁺ 4,2 mmol/L, créatinine 65 µmol/L, calcium 2,4 mmol/L, CRP < 5 mg/L, transaminases dans les normes ainsi que les gamma GT, phosphatases alcalines à la limite supérieure de la normale, NFS : globules blancs 7000/mm³ dont 55 % de polynucléaires neutrophiles, Hb 11 g/dL, VGM 103 µ³, plaquettes 200 000/mm³.",
       "questions": [
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 1</b>\n\nQuel diagnostic évoquez-vous ?",
+          "enonce": "<b>Question n° 1</b>\n\nQuelle pathologie osseuse évoquez-vous devant ce tableau clinique ? Citez chaque élément du diagnostic clinique.",
           "images": [],
           "reponseAttendue": "Une ostéoporose, avec fracture de l’extrémité inférieure du radius sur chute de sa hauteur et une perte de 8 cm (probables fractures vertébrales).",
           "correctionGenerale": "• <b>Ostéoporose</b>\n• Fracture de l’EIR sur chute de sa hauteur\n• Perte de 8 cm (probables fractures vertébrales)"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 2</b>\n\nQuels facteurs de risque de fracture sont présents chez cette patiente ? Lesquels recherchez-vous ?",
+          "enonce": "<b>Question n° 2</b>\n\nQuels sont chez cette patiente les facteurs de risque de cette maladie osseuse que vous notez à partir de l’observation ? Citez les autres facteurs de risque à rechercher.",
           "images": [
             "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-008-023.png"
           ],
@@ -730,7 +730,7 @@
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 3</b>\n\nQuel bilan réalisez-vous devant cette ostéoporose ?",
+          "enonce": "<b>Question n° 3</b>\n\nQuels examens complémentaires réalisez-vous dans un premier temps pour explorer cette ostéopathie (justifiez vos réponses) ? Quel(s) traitement(s) proposez-vous dans un premier temps ?",
           "images": [
             "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-008-024.png"
           ],
@@ -739,21 +739,21 @@
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 4</b>\n\nUne ostéodensitométrie est-elle indiquée ? Justifiez votre réponse.",
+          "enonce": "<b>Question n° 4</b>\n\nVous avez organisé une sortie à son domicile avec des aides appropriées (auxiliaire de vie et portage de repas à domicile) et un contact a été pris avec la voisine qui viendra lui rendre visite et vérifiera que tout se passe bien. Elle quitte l’hôpital avec une ordonnance, un courrier pour le médecin traitant et un rendez-vous en orthopédie pour son suivi.\n\nVous la revoyez en consultation 3 mois plus tard. Le traitement de sortie n’a pas été modifié et a été bien suivi. La consolidation de sa fracture est obtenue. Le bilan biologique que vous avez prescrit est normal et ne montre pas de carence vitaminique. L’état fonctionnel du membre supérieur est satisfaisant et la patiente a retrouvé toute son indépendance pour les actes de la vie quotidienne. La pression artérielle est de 140/85 mmHg.\n\nFaut-il faire d’autres investigations ?",
           "images": [],
           "reponseAttendue": "Non : femme ménopausée sous corticoïdes avec fracture ostéoporotique — l’ostéodensitométrie est inutile pour décider du traitement.",
           "correctionGenerale": "<b>Non</b> : femme ménopausée + sous corticoïdes + fracture ostéoporotique = <b>ODM inutile</b>."
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 5</b>\n\nQuelles mesures non médicamenteuses proposez-vous ?",
+          "enonce": "<b>Question n° 5</b>\n\nQuelle prise en charge non médicamenteuse allez-vous entreprendre ?",
           "images": [],
           "reponseAttendue": "Sevrage tabagique le cas échéant, prévention des chutes, promotion de l’activité physique.",
           "correctionGenerale": "• Sevrage tabagique le cas échéant\n• Prévention des chutes\n• Promotion de l’activité physique"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 6</b>\n\nInstaurez-vous un traitement médicamenteux de l’ostéoporose ? Précisez ses modalités.",
+          "enonce": "<b>Question n° 6</b>\n\nFaut-il entreprendre d’autres traitements pour la pathologie osseuse ? Justifiez vos réponses.",
           "images": [],
           "reponseAttendue": "Oui : instauration d’un traitement par bisphosphonates avec supplémentation vitamino-calcique, après consultation dentaire, à jeun le matin en position demi-assise avec un grand verre d’eau (risque d’œsophagite et d’ostéonécrose de la mâchoire) ; discuter l’introduction de tériparatide devant les probables fractures vertébrales.",
           "correctionGenerale": "• <b>Oui</b> : instauration d’un traitement par <b>bisphosphonates</b> + supplémentation vitamino-calcique\n• Après consultation dentaire, à jeun le matin, en position demi-assise, avec un grand verre d’eau\n• Risque d’œsophagite et d’ostéonécrose de la mâchoire\n• Discuter l’introduction de <b>tériparatide</b> car probables fractures vertébrales"
@@ -767,46 +767,46 @@
       "type": "EVCF",
       "source": "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf",
       "orderIndex": 13,
-      "vignette": null,
+      "vignette": "Une femme de 81 ans consulte pour des douleurs de la région trochantérienne droite apparues il y a 2 ans sans qu’une circonstance déclenchante ne soit retrouvée. Lors d’une précédente consultation aux urgences, une radiographie avait été réalisée. Le diagnostic de coxarthrose droite avait été annoncé à la malade et une ordonnance de paracétamol 500 mg (antalgique) à la demande a été réalisée.",
       "questions": [
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 1</b>\n\nQuelles sont les caractéristiques de la douleur de coxarthrose ?",
+          "enonce": "<b>Question n° 1</b>\n\nQuelles sont les caractéristiques des douleurs provoquées par une coxarthrose ?",
           "images": [],
           "reponseAttendue": "Douleur du pli inguinal, de la fesse ou du genou, avec irradiation sur la cuisse, raideur de la hanche, douleur d’allure mécanique (à l’effort, sans réveil nocturne ni dérouillage matinal) et limitation du périmètre de marche.",
           "correctionGenerale": "• Douleur du pli inguinal, de la fesse ou du genou\n• Irradiation sur la cuisse\n• Raideur de la hanche\n• Douleur d’allure mécanique (à l’effort, pas de réveil nocturne, pas de dérouillage matinal)\n• Limitation du périmètre de marche"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 2</b>\n\nQuels signes recherchez-vous à l’examen physique ?",
+          "enonce": "<b>Question n° 2</b>\n\nQuels signes recherchez-vous à l’examen physique de cette personne compatibles avec le diagnostic de coxarthrose ?",
           "images": [],
           "reponseAttendue": "Douleur à la palpation du pli inguinal, boiterie d’esquive, attitude vicieuse en rotation latérale, amyotrophie du quadriceps ou du psoas, absence de syndrome rachidien et signe de Léri négatif.",
           "correctionGenerale": "• Douleur à la palpation du pli inguinal\n• Boiterie d’esquive\n• Attitude vicieuse (rotation latérale)\n• Amyotrophie du quadriceps ou du psoas\n• Pas de syndrome rachidien, signe de Léri négatif\n\n<i>Source : COFER, item coxarthrose.</i>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 3</b>\n\nComment évaluez-vous la douleur et son retentissement fonctionnel ?",
+          "enonce": "<b>Question n° 3</b>\n\nComment évaluez-vous l’intensité de la douleur ?",
           "images": [],
           "reponseAttendue": "Hétéro-évaluation par Doloplus ou Algoplus ; auto-évaluation par EN, EVS ou EVA ; consommation d’antalgiques ; indice fonctionnel de Lequesne.",
           "correctionGenerale": "• <b>Hétéro-évaluation</b> : Doloplus, Algoplus\n• <b>Auto-évaluation</b> : EN, EVS, EVA\n• Consommation d’antalgiques\n• <b>Indice fonctionnel de Lequesne</b>"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 4</b>\n\nQuel est le retentissement de cette coxarthrose ?",
+          "enonce": "<b>Question n° 4</b>\n\nQuelles conséquences médico-sociales de cette coxarthrose, autres que la douleur, recherchez-vous ?",
           "images": [],
           "reponseAttendue": "Limitation de l’activité physique, grabatisation, isolement social, syndrome dépressif.",
           "correctionGenerale": "• Limitation de l’activité physique\n• Grabatisation, isolement social, syndrome dépressif"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 5</b>\n\nQuels signes radiographiques caractérisent l’arthrose ?",
+          "enonce": "<b>Question n° 5</b>\n\nQuelles anomalies sur une radiographie de hanche sont en faveur du diagnostic d’une coxarthrose ?",
           "images": [],
           "reponseAttendue": "Pincement de l’interligne articulaire, ostéophytose, géodes sous-chondrales, ostéocondensation sous-chondrale.",
           "correctionGenerale": "• Pincement de l’interligne articulaire\n• Ostéophytose\n• Géodes sous-chondrales\n• Ostéocondensation sous-chondrale"
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 6</b>\n\nQuels diagnostics différentiels évoquez-vous ?",
+          "enonce": "<b>Question n° 6</b>\n\nCitez 2 causes de douleurs de hanche autres que la coxarthrose, et indiquez leurs principales caractéristiques qui les différencient de la coxarthrose.",
           "images": [],
           "reponseAttendue": "Algoneurodystrophie (syndrome douloureux régional complexe), cruralgie, tendinopathie du moyen fessier, ostéonécrose aseptique de la tête fémorale.",
           "correctionGenerale": "• Algoneurodystrophie (syndrome douloureux régional complexe)\n• Cruralgie\n• Tendinopathie (moyen fessier)\n• Ostéonécrose aseptique de la tête fémorale"
@@ -827,7 +827,7 @@
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 9</b>\n\nQuels traitements de seconde ligne proposez-vous ?",
+          "enonce": "<b>Question n° 9</b>\n\nAprès avoir suivi vos conseils et les traitements prescrits pendant dix mois, la patiente garde des douleurs importantes et présente une gêne importante à la marche. Quelles thérapeutiques proposez-vous (justifiez vos réponses) ?",
           "images": [],
           "reponseAttendue": "L’infiltration de corticoïdes et la pose d’une prothèse totale de hanche.",
           "correctionGenerale": "• Infiltration de corticoïdes\n• Pose d’une <b>PTH</b>"

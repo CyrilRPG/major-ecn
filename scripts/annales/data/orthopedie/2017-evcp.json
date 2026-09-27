@@ -111,6 +111,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nDécrivez la radiographie. Quel est votre diagnostic ? Développez.",
           "images": [
+            "annales-orthopedie/evcp2017/sujet/evcp-2017-dossier2-radiographie-epaule.png",
             "annales-orthopedie/evcp2017/figures/img-033-109.png"
           ],
           "reponseAttendue": "Radiographie de l’épaule droite de face : omarthrose droite excentrée de stade 4b de la classification de Hamada et Fukuda (acétabulisation de l’acromion, sans collapsus de la tête), avec pincement de l’interligne gléno-huméral, diminution de l’espace sous-acromial, rupture du cintre gléno-huméral et ostéophytes.",

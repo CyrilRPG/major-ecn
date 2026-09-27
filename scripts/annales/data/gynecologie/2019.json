@@ -116,8 +116,10 @@
         },
         {
           "format": "qroc",
-          "enonce": "<b>Question n° 5</b>\n\nLe bilan biologique initial montre : Hb 10,3 g/dL (norme 10,5), plaquettes 90 000/mm³ (norme 150 000), fibrinogène 1 g/L (norme 4 à 6), TP 60 % (norme 100 %), globules blancs 12 300/mm³, ASAT 27 UI/L, ALAT 25 UI/L, créatininémie 80 µmol/L, ratio protéinurie/créatininurie 0,80 g/g (normal < 0,3 g/g).\n\nQuelle est votre prise en charge ? Justifiez.",
-          "images": [],
+          "enonce": "<b>Question n° 5</b>\n\nL’enregistrement du rythme cardiaque fœtal à l’admission vous est donné ci-dessous et le bilan biologique initial montre les éléments suivants : Hb 10,3 g/dL (norme 10,5), plaquettes 90 000/mm³ (norme 150 000), fibrinogène 1 g/L (norme 4 à 6), TP 60 % (norme 100 %), globules blancs 12 300/mm³, ASAT 27 UI/L, ALAT 25 UI/L, créatininémie 80 µmol/L, ratio protéinurie/créatininurie 0,80 g/g (normal < 0,3 g/g).\n\nQuelle est votre prise en charge ? Justifiez.",
+          "images": [
+            "annales-gynecologie/annales-2019-gyneco/figures/img-018-073.jpg"
+          ],
           "reponseAttendue": "Il s’agit d’une CIVD sur probable hématome rétroplacentaire compliquant une pré-éclampsie sévère et précoce : césarienne en urgence (code rouge) sous anesthésie générale ; réanimation médicale associée avec éventuelle transfusion de PFC et de fibrinogène ; prévenir le pédiatre et l’anesthésiste de garde ; prise en charge de la pré-éclampsie avec ajustement du traitement antihypertenseur et sulfate de magnésium en dose de charge si le RCF le permet.",
           "correctionGenerale": "• <b>CIVD sur probable HRP compliquant une pré-éclampsie sévère et précoce</b>\n• <b>Césarienne en urgence (code rouge) sous anesthésie générale</b>\n• Réanimation médicale associée : ± transfusion de PFC, fibrinogène\n• Prévenir le pédiatre et l’anesthésiste de garde\n• Prise en charge de la pré-éclampsie : ajustement du traitement antihypertenseur, sulfate de magnésium en dose de charge si le RCF le permet"
         }
