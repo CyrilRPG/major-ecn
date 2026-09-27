@@ -7,7 +7,10 @@
     "ANNALES ORTHOPEDIE/EVCF.53 2012 correction.pdf": {
       "atelier": "annales-orthopedie/evcf-53-2012-correction",
       "sujetOfficiel": "Annales/Sujets/evcf_2012/EVCF.53.DOC",
-      "figuresIgnorees": {}
+      "figuresIgnorees": {
+        "img-003-024.png": "Audit des images (28/09/2026, #1159) : classification de Salter et Harris : c'est la réponse ; détachée de la question.",
+        "img-005-042.png": "Audit des images (28/09/2026, #914) : Tableau « Interprétation du liquide synovial » (corrigé) ; détachée de la question."
+      }
     }
   }
 }

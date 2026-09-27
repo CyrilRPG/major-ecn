@@ -3,7 +3,46 @@
     "ANNALES ORTHOPEDIE/EVCF2015correction .pdf": {
       "atelier": "annales-orthopedie/evcf2015correction",
       "sujetOfficiel": "Annales/Sujets/evcf_2015/EVCF.53.DOC",
-      "figuresIgnorees": {}
+      "figuresIgnorees": {
+        "img-050-085.jpg": "Audit images 28/09/2026 (#449) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma de la classification de Dell (rhizarthrose) = réponse",
+        "img-050-084.png": "Audit images 28/09/2026 (#444) : figure du corrigé qui donne la réponse avant que l’élève réponde — Radiographies « Rhizarthrose : classification radiologique » = réponse",
+        "img-038-064.png": "Audit images 28/09/2026 (#425) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma du nerf radial au coude (corrigé)",
+        "img-031-055.png": "Audit images 28/09/2026 (#390) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « Classification des périprothétiques de hanche » (types B) = réponse (2 questions)",
+        "img-005-019.png": "Audit images 28/09/2026 (#282) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « Innervation de la main » = réponse",
+        "img-036-058.png": "Audit images 28/09/2026 (#275) : figure du corrigé qui donne la réponse avant que l’élève réponde — Photographie et schéma du test de Lachman = réponse",
+        "img-054-105.png": "Audit images 28/09/2026 (#367) : figure du corrigé qui donne la réponse avant que l’élève réponde — Vue arthroscopique (corrigé), sans rôle d'énoncé",
+        "img-054-104.png": "Audit images 28/09/2026 (#244) : figure du corrigé qui donne la réponse avant que l’élève réponde — Vue arthroscopique (corrigé) sans rôle d'énoncé",
+        "img-033-057.png": "Audit images 28/09/2026 (#237) : figure du corrigé qui donne la réponse avant que l’élève réponde — Radiographie avec l'angle scapho-lunaire tracé = réponse",
+        "img-011-040.png": "Audit images 28/09/2026 (#213) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma des tests en varus/valgus (© 2003 Steve Oh), corrigé sans rôle d'énoncé",
+        "img-023-046.png": "Audit images 28/09/2026 (#194) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma de la ligne de Blumensaat = réponse",
+        "img-019-044.png": "Audit images 28/09/2026 (#181) : figure du corrigé qui donne la réponse avant que l’élève réponde — Extrait d'article « usure volumétrique annuelle » (corrigé) = réponse",
+        "img-046-068.png": "Audit images 28/09/2026 (#180) : figure du corrigé qui donne la réponse avant que l’élève réponde — Photographie d'eczéma de contact (corrigé) = réponse (allergie aux métaux)",
+        "img-046-066.png": "Audit images 28/09/2026 (#461) : figure du corrigé qui donne la réponse avant que l’élève réponde — Photographies de métallose (corrigé) = réponse",
+        "img-052-094.png": "Audit des images (28/09/2026, #1226) : diapositive de la classification de Magerl : c'est la réponse ; détachée de la question.",
+        "img-057-118.png": "Audit des images (28/09/2026, #1225) : diapositive « Cartilage articulaire » (composition) : c'est la réponse ; détachée de la question.",
+        "img-036-060.png": "Audit des images (28/09/2026, #1195) : figure des types d'arrêt (Lachman) : c'est la réponse ; détachée de la question.",
+        "img-003-010.png": "Audit des images (28/09/2026, #1154) : planche de Netter (nerf musculo-cutané et muscles innervés) : c'est la réponse ; détachée de la question.",
+        "img-007-028.png": "Audit des images (28/09/2026, #1151) : schéma de l'anneau fémoral (© R.-A. Jean) : c'est la réponse ; détachée de la question.",
+        "img-017-043.png": "Audit des images (28/09/2026, #1148) : schéma des territoires sensitifs du pied : c'est la réponse ; détachée de la question.",
+        "img-013-041.png": "Audit des images (28/09/2026, #1072) : schéma anatomique (cône terminal en regard de L2) : c'est la réponse ; détachée de la question.",
+        "img-025-049.png": "Audit des images (28/09/2026, #1052) : diapositive « Test de Risser » : c'est la réponse ; détachée de la question.",
+        "img-009-038.png": "Audit des images (28/09/2026, #511) : Capture PowerPoint « Anatomie » du corrigé (stabilisateurs du genou, LCL) ; détachée de la question.",
+        "img-033-056.png": "Audit des images (28/09/2026, #550) : Schéma DISI « angle scapho-lunaire 30-60° » = la réponse ; détachée de la question.",
+        "img-030-054.png": "Audit des images (28/09/2026, #584) : Figure « Vancouver classification » = la réponse (deux questions) ; détachée de la question.",
+        "img-057-119.png": "Audit des images (28/09/2026, #631) : Schéma du cartilage hyalin légendé = la réponse ; détachée de la question.",
+        "img-048-073.png": "Audit des images (28/09/2026, #643) : Texte SFAR « Antibioprophylaxie en chirurgie orthopédique » = la réponse ; détachée de la question.",
+        "img-050-083.png": "Audit des images (28/09/2026, #672) : Radiographie fléchée de rhizarthrose = la réponse illustrée (question de définition) ; détachée de la question.",
+        "img-038-065.png": "Audit des images (28/09/2026, #690) : Planche anatomique de l'avant-bras (supinateurs) = la réponse ; détachée de la question.",
+        "img-010-039.png": "Audit des images (28/09/2026, #713) : Capture de diapositive « Anatomie : ligament collatéral latéral » (corrigé) ; détachée de la question.",
+        "img-023-047.png": "Audit des images (28/09/2026, #719) : Radiographie de genou de profil avec mesures tracées (corrigé) ; détachée de la question.",
+        "img-007-029.png": "Audit des images (28/09/2026, #799) : Illustration anatomique du psoas-iliaque (corrigé) ; détachée de la question.",
+        "img-046-067.png": "Audit des images (28/09/2026, #833) : Photo de pièce opératoire de métallose = une des complications demandées ; détachée de la question.",
+        "img-027-053.png": "Audit des images (28/09/2026, #878) : Schéma des pourcentages de croissance des cartilages = la réponse ; détachée de la question.",
+        "img-038-062.png": "Audit des images (28/09/2026, #898) : Planche de Netter du nerf musculo-cutané = la réponse ; détachée de la question.",
+        "img-025-051.png": "Audit des images (28/09/2026, #922) : Schéma « Risser 0 à 5 » = la réponse ; détachée de la question.",
+        "img-023-045.png": "Audit des images (28/09/2026, #932) : IRM de genou avec la ligne de Blumensaat tracée et nommée = la réponse ; détachée de la question.",
+        "img-023-048.png": "Audit des images (28/09/2026, #940) : IRM de genou avec mesures tracées (8.2 / 172), figure du corrigé ; détachée de la question."
+      }
     }
   },
   "series": [
@@ -18,42 +57,35 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°1</b>\n\nCitez deux muscles innervés par le nerf musculo-cutané.",
-          "images": ["annales-orthopedie/evcf2015correction/figures/img-003-010.png"],
+          "images": [],
           "reponseAttendue": "Biceps brachial, coraco-brachial, brachial.",
           "correctionGenerale": "• Biceps brachial\n• Coraco-brachial\n• Brachial"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nQuel est le territoire autonome sensitif du nerf médian au niveau de la main ?",
-          "images": ["annales-orthopedie/evcf2015correction/figures/img-005-019.png"],
+          "images": [],
           "reponseAttendue": "La face palmaire de la main en dehors de l’axe du 4ᵉ rayon, ainsi que la face dorsale de P2-P3 des doigts II et III et de la moitié latérale du doigt IV.",
           "correctionGenerale": "Innervation de la face palmaire de la main en dehors de l’axe du 4ᵉ rayon, ainsi que de la face dorsale de P2-P3 de DII, DIII et de la moitié latérale de DIV."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nQuel est le rapport osseux du muscle psoas-iliaque à sa sortie du bassin ?",
-          "images": [
-            "annales-orthopedie/evcf2015correction/figures/img-007-028.png",
-            "annales-orthopedie/evcf2015correction/figures/img-007-029.png"
-          ],
+          "images": [],
           "reponseAttendue": "La branche ilio-pubienne.",
           "correctionGenerale": "Branche ilio-pubienne."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nQuelle est l’insertion distale du ligament collatéral latéral (externe) ou LLE du genou ?",
-          "images": [
-            "annales-orthopedie/evcf2015correction/figures/recadre/img-009-038.png",
-            "annales-orthopedie/evcf2015correction/figures/recadre/img-010-039.png",
-            "annales-orthopedie/evcf2015correction/figures/img-011-040.png"
-          ],
+          "images": [],
           "reponseAttendue": "La tête de la fibula.",
           "correctionGenerale": "Tête de la fibula.\n\n<b>Stress en varus</b>\n• À 30° : LCL\n• En extension : LCL + PAPE"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°5</b>\n\nEn regard de quelle vertèbre se situe le cône médullaire ?",
-          "images": ["annales-orthopedie/evcf2015correction/figures/img-013-041.png"],
+          "images": [],
           "reponseAttendue": "L2.",
           "correctionGenerale": "L2."
         },
@@ -67,14 +99,14 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°7</b>\n\nQuel est le premier symptôme d’un syndrome de loge ?",
-          "images": ["annales-orthopedie/evcf2015correction/figures/img-017-043.png"],
+          "images": [],
           "reponseAttendue": "L’anesthésie de la première commissure du pied (nerf fibulaire profond).",
           "correctionGenerale": "Anesthésie de la première commissure du pied (nerf fibulaire profond)."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°8</b>\n\nQuelle est l’usure annuelle moyenne du polyéthylène dans le couple de frottement métal-polyéthylène utilisé dans les PTH ?",
-          "images": ["annales-orthopedie/evcf2015correction/figures/recadre/img-019-044.png"],
+          "images": [],
           "reponseAttendue": "100 microns par an.",
           "correctionGenerale": "100 microns / an."
         },
@@ -88,70 +120,49 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°10</b>\n\nQu’est-ce que la ligne de Blumensaat ?",
-          "images": [
-            "annales-orthopedie/evcf2015correction/figures/img-023-045.png",
-            "annales-orthopedie/evcf2015correction/figures/img-023-046.png",
-            "annales-orthopedie/evcf2015correction/figures/img-023-047.png",
-            "annales-orthopedie/evcf2015correction/figures/recadre/img-023-048.png"
-          ],
+          "images": [],
           "reponseAttendue": "La ligne de Blumensaat correspond au toit de l’échancrure, visible sur une radiographie de profil.",
           "correctionGenerale": "La ligne de Blumensaat correspond au toit de l’échancrure, visible sur une radiographie de profil."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°11</b>\n\nQue signifie un test de Risser 5 ?",
-          "images": [
-            "annales-orthopedie/evcf2015correction/figures/img-025-049.png",
-            "annales-orthopedie/evcf2015correction/figures/img-025-051.png"
-          ],
+          "images": [],
           "reponseAttendue": "La fusion complète du noyau d’ossification de la crête iliaque, marquant la fin de la puberté.",
           "correctionGenerale": "Fusion complète du noyau d’ossification de la crête iliaque (fin de la puberté).\n\nRappel du test de Risser : Risser 0 absence d’ossification (puberté), 1 ossification du premier tiers, 2 du deuxième tiers, 3 du troisième tiers, 4 début de soudure de la barrette à l’os iliaque, 5 fusion complète (arrêt de la croissance)."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°12</b>\n\nQuel pourcentage de croissance du fémur revient au cartilage de conjugaison inférieur ?",
-          "images": ["annales-orthopedie/evcf2015correction/figures/img-027-053.png"],
+          "images": [],
           "reponseAttendue": "70 %.",
           "correctionGenerale": "70 %."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°13</b>\n\nQu’est-ce que la classification de Vancouver dans les fractures ? Décrire le type C.",
-          "images": [
-            "annales-orthopedie/evcf2015correction/figures/img-030-054.png",
-            "annales-orthopedie/evcf2015correction/figures/recadre/img-031-055.png"
-          ],
+          "images": [],
           "reponseAttendue": "La classification des fractures péri-prothétiques après PTH ; le type C correspond à un trait de fracture passant à plus d’un centimètre de la tige, non descellée.",
           "correctionGenerale": "Classification des fractures péri-prothétiques après PTH.\n<b>Vancouver C</b> = trait de fracture qui passe à plus d’1 cm de la tige. Non descellée.\n\nPour les fractures B1 : l’index de fixation restante est calculé ; s’il est < 2/3, la fracture est potentiellement instable → type B2."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°14</b>\n\nQuelle est la valeur de l’angle scapho-lunaire sur une radiographie de profil du poignet ?",
-          "images": [
-            "annales-orthopedie/evcf2015correction/figures/img-033-056.png",
-            "annales-orthopedie/evcf2015correction/figures/img-033-057.png"
-          ],
+          "images": [],
           "reponseAttendue": "Entre 30 et 60°.",
           "correctionGenerale": "Entre 30 et 60°.\n(Au-delà de 70°, l’aspect est celui d’une DISI.)"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°15</b>\n\nQu’est-ce qu’un signe de Lachman ?",
-          "images": [
-            "annales-orthopedie/evcf2015correction/figures/img-036-058.png",
-            "annales-orthopedie/evcf2015correction/figures/img-036-060.png"
-          ],
+          "images": [],
           "reponseAttendue": "Un tiroir antérieur à 20° de flexion avec arrêt mou, forte présomption de rupture du LCA.",
           "correctionGenerale": "Tiroir antérieur à 20° de flexion avec arrêt mou : forte présomption d’une rupture du LCA.\n\n<b>Test de Lachman-Trillat</b>\n• Patient détendu ++\n• Genou déverrouillé\n• 20-30° de flexion\n\nLes différents types d’arrêt selon l’atteinte du LCA : arrêt dur (ligaments croisés sains), arrêt mou (LCA rompu, translation tibiale antérieure stoppée par les structures périphériques), arrêt dur retardé (LCA continu, arrêt dur mais avec un jeu articulaire plus important que sur un genou sain)."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°16</b>\n\nQuels sont les nerfs de la supination ?",
-          "images": [
-            "annales-orthopedie/evcf2015correction/figures/img-038-062.png",
-            "annales-orthopedie/evcf2015correction/figures/img-038-064.png",
-            "annales-orthopedie/evcf2015correction/figures/img-038-065.png"
-          ],
+          "images": [],
           "reponseAttendue": "Le nerf musculo-cutané (biceps brachial) et le nerf radial (supinateur, brachio-radialis).",
           "correctionGenerale": "• Nerf musculo-cutané (biceps brachial)\n• Nerf radial (supinateur, brachio-radialis)"
         },
@@ -179,56 +190,42 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°20</b>\n\nCitez deux complications spécifiques du couple de frottement métal-métal dans les PTH.",
-          "images": [
-            "annales-orthopedie/evcf2015correction/figures/img-046-066.png",
-            "annales-orthopedie/evcf2015correction/figures/img-046-067.png",
-            "annales-orthopedie/evcf2015correction/figures/img-046-068.png"
-          ],
+          "images": [],
           "reponseAttendue": "Métallose et allergie aux métaux (ALVAL).",
           "correctionGenerale": "• Métallose\n• Allergie aux métaux (ALVAL)"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°21</b>\n\nQuelles sont les molécules recommandées pour l’antibioprophylaxie en matière de chirurgie prothétique de la hanche ?",
-          "images": ["annales-orthopedie/evcf2015correction/figures/recadre/img-048-073.png"],
+          "images": [],
           "reponseAttendue": "Céfazoline, céfamandole, céfuroxime, clindamycine, vancomycine.",
           "correctionGenerale": "• Céfazoline\n• Céfamandole\n• Céfuroxime\n• Clindamycine\n• Vancomycine"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°22</b>\n\nQu’est-ce qu’une rhizarthrose ?",
-          "images": [
-            "annales-orthopedie/evcf2015correction/figures/img-050-083.png",
-            "annales-orthopedie/evcf2015correction/figures/img-050-084.png",
-            "annales-orthopedie/evcf2015correction/figures/img-050-085.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Une arthrose trapézo-métacarpienne, classée selon Dell.",
           "correctionGenerale": "Arthrose trapézo-métacarpienne.\nClassification de Dell."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°23</b>\n\nQuel est le mécanisme lésionnel des fractures du rachis lombaire de type A de Magerl ?",
-          "images": ["annales-orthopedie/evcf2015correction/figures/img-052-094.png"],
+          "images": [],
           "reponseAttendue": "La compression axiale.",
           "correctionGenerale": "Compression axiale."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°24</b>\n\nCitez deux muscles intra-articulaires de l’organisme.",
-          "images": [
-            "annales-orthopedie/evcf2015correction/figures/img-054-104.png",
-            "annales-orthopedie/evcf2015correction/figures/img-054-105.png"
-          ],
+          "images": [],
           "reponseAttendue": "La longue portion du biceps et le muscle poplité.",
           "correctionGenerale": "• Longue portion du biceps\n• Muscle poplité"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°25</b>\n\nQuels sont les quatre principaux composants du cartilage hyalin ?",
-          "images": [
-            "annales-orthopedie/evcf2015correction/figures/img-057-118.png",
-            "annales-orthopedie/evcf2015correction/figures/img-057-119.png"
-          ],
+          "images": [],
           "reponseAttendue": "Fibres de collagène de type II, chondrocytes, protéoglycanes et eau.",
           "correctionGenerale": "• Fibres de collagène de type II\n• Chondrocytes\n• Protéoglycanes\n• Eau"
         }

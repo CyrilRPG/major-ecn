@@ -3,7 +3,15 @@
     "ANNALES ORTHOPEDIE/EVCP2015correction.pdf": {
       "atelier": "annales-orthopedie/evcp2015correction",
       "sujetOfficiel": "Annales/Sujets/sujets_evc_pratiques_2015_0/EVCP.53.DOC",
-      "figuresIgnorees": {}
+      "figuresIgnorees": {
+        "img-017-075.png": "Audit images 28/09/2026 (#427) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma de la classification de Tile = réponse (Tile C3)",
+        "img-013-064.png": "Audit images 28/09/2026 (#349) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « Fractures complexes » du cotyle, corrigé",
+        "img-012-058.png": "Audit des images (28/09/2026, #1292) : diapositive « Classification de Judet et Letournel » (corrigé) ; détachée de la question.",
+        "img-014-070.png": "Audit des images (28/09/2026, #1165) : capture de vidéo de cours (classification des fractures de l'acétabulum) : figure de cours ; détachée de la question.",
+        "img-017-074.png": "Audit des images (28/09/2026, #650) : Diapositive « Tile Classification » (corrigé) ; détachée de la question.",
+        "img-015-072.png": "Audit des images (28/09/2026, #814) : Classification de Young-Burgess (bassin), corrigé ; détachée de la question.",
+        "img-016-073.png": "Audit des images (28/09/2026, #860) : Capture vidéo « LC = HEAD INJURY » (corrigé) ; détachée de la question."
+      }
     }
   },
   "series": [
@@ -46,14 +54,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nQuelles sont les 3 principales lésions radiologiques sur la radiographie du bassin ?",
           "images": [
-            "annales-orthopedie/evcp2015correction/figures/img-003-014.png",
-            "annales-orthopedie/evcp2015correction/figures/img-012-058.png",
-            "annales-orthopedie/evcp2015correction/figures/img-013-064.png",
-            "annales-orthopedie/evcp2015correction/figures/img-014-070.png",
-            "annales-orthopedie/evcp2015correction/figures/img-015-072.png",
-            "annales-orthopedie/evcp2015correction/figures/recadre/img-016-073.png",
-            "annales-orthopedie/evcp2015correction/figures/img-017-074.png",
-            "annales-orthopedie/evcp2015correction/figures/img-017-075.png"
+            "annales-orthopedie/evcp2015correction/figures/img-003-014.png"
           ],
           "reponseAttendue": "Une fracture bicolonne du cotyle, une lésion de l’anneau pelvien de type Tile C3, et une fracture trochantéro-diaphysaire du fémur droit.",
           "correctionGenerale": "• <b>Lésion du cotyle</b> : fracture bicolonne\n• <b>Lésion de l’anneau pelvien</b> : fracture Tile C3\n• <b>Fracture trochantéro-diaphysaire du fémur droit</b>\n\n<b>Cotyle — diagnostic topographique : classification de Judet et Letournel</b>\nFractures élémentaires 55 % : fracture de la paroi postérieure, de la colonne postérieure, de la paroi antérieure, de la colonne antérieure, fracture transversale.\nFractures complexes 45 %, classées en 5 catégories : les fractures en T ; les fractures associées de la paroi et de la colonne postérieures ; les fractures transversales associées à une fracture de la paroi postérieure ; les fractures de la colonne antérieure ou de la paroi antérieure associées à une hémitransversale postérieure ; les fractures des deux colonnes du cotyle.\n\n<b>Anneau pelvien — selon le mécanisme : Young et Burgess</b>\nIntérêt pronostique :\n• APC : saignement ++\n• LC : association fréquente avec un traumatisme crânien\n\n<b>Anneau pelvien — selon la stabilité : classification de Tile</b>"

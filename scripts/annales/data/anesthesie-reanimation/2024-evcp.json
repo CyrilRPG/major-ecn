@@ -3,7 +3,11 @@
     "ANNALES AREA/Corrige_EVCP_2024 AREA B.pdf": {
       "atelier": "annales-area/corrige-evcp-2024-area-b",
       "sujetOfficiel": null,
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-009-065.png": "Audit des images (28/09/2026, #1232) : diapositive « Intubation difficile en obstétrique (SFAR 2022) » : c'est la réponse ; détachée de la question.",
+        "img-008-056.png": "Audit des images (28/09/2026, #1161) : diapositive « Score de Glasgow - composantes » (corrigé) ; détachée de la question.",
+        "img-008-057.png": "Audit des images (28/09/2026, #782) : Tableau « Prise en charge du choc septique (SFAR/SRLF) », texte superposé et tronqué = élément de la réponse ; détachée de la question."
+      },
       "remarque": "Le corrigé reproduit les questions mais non les énoncés cliniques complets des deux cas : les vignettes ci-dessous sont reconstituées à partir des seuls éléments cités dans le corrigé, et signalées comme telles."
     }
   },
@@ -33,9 +37,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 3</b>\n\nCalculez le score de Glasgow du patient. Quelle est la conduite à tenir en urgence ?",
-          "images": [
-            "annales-area/corrige-evcp-2024-area-b/figures/img-008-056.png"
-          ],
+          "images": [],
           "reponseAttendue": "Glasgow : ouverture oculaire 1, réponse verbale 1, réponse motrice 3 → score total 5/15. Conduite à tenir : urgence thérapeutique — intubation orotrachéale pour protection des voies aériennes (GCS ≤ 8) après induction en séquence rapide, ventilation mécanique avec neuroprotection, sédation IVSE par propofol et sufentanil, lutte contre les ACSOS, transfert en USINV ou en réanimation, et bilan complet.",
           "correctionGenerale": "<b>Score de Glasgow</b>\n• Ouverture oculaire = 1\n• Réponse verbale = 1\n• Réponse motrice = 3\n→ <b>Score total = 5/15</b>\n\n<b>Conduite à tenir</b>\n• <b>Urgence thérapeutique</b>\n• <b>Intubation orotrachéale</b> pour protection des voies aériennes (GCS ≤ 8), après induction en séquence rapide\n• Ventilation mécanique après intubation, avec neuroprotection\n• Sédation IVSE : propofol / sufentanil\n• <b>Lutte contre les ACSOS</b>\n• Transfert en USINV / réanimation\n• Bilan complet\n\n<b>Rappel — composantes du score de Glasgow</b>\n• <i>Ouverture oculaire (E)</i> : 4 spontanée ; 3 à la demande ; 2 à la douleur ; 1 aucune\n• <i>Réponse verbale (V)</i> : 5 orientée ; 4 confuse ; 3 mots inappropriés ; 2 sons incompréhensibles ; 1 aucune\n• <i>Réponse motrice (M)</i> : 6 obéit aux ordres ; 5 localisation de la douleur ; 4 retrait ; 3 flexion anormale ; 2 extension ; 1 aucune"
         },
@@ -56,9 +58,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 6</b>\n\nQuelle est votre prise en charge en urgence ?",
-          "images": [
-            "annales-area/corrige-evcp-2024-area-b/figures/img-008-057.png"
-          ],
+          "images": [],
           "reponseAttendue": "Monitorage intensif en réanimation ; antibiothérapie probabiliste en urgence, IV, à large spectre (par exemple pipéracilline-tazobactam 4 g puis 16 g/jour au PSE, ± vancomycine selon le contexte) après prélèvements, en bithérapie avec l’amikacine 25 mg/kg/jour, réévaluée à H48 ; hémisuccinate d’hydrocortisone 200 mg/jour ; ventilation protectrice 6 à 8 mL/kg avec pression de plateau < 30 cmH₂O ; retrait du cathéter s’il est suspect et selon le différentiel de pousse ; expansion volémique et vasopresseurs (noradrénaline) si l’hypotension persiste ; recherche et contrôle du foyer infectieux.",
           "correctionGenerale": "• Monitorage intensif, réanimation\n• <b>Antibiothérapie probabiliste en urgence, IV, à large spectre</b> (ex. : pipéracilline-tazobactam 4 g puis 16 g/jour au PSE ± vancomycine selon le contexte) après prélèvements, + <b>bithérapie par amikacine 25 mg/kg/jour</b> ; réévaluation à H48\n• Hémisuccinate d’hydrocortisone 200 mg/jour\n• Ventilation protectrice 6 à 8 mL/kg, pression de plateau < 30 cmH₂O\n• Retrait du cathéter s’il est suspect et selon le différentiel de pousse\n• Expansion volémique, vasopresseurs (noradrénaline) si hypotension persistante\n• Recherche et contrôle du foyer infectieux\n\n<b>Prise en charge du choc septique (SFAR/SRLF)</b>\n• <i>Suspicion de sepsis grave</i> → prélever hémocultures, examens complémentaires\n• <i>Expansion volémique</i> → 30 mL/kg de cristalloïdes\n• <i>Antibiothérapie probabiliste</i> → dans l’heure, suivant le diagnostic\n• <i>Vasopresseur (noradrénaline)</i> → si PAM < 65 mmHg malgré remplissage\n• <i>Contrôle du foyer</i> → retrait de cathéter, drainage, chirurgie si besoin"
         },
@@ -76,7 +76,8 @@
           "reponseAttendue": "La loi Leonetti-Claeys (2016) : décision collégiale, inscrite dans le dossier ; prise en compte des directives anticipées et de la personne de confiance ; proportionnalité des soins et refus de l’obstination déraisonnable ; possibilité d’une sédation profonde et continue maintenue jusqu’au décès en cas de souffrance réfractaire.",
           "correctionGenerale": "<b>Cadre légal : loi Leonetti-Claeys (2016)</b>\n• Décision collégiale, inscrite dans le dossier\n• Prise en compte des directives anticipées / de la personne de confiance\n• Proportionnalité des soins, refus de l’obstination déraisonnable\n• Possibilité de sédation profonde et continue maintenue jusqu’au décès si souffrance réfractaire"
         }
-      ]
+      ],
+      "publication": "retiree"
     },
     {
       "label": "Annales - Anesthésie-Réanimation - 2024 - EVCP - Cas clinique 2",
@@ -124,9 +125,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 6</b>\n\nQuelle est la conduite à tenir devant une intubation impossible malgré plusieurs techniques ?",
-          "images": [
-            "annales-area/corrige-evcp-2024-area-b/figures/img-009-065.png"
-          ],
+          "images": [],
           "reponseAttendue": "Ne pas multiplier les tentatives : la priorité reste l’oxygénation. Ventilation au masque si possible ; utilisation d’un dispositif supraglottique (masque laryngé de 2ᵉ génération) ; si la ventilation est impossible, césarienne avec masque laryngé ou cricothyroïdotomie d’urgence.",
           "correctionGenerale": "• <b>Ne pas multiplier les tentatives. La priorité reste l’oxygénation.</b>\n• Ventilation au masque si possible\n• Utilisation d’un dispositif supraglottique (masque laryngé de 2ᵉ génération)\n• Si ventilation impossible : césarienne avec masque laryngé, ou cricothyroïdotomie d’urgence\n\n<b>Algorithme d’intubation difficile en obstétrique (SFAR 2022)</b>\n1. Préoxygénation optimale\n2. 2 tentatives maximum d’intubation (vidéolaryngoscope recommandé)\n3. Si échec → dispositif supraglottique (masque laryngé de 2ᵉ génération)\n4. Si ventilation impossible → césarienne immédiate avec masque laryngé ou cricothyroïdotomie\n5. Limiter l’hypoxémie materno-fœtale"
         },

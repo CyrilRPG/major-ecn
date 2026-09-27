@@ -1,0 +1,258 @@
+{
+  "hostname": "mrrgfnirpwsknuyiwcqy.supabase.co",
+  "date": "2026-09-28",
+  "operations": [
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "e9e0034d-7bdd-49cd-97e6-d7f033e526ba",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Médecine d’urgence - 2018 - EVCF — Q5 : valeurs du LCR : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "8e51f6be-e80c-48ed-be32-c9fbe1472b8c",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Médecine d’urgence - 2020 - EVCF — Q6 : valeurs de la gazométrie : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "da9a5181-55ba-4b90-8c57-eab227ab9d3c",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Médecine d’urgence - 2020 - EVCP - Sujet 1 — Q4 (et Q5 qui en dépend) : tracé ECG : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "a4346952-0ad8-4d78-8237-0ce1ac00792d",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Médecine d’urgence - 2020 - EVCP - Sujet 2 — Q3 : résultats (biologie, β-hCG, échographie) ; Q6 : image d’échographie : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "fba102bf-0b13-4fed-9b41-44376993822b",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Médecine d’urgence - 2021 - EVCF — Q12 : tracé ECG : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "71cd312f-cd01-44ef-a265-c2171df84c71",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Médecine d’urgence - 2021 - EVCP - Sujet 1 — Q1 : observation (constantes, examen) : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "d27305ca-118a-43b9-8163-68ccb27b104b",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Médecine d’urgence - 2021 - EVCP - Sujet 2 — Q3 : constantes à l’arrivée ; Q5 : gaz du sang : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "64f60e69-4dd1-4807-9799-2ec26828989b",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Psychiatrie - 2009 - EVCP — cas entier : observation clinique : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "ecbd9793-049a-4cca-ab24-5a7f609d2328",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Psychiatrie - 2014 - EVCP — cas entier : observation clinique : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "04f7f004-0ba9-4e7c-9ca3-f82dea1cb909",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Médecine générale - 2014 - EVCP — Q28 : posologie d’interdose proposée par le sujet : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "80e91e13-5e36-4fc1-a888-4b1bc660a3e2",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCF - Sujet 1 — Q1 à Q8 : vignette, ionogramme, traitement, évolution : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "c53ba00e-4121-476d-9c02-79971633689e",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCF - Sujet 2 — Q1, Q2, Q4 à Q6 : vignette, hémogramme : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "3830de35-4f7f-42a2-b23e-4141e93114c1",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCF - Sujet 3 — Q1 à Q3, Q5 : vignette, traitement : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "a445e3cc-97a5-449d-bbc3-8c6f9764c8c9",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Gériatrie - 2018 - EVCF - Sujet 4 — Q2, Q3 : âge, sexe, antécédents (CHA₂DS₂-VASc) : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "10581313-53e4-41ac-a841-fac4aa6ee568",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Gériatrie - 2020 - EVCP - Sujet 1 — Q1, Q2 : signes cliniques, biologie : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "32c4b29b-8f7a-4cd9-9cc2-de969cc27758",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Gériatrie - 2021 - EVCP — Q5, Q9 à Q12 : imagerie cérébrale, ECG, évolution : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "d076114a-5b38-44de-ba95-b16e10b5f5d7",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Anesthésie-Réanimation - 2024 - EVCP - Cas clinique 1 — Q3, Q7 : examen neurologique, hémocultures et cathéter : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "d3e65958-b486-475a-ab08-aea589059fb0",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Anesthésie-Réanimation - 2025 - EVCP - Dossier 1 — Q8 : photographie de la carte de contrôle ultime de l’épreuve : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "5f2204c9-e02b-40f3-bf30-dbdd2add3f5b",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Orthopédie - 2023 - EVCP - Dossier canal lombaire étroit — Q2, Q3 : radiographie, IRM : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "7d47b72d-f961-4e18-bc5b-39a940addf4a",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Pneumologie - 2023 - EVCP - Dossier 2 — Q2 : bilan biologique « ci-joint », angioscanner : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    },
+    {
+      "action": "update",
+      "table": "qcm_series",
+      "id": "12eb683b-0a3a-4779-b137-eeb524f3b704",
+      "before": {
+        "allowed_offers": null
+      },
+      "after": {
+        "allowed_offers": []
+      },
+      "reason": "Annales - Pneumologie - 2023 - EVCF — Q6 : image du scanner : absent des sources Annales/ et de contenus/ ; série retirée le 28/09/2026 (demande de Cyril)."
+    }
+  ]
+}

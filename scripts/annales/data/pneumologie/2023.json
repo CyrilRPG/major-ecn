@@ -123,7 +123,8 @@
           "reponseAttendue": "Interruption si l’évolution est favorable à 6 mois ; poursuite s’il apparaît un nouvel élément anamnestique en faveur d’un facteur persistant majeur. Pour la suite : suivi des D-dimères et réévaluation à la recherche d’un syndrome post-thrombotique.",
           "correctionGenerale": "• <b>Interruption</b> si évolution favorable à 6 mois\n• <b>Poursuite</b> s’il existe un nouvel élément anamnestique en faveur d’un facteur persistant majeur\n\n<b>Avenir</b>\n• <b>Suivi des D-dimères</b>\n• <b>Réévaluation du syndrome post-thrombotique</b>"
         }
-      ]
+      ],
+      "publication": "retiree"
     },
     {
       "label": "Annales - Pneumologie - 2023 - EVCF",
@@ -313,7 +314,8 @@
           "correctionGenerale": "• <b>1 cancer sur 5</b>\n• Donc <b>20 %</b>"
         }
       ],
-      "note": "<b>Questions isolées — 25 questions.</b>\n\nLes énoncés sont ceux du sujet officiel, projetés en séance sous forme d’images scannées et retranscrits ici. Le conférencier signale que le scanner thoracique appelé par la question 6 n’était pas disponible dans les énoncés qu’il a pu récupérer."
+      "note": "<b>Questions isolées — 25 questions.</b>\n\nLes énoncés sont ceux du sujet officiel, projetés en séance sous forme d’images scannées et retranscrits ici. Le conférencier signale que le scanner thoracique appelé par la question 6 n’était pas disponible dans les énoncés qu’il a pu récupérer.",
+      "publication": "retiree"
     }
   ]
 }

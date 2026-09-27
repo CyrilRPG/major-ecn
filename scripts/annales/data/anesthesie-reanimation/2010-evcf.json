@@ -3,7 +3,11 @@
     "ANNALES AREA/EVCF 2010 correction.pdf": {
       "atelier": "annales-area/evcf-2010-correction",
       "sujetOfficiel": "Annales/Sujets/evcf_2010_0.pdf",
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-002-000.png": "Audit images 28/09/2026 (#439) : figure du corrigé qui donne la réponse avant que l’élève réponde — Équation de Stewart-Hamilton = réponse",
+        "img-003-003.png": "Audit des images (28/09/2026, #649) : Formule de l'extraction en O2 (corrigé), sans rapport avec le positionnement des cathéters ; détachée de la question.",
+        "img-003-002.jpg": "Audit des images (28/09/2026, #704) : Encadré des formules DO2/VO2 (corrigé), sans rapport avec le positionnement des cathéters ; détachée de la question."
+      },
       "remarque": "Le corrigé (Florent Sigwalt) ne numérote que les réponses : les intitulés officiels ne sont pas repris. Vignette, données intercalées et intitulés sont ceux du sujet officiel scanné (Annales/Sujets/evcf_2010_0.pdf, pages 2 et 3, lues à l’image)."
     }
   },
@@ -110,9 +114,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°14</b>\n\nUn cathéter de Swan-Ganz a été mis en place. Les données sont notamment :\n• un débit cardiaque de 7 L/min ;\n• une saturation artérielle pulmonaire en oxygène de 80 %.\n\nQuelle est la technique utilisée par le cathéter de Swan-Ganz pour mesurer le débit cardiaque ?",
-          "images": [
-            "annales-area/evcf-2010-correction/figures/img-002-000.png"
-          ],
+          "images": [],
           "reponseAttendue": "La thermodilution pulmonaire, selon l’équation de Stewart-Hamilton, qui fait intervenir une variation de température et le débit cardiaque.",
           "correctionGenerale": "Thermodilution pulmonaire / équation de Stewart-Hamilton, faisant intervenir une variation de température et le débit cardiaque.\n\nCO = [(T sang − T bolus) × V bolus × k] / ∫ΔT sang × dT"
         },
@@ -147,10 +149,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°19</b>\n\nUn cathéter de Swan-Ganz n’a pas été mis en place. Un cathéter de thermodilution transpulmonaire (technique Picco) est mis en place.\n\nDécrivez le positionnement des cathéters.",
-          "images": [
-            "annales-area/evcf-2010-correction/figures/img-003-002.jpg",
-            "annales-area/evcf-2010-correction/figures/img-003-003.png"
-          ],
+          "images": [],
           "reponseAttendue": "Une voie veineuse centrale en territoire cave supérieur (indispensable) et un cathéter artériel fémoral, indispensable pour capter le bolus froid provenant de la circulation cave supérieure.",
           "correctionGenerale": "• VVC en système cave supérieur (indispensable)\n• KT artériel fémoral (indispensable pour capter le bolus froid provenant de la circulation cave supérieure)"
         },

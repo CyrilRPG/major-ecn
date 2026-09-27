@@ -92,9 +92,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\nLa patiente s’inquiète du risque de trisomie 21 en raison de son âge. Quelles informations lui donnez-vous ?",
-          "images": [
-            "annales-gynecologie/annales-2019-gyneco/figures/img-014-056.png"
-          ],
+          "images": [],
           "reponseAttendue": "Le risque combiné est proposé à toutes les femmes ; il est calculé à partir de l’âge maternel, de la clarté nucale et des marqueurs sériques du premier trimestre. Le risque de trisomie 21 augmente avec l’âge.",
           "correctionGenerale": "• Risque combiné proposé à toutes les femmes, calculé à partir de l’âge maternel, de la clarté nucale et des marqueurs sériques au premier trimestre\n• <b>Augmentation du risque de trisomie 21 avec l’âge</b>\n\n<i>La figure représente le risque de trisomie 21 en fonction de l’âge maternel : quasi nul jusqu’à 30 ans, il augmente ensuite de façon exponentielle pour dépasser 3 % au-delà de 45 ans.</i>\n\n<i>Source : CNGOF.</i>"
         },
@@ -150,11 +148,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nLes saignements se poursuivent. Quelles sont vos alternatives stratégiques ?",
-          "images": [
-            "annales-gynecologie/annales-2019-gyneco/figures/img-023-094.jpg",
-            "annales-gynecologie/annales-2019-gyneco/figures/img-023-095.jpg",
-            "annales-gynecologie/annales-2019-gyneco/figures/img-024-100.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Un ballon de tamponnement intra-utérin, puis, en cas de persistance : si la patiente est stable hémodynamiquement, une embolisation radiologique (avec transfert de la patiente) ; si elle n’est pas stable, une reprise chirurgicale par voie haute — points de capitonnage, triple ligature étagée, ligature des artères hypogastriques, hystérectomie d’hémostase.",
           "correctionGenerale": "• <b>Ballon de tamponnement intra-utérin</b>, puis si persistance :\n• <b>Si stable hémodynamiquement</b> : embolisation radiologique (transfert de la patiente)\n• <b>Si non stable</b> : reprise chirurgicale par voie haute — point de capitonnage, triple ligature étagée, ligature des hypogastriques, hystérectomie d’hémostase\n\n<i>Les figures illustrent les techniques chirurgicales : capitonnage utérin (technique de Cho, <i>haemostatic brace suture</i>) et triple ligature vasculaire étagée.</i>"
         }
@@ -178,9 +172,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\nQuelles sont les principales contre-indications à la contraception œstroprogestative ?",
-          "images": [
-            "annales-gynecologie/annales-2019-gyneco/figures/img-026-109.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Facteurs de risque artériels : antécédents familiaux au 1ᵉʳ degré d’IDM ou d’AVC avant 55 ans chez l’homme ou 65 ans chez la femme, hypertension artérielle, dyslipidémie non contrôlée, diabète insulino-dépendant si le diabète évolue depuis plus de 20 ans ou s’il existe des complications vasculaires, migraine avec aura. Facteurs de risque veineux : thrombophilie biologique connue, antécédents familiaux au 1ᵉʳ degré de MVTE avant 50 ans. Sont possibles en l’absence d’autre facteur de risque : âge > 35 ans, surpoids et obésité, tabac > 15 cigarettes/jour, dyslipidémie contrôlée, diabète de type II (en seconde intention), migraine simple.",
           "correctionGenerale": "<i>La réponse est donnée par le tableau ci-dessus.</i>\n\n<b>Facteurs de risque artériel — utilisation d’une COP</b>\n• Âge > 35 ans : possible si pas d’autre FDRV\n• Surpoids, obésité : possible si pas d’autre FDRV\n• Tabac > 15 cigarettes/jour : possible si pas d’autre FDRV\n• Antécédents familiaux au 1ᵉʳ degré d’IDM ou d’AVC avant 55 ans (homme) ou 65 ans (femme) : <b>contre-indication</b>\n• Hypertension artérielle : <b>contre-indication</b>\n• Dyslipidémie : non contrôlée → contre-indication ; contrôlée → possible si pas d’autre FDRV ; contre-indication relative si la dyslipidémie est survenue avec la COP\n• Diabète insulino-dépendant : <b>contre-indication si délai du diabète > 20 ans ou si complications vasculaires</b>\n• Diabète de type II : possible si pas d’autre FDRV, mais en seconde intention (1ᵉʳ choix : contraception microprogestative ou DIU au cuivre)\n• Migraine avec aura : <b>contre-indication</b>\n• Migraine simple : possible si pas d’autre FDRV\n\n<b>Facteurs de risque veineux — utilisation d’une COP</b>\n• Âge > 35 ans : possible si pas d’autre FDRV\n• Surpoids, obésité : possible si pas d’autre FDRV\n• Thrombophilie biologique connue : <b>contre-indication</b>\n• Antécédents familiaux au 1ᵉʳ degré de MVTE avant 50 ans : <b>contre-indication</b>"
         },

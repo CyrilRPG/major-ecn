@@ -3,7 +3,12 @@
     "ANNALES AREA/Correction EVCF 2013.pdf": {
       "atelier": "annales-area/correction-evcf-2013",
       "sujetOfficiel": null,
-      "figuresIgnorees": {}
+      "figuresIgnorees": {
+        "img-003-000.png": "Audit images 28/09/2026 (#464) : image décorative, vide ou hors sujet — Logo SFAR avec bandeau noirci, sans contenu",
+        "img-006-003.png": "Audit images 28/09/2026 (#313) : figure du corrigé qui donne la réponse avant que l’élève réponde — Pictogramme des délais de jeûne (6 h / 4 h / 2 h) = réponse",
+        "img-004-002.png": "Audit des images (28/09/2026, #788) : Diapositive « Facteurs déterminant Falv/Finsp » = la réponse ; détachée de la question.",
+        "img-003-001.png": "Audit des images (28/09/2026, #900) : Logo SFAR (décoratif) ; détachée de la question."
+      }
     },
     "ANNALES AREA/EVCF 2013 correction.pdf": {
       "atelier": "annales-area/evcf-2013-correction",
@@ -65,10 +70,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°7</b>\n\nQuels sont les principes de la prise en charge initiale du choc anaphylactique ?",
-          "images": [
-            "annales-area/correction-evcf-2013/figures/img-003-000.png",
-            "annales-area/correction-evcf-2013/figures/img-003-001.png"
-          ],
+          "images": [],
           "reponseAttendue": "Confirmer le diagnostic et éliminer les diagnostics différentiels, appeler à l’aide, interrompre le produit suspecté, faire venir le chariot d’urgence ; traiter par oxygène pur et contrôle des voies aériennes, adrénaline IVD titrée de 0,1 à 0,2 mg toutes les 1 à 2 minutes (bolus augmentés à 1-5 mg puis IVSE 0,2 mg/h si besoin), remplissage vasculaire rapide, noradrénaline ou glucagon en cas d’inefficacité, salbutamol en cas de bronchospasme après l’adrénaline, prélèvements précoces et hémisuccinate d’hydrocortisone 200 mg IVD toutes les 4 heures.",
           "correctionGenerale": "L’aide cognitive SFAR « Anaphylaxie grade III / IV (choc, bronchospasme) » ci-dessus détaille la conduite à tenir.\n\n<b>Confirmer</b> : hypotension, tachycardie, bronchospasme, rash (retardé) et angio-œdème, arrêt cardio-respiratoire.\n<b>Éliminer</b> : embolie pulmonaire ou amniotique, IDM, surdosage anesthésique, pneumothorax ou obstruction trachéo-bronchique, hémorragie.\n\n<b>Appel à l’aide — interrompre l’administration du produit suspecté — faut-il arrêter l’intervention ? — faire venir le chariot d’urgence.</b>\n\n<b>Traiter</b>\n• Oxygène pur et contrôle des voies aériennes\n• Adrénaline IVD (ampoule de 1 mg diluée dans 10 mL = 0,1 mg/mL) : titration de 0,1 à 0,2 mg toutes les 1 à 2 min ; si l’objectif tensionnel n’est pas atteint, augmenter les bolus de 1 à 5 mg ; adrénaline IVSE à débuter à 0,2 mg/h\n• Remplissage vasculaire rapide : cristalloïdes (30 mL/kg) puis amidons (30 mL/kg)\n• En cas d’inefficacité de l’adrénaline : noradrénaline IVSE ; glucagon 1 à 2 mg IVD toutes les 5 min (patients sous bêtabloquants) ; options : bleu de méthylène 1 à 3 mg IVD, sugammadex 16 mg/kg si curares stéroïdiens impliqués\n• Bronchospasme : en cas d’hypotension artérielle, adrénaline AVANT salbutamol ; salbutamol spray dans la sonde d’intubation, salbutamol IVD 0,1 à 0,2 mg, salbutamol IVSE 0,3 à 1,5 mg/h\n• Faire impérativement les premiers prélèvements ++\n• Hémisuccinate d’hydrocortisone 200 mg IVD toutes les 4 heures\n\n<b>Femme enceinte</b> : décubitus latéral gauche ; remplissage et adrénaline identiques.\n<b>Arrêt cardiaque réfractaire</b> : réanimation prolongée, envisager une assistance cardio-circulatoire (ECLS/ECMO).\n<b>Après</b> : surveillance intensive au moins 24 h (récurrence), information et exploration allergologique, déclaration au CRPV."
         },
@@ -82,9 +84,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°9</b>\n\nQuels sont les déterminants du rapport fraction inspirée sur fraction alvéolaire des agents halogénés ?",
-          "images": [
-            "annales-area/correction-evcf-2013/figures/img-004-002.png"
-          ],
+          "images": [],
           "reponseAttendue": "Le débit de gaz frais, la ventilation minute, la captation et la solubilité du gaz.",
           "correctionGenerale": "1. Débit de gaz frais\n2. Ventilation minute\n3. Captation\n4. Solubilité du gaz"
         },
@@ -140,9 +140,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°17</b>\n\nQuelles sont les règles de jeûne chez l’enfant de 1 an pour une chirurgie programmée sous AG ?",
-          "images": [
-            "annales-area/correction-evcf-2013/figures/img-006-003.png"
-          ],
+          "images": [],
           "reponseAttendue": "6 heures pour les solides et le lait 2ᵉ âge, 4 heures pour le lait 1ᵉʳ âge, 2 heures pour les liquides clairs, puis rien jusqu’à l’opération.",
           "correctionGenerale": "• <b>− 6 h</b> : solides et lait 2ᵉ âge\n• <b>− 4 h</b> : lait 1ᵉʳ âge\n• <b>− 2 h</b> : liquides clairs\n• Puis rien, jusqu’à l’opération"
         },

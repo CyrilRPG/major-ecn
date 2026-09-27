@@ -4,9 +4,23 @@
       "atelier": "annales-orthopedie/evcp-2020-correction",
       "sujetOfficiel": null,
       "figuresIgnorees": {
+        "img-122-535.jpg": "Audit images 28/09/2026 (#383) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma de la classification de Brooker = réponse (diagnostic « Brooker 4 ») ; hors sujet pour les questions 2 et 3",
+        "img-006-026.jpg": "Audit images 28/09/2026 (#353) : figure du corrigé qui donne la réponse avant que l’élève réponde — Figure « Classification des dysplasies de trochlée selon H. Dejour » = réponse",
+        "img-006-025.png": "Audit images 28/09/2026 (#340) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma de la classification de Dejour (trochlée) = réponse",
+        "img-041-179.jpg": "Audit images 28/09/2026 (#330) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « Les temps opératoires » = réponse",
+        "img-040-174.jpg": "Audit images 28/09/2026 (#271) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « Les temps opératoires » (prothèse inversée) = réponse",
+        "img-010-046.jpg": "Audit images 28/09/2026 (#206) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma des index Caton-Deschamps / Blackburne-Peel / Insall-Salvati = réponse",
+        "img-010-045.png": "Audit images 28/09/2026 (#395) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « Hauteur rotulienne – index de Caton-Deschamps » = réponse",
+        "img-098-430.png": "Audit des images (28/09/2026, #1305) : capture de navigateur « Présentation clinique » (corrigé) ; détachée de la question.",
+        "img-012-056.jpg": "Audit des images (28/09/2026, #1304) : scanner du genou annoté avec la mesure TA-GT (c'est la réponse) ; identifiant patient avec âge et date d'examen masqués ; détachée de la question.",
         "img-030-131.png": "aplat gris uniforme servant de masque de diapositive, sans aucun contenu",
         "img-042-184.png": "photographie décorative de fond de diapositive (pile de livres), sans contenu médical",
-        "img-042-185.png": "photographie décorative de fond de diapositive, sans contenu médical"
+        "img-042-185.png": "photographie décorative de fond de diapositive, sans contenu médical",
+        "img-012-057.jpg": "Audit des images (28/09/2026, #546) : TDM des genoux : date de naissance, âge, sexe, date/heure et n° d'examen en en-tête (masqués) ; mesures de bascule rotulienne tracées = la réponse (détachée) ; mention « Dr Antoine Combes © » ; détachée de la question.",
+        "img-030-130.png": "Audit des images (28/09/2026, #570) : Photo d'illustration (lunettes sur un livre), décorative ; détachée de la question.",
+        "img-010-047.jpg": "Audit des images (28/09/2026, #758) : Tableau Insall-Salvati / Blackburne-Peel / Caton-Deschamps = la réponse ; détachée de la question.",
+        "img-088-383.jpg": "Audit des images (28/09/2026, #855) : Tableau « Éléments cliniques orientant vers une radiculalgie symptomatique » = la réponse ; détachée de la question.",
+        "img-099-435.png": "Audit des images (28/09/2026, #901) : Capture de navigateur tronquée « Présentation clinique » (corrigé) ; détachée de la question."
       }
     }
   },
@@ -32,9 +46,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nQuelle classification permet d’en évaluer la sévérité ?",
           "images": [
-            "annales-orthopedie/evcp-2020-correction/figures/img-002-008.jpg",
-            "annales-orthopedie/evcp-2020-correction/figures/recadre/img-006-025.png",
-            "annales-orthopedie/evcp-2020-correction/figures/img-006-026.jpg"
+            "annales-orthopedie/evcp-2020-correction/figures/img-002-008.jpg"
           ],
           "reponseAttendue": "La classification de Dejour.",
           "correctionGenerale": "Classification de Dejour."
@@ -52,10 +64,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nComment évaluez-vous la hauteur rotulienne ? Citez 2 index différents en précisant comment les mesurer.",
           "images": [
-            "annales-orthopedie/evcp-2020-correction/figures/img-002-008.jpg",
-            "annales-orthopedie/evcp-2020-correction/figures/recadre/img-010-045.png",
-            "annales-orthopedie/evcp-2020-correction/figures/img-010-046.jpg",
-            "annales-orthopedie/evcp-2020-correction/figures/img-010-047.jpg"
+            "annales-orthopedie/evcp-2020-correction/figures/img-002-008.jpg"
           ],
           "reponseAttendue": "L’index de Caton-Deschamps (AT/AP) : patella infera si AT/AP < 0,8, valeurs normales entre 0,8 et 1,2, patella alta au-delà de 1,2.",
           "correctionGenerale": "<b>Index de Caton-Deschamps</b> : AT/AP\n• Patella infera\n• 0,8 < AT/AP < 1,2\n• Patella alta"
@@ -64,9 +73,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°5</b>\n\nVous demandez un bilan TDM complémentaire. Quelles sont les 2 mesures que vous allez évaluer grâce à cet examen afin d’affiner votre analyse de la pathologie ?",
           "images": [
-            "annales-orthopedie/evcp-2020-correction/figures/img-002-008.jpg",
-            "annales-orthopedie/evcp-2020-correction/figures/img-012-056.jpg",
-            "annales-orthopedie/evcp-2020-correction/figures/img-012-057.jpg"
+            "annales-orthopedie/evcp-2020-correction/figures/img-002-008.jpg"
           ],
           "reponseAttendue": "La mesure de la TA-GT et la bascule rotulienne.",
           "correctionGenerale": "• Mesure de la TA-GT\n• Bascule rotulienne"
@@ -155,7 +162,6 @@
           "format": "qroc",
           "enonce": "<b>Question n°1</b>\n\nQuel est votre diagnostic ?",
           "images": [
-            "annales-orthopedie/evcp-2020-correction/figures/recadre/img-030-130.png",
             "annales-orthopedie/evcp-2020-correction/figures/img-031-136.png"
           ],
           "reponseAttendue": "Une fracture de l’extrémité supérieure de l’humérus gauche, céphalo-tubérositaire à 4 parts selon Neer (CT2 de Duparc), avec refend articulaire dans la tête, sur probable ostéoporose.",
@@ -178,10 +184,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nDécrivez succinctement les principes techniques du traitement que vous avez choisi.",
-          "images": [
-            "annales-orthopedie/evcp-2020-correction/figures/img-040-174.jpg",
-            "annales-orthopedie/evcp-2020-correction/figures/img-041-179.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Installation en beach chair, voie delto-pectorale ou supéro-externe, ténotomie du biceps, réduction anatomique et fixation des tubérosités, tige spécifique « fracture », position basse de la glène et tilt inférieur.",
           "correctionGenerale": "• Installation en beach chair\n• Voie delto-pectorale ou supéro-externe\n• Ténotomie du biceps\n• Réduction anatomique et fixation des tubérosités\n• Tige spécifique « fracture »\n• Position basse de la glène\n• Tilt inférieur"
         }
@@ -379,9 +382,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°1</b>\n\nQuels sont les éléments de l’anamnèse et de l’examen clinique à rechercher dans le cadre de l’évaluation fonctionnelle et de l’orientation diagnostique ?",
-          "images": [
-            "annales-orthopedie/evcp-2020-correction/figures/img-088-383.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "À l’interrogatoire : antécédents lombaires, mode et date de début, caractère impulsif, notion de traumatisme, lombalgie associée, rythme mécanique ou inflammatoire, altération de l’état général, troubles sphinctériens. À l’examen : trajet radiculaire, testing musculaire, réflexes ostéotendineux, Lasègue/Léri, déficit neurologique, fièvre, hypoesthésie en selle et tonus du sphincter anal.",
           "correctionGenerale": "<b>Interrogatoire</b>\n• Antécédents lombaires\n• Début des symptômes : brutal / progressif, à l’effort / au repos, impulsif\n• Traumatisme ?\n• Lombalgie associée\n• Rythme : inflammatoire / mécanique\n• Altération de l’état général\n• Mode d’évolution\n• Symptômes associés, notamment troubles sphinctériens évocateurs d’un syndrome de la queue de cheval\n\n<b>Examen clinique</b>\n• Trajet radiculaire\n• Testing musculaire, réflexes ostéotendineux\n• Signe de Lasègue / Léri\n• Signes neurologiques déficitaires\n• Fièvre\n• Hypo-anesthésie en selle, perte de tonus du sphincter anal\n\n<b>Orientation</b>\n• Lombosciatique commune : monoradiculaire (L5 ou S1), rythme mécanique, lombalgies associées, effort déclenchant, intensité rapidement maximale régressant progressivement, antécédents lombaires\n• Lombosciatique symptomatique : pluriradiculaire, rythme inflammatoire, s’aggravant, sans lombalgie ni effort déclenchant, sujet âgé"
         },
@@ -407,10 +408,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nProposez le diagnostic et citez les options thérapeutiques médicales et chirurgicales.",
-          "images": [
-            "annales-orthopedie/evcp-2020-correction/figures/recadre/img-098-430.png",
-            "annales-orthopedie/evcp-2020-correction/figures/recadre/img-099-435.png"
-          ],
+          "images": [],
           "reponseAttendue": "Lombosciatique sur conflit disco-radiculaire L4 et fracture-tassement vertébral L1 cunéiforme de grade II sur probable ostéoporose, sans compression associée. Traitements médicaux : prise en charge de l’ostéoporose, prévention des chutes, antalgiques, reprise rapide de l’activité physique, ceinture de contention. Traitements chirurgicaux : vertébroplastie, ostéosynthèse cimentée, discectomie de libération radiculaire.",
           "correctionGenerale": "<b>Diagnostic</b>\n• Lombosciatique sur conflit disco-radiculaire (L4)\n• Fracture-tassement vertébral L1 cunéiforme, grade II, sur probable ostéoporose, sans compression associée\n\n<b>Traitements médicaux</b>\n• Prise en charge de l’ostéoporose : apport oral de calcium et de vitamine D, bisphosphonates, traitements substitutifs œstrogéniques\n• Prévention des troubles de la marche, de la vue et de l’équilibre\n• Traitement antalgique\n• Reprise rapide de l’activité physique\n• Ceinture de contention\n\n<b>Traitements chirurgicaux</b>\n• Vertébroplastie\n• Ostéosynthèse cimentée\n• Discectomie pour libération de la racine nerveuse"
         }
@@ -511,8 +509,7 @@
           "enonce": "<b>Question n°1</b>\n\nQuel est votre diagnostic ?",
           "images": [
             "annales-orthopedie/evcp-2020-correction/figures/img-119-520.jpg",
-            "annales-orthopedie/evcp-2020-correction/figures/img-119-521.png",
-            "annales-orthopedie/evcp-2020-correction/figures/img-122-535.jpg"
+            "annales-orthopedie/evcp-2020-correction/figures/img-119-521.png"
           ],
           "reponseAttendue": "Une fracture transverse de l’acétabulum gauche, avec descellement de l’implant cotyloïdien et luxation, sur ossifications péri-prothétiques Brooker 4.",
           "correctionGenerale": "• Fracture de l’acétabulum gauche (transverse)\n• Descellement de l’implant cotyloïdien avec luxation\n• Ossification péri-prothétique Brooker 4 (classification de Brooker)"
@@ -522,8 +519,7 @@
           "enonce": "<b>Question n°2</b>\n\nProposez un traitement et décrivez les différentes options chirurgicales.",
           "images": [
             "annales-orthopedie/evcp-2020-correction/figures/img-119-520.jpg",
-            "annales-orthopedie/evcp-2020-correction/figures/img-119-521.png",
-            "annales-orthopedie/evcp-2020-correction/figures/img-122-535.jpg"
+            "annales-orthopedie/evcp-2020-correction/figures/img-119-521.png"
           ],
           "reponseAttendue": "Hospitalisation, bilan préopératoire et reprise chirurgicale unipolaire (en vérifiant la compatibilité des implants et en récupérant le compte rendu opératoire), par voie d’abord postéro-externe de Moore, en prévoyant un anneau de soutien type croix de Kerboull +/− greffe ; autres options : cotyle de reconstruction vissé, jumbo, cup-cage, augments.",
           "correctionGenerale": "• Hospitalisation\n• Bilan préopératoire\n• Reprise chirurgicale unipolaire (attention à la compatibilité des implants, récupérer le compte rendu opératoire)\n• Voie d’abord postéro-externe de Moore\n• Prévoir un anneau de soutien type croix de Kerboull +/− greffe\n• Autres : cotyle de reconstruction vissé, jumbo, cup-cage, augments"
@@ -533,8 +529,7 @@
           "enonce": "<b>Question n°3</b>\n\nComment gérez-vous le traitement par AOD ?",
           "images": [
             "annales-orthopedie/evcp-2020-correction/figures/img-119-520.jpg",
-            "annales-orthopedie/evcp-2020-correction/figures/img-119-521.png",
-            "annales-orthopedie/evcp-2020-correction/figures/img-122-535.jpg"
+            "annales-orthopedie/evcp-2020-correction/figures/img-119-521.png"
           ],
           "reponseAttendue": "Consultation d’anesthésie, arrêt de l’Eliquis et relais par héparinothérapie, avec dosage de l’activité anti-Xa : un taux résiduel inférieur à 30 ng/mL permet d’envisager l’intervention sans augmentation du risque hémorragique.",
           "correctionGenerale": "• Consultation d’anesthésie, arrêt de l’Eliquis, relais par héparinothérapie\n• Dosage de l’activité anti-Xa : un taux résiduel inférieur à 30 ng/mL permet d’envisager une intervention sans aucune augmentation du risque hémorragique"

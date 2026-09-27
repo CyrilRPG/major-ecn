@@ -3,7 +3,77 @@
     "ANNALES ORTHOPEDIE/EVCF2019correction.pdf": {
       "atelier": "annales-orthopedie/evcf2019correction",
       "sujetOfficiel": "Annales/Sujets/EVCF 2019/EVCF 2019/evcf.53.doc",
-      "figuresIgnorees": {}
+      "figuresIgnorees": {
+        "img-012-056.png": "Audit images 28/09/2026 (#492) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma légendé de la terrible triade du coude = réponse",
+        "img-064-313.png": "Audit images 28/09/2026 (#472) : figure du corrigé qui donne la réponse avant que l’élève réponde — Radiographies annotées pente sacrée / incidence / version pelvienne = réponse",
+        "img-045-174.png": "Audit images 28/09/2026 (#390) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « Classification des périprothétiques de hanche » (types B) = réponse (2 questions)",
+        "img-032-126.png": "Audit images 28/09/2026 (#385) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma des gaines des fléchisseurs de la main = réponse",
+        "img-039-146.png": "Audit images 28/09/2026 (#328) : figure du corrigé qui donne la réponse avant que l’élève réponde — Radiographies et photo de pied de Charcot (corrigé), sans rôle d'énoncé ; étiquette déjà masquée",
+        "img-019-090.png": "Audit images 28/09/2026 (#327) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma du point d'angle postéro-externe du genou = réponse",
+        "img-027-124.png": "Audit images 28/09/2026 (#296) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma du ligament scapho-lunaire (corrigé)",
+        "img-011-049.png": "Audit images 28/09/2026 (#262) : figure du corrigé qui donne la réponse avant que l’élève réponde — Dessin du signe du clairon (MdA ©), corrigé",
+        "img-008-036.png": "Audit images 28/09/2026 (#255) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « Salter-Harris Classification » = réponse (2 questions)",
+        "img-015-071.png": "Audit images 28/09/2026 (#252) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma légendé du nerf suprascapulaire (échancrure spino-glénoïdale) = réponse",
+        "img-067-327.png": "Audit images 28/09/2026 (#233) : figure du corrigé qui donne la réponse avant que l’élève réponde — Photographie des yeux d'un patient (syndrome de Claude Bernard-Horner) = réponse (ptosis, myosis) ; visage identifiable",
+        "img-053-211.png": "Audit images 28/09/2026 (#227) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma du biofilm = réponse",
+        "img-014-066.png": "Audit images 28/09/2026 (#203) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma légendé de l'appareil ligamentaire du coude = réponse (faisceau antérieur du LCM)",
+        "img-061-299.jpg": "Audit images 28/09/2026 (#448) : figure du corrigé qui donne la réponse avant que l’élève réponde — Photographie de parage d'une dermohypodermite nécrosante (corrigé) = réponse ; date sans identité",
+        "img-061-298.jpg": "Audit images 28/09/2026 (#316) : figure du corrigé qui donne la réponse avant que l’élève réponde — Photographie de parage chirurgical d'une dermohypodermite nécrosante (corrigé) = réponse ; date incrustée sans identité",
+        "img-060-292.png": "Audit images 28/09/2026 (#399) : figure du corrigé qui donne la réponse avant que l’élève réponde — Photographie de parage d'une dermohypodermite nécrosante (corrigé) = réponse",
+        "img-059-290.png": "Audit images 28/09/2026 (#274) : image décorative, vide ou hors sujet — Mot « TARDIF » flou sur fond noir, sans contenu",
+        "img-059-288.png": "Audit images 28/09/2026 (#489) : image décorative, vide ou hors sujet — Flèche floue sur fond noir, sans contenu",
+        "img-059-286.png": "Audit images 28/09/2026 (#401) : image décorative, vide ou hors sujet — Mot « PRECOCE » flou sur fond noir, sans contenu",
+        "img-059-281.png": "Audit images 28/09/2026 (#200) : image décorative, vide ou hors sujet — Image vide (rectangle blanc sur fond noir), aucun contenu",
+        "img-013-061.png": "Audit images 28/09/2026 (#198) : figure du corrigé qui donne la réponse avant que l’élève réponde — Planche anatomique légendée « tendon conjoint du coraco-biceps » = réponse",
+        "img-058-244.png": "Audit des images (28/09/2026, #1326) : image vide (rectangle gris), sans contenu ; détachée de la question.",
+        "img-015-072.png": "Audit des images (28/09/2026, #1324) : planche anatomique (nerf suprascapulaire encadré) : donne la réponse ; détachée de la question.",
+        "img-060-293.png": "Audit des images (28/09/2026, #1314) : photographie opératoire (excision) : illustration du corrigé ; détachée de la question.",
+        "img-079-381.png": "Audit des images (28/09/2026, #1295) : score de Katagiri : c'est la réponse ; détachée de la question.",
+        "img-059-278.png": "Audit des images (28/09/2026, #1291) : image entièrement noire (vide) ; détachée de la question.",
+        "img-059-284.png": "Audit des images (28/09/2026, #1285) : flèche décorative sur fond noir, sans contenu ; détachée de la question.",
+        "img-041-156.jpg": "Audit des images (28/09/2026, #1268) : planche de Netter (pied, vue latérale) : figure de cours ; détachée de la question.",
+        "img-059-282.png": "Audit des images (28/09/2026, #1264) : photographie clinique de dermohypodermite (illustration du corrigé) ; détachée de la question.",
+        "img-058-236.png": "Audit des images (28/09/2026, #1239) : image vide (rectangle gris), sans contenu ; détachée de la question.",
+        "img-007-031.png": "Audit des images (28/09/2026, #1233) : texte de cours sur la fracture triplane (corrigé) ; détachée de la question.",
+        "img-006-024.png": "Audit des images (28/09/2026, #1229) : diapositive « Manœuvre de Barlow » : c'est la réponse ; détachée de la question.",
+        "img-058-228.png": "Audit des images (28/09/2026, #1216) : image entièrement noire (vide) ; détachée de la question.",
+        "img-058-238.png": "Audit des images (28/09/2026, #1190) : image vide (rectangle gris), sans contenu ; détachée de la question.",
+        "img-061-300.jpg": "Audit des images (28/09/2026, #1184) : photographie de cicatrice (suites de la prise en charge) : figure de corrigé ; détachée de la question.",
+        "img-061-297.jpg": "Audit des images (28/09/2026, #1147) : photographie opératoire (excision / fasciotomie) : montre la prise en charge demandée ; détachée de la question.",
+        "img-058-230.png": "Audit des images (28/09/2026, #1125) : image vide (rectangle gris), sans contenu ; détachée de la question.",
+        "img-060-294.png": "Audit des images (28/09/2026, #1085) : photographie opératoire après excision/greffe (illustration du traitement demandé) ; détachée de la question.",
+        "img-046-179.png": "Audit des images (28/09/2026, #1045) : diapositive « Traitement des périprothétiques de hanche » (Vancouver) : c'est la réponse (2 questions) ; détachée de la question.",
+        "img-049-193.png": "Audit des images (28/09/2026, #1031) : page de livre (© Elsevier Masson) sur la mesure de l'offset : c'est la réponse ; marque d'éditeur ; détachée de la question.",
+        "img-040-151.png": "Audit des images (28/09/2026, #1014) : schéma de l'ostéotomie de Zadek : c'est la réponse à la question de définition ; détachée de la question.",
+        "img-079-382.png": "Audit des images (28/09/2026, #523) : Tableau du score de Mirels = un des trois points demandés ; détachée de la question.",
+        "img-035-128.png": "Audit des images (28/09/2026, #535) : Schéma de l'index radio-ulnaire « 2 mm » = la réponse ; détachée de la question.",
+        "img-022-105.png": "Audit des images (28/09/2026, #538) : Diapositive du patch test (4 grades) = la réponse ; détachée de la question.",
+        "img-058-240.png": "Audit des images (28/09/2026, #552) : Rectangle gris vide (décoratif) ; détachée de la question.",
+        "img-058-229.png": "Audit des images (28/09/2026, #561) : Cadre noir vide (décoratif) ; détachée de la question.",
+        "img-016-077.png": "Audit des images (28/09/2026, #571) : Capture « Passage du nerf supra-scapulaire… (1) (2) » = la réponse ; détachée de la question.",
+        "img-060-291.png": "Audit des images (28/09/2026, #580) : Photo de parage d'une dermohypodermite nécrosante = la prise en charge demandée ; détachée de la question.",
+        "img-044-169.png": "Audit des images (28/09/2026, #584) : Figure « Vancouver classification » = la réponse (deux questions) ; détachée de la question.",
+        "img-071-348.png": "Audit des images (28/09/2026, #612) : Tableau des racines L3-S1 (dermatomes, muscles) = la réponse (deux questions de connaissance) ; détachée de la question.",
+        "img-050-198.png": "Audit des images (28/09/2026, #629) : Planche anatomique du psoas (corrigé) ; détachée de la question.",
+        "img-059-280.png": "Audit des images (28/09/2026, #660) : Photo de dermohypodermite nécrosante marquée (corrigé), l'énoncé ne cite aucune figure ; détachée de la question.",
+        "img-006-025.png": "Audit des images (28/09/2026, #785) : Diapositive « Manœuvre d'Ortolani » = la réponse ; détachée de la question.",
+        "img-029-125.png": "Audit des images (28/09/2026, #804) : Page d'article légendée « Bascule du lunatum (DISI) » = la réponse ; détachée de la question.",
+        "img-021-100.png": "Audit des images (28/09/2026, #819) : Diapositive « Classification de Ahlbäck » = la réponse ; détachée de la question.",
+        "img-060-295.png": "Audit des images (28/09/2026, #836) : Photo de dermohypodermite (corrigé), l'énoncé ne cite aucune figure ; détachée de la question.",
+        "img-027-123.png": "Audit des images (28/09/2026, #839) : Figures d'article sur le ligament scapho-lunaire légendées = la réponse ; détachée de la question.",
+        "img-023-110.jpg": "Audit des images (28/09/2026, #843) : Page de livre « Équilibrage ligamentaire des prothèses du genou » = la réponse ; détachée de la question.",
+        "img-047-184.png": "Audit des images (28/09/2026, #858) : Illustration d'un couple de frottement céramique = la réponse ; détachée de la question.",
+        "img-067-328.png": "Audit des images (28/09/2026, #871) : Diapositive « Syndrome de Pancoast… Claude Bernard-Horner » (corrigé) ; détachée de la question.",
+        "img-059-279.png": "Audit des images (28/09/2026, #880) : Diapositive floue « Clinique : » sur fond noir (vide) ; détachée de la question.",
+        "img-061-296.jpg": "Audit des images (28/09/2026, #899) : Photo de dermohypodermite opérée datée (corrigé) ; profil du patient partiel, non identifiable ; détachée de la question.",
+        "img-058-235.png": "Audit des images (28/09/2026, #929) : Bandeau flou « DHB : Dermo Hypodermite Bactérienne » (décoratif) ; détachée de la question.",
+        "img-068-333.png": "Audit des images (28/09/2026, #948) : Diapositive « Magerl-AO (1994) » = la réponse ; détachée de la question.",
+        "img-006-026.png": "Audit des images (28/09/2026, #949) : Photo de hanches de nourrisson avec angles d'abduction tracés (manœuvre), corrigé ; détachée de la question.",
+        "img-069-338.png": "Audit des images (28/09/2026, #954) : Capture de navigateur du site rhumato.info (imagerie du rachis cervical dans la PR) = la réponse ; détachée de la question.",
+        "img-069-339.png": "Audit des images (28/09/2026, #960) : Page du site rhumato.info (subluxation atloïdo-axoïdienne) = la réponse ; détachée de la question.",
+        "img-034-127.png": "Audit des images (28/09/2026, #971) : Capture d'une publicité (« Devenez Responsable de SPA »), hors sujet ; détachée de la question.",
+        "img-066-322.png": "Audit des images (28/09/2026, #986) : Échelle de cotation musculaire 0-5 = la réponse ; détachée de la question."
+      }
     }
   },
   "series": [
@@ -32,25 +102,21 @@
         {
           "format": "qroc",
           "enonce": "<b>Orthopédie pédiatrique — Question n°3</b>\n\nCiter 2 signes de l’examen clinique permettant de dépister une luxation congénitale de la hanche chez un nouveau-né. Quel examen complémentaire demandez-vous ?",
-          "images": [
-            "annales-orthopedie/evcf2019correction/figures/img-006-024.png",
-            "annales-orthopedie/evcf2019correction/figures/img-006-025.png",
-            "annales-orthopedie/evcf2019correction/figures/img-006-026.png"
-          ],
+          "images": [],
           "reponseAttendue": "Perte du volant d’abduction, manœuvre de Barlow (hanche en place luxable) et manœuvre d’Ortolani (ressaut de rentrée) ; échographie de hanche.",
           "correctionGenerale": "• Perte du volant d’abduction\n• Manœuvre de Barlow : hanche en place, luxable\n• Manœuvre d’Ortolani : ressaut de rentrée\n\n→ Échographie de hanche"
         },
         {
           "format": "qroc",
           "enonce": "<b>Orthopédie pédiatrique — Question n°4</b>\n\nQuelle est la principale complication d’une fracture triplane de la cheville chez l’enfant ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/recadre/img-007-031.png"],
+          "images": [],
           "reponseAttendue": "L’arthrose.",
           "correctionGenerale": "Arthrose."
         },
         {
           "format": "qroc",
           "enonce": "<b>Orthopédie pédiatrique — Question n°5</b>\n\nDécrire la classification de Salter et Harris des fractures touchant le cartilage de croissance.",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-008-036.png"],
+          "images": [],
           "reponseAttendue": "Salter I décollement, II trait métaphysaire, III trait épiphysaire, IV trait métaphyso-épiphysaire, V compression.",
           "correctionGenerale": "• Salter I : décollement\n• Salter II : trait métaphysaire\n• Salter III : trait épiphysaire\n• Salter IV : trait métaphyso-épiphysaire\n• Salter V : compression"
         },
@@ -65,7 +131,7 @@
           "format": "qroc",
           "enonce": "<b>Épaule – coude — Question n°2</b>\n\nQue traduit un signe du clairon positif ?",
           "images": [
-            "annales-orthopedie/evcf2019correction/figures/img-011-049.png",
+            
             "annales-orthopedie/evcf2019correction/figures/img-011-051.png"
           ],
           "reponseAttendue": "Une perte de la rotation externe active, traduisant une atteinte de l’infra-épineux et du petit rond.",
@@ -74,32 +140,28 @@
         {
           "format": "qroc",
           "enonce": "<b>Épaule – coude — Question n°3</b>\n\nComment se définit une terrible triade du coude ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-012-056.png"],
+          "images": [],
           "reponseAttendue": "Luxation du coude, fracture de la tête radiale et fracture de la coronoïde.",
           "correctionGenerale": "• Luxation du coude\n• Fracture de la tête radiale\n• Fracture de la coronoïde"
         },
         {
           "format": "qroc",
           "enonce": "<b>Épaule – coude — Question n°4</b>\n\nQuels sont les éléments constituants du tendon conjoint de l’épaule ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/recadre/img-013-061.png"],
+          "images": [],
           "reponseAttendue": "La courte portion du biceps et le coraco-brachial.",
           "correctionGenerale": "• Courte portion du biceps\n• Coraco-brachial"
         },
         {
           "format": "qroc",
           "enonce": "<b>Épaule – coude — Question n°5</b>\n\nQuel élément de stabilité du coude s’insère sur la facette antéro-médiale du processus coronoïde ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/recadre/img-014-066.png"],
+          "images": [],
           "reponseAttendue": "Le faisceau antérieur du ligament collatéral médial.",
           "correctionGenerale": "Faisceau antérieur du LCM (ligament collatéral médial)."
         },
         {
           "format": "qroc",
           "enonce": "<b>Épaule – coude — Question n°6</b>\n\nOù se situe la compression du nerf supra-scapulaire en cas d’amyotrophie isolée de la fosse infra-épineuse ?",
-          "images": [
-            "annales-orthopedie/evcf2019correction/figures/img-015-071.png",
-            "annales-orthopedie/evcf2019correction/figures/recadre/img-015-072.png",
-            "annales-orthopedie/evcf2019correction/figures/recadre/img-016-077.png"
-          ],
+          "images": [],
           "reponseAttendue": "À l’échancrure spino-glénoïde.",
           "correctionGenerale": "Échancrure spino-glénoïde."
         },
@@ -113,28 +175,28 @@
         {
           "format": "qroc",
           "enonce": "<b>Genou — Question n°1</b>\n\nCiter les éléments constitutifs du point d’angle postéro-externe du genou (PAPE), puis sa fonction.",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-019-090.png"],
+          "images": [],
           "reponseAttendue": "Le tendon poplité, le ligament fibulo-poplité, le complexe ligamentaire postéro-externe (ligament poplité oblique, ligament fabello-fibulaire, ligament poplité arqué), la corne postérieure du ménisque externe et la coque condylienne externe ; il stabilise le genou dans le plan horizontal et constitue le frein primaire à la rotation tibiale externe, surtout à 30° de flexion.",
           "correctionGenerale": "<b>Éléments constitutifs</b>\n• Le tendon poplité\n• Le ligament fibulo-poplité (PFL)\n• Le complexe ligamentaire postéro-externe : ligament poplité oblique, ligament fabello-fibulaire et ligament poplité arqué\n• La corne postérieure du ménisque externe\n• La coque condylienne externe\n\n<b>Fonction du PAPE</b>\n• Stabilisation du genou dans le plan horizontal\n• Frein primaire à la rotation tibiale externe\n• Rôle majeur à 30° de flexion"
         },
         {
           "format": "qroc",
           "enonce": "<b>Genou — Question n°2</b>\n\nDécrire les stades de la classification d’Ahlbäck.",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-021-100.png"],
+          "images": [],
           "reponseAttendue": "Stade 1 : pincement de l’interligne médial inférieur à 50 %. Stade 2 : pincement entre 50 et 100 %, pincement complet en Schuss. Stade 3 : cupule tibiale de moins de 5 mm de profondeur. Stade 4 : cupule tibiale de plus de 5 mm.",
           "correctionGenerale": "• <b>Stade 1</b> : pincement de l’interligne médial inférieur à 50 %\n• <b>Stade 2</b> : pincement compris entre 50 et 100 %, et pincement complet en Schuss\n• <b>Stade 3</b> : existence d’une cupule tibiale inférieure à 5 mm de profondeur\n• <b>Stade 4</b> : existence d’une cupule tibiale supérieure à 5 mm"
         },
         {
           "format": "qroc",
           "enonce": "<b>Genou — Question n°3</b>\n\nÀ quel type d’allergie correspondent les allergies aux métaux ? Quel examen demandez-vous en cas de suspicion ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/recadre/img-022-105.png"],
+          "images": [],
           "reponseAttendue": "Le syndrome ALVAL (aseptic lymphocytic vasculitis associated lesions) ; on demande un test épicutané (patch test), éventuellement complété par un MELISA.",
           "correctionGenerale": "• Syndrome d’<b>ALVAL</b> : <i>aseptic lymphocytic vasculitis associated lesions</i>\n• Test épicutané : patch test\n• (Memory Lymphocyte Immuno Stimulation Assay : MELISA®)"
         },
         {
           "format": "qroc",
           "enonce": "<b>Genou — Question n°4</b>\n\nLors de la réalisation d’une prothèse totale de genou, sur quel(s) espace(s) influe la coupe tibiale ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-023-110.jpg"],
+          "images": [],
           "reponseAttendue": "Sur l’espace en extension et sur l’espace en flexion.",
           "correctionGenerale": "• Espace en extension\n• Espace en flexion"
         },
@@ -148,17 +210,14 @@
         {
           "format": "qroc",
           "enonce": "<b>Main – poignet — Question n°1</b>\n\nDécrivez l’anatomie pratique du ligament scapho-lunaire. Laquelle de ses portions doit impérativement être réparée chez le sujet jeune ?",
-          "images": [
-            "annales-orthopedie/evcf2019correction/figures/recadre/img-027-123.png",
-            "annales-orthopedie/evcf2019correction/figures/img-027-124.png"
-          ],
+          "images": [],
           "reponseAttendue": "Trois portions : dorsale (la plus résistante, celle qu’il faut impérativement réparer), proximale et palmaire.",
           "correctionGenerale": "• Portion dorsale (la plus résistante)\n• Portion proximale\n• Portion palmaire"
         },
         {
           "format": "qroc",
           "enonce": "<b>Main – poignet — Question n°2</b>\n\nEn cas d’instabilité scapho-lunaire chronique, le déplacement peut être en DISI. Que signifie cet acronyme ? Quel est l’os qui bascule, et dans quel sens ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/recadre/img-029-125.png"],
+          "images": [],
           "reponseAttendue": "DISI = Dorsal Intercalated Segment Instability ; le semi-lunaire bascule en flexion dorsale (extension).",
           "correctionGenerale": "• <b>DISI</b> = <i>Dorsal Intercalated Segment Instability</i>\n• Os qui bascule : le <b>semi-lunaire</b>\n• Sens : flexion dorsale (extension)"
         },
@@ -172,21 +231,21 @@
         {
           "format": "qroc",
           "enonce": "<b>Main – poignet — Question n°4</b>\n\nProjection cutanée du cul-de-sac de la gaine des fléchisseurs du 2ᵉ rayon.",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-032-126.png"],
+          "images": [],
           "reponseAttendue": "L’articulation métacarpo-phalangienne du 2ᵉ rayon.",
           "correctionGenerale": "MCP du 2ᵉ rayon."
         },
         {
           "format": "qroc",
           "enonce": "<b>Main – poignet — Question n°5</b>\n\nIl existe des coulisses (compartiments) tendineuses dorsales au niveau de l’extrémité distale du radius. Combien ? Que contient la coulisse du bord radial ? Et celle du bord ulnaire ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/recadre/img-034-127.png"],
+          "images": [],
           "reponseAttendue": "Six compartiments ; le premier (bord radial) contient le long abducteur et le court extenseur du pouce ; le sixième (bord ulnaire) contient l’extenseur ulnaire du carpe.",
           "correctionGenerale": "• Nombre : <b>6</b>\n• Coulisse du bord radial — 1ᵉʳ compartiment : long abducteur du pouce, court extenseur du pouce\n• Coulisse du bord ulnaire — 6ᵉ compartiment : extenseur ulnaire du carpe"
         },
         {
           "format": "qroc",
           "enonce": "<b>Main – poignet — Question n°6</b>\n\nQuelle est la valeur normale de l’index radio-ulnaire distal ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-035-128.png"],
+          "images": [],
           "reponseAttendue": "− 2 mm.",
           "correctionGenerale": "− 2 mm."
         },
@@ -207,21 +266,21 @@
         {
           "format": "qroc",
           "enonce": "<b>Pied et hanche — Question n°3</b>\n\nConcernant le pied de Charcot : quelle en est la définition ? Quelle en est la principale étiologie ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-039-146.png"],
+          "images": [],
           "reponseAttendue": "Une neuro-ostéoarthropathie ; la principale étiologie est le diabète.",
           "correctionGenerale": "• <b>Définition</b> : neuro-ostéoarthropathie\n• <b>Principale étiologie</b> : diabète"
         },
         {
           "format": "qroc",
           "enonce": "<b>Pied et hanche — Question n°4</b>\n\nQuelle est la définition de l’ostéotomie calcanéenne de Zadek ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-040-151.png"],
+          "images": [],
           "reponseAttendue": "Une ostéotomie calcanéenne de fermeture supérieure, par résection d’un coin à base supérieure.",
           "correctionGenerale": "Ostéotomie calcanéenne de fermeture supérieure par résection d’un coin à base supérieure."
         },
         {
           "format": "qroc",
           "enonce": "<b>Pied et hanche — Question n°5</b>\n\nQuelle est la zone anatomique de vulnérabilité du tendon court fibulaire ? Et celle du tendon long fibulaire ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-041-156.jpg"],
+          "images": [],
           "reponseAttendue": "Court fibulaire : la gouttière rétromalléolaire. Long fibulaire : à proximité du tubercule du cuboïde, au niveau du changement de direction du tendon.",
           "correctionGenerale": "• <b>Court fibulaire</b> : gouttière rétromalléolaire\n• <b>Long fibulaire</b> : à proximité du tubercule du cuboïde, au niveau du changement de direction du tendon"
         },
@@ -235,39 +294,35 @@
         {
           "format": "qroc",
           "enonce": "<b>Pied et hanche — Question n°7</b>\n\nDéfinir la classification de Vancouver pour les fractures et décrire le type B.",
-          "images": [
-            "annales-orthopedie/evcf2019correction/figures/img-044-169.png",
-            "annales-orthopedie/evcf2019correction/figures/recadre/img-045-174.png",
-            "annales-orthopedie/evcf2019correction/figures/recadre/img-046-179.png"
-          ],
+          "images": [],
           "reponseAttendue": "Classification des fractures fémorales péri-prothétiques sur PTH ; le type B correspond à un trait passant par la tige fémorale : B1 prothèse scellée, B2 prothèse descellée, B3 prothèse descellée avec faible capital osseux.",
           "correctionGenerale": "Classification des fractures fémorales péri-prothétiques sur PTH.\n\n<b>Type B</b> : trait de fracture qui passe par la tige fémorale\n• <b>B1</b> : prothèse scellée\n• <b>B2</b> : prothèse descellée\n• <b>B3</b> : prothèse descellée avec faible capital osseux\n\nPour les fractures B1 : l’index de fixation restante ; s’il est < 2/3, la fracture est instable → B2."
         },
         {
           "format": "qroc",
           "enonce": "<b>Pied et hanche — Question n°8</b>\n\nDans les prothèses totales de hanche, quel couple de frottement peut être responsable d’un squeaking ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-047-184.png"],
+          "images": [],
           "reponseAttendue": "Le couple céramique-céramique.",
           "correctionGenerale": "Céramique – céramique."
         },
         {
           "format": "qroc",
           "enonce": "<b>Pied et hanche — Question n°9</b>\n\nQu’est-ce que l’offset fémoral ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/recadre/img-049-193.png"],
+          "images": [],
           "reponseAttendue": "La distance séparant le centre de rotation de la hanche de la ligne d’action des muscles abducteurs, perpendiculairement à celle-ci.",
           "correctionGenerale": "L’offset fémoral est la distance séparant le centre de rotation de la hanche de la ligne d’action des muscles abducteurs, perpendiculairement à celle-ci."
         },
         {
           "format": "qroc",
           "enonce": "<b>Pied et hanche — Question n°10</b>\n\nQuelle est l’innervation et la fonction du muscle psoas ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-050-198.png"],
+          "images": [],
           "reponseAttendue": "Principal fléchisseur de hanche, innervé par le nerf fémoral.",
           "correctionGenerale": "• Principal fléchisseur de hanche\n• Nerf fémoral"
         },
         {
           "format": "qroc",
           "enonce": "<b>Infection — Question n°1</b>\n\nDevant une infection chronique sur matériel non descellé, il est classiquement recommandé de procéder au changement du matériel en un ou deux temps. Quel argument bactériologique sous-tend cette attitude ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/recadre/img-053-211.png"],
+          "images": [],
           "reponseAttendue": "La constitution du biofilm (au-delà d’un mois), qui empêche la diffusion des antibiotiques.",
           "correctionGenerale": "Constitution du biofilm (> 1 mois), qui empêche la diffusion des antibiotiques."
         },
@@ -296,33 +351,13 @@
           "format": "qroc",
           "enonce": "<b>Infection — Question n°5</b>\n\nVous êtes appelé en service de médecine interne pour un patient hospitalisé depuis 72 heures pour « érysipèle » de jambe. L’aspect clinique local et général s’aggrave, mais sans signe de choc septique, malgré l’antibiothérapie mise en place dès les urgences. Quelle est votre hypothèse diagnostique ? Quelle prise en charge thérapeutique proposez-vous, et dans quel délai ?",
           "images": [
-            "annales-orthopedie/evcf2019correction/figures/img-058-228.png",
-            "annales-orthopedie/evcf2019correction/figures/img-058-229.png",
-            "annales-orthopedie/evcf2019correction/figures/img-058-230.png",
-            "annales-orthopedie/evcf2019correction/figures/img-058-235.png",
-            "annales-orthopedie/evcf2019correction/figures/img-058-236.png",
-            "annales-orthopedie/evcf2019correction/figures/img-058-238.png",
-            "annales-orthopedie/evcf2019correction/figures/img-058-240.png",
-            "annales-orthopedie/evcf2019correction/figures/img-058-244.png",
-            "annales-orthopedie/evcf2019correction/figures/img-059-278.png",
-            "annales-orthopedie/evcf2019correction/figures/img-059-279.png",
-            "annales-orthopedie/evcf2019correction/figures/img-059-280.png",
-            "annales-orthopedie/evcf2019correction/figures/img-059-281.png",
-            "annales-orthopedie/evcf2019correction/figures/img-059-282.png",
-            "annales-orthopedie/evcf2019correction/figures/img-059-284.png",
-            "annales-orthopedie/evcf2019correction/figures/img-059-286.png",
-            "annales-orthopedie/evcf2019correction/figures/img-059-288.png",
-            "annales-orthopedie/evcf2019correction/figures/img-059-290.png",
-            "annales-orthopedie/evcf2019correction/figures/img-060-291.png",
-            "annales-orthopedie/evcf2019correction/figures/img-060-292.png",
-            "annales-orthopedie/evcf2019correction/figures/img-060-293.png",
-            "annales-orthopedie/evcf2019correction/figures/img-060-294.png",
-            "annales-orthopedie/evcf2019correction/figures/img-060-295.png",
-            "annales-orthopedie/evcf2019correction/figures/img-061-296.jpg",
-            "annales-orthopedie/evcf2019correction/figures/img-061-297.jpg",
-            "annales-orthopedie/evcf2019correction/figures/img-061-298.jpg",
-            "annales-orthopedie/evcf2019correction/figures/img-061-299.jpg",
-            "annales-orthopedie/evcf2019correction/figures/img-061-300.jpg"
+            
+            
+            
+            
+            
+            
+            
           ],
           "reponseAttendue": "Une dermohypodermite bactérienne nécrosante : prise en charge chirurgicale en urgence (U1), avec parage « agressif » et excision à la lame froide des tissus infectés.",
           "correctionGenerale": "• <b>Dermohypodermite bactérienne nécrosante</b>\n• Prise en charge chirurgicale en urgence (U1)\n• Parage « agressif », excision à la lame froide des tissus infectés\n\n<b>Classification des DHB (dermo-hypodermites bactériennes)</b>\n• Non nécrosante (ex. érysipèle) → traitement médical\n• Nécrosante sans fasciite → traitement médical\n• Nécrosante avec fasciite, sans ou avec myosite → traitement médical <i>et</i> chirurgical\n\n<b>Diagnostic</b> : la clinique est pauvre à la phase précoce, d’où un retard diagnostique fréquent +++."
@@ -330,7 +365,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Rachis — Question n°1</b>\n\nComment mesure-t-on l’incidence pelvienne ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-064-313.png"],
+          "images": [],
           "reponseAttendue": "C’est l’angle formé entre une droite passant par le centre des têtes fémorales et le centre du plateau S1, et une droite perpendiculaire au plateau de S1.",
           "correctionGenerale": "Angle formé entre :\n• une droite passant par le centre des têtes fémorales et le centre du plateau S1\n• une droite perpendiculaire au plateau de S1"
         },
@@ -344,41 +379,35 @@
         {
           "format": "qroc",
           "enonce": "<b>Rachis — Question n°3</b>\n\nDans un déficit neurologique, que signifie un muscle coté à 3 ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-066-322.png"],
+          "images": [],
           "reponseAttendue": "Sur l’échelle MRC : une contraction permettant le mouvement contre la pesanteur.",
           "correctionGenerale": "Échelle MRC : contraction permettant le mouvement contre la pesanteur."
         },
         {
           "format": "qroc",
           "enonce": "<b>Rachis — Question n°4</b>\n\nQu’observe-t-on dans le syndrome de Claude Bernard-Horner ?",
-          "images": [
-            "annales-orthopedie/evcf2019correction/figures/img-067-327.png",
-            "annales-orthopedie/evcf2019correction/figures/recadre/img-067-328.png"
-          ],
+          "images": [],
           "reponseAttendue": "Un ptosis, un myosis et une énophtalmie.",
           "correctionGenerale": "• Ptosis\n• Myosis\n• Énophtalmie"
         },
         {
           "format": "qroc",
           "enonce": "<b>Rachis — Question n°5</b>\n\nDans la classification de l’AO ou de Magerl, quel est le mécanisme spécifique du type C ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-068-333.png"],
+          "images": [],
           "reponseAttendue": "Un mécanisme en rotation.",
           "correctionGenerale": "Mécanisme en rotation."
         },
         {
           "format": "qroc",
           "enonce": "<b>Rachis — Question n°6</b>\n\nQuelle est l’atteinte rachidienne la plus fréquente dans une polyarthrite rhumatoïde ancienne ?",
-          "images": [
-            "annales-orthopedie/evcf2019correction/figures/recadre/img-069-338.png",
-            "annales-orthopedie/evcf2019correction/figures/recadre/img-069-339.png"
-          ],
+          "images": [],
           "reponseAttendue": "La luxation atloïdo-axoïdienne.",
           "correctionGenerale": "Luxation atloïdo-axoïdienne."
         },
         {
           "format": "qroc",
           "enonce": "<b>Rachis — Question n°7</b>\n\nLors d’une compression intra-canalaire de la racine L5, quels sont les muscles potentiellement déficitaires ?",
-          "images": ["annales-orthopedie/evcf2019correction/figures/img-071-348.png"],
+          "images": [],
           "reponseAttendue": "Le tibial antérieur, les extenseurs des orteils et les fibulaires.",
           "correctionGenerale": "• Tibial antérieur\n• Extenseurs des orteils\n• Fibulaires"
         },
@@ -420,10 +449,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Tumeurs — Question n°5</b>\n\nDans le cadre du traitement chirurgical d’une métastase d’un cancer du sein de l’extrémité supérieure du fémur, quels sont les 3 points fondamentaux à évaluer en préopératoire ?",
-          "images": [
-            "annales-orthopedie/evcf2019correction/figures/img-079-381.png",
-            "annales-orthopedie/evcf2019correction/figures/img-079-382.png"
-          ],
+          "images": [],
           "reponseAttendue": "Le caractère unique ou multiple de la métastase (chirurgie carcinologique ou palliative), l’espérance de vie (score pronostique de Katagiri) et le risque fracturaire (score de Mirels).",
           "correctionGenerale": "• Métastase unique ou multiple : chirurgie « carcinologique » ou palliative ?\n• Espérance de vie : score pronostique de <b>Katagiri</b>\n• Risque fracturaire : score de <b>Mirels</b>"
         }

@@ -3,7 +3,9 @@
     "ANNALES ORTHOPEDIE/Corrections sujets 2020-2023.pdf": {
       "atelier": "annales-orthopedie/corrections-sujets-2020-2023",
       "sujetOfficiel": null,
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-003-024.png": "Audit des images (28/09/2026, #607) : Classification de Schizas (grades A-D) = élément de la réponse ; détachée de la question."
+      },
       "remarque": "Ce corrigé porte deux dossiers de canal lombaire étroit, l’un de 2020 et l’autre de 2023, absents des diaporamas « EVCP 2020 correction » et « connaissances pratiques-2023 » : ce ne sont pas des doublons de séries, mais le dossier de 2020 est le même cas clinique que le sujet n°8 du diaporama « EVCP 2020 correction » (patiente de 73 ans, thyroïdectomie, deux PTG, hypovitaminose D, tassement de L1) : la vignette et les coupes IRM T2 sagittales et axiales en sont reprises (pages 84 et 91-94), ce corrigé-ci ne reproduisant ni l’énoncé ni l’imagerie. Le PDF a un encodage de police défectueux (« ti » rendu « 5 », « tt » rendu « > ») : le texte a été relu sur le rendu image des pages."
     }
   },
@@ -33,7 +35,12 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nDécrivez l’imagerie.",
-          "images": ["annales-orthopedie/evcp-2020-correction/figures/img-091-396.jpg", "annales-orthopedie/evcp-2020-correction/figures/img-092-401.jpg", "annales-orthopedie/evcp-2020-correction/figures/img-093-406.png", "annales-orthopedie/evcp-2020-correction/figures/img-094-412.png", "annales-orthopedie/corrections-sujets-2020-2023/figures/img-003-024.png"],
+          "images": [
+            "annales-orthopedie/evcp-2020-correction/figures/img-091-396.jpg",
+            "annales-orthopedie/evcp-2020-correction/figures/img-092-401.jpg",
+            "annales-orthopedie/evcp-2020-correction/figures/img-093-406.png",
+            "annales-orthopedie/evcp-2020-correction/figures/img-094-412.png"
+          ],
           "reponseAttendue": "IRM du rachis lombaire en séquences T2, coupes axiales et sagittales, montrant un canal lombaire étroit multiétagé L2-L3 / L3-L4 / L4-L5, prédominant en L5-S1 (classification de Schizas D), avec également une fracture du coin antéro-supérieur de L1 sans recul du mur postérieur et un début de cyphose.",
           "correctionGenerale": "IRM du rachis lombaire en séquences T2, coupes axiales et sagittales, montrant un canal lombaire étroit multiétagé L2-L3 / L3-L4 / L4-L5, majoritairement en L5-S1.\n\n• <b>L2-L3</b> : débord discal et sténose foraminale bilatérale, arthrose des articulations zygapophysaires et hypertrophie des ligaments jaunes, responsables d’une sténose modérée du fourreau dural\n• <b>L3-L4</b> : débord discal et sténose foraminale bilatérale prédominant à gauche, arthrose des articulations zygapophysaires et hypertrophie des ligaments jaunes, responsables d’une sténose modérée du fourreau dural\n• <b>L4-L5</b> : débord discal et sténose foraminale bilatérale, arthrose des articulations zygapophysaires et hypertrophie des ligaments jaunes, responsables d’une sténose modérée du fourreau dural ; discopathie significative avec diminution de la hauteur discale et œdème du plateau inférieur de L4\n• <b>L5-S1</b> : compression antérieure — discopathie importante avec perte de hauteur du disque et œdème des plateaux de L5 et S1, hernie centrale et paramédiane avec compression des racines S1 dans les récessus ; arthrose des articulations zygapophysaires ; hypertrophie des ligaments jaunes responsable d’une sténose sévère du fourreau dural avec disparition de la graisse épidurale\n\n→ <b>Classification de Schizas D</b>\n\nIl existe également une fracture du coin antéro-supérieur de L1, sans recul du mur postérieur, et un début de cyphose."
         },
@@ -48,6 +55,7 @@
     },
     {
       "label": "Annales - Orthopédie - 2023 - EVCP - Dossier canal lombaire étroit",
+      "publication": "retiree",
       "annee": 2023,
       "type": "EVCP",
       "source": "ANNALES ORTHOPEDIE/Corrections sujets 2020-2023.pdf",

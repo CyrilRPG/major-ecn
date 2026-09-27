@@ -3,7 +3,9 @@
     "ANNALES PSYCHIATRIE/correction connaissance 2023.pdf": {
       "atelier": "annales-psychiatrie/correction-connaissance-2023",
       "sujetOfficiel": null,
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-003-021.jpg": "Audit des images (28/09/2026, #751) : Algorithme « Situation de danger diagnostiquée » = la réponse ; détachée de la question."
+      },
       "remarque": "Corrigé reprenant les intitulés officiels des 25 questions de l’épreuve de connaissances fondamentales 2023. Le sujet officiel 2023 n’est pas présent dans le dépôt, mais le corrigé reproduit les questions."
     },
     "ANNALES PSYCHIATRIE/correction sujet 2 2024.pdf": {
@@ -75,9 +77,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 6</b>\n\nDécrivez les deux types de conduite à tenir en urgence en cas de suspicion de trauma par abus sexuel intrafamilial.",
-          "images": [
-            "annales-psychiatrie/correction-connaissance-2023/figures/img-003-021.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Mesures de protection immédiate : signalement judiciaire à destination du procureur (article 40 du CPP) ; si danger immédiat, extraction du milieu avec hospitalisation en UAPED (unité d’accueil des enfants en danger). En situation moins urgente : transmission à la CRIP (cellule de recueil des informations préoccupantes, article 375 du Code civil). Chez l’adulte : rédaction d’un certificat circonstancié et proposition d’aller déposer plainte, avec prise en charge dans des maisons d’accueil.",
           "correctionGenerale": "<b>Mesures de protection immédiate</b>\n1. Signalement judiciaire à destination du procureur (art. 40 CPP)\n2. Si danger immédiat : extraction du milieu avec hospitalisation en <b>UAPED</b> (unité d’accueil des enfants en danger)\n\n• Face à une situation de maltraitance, le médecin doit être le protecteur de l’enfant\n• Situation moins urgente : transmission à la <b>CRIP</b> — cellule de recueil (art. 375 du Code civil)\n• La suspicion d’une situation de danger chez un enfant doit conduire à l’évaluation de l’ensemble des enfants vivant dans les mêmes conditions\n\n<b>Chez l’adulte</b>\n1. Rédaction d’un certificat circonstancié\n2. Proposer d’aller déposer plainte / prise en charge dans des maisons d’accueil\n\n<i>La figure (fig. 10.4) reproduit l’orientation initiale en cas de situation de danger diagnostiquée : devant une situation de maltraitance grave, un refus de soins urgents, une nécessité de protection urgente ou de constat médico-légal urgent (notamment infraction à caractère sexuel datant de moins de 5 jours), l’orientation est hospitalière avec signalement judiciaire ; sinon, ne pas rester seul face à la situation et prendre l’avis du médecin référent Protection de l’enfance du conseil départemental ou du service hospitalier référent.</i>"
         },

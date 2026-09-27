@@ -3,7 +3,20 @@
     "ANNALES GERIATRIE/Correction Annales Géria 2018 à 2021.pdf": {
       "atelier": "annales-geriatrie/correction-annales-geria-2018-a-2021",
       "sujetOfficiel": "Annales/Sujets/EVCF 2019/EVCF 2019/evcf.76.doc",
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-005-016.png": "Audit images 28/09/2026 (#382) : figure du corrigé qui donne la réponse avant que l’élève réponde — Critères de Fried = réponse",
+        "img-001-004.png": "Audit images 28/09/2026 (#357) : figure du corrigé qui donne la réponse avant que l’élève réponde — Texte de correction (traitement selon MMSE) = réponse ; filigrane « …FORMATION » (PAE)",
+        "img-004-013.png": "Audit images 28/09/2026 (#266) : figure du corrigé qui donne la réponse avant que l’élève réponde — Grille de l'échelle NPI = réponse (échelle et cotation)",
+        "img-012-034.png": "Audit images 28/09/2026 (#167) : figure du corrigé qui donne la réponse avant que l’élève réponde — Liste des symptômes du syndrome post-chute = réponse mot pour mot ; filigrane « PAE FORMATION »",
+        "img-008-023.png": "Audit des images (28/09/2026, #1230) : encadré des facteurs de risque de fracture : c'est la réponse ; détachée de la question.",
+        "img-001-002.jpg": "Audit des images (28/09/2026, #1073) : diapositive ADL/IADL : c'est la réponse ; détachée de la question.",
+        "img-008-024.png": "Audit des images (28/09/2026, #1039) : texte du corrigé (FRAX, bilan phosphocalcique…) : c'est la réponse ; détachée de la question.",
+        "img-003-010.png": "Audit des images (28/09/2026, #506) : Diapositive « Confusion selon DSM-5 » = la réponse ; filigrane d'un tiers (« … FORMATION ») ; détachée de la question.",
+        "img-011-031.png": "Audit des images (28/09/2026, #583) : Diapositive « BZD à courte durée de vie / neuroleptique » = la réponse ; filigrane d'un tiers ; détachée de la question.",
+        "img-001-003.png": "Audit des images (28/09/2026, #739) : Liste du bilan biologique = la réponse ; filigrane d'un tiers (« … FORMATION ») ; détachée de la question.",
+        "img-001-005.png": "Audit des images (28/09/2026, #761) : Liste de la prise en charge globale du TNC = la réponse ; filigrane d'un tiers (« … FORMATION ») ; détachée de la question.",
+        "img-019-049.jpg": "Audit des images (28/09/2026, #909) : Diapositive SFMU « Score CHA2DS2-VASc » = la réponse ; logo SFMU ; détachée de la question."
+      },
       "remarque": "Ce corrigé unique couvre huit épreuves (EVCF et EVCP 2018 à 2021) et ne reproduit que ses réponses, numérotées. Seul le sujet officiel EVCF 2019 (code 76) est présent dans le dépôt : ses énoncés ont donc été restitués intégralement. Pour les autres sessions, la question est identifiée par son numéro seul et le fait est signalé sur chaque question. Certaines réponses du corrigé sont fournies uniquement sous forme d’illustration (tableau ou diapositive) : ces figures sont rattachées à la question correspondante et leur contenu est transcrit."
     }
   },
@@ -73,7 +86,8 @@
           "correctionGenerale": "• Arrêt des traitements favorisants (citalopram, hydrochlorothiazide, IPP)\n• Restriction hydrique\n• Apport prudent de NaCl (gélules ou perfusion)\n• <b>Correction lente et progressive de la natrémie</b>"
         }
       ],
-      "note": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur une hyponatrémie avec hyperkaliémie évoquant d’abord une insuffisance surrénalienne aiguë, puis un SIADH sur pneumopathie aiguë communautaire.</i>"
+      "note": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur une hyponatrémie avec hyperkaliémie évoquant d’abord une insuffisance surrénalienne aiguë, puis un SIADH sur pneumopathie aiguë communautaire.</i>",
+      "publication": "retiree"
     },
     {
       "label": "Annales - Gériatrie - 2018 - EVCF - Sujet 2",
@@ -126,7 +140,8 @@
           "correctionGenerale": "<b>Cancer colorectal</b> : inflammation due à la néoplasie, carence martiale sur pertes de sang occultes dues à la néoplasie, dans un contexte d’AEG chez une personne âgée."
         }
       ],
-      "note": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur une anémie microcytaire avec thrombocytose révélant un cancer colorectal chez une personne âgée.</i>"
+      "note": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur une anémie microcytaire avec thrombocytose révélant un cancer colorectal chez une personne âgée.</i>",
+      "publication": "retiree"
     },
     {
       "label": "Annales - Gériatrie - 2018 - EVCF - Sujet 3",
@@ -186,7 +201,8 @@
           "correctionGenerale": "<b>Oui</b>, dépistage de troubles neurocognitifs à effectuer <b>à distance</b> d’un épisode confusionnel."
         }
       ],
-      "note": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur un syndrome confusionnel chez une personne âgée sous tramadol et fluoxétine.</i>"
+      "note": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur un syndrome confusionnel chez une personne âgée sous tramadol et fluoxétine.</i>",
+      "publication": "retiree"
     },
     {
       "label": "Annales - Gériatrie - 2018 - EVCF - Sujet 4",
@@ -199,9 +215,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 1</b>\n\nQuel score utilisez-vous pour évaluer le risque thrombo-embolique de cette fibrillation atriale ?",
-          "images": [
-            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-019-049.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Le score CHA₂DS₂-VASc, score de risque thrombo-embolique de la fibrillation atriale.",
           "correctionGenerale": "<b>Fibrillation atriale — score CHA₂DS₂-VASc</b>\n• <b>C</b> Insuffisance cardiaque / dysfonction VG — 1 point\n• <b>H</b> Hypertension artérielle — 1 point\n• <b>A₂</b> Âge ≥ 75 ans — 2 points\n• <b>D</b> Diabète — 1 point\n• <b>S₂</b> AVC / AIT / événement embolique — 2 points\n• <b>V</b> Pathologie vasculaire (coronaropathie, infarctus, artériopathie périphérique ou plaque aortique) — 1 point\n• <b>A</b> Âge 65-74 ans — 1 point\n• <b>Sc</b> <i>Sex category</i> (féminin) — 1 point\n\n<i>Source : Lip GY et al., Chest 2010.</i>"
         },
@@ -248,7 +262,8 @@
           "correctionGenerale": "<b>Personne de confiance.</b>"
         }
       ],
-      "note": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur l’anticoagulation d’une fibrillation atriale chez une femme de plus de 75 ans et sur la fin de vie.</i>"
+      "note": "<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas l’énoncé ni les intitulés des questions. D’après les réponses, ce sujet porte sur l’anticoagulation d’une fibrillation atriale chez une femme de plus de 75 ans et sur la fin de vie.</i>",
+      "publication": "retiree"
     },
     {
       "label": "Annales - Gériatrie - 2018 - EVCP - Sujet 1",
@@ -504,9 +519,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nQuels symptômes caractérisent un syndrome post-chute ?",
-          "images": [
-            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-012-034.png"
-          ],
+          "images": [],
           "reponseAttendue": "Trouble de la statique en position assise, rétropulsion, impossibilité de se maintenir en orthostatisme, hypertonie oppositionnelle, marche à petits pas, élargissement du polygone de sustentation, fléchissement des genoux, absence de déroulement du pied ; et sur le plan psycho-comportemental, peur de la chute, anxiété, syndrome dépressif, perte d’autonomie et grabatisation.",
           "correctionGenerale": "<b>Signes moteurs et posturaux</b>\n• Trouble de la statique en position assise\n• Rétropulsion\n• Impossibilité de se maintenir en orthostatisme\n• Hypertonie oppositionnelle\n• Marche à petits pas\n• Élargissement du polygone de sustentation\n• Fléchissement des genoux\n• Pas de déroulement du pied\n\n<b>Signes psycho-comportementaux</b>\n• Peur de la chute, anxiété, syndrome dépressif\n• Perte d’autonomie, grabatisation"
         },
@@ -689,9 +702,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 9</b>\n\nAprès une prise en charge adaptée de la pathologie cardiaque, votre patiente est transférée dans votre unité de gériatrie aiguë. Vous avez corrigé tous les troubles somatiques. Néanmoins, elle est toujours confuse, très agitée et anxieuse.\n\nAprès 48 heures passées dans le service et la mise en œuvre de mesures non médicamenteuses habituelles, l’équipe soignante de votre service vous demande de prescrire un traitement. Sur quels arguments décideriez-vous de l’introduction d’un traitement médicamenteux ? Quelle classe thérapeutique et selon quelles modalités ?",
-          "images": [
-            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-011-031.png"
-          ],
+          "images": [],
           "reponseAttendue": "Une benzodiazépine à courte durée de vie (type alprazolam ou lorazépam) en cas de signes d’agitation avec anxiété ; un neuroleptique (type rispéridone ou olanzapine) en cas de signes d’agitation avec délire ou hallucination ; en monothérapie, à la dose la plus faible possible, en cure courte, en préférant les formes buvables.",
           "correctionGenerale": "• <b>BZD à courte durée de vie</b> type alprazolam ou lorazépam, si signes d’agitation <b>avec anxiété</b>\n• <b>Neuroleptique</b> type rispéridone ou olanzapine, si signes d’agitation <b>avec délire ou hallucination</b>\n• <b>Monothérapie</b>\n• Dose la plus faible possible\n• En cure courte\n• Préférer les formes buvables"
         },
@@ -722,18 +733,14 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\nQuels sont chez cette patiente les facteurs de risque de cette maladie osseuse que vous notez à partir de l’observation ? Citez les autres facteurs de risque à rechercher.",
-          "images": [
-            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-008-023.png"
-          ],
+          "images": [],
           "reponseAttendue": "Présents : âge > 60 ans, corticothérapie systémique > 7,5 mg/j pendant plus de 3 mois pour une maladie de Horton. À rechercher : les autres facteurs de risque de fracture en dehors d’une DMO basse.",
           "correctionGenerale": "<b>Présents</b>\n• Âge > 60 ans\n• Corticothérapie systémique > 7,5 mg/j pendant > 3 mois sur maladie de Horton\n\n<b>À rechercher — facteurs de risque de fracture (en dehors d’une DMO basse)</b>\n<i>Chez l’ensemble des patients</i> : fracture de fragilité, vertébrale ou périphérique, de découverte clinique ou radiologique (il faut rechercher une cause tumorale, une ostéoporose secondaire, etc.) ; corticothérapie systémique en cours (≥ 3 mois consécutifs, à une posologie ≥ 7,5 mg/j d’équivalent prednisone) ; autre traitement ou affection responsable d’ostéoporose (hypogonadisme prolongé, hyperthyroïdie évolutive non traitée, hypercorticisme, hyperparathyroïdie primitive) ; âge > 60 ans ; tabagisme ; immobilisation prolongée.\n<i>De plus, chez la femme ménopausée</i> : corticothérapie systémique passée (≥ 3 mois consécutifs, à une posologie ≥ 7,5 mg/j d’équivalent prednisone) ; IMC < 19 ; ménopause avant 40 ans ; fracture de fragilité du col fémoral chez un parent du premier degré.\n<i>Enfin, certains facteurs n’accroissent pas le risque d’ostéoporose mais le risque de chute</i> : alcoolisme ; baisse de l’acuité visuelle ; troubles neuromusculaires et/ou orthopédiques."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nQuels examens complémentaires réalisez-vous dans un premier temps pour explorer cette ostéopathie (justifiez vos réponses) ? Quel(s) traitement(s) proposez-vous dans un premier temps ?",
-          "images": [
-            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-008-024.png"
-          ],
+          "images": [],
           "reponseAttendue": "Calcul du score FRAX et recherche des facteurs de risque d’ostéoporose ; calcium et phosphore sanguins et urinaires ; 25-OH-vitamine D et PTH ; NFS-plaquettes et TSH ; électrophorèse des protéines sériques avec immunofixation.",
           "correctionGenerale": "• Calcul du <b>score FRAX</b> + recherche des FDR d’ostéoporose\n• Calcium, phosphore sanguins et urinaires\n• 25-OH-vitamine D, PTH\n• NFS, plaquettes, TSH\n• EPPS + immunofixation\n\n<i>Cf. recommandations HAS 2019.</i>"
         },
@@ -878,7 +885,8 @@
           "reponseAttendue": "Loi Claeys-Leonetti : recueillir les directives anticipées, puis la personne de confiance, puis la famille ; recueillir le souhait de la patiente ; décision multidisciplinaire ; privilégier les soins de confort et ne pas être invasif.",
           "correctionGenerale": "• <b>Loi Claeys-Leonetti</b>\n• Recueillir les <b>directives anticipées</b> > la <b>personne de confiance</b> > la <b>famille</b>\n• Recueillir le souhait de la patiente\n• Décision multidisciplinaire\n• Privilégier les soins de confort, ne pas être invasif"
         }
-      ]
+      ],
+      "publication": "retiree"
     },
     {
       "label": "Annales - Gériatrie - 2020 - EVCP - Sujet 2",
@@ -943,9 +951,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nQuels sont les critères diagnostiques du syndrome confusionnel selon le DSM-5 ?",
-          "images": [
-            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-003-010.png"
-          ],
+          "images": [],
           "reponseAttendue": "Les critères DSM-5 de la confusion : diminution de la capacité à maintenir son attention ; désorganisation de la pensée ; au moins 2 manifestations parmi obnubilation, anomalies de la perception, perturbation du rythme veille/sommeil, perturbation de l’activité psychomotrice, désorientation, non-reconnaissance de l’entourage, troubles mnésiques ; évolution sur quelques heures à quelques jours avec fluctuations sur la journée ; étiologie organique retrouvée, sinon absence de trouble psychiatrique.",
           "correctionGenerale": "<b>Confusion selon le DSM-5</b>\n• <b>A</b> — Diminution de la capacité à maintenir son attention sur les stimuli externes et à s’intéresser de manière appropriée à de nouvelles stimulations externes\n• <b>B</b> — Désorganisation de la pensée = propos décousus, inappropriés ou incohérents\n• <b>C</b> — Au moins 2 manifestations parmi : obnubilation, anomalies de la perception (hallucinations, etc.), perturbation du rythme veille/sommeil, perturbation de l’activité psychomotrice, désorientation, non-reconnaissance de l’entourage, troubles mnésiques\n• <b>D</b> — Évolution sur quelques heures à quelques jours + fluctuations sur la journée\n• <b>E</b> — Étiologie organique retrouvée, sinon absence de trouble psychiatrique"
         },
@@ -1015,9 +1021,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 13</b>\n\nQuelle échelle évalue les troubles du comportement au cours d’une démence ? Comment est-elle cotée ?",
-          "images": [
-            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-004-013.png"
-          ],
+          "images": [],
           "reponseAttendue": "L’échelle NPI (inventaire neuropsychiatrique), qui cote pour chacun de ses 12 items la gravité de 1 à 3 et le retentissement de 0 à 5.",
           "correctionGenerale": "<b>Échelle NPI</b> — items cotés en gravité (1 à 3) et retentissement (0 à 5) :\n• Idées délirantes\n• Hallucinations\n• Agitation / agressivité\n• Dépression / dysphorie\n• Anxiété\n• Exaltation de l’humeur\n• Apathie / indifférence\n• Désinhibition\n• Irritabilité / instabilité\n• Comportement moteur\n• Sommeil\n• Troubles de l’appétit\n\n<b>Score total</b> : /36 en gravité et /60 en retentissement.\n\n<i>N’en citer que 5 !</i>"
         },
@@ -1080,9 +1084,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 22</b>\n\nQuels critères définissent la fragilité ?",
-          "images": [
-            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-005-016.png"
-          ],
+          "images": [],
           "reponseAttendue": "Les critères de Fried, définissant la fragilité : perte de poids ≥ 5 % par an, fatigue subjective, faible activité physique, vitesse de marche diminuée, faible force de préhension. Trois critères ou plus = fragile ; 1 ou 2 = pré-fragile ; 0 = non fragile.",
           "correctionGenerale": "<b>Critères de Fried</b>\n1. <b>Perte de poids</b> ≥ 5 % par an\n2. <b>Fatigue subjective</b> — épuisé ou fatigué en permanence ou fréquemment ?\n3. <b>Activité physique</b> — aucune activité physique ou moins de 1 à 2 marches par semaine\n4. <b>Vitesse de marche</b> — difficulté à marcher 100 mètres\n5. <b>Force</b> — <i>grip strength</i>\n\n<b>Interprétation</b> : 3 ou plus = fragile ; 1 ou 2 = pré-fragile ; 0 = non fragile."
         },
@@ -1114,9 +1116,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\nQuelles échelles utilisez-vous pour évaluer l’autonomie ?",
-          "images": [
-            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-001-002.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Les échelles ADL et IADL.",
           "correctionGenerale": "<b>ADL</b> (activités de base de la vie quotidienne) : se laver • s’habiller • se rendre aux toilettes • se déplacer • s’alimenter • être continent. → aides techniques, accessibilité.\n\n<b>IADL</b> (activités instrumentales de la vie quotidienne)\n• <i>Entretien quotidien</i> : propreté • alimentation • habillage → aide humaine\n• <i>Activités courantes</i> : téléphone • courses • préparation des aliments • soins personnels • déplacements • bains • entretien ménager • blanchisserie • moyens de transport • traitement • budget"
         },
@@ -1130,9 +1130,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 4</b>\n\nQuel bilan biologique réalisez-vous dans le bilan étiologique d’un trouble neurocognitif ?",
-          "images": [
-            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-001-003.png"
-          ],
+          "images": [],
           "reponseAttendue": "En 1ʳᵉ intention : NFS-plaquettes, ionogramme sanguin, urée, créatinine avec calcul de la clairance, calcémie, glycémie, TSH, albuminémie. En 2ᵉ intention : vitamines B9 et B12, bilan hépatique, sérologies VIH, syphilis et Lyme.",
           "correctionGenerale": "<b>En 1ʳᵉ intention</b>\n• NFS plaquettes\n• Ionogramme sanguin\n• Urée, créatinine, calcul de la clairance\n• Calcémie\n• Glycémie\n• TSH\n• Albuminémie\n\n<b>En 2ᵉ intention</b> : vitamines B9 et B12, bilan hépatique, sérologies VIH, syphilis et Lyme."
         },
@@ -1146,10 +1144,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 6</b>\n\nQuelle prise en charge médicamenteuse et globale proposez-vous devant ce trouble neurocognitif majeur ?",
-          "images": [
-            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-001-004.png",
-            "annales-geriatrie/correction-annales-geria-2018-a-2021/figures/img-001-005.png"
-          ],
+          "images": [],
           "reponseAttendue": "Traitement médicamenteux selon le stade : inhibiteur de l’acétylcholinestérase (rivastigmine) au stade léger (MMSE > 20), antiglutamate (mémantine) au stade sévère (MMSE < 10), l’un ou l’autre au stade modéré (10 < MMSE < 20) — ces molécules ne sont plus remboursées mais gardent leur AMM. Prise en charge globale : annonce du diagnostic, prise en charge ambulatoire et multidisciplinaire, stimulation cognitive, kinésithérapie, orthophonie, psychomotricité, aides à domicile, APA, mesures de protection juridique, soutien aux aidants, accueil de jour ou hébergement temporaire, suivi standardisé tous les 6 mois, ALD 30 avec prise en charge à 100 %.",
           "correctionGenerale": "<b>Traitement médicamenteux selon le stade</b>\n• <b>Stade léger, MMSE > 20</b> : inhibiteur de l’acétylcholinestérase (rivastigmine) — attention aux troubles digestifs et aux TDR/TDC, ECG +++\n• <b>Stade sévère, MMSE < 10</b> : antiglutamate (mémantine)\n• <b>Stade modéré, 10 < MMSE < 20</b> : l’un ou l’autre\n\n<i>À présent non remboursés, mais ont toujours l’AMM.</i>\n\n<b>Prise en charge globale</b>\n• Annonce du diagnostic\n• Prise en charge ambulatoire et multidisciplinaire\n• Stimulation cognitive\n• Kinésithérapie, orthophonie, psychomotricité\n• Aides à domicile\n• APA\n• Mesures de protection juridique\n• Soutien aux aidants\n• Accueil de jour ou hébergement temporaire\n• Suivi standardisé tous les 6 mois (batterie de tests)\n• ALD 30 avec prise en charge à 100 %"
         },
@@ -1209,7 +1204,8 @@
           "reponseAttendue": "Hospitalisation en gériatrie ; mise en condition avec pose de VVP et soluté G5 % ; oxygène aux lunettes avec objectif de SpO₂ > 94 % ; anticoagulation curative selon la fonction rénale (calcul des scores CHA₂DS₂-VASc et HAS-BLED) ; antibiothérapie par amoxicilline 50 mg/kg pendant 7 jours en l’absence d’allergie, avec réévaluation à 48-72 h ; aérosols et kinésithérapie respiratoire si besoin ; correction de la dénutrition ; traitement symptomatique par paracétamol ; mise au fauteuil dès que possible (anticoagulation efficace) ; surveillance clinique et paraclinique.",
           "correctionGenerale": "• Hospitalisation en gériatrie\n• Mise en condition avec pose de VVP + soluté G5 %\n• O₂ aux lunettes, objectif SpO₂ > 94 %\n• <b>Anticoagulation curative</b> selon la fonction rénale (calcul des scores CHA₂DS₂-VASc et HAS-BLED)\n• <b>Antibiothérapie par amoxicilline 50 mg/kg pendant 7 jours</b> en l’absence d’allergie, + réévaluation à 48-72 h\n• Aérosols et kinésithérapie respiratoire si besoin\n• Correction de la dénutrition\n• Traitement symptomatique par paracétamol\n• Mise au fauteuil dès que possible (anticoagulation efficace)\n• Surveillance clinique et paraclinique"
         }
-      ]
+      ],
+      "publication": "retiree"
     }
   ]
 }

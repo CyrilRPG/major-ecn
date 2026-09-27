@@ -3,7 +3,15 @@
     "ANNALES ORTHOPEDIE/EVCF2014correction.pdf": {
       "atelier": "annales-orthopedie/evcf2014correction",
       "sujetOfficiel": null,
-      "figuresIgnorees": {}
+      "figuresIgnorees": {
+        "img-009-037.png": "Audit images 28/09/2026 (#465) : figure du corrigé qui donne la réponse avant que l’élève réponde — Page de livre « Phlegmon des gaines » (capture avec barre des tâches) = réponse",
+        "img-004-016.png": "Audit images 28/09/2026 (#339) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma de la classification de Salter-Harris = réponse",
+        "img-020-085.png": "Audit images 28/09/2026 (#264) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive du corrigé « Anatomie utile » = réponse ; capture avec barre d'onglets",
+        "img-014-058.png": "Audit des images (28/09/2026, #1096) : photographies et schémas opératoires (drainage de gaine) : c'est la réponse ; capture d'écran avec barre des tâches ; détachée de la question.",
+        "img-019-080.png": "Audit des images (28/09/2026, #515) : Capture « Anatomie utile » légendée SE/IE/TM = les muscles demandés ; détachée de la question.",
+        "img-015-063.png": "Audit des images (28/09/2026, #628) : Capture d'un PDF de livre (ténosynovectomie, lambeaux de Hueston) = la réponse ; détachée de la question.",
+        "img-030-127.png": "Audit des images (28/09/2026, #959) : Photo de ponction de genou ramenant du sang = le geste demandé ; détachée de la question."
+      }
     }
   },
   "series": [
@@ -18,7 +26,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Sujet n°1 — Décollement épiphysaire chez l’enfant.</b>\n\nQuestion n°1 : Nommer la classification la plus couramment utilisée et la décrire.",
-          "images": ["annales-orthopedie/evcf2014correction/figures/img-004-016.png"],
+          "images": [],
           "reponseAttendue": "La classification de Salter et Harris : I décollement, II trait métaphysaire, III trait épiphysaire, IV trait métaphyso-épiphysaire, V compression.",
           "correctionGenerale": "<b>Salter et Harris</b>\n• <b>Salter I</b> : décollement\n• <b>Salter II</b> : trait métaphysaire\n• <b>Salter III</b> : trait épiphysaire\n• <b>Salter IV</b> : trait métaphyso-épiphysaire\n• <b>Salter V</b> : compression"
         },
@@ -32,7 +40,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Sujet n°2 — Infection des parties molles de la main.</b>\n\nQuestion n°1 : Définition d’un phlegmon de la main.",
-          "images": ["annales-orthopedie/evcf2014correction/figures/recadre/img-009-037.png"],
+          "images": [],
           "reponseAttendue": "Infection au niveau des gaines des tendons fléchisseurs des doigts, le plus souvent à staphylocoques ou streptocoques.",
           "correctionGenerale": "Infection au niveau des gaines des tendons fléchisseurs des doigts.\nGermes le plus souvent en cause : staphylocoques, streptocoques."
         },
@@ -46,20 +54,14 @@
         {
           "format": "qroc",
           "enonce": "<b>Sujet n°2 — Infection des parties molles de la main.</b>\n\nQuestion n°3 : Décrire les principes du traitement.",
-          "images": [
-            "annales-orthopedie/evcf2014correction/figures/recadre/img-014-058.png",
-            "annales-orthopedie/evcf2014correction/figures/recadre/img-015-063.png"
-          ],
+          "images": [],
           "reponseAttendue": "Prise en charge médico-chirurgicale : urgence chirurgicale avec lavage au bloc, excision de la porte d’entrée, ouverture de la gaine, prélèvements profonds, lavage antérograde abondant, +/− ténosynovectomie et second look, points lâches et rééducation précoce ; antibiothérapie probabiliste par Augmentin IV 48 h puis adaptée à l’antibiogramme.",
           "correctionGenerale": "<b>Prise en charge médico-chirurgicale.</b>\n\n<b>Urgence chirurgicale</b>\n• Lavage au bloc opératoire\n• Excision de la porte d’entrée\n• Ouverture de la gaine\n• Prélèvements bactériologiques profonds\n• Lavage abondant antérograde\n• +/− ténosynovectomie du fléchisseur dans les formes sévères\n• +/− second look\n• Points lâches\n• Rééducation précoce pour lutter contre l’enraidissement\n\n<b>Traitement médical</b>\n• Antibiothérapie probabiliste par Augmentin IV 48 h\n• Secondairement adaptée à l’antibiogramme\n\nLes figures illustrent le lavage simple de la gaine et la prise en charge des formes sévères."
         },
         {
           "format": "qroc",
           "enonce": "<b>Sujet n°3 — La coiffe des rotateurs de l’épaule.</b>\n\nQuestion n°1 : Nommer les muscles qui participent à la coiffe des rotateurs de l’épaule.",
-          "images": [
-            "annales-orthopedie/evcf2014correction/figures/recadre/img-019-080.png",
-            "annales-orthopedie/evcf2014correction/figures/recadre/img-020-085.png"
-          ],
+          "images": [],
           "reponseAttendue": "Supra-épineux, infra-épineux, petit rond et subscapulaire.",
           "correctionGenerale": "• Supra-épineux\n• Infra-épineux\n• Petit rond\n• Subscapulaire"
         },
@@ -73,7 +75,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Sujet n°3 — La coiffe des rotateurs de l’épaule.</b>\n\nQuestion n°3 : Décrire ce test.",
-          "images": ["annales-orthopedie/evcf2014correction/figures/recadre/img-025-106.png"],
+          "images": [
+            "annales-orthopedie/evcf2014correction/figures/recadre/img-025-106.png"
+          ],
           "reponseAttendue": "Patient debout de face, bras tendus pouces vers le bas, 30-40° d’abduction : douleur et faiblesse contre résistance de l’examinateur (manœuvre non tenue).",
           "correctionGenerale": "• Patient debout, de face\n• Bras tendus, pouces vers le bas\n• 30-40° d’abduction\n• Douleurs et faiblesse contre résistance de l’examinateur (manœuvre non tenue)"
         },
@@ -87,7 +91,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Sujet n°4 — Hémarthrose post-traumatique du genou.</b>\n\nQuestion n°2 : Quel geste simple permet d’affirmer la nature hématique de l’épanchement, et quelles précautions doivent l’accompagner ?",
-          "images": ["annales-orthopedie/evcf2014correction/figures/img-030-127.png"],
+          "images": [],
           "reponseAttendue": "La ponction articulaire, qui retrouve un liquide hématique ; elle impose des règles strictes d’asepsie en raison du risque d’inoculum bactérien.",
           "correctionGenerale": "• Ponction articulaire qui retrouve un liquide hématique\n• Règles strictes d’asepsie (risque d’inoculum bactérien)"
         },

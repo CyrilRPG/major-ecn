@@ -4,6 +4,8 @@
       "atelier": "annales-area/evcp-2013-corrige-pae",
       "sujetOfficiel": "Annales/Sujets/evcp_2013/EVCP.03.DOC",
       "figuresIgnorees": {
+        "img-004-028.png": "Audit images 28/09/2026 (#360) : figure du corrigé qui donne la réponse avant que l’élève réponde — Texte du corrigé (relais AVK J-5…J0) = réponse",
+        "img-003-020.png": "Audit des images (28/09/2026, #1271) : tableau du score de Lee : c'est la réponse ; détachée de la question.",
         "img-001-006.png": "Logo PAE Formation de la page de garde : élément de gabarit, sans contenu médical."
       }
     }
@@ -27,9 +29,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\nQuel score d’évaluation clinique du risque de complication cardiovasculaire postopératoire utiliseriez-vous ? Donnez les items constituant ce score clinique.",
-          "images": [
-            "annales-area/evcp-2013-corrige-pae/figures/img-003-020.png"
-          ],
+          "images": [],
           "reponseAttendue": "Le score de Lee : 1 point par item — chirurgie à haut risque (vasculaire sus-inguinale, intrathoracique ou intrapéritonéale), coronaropathie, insuffisance cardiaque, antécédent d’AVC ou d’AIT ischémique, diabète sous insulinothérapie, insuffisance rénale chronique (créatinine > 2,0 mg/dL soit 177 µmol/L). Le score de Lee clinique reprend les mêmes items à l’exclusion du critère chirurgical.",
           "correctionGenerale": "<b>Score de risque cardiaque de Lee</b> — 1 point par item :\n• <b>Chirurgie à haut risque</b>, définie par une chirurgie vasculaire sus-inguinale, intrathoracique ou intrapéritonéale <i>(item absent du score de Lee « clinique »)</i>\n• <b>Coronaropathie</b>, définie par un antécédent d’infarctus du myocarde, un angor clinique, l’utilisation de nitrés, une onde Q sur l’ECG ou un test non invasif de la circulation coronaire positif\n• <b>Insuffisance cardiaque</b>, définie par un antécédent d’insuffisance cardiaque congestive, d’œdème pulmonaire, une dyspnée nocturne paroxystique, des crépitants bilatéraux ou un galop B3, ou une redistribution vasculaire radiologique\n• <b>Antécédent d’accident vasculaire cérébral ischémique</b> ou d’accident cérébral ischémique transitoire\n• <b>Diabète</b> avec insulinothérapie\n• <b>Insuffisance rénale chronique</b>, définie par une créatinine > 2,0 mg/dL (177 µmol/L)"
         },
@@ -50,9 +50,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 5</b>\n\nQuelle est votre gestion préopératoire des traitements de cette patiente ?\n\n• Rédigez l’ordonnance de relais de l’anti-vitamine K (patiente sans insuffisance rénale).\n• Quelle est votre gestion de l’inhibiteur de l’enzyme de conversion ?\n• Quelle est votre gestion du bêta-bloquant ?",
-          "images": [
-            "annales-area/evcp-2013-corrige-pae/figures/img-004-028.png"
-          ],
+          "images": [],
           "reponseAttendue": "Relais de l’AVK car maladie thrombo-embolique veineuse de moins de 3 mois : arrêt de la coumadine à J-5, énoxaparine à dose curative à partir de J-3 le soir (100 UI/kg/12 h, soit 10 000 UI/12 h), dernière injection le matin de J-1, INR la veille au soir avec objectif < 1,5 (5 à 10 mg de vitamine K per os sinon). IEC : arrêt 12 heures avant, donc pas de prise le matin du bloc (risque d’hypotension peropératoire par blocage du système rénine-angiotensine). Bêta-bloquant : à poursuivre en périopératoire, donc à donner le matin de l’intervention.",
           "correctionGenerale": "<b>AVK : relais nécessaire</b> car maladie thrombo-embolique veineuse < 3 mois.\n\n<b>Éléments obligatoires de l’ordonnance</b>\n• Nom, prénom de la patiente\n• Date\n• Nom du médecin, numéro RPPS, signature\n• Faire pratiquer par une IDE les jours de semaine, les dimanches et jours fériés\n• Bien noter les dates de J-3, J-2 et J-1 sur l’ordonnance pour lever toute ambiguïté\n\n<b>Modèle d’ordonnance</b>\n• <b>Arrêt de la coumadine à J-5</b> avant l’intervention\n• Faire pratiquer par une IDE, les jours de semaine, dimanches et jours fériés, une injection d’<b>énoxaparine</b> (HBPM) à partir de J-3 le soir : 10 000 UI en SC (100 UI/kg/12 h)\n• Puis 10 000 UI / 12 h à J-2 en SC\n• Enfin une injection de 10 000 UI le matin de J-1\n• <b>Pas d’injection d’énoxaparine le soir de J-1 ni le matin du bloc</b>\n• Faire un INR la veille au soir pour s’assurer d’un INR < 1,5 ; si INR > 1,5, donner 5 à 10 mg de vitamine K per os\n\n<i>Le schéma de relais recommandé est rappelé ci-dessus : J-5 dernière prise de fluindione/warfarine ; J-4 pas de prise d’AVK ; J-3 première dose d’HBPM curative SC ou HNF SC le soir ; J-2 HBPM × 2/j SC ou HNF SC × 2 ou 3/j ; J-1 hospitalisation systématique, HBPM à dose curative le matin de la veille (ou HNF SC jusqu’au soir de la veille), ajustement selon l’INR ; J0 chirurgie.</i>\n\n<b>IEC</b>\n• Arrêt 12 h avant, soit pas de prise le matin du bloc (risque d’hypotension peropératoire par blocage du système rénine-angiotensine)\n\n<b>Bêta-bloquant</b>\n• À poursuivre en périopératoire, donc à donner le matin de l’intervention"
         },

@@ -3,7 +3,41 @@
     "ANNALES AREA/EVCP 2018.pdf": {
       "atelier": "annales-area/evcp-2018",
       "sujetOfficiel": "Annales/Sujets/2018_EVCP.pdf",
-      "figuresIgnorees": {}
+      "figuresIgnorees": {
+        "img-071-321.png": "Audit images 28/09/2026 (#347) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive des réflexes du tronc (pronostic de l'arrêt cardiaque) = réponse",
+        "img-066-298.jpg": "Audit images 28/09/2026 (#169) : figure du corrigé qui donne la réponse avant que l’élève réponde — Aide cognitive SFAR arrêt cardiaque = réponse",
+        "img-057-261.jpg": "Audit images 28/09/2026 (#285) : figure du corrigé qui donne la réponse avant que l’élève réponde — Algorithme de thromboprophylaxie (RFE) = réponse",
+        "img-053-241.png": "Audit images 28/09/2026 (#498) : figure du corrigé qui donne la réponse avant que l’élève réponde — Tableau de recommandations (surveillance de l'anticoagulation), corrigé",
+        "img-052-236.jpg": "Audit images 28/09/2026 (#241) : figure du corrigé qui donne la réponse avant que l’élève réponde — Tableau de recommandation (acide tranexamique) du corrigé",
+        "img-046-204.png": "Audit images 28/09/2026 (#165) : figure du corrigé qui donne la réponse avant que l’élève réponde — Tableau de recommandations (compression pneumatique) du corrigé = réponse",
+        "img-045-199.png": "Audit images 28/09/2026 (#364) : figure du corrigé qui donne la réponse avant que l’élève réponde — Tableau délais thromboprophylaxie / geste neuraxial (corrigé)",
+        "img-042-184.png": "Audit images 28/09/2026 (#301) : figure du corrigé qui donne la réponse avant que l’élève réponde — Tableau de recommandations (thromboprophylaxie carcinologique) = correction",
+        "img-041-179.png": "Audit images 28/09/2026 (#157) : figure du corrigé qui donne la réponse avant que l’élève réponde — Tableau de recommandations de thromboprophylaxie (corrigé) = réponse",
+        "img-040-174.png": "Audit images 28/09/2026 (#321) : figure du corrigé qui donne la réponse avant que l’élève réponde — Tableau de recommandations (thromboprophylaxie orthopédique), corrigé",
+        "img-038-164.jpg": "Audit images 28/09/2026 (#437) : figure du corrigé qui donne la réponse avant que l’élève réponde — Algorithme de thromboprophylaxie après PTH/PTG (corrigé, hors question)",
+        "img-032-136.jpg": "Audit images 28/09/2026 (#172) : image décorative, vide ou hors sujet — Page de garde des RFE GIHP/SFAR 2024 (logos), sans contenu d'énoncé",
+        "img-046-205.png": "Audit des images (28/09/2026, #1323) : tableau de recommandation (contentions élastiques) du corrigé ; détachée de la question.",
+        "img-043-189.png": "Audit des images (28/09/2026, #1319) : tableau de recommandations (chirurgie vasculaire), hors sujet ; détachée de la question.",
+        "img-034-146.png": "Audit des images (28/09/2026, #1302) : tableau de recommandations (thromboprophylaxie) du corrigé ; détachée de la question.",
+        "img-039-169.png": "Audit des images (28/09/2026, #1276) : tableau de recommandations (thromboprophylaxie après fracture du fémur), hors sujet ; détachée de la question.",
+        "img-033-141.jpg": "Audit des images (28/09/2026, #1237) : tableau de recommandations (thromboprophylaxie abdomino-pelvienne) : c'est la réponse ; détachée de la question.",
+        "img-048-215.png": "Audit des images (28/09/2026, #1173) : tableau de recommandations (thromboprophylaxie et insuffisance rénale) du corrigé ; détachée de la question.",
+        "img-017-074.jpg": "Audit des images (28/09/2026, #1155) : protocole de gestion glycémique préopératoire (corrigé) ; détachée de la question.",
+        "img-014-061.jpg": "Audit des images (28/09/2026, #1141) : schéma « complications spécifiques du diabète » : c'est la réponse ; détachée de la question.",
+        "img-067-303.jpg": "Audit des images (28/09/2026, #1005) : algorithmes ACR du corrigé ; détachée de la question.",
+        "img-050-225.png": "Audit des images (28/09/2026, #1001) : tableau de recommandations (thromboprophylaxie de l'obèse) du corrigé ; détachée de la question.",
+        "img-026-111.png": "Audit des images (28/09/2026, #509) : Tableau d'antibioprophylaxie de la SFAR = la réponse attendue ; détachée de la question.",
+        "img-049-220.png": "Audit des images (28/09/2026, #532) : Tableau « Thromboprophylaxie et fonction rénale » du corrigé ; détachée de la question.",
+        "img-056-256.jpg": "Audit des images (28/09/2026, #634) : Algorithme « TVP distale post-opératoire » (corrigé) ; détachée de la question.",
+        "img-052-235.jpg": "Audit des images (28/09/2026, #674) : Tableau de recommandations de thromboprophylaxie (corrigé) ; détachée de la question.",
+        "img-044-194.png": "Audit des images (28/09/2026, #742) : Tableau « Délai d'introduction » de la thromboprophylaxie (corrigé) ; détachée de la question.",
+        "img-070-316.png": "Audit des images (28/09/2026, #795) : Algorithme pronostique post-arrêt cardiaque = la réponse ; détachée de la question.",
+        "img-054-246.png": "Audit des images (28/09/2026, #801) : Tableau « Surveillance plaquettaire et risque de TIH » (corrigé) ; détachée de la question.",
+        "img-047-210.jpg": "Audit des images (28/09/2026, #867) : Tableau « Filtre cave » (corrigé) ; détachée de la question.",
+        "img-037-159.png": "Audit des images (28/09/2026, #912) : Tableau de thromboprophylaxie PTH/PTG (corrigé) ; détachée de la question.",
+        "img-055-251.png": "Audit des images (28/09/2026, #915) : Tableau « Doppler / TVP distales post-opératoires » (corrigé) ; détachée de la question.",
+        "img-051-230.png": "Audit des images (28/09/2026, #989) : Tableau « Thromboprophylaxie péri-opératoire chez l'enfant » (corrigé) ; détachée de la question."
+      }
     }
   },
   "series": [
@@ -48,18 +82,14 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 5</b>\n\nQuels sont les éléments cliniques principaux à rechercher à la consultation anesthésique pour évaluer le retentissement du diabète ?",
-          "images": [
-            "annales-area/evcp-2018/figures/img-014-061.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Raisonner en termes de micro- et de macroangiopathies. Microangiopathies : gastroparésie (ballonnements, nausées et vomissements postprandiaux), neuropathie (questionnaire DN4), plaies chroniques des membres inférieurs, œdèmes des membres inférieurs et quantification de la diurèse (micro-albuminurie, protéinurie), ouverture de bouche et signe du prieur (risque d’intubation difficile), troubles visuels et acuité visuelle (rétinopathie), dysautonomie cardiovasculaire (hypotension orthostatique, ECG). Macroangiopathies : angor d’effort et de repos, claudication des membres inférieurs, souffle carotidien.",
           "correctionGenerale": "Toujours raisonner en termes de <b>microangiopathies</b> et de <b>macroangiopathies</b>.\n\n<b>Atteintes MICROANGIOPATHIQUES</b>\n• Recherche d’une <b>gastroparésie</b> : ballonnements postprandiaux, vomissements, nausées postprandiales\n• Recherche d’une <b>neuropathie</b> : questionnaire DN4 sur les douleurs neuropathiques\n• Plaies chroniques, notamment aux membres inférieurs\n• Œdème des membres inférieurs, notamment dans le cadre d’une micro-albuminurie ; protéinurie si l’atteinte rénale est plus importante ; diurèse à quantifier\n• <b>Ouverture de bouche et signe du prieur</b> : risque d’intubation difficile\n• Troubles visuels / acuité visuelle (rétinopathie diabétique)\n• <b>Dysautonomie cardiovasculaire</b> : hypotension orthostatique / ECG\n\n<b>Atteintes MACROANGIOPATHIQUES</b>\n• Atteinte cardio-vasculaire : angor d’effort et de repos\n• Claudication des membres inférieurs\n• Sténose carotidienne : souffle carotidien\n\n<i>L’arbre décisionnel SFAR « Rechercher et évaluer les complications spécifiques du diabète » précise le bilan minimal (interrogatoire, PA couché/debout, ECG de repos, bandelette urinaire, créatininémie) et distingue l’atteinte coronaire — symptomatique, ou asymptomatique à suspecter devant d’autres atteintes artérielles, une protéinurie, une insuffisance rénale ou un score calcique coronaire > 400 —, la gastroparésie (« estomac plein », risque d’intubation) et la neuropathie autonome cardiaque (tachycardie permanente, QTc > 440 ms, ischémie ou IDM silencieux, hypotension orthostatique ou postprandiale, hypoglycémie grave non ressentie, absence de diminution nocturne de la PA au holter). Il rappelle l’importance du dialogue avec le patient diabétique et l’évaluation du contrôle glycémique par l’HbA1c.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 6</b>\n\nQuelle gestion du traitement réalisez-vous en préopératoire ?",
-          "images": [
-            "annales-area/evcp-2018/figures/img-017-074.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Rivaroxaban : arrêt, dernière prise à J-3, sans relais (anti-Xa). Bisoprolol : à poursuivre en périopératoire, y compris à J0. Kardégic 75 mg : à poursuivre car stent coronarien, la balance bénéfice/risque étant en faveur du maintien. Atorvastatine : pas d’arrêt. Metformine : arrêt la veille au soir, pas de prise à J0, reprise dès que la voie orale est possible et en l’absence d’insuffisance rénale postopératoire. Ramipril : pas de prise à J0. Surveillance des glycémies en préopératoire et mise en place d’un protocole d’insuline sous-cutanée adapté aux dextros.",
           "correctionGenerale": "• <b>Rivaroxaban (Xarelto®)</b> : STOP — dernière prise à <b>J-3, SANS RELAIS</b> car « -xaban »\n• <b>Bisoprolol (Bisoce®)</b> : à poursuivre en périopératoire, y compris à J0\n• <b>Kardégic® 75 mg</b> : à poursuivre car stent coronarien, la balance bénéfice/risque étant en faveur du maintien\n• <b>Atorvastatine (Tahor®)</b> : pas d’arrêt\n• <b>Metformine (Glucophage®)</b> : stop la veille au soir et pas de prise à J0 ; reprise dès que la voie orale est possible et en l’absence d’insuffisance rénale postopératoire\n• <b>Ramipril (Triatec®)</b> : pas de prise à J0\n\n<b>Surveillance des glycémies en préopératoire</b> et mise en place d’un protocole d’insuline sous-cutanée adapté aux dextros.\n\n<i>Le tableau SFAR de la période préopératoire détaille, en fonction de la glycémie capillaire, les apports sucrés et les doses d’insuline analogue ultra-rapide à administrer la veille au soir, au coucher, en cas de besoin nocturne et le matin de l’intervention, ainsi que la règle « repas normal + antidiabétiques oraux sauf metformine » la veille et « pas de prise d’ADO » le jour de l’intervention.</i>"
         },
@@ -87,9 +117,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 10</b>\n\nQuelle antibioprophylaxie prescrivez-vous (avec les doses) ?",
-          "images": [
-            "annales-area/evcp-2018/figures/img-026-111.png"
-          ],
+          "images": [],
           "reponseAttendue": "Pour une colectomie : céfoxitine 2 g IVL lors de la chirurgie, avec réinjection de 1 g toutes les 2 heures si la durée dépasse 2 heures, jusqu’à la fin de la chirurgie ; la veille au soir, tobramycine 200 mg per os en dose unique et métronidazole 1 g per os en dose unique. En cas de portage rectal d’entérobactérie BLSE, l’antibioprophylaxie doit être active sur la souche identifiée.",
           "correctionGenerale": "<b>Chirurgie colorectale et appendiculaire</b> (recommandations SFAR)\n\nPour une <b>colectomie</b> (comme pour l’amputation abdomino-périnéale, la proctectomie et le rétablissement de continuité) :\n• <b>La veille au soir</b> : tobramycine 200 mg per os en dose unique + métronidazole 1 g per os en dose unique <i>(grade 1 et avis d’experts)</i>\n• <b>Lors de la chirurgie</b> : <b>céfoxitine 2 g IVL</b>, puis 1 g si la durée dépasse 2 h, puis toutes les 2 h jusqu’à la fin de la chirurgie <i>(grade 1)</i>\n• Si portage rectal d’entérobactérie BLSE : antibioprophylaxie active sur la souche identifiée <i>(avis d’experts)</i>\n\n<i>Pour une appendicectomie programmée : céfoxitine 2 g IVL, puis 1 g si la durée dépasse 2 h, puis toutes les 2 h jusqu’à la fin de la chirurgie.</i>"
         },
@@ -111,32 +139,16 @@
           "format": "qroc",
           "enonce": "<b>Question n° 13</b>\n\nComment assurez-vous la thromboprophylaxie ?",
           "images": [
-            "annales-area/evcp-2018/figures/img-033-141.jpg",
-            "annales-area/evcp-2018/figures/img-032-136.jpg",
-            "annales-area/evcp-2018/figures/img-034-146.png",
-            "annales-area/evcp-2018/figures/img-037-159.png",
-            "annales-area/evcp-2018/figures/img-038-164.jpg",
-            "annales-area/evcp-2018/figures/img-039-169.png",
-            "annales-area/evcp-2018/figures/img-040-174.png",
-            "annales-area/evcp-2018/figures/img-041-179.png",
-            "annales-area/evcp-2018/figures/img-042-184.png",
-            "annales-area/evcp-2018/figures/img-043-189.png",
-            "annales-area/evcp-2018/figures/img-044-194.png",
-            "annales-area/evcp-2018/figures/img-045-199.png",
-            "annales-area/evcp-2018/figures/img-046-204.png",
-            "annales-area/evcp-2018/figures/img-046-205.png",
-            "annales-area/evcp-2018/figures/img-047-210.jpg",
-            "annales-area/evcp-2018/figures/img-048-215.png",
-            "annales-area/evcp-2018/figures/img-049-220.png",
-            "annales-area/evcp-2018/figures/img-050-225.png",
-            "annales-area/evcp-2018/figures/img-051-230.png",
-            "annales-area/evcp-2018/figures/img-052-235.jpg",
-            "annales-area/evcp-2018/figures/img-052-236.jpg",
-            "annales-area/evcp-2018/figures/img-053-241.png",
-            "annales-area/evcp-2018/figures/img-054-246.png",
-            "annales-area/evcp-2018/figures/img-055-251.png",
-            "annales-area/evcp-2018/figures/img-056-256.jpg",
-            "annales-area/evcp-2018/figures/img-057-261.jpg"
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
           ],
           "reponseAttendue": "Il s’agit d’une chirurgie abdomino-pelvienne carcinologique, donc à risque thromboembolique veineux élevé : il est recommandé de prescrire une thromboprophylaxie par HBPM pour une durée de 4 semaines, y compris en cas de chirurgie mini-invasive ou de parcours de réhabilitation accélérée ; le fondaparinux peut être une alternative, et les AOD anti-Xa peuvent être utilisés en relais des HBPM après reprise du transit. La première dose est administrée entre la 12ᵉ et la 24ᵉ heure postopératoire, avec déambulation précoce et hydratation optimale ; les contentions élastiques graduées ne sont pas recommandées, et la compression pneumatique intermittente est réservée aux contre-indications aux anticoagulants ou au très haut risque. Une surveillance plaquettaire de dépistage de la TIH est proposée.",
           "correctionGenerale": "<i>Actualisation 2024 des recommandations formalisées d’experts du GIHP, en collaboration avec la SFAR, la SFTH et la SFMV : « Prévention de la maladie thromboembolique veineuse péri-opératoire ».</i>\n\n<b>Chirurgie abdomino-pelvienne (carcinologique ou non)</b>\n• Après chirurgie abdomino-pelvienne à <b>risque thromboembolique veineux élevé</b> (carcinologique ou non) : il est recommandé de prescrire une thromboprophylaxie par <b>HBPM pour une durée de 4 semaines</b>, y compris en cas de chirurgie mini-invasive ou de parcours de réhabilitation accélérée <i>(1+, accord fort)</i> ; il est proposé que le fondaparinux puisse être utilisé en alternative aux HBPM <i>(2+)</i> ; il est proposé que les AOD anti-Xa puissent être utilisés en relais des HBPM après reprise du transit <i>(2+)</i>\n• Après chirurgie abdomino-pelvienne à <b>risque intermédiaire</b> : thromboprophylaxie par HBPM pour une durée minimale de 7 jours <i>(2+)</i>\n• Après chirurgie abdomino-pelvienne à <b>faible risque</b> : il est proposé de ne pas prescrire de thromboprophylaxie pharmacologique systématique ; celle-ci est proposée si le patient présente un facteur de risque majeur ou plusieurs facteurs de risque mineurs, ou en cas de chirurgie prolongée ou de complication postopératoire <i>(2−)</i>\n\n<b>Facteurs de risque majeurs</b> : antécédent(s) personnel(s) d’ETEV ; thrombophilie majeure connue ; cancer actif (traitement au cours des 6 derniers mois) ; obésité de classe III ou plus (IMC ≥ 40 kg/m²).\n\n<b>Facteurs de risque modérés ou mineurs</b> : âge ≥ 75 ans ; insuffisance cardiaque ou respiratoire, BPCO ; insuffisance rénale sévère (DFG < 30 mL/min/1,73 m²) ; maladie inflammatoire chronique (polyarthrite rhumatoïde, MICI, lupus…) ; traitement hormonal œstrogénique ; grossesse en cours ou post-partum ; obésité de classe I et II (IMC 30 à 40 kg/m²) ; alitement prolongé récent ; déficit neurologique < 1 mois (AVC, lésion médullaire) ; recours à une immobilisation orthopédique ou alitement au décours de la chirurgie. <i>L’âge et l’IMC étant des variables continues, le risque augmente lorsqu’ils augmentent.</i>\n\n<b>Délai d’introduction</b> : en chirurgie programmée, il est proposé d’administrer la première dose en postopératoire pour réduire le risque hémorragique <i>(2+)</i>, entre la <b>12ᵉ et la 24ᵉ heure postopératoire</b> <i>(2+)</i> ; en cas de risque thromboembolique veineux élevé lié au patient, les experts proposent de débuter entre la 6ᵉ et la 12ᵉ heure ; il est recommandé de respecter les délais minimaux de sécurité entre la thromboprophylaxie et la réalisation de procédures d’anesthésie locorégionale neuraxiale <i>(1+)</i> — HBPM 12 h, HNF SC 4 h, apixaban 36 h, rivaroxaban 24 h, dabigatran 24-36 h, fondaparinux 36 h.\n\n<b>Moyens mécaniques</b> : la compression pneumatique intermittente est recommandée si une thromboprophylaxie est indiquée mais que les anticoagulants sont contre-indiqués <i>(1+)</i> ; les contentions élastiques graduées ne sont pas recommandées, quel que soit le risque <i>(1−)</i> ; il est proposé de ne pas poser de filtre cave en prophylaxie primaire <i>(2−)</i>.\n\n<b>Insuffisance rénale</b> : adapter les modalités à la fonction rénale <i>(1+)</i> ; en cas d’insuffisance rénale sévère, HBPM en première intention plutôt que HNF ou AOD <i>(2+)</i> — énoxaparine 2000 UI × 1/j SC si DFG entre 15 et 30 mL/min/1,73 m², tinzaparine 4500 UI × 1/j SC si DFG > 20 ; en cas d’insuffisance rénale terminale (DFG < 15), calciparine 5000 UI × 2/j SC <i>(1+)</i>.\n\n<b>Obésité</b> : IMC 30-39 → schéma posologique standard ; IMC ≥ 40 → énoxaparine 4000 UI × 2/j SC (6000 UI × 2/j si > 150 kg), daltéparine 5000 UI × 2/j SC, tinzaparine 75 UI/kg × 1/j SC, fondaparinux 5 mg × 1/j SC, apixaban 2,5 mg × 2/j PO, rivaroxaban 10 mg × 1/j PO ; après chirurgie bariatrique, thromboprophylaxie par HBPM ou fondaparinux pour une durée minimale de 10 jours.\n\n<b>Surveillance</b> : il est proposé de ne pas mesurer l’activité anti-Xa au cours d’une thromboprophylaxie par HBPM <i>(2−)</i> ; il est proposé de surveiller la numération plaquettaire pour permettre un dépistage précoce de la TIH <i>(2+)</i> — à l’initiation d’une prophylaxie par HBPM, une à deux fois par semaine entre le 4ᵉ et le 14ᵉ jour, puis une fois par semaine pendant un mois si le traitement est poursuivi.\n\n<b>Doppler et TVP distales postopératoires</b> : il est recommandé de ne pas faire de dépistage systématique des TVP asymptomatiques <i>(1−)</i> ni de traiter systématiquement les TVP distales isolées postopératoires par un anticoagulant à dose curative <i>(1−)</i>.\n\n<i>Les autres tableaux et figures reproduits couvrent la chirurgie orthopédique (PTH/PTG, fracture de l’extrémité supérieure du fémur, fracture de la diaphyse fémorale, ligamentoplastie), la chirurgie vasculaire, la thromboprophylaxie chez l’enfant, chez les patients de réanimation, l’acide tranexamique et la prise en charge d’une TVP distale postopératoire.</i>"
@@ -165,20 +177,14 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 17</b>\n\nAprès sa sortie de réanimation, alors que le patient séjourne en salle, il est retrouvé en arrêt cardiaque. Quelle est votre prise en charge initiale (10 premières minutes) ?",
-          "images": [
-            "annales-area/evcp-2018/figures/img-066-298.jpg",
-            "annales-area/evcp-2018/figures/img-067-303.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Débuter la procédure : appeler du renfort médical, noter l’heure, désigner un leader, désigner une personne dédiée au chronomètre et au rapport écrit ; vérifier l’arrêt cardiaque (scope, SpO₂, EtCO₂, pouls), l’absence de LATA, la présence du chariot d’urgence et d’un plan dur, l’arrêt des médicaments hypotenseurs. MCE 100-120/min avec dépression sternale de 5-6 cm, relaxation complète, rotation toutes les 2 min ; ventilation sur sonde ou masque facial/BAVU en FiO₂ 1, FR basse à 10/min ; voie veineuse ou intra-osseuse ; monitorage et échographie diagnostique. Si asystolie : adrénaline 1 mg IVD toutes les 3 à 5 min. Si FV/TV : CEE biphasique 200 J suivi de 2 min de RCP, à répéter, puis après le 3ᵉ CEE adrénaline 1 mg IVD et amiodarone 300 mg (150 mg après le 5ᵉ CEE, relais 900 mg/j IVSE). Évaluation toutes les 2 min de l’efficacité (EtCO₂ > 10 mmHg, PAD > 20 mmHg). Recherche étiologique et traitement adapté.",
           "correctionGenerale": "<b>Aide cognitive SFAR « Arrêt cardiaque en service de réanimation »</b>\n\n<b>Débuter la procédure</b> : appeler du renfort médical ; noter l’heure ; désigner un leader ; désigner une personne dédiée au chronomètre et au rapport écrit.\n<b>Vérifier</b> : confirmer l’arrêt cardiaque (scope, SpO₂, EtCO₂, pouls) ; absence de LATA ; chariot d’urgence sur place et plan dur ; arrêt des médicaments hypotenseurs.\n\n<b>APPEL À L’AIDE</b>\n\n<b>Massage cardiaque externe</b> : 100-120/minute ; dépression sternale de 5-6 cm de profondeur ; relaxation complète ; rotation du masseur toutes les 2 min.\n<b>Ventilation</b> : sur sonde, masque facial ou BAVU ; FiO₂ = 1 ; FR basse à 10/min ; si le patient est intubé, vérifier l’intubation, sinon intuber.\n<b>Autres</b> : vérification ou pose d’une voie veineuse ou intra-osseuse ; monitorage (scope, pression invasive, EtCO₂) ; échographie diagnostique (ETT, pleurale, abdominale…) ; gaz du sang si biochimie délocalisée (dosage de l’Hb et du K⁺).\n\n<b>Asystolie</b> : adrénaline 1 mg IVD toutes les 3 à 5 min.\n<b>FV ou TV</b> : CEE biphasique 200 J (monophasique 360 J) suivi de 2 min de RCP, à répéter 3 fois si nécessaire ; après le 3ᵉ CEE, adrénaline 1 mg IVD + amiodarone dose de charge 300 mg (2ᵉ dose de 150 mg après le 5ᵉ CEE, relais 900 mg/j IVSE après 7 CEE) ; en cas de contre-indication (intoxication aux anesthésiques locaux), adapter.\n\n<b>Évaluation toutes les 2 minutes de l’efficacité de la RCP</b> : EtCO₂ > 10 mmHg, PAD > 20 mmHg, reprise d’activité cardiaque efficace.\n\n<b>Si reprise de rythme, discuter</b> : hypothermie thérapeutique (32-35 °C) 12 à 24 h, nécessité d’une coronarographie, sédation post-arrêt cardiaque.\n\n<b>Recherche étiologique et traitement adapté</b>\n• <i>Respiratoire</i> : hypoxie (extubation, pneumothorax, obstruction de sonde…), bronchospasme\n• <i>Cardiovasculaire</i> : hypovolémie et/ou hémorragie, embolie cruorique ou gazeuse (déconnexion de VVC), anaphylaxie, pneumothorax compressif (déconnexion de drain pleural), coronaropathie\n• <i>Métabolique</i> : dyskaliémie, dysphosphatémie, dysmagnésémie\n• <i>Neurologique</i> : AVC, HTIC\n\n<b>Arrêt cardiaque réfractaire — réanimation prolongée</b> : échec de la RCP après plus de 15 minutes sans retour à un rythme cardiaque spontané efficace ; contacter le centre de référence ; évaluer rapidement l’indication et la faisabilité d’une assistance circulatoire extracorporelle — en faveur : patient jeune, peu de comorbidités, no-flow < 5 min, low-flow < 30 min, CO₂ expiré > 10 mmHg au cours de la RCP, causes réversibles d’arrêt cardiaque.\n\n<i>Les algorithmes détaillés « arrêt cardiaque et rythme NON chocable » et « ACR et rythme chocable » sont reproduits.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 18</b>\n\nQuels sont les arguments cliniques et paracliniques du pronostic de l’arrêt cardiaque ?",
-          "images": [
-            "annales-area/evcp-2018/figures/img-070-316.png",
-            "annales-area/evcp-2018/figures/img-071-321.png"
-          ],
+          "images": [],
           "reponseAttendue": "Cliniques : durées de no-flow et de low-flow prolongées, EtCO₂ bas pendant la réanimation, comorbidités ; absence de signes de réveil dans les 3 jours suivant la reprise de circulation ; absence de réflexes du tronc cérébral ; état de mal myoclonique épileptique. Paracliniques : EEG non réactif, burst-suppression, isoélectrique ou hypovolté ; absence de N20 bilatérales aux potentiels évoqués somesthésiques ; NSE élevée ; lésions post-anoxiques diffuses au scanner ou à l’IRM cérébrale.",
           "correctionGenerale": "<b>Cliniques</b>\n• Low-flow et no-flow prolongés ; EtCO₂ bas pendant la réanimation ; comorbidités\n• Absence de signes de réveil dans les 3 jours suivant la reprise de circulation\n• Absence de réflexes du tronc cérébral\n• État de mal myoclonique épileptique\n\n<b>Paracliniques</b>\n• EEG : non-réactivité, burst-suppression, tracé isoélectrique, hypovolté\n• Absence de N20 bilatérales (potentiels évoqués somesthésiques)\n• NSE élevée\n• Lésions post-anoxiques diffuses sur la TDM ou l’IRM cérébrale\n\n<i>L’algorithme pronostique post-arrêt cardiaque est reproduit : après exclusion des facteurs perturbants (en particulier une sédation résiduelle), chez un patient inconscient M ≤ 2 à 72 h après la reprise d’activité cardiaque spontanée, la présence d’un ou deux des éléments suivants — absence de réflexe pupillaire ou cornéen, onde N20 des PES bilatérale absente — rend l’issue peu favorable très probable ; sinon, attendre au moins 24 h, puis rechercher deux ou plus des éléments suivants : status myoclonique dans les 48 h, NSE élevée, suppression des ondes (burst-suppression) ou non-réactivité au statut épileptique sur l’EEG, lésion diffuse causée par anoxie sur TDM ou IRM cérébrale.</i>\n\n<i>Rappel des huit réflexes physiologiques du tronc cérébral (cilio-spinal, fronto-orbiculaire, oculo-céphalique vertical, photomoteur, cornéen, massétérin, oculo-céphalique horizontal, oculo-cardiaque), la ventilation, et les deux réflexes pathologiques (palmo-mentonnier, cornéo-mandibulaire).</i>"
         },

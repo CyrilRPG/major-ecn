@@ -3,7 +3,9 @@
     "ANNALES ORTHOPEDIE/EVCP 2013 correction.pdf": {
       "atelier": "annales-orthopedie/evcp-2013-correction",
       "sujetOfficiel": "Annales/Sujets/evcp_2013/EVCP.53.pdf",
-      "figuresIgnorees": {}
+      "figuresIgnorees": {
+        "img-004-011.png": "Audit des images (28/09/2026, #689) : Schémas des topographies radiculaires S1-L3 = la réponse ; détachée de la question."
+      }
     }
   },
   "series": [
@@ -60,7 +62,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nQue recherchez-vous à l’examen clinique afin de dresser le bilan de la lombalgie et de la sciatalgie, en précisant le niveau radiculaire ?",
-          "images": ["annales-orthopedie/evcp-2013-correction/figures/img-004-011.png"],
+          "images": [],
           "reponseAttendue": "Interrogatoire (siège, rythme mécanique ou inflammatoire, impulsivité, mode de début, signes généraux, antécédents) et examen physique : troubles de la statique, mobilités, Lasègue ou Léri, signe de la sonnette, contracture, puis topographie radiculaire (L3, L4, L5, S1), réflexes achilléen et patellaire, cotation MRC.",
           "correctionGenerale": "<b>Interrogatoire</b>\n• Siège\n• Rythme : caractère mécanique ou inflammatoire\n• Impulsivité à la toux et à la défécation\n• Début brutal ou progressif\n• Signes généraux (lombalgie commune vs secondaire)\n• Antécédents\n\n<b>Examen physique</b>\nTroubles de la statique :\n• Sagittal : anomalies des lordoses ou des cyphoses\n• Frontal : attitude scoliotique\nMobilités :\n• Raideur en flexion ou en extension\nSigne de Lasègue ou de Léri (Lasègue inversé), signe de la sonnette. Contracture rachidienne localisée.\n\n<b>Topographie radiculaire</b>\n• Cruralgie <b>L3</b> : déficit du psoas ++, quadriceps\n• Cruralgie <b>L4</b> : déficit du quadriceps et du tibial antérieur\n• Sciatique <b>L5</b> : marche sur les talons impossible, hypoesthésie de l’hallux, loge antéro-externe\n• Sciatique <b>S1</b> : marche sur la pointe impossible\n\nAbolition du réflexe achilléen signant l’atteinte radiculaire S1 ; abolition du réflexe patellaire lors de l’atteinte de L4. Cotation de la force musculaire (MRC)."
         },
@@ -74,7 +76,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nDécrivez l’image ci-jointe. Vers quels diagnostics vous oriente-t-elle ?",
-          "images": ["annales-orthopedie/evcp-2013-correction/figures/img-006-016.png"],
+          "images": [
+            "annales-orthopedie/evcp-2013-correction/figures/img-006-016.png"
+          ],
           "reponseAttendue": "Radiographie du rachis lombaire de profil : pincement L5-S1 avec ostéocondensation sous-chondrale, ostéophytose et spondylolisthésis L4-L5 de stade I de Meyerding, orientant vers une discopathie sévère L5-S1 et une dégénérescence arthrosique de la charnière lombo-sacrée.",
           "correctionGenerale": "Radiographie du rachis lombaire de profil :\n• Pincement L5-S1 avec ostéocondensation sous-chondrale\n• Ostéophytose\n• Spondylolisthésis L4-L5 (stade I de Meyerding)\n\n→ Discopathie sévère L5-S1, dégénérescence arthrosique de la charnière lombo-sacrée."
         },

@@ -3,7 +3,9 @@
     "ANNALES URGENCE/Correction Annales Urgences 2018 à 2021.pdf": {
       "atelier": "annales-urgence/correction-annales-urgences-2018-a-2021",
       "sujetOfficiel": "Annales/Sujets/2018_EVCP.pdf ; Annales/Sujets/EVCF 2019/EVCF 2019/evcf.77.doc ; Annales/Sujets/2019_EVCP.pdf",
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-015-030.jpg": "Audit images 28/09/2026 (#445) : figure du corrigé qui donne la réponse avant que l’élève réponde — Tableau de l'index de Cushman = réponse"
+      },
       "remarque": "Ce corrigé unique couvre huit épreuves (EVCF et EVCP 2018 à 2021) et ne reproduit que ses réponses, numérotées. Les énoncés officiels ont été restitués à partir des sujets présents dans le dépôt lorsqu’ils existent — EVCP 2018 et EVCP 2019 (compilations « toutes spécialités », code 77) et EVCF 2019 (evcf.77.doc). Pour l’EVCF 2018 et pour les sessions 2020 et 2021, le dépôt ne contient pas le sujet officiel : la question est alors identifiée par son numéro seul et le fait est signalé sur chaque question."
     }
   },
@@ -108,7 +110,8 @@
           "correctionGenerale": "<b>Luxation scapulo-humérale antérieure</b>\n\n<b>Suspicion clinique si</b> : mécanisme du traumatisme, attitude du traumatisé du membre supérieur, signe de l’épaulette, coup de hache latéral, comblement du sillon delto-pectoral, signe de Berger.\n\n<b>Complications</b> : fracture, rupture de la coiffe des rotateurs, atteinte du nerf circonflexe, atteinte de l’artère axillaire, irréductibilité de la luxation, récidive ou instabilité, algoneurodystrophie, raideur.\n\n<b>Bilan avant réduction</b> : radiographie d’épaule de face et scapula de profil."
         }
       ],
-      "note": "Épreuve de vérification des connaissances fondamentales 2018 de médecine d’urgence : 13 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées. Chaque question est donc identifiée par son numéro et par le thème que sa réponse permet d’identifier.</i>"
+      "note": "Épreuve de vérification des connaissances fondamentales 2018 de médecine d’urgence : 13 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées. Chaque question est donc identifiée par son numéro et par le thème que sa réponse permet d’identifier.</i>",
+      "publication": "retiree"
     },
     {
       "label": "Annales - Médecine d’urgence - 2018 - EVCP - Sujet 1",
@@ -611,7 +614,8 @@
           "correctionGenerale": "• <b>Signes en faveur d’un processus expansif intracrânien</b> : déficit moteur, déficit sensitif, HLH, syndrome cérébelleux\n• <b>Signes d’engagement cérébral</b> : troubles de la vigilance + anomalies pupillaires, ou dysautonomie, ou crises toniques postérieures, ou aréactivité aux stimulations, ou décortication, ou décérébration\n• <b>Crises convulsives persistantes</b>\n\n<i>Source : ECN Pilly 2020, item 148.</i>"
         }
       ],
-      "note": "Épreuve de vérification des connaissances fondamentales 2020 de médecine d’urgence : 10 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées.</i>"
+      "note": "Épreuve de vérification des connaissances fondamentales 2020 de médecine d’urgence : 10 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées.</i>",
+      "publication": "retiree"
     },
     {
       "label": "Annales - Médecine d’urgence - 2020 - EVCP - Sujet 1",
@@ -691,7 +695,8 @@
           "reponseAttendue": "Transport SMUR médicalisé envoyé sur place ; prévenir le cardiologue de garde dans le centre d’accueil pour préparer la venue du patient ; s’assurer de la bonne coordination des équipes.",
           "correctionGenerale": "• Transport SMUR médicalisé envoyé sur place\n• Prévenir le cardiologue de garde dans le centre d’accueil pour préparer la venue du patient\n• S’assurer de la bonne coordination des équipes"
         }
-      ]
+      ],
+      "publication": "retiree"
     },
     {
       "label": "Annales - Médecine d’urgence - 2020 - EVCP - Sujet 2",
@@ -750,7 +755,8 @@
           "reponseAttendue": "Information et consentement de la patiente ; mise en condition avec 2 VVP ou 1 VVC, scope, mise à jeun et repos strict au lit ; oxygène aux lunettes +/− intubation, objectif SpO₂ > 95 % ; remplissage vasculaire et transfusion sanguine +/− noradrénaline, objectif PAM > 65 mmHg ; biologie en urgence avec bilan de coagulation, NFS-plaquettes et bilan prétransfusionnel ; prise en charge chirurgicale par cœlioscopie (salpingotomie) sans attendre les résultats des examens complémentaires, car il s’agit d’une urgence chirurgicale.",
           "correctionGenerale": "• Information et consentement de la patiente\n• Mise en condition avec 2 VVP ou 1 VVC + scope + mise à jeun + repos strict au lit\n• O₂ aux lunettes +/− intubation, objectif SpO₂ > 95 %\n• Remplissage vasculaire + transfusion sanguine +/− noradrénaline, objectif PAM > 65 mmHg\n• Biologie en urgence avec bilan de coagulation, NFS-plaquettes et bilan prétransfusionnel\n• <b>Prise en charge chirurgicale par cœlioscopie (salpingotomie) sans attendre les résultats des examens complémentaires</b>, car urgence chirurgicale"
         }
-      ]
+      ],
+      "publication": "retiree"
     },
     {
       "label": "Annales - Médecine d’urgence - 2021 - EVCF",
@@ -791,9 +797,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 5</b>\n\nQuel score évalue la gravité d’un syndrome de sevrage alcoolique ? Détaillez ses items.",
-          "images": [
-            "annales-urgence/correction-annales-urgences-2018-a-2021/figures/img-015-030.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "L’index de Cushman, score de gravité du syndrome de sevrage alcoolique, coté de 0 à 3 sur sept items : fréquence cardiaque, pression artérielle systolique (selon l’âge), fréquence respiratoire, tremblements, sueurs, agitation et troubles sensoriels. Un score < 7 correspond à un état clinique contrôlé, un score de 7 à 14 à un sevrage modéré, un score > 14 à un sevrage sévère.",
           "correctionGenerale": "<b>Index de Cushman</b> — index de gravité du syndrome de sevrage alcoolique. Chaque item est coté de 0 à 3 :\n• <b>Fréquence cardiaque</b> : ≤ 80 / 81-100 / 101-120 / > 120\n• <b>Pression artérielle systolique</b> — 18-30 ans : ≤ 125 / 126-135 / 136-145 / > 145 ; 31-50 ans : ≤ 135 / 136-145 / 146-155 / > 155 ; > 50 ans : ≤ 145 / 146-155 / 156-165 / > 165\n• <b>Fréquence respiratoire</b> : ≤ 16 / 17-25 / 26-35 / > 35\n• <b>Tremblements</b> : 0 / main en extension / tout le membre supérieur / généralisés\n• <b>Sueurs</b> : 0 / paumes / paumes et front / généralisées\n• <b>Agitation</b> : 0 / discrète / généralisée contrôlable / généralisée incontrôlable\n• <b>Troubles sensoriels</b> : 0 / gêné par le bruit et la lumière / hallucinations critiquées / hallucinations non critiquées\n\n<b>Interprétation</b>\n• Score < 7 : état clinique contrôlé\n• Score de 7 à 14 : sevrage modéré\n• Score > 14 : sevrage sévère"
         },
@@ -854,7 +858,8 @@
           "correctionGenerale": "• Pansements compressifs si hémorragie extériorisée\n• Suture ou agrafe de toute plaie du scalp hémorragique\n• Mise en place d’un garrot\n• Administration d’Exacyl® + remplissage vasculaire pour contrebalancer le saignement"
         }
       ],
-      "note": "Épreuve de vérification des connaissances fondamentales 2021 de médecine d’urgence : 13 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées.</i>"
+      "note": "Épreuve de vérification des connaissances fondamentales 2021 de médecine d’urgence : 13 questions à réponse ouverte et courte.\n\n<i>Le sujet officiel de cette session n’est pas présent dans le dépôt : le corrigé ne reproduit pas les intitulés des questions, seulement ses réponses numérotées.</i>",
+      "publication": "retiree"
     },
     {
       "label": "Annales - Médecine d’urgence - 2021 - EVCP - Sujet 1",
@@ -920,7 +925,8 @@
           "reponseAttendue": "Arrêt de l’apixaban, avec dosage de sa concentration résiduelle et de l’activité anti-Xa. Si le risque hémorragique est élevé — ce qui est le cas — et selon le résultat du dosage lorsqu’il est disponible, administration ou non de concentrés de complexe prothrombinique.",
           "correctionGenerale": "• <b>Arrêt de l’apixaban</b> + dosage de sa concentration résiduelle et de l’activité anti-Xa\n• Si le risque hémorragique est élevé (comme c’est le cas) et selon le résultat du dosage (si disponible) : administration ou non de <b>CCP</b>\n\n<i>Source : MAPAR, gestion périopératoire des anticoagulants oraux directs.</i>"
         }
-      ]
+      ],
+      "publication": "retiree"
     },
     {
       "label": "Annales - Médecine d’urgence - 2021 - EVCP - Sujet 2",
@@ -1000,7 +1006,8 @@
           "reponseAttendue": "Hypokaliémie, hyperglycémie, troubles du rythme, tachycardie, palpitations, poussée hypertensive.",
           "correctionGenerale": "• Hypokaliémie\n• Hyperglycémie\n• Troubles du rythme\n• Tachycardie, palpitations\n• Poussée hypertensive"
         }
-      ]
+      ],
+      "publication": "retiree"
     }
   ]
 }

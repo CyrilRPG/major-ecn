@@ -4,14 +4,24 @@
       "atelier": "annales-gynecologie/annales-2021",
       "sujetOfficiel": null,
       "figuresIgnorees": {
-        "img-018-079.png": "aplat blanc de la mise en page de la diapositive, sans contenu"
+        "img-018-080.jpg": "Audit des images (28/09/2026, #1140) : tableau des facteurs de risque veineux et COP : c'est la réponse ; détachée de la question.",
+        "img-006-025.png": "Audit des images (28/09/2026, #1127) : algorithme HAS du dépistage par test HPV : c'est la réponse ; détachée de la question.",
+        "img-013-057.jpg": "Audit des images (28/09/2026, #1063) : échographie de mesure de la LCC illustrant le corrigé (question de connaissance sans document) ; détachée de la question.",
+        "img-018-079.png": "aplat blanc de la mise en page de la diapositive, sans contenu",
+        "img-008-034.png": "Audit des images (28/09/2026, #536) : Algorithme HPV / cytologie (INCa) du corrigé ; détachée de la question.",
+        "img-006-024.jpg": "Audit des images (28/09/2026, #679) : Algorithme INCa « Femmes de 25 à 29 ans » = la réponse ; détachée de la question.",
+        "img-009-039.png": "Audit des images (28/09/2026, #725) : Capture de l'algorithme INCa « Cytologie initiale ASC-H, AGC ou HSIL » (corrigé) ; détachée de la question.",
+        "img-018-078.jpg": "Audit des images (28/09/2026, #735) : Tableau « Facteurs de risque artériel / utilisation d'une COP » = la réponse ; détachée de la question.",
+        "img-011-048.png": "Audit des images (28/09/2026, #944) : Algorithme INCa « Cytologie ASC-H, AGC ou HSIL en cours de grossesse » = la réponse ; détachée de la question."
       },
       "remarque": "Diaporama de correction reprenant les énoncés officiels de la session 2021 de gynécologie-obstétrique : une épreuve de connaissances fondamentales et deux cas pratiques."
     },
     "ANNALES GYNECOLOGIE/Annales gynéco médicale 2021.pdf": {
       "atelier": "annales-gynecologie/annales-gyneco-medicale-2021",
       "sujetOfficiel": null,
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-016-064.png": "Audit images 28/09/2026 (#410) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schémas des schémas de THS (avec / sans règles) = réponse"
+      },
       "remarque": "Diaporama de correction de la session 2021 de gynécologie médicale : deux cas pratiques et une épreuve de connaissances fondamentales."
     }
   },
@@ -41,30 +51,21 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 3</b>\n\nQuelle est la stratégie recommandée pour le dépistage du cancer et des dysplasies du col utérin ?",
-          "images": [
-            "annales-gynecologie/annales-2021/figures/img-006-024.jpg",
-            "annales-gynecologie/annales-2021/figures/img-006-025.png",
-            "annales-gynecologie/annales-2021/figures/recadre/img-008-034.png",
-            "annales-gynecologie/annales-2021/figures/recadre/img-009-039.png"
-          ],
+          "images": [],
           "reponseAttendue": "Un dépistage organisé pour toutes les femmes asymptomatiques âgées de 25 à 65 ans : de 25 à 30 ans, 2 FCV à 1 an d’intervalle puis, s’ils sont normaux, tous les 3 ans ; de 30 à 65 ans, test HPV — si négatif tous les 5 ans, si positif réalisation d’un FCV. Le frottis est d’abord jugé sur sa qualité (satisfaisant pour interprétation si présence de cellules jonctionnelles, sinon à refaire) ; il peut être normal, montrer des modifications cellulaires bénignes, ou des anomalies cellulaires épithéliales (ASC-US, LSIL, HSIL, carcinome malpighien, AGUS, adénocarcinome) qui imposent une colposcopie pour biopsie ciblée.",
           "correctionGenerale": "<b>Prévention secondaire</b>\n• Dépistage organisé pour toutes les femmes asymptomatiques âgées de <b>25 à 65 ans</b>\n• <b>25 à 30 ans</b> : 2 FCV à 1 an d’intervalle ; si normal, tous les 3 ans\n• <b>30 à 65 ans</b> : test HPV — si négatif tous les 5 ans ; si positif → FCV\n\n<b>Dépistage des lésions intra-épithéliales — résultat du frottis cervico-vaginal</b>\n• Qualité du frottis : satisfaisant pour interprétation (présence de cellules jonctionnelles) — sinon À REFAIRE\n• Normal, ou modifications cellulaires bénignes\n• <b>Anomalies cellulaires épithéliales → COLPOSCOPIE pour biopsie ciblée</b>\n  – ASC-US (atypies cellulaires pavimenteuses de signification indéterminée)\n  – Lésion intra-épithéliale de bas grade (LSIL)\n  – Lésion malpighienne intra-épithéliale de haut grade (HSIL)\n  – Carcinome malpighien\n  – AGUS (atypies cellulaires glandulaires de signification indéterminée)\n  – Adénocarcinome\n\n<i>Les figures reproduisent les algorithmes officiels : réalisation d’un examen cytologique en dépistage primaire chez les femmes de 25 à 29 ans, réalisation d’un test HPV-HR en dépistage primaire chez les femmes de 30 à 65 ans, et la conduite à tenir après cytologie ASC-US ou LSIL, puis après cytologie ASC-H, AGC ou HSIL.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question 4</b>\n\nLa grossesse peut-elle être l’occasion d’un dépistage du cancer du col ?",
-          "images": [
-            "annales-gynecologie/annales-2021/figures/img-011-048.png"
-          ],
+          "images": [],
           "reponseAttendue": "Oui, au premier trimestre : examen clinique, test HPV ou FCV en fonction de l’âge ; sinon en post-partum. Si le FCV est ASC-US ou LSIL, frottis en post-partum. S’il est ASC-H, AGC ou HSIL, colposcopie, dans le but d’éliminer un cancer invasif, car il n’y a pas de traitement des lésions intra-épithéliales pendant la grossesse ; à refaire à 3 mois s’il existe des lésions histologiques.",
           "correctionGenerale": "• <b>Oui, au premier trimestre</b> : examen clinique, test HPV ou FCV en fonction de l’âge\n• Sinon en post-partum\n• Si FCV ASC-US ou LSIL → frottis en post-partum\n• Si FCV ASC-H, AGC ou HSIL → <b>colposcopie</b> : le but est d’éliminer un cancer invasif, car il n’y a pas de traitement des lésions intra-épithéliales pendant la grossesse\n• À refaire à 3 mois s’il existe des lésions histologiques\n\n<i>La figure reproduit l’algorithme « Cytologie ASC-H, AGC ou HSIL en cours de grossesse » : colposcopie, puis selon qu’elle est satisfaisante et normale ou anormale, biopsie ; en l’absence de suspicion d’invasion, colposcopie 3 mois plus tard, puis cytologie et colposcopie dans les 2 à 3 mois après l’accouchement ; en cas de suspicion d’invasion ou de carcinome invasif, RCP ou avis d’expert.</i>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question 5</b>\n\nModalités de dépistage combiné de la trisomie 21.",
-          "images": [
-            "annales-gynecologie/annales-2021/figures/img-013-057.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Un dépistage non obligatoire, reposant au 1ᵉʳ trimestre (entre 11 et 13+6 SA) sur le calcul du risque combiné à partir de l’âge maternel, de la clarté nucale et de la LCC, et des marqueurs biologiques (bêta-hCG, PAPP-A) ; au 2ᵉ trimestre (> 14 SA), sur le calcul séquentiel du risque à partir de l’hCG total et de l’alpha-fœtoprotéine ; et sur les signes échographiques, tout au long de la grossesse. Si le risque est compris entre 1/51 et 1/1000 : dépistage par ADN circulant T21 (DPNI). Si le risque est ≥ 1/50 : caryotype fœtal d’emblée (biopsie de trophoblaste avant 14 SA, amniocentèse après 14 SA). Cas particuliers avec DPNI d’emblée : grossesses gémellaires, antécédent de T21, translocation robertsonienne dans le couple.",
           "correctionGenerale": "<b>Dépistage anténatal de la trisomie 21 — non obligatoire</b>\n• <b>Au 1ᵉʳ trimestre (entre 11 et 13+6 SA)</b> : calcul du risque combiné — données maternelles (âge), échographiques (clarté nucale, LCC), biologiques (bêta-hCG, PAPP-A)\n• <b>Au 2ᵉ trimestre (> 14 SA)</b> : calcul séquentiel du risque — hCG total, alpha-fœtoprotéine\n• Signes échographiques, tout au long de la grossesse\n\n<b>Interprétation</b> (recommandations HAS 2017)\n• Risque entre 1/51 et 1/1000 : examen de dépistage par <b>ADN circulant T21 (DPNI)</b>\n• Risque ≥ 1/50 : réalisation d’un <b>caryotype fœtal d’emblée</b> — biopsie de trophoblaste (< 14 SA) ou amniocentèse (> 14 SA)\n\n<b>Cas particuliers : DPNI d’emblée</b>\n• Grossesses gémellaires\n• Antécédent de T21\n• Translocation robertsonienne dans le couple\n\n<i>La figure reproduit une échographie du 1ᵉʳ trimestre avec mesure de la longueur cranio-caudale (56,81 mm, soit 12 semaines et 0 jour).</i>"
         },
@@ -85,10 +86,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 8</b>\n\nQuelles précautions prenez-vous avant de prescrire une contraception œstroprogestative ?",
-          "images": [
-            "annales-gynecologie/annales-2021/figures/img-018-078.jpg",
-            "annales-gynecologie/annales-2021/figures/img-018-080.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "La recherche des facteurs de risque artériels et veineux, l’information sur le risque d’IST et sur les précautions en cas d’oubli, et un bilan biologique de contrôle (cholestérol total, triglycérides, glycémie à jeun) 3 à 6 mois après le début de la prise — avant le début en cas d’antécédent familial de dyslipidémie — puis tous les 5 ans si normal.",
           "correctionGenerale": "• <b>Recherche des facteurs de risque</b>\n• Information sur le risque d’IST, sur les précautions en cas d’oubli\n• <b>Bilan biologique de contrôle</b> : cholestérol total, triglycérides, glycémie à jeun, 3 à 6 mois après le début de la prise ; avant le début si antécédent familial de dyslipidémie ; puis tous les 5 ans si normal\n\n<b>Facteurs de risque artériel — utilisation d’une COP</b> (figures)\n• Âge > 35 ans : possible si pas d’autre FDRV\n• Surpoids, obésité : possible si pas d’autre FDRV\n• Tabac > 15 cigarettes/jour : possible si pas d’autre FDRV\n• Antécédents familiaux au 1ᵉʳ degré d’IDM ou d’AVC avant 55 ans (homme) ou 65 ans (femme) : <b>contre-indication</b>\n• Hypertension artérielle : <b>contre-indication</b>\n• Dyslipidémie : non contrôlée → contre-indication ; contrôlée → possible si pas d’autre FDRV\n• Diabète insulino-dépendant : contre-indication si délai > 20 ans ou complications vasculaires\n• Diabète de type II : possible si pas d’autre FDRV, en seconde intention\n• Migraine avec aura : <b>contre-indication</b> ; migraine simple : possible si pas d’autre FDRV\n\n<b>Facteurs de risque veineux — utilisation d’une COP</b>\n• Âge > 35 ans, surpoids, obésité : possible si pas d’autre FDRV\n• Thrombophilie biologique connue : <b>contre-indication</b>\n• Antécédents familiaux au 1ᵉʳ degré de MVTE avant 50 ans : <b>contre-indication</b>"
         },
@@ -297,9 +295,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 6</b>\n\nQuelle est la conduite thérapeutique que vous envisagez ? Décrivez-en les modalités pratiques, sachant qu’elle souhaite ne plus avoir ses règles.",
-          "images": [
-            "annales-gynecologie/annales-gyneco-medicale-2021/figures/img-016-064.png"
-          ],
+          "images": [],
           "reponseAttendue": "La mise en place d’un traitement hormonal substitutif jusqu’à au moins 50 ans : estradiol percutané (patch ou gel), en débutant par 25 µg/j puis en adaptant selon les symptômes, et progestérone naturelle 100 mg/j, à prendre en continu si elle ne veut pas avoir de règles.",
           "correctionGenerale": "• <b>Mise en place d’un traitement hormonal substitutif jusqu’à au moins 50 ans</b>\n• <b>Estradiol percutané</b> : patch ou gel — débuter par 25 µg/j puis adapter en fonction des symptômes\n• <b>Progestérone naturelle</b> : 100 mg/j\n• <b>À prendre en continu</b> si elle ne veut pas avoir de règles\n\n<i>La figure compare les schémas d’administration : « avec règles » — estrogène en discontinu ou en continu, avec progestatif 14 jours (commencer l’estrogène le 1ᵉʳ jour de chaque mois et le progestatif le 15ᵉ jour, arrêter le traitement le 28ᵉ jour) ; « sans règles » — estrogène pendant 25 jours et progestatif pendant le même temps, commencer simultanément le 1ᵉʳ jour de chaque mois et arrêter le 25ᵉ jour (traitement interrompu 5 à 6 jours chaque mois), avec possibilité d’administrer les 2 hormones sans interruption.</i>"
         },

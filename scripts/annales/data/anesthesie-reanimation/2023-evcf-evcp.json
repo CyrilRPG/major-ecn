@@ -3,7 +3,23 @@
     "ANNALES AREA/Annale 2023 copie.pdf": {
       "atelier": "annales-area/annale-2023-copie",
       "sujetOfficiel": null,
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-074-231.jpg": "Audit images 28/09/2026 (#434) : figure du corrigé qui donne la réponse avant que l’élève réponde — Recommandation 16 (antalgie post-amygdalectomie) = réponse",
+        "img-085-265.jpg": "Audit images 28/09/2026 (#276) : figure du corrigé qui donne la réponse avant que l’élève réponde — Algorithme SFMU/SFAR/GIHP de gestion des AOD = réponse",
+        "img-093-290.jpg": "Audit images 28/09/2026 (#249) : figure du corrigé qui donne la réponse avant que l’élève réponde — Aide cognitive SFAR choc anaphylactique = réponse",
+        "img-031-091.jpg": "Audit images 28/09/2026 (#163) : figure du corrigé qui donne la réponse avant que l’élève réponde — Formule de Poiseuille (corrigé) = réponse",
+        "img-038-112.jpg": "Audit des images (28/09/2026, #1306) : schéma du retour veineux légendé (PSM, VNC, POD…) : donne la réponse de l'appariement demandé ; détachée de la question.",
+        "img-065-200.jpg": "Audit des images (28/09/2026, #1258) : recommandation R11 (salbutamol) : c'est la réponse ; détachée de la question.",
+        "img-063-193.jpg": "Audit des images (28/09/2026, #1176) : algorithme de l'enfant enrhumé (IVAS) : c'est la réponse (2 questions) ; détachée de la question.",
+        "img-073-227.jpg": "Audit des images (28/09/2026, #1153) : tableau des options analgésiques postopératoires : c'est la réponse ; détachée de la question.",
+        "img-053-160.jpg": "Audit des images (28/09/2026, #1109) : tableau des signes de troubles respiratoires (corrigé) ; détachée de la question.",
+        "img-072-223.jpg": "Audit des images (28/09/2026, #1090) : schéma des prescriptions postopératoires : c'est la réponse ; détachée de la question.",
+        "img-054-165.png": "Audit des images (28/09/2026, #519) : En-tête d'article (questionnaire STBUR) cité par le corrigé ; détachée de la question.",
+        "img-055-169.jpg": "Audit des images (28/09/2026, #544) : Diapositive « Questionnaire de Watson-Williams » = l'évaluation demandée ; détachée de la question.",
+        "img-031-090.jpg": "Audit des images (28/09/2026, #681) : Formule du retour veineux = la réponse ; détachée de la question.",
+        "img-070-216.jpg": "Audit des images (28/09/2026, #924) : Schéma de prise en charge per-opératoire (corrigé) ; détachée de la question.",
+        "img-053-161.jpg": "Audit des images (28/09/2026, #957) : En-tête d'article SFORL « Pediatric tonsillectomy » (corrigé) ; détachée de la question."
+      },
       "remarque": "L’EVCF 2023 d’anesthésie-réanimation comporte deux parties (pharmacologie et physiologie), réunies dans une seule série. La numérotation d’origine du support est conservée : la partie pharmacologie comporte deux questions portant le numéro 8. L’EVCP 2023 comporte deux sujets cliniques distincts, restitués en deux séries."
     }
   },
@@ -103,10 +119,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Physiologie — Question n° 2</b>\n\nÉcrivez la loi de Poiseuille adaptée au retour veineux, faisant intervenir les termes de l’équation suivante : retour veineux, pression systémique moyenne, pression atriale droite, résistances au retour veineux.",
-          "images": [
-            "annales-area/annale-2023-copie/figures/img-031-090.jpg",
-            "annales-area/annale-2023-copie/figures/img-031-091.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Retour veineux (RV) = [pression systémique moyenne (PSM) − pression atriale droite (PAD)] / résistances au retour veineux (RVR). Le retour veineux est donc proportionnel à la différence de pression entre la pression systémique moyenne et la pression atriale droite, et inversement proportionnel aux résistances au retour veineux.",
           "correctionGenerale": "<b>Retour veineux (RV) = [Pression systémique moyenne (PSM) − Pression atriale droite (PAD)] / Résistances au retour veineux (RVR)</b>\n\n<i>Loi de Poiseuille : ΔP = (8 η L / π R⁴) × Dv, soit débit = ΔP / résistance (fonction de la viscosité, de la longueur et du rayon du vaisseau).</i>\n\n• Le retour veineux est <b>proportionnel à la différence de pression</b> entre la pression systémique moyenne et la pression atriale droite\n• Le retour veineux est <b>inversement proportionnel aux résistances au retour veineux</b>\n\n<b>Augmentation du retour veineux</b>\n• Augmentation de la pression systémique moyenne\n• Diminution de la pression atriale droite\n• Diminution des résistances au retour veineux"
         },
@@ -128,8 +141,7 @@
           "format": "qroc",
           "enonce": "<b>Physiologie — Question n° 5</b>\n\nFaites correspondre aux numéros indiqués sur le schéma ci-dessous (représentant le compartiment veineux) les termes appropriés :\n\n• Volume non contraint (VNC)\n• Pression systémique moyenne (PSM)\n• Volume contraint (VC)\n• Pression atriale droite (POD)\n• Inverse des résistances au retour veineux (1/RRV)",
           "images": [
-            "annales-area/annale-2023-copie/figures/img-037-110.jpg",
-            "annales-area/annale-2023-copie/figures/img-038-112.jpg"
+            "annales-area/annale-2023-copie/figures/img-037-110.jpg"
           ],
           "reponseAttendue": "1 = pression systémique moyenne (PSM) ; 2 = volume contraint (VC) ; 3 = inverse des résistances au retour veineux (1/RRV) ; 4 = volume non contraint (VNC) ; 5 = pression atriale droite (POD).",
           "correctionGenerale": "• <b>1</b> = Pression systémique moyenne (PSM)\n• <b>2</b> = Volume contraint (VC)\n• <b>3</b> = Inverse des résistances au retour veineux (1/RRV)\n• <b>4</b> = Volume non contraint (VNC)\n• <b>5</b> = Pression atriale droite (POD)\n\n<i>Le schéma (B. Cholley, SFAR 2006) représente la capacitance du réservoir veineux : le volume contraint génère la pression systémique moyenne, et le gradient « moteur » du retour veineux est PSM − POD, selon la loi de Poiseuille RV = (PSM − POD)/R_RV.</i>"
@@ -190,12 +202,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 2</b>\n\nQuelle évaluation préanesthésique proposez-vous ?",
-          "images": [
-            "annales-area/annale-2023-copie/figures/img-053-160.jpg",
-            "annales-area/annale-2023-copie/figures/img-054-165.png",
-            "annales-area/annale-2023-copie/figures/img-055-169.jpg",
-            "annales-area/annale-2023-copie/figures/img-053-161.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Antécédents personnels de l’enfant (grossesse, naissance), poids de naissance, allergies, antécédents familiaux, évaluation du risque respiratoire — avec dépistage du SAOS par l’interrogatoire des parents (ronflement plus de la moitié du temps, ronflement bruyant, difficultés ou lutte pour respirer, pauses respiratoires observées, réveil fatigué le matin ; la présence d’au moins 3 symptômes est prédictive d’un SAOS et augmente le risque d’événements respiratoires peropératoires) — et évaluation du risque hémorragique.",
           "correctionGenerale": "• Antécédents personnels de l’enfant (grossesse, naissance)\n• Poids de naissance\n• Allergies\n• Antécédents familiaux\n• <b>Évaluation du risque respiratoire</b>\n• <b>Évaluation du risque hémorragique</b>\n\n<b>Dépister un SAOS : interrogatoire des parents</b>\n« Pendant que votre enfant dort :\n1) Ronfle-t-il plus de la moitié du temps ?\n2) Ronfle-t-il bruyamment ?\n3) Présente-t-il des difficultés pour respirer ou lutte-t-il pour respirer ?\n4) Avez-vous déjà remarqué que votre enfant s’arrête de respirer pendant la nuit ?\n5) Est-ce que votre enfant se réveille fatigué le matin ? »\n\n<b>La présence de ≥ 3 symptômes est prédictive d’un SAOS</b> → augmentation du risque d’événements respiratoires peropératoires.\n\n<b>Signes témoins de troubles respiratoires lors d’une hypertrophie amygdalienne</b> (en gras, les signes les plus discriminants)\n• <i>Symptômes nocturnes</i> : ronflement, <b>pauses respiratoires</b>, <b>sueurs</b>, énurésie, parasomnie, <b>sommeil agité</b>, position anormale pendant le sommeil (tête en hyperextension)\n• <i>Symptômes à l’éveil</i> : difficultés de réveil, <b>irritabilité au réveil</b>, hyperactivité, troubles de l’attention et de la mémoire, <b>asthénie au réveil</b>, somnolence diurne, céphalées matinales ou vomissement, anorexie au petit déjeuner, <b>respiration buccale</b>, troubles de la croissance (tardifs)\n\n<b>Questionnaire STBUR</b> — « The STBUR questionnaire for predicting perioperative respiratory adverse events in children at risk for sleep-disordered breathing » (<i>Pediatric Anesthesia</i>).\n\n<b>Évaluation du risque hémorragique — questionnaire de Watson-Williams</b> : une réponse à une question de type A, ou deux réponses à une question de type B, signalent une histoire clinique positive de trouble de l’hémostase ; ces questions sont à poser aussi aux parents et dans la fratrie.\n• <i>Type A</i> : saignement de plus de 24 heures ou transfusion après un acte chirurgical (circoncision, amygdalectomie…) ? hémorragie prolongée ou récidive hémorragique après 24 heures suite à une extraction dentaire ? antécédents d’hématurie inexpliquée ? consommation de salicylés ou d’AINS au cours des deux semaines précédentes ? ecchymoses anormales, pétéchies, signes de malnutrition ou de malabsorption, signes de maladie hépatique ou hématologique à l’examen ?\n• <i>Type B</i> : incidents précédents chez les parents ou chez les hommes du côté maternel ? ecchymoses faciles sans cause apparente ? épistaxis ayant nécessité un tamponnement chirurgical ? sites de ponction veineuse saignant plus de 15 minutes après le pansement ? tendance anormale au saignement déjà signalée ?\n\n<i>Référence citée : « Pediatric tonsillectomy: clinical practice guidelines », SFORL / AFCA / SFAR.</i>"
         },
@@ -223,18 +230,14 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 6</b>\n\nLe matin de l’intervention, les parents vous précisent que l’enfant est enrhumé depuis 2 jours, avec une rhinorrhée claire et une température à 37,8 °C ce matin. Décidez-vous de récuser ou d’anesthésier l’enfant ? Justifiez votre réponse.",
-          "images": [
-            "annales-area/annale-2023-copie/figures/img-063-193.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Anesthésie validée, car il s’agit d’une infection des voies aériennes supérieures légère (toux sèche, rhinorrhée claire), qui autorise l’anesthésie avec mesures préventives.",
           "correctionGenerale": "<b>Décision : anesthésie validée, car IVAS légère.</b>\n\n<b>Algorithme</b> — IVAS actuelle ou datant de 2 semaines :\n• <b>Urgence ?</b> → <b>Oui</b> : anesthésie avec mesures préventives\n• <b>Non</b> → évaluer la gravité de l’IVAS :\n  – <b>Sévère</b> (rhinorrhée purulente, toux productive, sibilants, fièvre, abattement) → report et réévaluation dans 2 semaines\n  – <b>Moyenne</b> (rhinorrhée purulente, toux productive) → décision individualisée\n  – <b>Légère</b> (toux sèche, rhinorrhée claire) → <b>anesthésie avec mesures préventives</b>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n° 7</b>\n\nSi vous décidez d’anesthésier l’enfant, décrivez l’induction anesthésique que vous allez réaliser.",
-          "images": [
-            "annales-area/annale-2023-copie/figures/img-065-200.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Préparation des voies aériennes supérieures : chez l’enfant enrhumé, avant l’âge de 6 ans, il est probablement recommandé de réaliser une nébulisation de salbutamol avant l’anesthésie générale (2,5 mg si le poids est inférieur à 20 kg, 5 mg au-delà). Induction inhalatoire au sévoflurane. Discuter une prémédication pharmacologique et/ou non pharmacologique.",
           "correctionGenerale": "<b>Préparation des VAS</b> — recommandation SFAR 2018 :\n<b>R11</b> — Chez l’enfant enrhumé, avant l’âge de 6 ans, il est probablement recommandé de réaliser une <b>nébulisation de salbutamol avant l’anesthésie générale</b> <i>(grade 2+, accord FORT)</i>.\n<i>Posologies : < 20 kg = 2,5 mg ; > 20 kg = 5 mg.</i>\n\n<b>Induction inhalatoire : SÉVOFLURANE.</b>\n\n<b>Discuter une prémédication pharmacologique et/ou non pharmacologique.</b>"
         },
@@ -255,12 +258,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 10</b>\n\nRédigez vos prescriptions postopératoires.",
-          "images": [
-            "annales-area/annale-2023-copie/figures/img-072-223.jpg",
-            "annales-area/annale-2023-copie/figures/img-070-216.jpg",
-            "annales-area/annale-2023-copie/figures/img-073-227.jpg",
-            "annales-area/annale-2023-copie/figures/img-074-231.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Analgésie : relais par paracétamol 15 mg/kg, recours à la nalbuphine 0,05 à 0,2 mg/kg IVL à la demande selon protocole ; ordonnance de sortie avec paracétamol 15 mg/kg/6 h per os systématiquement pendant 2 jours et Solupred 1 mg/kg/j per os, débuté à J+1 et poursuivi jusqu’à J+2. NVPO et ingesta : recours au dropéridol 30 µg/kg IVL, poursuite de l’ondansétron 0,1 mg/kg PO, recours à la métopimazine 5 mg en suppositoire, reprise des boissons à H+2 et de l’alimentation à H+4. Sortie au minimum à H+6 après vérification de la reprise de l’alimentation, de l’absence de saignement et de la compréhension des consignes.",
           "correctionGenerale": "<b>Postopératoire</b>\n\n<i>Analgésie</i>\n• Relais paracétamol 15 mg/kg\n• Recours : nalbuphine 0,05-0,2 mg/kg IVL à la demande, selon protocole\n• Vérification de l’ordonnance de sortie : paracétamol 15 mg/kg/6 h PO systématiquement pendant 2 jours ; Solupred 1 mg/kg/j PO (débuté à J+1 postopératoire et à poursuivre jusqu’à J+2)\n\n<i>NVPO / ingesta</i>\n• Recours dropéridol 30 µg/kg IVL\n• Poursuite de l’ondansétron 0,1 mg/kg PO\n• Recours : métopimazine 5 mg en suppositoire\n• Reprise des boissons : H+2 postopératoire\n• Reprise de l’alimentation : H+4 postopératoire\n\n<i>Sortie</i>\n• Minimum H+6 postopératoire, après vérification de la reprise de l’alimentation, de l’absence de saignement par le chirurgien et de la compréhension des consignes d’ambulatoire par le parent\n\n<b>Rappel du protocole peropératoire</b> : co-induction inhalatoire (sévoflurane) et IV, ou IV seule si grand enfant (sufentanil 0,1-0,2 µg/kg puis propofol 2 mg/kg) ; intubation orotrachéale avec sonde préformée, attention à la mobilisation ; risque d’obstruction des voies aériennes et de laryngo-broncho-spasme. Entretien anesthésique volatil (sévoflurane) ; prévention des NVPO par Solumédrol 1 mg/kg + ondansétron 0,1 mg/kg ; analgésie postopératoire selon la « stratégie corticoïdes » avec paracétamol 15 mg/kg IVL. Réveil : aspiration des sécrétions et du sang, ablation du packing pharyngé, extubation vigile en décubitus latéral +/− Trendelenburg (<i>tonsil position</i>), limitation des stimulations laryngées (<i>no touch strategy</i>).\n\n<b>Recommandation 16 (SFORL)</b> : « L’antalgie postopératoire recommandée après amygdalectomie est la suivante (accord professionnel) : une administration de paracétamol de façon systématique, à horaires programmés ; en cas de risque respiratoire accru, l’option AINS sera privilégiée compte tenu de l’absence de risque de dépression respiratoire ; en cas de risque hémorragique accru, l’option tramadol sera privilégiée compte tenu de l’absence de majoration du risque hémorragique et initiée en hospitalisation conventionnelle en l’absence de SAHOS ou de SARVAS préopératoire ; les deux autres options thérapeutiques (AINS modifiée et corticoïdes) peuvent être utilisées mais n’ont pas fait l’objet d’études spécifiques. En cas d’effet antalgique insuffisant, malgré le schéma prescrit, une nouvelle évaluation médicale est recommandée. »\n\n<b>Options antalgiques comparées</b>\n• <i>À l’hôpital</i> — option AINS : dexaméthasone per-op, morphine en SSPI, paracétamol IV ou per os, ibuprofène en hospitalisation. Option tramadol : dexaméthasone per-op, morphine en SSPI, paracétamol IV ou per os, tramadol en hospitalisation (non ambulatoire). Option corticoïdes : dexaméthasone per-op, morphine en SSPI, paracétamol IV ou per os. Option AINS modifiée : morphine en SSPI, paracétamol IV ou per os, ibuprofène en hospitalisation.\n• <i>À la maison</i> — option AINS : paracétamol per os + ibuprofène. Option tramadol : paracétamol per os + tramadol. Option corticoïdes : paracétamol per os + prednisolone. Option AINS modifiée : paracétamol per os + ibuprofène."
         },
@@ -298,9 +296,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nLe bilan sanguin fait le 21/07/2023 à 10 h retrouve un débit de filtration glomérulaire (DFG) à 40 mL/min et un taux de dabigatran à 60 ng/mL. Quelle est votre conduite à tenir ? Argumentez.",
-          "images": [
-            "annales-area/annale-2023-copie/figures/img-085-265.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Il s’agit d’une chirurgie à risque hémorragique élevé (hors neurochirurgie), réalisée en urgence, avec un dosage de dabigatran supérieur à 50 ng/mL : il faut donc arrêter le dabigatran et administrer l’idarucizumab 5 g IVL.",
           "correctionGenerale": "• Chirurgie à <b>risque hémorragique élevé</b> (non neurochirurgie)\n• <b>En urgence</b>\n• <b>Dosage du dabigatran > 50 ng/mL</b>\n\n→ <b>ARRÊT DU DABIGATRAN</b>\n→ <b>IDARUCIZUMAB 5 g IVL</b>\n\n<i>L’algorithme GIHP « Procédure invasive non programmée pour un patient traité par anticoagulant oral direct » est reproduit : pour une procédure à risque hémorragique élevé (seuil [AOD] ≤ 50 ng/mL, ou ≤ 30 ng/mL si anesthésie neuraxiale ou geste neuraxial), on mesure la concentration en dabigatran ou en AOD anti-Xa ; si le résultat n’est pas disponible rapidement, idarucizumab 5 g IV pour le dabigatran, ou discussion des CCP 25-50 UI/kg pour les anti-Xa ; si la concentration est au-dessus du seuil, même conduite ; si elle est au-dessous, la procédure invasive peut être réalisée. Après le geste, thromboprophylaxie veineuse si nécessaire, puis reprise de l’anticoagulation curative selon le risque hémorragique et thrombotique.</i>"
         },
@@ -328,9 +324,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 7</b>\n\nVous retenez le diagnostic de choc anaphylactique. Quelle est votre prise en charge immédiate ?",
-          "images": [
-            "annales-area/annale-2023-copie/figures/img-093-290.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Interrompre l’administration du produit suspecté, appeler à l’aide, arrêter la chirurgie. Contrôle des voies aériennes, oxygène pur, VVP de bon calibre, Trendelenburg. Remplissage vasculaire rapide : cristalloïdes 500 mL si grade II et 1000 mL si grade III, à renouveler une fois si besoin. Adrénaline IVD (1 mg dilué dans 10 mL = 100 µg/mL) pour une PAM ≥ 60 mmHg : grade II 20 µg puis 50 µg toutes les 2 min ; grade III titration de 100 à 200 µg toutes les 1 à 2 min ; grade IV bolus de 1 mg. En cas d’inefficacité après 10 minutes : doubler les bolus à 2 mg, adrénaline IVSE 200 µg/h, noradrénaline IVSE, glucagon si bêta-bloquant, poursuite du remplissage jusqu’à 30 mL/kg, discussion de la vasopressine. En cas de bronchospasme, salbutamol après correction de l’hypotension. Prélèvements sanguins dès que possible et hémisuccinate d’hydrocortisone 200 mg IVDL.",
           "correctionGenerale": "<b>CHOC ANAPHYLACTIQUE AU BLOC OPÉRATOIRE — grades ≥ II</b>\n\n<b>CONFIRMER</b> : hypotension, chute de la capnie, tachycardie, bronchospasme, rash retardé et angio-œdème (œdème laryngé, confusion avec un œdème angioneurotique), ACR.\n<b>ÉLIMINER</b> : embolie pulmonaire ou amniotique, IDM, pneumothorax ou obstruction trachéo-bronchique, surdosage en anesthésiques, hémorragie.\n\n<b>INTERROMPRE l’administration du produit suspecté — APPEL À L’AIDE — STOP chirurgie.</b>\n\n<b>TRAITER</b>\n• Contrôle des voies aériennes, oxygène pur, VVP de bon calibre, Trendelenburg\n• <b>Remplissage vasculaire rapide</b> : cristalloïdes 500 mL si grade II et 1000 mL si grade III, à renouveler une fois si besoin\n• <b>Adrénaline IVD</b> (ampoule de 1 mg diluée dans 10 mL = 100 µg/mL) pour une PAM ≥ 60 mmHg\n  – Grade II : 20 µg puis 50 µg toutes les 2 min (attention à la double dilution de l’adrénaline dans ce cas)\n  – Grade III : titration de 100 µg à 200 µg toutes les 1 à 2 min\n  – Grade IV : bolus d’adrénaline de 1 mg (cf. aide cognitive ACR)\n• <b>En cas d’inefficacité après 10 minutes</b> : doubler les bolus d’adrénaline à 2 mg ; adrénaline IVSE à débuter à 200 µg/h dès 3 bolus IV administrés ; noradrénaline IVSE à débuter à 300 µg – 1 mg/h après 3 bolus d’adrénaline ; glucagon 1 à 2 mg IVDL toutes les 5 min si le patient est sous bêta-bloquant ; poursuivre le remplissage cristalloïde jusqu’à 30 mL/kg ; considérer un monitorage non invasif de la volémie et/ou une échographie cardiaque ; discuter la vasopressine 2 à 10 UI IVD puis 2 UI/h\n• <b>En cas de bronchospasme</b> : après correction de l’hypotension artérielle (le salbutamol pouvant la majorer) — salbutamol en nébulisation (spray peu efficace dans la sonde d’intubation) ; salbutamol IVD 100 à 200 µg (ampoule de 0,5 mg diluée dans 10 mL = 50 µg/mL), relais IVSE 300 µg à 1,5 mg/h\n• Prélèvements sanguins dès que possible\n• Hémisuccinate d’hydrocortisone 200 mg IVDL (dose unique)\n• En cas d’arrêt cardiaque réfractaire : envisager une assistance cardio-circulatoire ECLS/ECMO\n\n<b>FEMME ENCEINTE</b> : discuter une extraction fœtale immédiate si > 20 SA ; décubitus latéral gauche ; remplissage et adrénaline identiques.\n\n<b>APRÈS</b> : surveillance intensive au moins 6 h après la disparition des signes ; information du patient ; prise de rendez-vous en consultation d’allergo-anesthésie ; déclaration à la pharmacovigilance.\n\n<b>Dosages</b> : histamine (tube EDTA) recommandée < 30 min ; tryptase (tube sec) < 30 min, 1 à 2 h et > 24 h ; IgE anti-ammoniums quaternaires (tube sec)."
         },

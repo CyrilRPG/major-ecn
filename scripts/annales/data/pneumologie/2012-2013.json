@@ -4,6 +4,7 @@
       "atelier": "annales-pneumologie-bon/conference-1-pae-formation-pneumo-23042025-copie",
       "sujetOfficiel": null,
       "figuresIgnorees": {
+        "img-015-060.jpg": "Audit images 28/09/2026 (#309) : figure du corrigé qui donne la réponse avant que l’élève réponde — Algorithme d'antibiothérapie des exacerbations de BPCO = réponse",
         "img-026-105.jpg": "illustration d’une diapositive de cours sans titre lisible (page 26) : support pédagogique du conférencier, hors iconographie de l’annale",
         "img-036-146.jpg": "illustration de la diapositive de cours « Anomalies V/Q » (page 36) : support pédagogique du conférencier, hors iconographie de l’annale",
         "img-036-147.jpg": "illustration de la diapositive de cours « Anomalies V/Q » (page 36) : support pédagogique du conférencier, hors iconographie de l’annale",
@@ -128,9 +129,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 6</b>\n\nDécrivez un schéma d’antibiothérapie pour exacerbation de BPCO figurant dans des recommandations de pratique clinique en vigueur.",
-          "images": [
-            "annales-pneumologie-bon/conference-1-pae-formation-pneumo-23042025-copie/figures/img-015-060.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "En l’absence de majoration de la purulence de l’expectoration : pas d’antibiotique, surveillance et réévaluation à 48 h ; en cas d’aggravation clinique, on rejoint la branche traitée. En cas de majoration de la purulence de l’expectoration : sans facteur de risque, amoxicilline-acide clavulanique 1,5 g/j, ou amoxicilline 3 g/j, ou pristinamycine 3 g/j, ou macrolide, pour une durée de 5 jours ; avec facteur de risque, amoxicilline-acide clavulanique 3 g/j, ou C3G, ou fluoroquinolone antipneumococcique, en discutant les critères d’hospitalisation, avec surveillance et réévaluation à 48 h. Les facteurs de risque sont : VEMS < 50 % de la valeur prédite, plus de deux exacerbations par an, cardiopathie ischémique, oxygénothérapie à domicile, corticothérapie orale chronique.",
           "correctionGenerale": "<b>Antibiothérapie des exacerbations de BPCO en ambulatoire</b>\n\n<b>Pas de majoration de la purulence de l’expectoration</b>\n• Pas d’antibiotique\n• Surveillance et réévaluation à 48 h\n• En cas d’aggravation clinique → rejoindre la branche traitée\n\n<b>Majoration de la purulence de l’expectoration, SANS facteur de risque</b>\n• Amoxicilline-acide clavulanique 1,5 g/j\n• Ou amoxicilline 3 g/j\n• Ou pristinamycine 3 g/j\n• Ou macrolide\n• Durée : 5 jours\n\n<b>Majoration de la purulence de l’expectoration, AVEC facteur de risque</b>\n• Amoxicilline-acide clavulanique 3 g/j, ou C3G, ou fluoroquinolone antipneumococcique\n• Discuter les critères d’hospitalisation ; surveillance et réévaluation à 48 h\n\n<i>Facteurs de risque</i> : VEMS < 50 % de la valeur prédite, plus de deux exacerbations par an, cardiopathie ischémique, oxygénothérapie à domicile, corticothérapie orale chronique."
         },

@@ -3,15 +3,23 @@
     "ANNALES GYNECOLOGIE/annale 2018.pdf": {
       "atelier": "annales-gynecologie/annale-2018",
       "sujetOfficiel": null,
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-005-020.png": "Audit des images (28/09/2026, #702) : Capture PDF « Signes de gravité / HELLP / IRA » = la réponse ; détachée de la question.",
+        "img-047-193.png": "Audit des images (28/09/2026, #937) : Capture de la classification FIGO du cancer du col = la réponse ; détachée de la question."
+      },
       "remarque": "Diaporama de correction reprenant les énoncés officiels de la session 2018 : deux cas de connaissances fondamentales et deux sujets de connaissances pratiques."
     },
     "ANNALES GYNECOLOGIE/annales 2019 GYNECO.pdf": {
       "atelier": "annales-gynecologie/annales-2019-gyneco",
       "sujetOfficiel": null,
       "figuresIgnorees": {
+        "img-024-100.jpg": "Audit images 28/09/2026 (#411) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma des ligatures vasculaires utérines = réponse",
+        "img-023-095.jpg": "Audit images 28/09/2026 (#496) : figure du corrigé qui donne la réponse avant que l’élève réponde — Figure EMC « capitonnage utérin de Cho » = réponse",
+        "img-026-109.jpg": "Audit images 28/09/2026 (#368) : figure du corrigé qui donne la réponse avant que l’élève réponde — Tableau des contre-indications des COP = réponse",
+        "img-014-056.png": "Audit images 28/09/2026 (#159) : figure du corrigé qui donne la réponse avant que l’élève réponde — Courbe du risque de trisomie 21 selon l'âge maternel = réponse",
         "img-026-110.png": "aplat blanc de la mise en page de la diapositive, sans contenu",
-        "img-034-143.png": "logo du CNGOF figurant en pied de diapositive, sans contenu médical"
+        "img-034-143.png": "logo du CNGOF figurant en pied de diapositive, sans contenu médical",
+        "img-023-094.jpg": "Audit des images (28/09/2026, #784) : Schémas de plastie utérine / suture de B-Lynch = une des alternatives demandées ; détachée de la question."
       },
       "remarque": "Diaporama de correction reprenant les énoncés officiels de la session 2019 : deux sujets pratiques, un cas d’hémorragie du post-partum, puis deux séries de questions isolées."
     }
@@ -42,7 +50,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 3</b>\n\nVous recherchez d’autres signes maternels cliniques de gravité. Citez cinq de ces critères.",
-          "images": ["annales-gynecologie/annale-2018/figures/recadre/img-005-020.png"],
+          "images": [],
           "reponseAttendue": "Une détresse respiratoire, un œdème aigu du poumon, une barre épigastrique, un déficit neurologique, des troubles de la conscience, des réflexes ostéo-tendineux vifs, diffusés et polycinétiques.",
           "correctionGenerale": "• Détresse respiratoire\n• OAP\n• Barre épigastrique\n• Déficit neurologique\n• Troubles de la conscience\n• ROT vifs, diffusés, polycinétiques\n\n<i>Cf. RPC 2020, reproduites ci-dessus : PAS ≥ 180 mmHg et/ou PAD ≥ 120 mmHg ; douleur épigastrique et/ou de l’hypochondre droit « en barre » ; céphalées intenses et rebelles ; troubles visuels ou auditifs ; déficit neurologique ; troubles de la conscience ; ROT vifs et polycinétiques ; crise d’éclampsie ; détresse respiratoire ; œdème aigu du poumon ; HELLP syndrome ; insuffisance rénale aiguë.</i>"
         },
@@ -77,7 +85,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 8</b>\n\nUne heure après son arrivée, la patiente appelle pour un saignement vaginal rouge vif associé à une douleur abdomino-pelvienne intense. L’utérus est dur et ne se relâche pas. La TA est à 180/120 mmHg malgré le traitement.\n\nL’enregistrement cardiotocographique présente deux anomalies : lesquelles ?",
-          "images": ["annales-gynecologie/annale-2018/figures/img-010-041.jpg"],
+          "images": [
+            "annales-gynecologie/annale-2018/figures/img-010-041.jpg"
+          ],
           "reponseAttendue": "Un ralentissement prolongé et une hypertonie, avec diminution de la variabilité et perte des accélérations : un profil d’hypoxie aiguë.",
           "correctionGenerale": "• Ralentissement prolongé\n• Hypertonie\n• Diminution de la variabilité, perte des accélérations\n\n→ <b>Profil d’hypoxie aiguë</b>"
         },
@@ -108,7 +118,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 1</b>\n\nDécrivez le cliché. Que vous manque-t-il pour une description précise de l’image ?",
-          "images": ["annales-gynecologie/annale-2018/figures/img-013-054.jpg"],
+          "images": [
+            "annales-gynecologie/annale-2018/figures/img-013-054.jpg"
+          ],
           "reponseAttendue": "Une mammographie, cliché de face, montrant une opacité spiculée dans un sein de forte densité. Il manque le cliché oblique et le sein controlatéral.",
           "correctionGenerale": "• Mammographie : cliché de face\n• <b>Opacité spiculée</b>\n• Forte densité du sein\n\n<b>Il manque</b> : le cliché oblique et le sein controlatéral."
         },
@@ -195,7 +207,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 1</b>\n\nL’échographie montre qu’il s’agit d’une grossesse gémellaire. Précisez la chorionicité par rapport au cliché suivant. Quel est le signe échographique ici présent, évocateur de ce type de placentation ?",
-          "images": ["annales-gynecologie/annale-2018/figures/img-026-107.jpg"],
+          "images": [
+            "annales-gynecologie/annale-2018/figures/img-026-107.jpg"
+          ],
           "reponseAttendue": "Une grossesse gémellaire bichoriale biamniotique, avec le signe du lambda.",
           "correctionGenerale": "• <b>Grossesse gémellaire bichoriale biamniotique</b>\n• <b>Signe du lambda</b>"
         },
@@ -310,7 +324,9 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 5</b>\n\nAprès votre interrogatoire minutieux, vous examinez la patiente. Le toucher vaginal perçoit un bourgeonnement du col. Vous avez fait une photographie de ce col (figure). L’examen au spéculum confirme ce bourgeonnement.\n\nQue proposez-vous de faire à la patiente ?",
-          "images": ["annales-gynecologie/annale-2018/figures/img-043-176.jpg"],
+          "images": [
+            "annales-gynecologie/annale-2018/figures/img-043-176.jpg"
+          ],
           "reponseAttendue": "Une biopsie, avec envoi en anatomopathologie.",
           "correctionGenerale": "<b>Biopsie et envoi en anatomopathologie.</b>"
         },
@@ -338,7 +354,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 9</b>\n\nLa tumeur mesure 5 cm sans atteinte paramétriale ou vaginale. Le bilan d’extension ne montre pas de métastases à distance. Quel est le stade FIGO ?",
-          "images": ["annales-gynecologie/annale-2018/figures/recadre/img-047-193.png"],
+          "images": [],
           "reponseAttendue": "Un stade IB3.",
           "correctionGenerale": "<b>Stade IB3.</b>\n\n<i>La figure reproduit la classification FIGO 2018 des cancers du col utérin.</i>"
         },

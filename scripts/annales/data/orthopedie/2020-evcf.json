@@ -3,7 +3,57 @@
     "ANNALES ORTHOPEDIE/EVCF2020 correction.pdf": {
       "atelier": "annales-orthopedie/evcf2020-correction",
       "sujetOfficiel": "Annales/Sujets/2020_EVCF pt1.pdf",
-      "figuresIgnorees": {}
+      "figuresIgnorees": {
+        "img-052-243.png": "Audit images 28/09/2026 (#376) : figure du corrigé qui donne la réponse avant que l’élève réponde — Planche de vascularisation artérielle de la tête fémorale = réponse",
+        "img-068-321.png": "Audit images 28/09/2026 (#323) : figure du corrigé qui donne la réponse avant que l’élève réponde — Planche anatomique du nerf fibulaire (Gray), corrigé",
+        "img-107-442.png": "Audit images 28/09/2026 (#315) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « pTNMR » (R0/R1/R2) = réponse",
+        "img-016-072.png": "Audit images 28/09/2026 (#312) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma légendé du nerf suprascapulaire à l'échancrure spino-glénoïdienne = réponse",
+        "img-060-281.png": "Audit images 28/09/2026 (#310) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma de coxométrie (VCE, HTE, CC'D, VCA) = réponse",
+        "img-021-095.png": "Audit images 28/09/2026 (#307) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive des stades de Goutallier (fenêtres musculaires) = réponse",
+        "img-084-399.png": "Audit images 28/09/2026 (#297) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « Gustilo-Anderson classification » (theplasticsfella.com), corrigé",
+        "img-023-105.png": "Audit images 28/09/2026 (#295) : figure du corrigé qui donne la réponse avant que l’élève réponde — Capture d'écran d'un document Word (OneDrive) contenant le texte de la réponse (éléments de stabilisation)",
+        "img-050-234.jpg": "Audit images 28/09/2026 (#294) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma des conflits CAM / pincer = réponse",
+        "img-094-437.png": "Audit images 28/09/2026 (#287) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « Fracture en ABD » (mécanisme) = correction",
+        "img-093-436.png": "Audit images 28/09/2026 (#325) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « Fractures en rotation externe » = réponse (mécanisme)",
+        "img-096-438.png": "Audit images 28/09/2026 (#250) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « Classification de Magerl » (A compression, B distraction…) = réponse",
+        "img-009-040.png": "Audit images 28/09/2026 (#234) : figure du corrigé qui donne la réponse avant que l’élève réponde — Formulaire ASIA vierge (corrigé), sans rôle d'énoncé ni rapport direct avec la question",
+        "img-008-035.png": "Audit images 28/09/2026 (#322) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma légendé du plexus brachial (racines C5-C7) = réponse",
+        "img-088-420.png": "Audit images 28/09/2026 (#354) : image décorative, vide ou hors sujet — Image entièrement blanche (vide)",
+        "img-088-419.png": "Audit images 28/09/2026 (#212) : figure du corrigé qui donne la réponse avant que l’élève réponde — Planche anatomique légendée du ligament deltoïdien = réponse",
+        "img-090-429.png": "Audit images 28/09/2026 (#209) : figure du corrigé qui donne la réponse avant que l’élève réponde — Tableau classification de Johnson/Myerson = réponse",
+        "img-005-021.png": "Audit images 28/09/2026 (#240) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive du corrigé « Anatomie utile » (SS) = correction ; capture avec barre d'onglets",
+        "img-004-016.png": "Audit images 28/09/2026 (#205) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive du corrigé « Anatomie utile » (SE, IE, TM) = correction ; capture avec barre d'onglets",
+        "img-056-261.png": "Audit images 28/09/2026 (#153) : figure du corrigé qui donne la réponse avant que l’élève réponde — Figure anatomique du corrigé (région inguinale, nerfs) sans rôle d'énoncé ; marque NYSORA ©",
+        "img-074-349.png": "Audit des images (28/09/2026, #1321) : classification AORI illustrée : c'est la réponse ; détachée de la question.",
+        "img-078-367.png": "Audit des images (28/09/2026, #1254) : planche anatomique du genou (Gray) : figure de cours ; détachée de la question.",
+        "img-046-215.png": "Audit des images (28/09/2026, #1245) : schéma des territoires sensitifs de la main : c'est la réponse ; détachée de la question.",
+        "img-084-397.png": "Audit des images (28/09/2026, #1200) : tableau de la classification de Gustilo : c'est la réponse ; détachée de la question.",
+        "img-021-093.png": "Audit des images (28/09/2026, #1199) : schéma des stades de Goutallier : c'est la réponse ; détachée de la question.",
+        "img-006-026.png": "Audit des images (28/09/2026, #1185) : planche « Nerfs de la face postérieure de l'épaule » : c'est la réponse ; détachée de la question.",
+        "img-068-319.png": "Audit des images (28/09/2026, #1170) : schéma des territoires sensitifs du membre inférieur : c'est la réponse ; détachée de la question.",
+        "img-025-115.png": "Audit des images (28/09/2026, #1108) : schéma de la prothèse inversée (médialisation du centre de rotation) : c'est la réponse ; détachée de la question.",
+        "img-037-175.png": "Audit des images (28/09/2026, #1098) : planche anatomique de Gray (nerfs de la main) : figure de cours ; détachée de la question.",
+        "img-044-206.jpg": "Audit des images (28/09/2026, #1089) : schéma légendé de l'appareil extenseur (bandelette médiane) : c'est la réponse ; détachée de la question.",
+        "img-062-293.png": "Audit des images (28/09/2026, #1086) : schéma de la ligne de Klein : c'est la réponse ; détachée de la question.",
+        "img-098-440.png": "Audit des images (28/09/2026, #1036) : fiche ASIA (logo Hôpitaux universitaires Paris-Sud) : figure de cours, sans rôle de document ; détachée de la question.",
+        "img-082-387.png": "Audit des images (28/09/2026, #504) : Radiographie de corrigé avec flèches sur le liseré de chondrocalcinose (réponse) ; énoncé sans image ; filigrane info-radiologie.ch ; détachée de la question.",
+        "img-031-149.jpg": "Audit des images (28/09/2026, #524) : Schéma légendé « Ligament scapho-lunaire » = la réponse ; détachée de la question.",
+        "img-016-071.png": "Audit des images (28/09/2026, #540) : Planche anatomique légendée « Nerf supra-scapulaire » du corrigé ; détachée de la question.",
+        "img-082-385.png": "Audit des images (28/09/2026, #645) : Diapositive « Pathologies microcristallines » = la réponse (chondrocalcinose) ; détachée de la question.",
+        "img-048-224.png": "Audit des images (28/09/2026, #646) : Planche de Gray légendée (artère glutéale supérieure, nerf sciatique) = la réponse ; détachée de la question.",
+        "img-044-205.jpg": "Audit des images (28/09/2026, #655) : Schéma légendé « Doigt en boutonnière » = la réponse ; détachée de la question.",
+        "img-042-196.jpg": "Audit des images (28/09/2026, #657) : Figure « Les gaines synoviales » = la réponse ; détachée de la question.",
+        "img-086-409.png": "Audit des images (28/09/2026, #677) : Planche anatomique du talus légendée = la réponse ; détachée de la question.",
+        "img-062-291.png": "Audit des images (28/09/2026, #763) : Radiographie de bassin avec les lignes de Klein tracées en rouge = la construction demandée ; détachée de la question.",
+        "img-092-435.png": "Audit des images (28/09/2026, #764) : Diapositive « Mécanisme en adduction », sans rapport direct (question sur la fracture interligamentaire), corrigé ; détachée de la question.",
+        "img-029-139.png": "Audit des images (28/09/2026, #789) : Capture PDF d'imageries d'ostéochondrite (corrigé), superpositions techniques seulement ; détachée de la question.",
+        "img-035-166.jpg": "Audit des images (28/09/2026, #812) : Schéma légendé du pouce (adducteur interposé) = la réponse (effet Stener) ; détachée de la question.",
+        "img-058-271.png": "Audit des images (28/09/2026, #822) : Diapositive « Coxa profunda / Protrusio acetabuli » avec lignes tracées = la réponse ; détachée de la question.",
+        "img-070-331.png": "Audit des images (28/09/2026, #831) : Schéma légendé du MPFL = la réponse ; détachée de la question.",
+        "img-027-125.png": "Audit des images (28/09/2026, #904) : Planche légendée « Articulation du coude (vue latérale) » = la réponse ; détachée de la question.",
+        "img-011-049.png": "Audit des images (28/09/2026, #913) : Photo de luxation erecta (yeux masqués) = l'attitude demandée ; URL en double dans la question ; détachée de la question.",
+        "img-029-135.png": "Audit des images (28/09/2026, #974) : Capture PDF « Stades évolués : dg RX, scanner » avec flèches (ostéochondrite), corrigé ; détachée de la question."
+      }
     }
   },
   "series": [
@@ -18,21 +68,14 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°1</b>\n\nQuels sont les nerfs impliqués dans l’élévation latérale du bras ?",
-          "images": [
-            "annales-orthopedie/evcf2020-correction/figures/recadre/img-004-016.png",
-            "annales-orthopedie/evcf2020-correction/figures/recadre/img-005-021.png",
-            "annales-orthopedie/evcf2020-correction/figures/img-006-026.png"
-          ],
+          "images": [],
           "reponseAttendue": "Le nerf suprascapulaire (muscle supra-épineux, premier degré d’abduction) et le nerf axillaire (muscle deltoïde).",
           "correctionGenerale": "• Nerf suprascapulaire → muscle supra-épineux (1ᵉʳ degré d’abduction)\n• Nerf axillaire → muscle deltoïde"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nAprès réduction d’une luxation scapulo-humérale antéro-interne, un patient présente un déficit de la contraction du muscle deltoïde, un déficit sensitif du moignon de l’épaule, un déficit sensitif postérieur du membre supérieur et une perte de l’extension des doigts, du carpe et du coude. Quelle lésion suspectez-vous ?",
-          "images": [
-            "annales-orthopedie/evcf2020-correction/figures/img-008-035.png",
-            "annales-orthopedie/evcf2020-correction/figures/img-009-040.png"
-          ],
+          "images": [],
           "reponseAttendue": "Une lésion du plexus brachial, racines C5-C6-C7.",
           "correctionGenerale": "Lésions du plexus brachial C5 – C6 – C7."
         },
@@ -40,7 +83,6 @@
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nEn cas de luxation erecta de l’épaule, dans quelle attitude se trouve le bras ?",
           "images": [
-            "annales-orthopedie/evcf2020-correction/figures/recadre/img-011-049.png",
             "annales-orthopedie/evcf2020-correction/figures/recadre/img-011-050.png"
           ],
           "reponseAttendue": "En abduction.",
@@ -56,10 +98,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°5</b>\n\nDécrivez le ou les muscles de la coiffe des rotateurs atteint(s) dans une compression du nerf suprascapulaire au niveau de l’échancrure spino-glénoïdienne.",
-          "images": [
-            "annales-orthopedie/evcf2020-correction/figures/img-016-071.png",
-            "annales-orthopedie/evcf2020-correction/figures/img-016-072.png"
-          ],
+          "images": [],
           "reponseAttendue": "L’infra-épineux.",
           "correctionGenerale": "Infra-épineux."
         },
@@ -73,48 +112,42 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°7</b>\n\nDéfinition d’une infiltration graisseuse de stade 3 de Goutallier et Bernageau des muscles de la coiffe des rotateurs.",
-          "images": [
-            "annales-orthopedie/evcf2020-correction/figures/img-021-093.png",
-            "annales-orthopedie/evcf2020-correction/figures/img-021-095.png"
-          ],
+          "images": [],
           "reponseAttendue": "Autant de graisse que de muscle.",
           "correctionGenerale": "Autant de graisse que de muscle (classification de Goutallier)."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°8</b>\n\nQuels sont les moyens de stabilisation de l’articulation acromio-claviculaire ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/recadre/img-023-105.png"],
+          "images": [],
           "reponseAttendue": "La chape delto-trapézienne, les ligaments acromio-claviculaires (contrôle du plan horizontal surtout : supérieur, inférieur, antérieur et postérieur) et les ligaments coraco-claviculaires (contrôle du plan vertical surtout, et supéro-inférieur) — latéral = trapézoïde, médial = conoïde.",
           "correctionGenerale": "<b>Éléments de la stabilisation</b>\n• Chape delto-trapézienne\n• Ligaments acromio-claviculaires (contrôle du plan horizontal surtout) : supérieur, inférieur, antérieur et postérieur\n• Ligaments coraco-claviculaires (contrôle du plan vertical surtout, et supéro-inférieur) — latéral = trapézoïde ; médial = conoïde\n\nRappels : l’acromio-claviculaire soutient le membre supérieur ; le test radiologique dynamique de Tauber (instabilité antéro-postérieure) différencie les stades 3 et 4 ; l’instabilité horizontale (postérieure ++) est de mauvais pronostic."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°9</b>\n\nQuel est le principe biomécanique des prothèses inversées d’épaule ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-025-115.png"],
+          "images": [],
           "reponseAttendue": "La médialisation et l’abaissement du centre de rotation.",
           "correctionGenerale": "Médialisation et abaissement du centre de rotation.\n(P. Boileau, F. Balg — doi : 10.1016/B978-2-84299-935-3.50015-5)"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°10</b>\n\nAu niveau de l’articulation du coude, quelles sont les insertions distales du ligament collatéral latéral ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-027-125.png"],
+          "images": [],
           "reponseAttendue": "La tête radiale (faisceau antérieur) et le bord latéral de l’ulna (faisceaux moyen et postérieur).",
           "correctionGenerale": "• Tête radiale (faisceau antérieur)\n• Bord latéral de l’ulna (faisceau moyen, faisceau postérieur)"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°11</b>\n\nQuel diagnostic suspectez-vous chez une gymnaste de 14 ans qui consulte pour des blocages douloureux du coude ?",
-          "images": [
-            "annales-orthopedie/evcf2020-correction/figures/recadre/img-029-135.png",
-            "annales-orthopedie/evcf2020-correction/figures/recadre/img-029-139.png"
-          ],
+          "images": [],
           "reponseAttendue": "Une ostéochondrite disséquante du coude (capitulum).",
           "correctionGenerale": "Ostéochondrite disséquante du coude (capitulum)."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°12</b>\n\nDevant une fracture articulaire à haute énergie localisée au milieu de la glène radiale chez un sujet jeune, quel ligament intra-carpien peut être lésé ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-031-149.jpg"],
+          "images": [],
           "reponseAttendue": "Le ligament scapho-lunaire.",
           "correctionGenerale": "Ligament scapho-lunaire."
         },
@@ -128,14 +161,14 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°14</b>\n\nDans une entorse du pouce, qu’appelle-t-on l’effet Stener ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-035-166.jpg"],
+          "images": [],
           "reponseAttendue": "L’interposition du muscle adducteur du pouce, qui empêche la cicatrisation du ligament collatéral ulnaire.",
           "correctionGenerale": "Interposition du muscle adducteur du pouce, qui empêche la cicatrisation du LCU."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°15</b>\n\nQuel est le nom de la branche nerveuse que l’on peut léser lors d’une voie de Henry faite pour une ostéosynthèse par plaque sur une fracture du radius distal ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-037-175.png"],
+          "images": [],
           "reponseAttendue": "Le rameau thénarien du nerf médian.",
           "correctionGenerale": "Rameau thénarien du nerf médian."
         },
@@ -156,45 +189,42 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°18</b>\n\nDans le cadre de l’examen clinique d’un phlegmon des gaines des fléchisseurs du pouce, sur quelle région anatomique se situe la douleur au cul-de-sac de la gaine ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-042-196.jpg"],
+          "images": [],
           "reponseAttendue": "Le poignet.",
           "correctionGenerale": "Le poignet."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°19</b>\n\nLorsqu’un doigt est déformé en boutonnière, quelle est la structure anatomique lésée ?",
-          "images": [
-            "annales-orthopedie/evcf2020-correction/figures/img-044-205.jpg",
-            "annales-orthopedie/evcf2020-correction/figures/img-044-206.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "La bandelette médiane du tendon extenseur, rompue.",
           "correctionGenerale": "Rupture de la bandelette médiane du tendon extenseur."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°20</b>\n\nQuel(s) nerf(s) assure(nt) l’innervation sensitive de la face dorsale du 4ᵉ doigt ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-046-215.png"],
+          "images": [],
           "reponseAttendue": "Les nerfs radial, ulnaire et médian.",
           "correctionGenerale": "• Nerf radial\n• Nerf ulnaire\n• Nerf médian"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°21</b>\n\nQuels éléments vasculo-nerveux passent dans le canal supra-piriformis ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-048-224.png"],
+          "images": [],
           "reponseAttendue": "L’artère et le nerf glutéaux supérieurs.",
           "correctionGenerale": "Artère et nerf glutéal supérieur."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°22</b>\n\nÀ la hanche, quels sont les mécanismes à l’origine d’un conflit fémoro-acétabulaire ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-050-234.jpg"],
+          "images": [],
           "reponseAttendue": "L’effet pince et l’effet came.",
           "correctionGenerale": "• Effet pince\n• Effet came"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°23</b>\n\nQuel élément anatomique risque d’être lésé lors d’une fracture déplacée du col fémoral chez l’adulte, et quelle peut en être la conséquence ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-052-243.png"],
+          "images": [],
           "reponseAttendue": "L’artère circonflexe (postérieure), avec pour conséquence une ostéonécrose de la tête fémorale.",
           "correctionGenerale": "L’artère circonflexe (postérieure)."
         },
@@ -208,31 +238,28 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°25</b>\n\nQuel est le nerf qui peut être lésé dans les voies d’abord antérieures type Hueter ou DAA (antérieure directe) lors de la mise en place d’une prothèse de hanche ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/recadre/img-056-261.png"],
+          "images": [],
           "reponseAttendue": "Le nerf cutané latéral de cuisse (fémoro-cutané).",
           "correctionGenerale": "Nerf cutané latéral de cuisse (fémoro-cutané)."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°26</b>\n\nQuels sont les critères qui définissent une coxarthrose protrusive ? En préciser les différents stades.",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-058-271.png"],
+          "images": [],
           "reponseAttendue": "Un débord de l’arrière-fond cotyloïdien en dedans de la ligne ischiatique de plus de 3 mm chez l’homme et 5 mm chez la femme ; stades : coxa profunda puis protrusion acétabulaire.",
           "correctionGenerale": "• Débord de l’arrière-fond cotyloïdien en dedans de la ligne ischiatique de plus de 3 mm chez l’homme et 5 mm chez la femme\n• Coxa profunda\n• Protrusion acétabulaire"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°27</b>\n\nSur des radiographies de face et en faux profil de Lequesne, sur quels éléments définit-on une dysplasie de hanche ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-060-281.png"],
+          "images": [],
           "reponseAttendue": "Sur la coxométrie de hanche : VCA, VCE, HTE et CC’D.",
           "correctionGenerale": "Coxométrie de hanche : <b>VCA</b>, <b>VCE</b>, <b>HTE</b>, <b>CC’D</b>."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°28</b>\n\nQuelle est la cause principale d’une boiterie douloureuse survenant chez un adolescent de 12 ans ? Quelle construction faut-il tracer sur la radiographie de bassin pour confirmer le diagnostic ?",
-          "images": [
-            "annales-orthopedie/evcf2020-correction/figures/img-062-291.png",
-            "annales-orthopedie/evcf2020-correction/figures/img-062-293.png"
-          ],
+          "images": [],
           "reponseAttendue": "Une épiphysiolyse fémorale supérieure ; on trace la ligne de Klein.",
           "correctionGenerale": "• Épiphysiolyse fémorale supérieure\n• Ligne de Klein"
         },
@@ -253,17 +280,14 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°31</b>\n\nAu cours d’une fracture déplacée du col de la fibula, quel élément anatomique peut être lésé ? Quelles en sont la conséquence et la traduction clinique ?",
-          "images": [
-            "annales-orthopedie/evcf2020-correction/figures/recadre/img-068-319.png",
-            "annales-orthopedie/evcf2020-correction/figures/img-068-321.png"
-          ],
+          "images": [],
           "reponseAttendue": "Le nerf fibulaire commun (SPE) : déficit sensitif de la face dorsale du pied et déficit moteur de la flexion dorsale de cheville, avec pied tombant et steppage.",
           "correctionGenerale": "• Nerf fibulaire commun (SPE)\n• Déficit sensitif de la face dorsale du pied\n• Déficit moteur de la flexion dorsale de cheville (pied tombant avec steppage)"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°32</b>\n\nQuelle est la structure anatomique lésée de façon systématique lors d’une luxation rotulienne ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-070-331.png"],
+          "images": [],
           "reponseAttendue": "Le MPFL (ligament fémoro-patellaire médial).",
           "correctionGenerale": "MPFL (<i>medial patellofemoral ligament</i>)."
         },
@@ -277,7 +301,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°34</b>\n\nQu’est-ce que la classification AORI dans les reprises de prothèse totale du genou ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-074-349.png"],
+          "images": [],
           "reponseAttendue": "Une quantification de la perte de substance osseuse.",
           "correctionGenerale": "Quantification de la perte de substance osseuse."
         },
@@ -291,7 +315,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°36</b>\n\nQuel est le ligament dont la lésion impose l’utilisation d’une charnière à pivot rotatoire en cas de PTG ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-078-367.png"],
+          "images": [],
           "reponseAttendue": "Le ligament latéral externe.",
           "correctionGenerale": "Ligament latéral externe."
         },
@@ -305,69 +329,56 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°38</b>\n\nVous êtes appelé aux urgences pour examiner un patient de 65 ans se plaignant de douleurs de genou. Le patient est apyrétique. Votre examen retrouve un genou augmenté de volume, inflammatoire, avec un épanchement franc. Vous réalisez une ponction articulaire qui ramène un liquide puriforme dont l’analyse montre : leucocytes 1 500/mm³, 95 % de polynucléaires, présence de microcristaux de pyrophosphate de calcium, sans germe au direct. Quel est le diagnostic le plus probable ?",
-          "images": [
-            "annales-orthopedie/evcf2020-correction/figures/img-082-385.png",
-            "annales-orthopedie/evcf2020-correction/figures/img-082-387.png"
-          ],
+          "images": [],
           "reponseAttendue": "Une chondrocalcinose.",
           "correctionGenerale": "Chondrocalcinose."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°39</b>\n\nDans le cas d’une fracture diaphysaire de jambe ouverte classée Gustilo IIIb, quel type d’ostéosynthèse vous paraît le plus adapté ?",
-          "images": [
-            "annales-orthopedie/evcf2020-correction/figures/img-084-397.png",
-            "annales-orthopedie/evcf2020-correction/figures/img-084-399.png"
-          ],
+          "images": [],
           "reponseAttendue": "Le fixateur externe.",
           "correctionGenerale": "Fixateur externe."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°40</b>\n\nDécrire en quoi l’anatomie du corps du talus participe au verrouillage mécanique de la cheville en flexion dorsale.",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-086-409.png"],
+          "images": [],
           "reponseAttendue": "La surface articulaire du talus est plus importante en avant qu’en arrière : en flexion dorsale, elle écarte le tibia de la fibula et met en tension les structures ligamentaires.",
           "correctionGenerale": "La surface articulaire du talus est plus importante en avant qu’en arrière, ce qui, en flexion dorsale, écarte le tibia de la fibula et met en tension les structures ligamentaires."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°41</b>\n\nDécrire les différents faisceaux composant le plan ligamentaire collatéral médial/tibial de la cheville.",
-          "images": [
-            "annales-orthopedie/evcf2020-correction/figures/img-088-419.png",
-            "annales-orthopedie/evcf2020-correction/figures/img-088-420.png"
-          ],
+          "images": [],
           "reponseAttendue": "Le ligament deltoïdien : faisceaux tibio-talien antérieur, tibio-talien postérieur, tibio-naviculaire et tibio-calcanéen.",
           "correctionGenerale": "<b>Ligament deltoïdien</b>\n• Faisceau tibio-talien antérieur\n• Faisceau tibio-talien postérieur\n• Faisceau tibio-naviculaire\n• Faisceau tibio-calcanéen"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°42</b>\n\nDécrire la classification proposée par Johnson et modifiée par Myerson des différents stades du pied plat acquis (Myerson et al., Foot Ankle Clin 2007).",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-090-429.png"],
+          "images": [],
           "reponseAttendue": "Stade 1 : ténosynovite isolée du tibial postérieur, sans déformation. Stade 2 : pied plat valgus réductible. Stade 3 : pied plat valgus fixé. Stade 4 : pied plat valgus fixé avec arthrose tibio-talienne.",
           "correctionGenerale": "• <b>Stade 1</b> : ténosynovite isolée du tibial postérieur, sans déformation\n• <b>Stade 2</b> : pied plat valgus réductible\n• <b>Stade 3</b> : pied plat valgus fixé\n• <b>Stade 4</b> : pied plat valgus fixé + arthrose tibio-talienne"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°43</b>\n\nQuel est le mécanisme lésionnel d’une fracture bimalléolaire interligamentaire ?",
-          "images": [
-            "annales-orthopedie/evcf2020-correction/figures/recadre/img-092-435.png",
-            "annales-orthopedie/evcf2020-correction/figures/recadre/img-093-436.png",
-            "annales-orthopedie/evcf2020-correction/figures/recadre/img-094-437.png"
-          ],
+          "images": [],
           "reponseAttendue": "Une rotation externe.",
           "correctionGenerale": "Rotation externe."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°44</b>\n\nDécrivez les différents types de mécanisme et les spécificités des atteintes des structures anatomiques dans chacun des types lésionnels A, B et C de la classification de Magerl dans les fractures thoraco-lombaires.",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/recadre/img-096-438.png"],
+          "images": [],
           "reponseAttendue": "Magerl A : mécanisme en compression, atteinte antérieure du corps vertébral. Magerl B : mécanisme en flexion-extension, atteinte disco-ligamentaire potentiellement instable, fracture-luxation articulaire. Magerl C : mécanisme en rotation, luxation et fractures articulaires, instables.",
           "correctionGenerale": "• <b>Magerl A</b> : mécanisme en compression — atteinte antérieure (corps vertébral)\n• <b>Magerl B</b> : mécanisme en flexion-extension — atteinte disco-ligamentaire, potentiellement instable ; fracture-luxation articulaire\n• <b>Magerl C</b> : mécanisme en rotation — luxation et fractures articulaires, instables"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°45</b>\n\nQuel est le niveau sensitif témoin d’une paraplégie de T10 ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/recadre/img-098-440.png"],
+          "images": [],
           "reponseAttendue": "Le dermatome passant par l’ombilic.",
           "correctionGenerale": "Dermatome passant par l’ombilic."
         },
@@ -402,7 +413,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°50</b>\n\nQuelle est la définition d’une exérèse R1 d’un sarcome des parties molles ?",
-          "images": ["annales-orthopedie/evcf2020-correction/figures/img-107-442.png"],
+          "images": [],
           "reponseAttendue": "Des marges non saines : présence de tissu tumoral au niveau des marges de résection après analyse anatomopathologique.",
           "correctionGenerale": "Marges non saines : tissu tumoral au niveau des marges de résection après analyse anatomopathologique."
         }

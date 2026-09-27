@@ -3,7 +3,41 @@
     "ANNALES ORTHOPEDIE/EVCP2017.pdf": {
       "atelier": "annales-orthopedie/evcp2017",
       "sujetOfficiel": "Annales/Sujets/EVCP__2017 - 30 à 76/EVCP__2017 - 30 à 76/EVCP.53.DOC",
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-037-122.png": "Audit images 28/09/2026 (#260) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive des stades de Goutallier (« & Bernageau – Scanner ») = réponse",
+        "img-056-148.png": "Audit images 28/09/2026 (#499) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « Notching = complication ? » (prothèse d'épaule) = réponse",
+        "img-055-147.png": "Audit images 28/09/2026 (#224) : figure du corrigé qui donne la réponse avant que l’élève réponde — Radiographies de complication de prothèse d'épaule (corrigé), sans rôle d'énoncé",
+        "img-054-146.png": "Audit images 28/09/2026 (#380) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive des complications des prothèses d'épaule = réponse",
+        "img-053-144.png": "Audit images 28/09/2026 (#420) : figure du corrigé qui donne la réponse avant que l’élève réponde — Arbre décisionnel des fractures de l'humérus proximal (corrigé, hors question)",
+        "img-030-106.png": "Audit images 28/09/2026 (#459) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « L'extension antérieure d'une rupture du supra-épineux » (corrigé)",
+        "img-028-103.png": "Audit images 28/09/2026 (#467) : figure du corrigé qui donne la réponse avant que l’élève réponde — Illustration du Belly press test (corrigé) = réponse (examen de la coiffe)",
+        "img-027-101.png": "Audit images 28/09/2026 (#223) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive du corrigé « Le Teres Minor » (force en RE2, drop sign, clairon) = réponse ; visages déjà masqués",
+        "img-024-098.png": "Audit images 28/09/2026 (#318) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « La coiffe s'inspecte… » = réponse",
+        "img-029-105.png": "Audit des images (28/09/2026, #1284) : fragment de diapositive de cours (rupture du supra-épineux) ; détachée de la question.",
+        "img-026-100.png": "Audit des images (28/09/2026, #1274) : diapositive « L'infra-épineux » (manœuvres d'examen) : c'est la réponse ; détachée de la question.",
+        "img-050-139.png": "Audit des images (28/09/2026, #1253) : diapositive « Les indications » (prothèse) filigranée : figure de corrigé ; détachée de la question.",
+        "img-028-102.png": "Audit des images (28/09/2026, #1163) : dessin de la manœuvre de Gerber (lift-off) : illustre la réponse ; détachée de la question.",
+        "img-033-109.png": "Audit des images (28/09/2026, #1095) : planche de la classification de Hamada : donne le stade attendu (2 questions ; la radiographie reste attachée) ; détachée de la question.",
+        "img-052-142.png": "Audit des images (28/09/2026, #1084) : diapositive d'indications de prothèse d'épaule (corrigé) ; détachée de la question.",
+        "img-036-121.png": "Audit des images (28/09/2026, #1032) : schéma de la classification de Patte : c'est la réponse ; détachée de la question.",
+        "img-053-143.png": "Audit des images (28/09/2026, #1015) : diapositive de corrigé « prothèses fractures » ; détachée de la question.",
+        "img-036-120.png": "Audit des images (28/09/2026, #592) : Diapositive « Rétraction : stades 1-2-3 » sur coupes TDM = la définition demandée (stade de Patte) ; détachée de la question.",
+        "img-049-132.png": "Audit des images (28/09/2026, #605) : Diapositive « Les indications » des prothèses d'épaule (corrigé) ; filigrane d'un tiers en fond ; détachée de la question.",
+        "img-038-126.png": "Audit des images (28/09/2026, #609) : Diapositive « La coupe en Y » (corrigé) ; détachée de la question.",
+        "img-051-141.png": "Audit des images (28/09/2026, #614) : Diapositive de résultats de prothèse (corrigé) ; visage déjà masqué ; détachée de la question.",
+        "img-040-128.png": "Audit des images (28/09/2026, #666) : Classification des glènes (A1-D), figure du corrigé ; détachée de la question.",
+        "img-049-136.png": "Audit des images (28/09/2026, #668) : Radiographies de prothèse d'épaule (corrigé) ; détachée de la question.",
+        "img-040-129.png": "Audit des images (28/09/2026, #698) : Tableau « Walch classification » (corrigé) ; détachée de la question.",
+        "img-039-127.png": "Audit des images (28/09/2026, #748) : Diapositive « Que rechercher ? Classification Favard » (corrigé) ; logos Paris Shoulder Unit / cours d'arthroplastie ; détachée de la question.",
+        "img-028-104.png": "Audit des images (28/09/2026, #766) : Illustrations légendées des tests du subscapulaire (corrigé) ; détachée de la question.",
+        "img-038-124.png": "Audit des images (28/09/2026, #777) : Capture de navigateur d'une diapositive « Qualité des muscles » (Goutallier), corrigé ; barre des tâches du poste ; détachée de la question.",
+        "img-037-123.png": "Audit des images (28/09/2026, #842) : Diapositive « Subscapularis : stades de Goutallier » (corrigé) ; détachée de la question.",
+        "img-050-138.png": "Audit des images (28/09/2026, #869) : Fragment tronqué de diapositive (radiographie d'épaule), corrigé ; détachée de la question.",
+        "img-049-137.png": "Audit des images (28/09/2026, #873) : Arbre décisionnel « Fracture humérus proximal » (corrigé) ; détachée de la question.",
+        "img-048-131.png": "Audit des images (28/09/2026, #934) : Schéma « Restaure la tension du deltoïde » (prothèse inversée), corrigé ; détachée de la question.",
+        "img-025-099.png": "Audit des images (28/09/2026, #936) : Diapositive « Le Supra Épineux : la manœuvre de Jobe » = un des tests demandés ; détachée de la question.",
+        "img-034-114.png": "Audit des images (28/09/2026, #987) : Coupe TDM annotée « rétroversion glène 30 degrés » (mesure du corrigé) ; détachée de la question."
+      },
       "sujetFiguresCouvertes": {
         "source_html_110c334d.png": "Mêmes radiographies du genou que la figure publiée en Dossier 1, question 1 (img-003-012, profil) : le corrigé en projette un agrandissement recadré. La version du sujet officiel porte en outre l’en-tête DICOM avec le nom du patient.",
         "source_html_911034b8.png": "Mêmes radiographies du genou que la figure publiée en Dossier 1, question 1 (img-003-014, face) : le corrigé en projette un agrandissement recadré. La version du sujet officiel porte en outre l’en-tête DICOM avec le nom du patient."
@@ -94,15 +128,10 @@
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nDécrivez précisément l’examen clinique de la coiffe des rotateurs.",
           "images": [
-            "annales-orthopedie/evcp2017/figures/recadre/img-024-098.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-025-099.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-026-100.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-027-101.png",
-            "annales-orthopedie/evcp2017/figures/img-028-102.png",
-            "annales-orthopedie/evcp2017/figures/img-028-103.png",
-            "annales-orthopedie/evcp2017/figures/img-028-104.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-029-105.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-030-106.png"
+            
+            
+            
+            
           ],
           "reponseAttendue": "Inspection à la recherche d’une amyotrophie des fosses supra- et infra-épineuses, puis testing analytique : supra-épineux par la manœuvre de Jobe ; infra-épineux par la force en RE1, l’external rotation lag sign et le dropping sign ; petit rond par la force en RE2, le drop sign et le signe du clairon ; subscapulaire par le lift-off de Gerber, le belly press test et le bear hug test ; long biceps par le palm up test.",
           "correctionGenerale": "<b>Inspection</b>\n• Recherche d’une amyotrophie des fosses supra- et infra-épineuses\n\n<b>Testing analytique</b>\n• <b>Supra-épineux</b> : manœuvre de Jobe\n• <b>Infra-épineux</b> : force en RE1, external rotation lag sign, dropping sign\n• <b>Petit rond (teres minor)</b> : force en RE2, drop sign, signe du clairon\n• <b>Subscapulaire</b> : lift-off (test de Gerber), belly press test, bear hug test\n• <b>Long biceps</b> : palm up test"
@@ -111,8 +140,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nDécrivez la radiographie. Quel est votre diagnostic ? Développez.",
           "images": [
-            "annales-orthopedie/evcp2017/sujet/evcp-2017-dossier2-radiographie-epaule.png",
-            "annales-orthopedie/evcp2017/figures/img-033-109.png"
+            "annales-orthopedie/evcp2017/sujet/evcp-2017-dossier2-radiographie-epaule.png"
           ],
           "reponseAttendue": "Radiographie de l’épaule droite de face : omarthrose droite excentrée de stade 4b de la classification de Hamada et Fukuda (acétabulisation de l’acromion, sans collapsus de la tête), avec pincement de l’interligne gléno-huméral, diminution de l’espace sous-acromial, rupture du cintre gléno-huméral et ostéophytes.",
           "correctionGenerale": "• Radiographie de l’épaule droite de face\n• Omarthrose droite excentrée, stade 4b de la classification de Hamada et Fukuda (acétabulisation de l’acromion, pas de collapsus de la tête)\n• Pincement de l’interligne gléno-huméral, diminution de l’espace sous-acromial, rupture du cintre gléno-huméral, ostéophytes"
@@ -123,18 +151,8 @@
           "images": [
             "annales-orthopedie/evcp2017/figures/img-034-110.png",
             "annales-orthopedie/evcp2017/figures/img-034-112.png",
-            "annales-orthopedie/evcp2017/figures/img-034-114.png",
             "annales-orthopedie/evcp2017/figures/img-034-116.png",
-            "annales-orthopedie/evcp2017/figures/img-034-118.png",
-            "annales-orthopedie/evcp2017/figures/img-036-120.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-036-121.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-037-122.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-037-123.png",
-            "annales-orthopedie/evcp2017/figures/img-038-124.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-038-126.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-039-127.png",
-            "annales-orthopedie/evcp2017/figures/img-040-128.png",
-            "annales-orthopedie/evcp2017/figures/img-040-129.png"
+            "annales-orthopedie/evcp2017/figures/img-034-118.png"
           ],
           "reponseAttendue": "Arthroscanner de l’épaule droite : rupture du supra-épineux rétracté au stade III de la classification de Patte, dégénérescence graisseuse de stade II de Goutallier, atrophie musculaire de grade I sur la coupe en Y, luxation possible du long biceps, évaluation du stock osseux de la glène (Favard E2) et de la subluxation de la tête, de la version et de l’usure glénoïdienne (Walch A1).",
           "correctionGenerale": "• Arthroscanner de l’épaule droite\n• Rupture du supra-épineux, rétracté au stade III (classification de Patte)\n• Dégénérescence graisseuse de stade II de Goutallier\n• Atrophie musculaire de grade I (coupe en Y)\n• Luxation du long biceps ?\n• Évaluation du stock osseux de la glène (Favard E2)\n• Évaluation de la subluxation de la tête, de la version et de l’usure de la glène (Walch A1)\n\nRappels : la rétraction tendineuse s’évalue par la classification de Patte, la dégénérescence graisseuse par celle de Goutallier, l’atrophie musculaire — à distinguer de l’infiltration graisseuse — sur la coupe en Y, et la version glénoïdienne, la subluxation de la tête et l’usure par la classification de Walch."
@@ -157,19 +175,10 @@
           "format": "qroc",
           "enonce": "<b>Question n°7</b>\n\nDonnez les complications potentielles des prothèses d’épaule.",
           "images": [
-            "annales-orthopedie/evcp2017/figures/recadre/img-048-131.png",
-            "annales-orthopedie/evcp2017/figures/img-049-132.png",
-            "annales-orthopedie/evcp2017/figures/img-049-136.png",
-            "annales-orthopedie/evcp2017/figures/img-049-137.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-050-138.png",
-            "annales-orthopedie/evcp2017/figures/img-050-139.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-051-141.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-052-142.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-053-143.png",
-            "annales-orthopedie/evcp2017/figures/img-053-144.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-054-146.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-055-147.png",
-            "annales-orthopedie/evcp2017/figures/recadre/img-056-148.png"
+            
+            
+            
+            
           ],
           "reponseAttendue": "Usure de la glène (glénoïdite) après hémiarthroplastie, infections (notamment à Propionibacterium acnes), descellement, luxations, fracture péri-prothétique, rupture secondaire de coiffe (prothèse anatomique) et fracture de fatigue de l’acromion (prothèse inversée).",
           "correctionGenerale": "• Hémiarthroplastie : usure de la glène (glénoïdite)\n• Infections (<i>Propionibacterium acnes</i>)\n• Descellement\n• Luxations\n• Fracture péri-prothétique\n• Rupture secondaire de coiffe (PTE anatomique)\n• Fracture de fatigue de l’acromion (PTE inversée)\n\nLes figures rappellent la médialisation et l’abaissement du centre de rotation, les indications respectives de l’hémiarthroplastie, de la prothèse totale anatomique et de la prothèse totale inversée, ainsi que les complications.\n\nBibliographie : C. Nérot, <i>Technique d’arthroplastie totale inversée d’épaule de première intention</i>, Cahiers de la SOFCOT, 2013."

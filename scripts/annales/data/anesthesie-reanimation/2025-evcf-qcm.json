@@ -3,7 +3,16 @@
     "ANNALES AREA/Correction sujet 2025 QCM voie interne .pdf": {
       "atelier": "annales-area/correction-sujet-2025-qcm-voie-interne",
       "sujetOfficiel": null,
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-014-101.png": "Audit images 28/09/2026 (#337) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma contraction/relaxation des muscles lisses (corrigé du QCM)",
+        "img-019-137.png": "Audit images 28/09/2026 (#319) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma du potentiel d'action cardiaque (corrigé du QCM)",
+        "img-029-210.png": "Audit images 28/09/2026 (#247) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma de la répartition de l'eau corporelle = correction du QCM",
+        "img-020-145.png": "Audit des images (28/09/2026, #1122) : schéma de physiologie du néphron (figure de cours) attaché à un QCM sans document ; détachée de la question.",
+        "img-021-153.png": "Audit des images (28/09/2026, #659) : Figure « Effets des hypnotiques sur l'EEG » = la réponse du QCM ; détachée de la question.",
+        "img-003-021.png": "Audit des images (28/09/2026, #673) : Schéma de la synapse glutamatergique (corrigé du QCM) ; détachée de la question.",
+        "img-003-022.png": "Audit des images (28/09/2026, #826) : Tableau des fibres nerveuses (corrigé du QCM) ; détachée de la question.",
+        "img-013-093.png": "Audit des images (28/09/2026, #994) : Schéma du cycle actine-myosine (corrigé du QCM) ; détachée de la question."
+      },
       "remarque": "Sujet CF-03 « voie interne » 2025 : 40 QCM. La série est laissée sans vignette clinique afin que le champ « kind » calculé par la base reste « qcm » — c’est-à-dire le format réservé à la voie interne."
     }
   },
@@ -19,10 +28,7 @@
         {
           "format": "qcm",
           "enonce": "<b>QCM 1</b>\n\nConcernant la transmission ascendante du message douloureux nociceptif, quels éléments participent directement à cette transmission ?",
-          "images": [
-            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-003-022.png",
-            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-003-021.png"
-          ],
+          "images": [],
           "correctionGenerale": "<i>Les figures rappellent, d’une part, les types de fibres nerveuses (A-alpha : proprioception, myélinisée, 13-20 µm, 80-120 m/s ; A-beta : toucher, myélinisée, 6-12 µm, 35-90 m/s ; A-delta : douleur mécanique et thermique, myélinisée, 1-5 µm, 5-40 m/s ; C : douleur mécanique, thermique et chimique, non myélinisée, 0,2-1,5 µm, 0,5-2 m/s), d’autre part la synapse glutamatergique avec ses récepteurs kaïnate, AMPA, NMDA et métabotropiques et ses transporteurs plasmiques et vésiculaires.</i>\n\n<i>Références utiles : Miller ; Guyton ; revue de neurophysiologie de la douleur.</i>",
           "items": [
             {
@@ -554,10 +560,7 @@
         {
           "format": "qcm",
           "enonce": "<b>QCM 15</b>\n\nConcernant la contraction cardiaque, quelles sont les propositions exactes ?",
-          "images": [
-            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-013-093.png",
-            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-014-101.png"
-          ],
+          "images": [],
           "correctionGenerale": "<i>Les figures détaillent le cycle attachement-détachement des ponts d’union actine-myosine (1. à l’état non activé, la tropomyosine masque le site de fixation de la myosine sur l’actine ; 2. le calcium provenant du réticulum se fixe sur la troponine et entraîne le glissement de la tropomyosine ; 3. formation des ponts d’union ; 4. libération d’ADP et de P provoquant la rotation de la tête de myosine ; 5. fixation d’ATP sur la tête de myosine provoquant son détachement de l’actine ; 6. hydrolyse de l’ATP provoquant le redressement de la tête de myosine) et, pour les muscles lisses, les cascades de contraction (Ca²⁺-calmoduline → MLCK active → myosine ATPase active → augmentation de la tension musculaire) et de relaxation (myosine phosphatase → diminution de l’activité de la myosine ATPase → diminution de la tension musculaire).</i>\n\n<i>Références utiles : Guyton & Hall ; Braunwald, physiologie du cardiomyocyte.</i>",
           "items": [
             {
@@ -823,9 +826,7 @@
         {
           "format": "qcm",
           "enonce": "<b>QCM 22</b>\n\nParmi les propositions suivantes concernant l’électrophysiologie cardiaque, laquelle (lesquelles) est (sont) exacte(s) ?",
-          "images": [
-            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-019-137.png"
-          ],
+          "images": [],
           "correctionGenerale": "<i>La figure rappelle les phases du potentiel d’action ventriculaire et les courants correspondants : phase 0 (I_Na, Nav1.5+β), phase 1 (I_to, Kv4.3+KChIP2), phase 2 (I_Ca, Cav1.2+β2+α2δ ; I_Kur, Kv1.5+Kvβ2.1), phase 3 (I_Kr, Kv7.1+MiRP1 ; I_Ks, Kv11.1+minK) et phase 4 (I_K1, Kir2.x).</i>\n\n<i>Références utiles : Guyton & Hall ; Braunwald.</i>",
           "items": [
             {
@@ -863,9 +864,7 @@
         {
           "format": "qcm",
           "enonce": "<b>QCM 23</b>\n\nConcernant le métabolisme du sodium, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
-          "images": [
-            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-020-145.png"
-          ],
+          "images": [],
           "correctionGenerale": "<i>Le schéma du néphron rappelle la répartition de la réabsorption du sodium : tube contourné proximal 65 %, branche large ascendante de l’anse 25 %, tube contourné distal 5-8 %, tube collecteur 1,5 %, avec les transporteurs correspondants (NHE3, NBC1, Na⁺/K⁺-ATPase, NKCC2, ROMK, NCC, ENaC).</i>\n\n<i>Références utiles : Guyton & Hall ; physiologie rénale.</i>",
           "items": [
             {
@@ -903,9 +902,7 @@
         {
           "format": "qcm",
           "enonce": "<b>QCM 24</b>\n\nL’effet de l’anesthésie générale par propofol ou halogéné sur l’électroencéphalogramme (EEG) est caractérisé par :",
-          "images": [
-            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-021-153.png"
-          ],
+          "images": [],
           "correctionGenerale": "<i>La figure illustre les effets des hypnotiques sur l’EEG : à l’éveil, oscillations rapides de faible amplitude ; sous anesthésie générale, ralentissement des oscillations et augmentation de l’amplitude ; enfin, burst suppression.</i>\n\n<i>Références utiles : Miller ; recommandations sur le monitorage EEG traité.</i>",
           "items": [
             {
@@ -1361,9 +1358,7 @@
         {
           "format": "qcm",
           "enonce": "<b>QCM 36</b>\n\nDans des conditions physiologiques, quelle(s) est (sont) la (les) bonne(s) réponse(s) ?",
-          "images": [
-            "annales-area/correction-sujet-2025-qcm-voie-interne/figures/img-029-210.png"
-          ],
+          "images": [],
           "correctionGenerale": "<i>Le schéma rappelle la répartition des compartiments hydriques : 70 % de liquide intracellulaire (LIC) et 30 % de liquide extracellulaire (LEC), ce dernier se répartissant en 7,5 % de plasma et autres liquides corporels et 22,5 % de liquide interstitiel.</i>\n\n<i>Référence utile : Guyton & Hall.</i>",
           "items": [
             {

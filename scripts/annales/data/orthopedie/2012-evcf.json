@@ -37,9 +37,7 @@
     {
       "format": "qroc",
       "enonce": "<b>Sujet n°2 — Fracture de l’extrémité inférieure du radius de l’enfant avant 8 ans.</b>\n\nQuestion 2 : Décrivez la principale classification.",
-      "images": [
-        "annales-orthopedie/evcf-53-2012-correction/figures/img-003-024.png"
-      ],
+      "images": [],
       "reponseAttendue": "La classification de Salter et Harris, en cinq types.",
       "correctionGenerale": "<b>Classification de Salter et Harris :</b>\n• <b>Type I</b> : décollement épiphysaire pur. Le pronostic de croissance est bon.\n• <b>Type II</b> : le trait de fracture emprunte le cartilage de croissance sauf à une extrémité où il remonte en zone métaphysaire. Le pronostic de croissance est habituellement bon.\n• <b>Type III</b> : le trait emprunte le cartilage de croissance sauf à une extrémité où il devient épiphysaire. Le pronostic de croissance est compromis surtout s’il persiste un défaut de réduction, même mineur. Il s’agit d’une fracture à trait intra-articulaire.\n• <b>Type IV</b> : le trait sépare un fragment épiphyso-métaphysaire. Le pronostic est souvent mauvais, même si la réduction paraît satisfaisante.\n• <b>Type V</b> : écrasement du cartilage de croissance par un mécanisme de compression. Il n’est en général identifiable que par sa complication : l’épiphysiodèse. Le diagnostic est évoqué a posteriori lorsque le trouble de croissance est constaté."
     },
@@ -67,9 +65,7 @@
     {
       "format": "qroc",
       "enonce": "<b>Sujet n°3 — Diagnostic d’une mono-arthrite aiguë non traumatique du poignet.</b>\n\nQuestion 2 : Citez les principaux moyens diagnostiques.",
-      "images": [
-        "annales-orthopedie/evcf-53-2012-correction/figures/img-005-042.png"
-      ],
+      "images": [],
       "reponseAttendue": "Échographie, radiographie, ponction articulaire (les 3 C : culture et coloration de Gram, cristaux, cellularité) et examens biologiques.",
       "correctionGenerale": "<b>Échographie</b>\n• Confirmer l’épanchement intra-articulaire\n• Guider la ponction\n• Diagnostics différentiels (enthésite, tendinite…)\n\n<b>Radiographie</b>\n• Liseré de chondrocalcinose\n• Dégénérescence arthrosique, lésion cartilagineuse\n\n<b>Ponction articulaire (les 3 C)</b>\n• Analyse bactériologique : Culture et Coloration de Gram\n• Recherche de microCristaux\n• Cellularité\n\n<b>Examens biologiques</b>\n• Élévation de la VS et de la CRP\n• Uricémie (goutte)\n• Hémocultures\n• Selon les circonstances : sérologies de Lyme, VIH, hépatites B, C et E, brucellose, chikungunya, fièvre Q ; recherche de facteurs rhumatoïdes et d’anti-CCP ; PCR gonocoque / Chlamydiae\n\nL’interprétation du liquide synovial est résumée dans le tableau ci-dessus."
     },

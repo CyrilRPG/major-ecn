@@ -3,7 +3,80 @@
     "ANNALES ORTHOPEDIE/EVCF2018correction.pdf": {
       "atelier": "annales-orthopedie/evcf2018correction",
       "sujetOfficiel": null,
-      "figuresIgnorees": {}
+      "figuresIgnorees": {
+        "img-093-319.png": "Audit images 28/09/2026 (#435) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma de la classification de Vancouver = réponse (2 questions)",
+        "img-044-219.png": "Audit images 28/09/2026 (#413) : figure du corrigé qui donne la réponse avant que l’élève réponde — Photographie du test de la table (Hueston) = réponse",
+        "img-007-033.png": "Audit images 28/09/2026 (#384) : figure du corrigé qui donne la réponse avant que l’élève réponde — Capture Facebook « Manipulateur en radiologie » (profil de Bloom et Obata) = réponse",
+        "img-007-032.png": "Audit images 28/09/2026 (#394) : figure du corrigé qui donne la réponse avant que l’élève réponde — Figure de livre « Incidence de Bloom et Obata » = réponse",
+        "img-025-120.png": "Audit images 28/09/2026 (#281) : figure du corrigé qui donne la réponse avant que l’élève réponde — Photographies de libération endoscopique du canal carpien = réponse",
+        "img-005-021.png": "Audit images 28/09/2026 (#258) : image décorative, vide ou hors sujet — Diapositive d'une autre question (« Question N° 4 », Monsieur X) dont la radiographie est un carré blanc : vide et hors sujet (2 questions)",
+        "img-084-313.png": "Audit images 28/09/2026 (#373) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma du plexus sacral (corrigé) = réponse (nerf sciatique)",
+        "img-083-312.png": "Audit images 28/09/2026 (#291) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive du corrigé (atteinte sciatique L5/S1 selon la traction) = réponse",
+        "img-079-308.png": "Audit images 28/09/2026 (#208) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive du corrigé (classification de Pipkin) ; vignette webcam avec visage identifiable de l'orateur → masquée, puis détachée",
+        "img-019-092.png": "Audit images 28/09/2026 (#184) : figure du corrigé qui donne la réponse avant que l’élève réponde — Photographie d'un électromyogramme = réponse (l'EMG)",
+        "img-057-275.png": "Audit images 28/09/2026 (#161) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma des territoires sensitifs de la jambe (corrigé) = réponse (fibulaire profond, 1re commissure)",
+        "img-039-194.png": "Audit images 28/09/2026 (#279) : figure du corrigé qui donne la réponse avant que l’élève réponde — Photographie opératoire d'aponévrectomie (Dupuytren), corrigé",
+        "img-039-193.png": "Audit images 28/09/2026 (#494) : figure du corrigé qui donne la réponse avant que l’élève réponde — Diapositive « Difficultés de fermeture » (Dupuytren, corrigé, hors question)",
+        "img-038-188.png": "Audit images 28/09/2026 (#432) : figure du corrigé qui donne la réponse avant que l’élève réponde — Photographie de plaie palmaire (corrigé, aponévrotomie), sans rôle d'énoncé",
+        "img-035-170.png": "Audit images 28/09/2026 (#414) : figure du corrigé qui donne la réponse avant que l’élève réponde — Photographie d'un flacon de Xiapex (corrigé), sans rôle d'énoncé",
+        "img-035-169.png": "Audit images 28/09/2026 (#232) : figure du corrigé qui donne la réponse avant que l’élève réponde — Photographie d'aponévrotomie à l'aiguille (corrigé), sans rôle d'énoncé",
+        "img-033-159.png": "Audit images 28/09/2026 (#201) : image décorative, vide ou hors sujet — Bandeau de capture d'écran d'Acrobat Reader (barre d'outils seule), aucun contenu médical",
+        "img-033-158.png": "Audit images 28/09/2026 (#286) : figure du corrigé qui donne la réponse avant que l’élève réponde — Dessin d'aponévrotomie à l'aiguille (corrigé), sans rôle d'énoncé",
+        "img-031-148.png": "Audit images 28/09/2026 (#257) : figure du corrigé qui donne la réponse avant que l’élève réponde — Schéma des stades de la maladie de Dupuytren (corrigé), sans rôle d'énoncé",
+        "img-031-147.png": "Audit images 28/09/2026 (#155) : figure du corrigé qui donne la réponse avant que l’élève réponde — Tableau de la classification de Tubiana (corrigé) sans rôle d'énoncé pour une question de connaissance",
+        "img-030-141.png": "Audit images 28/09/2026 (#336) : figure du corrigé qui donne la réponse avant que l’élève réponde — Capture Acrobat (SOFCOT, nodule palmaire de Dupuytren) avec barre des tâches, corrigé",
+        "img-029-136.png": "Audit images 28/09/2026 (#245) : figure du corrigé qui donne la réponse avant que l’élève réponde — Page d'article sur les brides de Dupuytren = réponse",
+        "img-009-044.png": "Audit des images (28/09/2026, #1298) : photographie d'attelle d'épaule : illustre la réponse ; détachée de la question.",
+        "img-089-317.png": "Audit des images (28/09/2026, #1288) : diapositive « Crescent Sign (Hip) » (corrigé) ; détachée de la question.",
+        "img-018-086.png": "Audit des images (28/09/2026, #1252) : capture de navigateur (tableaux de maladies professionnelles) : figure de corrigé ; détachée de la question.",
+        "img-012-058.png": "Audit des images (28/09/2026, #1244) : diapositive « Diagnostic + » de l'épicondylite (corrigé) ; détachée de la question.",
+        "img-007-034.png": "Audit des images (28/09/2026, #1243) : page de cours (Université Joseph Fourier) sur la luxation postérieure, radiographies légendées : c'est la réponse (2 questions) ; détachée de la question.",
+        "img-055-265.png": "Audit des images (28/09/2026, #1228) : diapositive légendée « Complication redoutée de la chirurgie : nécrose cutanée » : c'est la réponse ; détachée de la question.",
+        "img-027-129.png": "Audit des images (28/09/2026, #1223) : planche anatomique de la main (corrigé) ; détachée de la question.",
+        "img-009-043.png": "Audit des images (28/09/2026, #1221) : photographie d'écharpe coude au corps : montre l'immobilisation en cause (2 questions) ; détachée de la question.",
+        "img-025-119.png": "Audit des images (28/09/2026, #1219) : photographie opératoire (canal carpien à ciel ouvert) : c'est la réponse ; détachée de la question.",
+        "img-011-053.png": "Audit des images (28/09/2026, #1171) : capture d'écran « Recommended for you » d'une plateforme vidéo : sans rapport ; détachée de la question.",
+        "img-016-076.png": "Audit des images (28/09/2026, #1150) : page d'article sur l'échographie de l'épicondylite : c'est la réponse ; détachée de la question.",
+        "img-038-187.png": "Audit des images (28/09/2026, #1146) : figure de livre (© Elsevier Masson, technique de MacCash) : figure de cours ; marque d'éditeur ; détachée de la question.",
+        "img-080-309.png": "Audit des images (28/09/2026, #1136) : capture d'une visioconférence de cours (classification de Pipkin, visage de l'orateur) : figure de cours ; détachée de la question.",
+        "img-078-305.png": "Audit des images (28/09/2026, #1135) : page d'article « Mécanisme lésionnel » (luxations de hanche) : figure de cours ; détachée de la question.",
+        "img-028-130.png": "Audit des images (28/09/2026, #1119) : planche anatomique filigranée « alamy stock photo » (aponévrose palmaire) : c'est la réponse ; marque d'un tiers ; détachée de la question.",
+        "img-065-301.png": "Audit des images (28/09/2026, #1092) : fragment de diapositive de corrigé (embrochage), sans rapport direct avec la classification demandée ; détachée de la question.",
+        "img-029-135.png": "Audit des images (28/09/2026, #1079) : schéma de l'aponévrose palmaire : c'est la réponse ; détachée de la question.",
+        "img-088-316.png": "Audit des images (28/09/2026, #1064) : diapositive « Apports de la radiographie » (Arlet et Ficat, logo Centre Jean Perrin) : donne la réponse (IRM) ; détachée de la question.",
+        "img-089-318.png": "Audit des images (28/09/2026, #1048) : tableau ARCO (IRM, scintigraphie) : c'est la réponse ; détachée de la question.",
+        "img-057-276.png": "Audit des images (28/09/2026, #1047) : coupe anatomique de jambe légendée (nerf fibulaire profond) : donne la réponse ; détachée de la question.",
+        "img-036-176.png": "Audit des images (28/09/2026, #514) : Photo opératoire de Dupuytren (figure de corrigé) ; filigrane Science Photo Library ; détachée de la question.",
+        "img-064-299.png": "Audit des images (28/09/2026, #518) : Schéma de corrigé des mécanismes (extension/flexion), sans rôle dans l'énoncé ; détachée de la question.",
+        "img-044-218.png": "Audit des images (28/09/2026, #531) : Photo de corrigé illustrant le test de Hueston (main à plat), sans rôle dans l'énoncé ; détachée de la question.",
+        "img-007-031.png": "Audit des images (28/09/2026, #537) : Radiographie de corrigé (luxation postérieure d'épaule), sans rôle dans les deux énoncés (questions de connaissance) ; détachée de la question.",
+        "img-068-302.png": "Audit des images (28/09/2026, #551) : Schéma de coxométrie (VCE, HTE, VCA) = la réponse ; détachée de la question.",
+        "img-005-022.png": "Audit des images (28/09/2026, #566) : Schéma « Luxation de l'épaule » (normale/antérieure/postérieure) du corrigé ; détachée de la question.",
+        "img-078-306.png": "Audit des images (28/09/2026, #572) : Figure d'article « Luxation postérieure iliaque pure de hanche » (corrigé) ; détachée de la question.",
+        "img-083-311.png": "Audit des images (28/09/2026, #588) : Capture d'une visioconférence : visage identifiable du conférencier en vignette (masqué) ; référence d'article et schéma nerveux du corrigé (détachée) ; détachée de la question.",
+        "img-021-101.png": "Audit des images (28/09/2026, #600) : Capture PubMed (épineurotomie, conclusions) = la réponse ; détachée de la question.",
+        "img-078-307.png": "Audit des images (28/09/2026, #626) : Figure d'article « Luxation obturatrice pure » (corrigé) ; détachée de la question.",
+        "img-051-248.png": "Audit des images (28/09/2026, #637) : Capture d'écran vide (fenêtre blanche) ; détachée de la question.",
+        "img-032-153.png": "Audit des images (28/09/2026, #648) : Planche anatomique du doigt numérotée (corrigé) ; détachée de la question.",
+        "img-019-091.png": "Audit des images (28/09/2026, #653) : Diapositive d'EMG « Vitesse de conduction motrice… canal carpien » = la réponse ; détachée de la question.",
+        "img-086-314.png": "Audit des images (28/09/2026, #683) : Capture d'une page web (manœuvre de Boehler), corrigé ; détachée de la question.",
+        "img-063-297.png": "Audit des images (28/09/2026, #706) : Texte de cours « Classification : Lagrange et Rigault » = la réponse (deux questions) ; détachée de la question.",
+        "img-021-102.png": "Audit des images (28/09/2026, #722) : Page EMC (compression du nerf médian), corrigé ; détachée de la question.",
+        "img-042-209.png": "Audit des images (28/09/2026, #726) : Fragment de légende de figure (dermo-fasciectomie), presque vide ; détachée de la question.",
+        "img-040-200.png": "Audit des images (28/09/2026, #731) : Photo d'orthèse de main (corrigé) ; détachée de la question.",
+        "img-064-298.png": "Audit des images (28/09/2026, #746) : Texte de cours « Fracture supracondylienne : Lagrange et Rigault » = la réponse ; détachée de la question.",
+        "img-037-182.png": "Audit des images (28/09/2026, #754) : Photo d'incision en zigzag (Dupuytren), corrigé ; détachée de la question.",
+        "img-086-315.png": "Audit des images (28/09/2026, #762) : Diapositive « CAT en urgence » (luxation de hanche), corrigé ; vignette webcam du conférencier (visage) masquée ; détachée de la question.",
+        "img-077-304.png": "Audit des images (28/09/2026, #790) : Capture tronquée du site info-radiologie.ch (corrigé) ; détachée de la question.",
+        "img-035-171.png": "Audit des images (28/09/2026, #857) : Schéma d'injection de collagénase (Xiapex), sans rapport avec la question (corrigé) ; détachée de la question.",
+        "img-034-164.png": "Audit des images (28/09/2026, #866) : Capture d'Acrobat Reader tronquée, inutilisable ; détachée de la question.",
+        "img-070-303.png": "Audit des images (28/09/2026, #868) : Schéma des niveaux médullaires et fonctions (S2-S4 : fonction vésicale et sexuelle) = la réponse ; détachée de la question.",
+        "img-036-177.png": "Audit des images (28/09/2026, #870) : Capture d'un site de chirurgien (bride de Dupuytren enlevée), corrigé ; détachée de la question.",
+        "img-064-300.png": "Audit des images (28/09/2026, #893) : Texte de cours sur les fractures supracondyliennes (stades) = la réponse ; détachée de la question.",
+        "img-014-067.png": "Audit des images (28/09/2026, #923) : Photo d'orthèse de poignet = la réponse (articulation immobilisée) ; détachée de la question.",
+        "img-055-266.png": "Audit des images (28/09/2026, #964) : Page de livre (sutures du tendon calcanéen, déhiscence cutanée) = la réponse ; détachée de la question.",
+        "img-081-310.png": "Audit des images (28/09/2026, #969) : Diapositive « Clinique » (luxation de hanche de l'enfant, 3D), corrigé ; visage du patient hors cadre ; détachée de la question."
+      }
     }
   },
   "series": [
@@ -26,9 +99,7 @@
           "format": "qroc",
           "enonce": "<b>Question n°2</b>\n\nQuel est le signe radiologique principal d’une luxation postérieure gléno-humérale sur le cliché de face ?",
           "images": [
-            "annales-orthopedie/evcf2018correction/figures/img-005-020.png",
-            "annales-orthopedie/evcf2018correction/figures/img-005-021.png",
-            "annales-orthopedie/evcf2018correction/figures/img-005-022.png"
+            "annales-orthopedie/evcf2018correction/figures/img-005-020.png"
           ],
           "reponseAttendue": "La disparition de l’interligne gléno-huméral.",
           "correctionGenerale": "Disparition de l’interligne gléno-huméral."
@@ -36,67 +107,49 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°3</b>\n\nDans une luxation postérieure gléno-humérale, quelles incidences radiographiques standard demander ?",
-          "images": [
-            "annales-orthopedie/evcf2018correction/figures/img-007-031.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-007-032.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-007-033.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-007-034.png"
-          ],
+          "images": [],
           "reponseAttendue": "Radiographie de face, profil de Lamy et profil de Bloom et Obatta.",
           "correctionGenerale": "• Radiographie de face\n• Profil de Lamy\n• Profil de Bloom et Obatta"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°4</b>\n\nDans une luxation postérieure gléno-humérale réduite, quelle immobilisation est à proscrire ?",
-          "images": [
-            "annales-orthopedie/evcf2018correction/figures/img-009-043.png",
-            "annales-orthopedie/evcf2018correction/figures/img-009-044.png"
-          ],
+          "images": [],
           "reponseAttendue": "La rotation interne (coude au corps) est proscrite : l’immobilisation se fait en rotation neutre.",
           "correctionGenerale": "La rotation interne est proscrite (coude au corps) → immobilisation en rotation neutre."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°5</b>\n\nDans l’épicondylite latérale du coude, quel est le tendon habituellement concerné ?",
-          "images": [
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-011-053.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-012-058.png"
-          ],
+          "images": [],
           "reponseAttendue": "L’extensor carpi radialis brevis.",
           "correctionGenerale": "<i>Extensor carpi radialis brevis</i> (ECRB)."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°6</b>\n\nDans l’épicondylite latérale du coude : si vous optez pour un traitement orthopédique, quelle articulation immobilisez-vous ?",
-          "images": ["annales-orthopedie/evcf2018correction/figures/img-014-067.png"],
+          "images": [],
           "reponseAttendue": "Le poignet.",
           "correctionGenerale": "Le poignet."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°7</b>\n\nDans l’épicondylite latérale du coude : quel examen paraclinique de base permet de confirmer le diagnostic ?",
-          "images": ["annales-orthopedie/evcf2018correction/figures/recadre/img-016-076.png"],
+          "images": [],
           "reponseAttendue": "L’échographie.",
           "correctionGenerale": "L’échographie."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°8</b>\n\nQuel examen paraclinique est obligatoire à la reconnaissance du syndrome du canal carpien en maladie professionnelle ?",
-          "images": [
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-018-086.png",
-            "annales-orthopedie/evcf2018correction/figures/img-019-091.png",
-            "annales-orthopedie/evcf2018correction/figures/img-019-092.png"
-          ],
+          "images": [],
           "reponseAttendue": "L’électromyogramme.",
           "correctionGenerale": "L’électromyogramme.\n\n<b>Stimulo-détection</b>\nUne latence distale motrice supérieure à 4 ms et des vitesses de conduction sensitive inférieures à 45 m/s sont considérées comme pathologiques. Les atteintes motrices seront d’emblée chirurgicales."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°9</b>\n\nQuelle est la place de l’épineurotomie dans la chirurgie du canal carpien idiopathique ?",
-          "images": [
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-021-101.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-021-102.png"
-          ],
+          "images": [],
           "reponseAttendue": "Aucune : elle n’apporte pas de bénéfice par rapport à une simple décompression.",
           "correctionGenerale": "Aucune : pas de bénéfice par rapport à une simple décompression."
         },
@@ -110,10 +163,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°11</b>\n\nQuelles sont les deux techniques chirurgicales habituelles dans le traitement du syndrome du canal carpien ?",
-          "images": [
-            "annales-orthopedie/evcf2018correction/figures/img-025-119.png",
-            "annales-orthopedie/evcf2018correction/figures/img-025-120.png"
-          ],
+          "images": [],
           "reponseAttendue": "Les techniques à ciel ouvert (conventionnelle, mini-open) et les techniques endoscopiques (1 ou 2 voies).",
           "correctionGenerale": "• Techniques à ciel ouvert (conventionnelle, mini-open)\n• Techniques endoscopiques (1 ou 2 voies)"
         },
@@ -121,29 +171,17 @@
           "format": "qroc",
           "enonce": "<b>Question n°12</b>\n\nQuelle est la structure anatomique à l’origine de la rétraction dans la maladie de Dupuytren ?",
           "images": [
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-027-129.png",
-            "annales-orthopedie/evcf2018correction/figures/img-028-130.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-029-135.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-029-136.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-030-141.png",
-            "annales-orthopedie/evcf2018correction/figures/img-031-147.png",
-            "annales-orthopedie/evcf2018correction/figures/img-031-148.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-032-153.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-033-158.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-033-159.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-034-164.png",
-            "annales-orthopedie/evcf2018correction/figures/img-035-169.png",
-            "annales-orthopedie/evcf2018correction/figures/img-035-170.png",
-            "annales-orthopedie/evcf2018correction/figures/img-035-171.png",
-            "annales-orthopedie/evcf2018correction/figures/img-036-176.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-036-177.png",
-            "annales-orthopedie/evcf2018correction/figures/img-037-182.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-038-187.png",
-            "annales-orthopedie/evcf2018correction/figures/img-038-188.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-039-193.png",
-            "annales-orthopedie/evcf2018correction/figures/img-039-194.png",
-            "annales-orthopedie/evcf2018correction/figures/img-040-200.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-042-209.png"
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
           ],
           "reponseAttendue": "L’aponévrose palmaire et digitale.",
           "correctionGenerale": "<b>Aponévrose palmaire et digitale.</b>\n\n<b>Maladie de Dupuytren</b>\n• Fibrose rétractile de l’aponévrose palmaire et digitale\n• Brides, nodules\n• Homme > femme, 40-50 ans\n• Débute fréquemment au niveau des 4ᵉ et 5ᵉ rayons\n• Étiologie inconnue : prédisposition génétique, alcool, tabac, diabète\n• Classification de Tubiana\n\n<b>Zone de danger</b> : le passage paume-doigt. L’aponévrose malade passe d’une position superficielle par rapport aux pédicules à une position profonde ou latérale.\n\n<b>Techniques</b>\n• Aponévrotomie à l’aiguille — attention aux lésions vasculo-nerveuses, récidives\n• Aponévrotomie enzymatique par injection locale de collagénases\n• Aponévrectomie : lunettes grossissantes recommandées, de proximal en distal ; incisions ; technique de McCash « paume ouverte » ; lâcher du garrot pour vérifier la vitalité ; fermeture cutanée sans tension, lambeaux si tension excessive ou vitalité douteuse\n• Dermo-fasciectomie\n\n<b>Postopératoire</b>\n• Doigt en extension\n• Mobilisation précoce ++\n• Orthèses dynamiques d’extension\n\n<b>Évolution</b>\nRécidive fréquente (> 60 % des cas à long terme). Facteurs de mauvais pronostic : âge de début jeune (< 40 ans), caractère familial, origine ethnique (anglo-saxonne, scandinave), bilatéralité, lésions ectopiques (voûte plantaire : maladie de Ledderhose ; corps caverneux : maladie de Lapeyronie)."
@@ -151,10 +189,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°13</b>\n\nDans la maladie de Dupuytren, en présence de quel signe clinique proposez-vous un traitement chirurgical ?",
-          "images": [
-            "annales-orthopedie/evcf2018correction/figures/img-044-218.png",
-            "annales-orthopedie/evcf2018correction/figures/img-044-219.png"
-          ],
+          "images": [],
           "reponseAttendue": "Un déficit d’extension digitale avec gêne fonctionnelle, soit un test de Hueston positif ; il n’y a pas d’indication « esthétique » pour les nodules isolés ou les brides sans rétraction.",
           "correctionGenerale": "• Déficit d’extension digitale avec gêne fonctionnelle → <b>test de Hueston positif</b>\n• Pas d’indication « esthétique » pour les nodules isolés ou les brides sans rétraction"
         },
@@ -175,7 +210,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°16</b>\n\nQuel est le signe clinique pathognomonique de la rupture du tendon calcanéen ?",
-          "images": ["annales-orthopedie/evcf2018correction/figures/recadre/img-051-248.png"],
+          "images": [],
           "reponseAttendue": "Le signe de Thompson.",
           "correctionGenerale": "Signe de Thompson."
         },
@@ -189,20 +224,14 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°18</b>\n\nQuelle est la complication redoutée précoce du traitement chirurgical de la rupture du tendon calcanéen ?",
-          "images": [
-            "annales-orthopedie/evcf2018correction/figures/img-055-265.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-055-266.png"
-          ],
+          "images": [],
           "reponseAttendue": "Le risque cutané : nécrose, déhiscence.",
           "correctionGenerale": "Risque cutané : nécrose, déhiscence."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°19</b>\n\nQuel est le signe neurologique déficitaire précoce dans le syndrome de loge aigu de jambe ?",
-          "images": [
-            "annales-orthopedie/evcf2018correction/figures/img-057-275.png",
-            "annales-orthopedie/evcf2018correction/figures/img-057-276.png"
-          ],
+          "images": [],
           "reponseAttendue": "L’anesthésie de la première commissure du pied (nerf fibulaire profond).",
           "correctionGenerale": "Anesthésie de la première commissure du pied (nerf fibulaire profond)."
         },
@@ -223,27 +252,21 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°22</b>\n\nCitez les stades de la classification de Lagrange et Rigault dans les fractures en extension de la palette humérale.",
-          "images": [
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-063-297.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-064-298.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-064-299.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-064-300.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-065-301.png"
-          ],
+          "images": [],
           "reponseAttendue": "Stade I : seule la corticale antérieure est rompue, non déplacée. Stade II : fracture des deux corticales, bascule postérieure pure, périoste postérieur intact. Stade III : rotation ou translation, mais les deux fragments restent en contact. Stade IV : déplacement complet, plus aucun contact entre les fragments.",
           "correctionGenerale": "<b>Fracture en extension (95 %)</b>\n• <b>Stade I</b> : uniquement la corticale antérieure est rompue, non déplacée\n• <b>Stade II</b> : fracture des 2 corticales, bascule postérieure pure, le périoste postérieur reste toujours intact\n• <b>Stade III</b> : dès qu’il y a une rotation ou une translation, mais les 2 fragments restent en contact l’un avec l’autre\n• <b>Stade IV</b> : déplacement complet, il n’y a plus de contact entre les fragments\n\n<b>Fracture en flexion (5 %)</b>"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°23</b>\n\nQuels sont les trois angles radiologiques dans le diagnostic de la dysplasie cotyloïdienne de l’adulte ?",
-          "images": ["annales-orthopedie/evcf2018correction/figures/img-068-302.png"],
+          "images": [],
           "reponseAttendue": "La coxométrie de hanche : HTE (obliquité du toit du cotyle, normale < 10°), VCE (couverture externe, normale > 25°) et VCA (couverture antérieure, normale > 25°).",
           "correctionGenerale": "<b>Coxométrie de hanche</b>\n• <b>HTE</b> : obliquité du toit du cotyle (normale < 10°)\n• <b>VCE</b> : couverture externe (normale > 25°)\n• <b>VCA</b> : couverture antérieure (normale > 25°)"
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°24</b>\n\nLa survenue d’un syndrome périnéal vous fait suspecter une lésion dégénérative ou tumorale située à quel niveau médullaire ?",
-          "images": ["annales-orthopedie/evcf2018correction/figures/img-070-303.png"],
+          "images": [],
           "reponseAttendue": "Une compression L1-L2 : syndrome du cône terminal.",
           "correctionGenerale": "• Compression L1-L2\n• Syndrome du cône terminal"
         },
@@ -264,38 +287,21 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n°27</b>\n\nQuelle est la complication principale initiale après une luxation postérieure traumatique de la hanche ?",
-          "images": [
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-078-305.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-078-306.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-078-307.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-079-308.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-080-309.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-081-310.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-083-311.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-083-312.png",
-            "annales-orthopedie/evcf2018correction/figures/img-084-313.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-086-314.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-086-315.png"
-          ],
+          "images": [],
           "reponseAttendue": "La lésion du nerf sciatique.",
           "correctionGenerale": "<b>Lésion du nerf sciatique.</b>\n\n<b>Contexte</b> : traumatisme violent (AVP), fractures-luxations.\n\n<b>Complications précoces</b>\n• Lésions articulaires dans 63 % des cas\n• Le nerf sciatique est atteint dans 7 à 18 % des luxations postérieures\nLe pronostic de récupération est bon pour les lésions isolées de L5 (nerf fibulaire), moins bon en cas de déficit complet L5-S1 (nerf fibulaire + tibial).\n\n<b>Complications secondaires</b>\n• Ostéonécrose de la tête fémorale : 1-10 %, le plus souvent dans les 2 ans\n• Arthrose : très fréquente, jusqu’à 90 % selon certains auteurs — influence du délai de réduction ++\n\n<b>Traitement</b>\n• Réduction en urgence, par manœuvre externe ou réduction sanglante\n• TDM postopératoire, traction 10 jours, décharge sans appui 2 mois, kinésithérapie\n\nRéférences : Tehranzadeh J. et al., AJR 1990 ; Decoulx P. et al., Rev Chir Orthop 1971 ; Hoogaard K., Thomsen P.B., J Bone Joint Surg Am 1987."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°28</b>\n\nQuels sont les deux examens paracliniques permettant le diagnostic précoce d’une nécrose aseptique de la tête fémorale ?",
-          "images": [
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-077-304.png",
-            "annales-orthopedie/evcf2018correction/figures/recadre/img-088-316.png",
-            "annales-orthopedie/evcf2018correction/figures/img-089-317.png",
-            "annales-orthopedie/evcf2018correction/figures/img-089-318.png"
-          ],
+          "images": [],
           "reponseAttendue": "L’IRM et la scintigraphie osseuse.",
           "correctionGenerale": "• IRM\n• Scintigraphie osseuse\n\n<b>Classification ARCO de l’ostéonécrose</b>\nÉtendue de la zone nécrotique : A < 15 %, B = 15-30 %, C > 30 %.\nÉtendue de la zone effondrée : A < 15 %, B = 15-30 %, C > 30 %.\n\nBibliographie : P. Hernigou, <i>Ostéonécroses non traumatiques des épiphyses de l’adulte</i>, EMC 2006 ; P. Chiron, V. Lafontan, N. Reina, <i>Les fractures-luxations de la tête fémorale</i>, Cahiers de la SOFCOT 2012."
         },
         {
           "format": "qroc",
           "enonce": "<b>Question n°29</b>\n\nDécrivez la classification lésionnelle internationale de Vancouver permettant de poser l’indication thérapeutique dans les fractures péri-prothétiques de la hanche.",
-          "images": ["annales-orthopedie/evcf2018correction/figures/img-093-319.png"],
+          "images": [],
           "reponseAttendue": "Type A : trait passant par les trochanters (AG grand trochanter, AL petit trochanter). Type B : trait passant par la tige fémorale (B1 prothèse scellée, B2 descellée, B3 descellée avec faible capital osseux). Type C : trait à distance de la tige (> 1 cm). Type D : trait interprothétique, entre PTH et PTG.",
           "correctionGenerale": "• <b>Type A</b> : trait de fracture qui passe par les trochanters — AG : grand trochanter ; AL : petit trochanter\n• <b>Type B</b> : trait de fracture qui passe par la tige fémorale — B1 : prothèse scellée ; B2 : prothèse descellée ; B3 : prothèse descellée avec faible capital osseux\n• <b>Type C</b> : trait de fracture qui passe à distance de la tige (> 1 cm)\n• <b>Type D</b> : trait de fracture entre PTH et PTG (interprothétique)"
         },

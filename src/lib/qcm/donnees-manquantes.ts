@@ -44,7 +44,9 @@ export type Manque = {
 export function texteBrut(html: string | null | undefined): string {
   return String(html ?? '')
     .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<[^>]+>/g, ' ')
+    // Seulement de vraies balises : « SpO₂ < 90 %, FC > 120/min » stocké tel quel
+    // ne doit pas perdre ce qui sépare les deux signes.
+    .replace(/<\/?[a-z][a-z0-9]*\b[^>]*>/gi, ' ')
     .replace(/&nbsp;/g, ' ')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')

@@ -3,13 +3,17 @@
     "ANNALES GYNECOLOGIE/Annales 2023.pdf": {
       "atelier": "annales-gynecologie/annales-2023",
       "sujetOfficiel": null,
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-016-066.jpg": "Audit des images (28/09/2026, #741) : Capture vidéo anatomique avec l'uretère surligné en vert = la réponse (question de connaissance) ; détachée de la question."
+      },
       "remarque": "Diaporama de correction reprenant les énoncés officiels de la session 2023 de gynécologie-obstétrique : une épreuve de connaissances fondamentales (questions isolées) et deux cas pratiques."
     },
     "ANNALES GYNECOLOGIE/annales gynéco med 2023.pdf": {
       "atelier": "annales-gynecologie/annales-gyneco-med-2023",
       "sujetOfficiel": null,
       "figuresIgnorees": {
+        "img-015-060.png": "Audit images 28/09/2026 (#483) : figure du corrigé qui donne la réponse avant que l’élève réponde — Algorithme de l'aménorrhée secondaire = réponse",
+        "img-020-082.jpg": "Audit des images (28/09/2026, #1238) : algorithme de suivi d'une lésion de haut grade traitée : c'est la réponse ; détachée de la question.",
         "img-015-061.png": "masque blanc de la mise en page de la diapositive, superposé à l’algorithme, sans contenu propre"
       },
       "remarque": "Diaporama de correction de la session 2023 de gynécologie médicale : trois cas pratiques et une épreuve de connaissances fondamentales."
@@ -17,7 +21,9 @@
     "ANNALES GYNECOLOGIE/Annales 2024.pdf": {
       "atelier": "annales-gynecologie/annales-2024",
       "sujetOfficiel": null,
-      "figuresIgnorees": {},
+      "figuresIgnorees": {
+        "img-012-048.jpg": "Audit des images (28/09/2026, #1143) : classification FIGO des léiomyomes : c'est la réponse ; détachée de la question."
+      },
       "remarque": "Diaporama de correction reprenant les énoncés officiels de la session 2024 : une épreuve de connaissances fondamentales par thèmes et deux cas pratiques."
     }
   },
@@ -128,9 +134,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 14</b>\n\nÀ propos de l’anatomie féminine au niveau pelvien :\n\nA. Précisez la position habituelle de l’uretère au croisement des vaisseaux iliaques, à droite et à gauche.\nB. Précisez la position de l’uretère sous-ligamentaire et pré-ligamentaire par rapport à l’artère utérine.\nC. Quelle est la première branche de division du tronc antérieur de l’artère iliaque interne à destination viscérale ?",
-          "images": [
-            "annales-gynecologie/annales-2023/figures/img-016-066.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "A. À gauche, l’uretère croise l’artère iliaque commune ; à droite, l’artère iliaque externe. B. L’uretère pelvien croise l’artère utérine en passant en dehors et en arrière de celle-ci. C. L’artère ombilicale.",
           "correctionGenerale": "• <b>A.</b> À gauche, l’uretère croise l’<b>artère iliaque commune</b> ; à droite, l’<b>artère iliaque externe</b>\n• <b>B.</b> L’uretère pelvien croise l’artère utérine en passant <b>en dehors et en arrière</b> de celle-ci\n• <b>C.</b> L’<b>artère ombilicale</b>"
         },
@@ -390,9 +394,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 5</b>\n\nQuelle prise en charge proposez-vous ?",
-          "images": [
-            "annales-gynecologie/annales-gyneco-med-2023/figures/img-015-060.png"
-          ],
+          "images": [],
           "reponseAttendue": "Le premier diagnostic retenu est celui d’un hypogonadisme hypogonadotrope (aménorrhée hypothalamique fonctionnelle) sur troubles du comportement alimentaire : prise en charge psychologique, prise en charge nutritionniste et endocrinologique.",
           "correctionGenerale": "• Le premier diagnostic retenu est celui d’un <b>hypogonadisme hypogonadotrope (aménorrhée hypothalamique fonctionnelle) sur troubles du comportement alimentaire</b>\n• Prise en charge psychologique\n• Prise en charge nutritionniste et endocrinologique\n\n<i>La figure reproduit l’arbre décisionnel de l’aménorrhée secondaire : élimination des diagnostics de grossesse et de ménopause, dosages FSH, LH, TSH, prolactine, estradiol, testostérone et test aux progestatifs ; puis, selon les résultats, FSH élevée + estradiol bas (caryotype : 45X0 ou mosaïques, 46XX, insuffisance ovarienne prématurée → substitution estro-progestative), hyperprolactinémie (IRM hypophysaire, agoniste dopaminergique ± chirurgie), testostérone très élevée (cortisol libre urinaire, test au Synacthène® sur la 17-OH-progestérone, échographie ± IRM pelvienne, scanner surrénalien → bloc en 21-hydroxylase à révélation tardive ou tumeur virilisante), FSH basse + LH basse + estradiol bas (insuffisance gonadotrope : recherche de TCA ou d’exercice intense, autre déficit hypophysaire → IRM hypophysaire), FSH normale + estradiol normal + hirsutisme + testostérone élevée (échographie ovarienne, 17-OH-progestérone → SOPK ou bloc en 21-hydroxylase).</i>"
         }
@@ -430,9 +432,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 4</b>\n\nLa patiente est opérée et l’anatomopathologie confirme une lésion de haut grade in sano. Comment doit se dérouler le suivi ?",
-          "images": [
-            "annales-gynecologie/annales-gyneco-med-2023/figures/img-020-082.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "Un test HPV à 6 mois : s’il est positif, colposcopie ; s’il est négatif, test HPV à 3 ans.",
           "correctionGenerale": "• <b>Test HPV à 6 mois</b>\n  – Colposcopie si positif\n  – Si négatif : test HPV à 3 ans\n\n<i>La figure reproduit l’algorithme de suivi d’une lésion histologique malpighienne intra-épithéliale de haut grade traitée : test HPV haut risque à 6 mois (M6) ; si HPV négatif, test HPV à 1 an (M18) puis à 3 ans (M42) et à 3 ans (M78), puis surveillance prolongée sans limite d’âge ; si HPV positif, colposcopie avec examen de la vulve et du vagin et biopsie si nécessaire. Il n’y a pas d’indication de reprise chirurgicale quel que soit le statut des marges, et le suivi est similaire pour tous les traitements (destruction, résection, hystérectomie).</i>"
         },
@@ -593,9 +593,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question 8 — Pathologies bénignes de l’endomètre</b>\n\n1. Décrivez la classification FIGO 2011 des myomes.\n2. Quel bilan diagnostique en cas de ménométrorragies ?\n3. Quels sont les grands principes du traitement médical ?",
-          "images": [
-            "annales-gynecologie/annales-2024/figures/img-012-048.jpg"
-          ],
+          "images": [],
           "reponseAttendue": "1. Les myomes sous-muqueux : type 0 (pédiculé, endocavitaire), type 1 (< 50 % intramural), type 2 (≥ 50 % intramural) ; les autres : type 3 (en contact avec l’endomètre, 100 % intramural), type 4 (intramural), type 5 (sous-séreux, ≥ 50 % intramural), type 6 (sous-séreux, < 50 % intramural), type 7 (sous-séreux, pédiculé), type 8 (autre, par exemple cervical ou parasitaire) ; les léiomyomes hybrides sont désignés par deux nombres liés par un trait d’union (par exemple 2-5). 2. Une échographie pelvienne par voie abdominale et endovaginale. 3. Prise en charge symptomatique : traitement de la carence martiale si nécessaire, acide tranexamique en cas de saignement très abondant. Prise en charge étiologique : mise en place d’une contraception ou changement de celle-ci, par exemple par un dispositif intra-utérin au lévonorgestrel.",
           "correctionGenerale": "<b>1. Classification FIGO des léiomyomes</b>\n• <b>S — Sous-muqueux</b> : 0 (pédiculé, endocavitaire) ; 1 (< 50 % intramural) ; 2 (≥ 50 % intramural)\n• <b>A — Autres</b> : 3 (en contact avec l’endomètre, 100 % intramural) ; 4 (intramural) ; 5 (sous-séreux, ≥ 50 % intramural) ; 6 (sous-séreux, < 50 % intramural) ; 7 (sous-séreux, pédiculé) ; 8 (autre, à préciser — cervical, parasitaire)\n• <b>Léiomyomes hybrides</b> (affectent tant l’endomètre que la séreuse) : deux nombres liés par un trait d’union, le premier désignant la relation avec l’endomètre, le second la relation avec la séreuse. Exemple 2-5 : simultanément sous-muqueux et sous-séreux, moins de la moitié du diamètre se trouvant à la fois dans la cavité endométriale et dans la cavité péritonéale\n\n<b>2. Bilan diagnostique en cas de ménométrorragies</b>\n• Échographie pelvienne par voie abdominale et endovaginale\n\n<b>3. Grands principes du traitement médical</b>\n• <i>Prise en charge symptomatique</i> : traitement de la carence martiale si nécessaire ; en cas de saignement très abondant, acide tranexamique\n• <i>Prise en charge étiologique</i> : mise en place d’une contraception ou changement de celle-ci, par exemple dispositif intra-utérin au lévonorgestrel"
         }

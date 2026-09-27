@@ -3,7 +3,9 @@
     "ANNALES AREA/EVCF 2024 - Correction .pdf": {
       "atelier": "annales-area/evcf-2024-correction",
       "sujetOfficiel": null,
-      "figuresIgnorees": {}
+      "figuresIgnorees": {
+        "img-002-016.png": "Audit des images (28/09/2026, #534) : Encadré « Prééclampsie sévère : PAS ≥ 160 / PAD ≥ 110 » = la réponse ; détachée de la question."
+      }
     }
   },
   "series": [
@@ -62,9 +64,7 @@
         {
           "format": "qroc",
           "enonce": "<b>Question n° 7</b>\n\nQuelle(s) valeur(s) de la pression artérielle fera(ont) évoquer chez une femme enceinte une pré-éclampsie gravidique sévère sans signe de gravité ?",
-          "images": [
-            "annales-area/evcf-2024-correction/figures/img-002-016.png"
-          ],
+          "images": [],
           "reponseAttendue": "PAS ≥ 160 mmHg ou PAD ≥ 110 mmHg.",
           "correctionGenerale": "<b>PAS ≥ 160 mmHg ou PAD ≥ 110 mmHg.</b>\n\n<i>Aide cognitive SFAR 2020 : PRÉ-ÉCLAMPSIE SÉVÈRE — PAS ≥ 160 mmHg et/ou PAD ≥ 110 mmHg = URGENCE HYPERTENSIVE ⇒ DÉBUTER ou MAJORER LE TRAITEMENT ANTIHYPERTENSEUR.</i>\n\n<i>Référence : Collège National des Gynécologues et Obstétriciens Français (CNGOF) ; recommandation SFAR 2020.</i>"
         },
