@@ -81,6 +81,13 @@ export type PlanConfig = {
   consent_version: number;
   /** Nombre de tentatives minimal pour que les QCM de la plateforme comptent (§7). */
   min_attempts_platform: number;
+  /**
+   * Stabilité du planning : un item déjà engagé (commencé, ou programmé dans les
+   * `horizon_days` prochains jours) garde sa place tant qu'un autre ne le dépasse
+   * pas de plus de `bonus` points de priorité — une petite variation de
+   * coefficient ne réorganise pas le calendrier.
+   */
+  stability: { horizon_days: number; bonus: number };
 };
 
 export const DEFAULT_VOIE_WEIGHTS: Record<Voie, MatrixCriteria> = {
@@ -107,6 +114,7 @@ export const DEFAULT_CONFIG: PlanConfig = {
   questions_per_validation: 8,
   consent_version: 1,
   min_attempts_platform: 3,
+  stability: { horizon_days: 7, bonus: 6 },
 };
 
 /** Fusion tolérante : les clés absentes ou invalides retombent sur le défaut. */
@@ -135,6 +143,7 @@ export function mergeConfig(raw: unknown): PlanConfig {
   const depth = obj(cov.depth);
   const ds = obj(r.declared_scores);
   const pc = obj(r.pace);
+  const st = obj(r.stability);
   const out: PlanConfig = {
     voie_weights: { interne: criteria(vw.interne, D.voie_weights.interne), externe: criteria(vw.externe, D.voie_weights.externe) },
     levels: { p1: num(lv.p1, D.levels.p1, 0, 100), p2: num(lv.p2, D.levels.p2, 0, 100), p3: num(lv.p3, D.levels.p3, 0, 100) },
@@ -170,6 +179,7 @@ export function mergeConfig(raw: unknown): PlanConfig {
     questions_per_validation: whole(r.questions_per_validation, D.questions_per_validation, 3, 30),
     consent_version: whole(r.consent_version, D.consent_version, 1, 1000),
     min_attempts_platform: whole(r.min_attempts_platform, D.min_attempts_platform, 1, 100),
+    stability: { horizon_days: whole(st.horizon_days, D.stability.horizon_days, 0, 60), bonus: num(st.bonus, D.stability.bonus, 0, 50) },
   };
   // Valeurs contradictoires : retour aux valeurs par défaut du bloc concerné.
   if (!(out.levels.p1 > out.levels.p2 && out.levels.p2 > out.levels.p3)) out.levels = { ...D.levels };
@@ -180,6 +190,15 @@ export function mergeConfig(raw: unknown): PlanConfig {
 }
 
 /* ─── Référentiel (§4) ─── */
+/**
+ * Statut d'un item dans la matrice versionnée : seul ACTIVE (contenu
+ * disponible) est planifiable ; COMING_SOON est enregistré mais jamais proposé
+ * à l'élève ; RETIRE = absent de la version courante, conservé pour
+ * l'historique des élèves (jamais supprimé).
+ */
+export type ItemStatut = 'active' | 'coming_soon' | 'retire';
+export const ITEM_STATUT_LABEL: Record<ItemStatut, string> = { active: 'Actif', coming_soon: 'Bientôt disponible', retire: 'Retiré de la matrice' };
+
 export type PlanItem = {
   id: string;
   faculte_id: string;
@@ -208,9 +227,53 @@ export type PlanItem = {
   mode_travail_interne: string | null;
   mode_travail_externe: string | null;
   note_plateforme: number | null;
+  /** Statut dans la matrice versionnée (absent avant la migration du 28/09 : actif). */
+  statut?: ItemStatut;
+  /** Origine déclarée par la matrice (« MIPIC existant », « Import MG déjà ajouté »…). */
+  origine?: string | null;
+  /** Version de matrice qui a fixé l'état courant de l'item. */
+  matrix_version_id?: string | null;
+  /** Date depuis laquelle l'item est ACTIVE. */
+  active_since?: string | null;
   created_at: string;
   updated_at: string;
 };
+
+/**
+ * Un item ne se planifie que s'il est actif et ACTIVE dans sa matrice. Le
+ * contenu réel (cours relié) est exigé en amont : à la publication d'une
+ * version (sinon COMING_SOON) et par `listItems({ activeOnly })`.
+ */
+export function isPlannable(item: Pick<PlanItem, 'actif' | 'statut'>): boolean {
+  return item.actif && (item.statut ?? 'active') === 'active';
+}
+
+/* ─── Versions de la matrice ─── */
+export type MatrixVersionStatus = 'programmee' | 'active' | 'archivee' | 'annulee';
+export const MATRIX_VERSION_STATUS_LABEL: Record<MatrixVersionStatus, string> = {
+  programmee: 'Programmée', active: 'En vigueur', archivee: 'Archivée', annulee: 'Annulée',
+};
+export type MatrixVersion = {
+  id: string;
+  faculte_id: string;
+  specialite_id: string;
+  matrix: string;
+  version: number;
+  code: string;
+  label: string | null;
+  active_from: string;
+  status: MatrixVersionStatus;
+  activated_at: string | null;
+  source_file: string | null;
+  rules: Record<string, string>;
+  payload: unknown;
+  summary: Record<string, unknown>;
+  created_by: string | null;
+  created_at: string;
+};
+
+/** Part des connaissances de `item_id` déjà couverte par `related_item_id` (0–1). */
+export type PlanOverlap = { item_id: string; related_item_id: string; part: number };
 
 export type PrerequisiteType = 'indispensable' | 'recommande';
 export const PREREQ_TYPE_LABEL: Record<PrerequisiteType, string> = { indispensable: 'Indispensable', recommande: 'Recommandé' };
@@ -411,6 +474,7 @@ export const TRIGGER_LABEL: Record<string, string> = {
   onboarding: 'création du planning', seance_terminee: 'activité terminée', seance_avancee: 'activité réalisée en avance', seance_reportee: 'activité reportée',
   travail_libre: 'travail libre', evaluation: 'évaluation', auto_positionnement: 'nouveau niveau déclaré', disponibilites: 'disponibilités modifiées',
   demande_candidat: 'recalcul demandé', balayage_quotidien: 'recalcul quotidien', journee_terminee: 'journée terminée',
+  nouvelle_matrice: 'mise à jour du programme',
 };
 
 export type ActivityKind = 'seance_terminee' | 'seance_reportee' | 'seance_sautee' | 'seance_avancee' | 'temps_supplementaire' | 'journee_terminee'

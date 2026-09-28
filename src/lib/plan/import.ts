@@ -17,9 +17,19 @@
  *  Priorité externe | Mode de travail interne | Mode de travail externe.
  * Une ligne portant les six critères est un item de matrice : « Transversalité »
  * y est un critère 0–5 (et non l'échelle 1–5 historique).
+ *
+ * Matrice VERSIONNÉE (MIPIC_2026_V1 de Médecine interne, onglet
+ * MATRICE_<NOM>_V<n> + onglet des items en attente + onglet des règles) :
+ *  Item | Statut (ACTIVE / COMING_SOON) | Origine | Importance /5 |
+ *  Centralité polyvalente /5 | Années EVC repérées | Récence /5 |
+ *  Charge réf. (h) | Priorité externe /5 | Priorité interne QCM /5 | Version,
+ *  et, pour les items en attente : Item potentiel | Statut | Niveau.
+ * La priorité /5 de chaque voie devient le score de voie /100 (× 20) ; la
+ * charge en heures devient le temps de référence en minutes. Colonne
+ * facultative « Recouvrements » : « Nom d'item (40 %) ; Autre item ».
  */
 import { recenceFromYears } from './priority';
-import type { MatrixCriteria, MatrixLevel } from './types';
+import type { ItemStatut, MatrixCriteria, MatrixLevel } from './types';
 
 export type ImportRow = {
   specialite: string;
@@ -38,9 +48,15 @@ export type ImportRow = {
   notes: string | null;
   prerequis_indispensables: string[];
   prerequis_recommandes: string[];
+  /** Statut déclaré par une matrice versionnée (null = non précisé). */
+  statut: ItemStatut | null;
+  origine: string | null;
+  /** Recouvrements déclarés : part des connaissances de l'item déjà couverte par un autre. */
+  recouvrements: { nom: string; part: number }[];
   /** Matrice maître (null pour un item hors matrice). */
   matrix: {
-    criteres: MatrixCriteria;
+    /** Six critères (matrice MG) ou critères partiels (matrice versionnée : centralité seule). */
+    criteres: Partial<MatrixCriteria>;
     score_interne: number | null;
     score_externe: number | null;
     etoiles_interne: number | null;
@@ -79,9 +95,16 @@ const ALIASES: Record<string, string> = {
   priorite_interne: 'priorite_interne', priorite_externe: 'priorite_externe',
   mode_de_travail_interne: 'mode_travail_interne', mode_travail_interne: 'mode_travail_interne',
   mode_de_travail_externe: 'mode_travail_externe', mode_travail_externe: 'mode_travail_externe',
+  // Matrice versionnée (MIPIC)
+  statut: 'statut', origine: 'origine', version: 'version_label', item_potentiel: 'nom_item', niveau: 'niveau_attente',
+  importance_5: 'importance', recence_5: 'recence', annees_evc_reperees: 'annees_occurrence', annees_evc: 'annees_occurrence',
+  charge_ref_h: 'charge_h', charge_reference_h: 'charge_h', charge_h: 'charge_h',
+  centralite_polyvalente_5: 'c_centralite_poly', centralite_polyvalente: 'c_centralite_poly',
+  priorite_externe_5: 'prio5_externe', priorite_interne_qcm_5: 'prio5_interne', priorite_interne_5: 'prio5_interne',
+  recouvrements: 'recouvrements', recouvrement: 'recouvrements', recouvre: 'recouvrements',
 };
 
-export function parseImportRows(rows: Record<string, unknown>[], opts: { defaultSpecialite?: string | null; currentYear?: number } = {}): { items: ImportRow[]; issues: ImportIssue[]; columns: Set<string> } {
+export function parseImportRows(rows: Record<string, unknown>[], opts: { defaultSpecialite?: string | null; currentYear?: number; levels?: { p1: number; p2: number; p3: number } } = {}): { items: ImportRow[]; issues: ImportIssue[]; columns: Set<string> } {
   const items: ImportRow[] = [];
   const issues: ImportIssue[] = [];
   // Colonnes réellement présentes dans le fichier : une réimportation n'écrase que celles-là.
@@ -105,6 +128,19 @@ export function parseImportRows(rows: Record<string, unknown>[], opts: { default
     const isMatrix = filled === criteriaKeys.length;
     if (filled > 1 && !isMatrix) issues.push({ line, message: `« ${nom} » : critères de la matrice incomplets (${filled}/6) — item importé hors matrice` });
     let matrix: ImportRow['matrix'] = null;
+    // Matrice versionnée : priorité /5 par voie → score de voie /100.
+    const p5i = prio5(r.prio5_interne, line, 'Priorité interne /5', issues);
+    const p5e = prio5(r.prio5_externe, line, 'Priorité externe /5', issues);
+    if (!isMatrix && (p5i !== null || p5e !== null)) {
+      const lv = opts.levels ?? { p1: 85, p2: 70, p3: 55 };
+      const level = (sc: number | null): MatrixLevel | null => (sc === null ? null : sc >= lv.p1 ? 'P1' : sc >= lv.p2 ? 'P2' : sc >= lv.p3 ? 'P3' : 'P4');
+      const cp = str(r.c_centralite_poly) === '' ? null : int(r.c_centralite_poly, 0, 0, 5, line, 'Centralité', issues);
+      matrix = {
+        criteres: cp === null ? {} : { centralite: cp },
+        score_interne: p5i, score_externe: p5e, etoiles_interne: null, etoiles_externe: null,
+        priorite_interne: level(p5i), priorite_externe: level(p5e), mode_travail_interne: null, mode_travail_externe: null, note_plateforme: null,
+      };
+    }
     if (isMatrix) {
       const c = (k: string, label: string) => int(r[k], 0, 0, 5, line, label, issues);
       const criteres: MatrixCriteria = {
@@ -126,18 +162,28 @@ export function parseImportRows(rows: Record<string, unknown>[], opts: { default
     const stars = matrix ? Math.max(matrix.etoiles_interne ?? 0, matrix.etoiles_externe ?? 0) : 0;
     const importance = matrix && str(r.importance) === '' ? Math.max(1, Math.min(5, stars || 3)) : int(r.importance, 3, 1, 5, line, 'importance', issues);
     const volume = int(r.volume, 3, 1, 5, line, 'volume', issues);
-    const transversalite = matrix ? Math.max(1, matrix.criteres.transversalite) : int(r.transversalite, 1, 1, 5, line, 'transversalite', issues);
+    const transversalite = matrix && isMatrix ? Math.max(1, matrix.criteres.transversalite ?? 1)
+      : matrix?.criteres.centralite !== undefined && str(r.transversalite) === '' ? Math.max(1, matrix.criteres.centralite)
+        : int(r.transversalite, 1, 1, 5, line, 'transversalite', issues);
     const frequence = r.frequence_annales === undefined || str(r.frequence_annales) === '' ? years.length : int(r.frequence_annales, 0, 0, 1000, line, 'frequence_annales', issues);
     const recence = str(r.recence) === '' ? recenceFromYears(years, year) : int(r.recence, 1, 1, 5, line, 'recence', issues);
     // « 0 » ou vide = aucune valeur (et non 5 minutes, ni une priorité forcée à 1).
     const zeroOrEmpty = (v: unknown) => str(v) === '' || Number(str(v).replace(',', '.')) === 0;
-    const temps = zeroOrEmpty(r.temps_reference) ? null : int(r.temps_reference, 0, 5, 3000, line, 'temps_reference', issues) || null;
+    const hours = str(r.charge_h).replace(',', '.');
+    const fromHours = hours !== '' && Number.isFinite(Number(hours)) && Number(hours) > 0 ? Math.max(5, Math.min(3000, Math.round(Number(hours) * 60))) : null;
+    if (hours !== '' && fromHours === null) issues.push({ line, message: `« ${nom} » : charge « ${hours} » illisible (en heures)` });
+    const temps = !zeroOrEmpty(r.temps_reference) ? int(r.temps_reference, 0, 5, 3000, line, 'temps_reference', issues) || null : fromHours;
     const forced = zeroOrEmpty(r.priorite_forcee) ? null : int(r.priorite_forcee, 0, 1, 5, line, 'priorite_forcee', issues) || null;
+    const statut = parseStatut(r.statut);
+    if (str(r.statut) !== '' && statut === null) issues.push({ line, message: `« ${nom} » : statut « ${str(r.statut)} » inconnu (ACTIVE, COMING_SOON ou RETIRE)` });
+    const attente = str(r.niveau_attente);
+    const notes = [str(r.notes), attente ? `Niveau annoncé : ${attente}` : ''].filter(Boolean).join(' — ') || null;
     items.push({
       specialite, code: str(r.code) || null, nom_item: nom, cours_id: isUuid(str(r.cours_id)) ? str(r.cours_id) : null,
       importance, volume, temps_reference: temps, transversalite, frequence_annales: frequence, annees_occurrence: years, recence,
-      actif: parseBool(r.actif, true), priorite_forcee: forced, notes: str(r.notes) || null,
+      actif: parseBool(r.actif, true), priorite_forcee: forced, notes,
       prerequis_indispensables: parseList(r.prerequis_indispensables), prerequis_recommandes: parseList(r.prerequis_recommandes),
+      statut, origine: str(r.origine) || null, recouvrements: parseOverlaps(r.recouvrements),
       matrix,
     });
   });
@@ -180,6 +226,81 @@ export function rowsFromMatrixWorkbook(sheets: Record<string, Record<string, unk
 }
 function normRow(r: Record<string, unknown>): Record<string, unknown> {
   return Object.fromEntries(Object.entries(r).map(([k, v]) => [norm(k), v]));
+}
+
+/**
+ * Classeur d'une matrice VERSIONNÉE (lu côté client) : onglet principal
+ * MATRICE_<NOM>_V<n>, complété par l'onglet des items en attente (COMING_SOON)
+ * et l'onglet des règles. Sans onglet principal : null.
+ */
+export function rowsFromVersionedWorkbook(sheets: Record<string, Record<string, unknown>[]>): { rows: Record<string, unknown>[]; rules: Record<string, string>; sheet: string; sheetCode: string | null } | null {
+  const names = Object.keys(sheets);
+  const main = names.find((n) => /^matrice_.+_v\d+$/.test(norm(n)) && norm(n) !== 'matrice_maitre');
+  if (!main) return null;
+  const pending = names.filter((n) => n !== main && /(en_attente|coming_soon|a_venir|attente)/.test(norm(n)));
+  const rulesSheet = names.find((n) => /^regles/.test(norm(n)));
+  const rules: Record<string, string> = {};
+  for (const r of rulesSheet ? sheets[rulesSheet] : []) {
+    const vals = Object.values(r).map(str);
+    if (vals[0] && vals[1]) rules[vals[0]] = vals[1];
+  }
+  // Un item de l'onglet d'attente sans statut explicite est COMING_SOON.
+  const withStatut = (r: Record<string, unknown>) => (Object.keys(r).some((k) => norm(k) === 'statut' && str(r[k])) ? r : { ...r, Statut: 'COMING_SOON' });
+  const rows = [...sheets[main], ...pending.flatMap((n) => sheets[n].map(withStatut))];
+  const m = /^matrice_(.+)_v(\d+)$/.exec(norm(main));
+  return { rows, rules, sheet: main, sheetCode: m ? `${m[1].toUpperCase()}_V${m[2]}` : null };
+}
+
+function parseStatut(v: unknown): ItemStatut | null {
+  const s = norm(str(v));
+  if (!s) return null;
+  if (['active', 'actif', 'actifs'].includes(s)) return 'active';
+  if (['coming_soon', 'comingsoon', 'bientot', 'bientot_disponible', 'a_venir', 'en_attente'].includes(s)) return 'coming_soon';
+  if (['retire', 'retired', 'inactive', 'inactif'].includes(s)) return 'retire';
+  return null;
+}
+
+/** « Nom (40 %) ; Autre : 0,3 ; Troisième » → parts (défaut 50 %). */
+export function parseOverlaps(v: unknown): { nom: string; part: number }[] {
+  const out = new Map<string, { nom: string; part: number }>();
+  for (const raw of str(v).split(/[;|\n]+/).map((x) => x.trim()).filter(Boolean)) {
+    let nom = raw;
+    let part = 0.5;
+    const pct = /^(.*?)[\s(]*(\d+(?:[.,]\d+)?)\s*%\s*\)?$/.exec(raw);
+    const frac = /^(.*?)\s*[:=]\s*(0?[.,]\d+|1(?:[.,]0+)?)$/.exec(raw);
+    if (pct) { nom = pct[1]; part = Number(pct[2].replace(',', '.')) / 100; }
+    else if (frac) { nom = frac[1]; part = Number(frac[2].replace(',', '.')); }
+    nom = nom.replace(/[\s(:=-]+$/, '').trim();
+    if (nom && part > 0 && part <= 1) out.set(norm(nom), { nom, part: Math.round(part * 100) / 100 });
+  }
+  return Array.from(out.values());
+}
+
+/** Priorité /5 (décimale) → score /100. */
+function prio5(v: unknown, line: number, field: string, issues: ImportIssue[]): number | null {
+  const s = str(v).replace(',', '.');
+  if (s === '') return null;
+  const n = Number(s);
+  if (!Number.isFinite(n) || n < 0 || n > 5) { issues.push({ line, message: `${field} : « ${s} » hors de l’échelle 0–5 (ignorée)` }); return null; }
+  return Math.round(n * 20 * 100) / 100;
+}
+
+/**
+ * Code de version : d'abord le nom du fichier (« Matrice_MIPIC_2026_V1.xlsx »
+ * → MIPIC_2026_V1), sinon l'onglet (« MATRICE_MIPIC_V1 » → MIPIC_<année>_V1).
+ */
+export function versionCodeFrom(fileName: string, sheetCode: string | null, year: number): string | null {
+  const f = /([A-Za-z][A-Za-z0-9]*)[_ -]+(\d{4})[_ -]+V(\d+)/i.exec(fileName.replace(/\.[a-z0-9]+$/i, ''));
+  if (f && !/^matrice$/i.test(f[1])) return `${f[1].toUpperCase()}_${f[2]}_V${Number(f[3])}`;
+  const s = sheetCode ? /^(.+)_V(\d+)$/.exec(sheetCode) : null;
+  return s ? `${s[1]}_${year}_V${Number(s[2])}` : null;
+}
+
+/** « MIPIC_2026_V2 » → { matrix: 'MIPIC_2026', version: 2 } ; null si le code est mal formé. */
+export function parseVersionCode(code: string): { matrix: string; version: number } | null {
+  const m = /^([A-Z][A-Z0-9_]*?)_V(\d+)$/.exec(code.trim().toUpperCase());
+  if (!m || Number(m[2]) < 1) return null;
+  return { matrix: m[1], version: Number(m[2]) };
 }
 
 /** Score décimal 0–100 conservé tel quel (72,5 reste 72,5). */

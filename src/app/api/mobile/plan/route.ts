@@ -80,7 +80,8 @@ async function identifier(req: Request) {
 
 /** Projection d'une séance — jamais d'information sur un autre candidat. */
 function vueSeance(ctx: StudentContext, s: PlanSession, coursIds: Map<string, string | null>) {
-  const item = s.item_id ? ctx.items.find((i) => i.id === s.item_id) ?? null : null;
+  // Séance passée d'un item retiré de la matrice : son nom reste affiché (comme sur le web).
+  const item = s.item_id ? ctx.items.find((i) => i.id === s.item_id) ?? ctx.otherItems.find((i) => i.id === s.item_id) ?? null : null;
   const m = s.item_id ? ctx.mastery.get(s.item_id) : undefined;
   return {
     id: s.id, day: s.day, minutes: s.minutes, minutesLabel: fmtMinutes(s.minutes),

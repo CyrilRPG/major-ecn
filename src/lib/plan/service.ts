@@ -4,9 +4,9 @@ import { canStudentReadSerie, type QcmAccessContext } from '@/lib/data/qcm-acces
 import { chargerAnnonces } from '@/lib/annonces/server';
 import { dayKeyOf, todayKey } from '@/lib/suivi/format';
 import {
-  addActivity, addGeneration, addMasteryHistory, addQuestionUses, collegeFamily, completeEvaluationOnce, getConfig, getEvaluation, getItem, getMastery,
-  getProfile, getSession, insertEvaluation, insertSession, listAttemptsForCours, listCoursWithQuestions, listMockExamAttemptsForCours, listColleges,
-  listGenerations, listItems, listMastery, listMasteryHistory, listPrerequisites, listQuestionTags, listQuestionUses, listQuestionsForCours,
+  addActivity, addGeneration, addMasteryHistory, addQuestionUses, collegeFamily, completeEvaluationOnce, getActiveMatrixVersion, getConfig, getEvaluation, getItem, getMastery,
+  getProfile, getSession, insertEvaluation, insertSession, listAttemptsForCours, listCoursWithQuestions, listEquivalentCours, listItemsByIds, listMockExamAttemptsForCours, listColleges,
+  listGenerations, listItems, listMastery, listMasteryHistory, listOverlaps, listPrerequisites, listQuestionTags, listQuestionUses, listQuestionsForCours,
   listRecentDoneSessions, listSessions, planDb, replaceFutureSessions, updateSessionIf, upsertMastery, upsertProfile,
   type AttemptLite, type CollegeLite, type QuestionRow,
 } from './db';
@@ -19,13 +19,14 @@ import { pickQuestions, scoreEvaluation, type EvalAnswer, type EvalQuestion } fr
 import { computePace, declaredToScore, evaluationOutcome, masteryFromAttempts, mergeMastery, sourceConfidence, type Pace } from './mastery';
 import { computePriority, type PriorityResult } from './priority';
 import { pickNextActivity, type NextActivity } from './next-activity';
+import { inheritFromOverlaps, withInheritedMastery, type OverlapSource } from './overlap';
 import { shouldShowIntro } from './intro';
 import { addDaysKey, daysBetween } from './revision';
 import { generateSchedule, type MasteryState, type ScheduleSummary } from './scheduler';
 import { referenceMinutes } from './workload';
 import {
   LEARNING_KINDS, parseAvailability,
-  type Availability, type DeclaredLevel, type PlanConfig, type PlanItem, type PlanMastery, type PlanPrerequisite, type PlanProfile, type PlanSession, type Voie,
+  type Availability, type DeclaredLevel, type PlanConfig, type PlanItem, type PlanMastery, type PlanOverlap, type PlanPrerequisite, type PlanProfile, type PlanSession, type Voie,
 } from './types';
 
 /**
@@ -101,9 +102,15 @@ export type StudentContext = {
   summary: (ScheduleSummary & { pace?: Pace }) | null;
   /** Items ayant des questions sur la plateforme (évaluation courte possible). */
   evaluable: Set<string>;
+  /** Items hors programme courant (retirés ou bientôt disponibles) cités par des séances passées : l'historique garde leur nom. */
+  otherItems: PlanItem[];
 };
 
 export async function loadStudentContext(userId: string, opts: { now?: Date } = {}): Promise<StudentContext | null> {
+  // Une nouvelle version de la matrice est entrée en vigueur depuis le dernier calcul :
+  // le planning futur est recalculé avant d'être affiché (le passé n'est jamais touché).
+  const { ensurePlanFresh } = await import('./matrix-versions');
+  await ensurePlanFresh(userId).catch((e) => console.error('[plan] recalcul après nouvelle matrice :', e instanceof Error ? e.message : e));
   const profile = await getProfile(userId);
   if (!profile || !profile.onboarding_done || !profile.specialite_id || !profile.exam_date) return null;
   const now = opts.now ?? new Date();
@@ -116,6 +123,9 @@ export async function loadStudentContext(userId: string, opts: { now?: Date } = 
     listPrerequisites(items.map((i) => i.id)), listMastery(userId), listSessions(userId), listGenerations(userId, 1), evaluableItemIds(items),
   ]);
   const mastery = new Map(masteryRows.map((m) => [m.item_id, m]));
+  const activeIds = new Set(items.map((i) => i.id));
+  const otherIds = Array.from(new Set(sessions.map((s) => s.item_id).filter((id): id is string => !!id && !activeIds.has(id))));
+  const otherItems = otherIds.length > 0 ? await listItemsByIds(otherIds) : [];
   const daysLeft = Math.max(0, daysBetween(today, profile.exam_date));
   const voie = profile.voie;
   const priorities = new Map(items.map((i) => {
@@ -135,6 +145,7 @@ export async function loadStudentContext(userId: string, opts: { now?: Date } = 
     estimatedMastery: estimatedMastery(statuses),
     summary: (generations[0]?.summary as StudentContext['summary']) ?? null,
     evaluable,
+    otherItems,
   };
 }
 
@@ -300,18 +311,32 @@ export async function regeneratePlan(userId: string, trigger: string, opts: { no
   const [config, colleges] = await Promise.all([getConfig(), listColleges()]);
   const family = collegeFamily(profile.specialite_id!, colleges);
   const items = await listItems({ specialites: family, activeOnly: true });
-  const [prerequisites, masteryRows, todaySessions, pace, evaluable] = await Promise.all([
+  const [prerequisites, masteryRows, todaySessions, futureSessions, pace, evaluable, overlaps, matrixVersion] = await Promise.all([
     listPrerequisites(items.map((i) => i.id)), listMastery(userId), listSessions(userId, { from: today, to: today, statuses: ['terminee', 'en_cours'] }),
-    paceOf(userId, config, now), evaluableItemIds(items),
+    listSessions(userId, { from: today, statuses: ['planifiee'] }),
+    paceOf(userId, config, now), evaluableItemIds(items), listOverlaps(items.map((i) => i.id)), getActiveMatrixVersion(profile.specialite_id!),
   ]);
-  const mastery = new Map<string, MasteryState>();
-  for (const m of masteryRows) {
-    if (Number(m.confidence) <= 0) continue;
-    mastery.set(m.item_id, {
-      score: Number(m.mastery_score), confidence: Number(m.confidence), minutesDone: m.learning_minutes_done,
-      reactivationCount: m.reactivation_count, lastEvaluatedAt: m.last_evaluated_at, lastScore: m.last_result === null ? null : Number(m.last_result),
-      lastWorkedAt: m.last_worked_at, nextReactivationOn: null,
+  // Items entrés au programme après la création du planning (nouvelle version de la matrice) :
+  // ils partent du niveau déclaré par l'élève pour leur spécialité, comme à l'onboarding.
+  const known = new Set(masteryRows.map((m) => m.item_id));
+  const fresh = items.filter((i) => !known.has(i.id));
+  if (fresh.length > 0) {
+    const parentOf = new Map(colleges.map((c) => [c.id, c.parent_matiere_id]));
+    const levelOf = (spe: string): DeclaredLevel => profile!.specialty_levels[spe] ?? profile!.specialty_levels[parentOf.get(spe) ?? ''] ?? profile!.specialty_levels[profile!.specialite_id!] ?? 'inconnu';
+    const rows = fresh.map((i) => {
+      const level = levelOf(i.specialite_id);
+      const d = declaredToScore(level, config);
+      return { user_id: userId, item_id: i.id, declared_level: level, mastery_score: d.score, confidence: d.confidence, source: 'auto_evaluation', origin: 'declare' as const, status: 'a_travailler' as const };
     });
+    await upsertMastery(rows);
+    await addMasteryHistory(rows.map((r) => ({ user_id: userId, item_id: r.item_id, score: r.mastery_score, confidence: r.confidence, source: 'auto_evaluation', detail: { level: r.declared_level, par: 'specialite', nouvel_item: true } })));
+    masteryRows.push(...rows.map((r) => ({ ...r, learning_minutes_done: 0, reactivation_count: 0, last_evaluated_at: null, last_worked_at: null, activity_count: 0, results_count: 0, results_correct: 0, last_result: null, time_spent_minutes: 0, next_reactivation_on: null, updated_at: now.toISOString() }) as PlanMastery));
+  }
+  const mastery = masteryStates(items, masteryRows, overlaps);
+  // Stabilité : premier jour où chaque item était programmé par le planning en vigueur.
+  const previousPlan = new Map<string, string>();
+  for (const s of futureSessions) {
+    if (s.item_id && (s.kind === 'apprentissage' || s.kind === 'approfondissement') && !previousPlan.has(s.item_id)) previousPlan.set(s.item_id, s.day);
   }
   // Travail du jour (y compris en avance) déduit ; journée close = plus rien aujourd'hui.
   const dayClosed = profile.day_closed_on === today;
@@ -319,6 +344,7 @@ export async function regeneratePlan(userId: string, trigger: string, opts: { no
   const result = generateSchedule({
     items, prerequisites, mastery, availability: profile.availability, today, examDate: profile.exam_date!, config,
     voie: profile.voie, unavailableDays: profile.unavailable_days, minutesUsedToday, paceFactor: pace.factor, evaluableItemIds: evaluable,
+    previousPlan,
   });
   const version = profile.plan_version + 1;
   // Les séances réalisées ou commencées restent ; les séances futures sont remplacées :
@@ -343,9 +369,49 @@ export async function regeneratePlan(userId: string, trigger: string, opts: { no
   const summary = { ...result.summary, pace };
   await addGeneration({
     user_id: userId, plan_version: version, trigger,
-    summary: { ...summary, sessions: rows.length, uncovered: result.summary.uncoveredItemIds.length },
+    // Traçabilité : version de matrice sur laquelle ce planning a été calculé.
+    summary: { ...summary, sessions: rows.length, uncovered: result.summary.uncoveredItemIds.length, matrix_version: matrixVersion?.code ?? null },
   });
   return summary;
+}
+
+/**
+ * État de chaque item pour le moteur : travail PROPRE de l'élève, complété par
+ * ce qui a déjà été travaillé dans des items qui le recouvrent (overlap.ts).
+ * L'héritage n'est jamais écrit : il est recalculé et s'efface devant les
+ * résultats propres de l'item.
+ */
+function masteryStates(items: PlanItem[], masteryRows: PlanMastery[], overlaps: PlanOverlap[]): Map<string, MasteryState> {
+  const mastery = new Map<string, MasteryState>();
+  for (const m of masteryRows) {
+    if (Number(m.confidence) <= 0) continue;
+    mastery.set(m.item_id, {
+      score: Number(m.mastery_score), confidence: Number(m.confidence), minutesDone: m.learning_minutes_done,
+      reactivationCount: m.reactivation_count, lastEvaluatedAt: m.last_evaluated_at, lastScore: m.last_result === null ? null : Number(m.last_result),
+      lastWorkedAt: m.last_worked_at, nextReactivationOn: null,
+    });
+  }
+  if (overlaps.length === 0) return mastery;
+  const byId = new Map(masteryRows.map((m) => [m.item_id, m]));
+  const sources = new Map<string, OverlapSource>(masteryRows.map((m) => [m.item_id, {
+    score: Number(m.mastery_score), confidence: Number(m.confidence), observed: m.origin === 'observe',
+    minutesDone: m.learning_minutes_done, lastWorkedAt: m.last_worked_at,
+  }]));
+  for (const item of items) {
+    const inh = inheritFromOverlaps(item.id, overlaps, sources);
+    if (inh.from.length === 0) continue;
+    const own = mastery.get(item.id);
+    const row = byId.get(item.id);
+    const value = withInheritedMastery(own ? { score: own.score, confidence: own.confidence } : null, row?.origin === 'observe', inh.measure);
+    mastery.set(item.id, {
+      ...(own ?? { minutesDone: 0, reactivationCount: 0, lastEvaluatedAt: null, lastScore: null, lastWorkedAt: null, nextReactivationOn: null }),
+      ...(value ?? { score: own?.score ?? 45, confidence: own?.confidence ?? 0 }),
+      minutesDone: (own?.minutesDone ?? 0) + inh.minutes,
+      inheritedMinutes: inh.minutes,
+      lastWorkedAt: own?.lastWorkedAt ?? inh.lastWorkedAt,
+    });
+  }
+  return mastery;
 }
 
 /**
@@ -527,14 +593,18 @@ export async function syncMasteryFromPlatform(userId: string, opts: { force?: bo
   const items = await listItems({ specialites: collegeFamily(profile.specialite_id, colleges), activeOnly: true });
   const withCours = items.filter((i) => i.cours_id);
   const since = new Date(now.getTime() - 180 * 86_400_000).toISOString();
-  const coursIds = withCours.map((i) => i.cours_id!);
+  // Copie physique ↔ original (linked_to_cours_id) : le travail fait sur l'un vaut pour l'autre.
+  const equivalents = await listEquivalentCours(withCours.map((i) => i.cours_id!)).catch(() => new Map<string, string[]>());
+  const coursIds = Array.from(new Set(withCours.flatMap((i) => [i.cours_id!, ...(equivalents.get(i.cours_id!) ?? [])])));
   const [attempts, mockAttempts, tags] = await Promise.all([
     listAttemptsForCours(userId, coursIds, since),
     listMockExamAttemptsForCours(userId, coursIds, since).catch((): AttemptLite[] => []),
     listQuestionTags(items.map((i) => i.id)),
   ]);
   const itemByCours = new Map<string, string[]>();
-  for (const i of withCours) itemByCours.set(i.cours_id!, [...(itemByCours.get(i.cours_id!) ?? []), i.id]);
+  for (const i of withCours) {
+    for (const c of [i.cours_id!, ...(equivalents.get(i.cours_id!) ?? [])]) itemByCours.set(c, [...(itemByCours.get(c) ?? []), i.id]);
+  }
   const itemsByQuestion = new Map<string, string[]>();
   for (const t of tags) itemsByQuestion.set(t.question_id, [...(itemsByQuestion.get(t.question_id) ?? []), t.item_id]);
   const perItem = new Map<string, { isCorrect: boolean; at: string }[]>();
@@ -736,6 +806,10 @@ export async function selfPosition(userId: string, itemId: string, level: Declar
 export async function runPlanSweep(now: Date = new Date(), opts: { budgetMs?: number } = {}): Promise<{ recalculated: number; synced: number; remaining: number; errors: string[] }> {
   const report = { recalculated: 0, synced: 0, remaining: 0, errors: [] as string[] };
   const { listProfiles } = await import('./db');
+  // Versions de matrice arrivées à leur date d'activation : appliquées d'abord, le recalcul suit.
+  const { activateDueMatrixVersions, activationBySpecialty } = await import('./matrix-versions');
+  try { await activateDueMatrixVersions(now, { force: true }); } catch (err) { report.errors.push(`versions : ${err instanceof Error ? err.message : String(err)}`); }
+  const activation = await activationBySpecialty().catch(() => new Map<string, string>());
   const started = Date.now();
   // Les plannings les plus anciens d'abord : si le temps d'exécution manque, le passage suivant reprend la suite.
   const profiles = (await listProfiles())
@@ -748,7 +822,10 @@ export async function runPlanSweep(now: Date = new Date(), opts: { budgetMs?: nu
       // Recalcul si le dernier planning date d'hier ou plus : les séances non
       // réalisées ne s'accumulent pas, elles sont redistribuées (§18, addendum §7).
       const last = p.last_generated_at ? dayKeyOf(p.last_generated_at) : null;
-      if (!last || last < todayKey(now)) { await regeneratePlan(p.user_id, 'balayage_quotidien', { now }); report.recalculated++; }
+      // Planning calculé avant la version de matrice en vigueur : recalculé (futur seulement).
+      const act = p.specialite_id ? activation.get(p.specialite_id) : undefined;
+      const stale = !!act && (!p.last_generated_at || Date.parse(p.last_generated_at) < Date.parse(act));
+      if (!last || last < todayKey(now) || stale) { await regeneratePlan(p.user_id, stale ? 'nouvelle_matrice' : 'balayage_quotidien', { now }); report.recalculated++; }
     } catch (err) {
       report.errors.push(`${p.user_id}: ${err instanceof Error ? err.message : String(err)}`);
     }

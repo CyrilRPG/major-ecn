@@ -6,7 +6,8 @@ import type { SessionView } from '@/components/student/plan/session-card';
 
 /** Projection d'une séance pour les écrans candidat (jamais d'autre candidat). */
 export function toSessionView(ctx: StudentContext, s: PlanSession, coursIds: Map<string, string | null>): SessionView {
-  const item = s.item_id ? ctx.items.find((i) => i.id === s.item_id) ?? null : null;
+  // Séance passée d'un item retiré de la matrice : son nom reste affiché (l'historique n'est jamais réécrit).
+  const item = s.item_id ? ctx.items.find((i) => i.id === s.item_id) ?? ctx.otherItems.find((i) => i.id === s.item_id) ?? null : null;
   const m = s.item_id ? ctx.mastery.get(s.item_id) : undefined;
   return {
     id: s.id, day: s.day, minutes: s.minutes, kind: s.kind, status: s.status, reason: s.reason, priorityTier: s.priority_tier,

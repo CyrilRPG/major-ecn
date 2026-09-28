@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { InlineStatus, NativeSelect } from '@/components/admin/suivi/ui';
 import { deleteItemAction, patchItemAction } from '@/app/admin/planificateur/actions';
-import type { PlanItem } from '@/lib/plan/types';
+import { ITEM_STATUT_LABEL, type PlanItem } from '@/lib/plan/types';
 
 /** Édition en ligne des caractéristiques (§22) — chaque changement est enregistré immédiatement. */
 export function ItemsTable({ items, collegeNames, prereqCount }: { items: PlanItem[]; collegeNames: Record<string, string>; prereqCount: Record<string, number> }) {
@@ -50,11 +50,13 @@ export function ItemsTable({ items, collegeNames, prereqCount }: { items: PlanIt
           <TableBody>
             {rows.length === 0 && <TableRow><TableCell colSpan={13} className="text-sm text-(--color-ink-soft)">Aucun item. Créez-en depuis les cours ou importez la matrice.</TableCell></TableRow>}
             {rows.slice(0, 400).map((i) => (
-              <TableRow key={i.id} className={!i.actif ? 'opacity-60' : ''}>
+              <TableRow key={i.id} className={!i.actif || (i.statut ?? 'active') !== 'active' ? 'opacity-60' : ''}>
                 <TableCell className="max-w-xs">
                   <Link href={`/admin/planificateur/items/${i.id}`} className="font-medium text-(--color-ink) underline-offset-4 hover:underline">{i.nom_item}</Link>
                   {i.code && <span className="ml-1 text-xs text-(--color-ink-muted)">{i.code}</span>}
-                  {!i.cours_id && <span className="ml-1 text-[10px] text-amber-700" title="Aucun cours relié : pas d’évaluation automatique">sans cours</span>}
+                  {!i.cours_id && <span className="ml-1 text-[10px] text-amber-700" title="Aucun cours relié : jamais proposé à l’élève">sans cours</span>}
+                  {i.statut && i.statut !== 'active' && <span className="ml-1 text-[10px] font-medium text-amber-700" title={i.statut === 'coming_soon' ? 'Enregistré, jamais proposé à l’élève tant que son contenu n’est pas activé' : 'Absent de la version en vigueur : conservé pour l’historique des élèves'}>{ITEM_STATUT_LABEL[i.statut]}</span>}
+                  {i.origine && <span className="ml-1 text-[10px] text-(--color-ink-muted)">{i.origine}</span>}
                 </TableCell>
                 <TableCell className="text-xs text-(--color-ink-soft)">{collegeNames[i.specialite_id] ?? i.specialite_id}</TableCell>
                 <TableCell>{num(i, 'importance', 1, 5)}</TableCell>
@@ -72,7 +74,7 @@ export function ItemsTable({ items, collegeNames, prereqCount }: { items: PlanIt
                 </TableCell>
                 <TableCell><input type="checkbox" checked={i.actif} disabled={pending} onChange={(e) => patch(i.id, { actif: e.target.checked })} className="h-4 w-4 accent-(--color-primary)" aria-label="Actif" /></TableCell>
                 <TableCell>
-                  <Button size="sm" variant="ghost" disabled={pending} onClick={() => { if (confirm(`Supprimer « ${i.nom_item} » ? Les niveaux des candidats sur cet item seront perdus.`)) start(async () => { const r = await deleteItemAction(i.id); if (!r.ok) setError(r.error); else router.refresh(); }); }} aria-label="Supprimer"><Trash2 /></Button>
+                  <Button size="sm" variant="ghost" disabled={pending} onClick={() => { if (confirm(`Supprimer « ${i.nom_item} » ? Impossible si des élèves y ont déjà travaillé : retirez-le alors de la matrice (nouvelle version) ou décochez « Actif ».`)) start(async () => { const r = await deleteItemAction(i.id); if (!r.ok) setError(r.error); else router.refresh(); }); }} aria-label="Supprimer"><Trash2 /></Button>
                 </TableCell>
               </TableRow>
             ))}

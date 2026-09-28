@@ -4,7 +4,7 @@ import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import {
   mergeConfig, parseAvailability,
-  type PlanConfig, type PlanEvaluation, type PlanItem, type PlanMastery, type PlanPrerequisite, type PlanProfile, type PlanSession,
+  type MatrixVersion, type PlanConfig, type PlanEvaluation, type PlanItem, type PlanMastery, type PlanOverlap, type PlanPrerequisite, type PlanProfile, type PlanSession,
 } from './types';
 
 /**
@@ -54,7 +54,9 @@ export async function listItems(opts: { specialites?: string[]; activeOnly?: boo
   const rows = await fetchAllRows<PlanItem>((from, to) => {
     let q = planDb().from('plan_items').select('*');
     if (opts.specialites && opts.specialites.length > 0) q = q.in('specialite_id', opts.specialites);
-    if (opts.activeOnly) q = q.eq('actif', true);
+    // Programme de l'élève : items actifs, ACTIVE dans leur matrice et reliés à un contenu
+    // (un item COMING_SOON ou retiré n'est jamais proposé ; il reste en base pour l'historique).
+    if (opts.activeOnly) q = q.eq('actif', true).eq('statut', 'active').not('cours_id', 'is', null);
     return q.order('nom_item').order('id').range(from, to);
   });
   return rows.map(normalizeItem);
@@ -62,6 +64,87 @@ export async function listItems(opts: { specialites?: string[]; activeOnly?: boo
 export async function getItem(id: string): Promise<PlanItem | null> {
   const { data } = await planDb().from('plan_items').select('*').eq('id', id).maybeSingle();
   return data ? normalizeItem(data as PlanItem) : null;
+}
+/** Items par identifiant, tous statuts (séances passées d'un item retiré de la matrice). */
+export async function listItemsByIds(ids: string[]): Promise<PlanItem[]> {
+  const out: PlanItem[] = [];
+  for (let i = 0; i < ids.length; i += 200) {
+    const { data, error } = await planDb().from('plan_items').select('*').in('id', ids.slice(i, i + 200));
+    if (error) throw new Error(error.message);
+    out.push(...((data ?? []) as PlanItem[]).map(normalizeItem));
+  }
+  return out;
+}
+
+/* ─── Versions de la matrice et recouvrements ─── */
+export async function listMatrixVersions(opts: { specialites?: string[] } = {}): Promise<MatrixVersion[]> {
+  let q = planDb().from('plan_matrix_versions').select('*').eq('faculte_id', EDN_FACULTE_ID);
+  if (opts.specialites && opts.specialites.length > 0) q = q.in('specialite_id', opts.specialites);
+  const { data, error } = await q.order('matrix').order('version', { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data ?? []) as MatrixVersion[];
+}
+export async function getMatrixVersion(id: string): Promise<MatrixVersion | null> {
+  const { data } = await planDb().from('plan_matrix_versions').select('*').eq('id', id).maybeSingle();
+  return (data as MatrixVersion | null) ?? null;
+}
+/** Version en vigueur d'une spécialité (collège de premier niveau). */
+export async function getActiveMatrixVersion(specialiteId: string): Promise<MatrixVersion | null> {
+  const { data } = await planDb().from('plan_matrix_versions').select('id, code, matrix, version, active_from, activated_at, specialite_id, status')
+    .eq('faculte_id', EDN_FACULTE_ID).eq('specialite_id', specialiteId).eq('status', 'active').maybeSingle();
+  return (data as MatrixVersion | null) ?? null;
+}
+export type VersionItemRow = { id: string; version_id: string; item_id: string | null; specialite_id: string; nom_item: string; statut: string; change: string; data: Record<string, unknown> };
+export async function listVersionItems(versionId: string): Promise<VersionItemRow[]> {
+  return fetchAllRows<VersionItemRow>((from, to) => planDb().from('plan_matrix_version_items').select('*').eq('version_id', versionId).order('nom_item').order('id').range(from, to));
+}
+export async function listOverlaps(itemIds?: string[]): Promise<PlanOverlap[]> {
+  const map = (rows: PlanOverlap[]) => rows.map((r) => ({ item_id: r.item_id, related_item_id: r.related_item_id, part: Number(r.part) }));
+  if (!itemIds) return map(await fetchAllRows<PlanOverlap>((from, to) => planDb().from('plan_item_overlaps').select('item_id, related_item_id, part').order('item_id').order('related_item_id').range(from, to)));
+  const out: PlanOverlap[] = [];
+  for (let i = 0; i < itemIds.length; i += 200) {
+    const { data, error } = await planDb().from('plan_item_overlaps').select('item_id, related_item_id, part').in('item_id', itemIds.slice(i, i + 200));
+    if (error) throw new Error(error.message);
+    out.push(...map((data ?? []) as PlanOverlap[]));
+  }
+  return out;
+}
+
+/**
+ * Cours ayant un contenu réel sur la plateforme : une fiche ou une série QCM /
+ * QROC. (Jamais `fiches.content_html` : seule la présence de la ligne compte.)
+ */
+export async function listCoursWithContent(coursIds: string[]): Promise<Set<string>> {
+  const out = new Set<string>();
+  // Tranches de 20 cours : une tranche de séries reste sous le plafond de 1 000 lignes de PostgREST.
+  for (let i = 0; i < coursIds.length; i += 20) {
+    const chunk = coursIds.slice(i, i + 20);
+    const [{ data: f, error: e1 }, { data: s, error: e2 }] = await Promise.all([
+      planDb().from('fiches').select('cours_id').in('cours_id', chunk),
+      planDb().from('qcm_series').select('cours_id').in('cours_id', chunk).in('type', ['qcm', 'qroc']),
+    ]);
+    if (e1 || e2) throw new Error((e1 ?? e2)!.message);
+    for (const r of [...(f ?? []), ...(s ?? [])] as { cours_id: string }[]) out.add(r.cours_id);
+  }
+  return out;
+}
+
+/**
+ * Cours équivalents (copie physique ↔ original, `linked_to_cours_id`) : le
+ * travail fait sur l'un vaut pour l'autre (items MG copiés en Médecine interne).
+ */
+export async function listEquivalentCours(coursIds: string[]): Promise<Map<string, string[]>> {
+  const out = new Map<string, string[]>();
+  const add = (a: string, b: string) => { if (a !== b) out.set(a, Array.from(new Set([...(out.get(a) ?? []), b]))); };
+  for (let i = 0; i < coursIds.length; i += 100) {
+    const chunk = coursIds.slice(i, i + 100);
+    const [{ data: own }, { data: copies }] = await Promise.all([
+      planDb().from('cours').select('id, linked_to_cours_id').in('id', chunk).not('linked_to_cours_id', 'is', null),
+      planDb().from('cours').select('id, linked_to_cours_id').in('linked_to_cours_id', chunk),
+    ]);
+    for (const c of [...(own ?? []), ...(copies ?? [])] as { id: string; linked_to_cours_id: string }[]) { add(c.id, c.linked_to_cours_id); add(c.linked_to_cours_id, c.id); }
+  }
+  return out;
 }
 export async function listPrerequisites(itemIds?: string[]): Promise<PlanPrerequisite[]> {
   if (itemIds && itemIds.length === 0) return [];

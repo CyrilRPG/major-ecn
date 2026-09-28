@@ -29,6 +29,7 @@ export type AuditEntity =
   | 'suivi_settings'
   | 'plan_item'
   | 'plan_settings'
+  | 'plan_matrix_version'
   // Gestion des accès collaborateurs (cahier des charges 18/09/2026).
   | 'collaborator'
   | 'student_followup'

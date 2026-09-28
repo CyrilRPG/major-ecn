@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint && node scripts/verifier-images-qcm.mjs",
     "typecheck": "tsc --noEmit",
-    "test:plan": "tsx --test tests/plan-engines.test.ts tests/plan-mg-addendum.test.ts tests/plan-invariants.test.ts tests/plan-audit-regressions.test.ts tests/plan-intro.test.ts",
+    "test:plan": "tsx --test tests/plan-engines.test.ts tests/plan-mg-addendum.test.ts tests/plan-invariants.test.ts tests/plan-audit-regressions.test.ts tests/plan-intro.test.ts tests/plan-matrix-versions.test.ts",
     "generate-pdfs": "python3 scripts/generate-pdfs.py",
     "create-admin": "tsx scripts/create-admin.ts",
     "upload-fiches": "tsx scripts/upload-fiches.ts",

@@ -11,6 +11,7 @@ import {
 import { buildGraph, wouldCreateCycle } from '@/lib/plan/prerequisites';
 import { recenceFromYears } from '@/lib/plan/priority';
 import { parseImportRows } from '@/lib/plan/import';
+import { activateMatrixVersion, cancelMatrixVersion, publishMatrixVersion, type VersionPreview } from '@/lib/plan/matrix-versions';
 import { mergeConfig, type PlanConfig } from '@/lib/plan/types';
 
 type Ok<T = object> = { ok: true } & T;
@@ -89,6 +90,8 @@ export async function deleteItemAction(id: string): Promise<Ok | Err> {
     const { profile } = await requireAdminAction();
     const item = await getItem(id);
     if (!item) return { ok: false, error: 'Item introuvable' };
+    // La base refuse la suppression d'un item portant du travail d'élève (migration 20260928230000) :
+    // il se retire alors de la matrice (statut « retiré »), son historique restant intact.
     const { error } = await planDb().from('plan_items').delete().eq('id', id);
     if (error) return { ok: false, error: error.message };
     await logAudit({ actor: profile, action: 'delete', entity: 'plan_item', entityId: id, description: `Item du planificateur supprimé : ${item.nom_item}` });
@@ -272,5 +275,86 @@ export async function saveConfigAction(input: unknown): Promise<Ok<{ config: Pla
     await logAudit({ actor: profile, action: 'update', entity: 'plan_settings', entityId: EDN_FACULTE_ID, description: 'Réglages du planificateur modifiés', diff: config as unknown as Record<string, unknown> });
     revalidate();
     return { ok: true, config };
+  } catch (e) { return fail(e); }
+}
+
+/* ─── Versions de la matrice (MIPIC_2026_V1, V2…) : une nouvelle matrice modifie le futur, jamais le passé ─── */
+const VersionSchema = z.object({
+  specialiteId: z.string().min(1, 'Spécialité requise'),
+  code: z.string().trim().min(3, 'Code de version requis').max(60),
+  activeFrom: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date d’activation invalide'),
+  sourceFile: z.string().max(300).nullable().default(null),
+  label: z.string().max(120).nullable().default(null),
+  rules: z.record(z.string(), z.string().max(2000)).default({}),
+});
+
+/** Analyse (`dryRun`) puis publication d'une version ; appliquée aussitôt si sa date est atteinte. */
+export async function publishMatrixVersionAction(rows: unknown, opts: unknown, dryRun: boolean): Promise<Ok<{ preview: VersionPreview; activated: boolean; regenerated: number; remaining: number }> | Err> {
+  try {
+    const { user, profile } = await requireAdminAction();
+    if (!Array.isArray(rows) || rows.length === 0) return { ok: false, error: 'Aucune ligne à importer.' };
+    if (rows.length > 5000) return { ok: false, error: 'Plus de 5 000 lignes : découpez le fichier.' };
+    const parsed = VersionSchema.safeParse(opts);
+    if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? 'Paramètres invalides' };
+    const o = parsed.data;
+    const r = await publishMatrixVersion(
+      { rows: rows as Record<string, unknown>[], specialiteId: o.specialiteId, code: o.code, activeFrom: o.activeFrom, sourceFile: o.sourceFile, rules: o.rules, label: o.label, actorId: user.id },
+      { dryRun, regenBudgetMs: 20_000 },
+    );
+    if (!r.ok) return r;
+    if (!dryRun) {
+      const s = r.preview.summary;
+      await logAudit({
+        actor: profile, action: 'create', entity: 'plan_matrix_version', entityId: r.versionId,
+        description: `Matrice ${r.preview.code} ${r.activated ? 'publiée et activée' : `programmée au ${o.activeFrom}`} : ${s.items_active} items actifs, ${s.items_coming_soon} bientôt disponibles, ${s.ajoute} ajoutés, ${s.active} activés, ${s.modifie} modifiés, ${s.retire} retirés`,
+      });
+      revalidate();
+    }
+    return { ok: true, preview: r.preview, activated: r.activated, regenerated: r.regenerated, remaining: r.remaining };
+  } catch (e) { return fail(e); }
+}
+
+export async function activateMatrixVersionAction(id: string): Promise<Ok<{ regenerated: number; remaining: number }> | Err> {
+  try {
+    const { profile } = await requireAdminAction();
+    const r = await activateMatrixVersion(id, { regenBudgetMs: 20_000 });
+    if (!r.ok) return r;
+    await logAudit({ actor: profile, action: 'update', entity: 'plan_matrix_version', entityId: id, description: 'Version de la matrice activée avant sa date' });
+    revalidate();
+    return { ok: true, regenerated: r.regenerated, remaining: r.remaining };
+  } catch (e) { return fail(e); }
+}
+
+export async function cancelMatrixVersionAction(id: string): Promise<Ok | Err> {
+  try {
+    const { profile } = await requireAdminAction();
+    const r = await cancelMatrixVersion(id);
+    if (!r.ok) return r;
+    await logAudit({ actor: profile, action: 'update', entity: 'plan_matrix_version', entityId: id, description: 'Version programmée de la matrice annulée' });
+    revalidate();
+    return { ok: true };
+  } catch (e) { return fail(e); }
+}
+
+/* ─── Recouvrements : le travail fait sur un item vaut en partie pour un autre ─── */
+export async function addOverlapAction(itemId: string, relatedId: string, part: number): Promise<Ok | Err> {
+  try {
+    const { profile } = await requireAdminAction();
+    if (itemId === relatedId) return { ok: false, error: 'Un item ne peut pas se recouvrir lui-même.' };
+    if (!(part > 0 && part <= 1)) return { ok: false, error: 'Part entre 1 et 100 %.' };
+    const { error } = await planDb().from('plan_item_overlaps').upsert({ item_id: itemId, related_item_id: relatedId, part: Math.round(part * 100) / 100 }, { onConflict: 'item_id,related_item_id' });
+    if (error) return { ok: false, error: error.message };
+    await logAudit({ actor: profile, action: 'update', entity: 'plan_item', entityId: itemId, description: `Recouvrement déclaré (${Math.round(part * 100)} %)` });
+    revalidate();
+    return { ok: true };
+  } catch (e) { return fail(e); }
+}
+export async function removeOverlapAction(itemId: string, relatedId: string): Promise<Ok | Err> {
+  try {
+    await requireAdminAction();
+    const { error } = await planDb().from('plan_item_overlaps').delete().eq('item_id', itemId).eq('related_item_id', relatedId);
+    if (error) return { ok: false, error: error.message };
+    revalidate();
+    return { ok: true };
   } catch (e) { return fail(e); }
 }

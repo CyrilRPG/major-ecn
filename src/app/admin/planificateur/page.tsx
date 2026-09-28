@@ -3,6 +3,10 @@ import { getConfig, listColleges, listItems, listPrerequisites, listProfiles } f
 import { buildGraph, findCycles } from '@/lib/plan/prerequisites';
 import { Kpi, SectionCard } from '@/components/admin/suivi/ui';
 import { PLAN_STUDENT_ENABLED } from '@/lib/modules-flags';
+import type { PlanItem } from '@/lib/plan/types';
+
+/** Actif, ACTIVE dans sa matrice et relié à un cours : proposé aux élèves. */
+const planifiable = (i: PlanItem) => i.actif && (i.statut ?? 'active') === 'active' && !!i.cours_id;
 
 /** Vue d'ensemble : état de la matrice par spécialité, candidats, réglages. */
 export default async function PlanAdminHome() {
@@ -13,7 +17,7 @@ export default async function PlanAdminHome() {
   for (const i of items) {
     const top = parentOf.get(i.specialite_id) ?? i.specialite_id;
     const d = perCollege.get(top) ?? { total: 0, actifs: 0, avecCours: 0 };
-    d.total++; if (i.actif) d.actifs++; if (i.cours_id) d.avecCours++;
+    d.total++; if (planifiable(i)) d.actifs++; if (i.cours_id) d.avecCours++;
     perCollege.set(top, d);
   }
   const cycles = findCycles(buildGraph(prereqs));
@@ -26,7 +30,7 @@ export default async function PlanAdminHome() {
         <p className="mt-1 text-sm text-(--color-ink-soft)">Référentiel pédagogique, prérequis, coefficients du moteur et suivi des candidats. {PLAN_STUDENT_ENABLED ? 'Module ouvert aux élèves.' : 'Module en recette : visible du personnel seulement (vue étudiant).'}</p>
       </header>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
-        <Kpi label="Items de la matrice" value={items.length} hint={`${items.filter((i) => i.actif).length} actifs`} />
+        <Kpi label="Items de la matrice" value={items.length} hint={`${items.filter(planifiable).length} planifiables · ${items.filter((i) => i.statut === 'coming_soon').length} bientôt disponibles`} />
         <Kpi label="Reliés à un cours" value={items.filter((i) => i.cours_id).length} hint="évaluations et QCM possibles" />
         <Kpi label="Prérequis" value={prereqs.length} hint={`${prereqs.filter((p) => p.type === 'indispensable').length} indispensables`} />
         <Kpi label="Cycles détectés" value={cycles.length} tone={cycles.length > 0 ? 'danger' : 'success'} />

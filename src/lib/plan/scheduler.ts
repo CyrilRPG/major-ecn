@@ -26,7 +26,7 @@ import { computePriority, sortByPriority, workMode, type PriorityResult } from '
 import { buildGraph, recommendedOf, unmetChain } from './prerequisites';
 import { adaptedInterval, addDaysKey, daysBetween, isoWeekdayKey, parisDay } from './revision';
 import { itemWorkload, MIN_REMAINDER } from './workload';
-import { PRIORITY_TIER_LABEL, type Availability, type PlanConfig, type PlanItem, type PlanPrerequisite, type SessionKind, type Voie } from './types';
+import { isPlannable, PRIORITY_TIER_LABEL, type Availability, type PlanConfig, type PlanItem, type PlanPrerequisite, type SessionKind, type Voie } from './types';
 
 export type MasteryState = MasteryValue & {
   minutesDone: number;
@@ -36,6 +36,8 @@ export type MasteryState = MasteryValue & {
   lastWorkedAt?: string | null;
   /** Prochaine réactivation déjà connue (date réelle de réalisation + intervalle). */
   nextReactivationOn?: string | null;
+  /** Part de `minutesDone` reprise d'items qui recouvrent celui-ci (overlap.ts), et non faite sur l'item. */
+  inheritedMinutes?: number;
 };
 
 export type ScheduleInput = {
@@ -61,6 +63,13 @@ export type ScheduleInput = {
    * plateforme). Absent = tous. Les autres sont validés à la fin de leur couverture.
    */
   evaluableItemIds?: Set<string>;
+  /**
+   * Planning en vigueur avant ce recalcul : premier jour programmé de chaque
+   * item (première couverture ou approfondissement). Active la stabilité
+   * (`config.stability`) : un item engagé garde sa place face à une petite
+   * variation de priorité ; un nouvel item nettement prioritaire s'insère.
+   */
+  previousPlan?: Map<string, string>;
 };
 
 export type PlannedSession = {
@@ -163,7 +172,8 @@ function simulate(input: ScheduleInput, forcedCompression: number | null): Sched
   const { config } = input;
   const voie = input.voie ?? null;
   const pace = input.paceFactor ?? input.speedFactor ?? 1;
-  const items = input.items.filter((i) => i.actif);
+  // Seuls les items ACTIVE sont programmés : un item « bientôt disponible » ou retiré n'est jamais proposé.
+  const items = input.items.filter(isPlannable);
   const itemById = new Map(items.map((i) => [i.id, i]));
   const daysLeft = Math.max(0, daysBetween(input.today, input.examDate));
   const mastery = new Map<string, MasteryValue>();
@@ -171,9 +181,11 @@ function simulate(input: ScheduleInput, forcedCompression: number | null): Sched
   const unavailable = new Set(input.unavailableDays ?? []);
   const canEvaluate = (id: string) => !input.evaluableItemIds || input.evaluableItemIds.has(id);
 
-  /* 1. Priorités */
-  const scored = sortByPriority(items.map((item) => ({ item, priority: computePriority(item, mastery.get(item.id) ?? null, daysLeft, config, voie) })));
-  const priorities = new Map(scored.map((s) => [s.item.id, s.priority]));
+  /* 1. Priorités — l'ordre de travail tient compte de la stabilité, les priorités affichées restent exactes */
+  const base = items.map((item) => ({ item, priority: computePriority(item, mastery.get(item.id) ?? null, daysLeft, config, voie) }));
+  const priorities = new Map(base.map((s) => [s.item.id, s.priority]));
+  const stick = (id: string) => stabilityBonus(id, input);
+  const scored = stableOrder(base, input);
 
   /* Jours et budgets */
   const finalRevisionDays = Math.min(config.final_revision_days, Math.floor(daysLeft * 0.15));
@@ -318,7 +330,7 @@ function simulate(input: ScheduleInput, forcedCompression: number | null): Sched
   const eligible = (s: ItemState, day: string) =>
     s.blockedBy.every((pid) => { const p = stateById.get(pid); return !p || (p.validatedOn !== null && p.validatedOn < day); });
   // Rendement d'un approfondissement : items prioritaires et/ou mal maîtrisés d'abord.
-  const deepRank = (s: ItemState) => (s.pr.matrixScore ?? s.pr.score) / 100 + s.gap * 1.2;
+  const deepRank = (s: ItemState) => ((s.pr.matrixScore ?? s.pr.score) + stick(s.item.id)) / 100 + s.gap * 1.2;
   const trainingRank = [...states].sort((a, b) => deepRank(b) - deepRank(a));
 
   for (let k = 0; k < daysLeft; k++) {
@@ -493,6 +505,57 @@ function simulate(input: ScheduleInput, forcedCompression: number | null): Sched
       finalRevisionDays,
     },
   };
+}
+
+/**
+ * Bonus de stabilité (points de priorité, pour l'ORDRE seulement) d'un item
+ * déjà engagé : première couverture commencée, ou item programmé dans les
+ * `horizon_days` prochains jours par le planning précédent (plein bonus pour
+ * aujourd'hui, la moitié en fin d'horizon — l'ordre des jours proches est
+ * conservé). Sans planning précédent : aucun bonus (première génération).
+ */
+export function stabilityBonus(itemId: string, input: Pick<ScheduleInput, 'previousPlan' | 'mastery' | 'today' | 'config'>): number {
+  const { horizon_days: h, bonus } = input.config.stability;
+  if (!input.previousPlan || bonus <= 0) return 0;
+  let w = 0;
+  const prev = input.previousPlan.get(itemId);
+  if (prev !== undefined) {
+    const d = Math.max(0, daysBetween(input.today, prev));
+    if (d <= h) w = 1 - d / (2 * (h + 1));
+  }
+  const m = input.mastery.get(itemId);
+  if (m && m.minutesDone - (m.inheritedMinutes ?? 0) > 0) w = Math.max(w, 1);
+  return Math.round(w * bonus * 10) / 10;
+}
+
+/**
+ * Ordre de travail stable. Sans planning précédent : priorité décroissante.
+ * Sinon, les items ENGAGÉS (commencés, ou programmés dans l'horizon) gardent
+ * leur ordre relatif du planning en vigueur ; un autre item ne s'intercale
+ * devant un item engagé que si sa priorité le dépasse de plus de
+ * `stability.bonus` points — un nouvel item nettement prioritaire s'insère à
+ * sa place, une petite variation de coefficient ne déplace rien.
+ */
+function stableOrder<T extends { item: PlanItem; priority: PriorityResult }>(rows: T[], input: ScheduleInput): T[] {
+  const { bonus } = input.config.stability;
+  if (!input.previousPlan || bonus <= 0) return sortByPriority(rows);
+  const engaged = rows.filter((r) => stabilityBonus(r.item.id, input) > 0);
+  if (engaged.length === 0) return sortByPriority(rows);
+  const engagedIds = new Set(engaged.map((r) => r.item.id));
+  // Commencé sans séance à venir (travail libre, avance) : en tête ; puis jour prévu, puis priorité.
+  const dayOf = (id: string) => input.previousPlan!.get(id) ?? '';
+  const committed = sortByPriority(engaged).sort((a, b) => dayOf(a.item.id).localeCompare(dayOf(b.item.id)));
+  const others = sortByPriority(rows.filter((r) => !engagedIds.has(r.item.id)));
+  const out: T[] = [];
+  let i = 0;
+  let j = 0;
+  while (i < committed.length || j < others.length) {
+    if (i >= committed.length) out.push(others[j++]);
+    else if (j >= others.length) out.push(committed[i++]);
+    else if (others[j].priority.score > committed[i].priority.score + bonus) out.push(others[j++]);
+    else out.push(committed[i++]);
+  }
+  return out;
 }
 
 function kindOrder(k: SessionKind): number {

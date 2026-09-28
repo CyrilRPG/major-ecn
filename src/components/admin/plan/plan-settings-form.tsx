@@ -86,6 +86,12 @@ export function PlanSettingsForm({ config }: { config: PlanConfig }) {
           <Field label="Facteur max"><Input type="number" step={0.05} min={1} max={3} value={c.pace.max_factor} onChange={(e) => setC({ ...c, pace: { ...c.pace, max_factor: Number(e.target.value) || 0 } })} /></Field>
         </div>
       </SectionCard>
+      <SectionCard title="Stabilité du planning" description="Un item déjà commencé, ou programmé dans les prochains jours, garde sa place tant qu’un autre ne le dépasse pas nettement : une petite variation de coefficient (ou une nouvelle version de la matrice) ne réorganise pas brutalement le calendrier, un nouvel item nettement prioritaire s’insère.">
+        <div className="grid gap-4 md:grid-cols-3">
+          <Field label="Horizon protégé (jours)" hint="0 = aucune protection"><Input type="number" min={0} max={60} value={c.stability.horizon_days} onChange={(e) => setC({ ...c, stability: { ...c.stability, horizon_days: num(e.target.value) } })} /></Field>
+          <Field label="Avance à dépasser (points de priorité)" hint="Sur 100 ; 0 = aucune protection"><Input type="number" min={0} max={50} step={0.5} value={c.stability.bonus} onChange={(e) => setC({ ...c, stability: { ...c.stability, bonus: Number(e.target.value) || 0 } })} /></Field>
+        </div>
+      </SectionCard>
       <SectionCard title="Coefficients des items hors matrice (§8)" description={`Somme actuelle : ${sum} (normalisée). Ils ne sont jamais affichés aux candidats.`}>
         <div className="grid gap-4 md:grid-cols-3">
           {W('niveau', 'Poids du niveau du candidat')}{W('importance', 'Poids de l’importance')}{W('frequence', 'Poids de la fréquence aux EVC')}

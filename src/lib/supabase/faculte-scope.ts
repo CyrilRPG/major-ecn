@@ -65,6 +65,7 @@ const TABLES_CLOISONNEES = new Set([
   'plan_settings',
   'plan_items',
   'plan_profiles',
+  'plan_matrix_versions',
 ]);
 
 /**

@@ -5,6 +5,9 @@ import { ImportMatrix } from '@/components/admin/plan/import-matrix';
 import { SeedFromCollege } from '@/components/admin/plan/seed-from-college';
 import { SectionCard } from '@/components/admin/suivi/ui';
 
+// Publier une version de la matrice recalcule le planning futur des élèves de la spécialité.
+export const maxDuration = 60;
+
 /** Matrice pédagogique (§4, §22) : liste, édition en ligne, import, création depuis les cours. */
 export default async function PlanItemsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const sp = await searchParams;
@@ -39,8 +42,8 @@ export default async function PlanItemsPage({ searchParams }: { searchParams: Pr
           <span className="text-sm text-(--color-ink-soft)">{items.length} item(s)</span>
         </form>
         <ItemsTable items={items} collegeNames={nameOf} prereqCount={Object.fromEntries(prereqCount)} />
-        <SectionCard title="Importer la matrice (CSV / XLSX)" description="Les items existants (même spécialité, même nom) sont mis à jour ; les autres sont créés. Les prérequis peuvent être nommés dans le fichier.">
-          <ImportMatrix colleges={tops.map((c) => ({ id: c.id, nom: c.nom }))} />
+        <SectionCard title="Importer la matrice (CSV / XLSX)" description="Matrice versionnée (MIPIC_2026_V1…) : publiée comme une version datée, voir l’onglet Versions. Autre fichier : les items existants (même spécialité, même nom) sont mis à jour ; les autres sont créés. Les prérequis peuvent être nommés dans le fichier.">
+          <ImportMatrix colleges={tops.map((c) => ({ id: c.id, nom: c.nom }))} defaultCollege={college || undefined} />
         </SectionCard>
       </div>
     </main>
