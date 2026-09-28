@@ -52,7 +52,11 @@ function weekDates(offset = 0): Date[] {
     const d = new Date(monday); d.setDate(monday.getDate() + i); return d;
   });
 }
-const dateKey = (d: Date) => d.toISOString().slice(0, 10);
+// Date du jour AFFICHÉ, en heure locale. Surtout pas `toISOString()` : à
+// Paris (UTC+1/+2), minuit local est encore la veille en UTC, et chaque
+// évènement était enregistré un jour trop tôt (ORL du 29/09 stocké le 28).
+const dateKey = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
 /* ════════════════════════════════════════════════════════════════════════ */
 export function AdminAgenda({
