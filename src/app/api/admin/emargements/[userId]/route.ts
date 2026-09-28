@@ -5,7 +5,9 @@
  *   - `course_attendances` → vidéos visionnées sur la plateforme (vidéo du
  *     cours ou séance approfondie), avec signature manuscrite ;
  *   - `session_presences`  → sessions Zoom en direct, émargées par signature
- *     manuscrite avant ouverture du lien.
+ *     manuscrite avant ouverture du lien ;
+ *   - `parcours_completions` → feuille d'émargement de fin de parcours, signée
+ *     après l'interrogation (PDF /api/certificate/[cours]).
  *
  * `?format=csv` renvoie l'export (sans les images de signature).
  * `?source=plateforme|zoom` filtre l'export sur une seule origine.
@@ -39,6 +41,8 @@ export type Emargement = {
   intervenant: string | null;
   /** Séance Zoom : jour et horaire prévus (« 29/09/2026 17:30–20:00 »). */
   seance?: string | null;
+  /** Interrogation de fin de parcours : note sur 20. */
+  note?: string | null;
 };
 
 function csvCell(v: unknown): string {
@@ -71,7 +75,7 @@ export async function GET(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = createAdminClient() as any;
 
-  const [{ data: student }, { data: attendances, error: aErr }, { data: presences }, { data: matieres }] =
+  const [{ data: student }, { data: attendances, error: aErr }, { data: presences }, { data: matieres }, { data: completions }] =
     await Promise.all([
       db.from('profiles').select('first_name, last_name, email').eq('id', userId).maybeSingle(),
       db.from('course_attendances')
@@ -83,6 +87,9 @@ export async function GET(
       // `course_attendances.matiere_id` stocke un identifiant (col-…) : on le
       // résout en nom lisible. Côté Zoom, `college` est déjà un libellé libre.
       db.from('matieres').select('id, nom'),
+      db.from('parcours_completions')
+        .select('cours_id, certificate_signed_at, signature_data_url, qcm_test_score, qcm_test_total, cours(titre, matiere_id)')
+        .eq('user_id', userId).not('certificate_signed_at', 'is', null),
     ]);
 
   if (aErr) return NextResponse.json({ error: aErr.message }, { status: 500 });
@@ -136,7 +143,29 @@ export async function GET(
       : null,
   }));
 
-  const rows = [...fromPlateforme, ...fromZoom].sort((a, b) => {
+  type CRow = {
+    cours_id: string; certificate_signed_at: string; signature_data_url: string | null;
+    qcm_test_score: number | null; qcm_test_total: number | null;
+    cours: { titre: string | null; matiere_id: string | null } | null;
+  };
+  const fromInterrogation: Emargement[] = ((completions ?? []) as CRow[]).map((r) => ({
+    id: `interrogation-${r.cours_id}`,
+    source: 'plateforme',
+    typeLabel: 'Interrogation de fin de parcours',
+    college: r.cours?.matiere_id ? (collegeName.get(r.cours.matiere_id) ?? r.cours.matiere_id) : null,
+    titre: r.cours?.titre ?? r.cours_id,
+    date: r.certificate_signed_at,
+    requiredAt: null,
+    signed: true,
+    signaturePng: r.signature_data_url,
+    watchedRatio: null,
+    intervenant: null,
+    note: r.qcm_test_score != null && r.qcm_test_total
+      ? `${((r.qcm_test_score / r.qcm_test_total) * 20).toFixed(1).replace('.', ',')} / 20`
+      : null,
+  }));
+
+  const rows = [...fromPlateforme, ...fromInterrogation, ...fromZoom].sort((a, b) => {
     const da = a.date ?? a.requiredAt ?? '';
     const dbb = b.date ?? b.requiredAt ?? '';
     return dbb.localeCompare(da);
@@ -150,13 +179,13 @@ export async function GET(
     : rows;
 
   if (url.searchParams.get('format') === 'csv') {
-    const header = ['Élève', 'Email', 'Origine', 'Type', 'Collège', 'Intitulé', 'Séance (date et horaire)', 'Vu le', 'Signé le', 'Progression', 'Intervenant'];
+    const header = ['Élève', 'Email', 'Origine', 'Type', 'Collège', 'Intitulé', 'Séance (date et horaire)', 'Vu le', 'Signé le', 'Progression / note', 'Intervenant'];
     const lines = filtered.map((r) => [
       fullName, student?.email ?? '',
       r.source === 'zoom' ? 'Zoom' : 'Plateforme',
       r.typeLabel, r.college ?? '', r.titre, r.seance ?? '',
       fmt(r.requiredAt), r.signed ? fmt(r.date) : 'NON SIGNÉ',
-      r.watchedRatio != null ? `${Math.round(r.watchedRatio * 100)}%` : '',
+      r.watchedRatio != null ? `${Math.round(r.watchedRatio * 100)}%` : (r.note ?? ''),
       r.intervenant ?? '',
     ].map(csvCell).join(';'));
     // BOM : Excel ouvre l'UTF-8 correctement (accents des intitulés).
@@ -175,7 +204,7 @@ export async function GET(
     student: { name: fullName, email: student?.email ?? null },
     counts: {
       total: rows.length,
-      plateforme: fromPlateforme.length,
+      plateforme: fromPlateforme.length + fromInterrogation.length,
       zoom: fromZoom.length,
       pending: rows.filter((r) => !r.signed).length,
     },

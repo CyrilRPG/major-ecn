@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AlertTriangle, BarChart3, BookOpen, CalendarCheck, CalendarClock, CalendarDays, CalendarRange, ChevronDown, Clapperboard, ClipboardList, Cog, Eye, GraduationCap, Library, ListTree, Mail, Megaphone, MessageCircle, MessagesSquare, MonitorPlay, Newspaper, PencilRuler, Receipt, ScrollText, ShieldCheck, Sparkles, Ticket, Timer, Trophy, Upload, UserCog, Users, X } from 'lucide-react';
+import { AlertTriangle, BarChart3, BookOpen, CalendarCheck, CalendarClock, CalendarDays, CalendarRange, ChevronDown, Clapperboard, ClipboardList, Cog, Eye, FileSignature, GraduationCap, Library, ListTree, Mail, Megaphone, MessageCircle, MessagesSquare, MonitorPlay, Newspaper, PencilRuler, Receipt, ScrollText, ShieldCheck, Sparkles, Ticket, Timer, Trophy, Upload, UserCog, Users, X } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
@@ -57,6 +57,7 @@ const GROUPS: Group[] = [
     items: [
       { href: '/admin/sessions', label: 'Sessions EVC', Icon: CalendarClock, adminOnly: true },
       { href: '/admin/agenda', label: 'Agenda', Icon: CalendarDays },
+      { href: '/admin/emargements', label: 'Feuilles d’émargement', Icon: FileSignature, adminOnly: true },
     ],
   },
   {

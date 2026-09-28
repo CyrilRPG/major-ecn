@@ -151,7 +151,7 @@ export default async function ProfilPage() {
           Présences
         </p>
         <p className="mt-2 mb-4 text-sm text-(--color-ink-soft)">
-          Retrouvez l’historique de vos émargements aux sessions Zoom (date, heure, intervenant).
+          Retrouvez toutes vos feuilles d’émargement : vidéos de cours, séances approfondies et sessions Zoom (date, heure, signature).
         </p>
         <a
           href="/presences"
