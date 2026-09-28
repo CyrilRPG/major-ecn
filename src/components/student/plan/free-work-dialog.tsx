@@ -18,6 +18,8 @@ export function FreeWorkDialog({ items, label = 'Travailler un autre item' }: { 
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
   const filtered = q ? items.filter((i) => i.name.toLowerCase().includes(q.toLowerCase())) : items;
+  // Jamais d'item sélectionné invisible : la sélection suit le filtre.
+  const selected = filtered.some((i) => i.id === itemId) ? itemId : filtered[0]?.id ?? '';
   return (
     <>
       <Button variant="outline" size="sm" onClick={() => setOpen(true)}><PenLine /> {label}</Button>
@@ -29,7 +31,7 @@ export function FreeWorkDialog({ items, label = 'Travailler un autre item' }: { 
           </DialogHeader>
           <div className="space-y-3">
             <Input placeholder="Rechercher un item…" value={q} onChange={(e) => setQ(e.target.value)} />
-            <select value={itemId} onChange={(e) => setItemId(e.target.value)} className="h-11 w-full rounded-(--radius-button) border border-(--color-border) bg-(--color-surface) px-3 text-sm text-(--color-ink)" size={6}>
+            <select aria-label="Item travaillé" value={selected} onChange={(e) => setItemId(e.target.value)} className="h-11 w-full rounded-(--radius-button) border border-(--color-border) bg-(--color-surface) px-3 text-sm text-(--color-ink)" size={6}>
               {filtered.map((i) => <option key={i.id} value={i.id}>{i.name}</option>)}
             </select>
             <label className="flex items-center gap-2 text-sm text-(--color-ink)">Durée (minutes)
@@ -39,9 +41,9 @@ export function FreeWorkDialog({ items, label = 'Travailler un autre item' }: { 
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Annuler</Button>
-            <Button disabled={pending || !itemId} onClick={() => start(async () => {
+            <Button disabled={pending || !selected} onClick={() => start(async () => {
               setError(null);
-              const r = await logFreeWorkAction(itemId, Number(minutes));
+              const r = await logFreeWorkAction(selected, Math.round(Number(minutes)));
               if (!r.ok) { setError(r.error); return; }
               setOpen(false); router.refresh();
             })}>{pending && <Loader2 className="animate-spin" />} Enregistrer</Button>

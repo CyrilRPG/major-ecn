@@ -1,85 +1,107 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { AlertTriangle, CalendarDays, Sparkles } from 'lucide-react';
+import { CalendarDays, CheckCircle2, Sparkles } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { loadStudentContext, syncMasteryFromPlatform } from '@/lib/plan/service';
-import { listGenerations } from '@/lib/plan/db';
 import { coursIdMap, toSessionView } from '@/lib/plan/views';
 import { fmtMinutes } from '@/lib/plan/analytics';
+import { figuresOf } from '@/lib/plan/figures';
+import { FORECAST_NOTICE, VOIE_LABEL } from '@/lib/plan/types';
 import { fmtDayKeyLong } from '@/lib/suivi/format';
 import { SessionCard } from '@/components/student/plan/session-card';
 import { FreeWorkDialog } from '@/components/student/plan/free-work-dialog';
-import { ProgramReminder, Stat } from '@/components/student/plan/ui';
+import { ExtraTimeButton, ExtraTimeProvider } from '@/components/student/plan/extra-time';
+import { InsufficientBanner, PlanPopups } from '@/components/student/plan/plan-popups';
+import { Stat } from '@/components/student/plan/ui';
 
-/** Aujourd'hui (§12, §19) : les séances du jour, temps total, actions, explications. */
+/**
+ * Aujourd'hui (§12, §19, addendum) : détail complet du programme du jour avec
+ * durées indicatives. Le planning est une file de travail : « J'ai encore du
+ * temps » propose à tout moment la meilleure activité suivante, et le
+ * programme terminé déclenche « Bravo… Il vous reste du temps ? ».
+ */
 export default async function PlanTodayPage() {
   const { user } = await requireUser();
   await syncMasteryFromPlatform(user.id).catch(() => 0);
   const ctx = await loadStudentContext(user.id);
   if (!ctx) redirect('/planificateur/onboarding');
   const coursIds = coursIdMap(ctx);
-  const today = ctx.sessions.filter((s) => s.day === ctx.today && s.status !== 'annulee').map((s) => toSessionView(ctx, s, coursIds));
-  const total = today.filter((s) => s.status !== 'terminee').reduce((n, s) => n + s.minutes, 0);
-  const doneMin = today.filter((s) => s.status === 'terminee').reduce((n, s) => n + s.minutes, 0);
-  const [gen] = await listGenerations(user.id, 1);
-  const summary = (gen?.summary ?? {}) as { insufficientTime?: boolean; uncovered?: number };
-  const approaching = ctx.daysLeft <= ctx.config.approach_days;
-  const insufficient = ctx.coverage.insufficientIds.length;
-  const next = ctx.sessions.filter((s) => s.day > ctx.today && s.status === 'planifiee').map((s) => s.day).sort()[0];
+  const today = ctx.sessions.filter((s) => s.day === ctx.today && s.status !== 'annulee' && s.status !== 'reportee').map((s) => toSessionView(ctx, s, coursIds));
+  const remaining = today.filter((s) => s.status !== 'terminee').reduce((n, s) => n + s.minutes, 0);
+  const doneMin = ctx.sessions.filter((s) => s.day === ctx.today && s.status === 'terminee').reduce((n, s) => n + (s.actual_minutes ?? s.minutes), 0);
+  // « Programme du jour terminé » : seules comptent les activités PRÉVUES aujourd'hui par le planning
+  // (une activité ajoutée ou avancée ne fabrique pas un programme du jour).
+  const planned = today.filter((s) => s.origin === 'planning');
+  const allDone = planned.length > 0 && planned.every((s) => s.status === 'terminee') && !today.some((s) => s.status === 'en_cours');
+  const dayClosed = ctx.profile.day_closed_on === ctx.today;
+  const summary = ctx.summary;
+  const insufficient = !!summary?.insufficientTime;
+  const firstPending = !ctx.profile.first_plan_ack_at;
+  const nextDay = ctx.sessions.filter((s) => s.day > ctx.today && s.status === 'planifiee').map((s) => s.day).sort()[0];
+  const upcoming = nextDay ? ctx.sessions.filter((s) => s.day === nextDay && s.status === 'planifiee').slice(0, 3).map((s) => toSessionView(ctx, s, coursIds)) : [];
+  const p = ctx.program;
 
   return (
+    <ExtraTimeProvider>
     <main className="space-y-5">
+      <PlanPopups
+        today={ctx.today} firstPending={firstPending} insufficient={insufficient} dayDone={allDone && !dayClosed}
+        figures={figuresOf(summary ?? { daysLeft: ctx.daysLeft, totalAvailableMinutes: 0 })}
+      />
+
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-(--color-ink)">Aujourd’hui</h1>
-          <p className="mt-1 text-sm text-(--color-ink-soft)">{fmtDayKeyLong(ctx.today)} · {ctx.college?.nom ?? 'Votre spécialité'} · J-{ctx.daysLeft} avant les épreuves</p>
+          <p className="mt-1 text-sm text-(--color-ink-soft)">
+            {fmtDayKeyLong(ctx.today)} · {ctx.college?.nom ?? 'Votre spécialité'}{ctx.voie ? ` · ${VOIE_LABEL[ctx.voie]}` : ''} · J-{ctx.daysLeft} avant l’EVC
+          </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          <ExtraTimeButton variant="primary" className="bg-[#730d31] text-white hover:bg-[#5e0a28]" />
           <FreeWorkDialog items={ctx.items.map((i) => ({ id: i.id, name: i.nom_item }))} />
-          <Link href="/planificateur/programme" className="inline-flex h-9 items-center rounded-(--radius-button) border border-(--color-border) px-3 text-sm text-(--color-ink)">Voir le programme complet</Link>
         </div>
       </header>
 
-      <ProgramReminder />
-
-      {summary.insufficientTime && (
-        <div className="rounded-(--radius-card) border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:bg-amber-900/15 dark:text-amber-100">
-          <p className="flex items-center gap-2 font-semibold"><AlertTriangle className="h-4 w-4" /> Votre temps de préparation est limité</p>
-          <p className="mt-1">Compte tenu du temps disponible que vous avez déclaré et du temps restant avant les épreuves, votre planning nécessite une forte priorisation. Major ECN organise votre temps en privilégiant les éléments actuellement considérés comme les plus importants pour votre préparation.</p>
-          <p className="mt-1">Cela ne signifie pas que les autres éléments du programme ne peuvent pas être évalués. L’ensemble du programme reste à maîtriser.</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Link href="/planificateur/parametres" className="inline-flex h-9 items-center rounded-(--radius-button) bg-(--color-primary) px-3 text-sm font-medium text-(--color-primary-fg)">Modifier mes disponibilités</Link>
-            <Link href="/planificateur/programme?filtre=insuffisant" className="inline-flex h-9 items-center rounded-(--radius-button) border border-current px-3 text-sm">Conserver mon rythme actuel et voir les items concernés</Link>
-          </div>
-        </div>
-      )}
-
-      {approaching && insufficient > 0 && (
-        <div className="rounded-(--radius-card) border border-(--color-border) bg-(--color-surface) p-4 text-sm">
-          <p className="font-semibold text-(--color-ink)">Il reste {ctx.daysLeft} jour{ctx.daysLeft > 1 ? 's' : ''} avant les EVC</p>
-          <p className="mt-1 text-(--color-ink-soft)">Votre planning privilégie actuellement vos principales lacunes et les éléments à fort rendement. {insufficient} item{insufficient > 1 ? 's' : ''} du programme reste{insufficient > 1 ? 'nt' : ''} néanmoins insuffisamment travaillé{insufficient > 1 ? 's' : ''}.</p>
-          <Link href="/planificateur/programme?filtre=insuffisant" className="mt-2 inline-block text-sm font-medium text-(--color-primary) underline-offset-4 hover:underline">Voir les items concernés</Link>
-        </div>
-      )}
+      {!firstPending && insufficient && !ctx.profile.insufficient_ack_at && <InsufficientBanner />}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Stat label="Temps total aujourd’hui" value={fmtMinutes(total + doneMin)} hint={doneMin > 0 ? `${fmtMinutes(doneMin)} déjà réalisées` : undefined} />
-        <Stat label="Séances" value={today.length} hint={`${today.filter((s) => s.status === 'terminee').length} terminée(s)`} />
-        <Stat label="Programme couvert" value={`${ctx.coverage.coveragePct} %`} hint={`${ctx.coverage.counts.maitrise + ctx.coverage.counts.a_reactiver} maîtrisés · ${ctx.coverage.counts.a_consolider} à consolider`} />
-        <Stat label="Planning de la semaine" value={`${ctx.weekExecution.pct} %`} hint={`${ctx.weekExecution.done}/${ctx.weekExecution.planned} séances réalisées`} />
+        <Stat label="Programme du jour" value={fmtMinutes(remaining + doneMin)} hint={doneMin > 0 ? `${fmtMinutes(doneMin)} déjà réalisées` : 'Durées indicatives'} />
+        <Stat label="Activités" value={today.length} hint={`${today.filter((s) => s.status === 'terminee').length} terminée(s)`} />
+        <Stat label="Couverture du programme" value={`${p.coveragePct} %`} hint={`${p.workedIds.length} travaillés · ${p.scheduledIds.length} programmés / ${p.total}`} />
+        <Stat label="Items restant à travailler" value={p.remainingIds.length} hint={p.remainingIds.length > 0 ? 'Non encore programmés — toujours accessibles' : 'Tout le programme est couvert'} />
       </div>
+
+      {(allDone || dayClosed) && !today.some((s) => s.status === 'en_cours') ? (
+        <div className="rounded-(--radius-card) border border-emerald-300/60 bg-emerald-50/60 p-5 text-sm dark:bg-emerald-900/10">
+          <p className="flex items-center gap-2 font-semibold text-(--color-ink)"><CheckCircle2 className="h-4 w-4 text-emerald-600" /> Programme du jour terminé{dayClosed ? ' — bonne fin de journée' : ''}.</p>
+          <p className="mt-1 text-(--color-ink-soft)">Vous pouvez poursuivre à tout moment : le planificateur choisira la prochaine activité la plus pertinente et recalculera la suite.</p>
+          <div className="mt-3"><ExtraTimeButton /></div>
+        </div>
+      ) : null}
 
       {today.length === 0 ? (
         <div className="rounded-(--radius-card) border border-dashed border-(--color-border) p-6 text-center text-sm text-(--color-ink-soft)">
-          <Sparkles className="mx-auto mb-2 h-5 w-5 text-(--color-primary)" />
-          Aucune séance prévue aujourd’hui{next ? ` — prochaine séance le ${fmtDayKeyLong(next)}` : ''}.
-          <div className="mt-3"><FreeWorkDialog items={ctx.items.map((i) => ({ id: i.id, name: i.nom_item }))} label="Travailler un item quand même" /></div>
+          <Sparkles className="mx-auto mb-2 h-5 w-5 text-[#730d31]" />
+          Aucune activité prévue aujourd’hui{nextDay ? ` — prochaine séance le ${fmtDayKeyLong(nextDay)}` : ''}.
+          <div className="mt-3 flex justify-center"><ExtraTimeButton /></div>
         </div>
       ) : (
         <ul className="space-y-2">{today.map((s) => <SessionCard key={s.id} s={s} />)}</ul>
       )}
 
-      <p className="flex items-center gap-2 text-xs text-(--color-ink-muted)"><CalendarDays className="h-3.5 w-3.5" /> Le planning est recalculé à chaque séance terminée ou reportée, à chaque évaluation et à chaque modification de vos disponibilités.</p>
+      {upcoming.length > 0 && (
+        <section className="space-y-2">
+          <h2 className="flex items-center justify-between text-sm font-semibold text-(--color-ink)">
+            <span>Ensuite · {fmtDayKeyLong(nextDay!)}</span>
+            <Link href="/planificateur/semaine" className="text-xs font-medium text-[#730d31] underline-offset-4 hover:underline">7 prochains jours</Link>
+          </h2>
+          <p className="text-xs italic text-(--color-ink-muted)">{FORECAST_NOTICE}</p>
+          <ul className="space-y-2">{upcoming.map((s) => <SessionCard key={s.id} s={s} compact />)}</ul>
+        </section>
+      )}
+
+      <p className="flex items-center gap-2 text-xs text-(--color-ink-muted)"><CalendarDays className="h-3.5 w-3.5" /> Le planning est recalculé à chaque activité réalisée (même en avance), à chaque évaluation et à chaque modification de vos disponibilités ; une séance manquée est redistribuée, jamais accumulée.</p>
     </main>
+    </ExtraTimeProvider>
   );
 }

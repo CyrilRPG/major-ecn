@@ -11,7 +11,13 @@ export default async function PlanCandidatsPage() {
   const students = new Map((await listStudentsByIds(onboarded.map((p) => p.user_id))).map((s) => [s.id, s]));
   const nameOf = new Map(colleges.map((c) => [c.id, c.nom]));
   type M = { user_id: string; status: string };
-  const mastery = onboarded.length > 0 ? await fetchAllRows<M>((from, to) => planDb().from('plan_mastery').select('user_id, status').in('user_id', onboarded.map((p) => p.user_id).slice(0, 500)).order('user_id').order('item_id').range(from, to)) : [];
+  // Par tranches de 100 candidats (URL PostgREST bornée) — aucun candidat n'est laissé de côté.
+  const ids = onboarded.map((p) => p.user_id);
+  const mastery: M[] = [];
+  for (let i = 0; i < ids.length; i += 100) {
+    const chunk = ids.slice(i, i + 100);
+    mastery.push(...await fetchAllRows<M>((from, to) => planDb().from('plan_mastery').select('user_id, status').in('user_id', chunk).order('user_id').order('item_id').range(from, to)));
+  }
   const stats = new Map<string, { total: number; covered: number }>();
   for (const m of mastery) {
     const s = stats.get(m.user_id) ?? { total: 0, covered: 0 };

@@ -96,6 +96,57 @@ export function deriveItemStatuses(input: StatusDerivationInput): ItemStatusRow[
   });
 }
 
+/**
+ * Couverture du programme (addendum §6) : total, déjà travaillés, programmés
+ * avant l'épreuve, restant à travailler / non encore programmés, pourcentage.
+ * Un item travaillé ET programmé compte une seule fois (travaillé). Un item non
+ * programmé reste visible et accessible : il n'est jamais retiré du programme.
+ */
+export type ProgramCoverage = {
+  total: number;
+  workedIds: string[];
+  scheduledIds: string[];
+  remainingIds: string[];
+  /** (travaillés + programmés) / total. */
+  coveragePct: number;
+  /** travaillés / total. */
+  workedPct: number;
+};
+
+export function computeProgramCoverage(input: {
+  items: { id: string }[];
+  mastery: Map<string, { activity_count?: number; time_spent_minutes?: number; learning_minutes_done?: number; origin?: string; results_count?: number }>;
+  sessions: { item_id: string | null; day: string; status: string; kind: string }[];
+  today: string;
+}): ProgramCoverage {
+  const planned = new Set(input.sessions
+    .filter((s) => s.item_id && s.day >= input.today && (s.status === 'planifiee' || s.status === 'en_cours') && s.kind !== 'entrainement' && s.kind !== 'revision_finale')
+    .map((s) => s.item_id as string));
+  const done = new Set(input.sessions.filter((s) => s.item_id && s.status === 'terminee').map((s) => s.item_id as string));
+  const worked: string[] = []; const scheduled: string[] = []; const remaining: string[] = [];
+  for (const { id } of input.items) {
+    const m = input.mastery.get(id);
+    const isWorked = done.has(id) || (m?.activity_count ?? 0) > 0 || (m?.time_spent_minutes ?? 0) > 0 || (m?.learning_minutes_done ?? 0) > 0
+      || (m?.origin === 'observe' && (m?.results_count ?? 0) > 0);
+    if (isWorked) worked.push(id);
+    else if (planned.has(id)) scheduled.push(id);
+    else remaining.push(id);
+  }
+  const total = input.items.length;
+  return {
+    total, workedIds: worked, scheduledIds: scheduled, remainingIds: remaining,
+    coveragePct: total > 0 ? Math.round(((worked.length + scheduled.length) / total) * 100) : 0,
+    workedPct: total > 0 ? Math.round((worked.length / total) * 100) : 0,
+  };
+}
+
+export function fmtHours(totalMinutes: number): string {
+  const h = totalMinutes / 60;
+  if (h >= 10) return `${Math.round(h)} heures`;
+  const r = Math.round(h * 2) / 2;
+  return `${String(r).replace('.', ',')} heure${r > 1 ? 's' : ''}`;
+}
+
 export function fmtMinutes(total: number): string {
   const m = Math.max(0, Math.round(total));
   const h = Math.floor(m / 60);

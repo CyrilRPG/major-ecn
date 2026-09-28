@@ -42,7 +42,13 @@ export async function saveConfig(config: PlanConfig): Promise<void> {
 
 /* ─── Référentiel ─── */
 function normalizeItem(r: PlanItem): PlanItem {
-  return { ...r, annees_occurrence: Array.isArray(r.annees_occurrence) ? r.annees_occurrence : [] };
+  return {
+    ...r,
+    annees_occurrence: Array.isArray(r.annees_occurrence) ? r.annees_occurrence : [],
+    criteres: r.criteres && typeof r.criteres === 'object' ? r.criteres : null,
+    score_interne: r.score_interne === null || r.score_interne === undefined ? null : Number(r.score_interne),
+    score_externe: r.score_externe === null || r.score_externe === undefined ? null : Number(r.score_externe),
+  };
 }
 export async function listItems(opts: { specialites?: string[]; activeOnly?: boolean } = {}): Promise<PlanItem[]> {
   const rows = await fetchAllRows<PlanItem>((from, to) => {
@@ -93,8 +99,15 @@ export async function listCoursOfColleges(collegeIds: string[]): Promise<CoursLi
 export async function getProfile(userId: string): Promise<PlanProfile | null> {
   const { data } = await planDb().from('plan_profiles').select('*').eq('user_id', userId).maybeSingle();
   if (!data) return null;
-  const r = data as PlanProfile;
-  return { ...r, availability: parseAvailability(r.availability) };
+  return normalizeProfile(data as PlanProfile);
+}
+function normalizeProfile(r: PlanProfile): PlanProfile {
+  return {
+    ...r,
+    availability: parseAvailability(r.availability),
+    specialty_levels: r.specialty_levels && typeof r.specialty_levels === 'object' ? r.specialty_levels : {},
+    unavailable_days: Array.isArray(r.unavailable_days) ? r.unavailable_days.map((d) => String(d).slice(0, 10)) : [],
+  };
 }
 export async function upsertProfile(userId: string, patch: Partial<PlanProfile>): Promise<void> {
   const { error } = await planDb().from('plan_profiles').upsert({ user_id: userId, faculte_id: EDN_FACULTE_ID, ...patch }, { onConflict: 'user_id' });
@@ -102,12 +115,17 @@ export async function upsertProfile(userId: string, patch: Partial<PlanProfile>)
 }
 export async function listProfiles(): Promise<PlanProfile[]> {
   const rows = await fetchAllRows<PlanProfile>((from, to) => planDb().from('plan_profiles').select('*').order('user_id').range(from, to));
-  return rows.map((r) => ({ ...r, availability: parseAvailability(r.availability) }));
+  return rows.map(normalizeProfile);
 }
 
 /* ─── Maîtrise ─── */
 export async function listMastery(userId: string): Promise<PlanMastery[]> {
   return fetchAllRows<PlanMastery>((from, to) => planDb().from('plan_mastery').select('*').eq('user_id', userId).order('item_id').range(from, to));
+}
+/** Une ligne de maîtrise (évite de relire toute la table pour un item). */
+export async function getMastery(userId: string, itemId: string): Promise<PlanMastery | null> {
+  const { data } = await planDb().from('plan_mastery').select('*').eq('user_id', userId).eq('item_id', itemId).maybeSingle();
+  return (data as PlanMastery | null) ?? null;
 }
 export async function upsertMastery(rows: (Partial<PlanMastery> & { user_id: string; item_id: string })[]): Promise<void> {
   for (let i = 0; i < rows.length; i += 500) {
@@ -121,10 +139,11 @@ export async function addMasteryHistory(rows: { user_id: string; item_id: string
   if (error) console.error('[plan] historique de maîtrise non écrit :', error.message);
 }
 export type MasteryHistoryRow = { id: string; user_id: string; item_id: string; score: number; confidence: number; source: string; detail: Record<string, unknown>; created_at: string };
-export async function listMasteryHistory(userId: string, itemId?: string): Promise<MasteryHistoryRow[]> {
+export async function listMasteryHistory(userId: string, itemId?: string, opts: { since?: string } = {}): Promise<MasteryHistoryRow[]> {
   return fetchAllRows<MasteryHistoryRow>((from, to) => {
     let q = planDb().from('plan_mastery_history').select('*').eq('user_id', userId);
     if (itemId) q = q.eq('item_id', itemId);
+    if (opts.since) q = q.gte('created_at', opts.since);
     return q.order('created_at', { ascending: false }).order('id').range(from, to);
   });
 }
@@ -143,17 +162,38 @@ export async function getSession(id: string): Promise<PlanSession | null> {
   const { data } = await planDb().from('plan_sessions').select('*').eq('id', id).maybeSingle();
   return (data as PlanSession | null) ?? null;
 }
-/** Remplace les séances FUTURES non réalisées (à partir de `fromDay`) par la nouvelle génération. */
-export async function replaceFutureSessions(userId: string, fromDay: string, rows: Omit<PlanSession, 'id' | 'created_at' | 'updated_at' | 'started_at' | 'completed_at' | 'actual_minutes'>[]): Promise<void> {
-  const db = planDb();
-  const { error: e1 } = await db.from('plan_sessions').delete().eq('user_id', userId).gte('day', fromDay).in('status', ['planifiee', 'reportee', 'sautee']);
-  if (e1) throw new Error(e1.message);
-  // Les séances en retard (jours passés, jamais réalisées) sont marquées « non réalisée » et gardées en historique.
-  await db.from('plan_sessions').update({ status: 'sautee' }).eq('user_id', userId).lt('day', fromDay).eq('status', 'planifiee');
-  for (let i = 0; i < rows.length; i += 500) {
-    const { error } = await db.from('plan_sessions').insert(rows.slice(i, i + 500));
-    if (error) throw new Error(error.message);
-  }
+/**
+ * Remplace les séances FUTURES non réalisées (à partir de `fromDay`) par la nouvelle génération.
+ * Les séances reportées restent en historique (leur travail est redistribué par le recalcul).
+ */
+export async function replaceFutureSessions(userId: string, fromDay: string, rows: Omit<PlanSession, 'id' | 'created_at' | 'updated_at' | 'started_at' | 'completed_at' | 'actual_minutes' | 'status' | 'user_id'>[]): Promise<void> {
+  // Une seule transaction verrouillée par candidat (migration 20260928190000) : une
+  // insertion en échec n'efface plus le planning, deux recalculs simultanés ne le dupliquent plus.
+  // Les séances passées jamais terminées (planifiées ou commencées) deviennent « non réalisées ».
+  const { error } = await planDb().rpc('plan_replace_future_sessions', { p_user: userId, p_from: fromDay, p_rows: rows });
+  if (error) throw new Error(error.message);
+}
+/** Séance ajoutée hors génération (temps supplémentaire). */
+export async function insertSession(row: Omit<PlanSession, 'id' | 'created_at' | 'updated_at' | 'completed_at' | 'actual_minutes'>): Promise<PlanSession> {
+  const { data, error } = await planDb().from('plan_sessions').insert(row).select('*').single();
+  if (error || !data) throw new Error(error?.message ?? 'Séance non créée');
+  return data as PlanSession;
+}
+/** Dernières séances terminées (mesure du rythme réel). */
+export async function listRecentDoneSessions(userId: string, limit: number): Promise<PlanSession[]> {
+  const { data, error } = await planDb().from('plan_sessions').select('*').eq('user_id', userId).eq('status', 'terminee')
+    .order('completed_at', { ascending: false, nullsFirst: false }).order('id').limit(limit);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as PlanSession[];
+}
+/**
+ * Mise à jour conditionnelle : ne s'applique que si la séance est encore dans
+ * l'un des statuts attendus (double clic, deux appareils). Rend true si appliquée.
+ */
+export async function updateSessionIf(id: string, statuses: string[], patch: Partial<PlanSession>): Promise<boolean> {
+  const { data, error } = await planDb().from('plan_sessions').update(patch).eq('id', id).in('status', statuses).select('id');
+  if (error) throw new Error(error.message);
+  return (data ?? []).length > 0;
 }
 export async function updateSession(id: string, patch: Partial<PlanSession>): Promise<void> {
   const { error } = await planDb().from('plan_sessions').update(patch).eq('id', id);
@@ -192,6 +232,12 @@ export async function getEvaluation(id: string): Promise<PlanEvaluation | null> 
   const { data } = await planDb().from('plan_evaluations').select('*').eq('id', id).maybeSingle();
   return (data as PlanEvaluation | null) ?? null;
 }
+/** Clôture d'une évaluation, une seule fois (deux soumissions simultanées : une seule gagne). */
+export async function completeEvaluationOnce(id: string, patch: Partial<PlanEvaluation>): Promise<boolean> {
+  const { data, error } = await planDb().from('plan_evaluations').update(patch).eq('id', id).is('completed_at', null).select('id');
+  if (error) throw new Error(error.message);
+  return (data ?? []).length > 0;
+}
 export async function updateEvaluation(id: string, patch: Partial<PlanEvaluation>): Promise<void> {
   const { error } = await planDb().from('plan_evaluations').update(patch).eq('id', id);
   if (error) throw new Error(error.message);
@@ -204,7 +250,7 @@ export async function listEvaluations(userId: string, itemId?: string): Promise<
   });
 }
 export async function listQuestionUses(userId: string): Promise<Set<string>> {
-  const rows = await fetchAllRows<{ question_id: string }>((from, to) => planDb().from('plan_question_uses').select('question_id').eq('user_id', userId).order('question_id').range(from, to));
+  const rows = await fetchAllRows<{ question_id: string }>((from, to) => planDb().from('plan_question_uses').select('question_id, usage').eq('user_id', userId).order('question_id').order('usage').range(from, to));
   return new Set(rows.map((r) => r.question_id));
 }
 export async function addQuestionUses(userId: string, questionIds: string[], usage: string): Promise<void> {
@@ -234,12 +280,22 @@ export async function listQuestionsForCours(coursIds: string[], extraQuestionIds
   const seen = new Set<string>();
   return out.filter((q) => (seen.has(q.id) ? false : (seen.add(q.id), true)));
 }
+/** Cours portant au moins une série QCM ou QROC (vivier possible d'une évaluation). */
+export async function listCoursWithQuestions(coursIds: string[]): Promise<Set<string>> {
+  const out = new Set<string>();
+  for (let i = 0; i < coursIds.length; i += 100) {
+    const rows = await fetchAllRows<{ cours_id: string; id: string }>((from, to) => planDb().from('qcm_series').select('cours_id, id')
+      .in('cours_id', coursIds.slice(i, i + 100)).in('type', ['qcm', 'qroc']).order('id').range(from, to));
+    for (const r of rows) out.add(r.cours_id);
+  }
+  return out;
+}
 export async function listQuestionTags(itemIds: string[]): Promise<{ question_id: string; item_id: string }[]> {
   if (itemIds.length === 0) return [];
   const out: { question_id: string; item_id: string }[] = [];
   for (let i = 0; i < itemIds.length; i += 200) {
     const chunk = itemIds.slice(i, i + 200);
-    out.push(...await fetchAllRows<{ question_id: string; item_id: string }>((from, to) => planDb().from('plan_question_tags').select('question_id, item_id').in('item_id', chunk).order('question_id').range(from, to)));
+    out.push(...await fetchAllRows<{ question_id: string; item_id: string }>((from, to) => planDb().from('plan_question_tags').select('question_id, item_id').in('item_id', chunk).order('question_id').order('item_id').range(from, to)));
   }
   return out;
 }

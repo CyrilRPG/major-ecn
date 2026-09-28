@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
-import { loadEvaluation } from '@/lib/plan/service';
+import { loadEvaluation, publicEvaluation } from '@/lib/plan/service';
 import { EvaluationRunner } from '@/components/student/plan/evaluation-runner';
 import { EVALUATION_RESULT_LABEL, type EvaluationResult } from '@/lib/plan/types';
 
@@ -9,8 +9,10 @@ import { EVALUATION_RESULT_LABEL, type EvaluationResult } from '@/lib/plan/types
 export default async function EvaluationPage({ params }: { params: Promise<{ id: string }> }) {
   const { user, profile } = await requireUser();
   const { id } = await params;
-  const view = await loadEvaluation(user.id, profile.permission_scope, id);
-  if (!view) notFound();
+  const loaded = await loadEvaluation(user.id, profile.permission_scope, id);
+  if (!loaded) notFound();
+  // Aucune bonne réponse n'est envoyée au navigateur avant la soumission.
+  const view = publicEvaluation(loaded);
   return (
     <main className="space-y-5">
       <header>

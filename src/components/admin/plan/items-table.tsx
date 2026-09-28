@@ -25,7 +25,8 @@ export function ItemsTable({ items, collegeNames, prereqCount }: { items: PlanIt
     if (!r.ok) { setError(r.error); return; }
     setStatus('Enregistré.'); router.refresh();
   });
-  const Num = ({ item, field, min, max }: { item: PlanItem; field: 'importance' | 'volume' | 'transversalite' | 'recence' | 'frequence_annales'; min: number; max: number }) => (
+  // Fonction de rendu (et non composant défini dans le rendu, qui se remontait à chaque rafraîchissement).
+  const num = (item: PlanItem, field: 'importance' | 'volume' | 'transversalite' | 'recence' | 'frequence_annales', min: number, max: number) => (
     <NativeSelect className="h-8 w-16 px-1 text-xs" value={item[field]} disabled={pending} onChange={(e) => patch(item.id, { [field]: Number(e.target.value) })}>
       {Array.from({ length: max - min + 1 }, (_, i) => min + i).map((v) => <option key={v} value={v}>{v}</option>)}
     </NativeSelect>
@@ -56,12 +57,12 @@ export function ItemsTable({ items, collegeNames, prereqCount }: { items: PlanIt
                   {!i.cours_id && <span className="ml-1 text-[10px] text-amber-700" title="Aucun cours relié : pas d’évaluation automatique">sans cours</span>}
                 </TableCell>
                 <TableCell className="text-xs text-(--color-ink-soft)">{collegeNames[i.specialite_id] ?? i.specialite_id}</TableCell>
-                <TableCell><Num item={i} field="importance" min={1} max={5} /></TableCell>
-                <TableCell><Num item={i} field="volume" min={1} max={5} /></TableCell>
+                <TableCell>{num(i, 'importance', 1, 5)}</TableCell>
+                <TableCell>{num(i, 'volume', 1, 5)}</TableCell>
                 <TableCell><Input type="number" min={5} max={3000} className="h-8 w-20 text-xs" defaultValue={i.temps_reference ?? ''} placeholder="auto" disabled={pending} onBlur={(e) => { const v = e.target.value ? Number(e.target.value) : null; if (v !== i.temps_reference) patch(i.id, { temps_reference: v }); }} /></TableCell>
-                <TableCell><Num item={i} field="transversalite" min={1} max={5} /></TableCell>
+                <TableCell>{num(i, 'transversalite', 1, 5)}</TableCell>
                 <TableCell><Input type="number" min={0} max={1000} className="h-8 w-16 text-xs" defaultValue={i.frequence_annales} disabled={pending} onBlur={(e) => { const v = Number(e.target.value); if (v !== i.frequence_annales) patch(i.id, { frequence_annales: v }); }} /></TableCell>
-                <TableCell><Num item={i} field="recence" min={1} max={5} /></TableCell>
+                <TableCell>{num(i, 'recence', 1, 5)}</TableCell>
                 <TableCell className="text-xs text-(--color-ink-soft)">{i.annees_occurrence.join(', ') || '—'}</TableCell>
                 <TableCell className="text-xs text-(--color-ink-soft)">{prereqCount[i.id] ?? 0}</TableCell>
                 <TableCell>

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { completeSessionAction, postponeSessionAction, startEvaluationAction, startSessionAction } from '@/app/(student)/planificateur/actions';
-import { PRIORITY_TIER_LABEL, SESSION_KIND_LABEL, SESSION_STATUS_LABEL, type PriorityTier, type SessionKind, type SessionStatus } from '@/lib/plan/types';
+import { PRIORITY_TIER_LABEL, SESSION_KIND_LABEL, SESSION_STATUS_LABEL, START_NOW_LABEL, type PriorityTier, type SessionKind, type SessionStatus } from '@/lib/plan/types';
 import { cn } from '@/lib/utils';
 
 export type SessionView = {
@@ -26,13 +26,21 @@ export type SessionView = {
   coursId: string | null;
   masteryScore: number | null;
   canEvaluate: boolean;
+  /** Séance d'un jour à venir (prévisionnelle) : réalisable dès maintenant. */
+  isFuture: boolean;
+  origin: 'planning' | 'avance' | 'temps_supplementaire';
+  plannedDay: string | null;
 };
 
 const TIER_CLASS: Record<PriorityTier, string> = {
   tres_elevee: 'text-(--color-danger)', elevee: 'text-amber-700 dark:text-amber-300', normale: 'text-(--color-primary)', secondaire: 'text-(--color-ink-muted)',
 };
 
-/** Séance du jour (§19) : Commencer / Terminé / Reporter, explication (§20). */
+/**
+ * Séance (§19) : Commencer / Terminé / Reporter, explication (§20). Une séance
+ * d'un jour à venir se réalise en avance (« Commencer maintenant ») : elle est
+ * ramenée à aujourd'hui et ne sera plus reproposée le jour prévu.
+ */
 export function SessionCard({ s, compact = false }: { s: SessionView; compact?: boolean }) {
   const router = useRouter();
   const [pending, start] = useTransition();
@@ -63,6 +71,8 @@ export function SessionCard({ s, compact = false }: { s: SessionView; compact?: 
             <Badge variant="outline">{SESSION_KIND_LABEL[s.kind]}{s.part && s.parts && s.parts > 1 ? ` ${s.part}/${s.parts}` : ''}</Badge>
             {s.masteryScore !== null && <span className="text-(--color-ink-soft)">Maîtrise actuelle : {Math.round(s.masteryScore)} %</span>}
             {s.status !== 'planifiee' && <Badge variant={done ? 'success' : 'muted'}>{SESSION_STATUS_LABEL[s.status]}</Badge>}
+            {s.origin === 'avance' && <Badge variant="outline">Réalisée en avance{s.plannedDay ? ` (prévue le ${s.plannedDay.split('-').reverse().slice(0, 2).join('/')})` : ''}</Badge>}
+            {s.origin === 'temps_supplementaire' && <Badge variant="outline">Temps supplémentaire</Badge>}
           </p>
           {!compact && (
             <button type="button" onClick={() => setOpen((v) => !v)} className="mt-1.5 inline-flex items-center gap-1 text-xs text-(--color-primary) underline-offset-4 hover:underline">
@@ -71,7 +81,20 @@ export function SessionCard({ s, compact = false }: { s: SessionView; compact?: 
           )}
           {open && <p className="mt-1 text-xs text-(--color-ink-soft)">{s.reason}</p>}
         </div>
-        {!done && (
+        {!done && s.isFuture && s.status === 'planifiee' && (
+          <div className="flex flex-wrap gap-1.5">
+            {s.kind === 'evaluation' && s.canEvaluate && s.itemId ? (
+              <Button size="sm" variant="secondary" disabled={pending} onClick={() => run(() => startEvaluationAction(s.itemId!), (r) => { if (r.id) router.push(`/planificateur/evaluation/${r.id}`); })}>
+                {pending ? <Loader2 className="animate-spin" /> : <ClipboardCheck />} {START_NOW_LABEL}
+              </Button>
+            ) : (
+              <Button size="sm" variant="secondary" disabled={pending} onClick={() => run(() => startSessionAction(s.id), () => { if (s.coursId) router.push(`/cours/${s.coursId}`); })}>
+                {pending ? <Loader2 className="animate-spin" /> : <Play />} {START_NOW_LABEL}
+              </Button>
+            )}
+          </div>
+        )}
+        {!done && !(s.isFuture && s.status === 'planifiee') && (
           <div className="flex flex-wrap gap-1.5">
             {s.kind === 'evaluation' && s.canEvaluate && s.itemId ? (
               <Button size="sm" disabled={pending} onClick={() => run(() => startEvaluationAction(s.itemId!), (r) => { if (r.id) router.push(`/planificateur/evaluation/${r.id}`); })}>
@@ -80,9 +103,12 @@ export function SessionCard({ s, compact = false }: { s: SessionView; compact?: 
             ) : (
               <>
                 {s.status !== 'en_cours' && s.coursId && (
-                  <Button size="sm" variant="secondary" asChild>
-                    <Link href={`/cours/${s.coursId}`} onClick={() => { void startSessionAction(s.id); }}><Play /> Commencer</Link>
+                  <Button size="sm" variant="secondary" disabled={pending} onClick={() => run(() => startSessionAction(s.id), () => router.push(`/cours/${s.coursId}`))}>
+                    {pending ? <Loader2 className="animate-spin" /> : <Play />} Commencer
                   </Button>
+                )}
+                {s.status === 'en_cours' && s.coursId && (
+                  <Button size="sm" variant="secondary" asChild><Link href={`/cours/${s.coursId}`}><Play /> Reprendre</Link></Button>
                 )}
                 {s.status !== 'en_cours' && !s.coursId && (
                   <Button size="sm" variant="secondary" disabled={pending} onClick={() => run(() => startSessionAction(s.id))}><Play /> Commencer</Button>
@@ -91,8 +117,8 @@ export function SessionCard({ s, compact = false }: { s: SessionView; compact?: 
             )}
             {askMinutes ? (
               <span className="inline-flex items-center gap-1">
-                <Input type="number" min={5} max={600} value={minutes} onChange={(e) => setMinutes(e.target.value)} className="h-9 w-20 text-sm" aria-label="Minutes réellement passées" />
-                <Button size="sm" disabled={pending} onClick={() => run(() => completeSessionAction(s.id, Number(minutes) || null))}>{pending ? <Loader2 className="animate-spin" /> : <CheckCircle2 />} Valider</Button>
+                <Input type="number" min={1} max={600} step={1} value={minutes} onChange={(e) => setMinutes(e.target.value)} className="h-9 w-20 text-sm" aria-label="Minutes réellement passées" />
+                <Button size="sm" disabled={pending} onClick={() => run(() => completeSessionAction(s.id, Math.round(Number(minutes)) || null))}>{pending ? <Loader2 className="animate-spin" /> : <CheckCircle2 />} Valider</Button>
               </span>
             ) : (
               <Button size="sm" disabled={pending} onClick={() => setAskMinutes(true)}><CheckCircle2 /> Terminé</Button>

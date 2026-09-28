@@ -6,7 +6,7 @@ import { Download, Loader2, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NativeSelect } from '@/components/admin/suivi/ui';
 import { importMatrixAction } from '@/app/admin/planificateur/actions';
-import { IMPORT_TEMPLATE_EXAMPLE, IMPORT_TEMPLATE_HEADERS } from '@/lib/plan/import';
+import { IMPORT_TEMPLATE_EXAMPLE, IMPORT_TEMPLATE_HEADERS, rowsFromMatrixWorkbook } from '@/lib/plan/import';
 
 /**
  * Import CSV / XLSX de la matrice (§4). Le fichier est lu dans le navigateur
@@ -29,8 +29,9 @@ export function ImportMatrix({ colleges }: { colleges: { id: string; nom: string
       if (/\.(xlsx|xls)$/i.test(file.name)) {
         const XLSX = await import('xlsx');
         const wb = XLSX.read(await file.arrayBuffer(), { type: 'array' });
-        const sheet = wb.Sheets[wb.SheetNames[0]];
-        setRows(XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: '' }));
+        // Matrice maître MG (onglets MATRICE_MAITRE + voies) ; sinon, la première feuille.
+        const sheets = Object.fromEntries(wb.SheetNames.map((n) => [n, XLSX.utils.sheet_to_json<Record<string, unknown>>(wb.Sheets[n], { defval: '' })]));
+        setRows(rowsFromMatrixWorkbook(sheets) ?? sheets[wb.SheetNames[0]]);
       } else {
         const Papa = (await import('papaparse')).default;
         const text = await file.text();
@@ -77,7 +78,7 @@ export function ImportMatrix({ colleges }: { colleges: { id: string; nom: string
           {issues.slice(0, 200).map((i, k) => <li key={k}>{i.line ? `Ligne ${i.line} : ` : ''}{i.message}</li>)}
         </ul>
       )}
-      <p className="text-xs text-(--color-ink-muted)">Colonnes : {IMPORT_TEMPLATE_HEADERS.join(' · ')}. Échelles 1–5 ; années séparées par « ; » ; prérequis = noms d’items séparés par « ; ». La récence est déduite des années si elle est vide.</p>
+      <p className="text-xs text-(--color-ink-muted)">Matrice maître (classeur « Matrices planificateur MG ») : importée telle quelle, onglets de voie compris — choisir « Médecine générale » comme spécialité par défaut. Autre fichier — colonnes : {IMPORT_TEMPLATE_HEADERS.join(' · ')}. Échelles 1–5 ; années séparées par « ; » ; prérequis = noms d’items séparés par « ; ». La récence est déduite des années si elle est vide.</p>
     </div>
   );
 }

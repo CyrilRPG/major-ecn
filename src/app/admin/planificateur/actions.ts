@@ -133,35 +133,65 @@ export async function importMatrixAction(rows: unknown, opts: { defaultSpecialit
     const { profile } = await requireAdminAction();
     if (!Array.isArray(rows) || rows.length === 0) return { ok: false, error: 'Aucune ligne à importer.' };
     if (rows.length > 5000) return { ok: false, error: 'Plus de 5 000 lignes : découpez le fichier.' };
-    const { items, issues } = parseImportRows(rows as Record<string, unknown>[], { defaultSpecialite: opts.defaultSpecialite ?? null });
+    const { items, issues, columns } = parseImportRows(rows as Record<string, unknown>[], { defaultSpecialite: opts.defaultSpecialite ?? null });
     if (items.length === 0) return { ok: false, error: issues[0]?.message ?? 'Aucune ligne exploitable.' };
     const colleges = await listColleges();
     const byName = new Map(colleges.map((c) => [norm(c.nom), c.id]));
     const byId = new Set(colleges.map((c) => c.id));
-    const resolveSpe = (s: string) => (byId.has(s) ? s : byName.get(norm(s)) ?? null);
+    // Les noms de spécialité se résolvent d'abord DANS la famille du collège choisi :
+    // « Cardiologie » d'une matrice MG désigne le sous-collège MG, pas le collège EDN.
+    const family = opts.defaultSpecialite ? colleges.filter((c) => collegeFamily(opts.defaultSpecialite!, colleges).includes(c.id)) : [];
+    const ALIAS: Record<string, string> = { 'urgences metabolique': 'reanimation', therapeutique: 'pharmacologie', 'hepato gastro': 'hepato gastro enterologie', 'maladies infectieuses': 'maladies infectieuses' };
+    const resolveSpe = (s: string): string | null => {
+      if (byId.has(s)) return s;
+      const n = norm(s);
+      const target = ALIAS[n] ?? n;
+      const inFamily = family.find((c) => norm(c.nom) === target) ?? family.find((c) => norm(c.nom).startsWith(target) || target.startsWith(norm(c.nom)));
+      return inFamily?.id ?? byName.get(target) ?? null;
+    };
     const unresolved = items.filter((i) => !resolveSpe(i.specialite));
     for (const u of unresolved) issues.push({ line: 0, message: `Spécialité inconnue « ${u.specialite} » (item « ${u.nom_item} ») — ligne ignorée` });
     const valid = items.filter((i) => resolveSpe(i.specialite));
 
     const db = planDb();
+    // Cours de la plateforme rapprochés par titre (unique dans la spécialité) quand le fichier n'a pas de cours_id.
+    const coursBySpe = new Map<string, { id: string; titre: string }[]>();
+    for (const c of await listCoursOfColleges(Array.from(new Set(valid.map((i) => resolveSpe(i.specialite)!))))) {
+      coursBySpe.set(c.matiere_id, [...(coursBySpe.get(c.matiere_id) ?? []), { id: c.id, titre: c.titre }]);
+    }
+    const matchCours = (spe: string, nom: string): string | null => {
+      const pool = coursBySpe.get(spe) ?? [];
+      let hit = pool.filter((c) => norm(c.titre) === norm(nom));
+      if (hit.length !== 1) hit = pool.filter((c) => norm(c.titre).includes(norm(nom)) || norm(nom).includes(norm(c.titre)));
+      return hit.length === 1 ? hit[0].id : null;
+    };
     const existing = await listItems();
     const key = (spe: string, nom: string) => `${spe}|${norm(nom)}`;
     const existingByKey = new Map(existing.map((i) => [key(i.specialite_id, i.nom_item), i]));
     let created = 0, updated = 0;
     for (const it of valid) {
       const spe = resolveSpe(it.specialite)!;
-      const row = {
+      const full: Record<string, unknown> = {
         specialite_id: spe, cours_id: it.cours_id, code: it.code, nom_item: it.nom_item, importance: it.importance, volume: it.volume, temps_reference: it.temps_reference,
         transversalite: it.transversalite, frequence_annales: it.frequence_annales, annees_occurrence: it.annees_occurrence, recence: it.recence, actif: it.actif,
         priorite_forcee: it.priorite_forcee, notes: it.notes,
+        ...(it.matrix ? { ...it.matrix } : {}),
       };
       const cur = existingByKey.get(key(spe, it.nom_item));
+      if (!full.cours_id) full.cours_id = cur?.cours_id ?? matchCours(spe, it.nom_item);
+      if (!full.cours_id) issues.push({ line: 0, message: `« ${it.nom_item} » : aucun cours de la plateforme rapproché (item importé sans lien vers un cours)` });
       if (cur) {
-        const { error } = await db.from('plan_items').update({ ...row, cours_id: row.cours_id ?? cur.cours_id }).eq('id', cur.id);
+        // Réimportation : seules les colonnes présentes dans le fichier sont écrites — les réglages faits
+        // dans l'administration (item désactivé, notes, priorité forcée, temps de référence…) sont conservés.
+        const derived = it.matrix ? ['importance', 'transversalite'] : [];
+        const keep = new Set(['specialite_id', 'nom_item', 'cours_id', ...derived, ...Array.from(columns).filter((c) => c in full), ...(it.matrix ? Object.keys(it.matrix) : [])]);
+        if (columns.has('annees_occurrence')) keep.add('annees_occurrence');
+        const patchRow = Object.fromEntries(Object.entries(full).filter(([k]) => keep.has(k)));
+        const { error } = await db.from('plan_items').update(patchRow).eq('id', cur.id);
         if (error) return { ok: false, error: error.message };
         updated++;
       } else {
-        const { data, error } = await db.from('plan_items').insert({ ...row, faculte_id: EDN_FACULTE_ID }).select('*').single();
+        const { data, error } = await db.from('plan_items').insert({ ...full, faculte_id: EDN_FACULTE_ID }).select('*').single();
         if (error || !data) return { ok: false, error: error?.message ?? 'Insertion impossible' };
         existingByKey.set(key(spe, it.nom_item), data);
         created++;
@@ -233,6 +263,11 @@ export async function saveConfigAction(input: unknown): Promise<Ok<{ config: Pla
     if (sum <= 0) return { ok: false, error: 'La somme des coefficients doit être positive.' };
     if (config.session.min > config.session.max) return { ok: false, error: 'La durée minimale d’une séance dépasse la durée maximale.' };
     if (config.thresholds.consolidation > config.thresholds.maitrise) return { ok: false, error: 'Le seuil de consolidation doit être inférieur au seuil de maîtrise.' };
+    if (!(config.levels.p1 > config.levels.p2 && config.levels.p2 > config.levels.p3)) return { ok: false, error: 'Les seuils doivent décroître : P1 > P2 > P3.' };
+    if (config.priority_mix.matrice + config.priority_mix.niveau + config.priority_mix.proximite <= 0) return { ok: false, error: 'La somme des poids de l’ordre de travail doit être positive.' };
+    for (const v of ['interne', 'externe'] as const) {
+      if (Object.values(config.voie_weights[v]).reduce((a, b) => a + b, 0) <= 0) return { ok: false, error: `La somme des poids de la voie ${v} doit être positive.` };
+    }
     await saveConfig(config);
     await logAudit({ actor: profile, action: 'update', entity: 'plan_settings', entityId: EDN_FACULTE_ID, description: 'Réglages du planificateur modifiés', diff: config as unknown as Record<string, unknown> });
     revalidate();

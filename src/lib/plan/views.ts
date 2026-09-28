@@ -13,7 +13,10 @@ export function toSessionView(ctx: StudentContext, s: PlanSession, coursIds: Map
     part: s.part, parts: s.parts, itemId: s.item_id, itemName: item?.nom_item ?? 'Item du programme',
     coursId: s.item_id ? coursIds.get(s.item_id) ?? null : null,
     masteryScore: m && Number(m.confidence) > 0 ? Number(m.mastery_score) : null,
-    canEvaluate: !!item,
+    canEvaluate: !!item && ctx.evaluable.has(item.id),
+    isFuture: s.day > ctx.today,
+    origin: s.origin ?? 'planning',
+    plannedDay: s.planned_day ?? null,
   };
 }
 

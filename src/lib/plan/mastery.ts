@@ -10,11 +10,12 @@
 import type { DeclaredLevel, MasterySource, MasteryStatus, PlanConfig } from './types';
 
 /** Score et confiance initiaux d'un niveau déclaré (§3, §7). */
-export function declaredToScore(level: DeclaredLevel): { score: number; confidence: number } {
+export function declaredToScore(level: DeclaredLevel, config?: PlanConfig): { score: number; confidence: number } {
+  const d = config?.declared_scores ?? { faible: 30, moyen: 55, aise: 75 };
   switch (level) {
-    case 'faible': return { score: 30, confidence: 0.3 };
-    case 'moyen': return { score: 55, confidence: 0.3 };
-    case 'aise': return { score: 80, confidence: 0.3 };
+    case 'faible': return { score: d.faible, confidence: 0.3 };
+    case 'moyen': return { score: d.moyen, confidence: 0.3 };
+    case 'aise': return { score: d.aise, confidence: 0.3 };
     case 'inconnu': return { score: 45, confidence: 0.15 };
   }
 }
@@ -134,6 +135,64 @@ export function speedFactorFromSessions(sessions: { planned: number; actual: num
   const actual = measured.reduce((n, s) => n + (s.actual ?? 0), 0);
   if (planned <= 0) return 1;
   return round2(clamp(actual / planned, 0.5, 2));
+}
+
+export type PaceSample = { planned: number; actual: number | null };
+export type Pace = {
+  /** Multiplicateur des durées : < 1 = plus de contenu par heure, > 1 = durées allongées. */
+  factor: number;
+  /** Minutes réelles / minutes prévues (1 = référence), null tant que trop peu de mesures. */
+  speed: number | null;
+  /** Résultats récents (%), null s'ils manquent. */
+  performance: number | null;
+  samples: number;
+  verdict: 'reference' | 'rapide_bon' | 'rapide_insuffisant' | 'rapide_moyen' | 'lent' | 'rapide_sans_resultat';
+};
+
+/**
+ * Rythme réel (addendum « gestion de l'avance ») : la vitesse n'est JAMAIS
+ * interprétée seule.
+ *  - rapide et bon → la charge augmente (durées raccourcies) ;
+ *  - rapide mais résultats insuffisants → aucune augmentation : ce sont la
+ *    maîtrise et les réactivations qui feront travailler davantage l'item ;
+ *  - lent → volume ajusté (durées allongées), sans sanction ;
+ *  - l'ajustement est progressif : pleine valeur à `full_weight_samples` mesures.
+ */
+export function computePace(samples: PaceSample[], performance: number | null, config: PlanConfig): Pace {
+  const p = config.pace;
+  const measured = samples.filter((s) => s.actual !== null && s.actual > 0 && s.planned > 0);
+  const n = measured.length;
+  if (n < p.min_samples) return { factor: 1, speed: null, performance, samples: n, verdict: 'reference' };
+  const planned = measured.reduce((a, s) => a + s.planned, 0);
+  const actual = measured.reduce((a, s) => a + (s.actual ?? 0), 0);
+  const speed = round2(clamp(actual / planned, 0.3, 3));
+  const weight = Math.min(1, n / p.full_weight_samples);
+  let target = 1;
+  let verdict: Pace['verdict'] = 'reference';
+  if (speed < 0.9) {
+    if (performance === null) { target = 1; verdict = 'rapide_sans_resultat'; }
+    else if (performance >= p.good_result) { target = speed; verdict = 'rapide_bon'; }
+    else if (performance < p.poor_result) { target = 1; verdict = 'rapide_insuffisant'; }
+    else { target = (1 + speed) / 2; verdict = 'rapide_moyen'; }
+  } else if (speed > 1.1) {
+    target = speed; verdict = 'lent';
+  }
+  const factor = round2(clamp(1 + (target - 1) * weight, p.min_factor, p.max_factor));
+  return { factor, speed, performance, samples: n, verdict };
+}
+
+/** Phrase lisible par le candidat (jamais de formule). */
+export function paceMessage(pace: Pace): string | null {
+  if (pace.speed === null) return null;
+  const pct = Math.round(Math.abs(1 - pace.speed) * 100);
+  switch (pace.verdict) {
+    case 'rapide_bon': return `Vous travaillez environ ${pct} % plus vite que la durée de référence, avec de bons résultats : votre planning intègre davantage de contenu, sans vous demander plus d’heures.`;
+    case 'rapide_insuffisant': return `Vous terminez vos séances environ ${pct} % plus vite que prévu, mais vos résultats restent à consolider : la charge n’est pas augmentée, le planning privilégie réactivations et approfondissement.`;
+    case 'rapide_moyen': return `Vous travaillez environ ${pct} % plus vite que la durée de référence : la charge augmente prudemment, au rythme de vos résultats.`;
+    case 'rapide_sans_resultat': return `Vous travaillez plus vite que la durée de référence : la charge augmentera dès que vos résultats confirmeront votre maîtrise.`;
+    case 'lent': return `Certaines activités vous demandent davantage de temps : les durées sont ajustées à votre rythme, sans pénalité.`;
+    default: return 'Votre rythme correspond aux durées de référence.';
+  }
 }
 
 export function clamp(v: number, min: number, max: number): number {

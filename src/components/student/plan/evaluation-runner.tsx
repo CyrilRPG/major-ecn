@@ -19,12 +19,13 @@ export function EvaluationRunner({ evaluationId, itemName, questions }: { evalua
   const router = useRouter();
   const [answers, setAnswers] = useState<Record<string, EvalAnswer>>({});
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
+  const [graded, setGraded] = useState<Set<string>>(new Set());
   const [result, setResult] = useState<{ pct: number; result: EvaluationResult } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
   const answered = questions.filter((q) => {
     const a = answers[q.id];
-    return a && (a.kind === 'qcm' ? a.selected.length > 0 : true);
+    return a && (a.kind === 'qcm' ? a.selected.length > 0 : revealed.has(q.id) && graded.has(q.id));
   }).length;
 
   if (result) {
@@ -79,8 +80,8 @@ export function EvaluationRunner({ evaluationId, itemName, questions }: { evalua
                       <p className="mt-2 text-xs text-(--color-ink-muted)">Comparez avec votre réponse puis évaluez-vous honnêtement :</p>
                       <div className="mt-1 flex flex-wrap gap-1.5">
                         {(['juste', 'partiel', 'faux'] as const).map((s) => (
-                          <button key={s} type="button" onClick={() => setAnswers({ ...answers, [q.id]: { kind: 'qroc', text: a?.kind === 'qroc' ? a.text : '', self: s } })}
-                            className={cn('rounded-full border px-3 py-1 text-xs', a?.kind === 'qroc' && a.self === s && revealed.has(q.id) ? 'border-(--color-primary) bg-(--color-primary) text-(--color-primary-fg)' : 'border-(--color-border) text-(--color-ink-soft)')}>
+                          <button key={s} type="button" onClick={() => { setAnswers({ ...answers, [q.id]: { kind: 'qroc', text: a?.kind === 'qroc' ? a.text : '', self: s } }); setGraded(new Set([...graded, q.id])); }}
+                            className={cn('rounded-full border px-3 py-1 text-xs', a?.kind === 'qroc' && a.self === s && graded.has(q.id) ? 'border-(--color-primary) bg-(--color-primary) text-(--color-primary-fg)' : 'border-(--color-border) text-(--color-ink-soft)')}>
                             {s === 'juste' ? 'Juste' : s === 'partiel' ? 'Partiellement juste' : 'Faux'}
                           </button>
                         ))}

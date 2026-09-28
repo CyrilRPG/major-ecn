@@ -15,7 +15,7 @@ export function PriorityBadge({ tier }: { tier: PriorityTier | string | null | u
 }
 
 const KIND_VARIANT: Record<SessionKind, 'primary' | 'success' | 'warning' | 'outline' | 'muted'> = {
-  apprentissage: 'primary', consolidation: 'warning', evaluation: 'success', reactivation: 'outline', revision_finale: 'muted',
+  apprentissage: 'primary', consolidation: 'warning', approfondissement: 'warning', evaluation: 'success', reactivation: 'outline', entrainement: 'muted', revision_finale: 'muted',
 };
 export function KindBadge({ kind }: { kind: SessionKind }) {
   return <Badge variant={KIND_VARIANT[kind]}>{SESSION_KIND_LABEL[kind]}</Badge>;

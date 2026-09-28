@@ -29,7 +29,13 @@ export default async function ProgrammePage({ searchParams }: { searchParams: Pr
   for (const s of ctx.sessions) if (s.status === 'planifiee' && s.item_id && s.day >= ctx.today && !nextSession.has(s.item_id)) nextSession.set(s.item_id, s.day);
 
   let rows = ctx.statuses.map((r) => ({ ...r, priority: ctx.priorities.get(r.item.id)!, next: nextSession.get(r.item.id) ?? null }));
+  const worked = new Set(ctx.program.workedIds);
+  const scheduled = new Set(ctx.program.scheduledIds);
+  const notScheduled = new Set(ctx.program.remainingIds);
   if (filtre === 'insuffisant') rows = rows.filter((r) => insufficient.has(r.item.id));
+  else if (filtre === 'travailles') rows = rows.filter((r) => worked.has(r.item.id));
+  else if (filtre === 'programmes') rows = rows.filter((r) => scheduled.has(r.item.id));
+  else if (filtre === 'non_programme') rows = rows.filter((r) => notScheduled.has(r.item.id));
   else if ((MASTERY_STATUSES as string[]).includes(filtre)) rows = rows.filter((r) => r.status === filtre);
   if (q) rows = rows.filter((r) => r.item.nom_item.toLowerCase().includes(q));
   rows.sort((a, b) => b.priority.score - a.priority.score || a.item.nom_item.localeCompare(b.item.nom_item, 'fr'));
@@ -47,6 +53,9 @@ export default async function ProgrammePage({ searchParams }: { searchParams: Pr
         <input name="q" defaultValue={q} placeholder="Rechercher un item…" className="h-9 min-w-48 flex-1 rounded-(--radius-button) border border-(--color-border) bg-(--color-surface) px-3 text-sm text-(--color-ink)" />
         <select name="filtre" defaultValue={filtre} className="h-9 rounded-(--radius-button) border border-(--color-border) bg-(--color-surface) px-2 text-sm text-(--color-ink)">
           <option value="">Tous les statuts</option>
+          <option value="travailles">Déjà travaillés</option>
+          <option value="programmes">Programmés avant l’épreuve</option>
+          <option value="non_programme">Non encore programmés</option>
           <option value="insuffisant">Insuffisamment travaillés</option>
           {MASTERY_STATUSES.map((s) => <option key={s} value={s}>{MASTERY_STATUS_LABEL[s]}</option>)}
         </select>
@@ -64,7 +73,9 @@ export default async function ProgrammePage({ searchParams }: { searchParams: Pr
               </p>
               <p className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-(--color-ink-soft)">
                 <Badge variant={STATUS_VARIANT[r.status]}>{MASTERY_STATUS_LABEL[r.status]}</Badge>
+                {r.priority.level && <span className="rounded-full border border-[#730d31]/30 px-1.5 py-px text-[10px] font-semibold text-[#730d31] dark:text-[#f25667]">{r.priority.level}</span>}
                 <PriorityBadge tier={r.priority.tier} />
+                {notScheduled.has(r.item.id) && <span className="text-(--color-ink-muted)">Non encore programmé — accessible à tout moment</span>}
                 {r.next && <span>Prochaine séance : {fmtDateShort(`${r.next}T12:00:00Z`)}</span>}
               </p>
               <p className="mt-1 text-xs text-(--color-ink-muted)">{r.priority.reasons[0]}</p>

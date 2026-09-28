@@ -21,6 +21,18 @@ export function nextInterval(count: number, lastScore: number | null, config: Pl
 }
 
 /**
+ * Intervalle adapté au temps restant (addendum §7) : la base J+7 / J+14 /
+ * J+30 / J+60 est resserrée quand l'épreuve est proche — à moins de 120 jours,
+ * elle est multipliée par jours restants / 120 (jamais moins de 35 %), sans
+ * descendre sous 2 jours.
+ */
+export function adaptedInterval(count: number, lastScore: number | null, daysLeft: number, config: PlanConfig): number {
+  const base = nextInterval(count, lastScore, config);
+  const horizon = Math.max(0.35, Math.min(1, daysLeft / 120));
+  return Math.max(2, Math.round(base * horizon));
+}
+
+/**
  * Dates (clé jour) des réactivations à venir d'un item validé le jour
  * `fromDay`, jusqu'à `untilDay` exclu : une par intervalle successif.
  */
@@ -39,6 +51,13 @@ export function reactivationDays(fromDay: string, untilDay: string, startCount: 
 }
 
 const pad = (n: number) => String(n).padStart(2, '0');
+const PARIS = new Intl.DateTimeFormat('fr-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' });
+/** Jour (heure de Paris) d'un horodatage ISO ; une clé 'YYYY-MM-DD' est rendue telle quelle. */
+export function parisDay(iso: string): string {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? iso.slice(0, 10) : PARIS.format(d);
+}
 export function addDaysKey(day: string, n: number): string {
   const [y, m, d] = day.split('-').map(Number);
   const t = new Date(Date.UTC(y, m - 1, d + n));

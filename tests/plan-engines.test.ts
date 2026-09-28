@@ -14,6 +14,8 @@ import { parseImportRows } from '../src/lib/plan/import';
 const item = (over: Partial<PlanItem> & { id: string; nom_item: string }): PlanItem => ({
   faculte_id: 'major-ecn', specialite_id: 'col-cardiologie', cours_id: null, code: null, importance: 3, volume: 3, temps_reference: null,
   transversalite: 1, frequence_annales: 0, annees_occurrence: [], recence: 1, actif: true, priorite_forcee: null, notes: null,
+  criteres: null, score_interne: null, score_externe: null, etoiles_interne: null, etoiles_externe: null, priorite_interne: null, priorite_externe: null,
+  mode_travail_interne: null, mode_travail_externe: null, note_plateforme: null,
   created_at: '', updated_at: '', ...over,
 });
 const prereq = (item_id: string, prerequisite_item_id: string, type: 'indispensable' | 'recommande' = 'indispensable'): PlanPrerequisite =>
@@ -33,7 +35,8 @@ test('config : fusion tolérante, coefficients jamais codés en dur', () => {
 
 test('maîtrise : une auto-évaluation pèse moins qu’une validation', () => {
   const auto = declaredToScore('aise');
-  assert.equal(auto.score, 80);
+  assert.equal(auto.score, 75, '« Bon » déclaré');
+  assert.equal(declaredToScore('aise', { ...DEFAULT_CONFIG, declared_scores: { faible: 20, moyen: 50, aise: 70 } }).score, 70, 'réglable');
   assert.ok(auto.confidence < 0.5, 'une auto-évaluation n’est pas fiable');
   assert.equal(prerequisiteMet(auto, 70), false, 'niveau déclaré : prérequis non considéré comme acquis');
   const merged = mergeMastery(auto, { score: 30, confidence: 0.7 });
@@ -102,7 +105,7 @@ test('prérequis : chaîne A → B → C remontée récursivement, cycles détec
 
 test('charge : ajustée au niveau, découpée en séances de 45 à 60 minutes', () => {
   const it = item({ id: 'i', nom_item: 'Item', volume: 4 }); // 300 min de référence
-  assert.equal(remainingMinutes({ item: it, mastery: null, minutesDone: 0, daysLeft: 200, config: DEFAULT_CONFIG }), Math.round(300 * (1 - 0.45 * 0.75)));
+  assert.equal(remainingMinutes({ item: it, mastery: null, minutesDone: 0, daysLeft: 200, config: DEFAULT_CONFIG }), Math.round((300 * (1 - 0.45 * 0.75)) / 5) * 5);
   assert.equal(remainingMinutes({ item: it, mastery: { score: 90, confidence: 0.8 }, minutesDone: 0, daysLeft: 200, config: DEFAULT_CONFIG }), 0, 'item maîtrisé : rien à planifier');
   assert.ok(remainingMinutes({ item: it, mastery: { score: 30, confidence: 0.3 }, minutesDone: 100, daysLeft: 200, config: DEFAULT_CONFIG }) < remainingMinutes({ item: it, mastery: { score: 30, confidence: 0.3 }, minutesDone: 0, daysLeft: 200, config: DEFAULT_CONFIG }), 'le travail fait est déduit');
   const parts = splitIntoSessions(200, DEFAULT_CONFIG);
@@ -154,7 +157,9 @@ test('planning : généré dès J0, respecte les disponibilités et l’ordre de
   assert.deepEqual(r.summary.uncoveredItemIds, []);
   const c = r.sessions.find((s) => s.itemId === 'C' && s.kind === 'apprentissage')!;
   assert.ok(/prérequis|Priorité/.test(c.reason));
-  assert.ok(c.parts && c.parts >= 2 && c.part === 1, 'un gros item est découpé en plusieurs séances');
+  assert.equal(c.part, 1);
+  const cWork = r.sessions.filter((s) => s.itemId === 'C' && (s.kind === 'apprentissage' || s.kind === 'approfondissement'));
+  assert.ok(cWork.length >= 2, 'un gros item est découpé : première couverture puis approfondissement');
 });
 
 test('planning : temps insuffisant signalé, aucun item supprimé du programme, déterminisme', () => {
@@ -200,8 +205,8 @@ test('analytics : couverture du programme ≠ avancement du planning', () => {
   assert.equal(cov.coveragePct, 50);
   assert.deepEqual(cov.insufficientIds.sort(), ['C', 'D']);
   const sessions = [
-    { id: '1', user_id: 'u', item_id: 'A', day: '2026-09-14', order_index: 0, minutes: 60, kind: 'apprentissage', status: 'terminee', priority_score: null, priority_tier: null, reason: '', plan_version: 1, part: null, parts: null, started_at: null, completed_at: null, actual_minutes: 50, created_at: '', updated_at: '' },
-    { id: '2', user_id: 'u', item_id: 'B', day: '2026-09-15', order_index: 0, minutes: 60, kind: 'apprentissage', status: 'planifiee', priority_score: null, priority_tier: null, reason: '', plan_version: 1, part: null, parts: null, started_at: null, completed_at: null, actual_minutes: null, created_at: '', updated_at: '' },
+    { id: '1', user_id: 'u', item_id: 'A', day: '2026-09-14', order_index: 0, minutes: 60, kind: 'apprentissage', status: 'terminee', priority_score: null, priority_tier: null, reason: '', plan_version: 1, part: null, parts: null, started_at: null, completed_at: null, actual_minutes: 50, origin: 'planning', planned_day: null, created_at: '', updated_at: '' },
+    { id: '2', user_id: 'u', item_id: 'B', day: '2026-09-15', order_index: 0, minutes: 60, kind: 'apprentissage', status: 'planifiee', priority_score: null, priority_tier: null, reason: '', plan_version: 1, part: null, parts: null, started_at: null, completed_at: null, actual_minutes: null, origin: 'planning', planned_day: null, created_at: '', updated_at: '' },
   ] as const;
   const ex = computeExecution([...sessions], '2026-09-14', '2026-09-20');
   assert.equal(ex.pct, 50);
