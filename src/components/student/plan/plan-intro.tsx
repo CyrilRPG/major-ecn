@@ -160,9 +160,10 @@ export function PlanIntroDialog({ open, onClose, replay = false }: {
   const [index, setIndex] = useState(0);
   const [cycle, setCycle] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [hover, setHover] = useState(false);
   const [busy, setBusy] = useState(false);
-  const stopped = paused || hover;
+  // Seul le bouton pause arrête l'animation : une pause au survol figeait une scène
+  // à son tout début (encadré vide, titre invisible) dès que la souris passait dessus.
+  const stopped = paused;
 
   // Temps déjà écoulé dans la scène : une pause reprend exactement où elle s'était arrêtée
   // (le minuteur et les animations CSS restent synchronisés).
@@ -191,7 +192,6 @@ export function PlanIntroDialog({ open, onClose, replay = false }: {
           <DialogPrimitive.Content
             className={cn(sans.className, 'relative max-h-[94dvh] w-full max-w-[560px] overflow-y-auto rounded-[22px] bg-[#fefdfe] p-5 shadow-[0_30px_80px_-20px_rgba(40,10,20,0.45)] outline-none sm:p-7')}
             onKeyDown={(e) => { if (e.key === 'ArrowRight') go(index + 1); if (e.key === 'ArrowLeft') go(index - 1); }}
-            onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
           >
             <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8e6a48]">{replay ? 'Comment ça marche' : 'Nouveau'}</p>
             <DialogPrimitive.Title className={cn(serif.className, 'mt-1 text-[25px] font-bold leading-tight text-[#150a10] sm:text-[28px]')}>
