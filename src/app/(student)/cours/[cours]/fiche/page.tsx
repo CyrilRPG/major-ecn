@@ -143,6 +143,8 @@ export default async function CoursFichePage({
             src={`/api/fiches/${coursId}/pdf?doc=${courant.id}`}
             coursId={coursId}
             initiallyRead={initiallyRead}
+            // Surlignage par l'élève, sauvegardé par fiche (cf. /api/fiches/[cours]/surlignages).
+            surlignage={{ ficheId: courant.id }}
           />
         </>
       ) : (

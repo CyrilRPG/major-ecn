@@ -1,0 +1,21 @@
+/*
+ * Couche texte pdf.js rendue sélectionnable UNIQUEMENT dans le lecteur de
+ * fiche qui propose le surlignage (le conteneur porte `.surl-actif`). Le texte
+ * reste transparent : on ne voit que le canvas du PDF, jamais une seconde mise
+ * en page. La copie est bloquée par le lecteur (événements copy/cut).
+ */
+.surl-actif .textLayer {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.surl-actif .textLayer ::selection {
+  background: rgb(37 99 235 / 0.26);
+}
+
+/* Filigrane au nom de l'élève (texte incliné) : ni sélectionnable, ni cliquable. */
+.surl-actif .textLayer .surl-ignore {
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}

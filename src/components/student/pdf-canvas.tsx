@@ -3,7 +3,10 @@
 /**
  * Rendu d'une fiche PDF en <canvas> (react-pdf / pdf.js) — volontairement
  * SANS visionneuse native : pas de barre d'outils navigateur, donc pas de
- * bouton de téléchargement / impression, et pas de couche texte sélectionnable.
+ * bouton de téléchargement / impression, et pas de couche texte sélectionnable
+ * — sauf dans le lecteur de fiche qui propose le SURLIGNAGE (contexte
+ * `SurlignagesProvider`) : la couche texte pdf.js, transparente, y sert à
+ * sélectionner les passages ; la copie reste bloquée (copy/cut annulés).
  * À charger uniquement côté client (dynamic ssr:false) : pdf.js référence
  * `DOMMatrix` à l'évaluation du module, indisponible côté serveur.
  *
@@ -22,9 +25,14 @@
  * l'échec de chargement du module, pas une erreur pendant le rendu.
  */
 import '@/lib/polyfills/pdfjs-compat';
-import { Component, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Component, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/TextLayer.css';
+import './surlignages/surlignages.css';
 import PdfFallbackFrame from './pdf-fallback-frame';
+import { useSurlignagesOptionnel } from './surlignages/contexte';
+import { CoucheSurlignages } from './surlignages/couche-page';
+import { BarreSurlignage } from './surlignages/barre-flottante';
 
 // Worker servi en same-origin depuis /public. Le suffixe ?v=<version> casse
 // le cache navigateur quand la version de pdf.js change (sinon « API version
@@ -52,6 +60,18 @@ function LazyPage({
   onRatio: (r: number) => void;
 }) {
   const holderRef = useRef<HTMLDivElement>(null);
+  const surlignages = useSurlignagesOptionnel();
+  const [versionCouche, setVersionCouche] = useState(0);
+  // Rappels STABLES : react-pdf redessine la couche texte quand le rappel de
+  // fin de rendu change d'identité — un rappel recréé à chaque rendu relançait
+  // la couche (sélection perdue) et bouclait avec le compteur ci-dessus.
+  const actif = !!surlignages;
+  const enregistrerTextePage = surlignages?.enregistrerTextePage;
+  const surTexte = useCallback(
+    (tc: { items: readonly unknown[] }) => enregistrerTextePage?.(pageNumber, tc.items),
+    [enregistrerTextePage, pageNumber],
+  );
+  const surCoucheTexte = useCallback(() => setVersionCouche((v) => v + 1), []);
   // Les 2 premières pages tout de suite ; sans IntersectionObserver, tout de
   // suite aussi (comportement d'avant). Module client-only : window existe.
   const [visible, setVisible] = useState(
@@ -77,7 +97,11 @@ function LazyPage({
   }, [visible, root]);
 
   return (
-    <div ref={holderRef} style={visible ? undefined : { width, height: Math.round(width * ratio) }}>
+    <div
+      ref={holderRef}
+      data-page={pageNumber}
+      style={visible ? undefined : { width, height: Math.round(width * ratio) }}
+    >
       {visible && (
         <Page
           pageNumber={pageNumber}
@@ -86,13 +110,18 @@ function LazyPage({
             MAX_DPR,
             typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1,
           )}
-          renderTextLayer={false}
+          // Couche texte seulement pour le surlignage (sinon : rien de sélectionnable).
+          renderTextLayer={actif}
           renderAnnotationLayer={false}
           onLoadSuccess={(page) => {
             if (page.width > 0) onRatio(page.height / page.width);
           }}
+          onGetTextSuccess={actif ? surTexte : undefined}
+          onRenderTextLayerSuccess={actif ? surCoucheTexte : undefined}
           className="shadow-[0_4px_18px_-8px_rgba(15,31,77,0.35)]"
-        />
+        >
+          {actif && <CoucheSurlignages page={pageNumber} versionCouche={versionCouche} />}
+        </Page>
       )}
     </div>
   );
@@ -134,6 +163,21 @@ function PdfCanvasInner({ src, zoom = 1, onFatal }: { src: string; zoom?: number
   const [baseWidth, setBaseWidth] = useState(820);
   const [ratio, setRatio] = useState(Math.SQRT2); // A4 en attendant la vraie valeur
   const wrapRef = useRef<HTMLDivElement>(null);
+  const zoneRef = useRef<HTMLDivElement>(null);
+  const surlignages = useSurlignagesOptionnel();
+  const pointeurRef = useRef('mouse');
+
+  // Navigation depuis la liste des surlignages : la page (ou son gabarit, tant
+  // qu'elle n'est pas dessinée) est amenée au centre du lecteur.
+  const enregistrerNavigation = surlignages?.enregistrerNavigation;
+  useEffect(() => {
+    if (!enregistrerNavigation) return;
+    enregistrerNavigation((page) => {
+      const cible = wrapRef.current?.querySelector(`[data-page="${page}"]`);
+      cible?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    return () => enregistrerNavigation(null);
+  }, [enregistrerNavigation]);
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -153,32 +197,51 @@ function PdfCanvasInner({ src, zoom = 1, onFatal }: { src: string; zoom?: number
   return (
     <div
       ref={wrapRef}
-      className="flex h-full w-full select-none justify-center overflow-auto bg-slate-100"
-      onContextMenu={(e) => e.preventDefault()}
+      className={
+        'flex h-full w-full select-none justify-center overflow-auto bg-slate-100' +
+        (surlignages ? ' surl-actif' : '')
+      }
+      onPointerDown={(e) => {
+        pointeurRef.current = e.pointerType;
+      }}
+      onContextMenu={(e) => {
+        // Au doigt, l'appui long SÉLECTIONNE le texte à surligner : l'annuler
+        // empêcherait la sélection sur Android. La copie reste bloquée.
+        if (surlignages && pointeurRef.current !== 'mouse') return;
+        e.preventDefault();
+      }}
       onDragStart={(e) => e.preventDefault()}
+      onCopy={surlignages ? (e) => e.preventDefault() : undefined}
+      onCut={surlignages ? (e) => e.preventDefault() : undefined}
     >
-      <Document
-        file={src}
-        onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-        // Une erreur de pdf.js (module, worker, mémoire…) ne doit jamais
-        // priver l'élève de sa fiche : on repasse à la visionneuse native.
-        onLoadError={onFatal}
-        onSourceError={onFatal}
-        loading={<div className="py-24 text-sm text-(--color-ink-soft)">Chargement de la fiche…</div>}
-        error={<div className="py-24 text-sm text-(--color-ink-soft)">Impossible d’afficher la fiche pour le moment. Rechargez la page ou vérifiez votre connexion.</div>}
-        className="flex flex-col items-center gap-4 py-4"
-      >
-        {Array.from({ length: numPages }, (_, i) => (
-          <LazyPage
-            key={i}
-            pageNumber={i + 1}
-            width={pageWidth}
-            ratio={ratio}
-            root={wrapRef}
-            onRatio={setRatio}
-          />
-        ))}
-      </Document>
+      <div ref={zoneRef} className="relative">
+        <Document
+          file={src}
+          onLoadSuccess={(pdf) => {
+            setNumPages(pdf.numPages);
+            surlignages?.enregistrerDocument(pdf);
+          }}
+          // Une erreur de pdf.js (module, worker, mémoire…) ne doit jamais
+          // priver l'élève de sa fiche : on repasse à la visionneuse native.
+          onLoadError={onFatal}
+          onSourceError={onFatal}
+          loading={<div className="py-24 text-sm text-(--color-ink-soft)">Chargement de la fiche…</div>}
+          error={<div className="py-24 text-sm text-(--color-ink-soft)">Impossible d’afficher la fiche pour le moment. Rechargez la page ou vérifiez votre connexion.</div>}
+          className="flex flex-col items-center gap-4 py-4"
+        >
+          {Array.from({ length: numPages }, (_, i) => (
+            <LazyPage
+              key={i}
+              pageNumber={i + 1}
+              width={pageWidth}
+              ratio={ratio}
+              root={wrapRef}
+              onRatio={setRatio}
+            />
+          ))}
+        </Document>
+        {surlignages && <BarreSurlignage zoneRef={zoneRef} zoom={zoom} />}
+      </div>
     </div>
   );
 }

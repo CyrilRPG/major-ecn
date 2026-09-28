@@ -29,6 +29,22 @@ export function AntiCopyShield() {
       return false;
     }
 
+    /**
+     * Couche texte du lecteur de fiche qui propose le SURLIGNAGE (cf.
+     * components/student/surlignages) : on doit pouvoir y sélectionner un
+     * passage pour le surligner. Seule la sélection y est permise — la copie,
+     * le glisser et les raccourcis restent bloqués comme partout.
+     */
+    function selectionPourSurligner(target: EventTarget | null): boolean {
+      const el = target instanceof Element ? target : target instanceof Node ? target.parentElement : null;
+      return !!el?.closest('.surl-actif .textLayer');
+    }
+
+    function onSelectStart(e: Event) {
+      if (selectionPourSurligner(e.target)) return;
+      block(e);
+    }
+
     /** Bloque un event s'il ne provient pas d'un champ éditable. */
     function block(e: Event) {
       if (isEditable(e.target)) return;
@@ -39,6 +55,9 @@ export function AntiCopyShield() {
     /** Bloque clic-droit hors champ éditable. */
     function onContext(e: MouseEvent) {
       if (isEditable(e.target)) return;
+      // Au doigt (Android), l'appui long sur le texte d'une fiche sélectionne le
+      // passage à surligner : annuler cet évènement empêcherait la sélection.
+      if ((e as PointerEvent).pointerType === 'touch' && selectionPourSurligner(e.target)) return;
       e.preventDefault();
     }
 
@@ -61,7 +80,7 @@ export function AntiCopyShield() {
     document.addEventListener('copy', block, true);
     document.addEventListener('cut', block, true);
     document.addEventListener('dragstart', block, true);
-    document.addEventListener('selectstart', block, true);
+    document.addEventListener('selectstart', onSelectStart, true);
     document.addEventListener('contextmenu', onContext, true);
     document.addEventListener('keydown', onKeyDown, true);
 
@@ -69,7 +88,7 @@ export function AntiCopyShield() {
       document.removeEventListener('copy', block, true);
       document.removeEventListener('cut', block, true);
       document.removeEventListener('dragstart', block, true);
-      document.removeEventListener('selectstart', block, true);
+      document.removeEventListener('selectstart', onSelectStart, true);
       document.removeEventListener('contextmenu', onContext, true);
       document.removeEventListener('keydown', onKeyDown, true);
     };

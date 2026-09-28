@@ -6,6 +6,8 @@ import { Check, Download, Loader2, Lock, Maximize2, Minimize2, ZoomIn, ZoomOut }
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
+import { SurlignagesProvider } from './surlignages/contexte';
+import { PanneauSurlignages } from './surlignages/panneau';
 
 // Rendu en <canvas> (react-pdf), chargé uniquement côté client : pas de
 // visionneuse PDF native → aucun bouton de téléchargement / impression,
@@ -39,6 +41,7 @@ export function PdfViewer({
   canMarkRead = true,
   notice,
   fill = false,
+  surlignage,
 }: {
   src: string;
   coursId: string;
@@ -53,6 +56,48 @@ export function PdfViewer({
   /** Remplit le conteneur parent (panneau de la vue partagée) au lieu d'une
    *  hauteur d'écran : le parent fixe la hauteur, le canvas prend le reste. */
   fill?: boolean;
+  /** Surlignage par l'élève (fiche de cours) : identifiant de la fiche affichée.
+   *  Sans lui, le lecteur reste strictement en lecture (supports, fiche éclair…). */
+  surlignage?: { ficheId: string };
+}) {
+  const lecteur = (
+    <PdfViewerInner
+      src={src}
+      coursId={coursId}
+      initiallyRead={initiallyRead}
+      canDownload={canDownload}
+      canMarkRead={canMarkRead}
+      notice={notice}
+      fill={fill}
+      surlignageActif={!!surlignage}
+    />
+  );
+  if (!surlignage) return lecteur;
+  return (
+    <SurlignagesProvider coursId={coursId} ficheId={surlignage.ficheId}>
+      {lecteur}
+    </SurlignagesProvider>
+  );
+}
+
+function PdfViewerInner({
+  src,
+  coursId,
+  initiallyRead,
+  canDownload,
+  canMarkRead,
+  notice,
+  fill,
+  surlignageActif,
+}: {
+  src: string;
+  coursId: string;
+  initiallyRead: boolean;
+  canDownload: boolean;
+  canMarkRead: boolean;
+  notice?: string;
+  fill: boolean;
+  surlignageActif: boolean;
 }) {
   const [read, setRead] = useState(initiallyRead);
   const [pending, start] = useTransition();
@@ -109,7 +154,7 @@ export function PdfViewer({
       {/* Toolbar : zoom + plein écran + marquer comme lue (pas de téléchargement) */}
       <div
         className={
-          'flex items-center gap-1.5 border-b border-(--color-border) px-3 py-2 sm:gap-2 sm:px-5 sm:py-3 ' +
+          'relative flex items-center gap-1.5 border-b border-(--color-border) px-3 py-2 sm:gap-2 sm:px-5 sm:py-3 ' +
           (isFullscreen ? 'bg-(--color-surface)' : 'bg-(--color-surface-soft)')
         }
       >
@@ -118,6 +163,7 @@ export function PdfViewer({
           {notice ?? (canDownload ? 'Téléchargement réservé au staff.' : 'Fiche consultable en ligne uniquement.')}
         </p>
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+          {surlignageActif && <PanneauSurlignages />}
           <div className="flex items-center gap-1 rounded-lg border border-(--color-border) bg-(--color-surface) px-1">
             <Button size="sm" variant="ghost" onClick={() => setZoom((z) => Math.max(ZOOM_MIN, Math.round((z - ZOOM_STEP) * 10) / 10))} disabled={zoom <= ZOOM_MIN} aria-label="Réduire">
               <ZoomOut />
