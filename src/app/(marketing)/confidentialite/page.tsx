@@ -17,8 +17,9 @@ const TOC = [
   { id: 'obligations',       label: '4. Vos obligations' },
   { id: 'mineurs',           label: '5. Protection des mineurs' },
   { id: 'securite',          label: '6. Sécurité' },
-  { id: 'modification',      label: '7. Modification de la Politique' },
-  { id: 'contact',           label: '8. Contact' },
+  { id: 'application-mobile', label: '7. Application mobile' },
+  { id: 'modification',      label: '8. Modification de la Politique' },
+  { id: 'contact',           label: '9. Contact' },
 ];
 
 export default function ConfidentialitePage() {
@@ -26,7 +27,7 @@ export default function ConfidentialitePage() {
     <LegalShell
       title="Politique de Confidentialité"
       subtitle="Comment Major ECN (PAE Formation) collecte, utilise et protège vos données personnelles."
-      lastUpdated="14 juin 2026"
+      lastUpdated="28 septembre 2026"
       toc={TOC}
       pdfHref="/legal/politique-confidentialite.pdf"
     >
@@ -131,7 +132,7 @@ export default function ConfidentialitePage() {
           vous opposer audit traitement et du droit à la portabilité des données à caractère
           personnel. Pour exercer vos droits, veuillez écrire à{' '}
           <a href="mailto:contact@major-ecn.fr" className="font-semibold text-[#C0112E] underline">contact@major-ecn.fr</a>
-          {' '}ou à l’adresse postale : PAE Formation — 3, rue Rosa Bonheur à Paris (75007).
+          {' '}ou à l’adresse postale : PAE Formation — 3, rue Rosa Bonheur à Paris (75015).
         </p>
         <p>Une réponse à votre requête vous sera adressée dans un délai de 30 jours.</p>
         <p>Vous conservez le droit de déposer une réclamation pour atteinte à la protection de vos données, auprès de la CNIL.</p>
@@ -195,7 +196,31 @@ export default function ConfidentialitePage() {
         </p>
       </LegalSection>
 
-      <LegalSection id="modification" title="7. Modification de la Politique de Confidentialité">
+      <LegalSection id="application-mobile" title="7. Application mobile">
+        <p>
+          L’application mobile Major ECN (Android et iOS) donne accès au même compte que la
+          Plateforme. Elle traite, en plus des informations décrites ci-dessus, les données
+          suivantes, uniquement pour fournir le Service :
+        </p>
+        <LegalList>
+          <li><strong>Identifiant d’appareil</strong> : un identifiant aléatoire est attribué au téléphone à la connexion. Un compte ne peut être ouvert que sur un seul appareil à la fois ; se connecter sur un nouvel appareil déconnecte le précédent. Le modèle du téléphone et la version de l’application sont enregistrés avec cet identifiant.</li>
+          <li><strong>Stockage hors ligne sur l’appareil</strong> : les cours que vous choisissez de télécharger (fiches, vidéos, QCM, flashcards) et vos réponses en attente d’envoi sont enregistrés dans l’espace privé de l’application, sur votre téléphone. Ils sont effacés à la déconnexion.</li>
+          <li><strong>Temps d’étude</strong> : le temps passé sur les écrans de révision, y compris hors connexion, est transmis à la Plateforme pour alimenter vos statistiques.</li>
+          <li><strong>Contenus que vous produisez</strong> : réponses aux QCM, évaluations de flashcards, questions à revoir, notes de cours, surlignages de fiches, messages du forum et signatures d’émargement.</li>
+          <li><strong>Notifications locales</strong> : les rappels de révision et de cours en direct sont programmés sur votre téléphone, avec votre autorisation, et ne transitent par aucun serveur. Vous pouvez les désactiver à tout moment dans votre profil ou dans les réglages du téléphone.</li>
+        </LegalList>
+        <p>
+          L’application ne contient aucune publicité, n’utilise aucun outil de mesure d’audience
+          tiers et ne suit pas votre activité dans d’autres applications ou sites.
+        </p>
+        <p>
+          Vous pouvez supprimer votre compte depuis l’application (Plus, puis Profil, puis
+          « Supprimer mon compte ») ou en suivant la procédure décrite sur la page{' '}
+          <a href="/suppression-compte" className="font-semibold text-[#C0112E] underline">Supprimer votre compte</a>.
+        </p>
+      </LegalSection>
+
+      <LegalSection id="modification" title="8. Modification de la Politique de Confidentialité">
         <p>
           La Société se réserve le droit de modifier, compléter ou remplacer les dispositions de la
           présente Politique de Confidentialité. En cas de modification importante, la Société
@@ -204,10 +229,10 @@ export default function ConfidentialitePage() {
         </p>
       </LegalSection>
 
-      <LegalSection id="contact" title="8. Contact">
+      <LegalSection id="contact" title="9. Contact">
         <p>
           Pour toutes questions, observations, suggestions ou réclamations, veuillez contacter PAE
-          Formation — 3, rue Rosa Bonheur à Paris (75007), par mail —{' '}
+          Formation — 3, rue Rosa Bonheur à Paris (75015), par mail —{' '}
           <a href="mailto:contact@major-ecn.fr" className="font-semibold text-[#C0112E] underline">contact@major-ecn.fr</a>.
         </p>
       </LegalSection>

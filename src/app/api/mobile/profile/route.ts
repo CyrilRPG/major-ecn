@@ -9,12 +9,30 @@ import { AVATAR_PRESETS, isPlatformAvatar, platformAvatarUrl, effectiveSeed } fr
 import { canoniserAvatar, estAvatarAutorise, estAvatarCompose } from '@/lib/avatars/traits';
 import { sondeAvatarsProfils } from '@/lib/avatars/profils';
 import { avatarEstLibre } from '@/lib/avatars/unicite';
+import { generatePseudo } from '@/lib/auth/pseudo';
+import { purgerSurlignages } from '@/lib/fiches/surlignages-purge';
+import { anonymiserMessagesForum } from '@/lib/forum/anonymiser';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const PHONE_RE = /^[0-9 +().\-]{0,30}$/;
 const PSEUDO_RE = /^[a-z0-9._-]{3,40}$/i;
+const PSEUDO_PROF_RE = /^[\p{L}\p{N} ._'-]{3,60}$/u;
+
+/**
+ * Pseudo déjà porté par un AUTRE compte ? Comparaison exacte insensible à la
+ * casse (l'index unique `profiles_pseudo_unique` porte sur `lower(pseudo)`) :
+ * `ilike` dont les jokers `%` et `_` (et l'échappement) sont neutralisés —
+ * « jean_d » ne doit pas heurter « jeanxd » — puis `.limit(1)` : plusieurs
+ * lignes ne font plus échouer `maybeSingle` en « libre ».
+ */
+async function pseudoPris(admin: any, pseudo: string, userId: string): Promise<boolean | { error: string }> {
+  const motif = pseudo.replace(/[\\%_]/g, (c) => `\\${c}`);
+  const { data, error } = await admin.from('profiles').select('id').ilike('pseudo', motif).neq('id', userId).limit(1);
+  if (error) return { error: error.message };
+  return (data ?? []).length > 0;
+}
 
 async function mobileAuth(req: Request) {
   const auth = await getBearerUser(req);
@@ -90,15 +108,46 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   }
 
+  if (body.action === 'regenerate_pseudo') {
+    // Même règle que l'action web `regeneratePseudoAction` : initiales + promo
+    // + suffixe court, décliné jusqu'à trouver un pseudo libre.
+    const admin = createAdminClient() as any;
+    const { data: me } = await db.from('profiles').select('first_name, last_name, promotion').eq('id', auth.user.id).maybeSingle();
+    const base = generatePseudo(me?.first_name ?? '', me?.last_name ?? '', me?.promotion ?? 'X');
+    let candidate: string | null = null;
+    for (let i = 0; i < 50 && !candidate; i++) {
+      const trial = i === 0 ? base : `${base}-${i + 1}`;
+      const pris = await pseudoPris(admin, trial, auth.user.id);
+      if (typeof pris === 'object') return NextResponse.json({ error: pris.error }, { status: 500 });
+      if (!pris) candidate = trial;
+    }
+    if (!candidate) return NextResponse.json({ error: 'Aucun pseudo libre trouvé, réessayez.' }, { status: 409 });
+    const { error } = await db.from('profiles').update({ pseudo: candidate }).eq('id', auth.user.id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ ok: true, pseudo: candidate });
+  }
+
   if (body.action === 'pseudo') {
-    const pseudo = (body.pseudo ?? '').trim().toLowerCase();
-    if (!PSEUDO_RE.test(pseudo)) {
-      return NextResponse.json({ error: '3 à 40 caractères : lettres, chiffres, point, tiret ou underscore.' }, { status: 400 });
+    // Parité web (`updatePseudoAction`) : les enseignants ont droit à un
+    // pseudo lisible (« Professeur Cardiologie »), les élèves à un identifiant.
+    const { data: me } = await db.from('profiles').select('role').eq('id', auth.user.id).maybeSingle();
+    const isStaff = me?.role === 'professor' || me?.role === 'admin';
+    const raw = (body.pseudo ?? '').trim();
+    const pseudo = isStaff ? raw.replace(/\s+/g, ' ') : raw.toLowerCase();
+    if (!(isStaff ? PSEUDO_PROF_RE : PSEUDO_RE).test(pseudo)) {
+      return NextResponse.json({
+        error: isStaff
+          ? '3 à 60 caractères : lettres (accents compris), chiffres, espace, point, tiret, underscore ou apostrophe.'
+          : '3 à 40 caractères : lettres, chiffres, point, tiret ou underscore.',
+      }, { status: 400 });
     }
     const admin = createAdminClient() as any;
-    const { data: existing } = await admin.from('profiles').select('id').ilike('pseudo', pseudo).neq('id', auth.user.id).maybeSingle();
-    if (existing) return NextResponse.json({ error: 'Ce pseudo est déjà pris.' }, { status: 409 });
+    const pris = await pseudoPris(admin, pseudo, auth.user.id);
+    if (typeof pris === 'object') return NextResponse.json({ error: pris.error }, { status: 500 });
+    if (pris) return NextResponse.json({ error: 'Ce pseudo est déjà pris.' }, { status: 409 });
     const { error } = await db.from('profiles').update({ pseudo }).eq('id', auth.user.id);
+    // Course entre deux comptes : l'index unique tranche.
+    if (error?.code === '23505') return NextResponse.json({ error: 'Ce pseudo est déjà pris.' }, { status: 409 });
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true, pseudo });
   }
@@ -136,6 +185,13 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ error: 'Un administrateur ne peut pas supprimer son propre compte.' }, { status: 403 });
   }
   const admin = createAdminClient();
+  // Les surlignages vivent dans un bucket (pas de cascade SQL) : on les purge
+  // avant le compte, comme l'annonce la page publique /suppression-compte.
+  await purgerSurlignages(admin, auth.user.id).catch(() => undefined);
+  // Forum : questions et relances restent visibles, signées « Ancien élève »
+  // (même promesse). Échec → le compte n'est pas supprimé.
+  const anonErr = await anonymiserMessagesForum(admin, auth.user.id);
+  if (anonErr) return NextResponse.json({ error: anonErr }, { status: 500 });
   await admin.auth.admin.signOut(auth.user.id).catch(() => undefined);
   const { error } = await admin.auth.admin.deleteUser(auth.user.id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

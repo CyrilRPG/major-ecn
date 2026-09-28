@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { assertAccessActive } from '@/lib/auth/access';
 import { getRequestUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
+import { refusLectureFiche } from '@/lib/auth/acces-lecture-item';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,6 +28,12 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
 
   const expiredRes = await assertAccessActive(supabase, user.id);
   if (expiredRes) return expiredRes;
+
+  // Mêmes gardes que la page `cours/[cours]/fiche` : collège (access_type compris),
+  // droit « fiche » de la formule, lecture du professeur. Sans elles, la fiche de cours
+  // était servie à n'importe quel élève connecté (appel direct depuis l'app).
+  const refus = await refusLectureFiche(supabase, user.id, coursId, 'fiche');
+  if (refus) return refus;
 
   // Un item peut porter plusieurs fiches : `?doc=<id>` désigne celle demandée,
   // à défaut la première de la liste (order_index le plus bas).

@@ -226,7 +226,7 @@ export default function CGUPage() {
           <p>
             L’Utilisateur pourra exercer ses droits en écrivant à{' '}
             <a href="mailto:contact@major-ecn.fr" className="font-semibold text-[#C0112E] underline">contact@major-ecn.fr</a>
-            {' '}ou à l’adresse postale : PAE Formation — 3, rue Rosa Bonheur à Paris (75007).
+            {' '}ou à l’adresse postale : PAE Formation — 3, rue Rosa Bonheur à Paris (75015).
             Une réponse à la requête lui sera adressée dans un délai de 30 jours.
           </p>
         </LegalSubSection>
@@ -398,7 +398,7 @@ export default function CGUPage() {
       <LegalSection id="mentions-legales" title="Mentions légales">
         <p><strong>PAE Formation</strong></p>
         <p>Société par actions simplifiée au capital de 100 euros</p>
-        <p>Siège social : 3, rue Rosa Bonheur — Paris (75007)</p>
+        <p>Siège social : 3, rue Rosa Bonheur — Paris (75015)</p>
         <p>821 740 537 R.C.S Paris</p>
         <p>Téléphone : 01.47.34.35.71</p>
         <p>Directeur de publication : A. Bonan</p>

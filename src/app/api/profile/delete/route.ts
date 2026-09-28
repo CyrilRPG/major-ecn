@@ -13,6 +13,8 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
+import { purgerSurlignages } from '@/lib/fiches/surlignages-purge';
+import { anonymiserMessagesForum } from '@/lib/forum/anonymiser';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,6 +43,14 @@ export async function POST() {
       { status: 500 },
     );
   }
+
+  // Surlignages des fiches (Storage, sans cascade SQL) : purgés avant le compte.
+  await purgerSurlignages(admin, user.id).catch(() => undefined);
+
+  // Forum : questions et relances restent visibles, signées « Ancien élève »
+  // (promesse de /suppression-compte). Échec → le compte n'est pas supprimé.
+  const anonErr = await anonymiserMessagesForum(admin, user.id);
+  if (anonErr) return NextResponse.json({ error: anonErr }, { status: 500 });
 
   // Force la déconnexion du user puis supprime son compte. Le profile est
   // supprimé en cascade via la FK ON DELETE CASCADE.

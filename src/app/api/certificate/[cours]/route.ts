@@ -4,6 +4,8 @@ import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { createClient } from '@/lib/supabase/server';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { verifierLienCertificat } from '@/lib/certificats/lien-signe';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -28,11 +30,18 @@ function ansi(s: string): string {
  */
 export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await ctx.params;
-  const supabase = await createClient();
-  const user = await getVerifiedUser(supabase);
+  const url = new URL(req.url);
+  // Lien signé délivré à l'app mobile (/api/mobile/certificate) : le navigateur
+  // système n'a pas la session de l'élève. Le jeton désigne UN élève et UN
+  // cours, pour quelques minutes ; les lectures se font alors en service-role,
+  // bornées à cet élève.
+  const jeton = url.searchParams.get('t');
+  const eleveDuLien = jeton ? verifierLienCertificat(jeton, coursId) : null;
+  if (jeton && !eleveDuLien) return NextResponse.json({ error: 'Lien expiré : rouvrez le certificat depuis l’application.' }, { status: 401 });
+  const supabase = eleveDuLien ? createAdminClient() : await createClient();
+  const user = eleveDuLien ? { id: eleveDuLien } : await getVerifiedUser(supabase);
   if (!user) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
 
-  const url = new URL(req.url);
   const overrideUserId = url.searchParams.get('user_id');
 
   let targetUserId = user.id;

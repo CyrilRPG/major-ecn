@@ -54,6 +54,8 @@ const STATIC_ROUTES: {
   { path: '/conditions-particulieres', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/mentions-legales', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/confidentialite', priority: 0.3, changeFrequency: 'yearly' },
+  // Exigée par Google Play pour l'application mobile (suppression de compte).
+  { path: '/suppression-compte', priority: 0.3, changeFrequency: 'yearly' },
 ];
 
 /**

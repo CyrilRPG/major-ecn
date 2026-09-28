@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { applyDeletionPolicy } from '@/lib/suivi/sweep';
+import { anonymiserMessagesForum } from '@/lib/forum/anonymiser';
 
 export async function POST(req: Request) {
   const guard = await requireAdminRequest(req);
@@ -21,6 +22,11 @@ export async function POST(req: Request) {
   // Suivi individuel (§18) : selon le réglage, une trace statistique anonyme
   // est conservée avant que la cascade n'efface les données nominatives.
   try { await applyDeletionPolicy(body.userId); } catch (e) { console.error('[suivi] politique de suppression :', e); }
+
+  // Forum : questions et relances de l'élève signées « Ancien élève » (page
+  // /suppression-compte, demande par e-mail traitée ici).
+  const anonErr = await anonymiserMessagesForum(admin, body.userId);
+  if (anonErr) return NextResponse.json({ error: anonErr }, { status: 500 });
 
   // Supabase auth.admin.deleteUser supprime le user. Le profil cascade via ON DELETE CASCADE.
   const { error } = await admin.auth.admin.deleteUser(body.userId);

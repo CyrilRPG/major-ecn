@@ -3,6 +3,7 @@ import { assertAccessActive } from '@/lib/auth/access';
 import { getRequestUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { bunnyEmbedUrl } from '@/lib/bunny';
+import { resoudreVideoLecture } from '@/lib/auth/acces-lecture-item';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,26 +21,15 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   const expiredRes = await assertAccessActive(supabase, user.id);
   if (expiredRes) return expiredRes;
 
-  // `?video=<id>` : LA séance demandée. Un item de replays en porte une
-  // dizaine ; sans ce paramètre, l'application ne pouvait lire que la première
-  // (la page web, elle, choisit la vidéo via `?v=`). L'appartenance à l'item
-  // est vérifiée par le filtre `cours_id`, les droits par la RLS.
-  const videoId = req.nextUrl.searchParams.get('video');
-  const requete = supabase
-    .from('videos')
-    .select('bunny_video_id, storage_path')
-    .eq('cours_id', coursId);
-  // Sans séance précise : la première vidéo REGARDABLE (une séance à venir
-  // n'a encore ni lien Bunny ni fichier).
-  const { data: videos } = videoId
-    ? await requete.eq('id', videoId).limit(1)
-    : await requete
-        .or('bunny_video_id.not.is.null,storage_path.not.is.null')
-        .order('order_index', { ascending: true })
-        .limit(1);
-
-  const video = videos?.[0] as { bunny_video_id?: string | null; storage_path?: string | null } | undefined;
-  if (!video) return NextResponse.json({ error: 'Vidéo introuvable' }, { status: 404 });
+  // `?video=<id>` : LA séance demandée (un item de replays en porte une
+  // dizaine) ; sans lui, la première séance regardable des cours vidéo, comme
+  // la page web. Les droits sont ceux des pages vidéo web : collège, audience
+  // de la vidéo (voie, formules, listes nominatives), déblocage des séances
+  // approfondies. Auparavant, seule la RLS filtrait : une séance verrouillée
+  // ou hors de la formule se lisait en passant son identifiant.
+  const choix = await resoudreVideoLecture(supabase, user.id, coursId, req.nextUrl.searchParams.get('video'));
+  if ('refus' in choix) return choix.refus;
+  const video = choix.video;
 
   // L'embed ne dépend d'aucune configuration serveur (cf. bunny.ts).
   const bunnyId = video.bunny_video_id;

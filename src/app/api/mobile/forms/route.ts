@@ -123,9 +123,24 @@ export async function POST(req: Request) {
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = admin as any;
-  const { data: form } = await db
-    .from('satisfaction_forms').select('id, title, fields, active, mandatory').eq('id', form_id).maybeSingle();
-  if (!form || !form.active) return NextResponse.json({ error: 'Formulaire introuvable.' }, { status: 404 });
+  const [{ data: form }, { data: profile }, { data: existing }] = await Promise.all([
+    db.from('satisfaction_forms')
+      .select('id, title, fields, active, mandatory, target_promo, target_offer, target_college')
+      .eq('id', form_id).maybeSingle(),
+    db.from('profiles').select('promotion, permission_scope').eq('id', userId).maybeSingle(),
+    db.from('satisfaction_responses').select('skipped').eq('form_id', form_id).eq('user_id', userId).maybeSingle(),
+  ]);
+  // Mêmes contrôles que la lecture : formulaire actif ET destiné à cet élève.
+  // Sans eux, un élève pouvait répondre (ou « ignorer ») un formulaire qui ne
+  // le visait pas, et écraser une réponse déjà envoyée.
+  const cible = !!form && isUserTargeted(form as FormRow, {
+    promotion: profile?.promotion ?? null,
+    permission_scope: profile?.permission_scope ?? null,
+  });
+  if (!form || !form.active || !cible) return NextResponse.json({ error: 'Formulaire introuvable.' }, { status: 404 });
+  if (existing && !existing.skipped) {
+    return NextResponse.json({ error: 'Vous avez déjà répondu à ce formulaire.', code: 'ALREADY_ANSWERED' }, { status: 409 });
+  }
 
   if (action === 'skip') {
     if (form.mandatory) return NextResponse.json({ error: 'Ce formulaire est obligatoire.' }, { status: 400 });
@@ -153,8 +168,9 @@ export async function POST(req: Request) {
   );
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // Notification admin (best-effort, comme le web).
-  void (async () => {
+  // Notification admin (best-effort, comme le web). Attendue avant de
+  // répondre : une fonction serverless peut être gelée dès la réponse envoyée.
+  await (async () => {
     try {
       const [{ data: student }, { data: admins }] = await Promise.all([
         db.from('profiles').select('first_name, last_name, email').eq('id', userId).maybeSingle(),

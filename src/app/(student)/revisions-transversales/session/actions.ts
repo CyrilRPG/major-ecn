@@ -50,7 +50,7 @@ export async function recordTransversalSession(
 
   const now = new Date().toISOString();
   const { error } = await (supabase as unknown as {
-    from: (t: string) => { insert: (v: Record<string, unknown>) => Promise<{ error: { message: string } | null }> };
+    from: (t: string) => { insert: (v: Record<string, unknown>) => Promise<{ error: { message: string; code?: string } | null }> };
   }).from('transversal_sessions').insert({
     user_id: user.id,
     started_at: input.started_at,
@@ -61,6 +61,9 @@ export async function recordTransversalSession(
     specialty_scores: input.specialty_scores,
     matiere_scores: input.matiere_scores ?? {},
   });
+  // 23505 : même session déjà enregistrée (index unique user_id, kind,
+  // started_at) — double envoi, rien à refaire.
+  if (error?.code === '23505') return { ok: true };
   if (error) return { ok: false, error: error.message };
 
   // Session achevée : plus rien à reprendre sur un autre appareil.

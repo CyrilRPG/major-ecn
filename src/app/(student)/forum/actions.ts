@@ -6,11 +6,10 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { generatePseudo } from '@/lib/auth/pseudo';
-import { sendEmail, siteUrl } from '@/lib/email/send';
-import { forumNewQuestionEmail } from '@/lib/email/templates';
+import { notifyProfessorsOfNewQuestion } from '@/lib/forum/notifications';
 import { ELEVE_SANS_NOM, identityContext, identityFromProfile } from '@/lib/admin/student-identity';
 import { logAudit } from '@/lib/audit/log';
-import { lireScopeEquipe, questionDansPerimetre, recoitQuestionEleve } from '@/lib/auth/collaborateurs';
+import { lireScopeEquipe, questionDansPerimetre } from '@/lib/auth/collaborateurs';
 
 type Result = { ok: true; id: string } | { error: string };
 
@@ -111,56 +110,6 @@ export async function askQuestionAction(input: {
 
   revalidatePath('/admin/qa');
   return { ok: true, id: data.id };
-}
-
-/**
- * Envoie un email à chaque enseignant dont le périmètre couvre le collège de
- * la question (`recoitQuestionEleve`) : comptes actifs et non expirés, avec au
- * moins un type pédagogique — jamais un monteur vidéo, un commercial ni un
- * rédacteur blog. Une question hors cours part aux enseignants de la
- * spécialité de l'élève. Le mail ne porte PAS l'adresse de l'élève.
- */
-async function notifyProfessorsOfNewQuestion(args: {
-  questionId: string;
-  matiereId: string | null;
-  /** `permission_scope` de l'élève : routage d'une question hors cours. */
-  eleveScope: unknown;
-  studentPseudo: string;
-  studentName: string;
-  studentContext: string;
-  coursTitre: string | null;
-  matiereNom: string | null;
-  body: string;
-}) {
-  const admin = createAdminClient();
-  const { data: profs } = await admin
-    .from('profiles')
-    .select('id, role, first_name, email, permission_scope, is_active, access_end')
-    .eq('role', 'professor');
-
-  if (!profs?.length) return;
-
-  const targets = profs.filter((p) => recoitQuestionEleve(p, args.matiereId, args.eleveScope));
-
-  if (targets.length === 0) return;
-
-  const qaUrl = `${siteUrl()}/admin/qa`;
-  await Promise.all(
-    targets.map(async (p) => {
-      const { subject, html, text } = forumNewQuestionEmail({
-        professorFirstName: p.first_name ?? '',
-        studentPseudo: args.studentPseudo,
-        studentName: args.studentName,
-        studentEmail: null,
-        studentContext: args.studentContext,
-        coursTitre: args.coursTitre,
-        matiereNom: args.matiereNom,
-        questionBody: args.body,
-        qaUrl,
-      });
-      await sendEmail({ to: p.email!, subject, html, text }).catch(() => null);
-    }),
-  );
 }
 
 /* ============================================================
@@ -315,7 +264,12 @@ export async function addReplyAction(input: z.infer<typeof ReplySchema>): Promis
     }
   }
 
+  // Un élève ne signe jamais de son nom réel (un trigger en base le remplace
+  // aussi) : pseudo, sinon pseudo généré comme pour une question.
   const authorName = (profile.pseudo ?? '').trim()
+    || (profile.role === 'student'
+      ? generatePseudo(profile.first_name ?? '', profile.last_name ?? '', profile.promotion ?? 'X')
+      : '')
     || [profile.first_name, profile.last_name].filter(Boolean).join(' ').trim()
     || profile.email
     || (profile.role === 'student' ? 'Étudiant' : 'Équipe Major ECN');

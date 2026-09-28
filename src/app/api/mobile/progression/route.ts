@@ -5,6 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
+import { fetchAllRows } from '@/lib/supabase/fetch-all';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -38,40 +39,50 @@ export async function GET(req: Request) {
   const { data: profile } = await db
     .from('profiles').select('role, permission_scope').eq('id', userId).maybeSingle();
   const scope = parseScope(profile?.permission_scope);
-  const staff = profile?.role === 'admin' || profile?.role === 'professor';
-
-  // Périmètre EDN accessible à cet élève (mêmes clés de permission que le web).
-  const [{ data: matieresRaw }, { data: coursRaw }, { data: progressRaw }] = await Promise.all([
-    db.from('matieres')
-      .select('id, access_type, semestres!inner(faculte_id)')
-      .eq('semestres.faculte_id', EDN_FACULTE_ID),
-    db.from('cours').select('id, matiere_id, access_type'),
-    db.from('course_progress')
-      .select('cours_id, video_watched, fiche_read')
-      .eq('user_id', userId),
-  ]);
+  // Seul l'administrateur voit tout (parité web : `staff: isAdmin`). Un
+  // professeur garde sa formule et son périmètre de collèges / d'items.
+  const isAdmin = profile?.role === 'admin';
 
   type MatRow = { id: string; access_type: 'all' | 'specific' };
   type CoursRow = { id: string; matiere_id: string; access_type: 'all' | 'specific' };
+  type ProgressRow = { cours_id: string; video_watched: boolean | null; fiche_read: boolean | null };
+
+  // Périmètre EDN accessible (mêmes clés de permission que le web). Lectures
+  // INTÉGRALES : la faculté compte plus de 1 000 items et PostgREST tronque en
+  // silence au-delà — les derniers collèges disparaissaient de la progression.
+  const [matieresRaw, coursRaw, progressRaw] = await Promise.all([
+    fetchAllRows<MatRow>((from, to) => db.from('matieres')
+      .select('id, access_type, semestres!inner(faculte_id)')
+      .eq('semestres.faculte_id', EDN_FACULTE_ID)
+      .order('id')
+      .range(from, to)),
+    fetchAllRows<CoursRow>((from, to) => db.from('cours')
+      .select('id, matiere_id, access_type')
+      .order('id')
+      .range(from, to)),
+    fetchAllRows<ProgressRow>((from, to) => db.from('course_progress')
+      .select('cours_id, video_watched, fiche_read')
+      .eq('user_id', userId)
+      .order('cours_id')
+      .range(from, to)),
+  ]);
+
   const matieresOk = new Set(
-    ((matieresRaw ?? []) as MatRow[])
-      .filter((m) => staff || canAccessCollege(scope, m.id, m.access_type))
+    matieresRaw
+      .filter((m) => isAdmin || canAccessCollege(scope, m.id, m.access_type))
       .map((m) => m.id),
   );
-  const coursAccessibles = ((coursRaw ?? []) as CoursRow[])
+  const coursAccessibles = coursRaw
     .filter((c) => matieresOk.has(c.matiere_id))
-    .filter((c) => staff || canAccessCours(scope, c.matiere_id, c.id, c.access_type));
+    .filter((c) => isAdmin || canAccessCours(scope, c.matiere_id, c.id, c.access_type));
 
-  const progressParCours = new Map(
-    ((progressRaw ?? []) as { cours_id: string; video_watched: boolean | null; fiche_read: boolean | null }[])
-      .map((p) => [p.cours_id, p]),
-  );
+  const progressParCours = new Map(progressRaw.map((p) => [p.cours_id, p]));
 
   const progression = await chargerProgressionCours({
     userId,
     faculteId: EDN_FACULTE_ID,
     scope,
-    staff,
+    staff: isAdmin,
     cours: coursAccessibles.map((c) => {
       const cp = progressParCours.get(c.id);
       return {

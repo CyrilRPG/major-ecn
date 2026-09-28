@@ -87,7 +87,7 @@ export function TransversalSession({
   const [recorded, setRecorded] = useState(false);
   const [recordError, setRecordError] = useState(false);
   const [showCorrections, setShowCorrections] = useState(false);
-  const [startedAt] = useState(() => reprise?.startedAt ?? new Date().toISOString());
+  const [startedAt, setStartedAt] = useState(() => reprise?.startedAt ?? new Date().toISOString());
 
   const total = questions.length;
   const q = questions[index];
@@ -140,6 +140,10 @@ export function TransversalSession({
           setQrocText(''); setRevealed(false); setSelfGrade(null);
           setScore(0); setPerCours({}); setPerMatiere({}); setDone(false); setRecorded(false);
           setRecordError(false);
+          // Nouvelle passation = nouvelle session : (user_id, kind, started_at)
+          // est unique en base (idempotence de /api/mobile/revisions), comme
+          // dans l'app.
+          setStartedAt(new Date().toISOString());
         }}
         onShowCorrections={() => setShowCorrections(true)}
       />
