@@ -8,6 +8,7 @@ import { collegeFamily, getProfile, listActivity, listColleges, listGenerations,
 import {
   acknowledgeFirstPlan, acknowledgeInsufficient, claimExtraActivity, closeDay, collegesForStudent, completeOnboarding, completeSession,
   examDateForCollege, loadEvaluation, loadStudentContext, logFreeWork, postponeSession, publicEvaluation, regeneratePlan, selfPosition, startEvaluation,
+  planAvailableFor, planIntroFor, recordIntroSeen,
   startSession, submitEvaluation, syncMasteryFromPlatform, updateAvailability, voieOfScope, type StudentContext,
 } from '@/lib/plan/service';
 import { paceMessage, RELIABLE_CONFIDENCE } from '@/lib/plan/mastery';
@@ -104,6 +105,15 @@ export async function GET(req: Request) {
   if (!(await planTablesReady())) return NextResponse.json({ ouvert: true, tablesPretes: false });
 
   const url = new URL(req.url);
+  // Accès léger (accueil de l'app) : « Mon planning » concerne-t-il l'élève, et faut-il
+  // lui montrer la présentation animée ? Même règle que l'accueil web.
+  if (url.searchParams.has('acces')) {
+    const [eligible, presentation] = await Promise.all([
+      planAvailableFor(id.permissionScope),
+      planIntroFor(id.userId, id.permissionScope, true),
+    ]);
+    return NextResponse.json({ ouvert: true, tablesPretes: true, eligible: eligible || id.staff, presentation });
+  }
   const evaluationId = url.searchParams.get('evaluation');
   if (evaluationId) {
     const vue = await loadEvaluation(id.userId, id.permissionScope, evaluationId);
@@ -282,6 +292,7 @@ const CorpsSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('ack-insufficient') }),
   z.object({ action: z.literal('extra-time'), budget: z.number().int().min(5).max(480).nullable() }),
   z.object({ action: z.literal('close-day') }),
+  z.object({ action: z.literal('intro-seen'), dismissed: z.boolean() }),
   z.object({ action: z.literal('start-session'), sessionId: z.string().uuid() }),
   z.object({ action: z.literal('complete-session'), sessionId: z.string().uuid(), actualMinutes: z.number().min(0, 'Durée invalide').max(960, 'Durée invalide').transform((v) => Math.round(v)).nullable() }),
   z.object({ action: z.literal('postpone-session'), sessionId: z.string().uuid() }),
@@ -343,6 +354,9 @@ export async function POST(req: Request) {
       }
       case 'close-day':
         await closeDay(id.userId);
+        return NextResponse.json({ ok: true });
+      case 'intro-seen':
+        await recordIntroSeen(id.userId, body.dismissed);
         return NextResponse.json({ ok: true });
       case 'start-session':
         await startSession(id.userId, body.sessionId);
