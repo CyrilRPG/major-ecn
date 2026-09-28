@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState, useTransition } from 'react';
-import { CalendarDays, ChevronLeft, ChevronRight, Clock, Edit, Plus, Star, Trash2, User, Video } from 'lucide-react';
+import { useMemo, useRef, useState, useTransition } from 'react';
+import { CalendarDays, ChevronLeft, ChevronRight, Clock, Edit, Plus, Star, Trash2 } from 'lucide-react';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog';
@@ -42,8 +42,10 @@ const paletteFor = (college: string | null) => {
   return COLLEGE_PALETTE[college] ?? DEFAULT_PALETTE;
 };
 
-function weekDates(offset = 0): Date[] {
-  const now = new Date();
+function weekDates(offset = 0, aujourdHui?: string): Date[] {
+  // Jour de référence en heure de PARIS, donné par le serveur : rendu serveur
+  // (UTC) et navigateur affichent la même semaine, même le lundi avant 2 h.
+  const now = aujourdHui ? depuisCle(aujourdHui) : new Date();
   const dow = (now.getDay() + 6) % 7;
   const monday = new Date(now);
   monday.setHours(0, 0, 0, 0);
@@ -55,19 +57,26 @@ function weekDates(offset = 0): Date[] {
 // Date du jour AFFICHÉ, en heure locale. Surtout pas `toISOString()` : à
 // Paris (UTC+1/+2), minuit local est encore la veille en UTC, et chaque
 // évènement était enregistré un jour trop tôt (ORL du 29/09 stocké le 28).
+/** « AAAA-MM-JJ » → minuit local de ce jour. */
+function depuisCle(cle: string): Date {
+  const [a, m, j] = cle.split('-').map(Number);
+  return new Date(a, m - 1, j);
+}
 const dateKey = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
 /* ════════════════════════════════════════════════════════════════════════ */
 export function AdminAgenda({
-  events, colleges,
+  events, colleges, aujourdHui,
 }: {
   events: PlatformEventRow[];
   colleges: College[];
+  /** Aujourd'hui à Paris (AAAA-MM-JJ), fourni par le serveur. */
+  aujourdHui?: string;
 }) {
   const [weekOffset, setWeekOffset] = useState(0);
-  const dates = weekDates(weekOffset);
-  const todayKey = new Date().toDateString();
+  const dates = weekDates(weekOffset, aujourdHui);
+  const todayKey = (aujourdHui ? depuisCle(aujourdHui) : new Date()).toDateString();
   const [creatingFor, setCreatingFor] = useState<Date | null>(null);
   const [editing, setEditing] = useState<PlatformEventRow | null>(null);
 
@@ -188,25 +197,34 @@ export function AdminAgenda({
         })}
       </div>
 
-      <EventFormDialog
-        open={creatingFor != null}
-        date={creatingFor}
-        initial={editing}
-        colleges={colleges}
-        onClose={() => { setCreatingFor(null); setEditing(null); }}
-      />
+      {/* Monté à l'ouverture seulement, et remonté pour chaque évènement : les
+          états du formulaire partent toujours de l'évènement ouvert (l'ancien
+          effet de remise à zéro laissait un premier rendu périmé). */}
+      {creatingFor && (
+        <EventFormDialog
+          key={editing?.id ?? `nouveau-${dateKey(creatingFor)}`}
+          open
+          date={creatingFor}
+          initial={editing}
+          colleges={colleges}
+          passe={!!aujourdHui && dateKey(creatingFor) < aujourdHui}
+          onClose={() => { setCreatingFor(null); setEditing(null); }}
+        />
+      )}
     </div>
   );
 }
 
 /* ──────────────────────── Dialog formulaire ──────────────────────── */
 function EventFormDialog({
-  open, date, initial, colleges, onClose,
+  open, date, initial, colleges, passe = false, onClose,
 }: {
   open: boolean;
   date: Date | null;
   initial: PlatformEventRow | null;
   colleges: College[];
+  /** Jour déjà passé : on prévient (création a posteriori). */
+  passe?: boolean;
   onClose: () => void;
 }) {
   const [pending, startTransition] = useTransition();
@@ -219,17 +237,11 @@ function EventFormDialog({
   const topColleges = useMemo(() => colleges.filter((c) => !c.parentId), [colleges]);
   const mgSpecialties = useMemo(() => colleges.filter((c) => c.parentId === MG_COLLEGE_ID), [colleges]);
 
-  // Réinitialise les états locaux à chaque ouverture
-  useEffect(() => {
-    if (!open) return;
-    setScopeType(initial?.scope_type ?? 'all');
-    setScopeColleges(initial?.scope_colleges ?? []);
-    setOffers(initial?.required_offers ?? ['essentiel', 'intensif', 'approfondi']);
-    setVoies(initial?.voies ?? ['interne', 'externe']);
-    setErr(null);
-  }, [open, initial]);
+  // Double clic sur « Enregistrer » : un seul envoi (sinon deux évènements).
+  const enVol = useRef(false);
 
   const onSubmit = (formData: FormData) => {
+    if (enVol.current) return;
     // Ajoute manuellement les checkboxes non incluses dans le form
     formData.delete('required_offers');
     offers.forEach((o) => formData.append('required_offers', o));
@@ -241,19 +253,29 @@ function EventFormDialog({
     formData.delete('voies');
     voies.forEach((v) => formData.append('voies', v));
     setErr(null);
+    enVol.current = true;
     startTransition(async () => {
-      const res = await upsertPlatformEvent(formData);
-      if (res.error) setErr(res.error);
-      else onClose();
+      try {
+        const res = await upsertPlatformEvent(formData);
+        if (res.error) setErr(res.error);
+        else onClose();
+      } catch {
+        setErr('Enregistrement impossible (connexion ?). Réessayez.');
+      } finally {
+        enVol.current = false;
+      }
     });
   };
 
   const onDelete = () => {
     if (!initial) return;
     if (!confirm('Supprimer cet évènement ?')) return;
+    setErr(null);
     startTransition(async () => {
-      await deletePlatformEvent(initial.id);
-      onClose();
+      // La suppression échouée fermait la fenêtre comme si tout allait bien.
+      const res = await deletePlatformEvent(initial.id).catch(() => ({ error: 'Suppression impossible (connexion ?).' }));
+      if ('error' in res && res.error) setErr(res.error);
+      else onClose();
     });
   };
 
@@ -278,6 +300,11 @@ function EventFormDialog({
           </DialogTitle>
           <DialogDescription>
             {date?.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long' })}
+            {passe && !initial && (
+              <span className="mt-1 block font-semibold text-[#B45309]">
+                Ce jour est déjà passé : l’évènement sera créé a posteriori.
+              </span>
+            )}
           </DialogDescription>
         </DialogHeader>
 
@@ -324,7 +351,7 @@ function EventFormDialog({
               className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm focus-ring" />
           </Field>
 
-          <Field label="Notes internes">
+          <Field label="Informations pour les élèves (affichées dans leur agenda)">
             <textarea name="notes" rows={2} maxLength={2000} defaultValue={initial?.notes ?? ''}
               className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm focus-ring" />
           </Field>

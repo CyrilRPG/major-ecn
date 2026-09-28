@@ -29,8 +29,10 @@ function fmtDate(d: string | null): string {
 }
 function fmtMarkedAt(iso: string): string {
   try {
+    // Heure de Paris : ce rendu serveur tourne en UTC.
     return new Date(iso).toLocaleString('fr-FR', {
       day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+      timeZone: 'Europe/Paris',
     });
   } catch {
     return iso;

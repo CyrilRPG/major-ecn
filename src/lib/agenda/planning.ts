@@ -89,8 +89,12 @@ export type EvenementPlanning = {
   debut: string | null;
   fin: string | null;
   intervenant: string | null;
-  /** Lien de la visio (séances en direct seulement). */
+  /** Lien de la visio (séances en direct seulement). JAMAIS transmis au
+   *  navigateur de l'élève : il ne s'obtient qu'après émargement
+   *  (/api/presences) — `chargerPlanning` le remplace par null. */
   lien: string | null;
+  /** Nature de la visio, sans le lien : sert au libellé « Cours en direct - Zoom ». */
+  visio: 'zoom' | 'autre' | null;
   /** Catégorie d'un évènement personnel (« Révision », « Examen »…). */
   categorie: string | null;
 };
@@ -110,6 +114,12 @@ function lienValide(url: string | null | undefined): string | null {
   return /^https?:\/\//i.test(u) ? u : null;
 }
 
+export function natureVisio(url: string | null | undefined): 'zoom' | 'autre' | null {
+  const u = lienValide(url);
+  if (!u) return null;
+  return /zoom\.us/i.test(u) ? 'zoom' : 'autre';
+}
+
 /** Fusionne les deux sources (séances déjà filtrées) et trie par date/heure. */
 export function versEvenementsPlanning(
   plateforme: EvenementPlateformeBrut[],
@@ -125,6 +135,7 @@ export function versEvenementsPlanning(
       fin: normaliserHeure(e.end_time),
       intervenant: e.intervenant?.trim() || null,
       lien: lienValide(e.zoom_url),
+      visio: natureVisio(e.zoom_url),
       categorie: null,
     })),
     ...perso.map((e) => ({
@@ -136,6 +147,7 @@ export function versEvenementsPlanning(
       fin: normaliserHeure(e.end_time),
       intervenant: null,
       lien: null,
+      visio: null,
       categorie: e.category?.trim() || null,
     })),
   ];
@@ -197,6 +209,61 @@ export function estAVenir(e: EvenementPlanning, present: InstantParis): boolean 
   if (e.date !== present.date) return e.date > present.date;
   const borne = finEffective(e) ?? '24:00';
   return borne > present.heure;
+}
+
+/* ------------------------------------------------------------------ */
+/* Émargement d'une séance en direct                                   */
+/* ------------------------------------------------------------------ */
+
+/** L'émargement (et donc le lien Zoom) ouvre 1 h avant le début… */
+export const EMARGEMENT_OUVERTURE_MIN = 60;
+/** … et ferme 3 h après la fin (retardataires, coupures de connexion). */
+export const EMARGEMENT_FERMETURE_MIN = 180;
+/** Durée supposée d'une séance sans heure de fin. */
+const DUREE_PAR_DEFAUT_MIN = 180;
+
+const minutesDuJour = (hhmm: string) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5));
+const indiceJour = (iso: string) => {
+  const [a, m, j] = iso.split('-').map(Number);
+  return Math.round(Date.UTC(a, m - 1, j) / 86_400_000);
+};
+
+export type EtatEmargement = { etat: 'avant' | 'ouvert' | 'clos'; ouverture: { date: string; heure: string } | null };
+
+/**
+ * Peut-on émarger MAINTENANT (heure de Paris) ? Même règle pour la route
+ * /api/presences et pour l'écran élève. Une séance sans heure s'émarge toute
+ * la journée ; une fin antérieure au début = séance qui passe minuit.
+ */
+export function etatEmargement(
+  e: { date: string; start_time: string | null; end_time: string | null },
+  present: InstantParis,
+): EtatEmargement {
+  const date = e.date.slice(0, 10);
+  const debut = normaliserHeure(e.start_time);
+  const maintenant = indiceJour(present.date) * 1440 + minutesDuJour(present.heure);
+  if (!debut) {
+    if (date > present.date) return { etat: 'avant', ouverture: { date, heure: '00:00' } };
+    return { etat: date < present.date ? 'clos' : 'ouvert', ouverture: null };
+  }
+  const base = indiceJour(date) * 1440;
+  const debutAbs = base + minutesDuJour(debut);
+  const fin = normaliserHeure(e.end_time);
+  let finAbs = fin ? base + minutesDuJour(fin) : debutAbs + DUREE_PAR_DEFAUT_MIN;
+  if (finAbs <= debutAbs) finAbs += 1440;
+  const ouvertureAbs = debutAbs - EMARGEMENT_OUVERTURE_MIN;
+  if (maintenant < ouvertureAbs) {
+    const jour = Math.floor(ouvertureAbs / 1440);
+    const min = ouvertureAbs - jour * 1440;
+    return {
+      etat: 'avant',
+      ouverture: {
+        date: new Date(jour * 86_400_000).toISOString().slice(0, 10),
+        heure: `${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`,
+      },
+    };
+  }
+  return { etat: maintenant > finAbs + EMARGEMENT_FERMETURE_MIN ? 'clos' : 'ouvert', ouverture: null };
 }
 
 /** Heure de fin ; une fin antérieure au début (séance qui passe minuit) court jusqu'à 24:00. */

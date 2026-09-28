@@ -20,6 +20,8 @@ const eventSchema = z.object({
   category: z.enum(['Révision', 'Examen', 'Stage', 'Autre']).default('Révision'),
   color_key: z.enum(['violet', 'rose', 'bleu', 'vert', 'orange', 'turquoise']).default('violet'),
   notes: z.string().max(1000).optional().or(z.literal('')),
+}).refine((d) => !d.start_time || !d.end_time || d.end_time > d.start_time, {
+  message: 'L’heure de fin doit être après l’heure de début.',
 });
 
 export type AgendaEventInput = z.infer<typeof eventSchema>;
@@ -38,7 +40,7 @@ export async function upsertAgendaEvent(form: FormData) {
   };
   const parsed = eventSchema.safeParse(raw);
   if (!parsed.success) {
-    return { error: 'Données invalides' };
+    return { error: parsed.error.issues[0]?.message ?? 'Données invalides' };
   }
   const data = parsed.data;
   const supabase = await createClient();

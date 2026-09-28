@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { CalendarDays, Check, ChevronLeft, ChevronRight, Clock, ExternalLink, PenLine, Plus, Star, Trash2, User, Video } from 'lucide-react';
 import { SignaturePad } from '@/components/student/signature-pad';
 import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
@@ -8,6 +8,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog';
 import { upsertAgendaEvent, deleteAgendaEvent } from '@/app/(student)/agenda/actions';
+import { etatEmargement, instantParis, libelleJourLong } from '@/lib/agenda/planning';
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /*  Évènements « plateforme » (créés par admin, déjà filtrés côté serveur     */
@@ -21,7 +22,10 @@ export type PlatformEvent = {
   end_time: string | null;
   college: string | null;
   intervenant: string | null;
+  /** Toujours null côté élève : le lien n'est remis qu'après émargement. */
   zoom_url: string | null;
+  /** La séance a une visio (sans en donner le lien). */
+  visio?: 'zoom' | 'autre' | null;
   notes: string | null;
 };
 
@@ -71,8 +75,11 @@ const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dima
  * Renvoie les 7 jours (lundi → dimanche) de la semaine courante décalée
  * de `offset` semaines (négatif = passé, positif = futur).
  */
-function weekDates(offset = 0): Date[] {
-  const now = new Date();
+function weekDates(offset = 0, aujourdHui?: string): Date[] {
+  // Jour de référence donné par le serveur en heure de PARIS : le rendu serveur
+  // (UTC) et le navigateur tombent ainsi sur la même semaine, même le lundi
+  // entre minuit et 2 h.
+  const now = aujourdHui ? depuisCle(aujourdHui) : new Date();
   const dow = (now.getDay() + 6) % 7; // 0 = lundi
   const monday = new Date(now);
   monday.setHours(0, 0, 0, 0);
@@ -89,22 +96,39 @@ function weekDates(offset = 0): Date[] {
 // évènement était enregistré un jour trop tôt (ORL du 29/09 stocké le 28).
 const dateKey = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+/** « AAAA-MM-JJ » → minuit local de ce jour. */
+function depuisCle(cle: string): Date {
+  const [a, m, j] = cle.split('-').map(Number);
+  return new Date(a, m - 1, j);
+}
+/** Semaines entre la semaine de `aujourdHui` et celle de `cible` (lundi → lundi). */
+function ecartSemaines(aujourdHui: string, cible: string): number {
+  const lundi = (d: Date) => { const x = new Date(d); x.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return x; };
+  const jours = Math.round((lundi(depuisCle(cible)).getTime() - lundi(depuisCle(aujourdHui)).getTime()) / 86_400_000);
+  return Math.round(jours / 7);
+}
 
 /* ════════════════════════════════════════════════════════════════════════ */
 export function AgendaWeek({
-  userEvents, platformEvents = [], signedEventIds = [],
+  userEvents, platformEvents = [], signedEventIds = [], aujourdHui, seanceInitiale = null,
 }: {
   userEvents: UserEvent[];
   platformEvents?: PlatformEvent[];
   /** Sessions déjà émargées par l'étudiant : on ne redemande pas sa signature. */
   signedEventIds?: string[];
+  /** Aujourd'hui à Paris (AAAA-MM-JJ), fourni par le serveur. */
+  aujourdHui?: string;
+  /** Séance à ouvrir d'emblée (lien « Émarger et accéder » du planning). */
+  seanceInitiale?: string | null;
 }) {
+  const initiale = seanceInitiale ? platformEvents.find((e) => e.id === seanceInitiale) ?? null : null;
   // Décalage en semaines par rapport à la semaine courante (0 = cette
   // semaine, -1 = semaine précédente, +1 = semaine prochaine…).
-  const [weekOffset, setWeekOffset] = useState(0);
-  const dates = weekDates(weekOffset);
-  const todayKey = new Date().toDateString();
-  const [selectedPlatform, setSelectedPlatform] = useState<PlatformEvent | null>(null);
+  const [weekOffset, setWeekOffset] = useState(() =>
+    initiale && aujourdHui ? ecartSemaines(aujourdHui, initiale.date) : 0);
+  const dates = weekDates(weekOffset, aujourdHui);
+  const todayKey = (aujourdHui ? depuisCle(aujourdHui) : new Date()).toDateString();
+  const [selectedPlatform, setSelectedPlatform] = useState<PlatformEvent | null>(initiale);
   const [selectedPersonal, setSelectedPersonal] = useState<UserEvent | null>(null);
   const [creatingFor, setCreatingFor] = useState<Date | null>(null);
   const [editing, setEditing] = useState<UserEvent | null>(null);
@@ -222,7 +246,7 @@ export function AgendaWeek({
                           {e.college}
                         </span>
                       )}
-                      {e.zoom_url && (
+                      {(e.visio || e.zoom_url) && (
                         <span className="mt-2 flex items-center gap-1 text-[11px] text-(--color-ink-muted)">
                           <Video className="h-3 w-3" />
                           Cours en visio
@@ -312,7 +336,7 @@ export function AgendaWeek({
                     {selectedPlatform.notes}
                   </p>
                 )}
-                {selectedPlatform.zoom_url && (
+                {(selectedPlatform.visio || selectedPlatform.zoom_url) && (
                   <ZoomJoinBlock
                     key={selectedPlatform.id}
                     event={selectedPlatform}
@@ -356,28 +380,31 @@ export function AgendaWeek({
 function ZoomJoinBlock({ event, alreadySigned }: { event: PlatformEvent; alreadySigned: boolean }) {
   const [signature, setSignature] = useState<string | null>(null);
   const [signed, setSigned] = useState(alreadySigned);
+  // Le lien n'est jamais dans la page : la route le remet après émargement
+  // (ou tout de suite si la séance est déjà émargée).
+  const [url, setUrl] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  if (!event.zoom_url) return null;
-  const url = event.zoom_url;
+  // Fenêtre d'émargement (1 h avant → 3 h après), même règle que la route.
+  const [fenetre] = useState(() => etatEmargement(event, instantParis()));
+
+  // Séance déjà émargée : on récupère le lien sans redemander de signature.
+  useEffect(() => {
+    if (!alreadySigned) return;
+    let annule = false;
+    demanderLienSeance(event.id)
+      .then((u) => { if (!annule) setUrl(u); })
+      .catch((e) => { if (!annule) setError(e instanceof Error ? e.message : 'Lien indisponible'); });
+    return () => { annule = true; };
+  }, [alreadySigned, event.id]);
 
   async function emarger() {
     if (!signature || busy) return;
     setBusy(true);
     setError(null);
     try {
-      const res = await fetchAvecJetonFrais('/api/presences', {
-        eventId: event.id,
-        signaturePng: signature,
-      });
-      const json = (await res.json().catch(() => ({}))) as { error?: string };
-      if (!res.ok) {
-        throw new Error(
-          res.status === 401
-            ? 'Votre session a expiré. Rechargez la page, puis réémargez.'
-            : json.error ?? 'Émargement impossible',
-        );
-      }
+      const u = await demanderLienSeance(event.id, signature);
+      setUrl(u);
       setSigned(true);
     } catch (e) {
       // Contrairement à l'ancien comportement « best-effort », on n'ouvre PAS
@@ -387,6 +414,16 @@ function ZoomJoinBlock({ event, alreadySigned }: { event: PlatformEvent; already
     } finally {
       setBusy(false);
     }
+  }
+
+  if (!signed && fenetre.etat !== 'ouvert') {
+    return (
+      <p className="mt-2 rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-3 text-[13px] leading-snug text-(--color-ink-soft)">
+        {fenetre.etat === 'avant' && fenetre.ouverture
+          ? <>L’émargement et le lien du cours ouvriront le {libelleJourLong(fenetre.ouverture.date).toLowerCase()} à {fenetre.ouverture.heure.replace(':', ' h ')}, une heure avant le début.</>
+          : <>Cette séance est terminée : l’émargement est clos.</>}
+      </p>
+    );
   }
 
   return (
@@ -420,20 +457,45 @@ function ZoomJoinBlock({ event, alreadySigned }: { event: PlatformEvent; already
           <p className="flex items-center gap-1.5 text-[12.5px] font-semibold text-(--color-primary)">
             <Check className="h-3.5 w-3.5" /> Émargement enregistré.
           </p>
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-4 py-3 font-medium text-white transition-opacity hover:opacity-90"
-          >
-            <Video className="h-4 w-4" />
-            Rejoindre le cours sur Zoom
-            <ExternalLink className="h-3.5 w-3.5" />
-          </a>
+          {error && <p className="text-[12.5px] font-semibold text-(--color-danger)">{error}</p>}
+          {url ? (
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-(--color-primary) px-4 py-3 font-medium text-white transition-opacity hover:opacity-90"
+            >
+              <Video className="h-4 w-4" />
+              Rejoindre le cours{event.visio === 'zoom' ? ' sur Zoom' : ''}
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          ) : !error && (
+            <p className="text-[12.5px] text-(--color-ink-soft)">Récupération du lien…</p>
+          )}
         </>
       )}
     </div>
   );
+}
+
+/**
+ * Émarge (avec signature) ou, pour une séance déjà émargée, redemande
+ * simplement le lien : /api/presences ne le remet qu'à un élève émargé.
+ */
+async function demanderLienSeance(eventId: string, signaturePng?: string): Promise<string | null> {
+  const res = await fetchAvecJetonFrais('/api/presences', {
+    eventId,
+    ...(signaturePng ? { signaturePng } : {}),
+  });
+  const json = (await res.json().catch(() => ({}))) as { error?: string; zoomUrl?: string | null };
+  if (!res.ok) {
+    throw new Error(
+      res.status === 401
+        ? 'Votre session a expiré. Rechargez la page, puis réémargez.'
+        : json.error ?? 'Émargement impossible',
+    );
+  }
+  return json.zoomUrl ?? null;
 }
 
 /* ──────────────────────── Dialog : détail évènement perso ────────────── */
@@ -483,8 +545,10 @@ function PersonalEventDialog({
                   onClick={() => {
                     if (!confirm('Supprimer cet évènement ?')) return;
                     startTransition(async () => {
-                      await deleteAgendaEvent(event.id);
-                      onClose();
+                      // Une suppression échouée fermait la fenêtre comme si tout allait bien.
+                      const res = await deleteAgendaEvent(event.id).catch(() => ({ error: 'Suppression impossible (connexion ?).' }));
+                      if ('error' in res && res.error) alert(res.error);
+                      else onClose();
                     });
                   }}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) px-3 py-2 text-sm text-(--color-ink-soft) hover:border-(--color-primary)/60 hover:text-(--color-primary)"

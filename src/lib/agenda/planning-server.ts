@@ -60,7 +60,9 @@ export async function chargerPlanning(
 
   const seances = (plateforme.data ?? []).filter((e) => evenementVisiblePourEleve(e, scope));
   return {
-    evenements: versEvenementsPlanning(seances, perso.data ?? []),
+    // Le lien de la visio ne quitte jamais le serveur : l'élève l'obtient en
+    // émargeant (/api/presences), depuis /agenda?seance=<id>.
+    evenements: versEvenementsPlanning(seances, perso.data ?? []).map((e) => ({ ...e, lien: null })),
     present: aujourdHui,
     fin,
   };

@@ -1,20 +1,27 @@
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { AgendaWeek, type UserEvent, type PlatformEvent } from '@/components/student/agenda-week';
-import { parseScope, scopeOffers } from '@/lib/auth/permissions';
+import { parseScope } from '@/lib/auth/permissions';
+import {
+  ajouterJours, evenementVisiblePourEleve, instantParis, natureVisio, type EvenementPlateformeBrut,
+} from '@/lib/agenda/planning';
 
 export const metadata = { title: 'Agenda' };
 
-export default async function AgendaPage() {
+export default async function AgendaPage({
+  searchParams,
+}: { searchParams: Promise<{ seance?: string }> }) {
   const { user, profile } = await requireUser();
   const supabase = await createClient();
+  const { seance } = await searchParams;
 
-  // On charge un peu plus large que la semaine courante au cas où la
-  // bordure de semaine bouge (rendu serveur vs client).
-  const start = new Date(); start.setDate(start.getDate() - 14);
-  const end = new Date(); end.setDate(end.getDate() + 21);
-  const startStr = start.toISOString().slice(0, 10);
-  const endStr = end.toISOString().slice(0, 10);
+  // Fenêtre en heure de PARIS (le serveur est en UTC) : −2 mois / +6 mois.
+  // Elle couvre largement les flèches de semaine et le planning 30 jours, d'où
+  // l'on arrive avec ?seance=<id> (l'ancienne fenêtre −14/+21 jours laissait
+  // des semaines « vides » alors que des séances y étaient programmées).
+  const aujourdHui = instantParis().date;
+  const startStr = ajouterJours(aujourdHui, -60);
+  const endStr = ajouterJours(aujourdHui, 180);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = supabase as any;
@@ -30,33 +37,19 @@ export default async function AgendaPage() {
       .order('date').order('start_time'),
   ]);
 
-  // Filtrage côté serveur selon les permissions de l'étudiant
+  // Filtrage côté serveur selon les permissions de l'étudiant : MÊME règle
+  // que le planning de l'accueil (lib/agenda/planning).
   const scope = parseScope(profile.permission_scope);
-  // Multi-formules : une élève Approfondie + Intensive doit voir les événements
-  // de CHACUNE de ses formules (union), pas seulement de la formule principale.
-  const offresEleve = scopeOffers(scope);
-  const platformEvents: PlatformEvent[] = ((platformData ?? []) as Array<{
-    id: string; title: string; date: string; start_time: string | null; end_time: string | null;
-    college: string | null; intervenant: string | null; zoom_url: string | null; notes: string | null;
-    required_offers: string[] | null; scope_type: 'all' | 'college'; scope_colleges: string[] | null;
-    voies: string[] | null;
-  }>).filter((e) => {
-    const offers = e.required_offers ?? ['essentiel', 'intensif', 'approfondi'];
-    if (!offresEleve.some((o) => offers.includes(o))) return false;
-    // Voie de concours : si l'évènement cible une/des voie(s) et que l'étudiant a
-    // une voie définie hors de cette liste, il ne le voit pas. Voie inconnue
-    // (null) ou liste vide → pas de restriction.
-    const evVoies = e.voies ?? [];
-    if (evVoies.length > 0 && scope.voie && !evVoies.includes(scope.voie)) return false;
-    if (e.scope_type === 'college') {
-      const ids = e.scope_colleges ?? [];
-      if (ids.length === 0) return true; // aucune spécialité cochée → toutes
-      if (scope.type === 'all') return true; // accès intégral → voit tout
-      return ids.some((cid) => scope.colleges.includes(cid));
-    }
-    // 'all' = toutes les spécialités : visible par tout élève de la bonne formule
-    return true;
-  });
+  // Le lien de la visio ne part PAS dans la page : il n'est remis qu'après
+  // émargement, par /api/presences. On ne transmet que son existence.
+  const platformEvents: PlatformEvent[] = ((platformData ?? []) as EvenementPlateformeBrut[])
+    .filter((e) => evenementVisiblePourEleve(e, scope))
+    .map((e) => ({
+      id: e.id, title: e.title, date: e.date, start_time: e.start_time, end_time: e.end_time,
+      college: e.college, intervenant: e.intervenant, notes: e.notes,
+      zoom_url: null,
+      visio: natureVisio(e.zoom_url),
+    }));
 
   const events = (userData ?? []) as UserEvent[];
 
@@ -79,7 +72,13 @@ export default async function AgendaPage() {
           « + Ajouter » sous chaque journée pour planifier une session.
         </p>
       </header>
-      <AgendaWeek userEvents={events} platformEvents={platformEvents} signedEventIds={signedEventIds} />
+      <AgendaWeek
+        userEvents={events}
+        platformEvents={platformEvents}
+        signedEventIds={signedEventIds}
+        aujourdHui={aujourdHui}
+        seanceInitiale={seance && platformEvents.some((e) => e.id === seance) ? seance : null}
+      />
     </div>
   );
 }

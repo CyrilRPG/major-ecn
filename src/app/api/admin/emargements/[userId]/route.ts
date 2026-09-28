@@ -37,6 +37,8 @@ export type Emargement = {
   signaturePng: string | null;
   watchedRatio: number | null;
   intervenant: string | null;
+  /** Séance Zoom : jour et horaire prévus (« 29/09/2026 17:30–20:00 »). */
+  seance?: string | null;
 };
 
 function csvCell(v: unknown): string {
@@ -47,8 +49,11 @@ function csvCell(v: unknown): string {
 function fmt(iso: string | null): string {
   if (!iso) return '';
   try {
+    // Heure de PARIS : le serveur tourne en UTC (une signature de 20:05
+    // sortait « 18:05 » dans l'export).
     return new Date(iso).toLocaleString('fr-FR', {
       day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+      timeZone: 'Europe/Paris',
     });
   } catch { return iso; }
 }
@@ -73,7 +78,7 @@ export async function GET(
         .select('id, cours_id, cours_titre, matiere_id, kind, required_at, signed_at, signature_png, watched_ratio')
         .eq('user_id', userId).order('required_at', { ascending: false }),
       db.from('session_presences')
-        .select('id, event_title, event_date, start_time, college, intervenant, marked_at, signature_png')
+        .select('id, event_title, event_date, start_time, end_time, college, intervenant, marked_at, signature_png')
         .eq('user_id', userId).order('marked_at', { ascending: false }),
       // `course_attendances.matiere_id` stocke un identifiant (col-…) : on le
       // résout en nom lisible. Côté Zoom, `college` est déjà un libellé libre.
@@ -93,7 +98,7 @@ export async function GET(
   };
   type PRow = {
     id: string; event_title: string | null; event_date: string | null; start_time: string | null;
-    college: string | null; intervenant: string | null; marked_at: string;
+    end_time: string | null; college: string | null; intervenant: string | null; marked_at: string;
     signature_png: string | null;
   };
 
@@ -125,6 +130,10 @@ export async function GET(
     signaturePng: r.signature_png,
     watchedRatio: null,
     intervenant: r.intervenant,
+    seance: r.event_date
+      ? `${r.event_date.slice(8, 10)}/${r.event_date.slice(5, 7)}/${r.event_date.slice(0, 4)}`
+        + (r.start_time ? ` ${r.start_time.slice(0, 5)}${r.end_time ? `–${r.end_time.slice(0, 5)}` : ''}` : '')
+      : null,
   }));
 
   const rows = [...fromPlateforme, ...fromZoom].sort((a, b) => {
@@ -141,11 +150,11 @@ export async function GET(
     : rows;
 
   if (url.searchParams.get('format') === 'csv') {
-    const header = ['Élève', 'Email', 'Origine', 'Type', 'Collège', 'Intitulé', 'Vu le', 'Signé le', 'Progression', 'Intervenant'];
+    const header = ['Élève', 'Email', 'Origine', 'Type', 'Collège', 'Intitulé', 'Séance (date et horaire)', 'Vu le', 'Signé le', 'Progression', 'Intervenant'];
     const lines = filtered.map((r) => [
       fullName, student?.email ?? '',
       r.source === 'zoom' ? 'Zoom' : 'Plateforme',
-      r.typeLabel, r.college ?? '', r.titre,
+      r.typeLabel, r.college ?? '', r.titre, r.seance ?? '',
       fmt(r.requiredAt), r.signed ? fmt(r.date) : 'NON SIGNÉ',
       r.watchedRatio != null ? `${Math.round(r.watchedRatio * 100)}%` : '',
       r.intervenant ?? '',

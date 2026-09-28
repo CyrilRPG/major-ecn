@@ -2,6 +2,7 @@ import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { AdminAgenda, type PlatformEventRow } from '@/components/admin/agenda/admin-agenda';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
+import { ajouterJours, instantParis } from '@/lib/agenda/planning';
 
 export const metadata = { title: 'Agenda' };
 
@@ -9,17 +10,18 @@ export default async function AdminAgendaPage() {
   await requireAdmin();
   const supabase = await createClient();
 
-  // Charge events large autour de la semaine courante (8 semaines passées
-  // + 12 à venir), comme l'agenda étudiant.
-  const start = new Date(); start.setDate(start.getDate() - 56);
-  const end   = new Date(); end.setDate(end.getDate() + 84);
+  // Fenêtre large, en heure de PARIS (le serveur est en UTC) : 4 mois passés,
+  // un an à venir. Les séances sont rares (quelques dizaines par an) ; une
+  // fenêtre trop courte montrait des semaines vides où l'on recréait des
+  // séances existantes.
+  const aujourdHui = instantParis().date;
 
   const [{ data: events }, { data: fac }] = await Promise.all([
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any).from('platform_events')
       .select('id, title, date, start_time, end_time, college, intervenant, zoom_url, notes, required_offers, scope_type, scope_colleges, voies')
-      .gte('date', start.toISOString().slice(0, 10))
-      .lte('date', end.toISOString().slice(0, 10))
+      .gte('date', ajouterJours(aujourdHui, -120))
+      .lte('date', ajouterJours(aujourdHui, 365))
       .order('date').order('start_time'),
     supabase.from('facultes')
       .select('semestres(matieres(id, nom, order_index, parent_matiere_id))')
@@ -52,6 +54,7 @@ export default async function AdminAgendaPage() {
       <AdminAgenda
         events={(events ?? []) as PlatformEventRow[]}
         colleges={colleges}
+        aujourdHui={aujourdHui}
       />
     </main>
   );

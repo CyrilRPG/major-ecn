@@ -3,7 +3,7 @@
 import { useMemo, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import {
-  ArrowRight, CalendarDays, ChevronLeft, ChevronRight, Clock, ExternalLink, Monitor, NotebookPen, UserRound,
+  ArrowRight, CalendarDays, ChevronLeft, ChevronRight, Clock, Monitor, NotebookPen, UserRound,
 } from 'lucide-react';
 import {
   comparerMois, decalerMois, dureeLisible, estAVenir, grilleDuMois, jourParDefaut, libelleJourCourt,
@@ -261,7 +261,9 @@ function CaseJour({
 function DetailEvenement({ e, present, separe }: { e: EvenementPlanning; present: InstantParis; separe: boolean }) {
   const plage = plageHoraire(e.debut, e.fin);
   const duree = dureeLisible(e.debut, e.fin);
-  const ouvert = e.lien && estAVenir(e, present);
+  // Plus de lien Zoom direct : on passe par l'émargement obligatoire de
+  // /agenda (le lien n'est donné qu'après signature).
+  const ouvert = e.genre === 'direct' && e.visio && estAVenir(e, present);
   return (
     <div className={separe ? 'mt-3.5 border-t border-(--pl-bordeaux)/10 pt-3.5' : 'mt-1.5'}>
       <p className="text-[18px] font-extrabold leading-snug tracking-tight text-(--color-ink)">{e.titre}</p>
@@ -273,7 +275,7 @@ function DetailEvenement({ e, present, separe }: { e: EvenementPlanning; present
         {e.genre === 'direct' ? (
           <li className="flex items-center gap-2.5">
             <Monitor className="h-4 w-4 shrink-0" strokeWidth={2} />
-            <span>Cours en direct{e.lien && /zoom\.us/i.test(e.lien) ? ' - Zoom' : ''}</span>
+            <span>Cours en direct{e.visio === 'zoom' ? ' - Zoom' : ''}</span>
           </li>
         ) : (
           <li className="flex items-center gap-2.5">
@@ -289,14 +291,12 @@ function DetailEvenement({ e, present, separe }: { e: EvenementPlanning; present
         )}
       </ul>
       {ouvert && (
-        <a
-          href={e.lien!}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href={`/agenda?seance=${encodeURIComponent(e.id.replace(/^p:/, ''))}`}
           className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-(--pl-bordeaux) text-[14px] font-bold text-white shadow-[0_10px_22px_-12px_rgba(134,20,39,0.8)] transition-transform hover:scale-[1.01]"
         >
-          Accéder à la séance <ExternalLink className="h-4 w-4" strokeWidth={2.4} />
-        </a>
+          Émarger et accéder à la séance <ArrowRight className="h-4 w-4" strokeWidth={2.4} />
+        </Link>
       )}
     </div>
   );
