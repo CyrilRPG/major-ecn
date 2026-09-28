@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Loader2, Video } from 'lucide-react';
 import {
   addVideoToRevisionsAction, listItemsAction, listVideosAction,
@@ -10,6 +10,7 @@ import { estItemRevisions, porteItemRevisions, revisionsTitre } from '@/lib/vide
 import { BunnyVideoUpload } from '@/components/admin/content/bunny-video-upload';
 import type { LibraryCollege } from '@/lib/videos/bibliotheque';
 import { VideoManager, type DroitsVideo } from './video-manager';
+import { CollegeSearch, type OptionCollege } from '@/components/admin/college-search';
 
 // Construit côté serveur (périmètre + ordre alphabétique) : voir lib/videos/bibliotheque.
 export type { LibraryCollege };
@@ -44,6 +45,34 @@ export function VideoLibrary({ colleges, droits }: { colleges: LibraryCollege[];
   const [error, setError] = useState<string | null>(null);
 
   const college = colleges.find((c) => c.id === collegeId) ?? null;
+
+  // Recherche : les collèges ET leurs sous-collèges (« pneumo » trouve la
+  // Pneumologie de Médecine générale) ; choisir un sous-collège règle les deux.
+  const { optionsRecherche, parentDe } = useMemo(() => {
+    const parents = new Map<string, string>();
+    const opts: OptionCollege[] = [];
+    for (const c of colleges) {
+      opts.push({ id: c.id, nom: c.nom, precision: c.enfants.length > 0 ? `${c.enfants.length} sous-collèges` : null });
+      for (const e of c.enfants) {
+        parents.set(e.id, c.id);
+        opts.push({ id: e.id, nom: e.nom, precision: c.nom });
+      }
+    }
+    return { optionsRecherche: opts, parentDe: parents };
+  }, [colleges]);
+
+  const choisirCollege = (id: string) => {
+    const parent = parentDe.get(id);
+    setCoursId(''); setVideos(null); setItems(null);
+    if (parent) {
+      setCollegeId(parent); setSousCollegeId(id);
+      chargerItems(id);
+      return;
+    }
+    setCollegeId(id); setSousCollegeId('');
+    const c = colleges.find((x) => x.id === id);
+    if (c && c.enfants.length === 0) chargerItems(id);
+  };
   const aDesEnfants = (college?.enfants.length ?? 0) > 0;
   // Un collège à sous-collèges porte ses items dans ses sous-collèges, et parfois
   // quelques-uns en propre : le second sélecteur propose alors aussi le collège
@@ -139,21 +168,15 @@ export function VideoLibrary({ colleges, droits }: { colleges: LibraryCollege[];
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Champ label="Collège">
-          <select
-            value={collegeId}
-            onChange={(e) => {
-              const id = e.target.value;
-              setCollegeId(id); setSousCollegeId(''); setCoursId(''); setVideos(null); setItems(null);
-              const c = colleges.find((x) => x.id === id);
-              if (c && c.enfants.length === 0) chargerItems(id);
+          <CollegeSearch
+            options={optionsRecherche}
+            selection={college ? { id: college.id, nom: college.nom } : null}
+            onChoisir={(o) => choisirCollege(o.id)}
+            onEffacer={() => {
+              setCollegeId(''); setSousCollegeId(''); setCoursId(''); setVideos(null); setItems(null);
             }}
-            className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm"
-          >
-            <option value="">Choisir un collège…</option>
-            {colleges.map((c) => (
-              <option key={c.id} value={c.id}>{c.nom}</option>
-            ))}
-          </select>
+            placeholder="Tapez le nom d’un collège…"
+          />
         </Champ>
 
         {aDesEnfants && (
@@ -280,6 +303,12 @@ export function VideoLibrary({ colleges, droits }: { colleges: LibraryCollege[];
             videos={videos}
             onChanged={modeRevisions ? apresCreationRevisions : rechargerTout}
             droits={droits}
+            contexte={college ? {
+              college: college.nom,
+              sousCollege: aDesEnfants && matiereId !== collegeId ? nomMatiere : null,
+              item: (modeRevisions ? titreRevisions : item?.titre) ?? '',
+              categorie: CATEGORIES.find((c) => c.type === type)?.label ?? '',
+            } : null}
             notice={modeRevisions
               ? `L’item « ${titreRevisions} » n’existe pas encore : il sera créé automatiquement, en tête du collège, dès que vous ajouterez cette vidéo.`
               : undefined}

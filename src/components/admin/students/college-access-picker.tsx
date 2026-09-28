@@ -1,9 +1,10 @@
 'use client';
 
-import { Stethoscope } from 'lucide-react';
+import { Stethoscope, X } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
+import { CollegeSearch } from '@/components/admin/college-search';
 
 /** Collège « Médecine générale » (parent). Ses sous-matières (col-mg-*) sont
  *  les spécialités accordables individuellement. */
@@ -132,16 +133,42 @@ export function CollegeAccessPicker({
 
       {value.permissionType === 'college' && (
         <>
-          <div className="ml-1 mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {topColleges.map((c) => (
-              <label key={c.id} className="flex items-center gap-2 text-sm">
-                <Checkbox
-                  checked={selectedSet.has(c.id)}
-                  onCheckedChange={(v) => toggleTop(c.id, !!v)}
-                />
-                {c.nom}
-              </label>
-            ))}
+          {/* Recherche (28/09/2026) : les collèges correspondants s'affichent
+              dès la première lettre ; chaque choix devient une étiquette
+              retirable. Remplace la grille de cases à cocher. */}
+          <div className="mt-2 space-y-2">
+            <CollegeSearch
+              options={topColleges.map((c) => ({
+                id: c.id,
+                nom: c.nom,
+                precision: enfantsDe(c.id).length > 0 ? 'avec ses sous-collèges' : null,
+              }))}
+              exclure={selectedSet}
+              onChoisir={(o) => toggleTop(o.id, true)}
+              placeholder="Tapez le nom d’un collège à accorder…"
+            />
+            {topColleges.some((c) => selectedSet.has(c.id)) ? (
+              <ul className="flex flex-wrap gap-1.5" aria-label="Collèges accordés">
+                {topColleges.filter((c) => selectedSet.has(c.id)).map((c) => (
+                  <li
+                    key={c.id}
+                    className="inline-flex items-center gap-1 rounded-full border border-(--color-primary)/30 bg-(--color-primary-soft) py-1 pl-2.5 pr-1 text-[13px] font-medium text-(--color-ink)"
+                  >
+                    {c.nom}
+                    <button
+                      type="button"
+                      aria-label={`Retirer ${c.nom}`}
+                      onClick={() => toggleTop(c.id, false)}
+                      className="rounded-full p-0.5 text-(--color-ink-muted) hover:bg-white hover:text-(--color-ink)"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-xs text-(--color-ink-muted)">Aucun collège accordé pour l’instant.</p>
+            )}
           </div>
 
           {/* Médecine générale : voie + spécialités */}

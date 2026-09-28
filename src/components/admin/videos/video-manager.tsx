@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 import { extractBunnyVideoId } from '@/lib/bunny-link';
 import { BunnyApercu } from './bunny-apercu';
+import { BilanPublicationDialog, type ContexteVideo, type SeanceAuBilan } from './bilan-publication-dialog';
 import {
   addVideoAction, addVideoSupportAction, deleteVideoAction, deleteVideosAction, listStudentsAction,
   moveVideoSupportAction, publishVideoAction, removeVideoSupportAction, renameVideoAction, reorderVideosAction, unpublishVideoAction,
@@ -500,6 +501,7 @@ export function VideoManager({
   onAdd,
   notice,
   droits = TOUS_DROITS,
+  contexte = null,
 }: {
   coursId: string;
   type: VideoType;
@@ -513,6 +515,8 @@ export function VideoManager({
   notice?: string;
   /** Droits de la personne : sans « publier », ses dépôts restent « À valider » ; sans « supprimer », pas de corbeille. */
   droits?: DroitsVideo;
+  /** Collège › item › catégorie, rappelés dans le bilan avant publication. */
+  contexte?: ContexteVideo | null;
 }) {
   const router = useRouter();
   const copy = COPY[type];
@@ -582,7 +586,21 @@ export function VideoManager({
     setSeances((prev) => prev.map((s) => (s.tempId === tempId ? { ...s, ...patch } : s)));
   }
 
-  async function handleSaveAll() {
+  // Bilan avant publication : ouvert par « Enregistrer tout » (dépôt) ou par
+  // « Publier » sur une vidéo « À valider ». `n` remonte la fenêtre à chaque
+  // ouverture (vérifications Bunny refaites sur les séances corrigées).
+  const [bilan, setBilan] = useState<
+    | { n: number; mode: 'depot'; seances: SeanceAuBilan[] }
+    | { n: number; mode: 'publication'; seances: SeanceAuBilan[]; videoId: string }
+    | null
+  >(null);
+  const ouvertures = useRef(0);
+  const nomsEleves = useMemo(
+    () => new Map((students ?? []).map((st) => [st.id, st.nom])),
+    [students],
+  );
+
+  function demanderBilan() {
     for (let i = 0; i < seances.length; i++) {
       const s = seances[i];
       if (!s.titre.trim()) return setError(`Séance ${i + 1} : donnez un titre.`);
@@ -595,7 +613,70 @@ export function VideoManager({
       if (s.offers.length === 0) return setError(`Séance ${i + 1} : cochez au moins une formule.`);
       if (s.voies.length === 0) return setError(`Séance ${i + 1} : cochez au moins une voie.`);
     }
+    setError(null);
+    setBilan({
+      n: ++ouvertures.current,
+      mode: 'depot',
+      seances: seances.map((s) => ({
+        titre: s.titre.trim(),
+        aVenir: s.aVenir && !s.lien.trim(),
+        bunnyId: s.lien.trim() ? extractBunnyVideoId(s.lien) : null,
+        lien: s.lien.trim(),
+        liveAt: s.aVenir ? depuisSaisieLocale(s.liveAt) : null,
+        rubrique: s.rubrique.trim() || rubriqueParDefaut(type),
+        voies: s.voies,
+        offers: s.offers,
+        deniedUserIds: s.deniedUserIds,
+        allowedUserIds: s.allowedUserIds,
+        supports: s.supports.map((sup) => ({
+          nom: sup.file.name,
+          taille: sup.file.size,
+          mime: sup.file.type || null,
+          differentes: sup.differentes,
+          voies: sup.voies,
+          offers: sup.offers,
+        })),
+      })),
+    });
+  }
 
+  function demanderPublication(v: ManagedVideo) {
+    setBilan({
+      n: ++ouvertures.current,
+      mode: 'publication',
+      videoId: v.id,
+      seances: [{
+        titre: v.titre,
+        aVenir: !!v.a_venir,
+        bunnyId: v.bunny_video_id,
+        lien: v.bunny_video_id ?? '',
+        liveAt: v.live_at ?? null,
+        rubrique: v.rubrique || rubriqueParDefaut(type),
+        voies: v.voies,
+        offers: v.offers,
+        deniedUserIds: v.denied_user_ids,
+        allowedUserIds: v.allowed_user_ids,
+        supports: v.supports.map((sup) => ({
+          nom: sup.titre,
+          taille: null,
+          mime: null,
+          differentes: (sup.offers?.length ?? 0) > 0 || (sup.voies?.length ?? 0) > 0,
+          voies: sup.voies?.length ? sup.voies : v.voies,
+          offers: sup.offers?.length ? sup.offers : v.offers,
+        })),
+      }],
+    });
+  }
+
+  function confirmerBilan() {
+    const b = bilan;
+    setBilan(null);
+    if (!b) return;
+    if (b.mode === 'publication') run(() => publishVideoAction({ videoId: b.videoId }));
+    else void handleSaveAll();
+  }
+
+  async function handleSaveAll() {
     setError(null);
     setSaving(true);
     const total = seances.reduce((acc, s) => acc + 1 + s.supports.length, 0);
@@ -1186,7 +1267,7 @@ export function VideoManager({
                     )}
                     {droits.publier && v.status === 'a_valider' && (
                       <>
-                        <button type="button" disabled={pending} onClick={() => run(() => publishVideoAction({ videoId: v.id }))} className="rounded-md bg-[#16793C] px-2 py-0.5 font-bold text-white hover:brightness-110 disabled:opacity-50">Publier</button>
+                        <button type="button" disabled={pending} onClick={() => demanderPublication(v)} className="rounded-md bg-[#16793C] px-2 py-0.5 font-bold text-white hover:brightness-110 disabled:opacity-50">Publier</button>
                         <button
                           type="button" disabled={pending}
                           onClick={() => { const d = prompt('Publier le (AAAA-MM-JJ HH:MM) :'); if (d) run(() => publishVideoAction({ videoId: v.id, publishAt: d.replace(' ', 'T') })); }}
@@ -1352,7 +1433,7 @@ export function VideoManager({
           )}
 
           <div className="flex items-center gap-3 border-t border-[#7C3AED]/20 pt-4">
-            <Button type="button" onClick={handleSaveAll} disabled={saving || seances.length === 0}>
+            <Button type="button" onClick={demanderBilan} disabled={saving || seances.length === 0}>
               {saving ? <Loader2 className="animate-spin" /> : <Check />}
               Enregistrer tout
               <span className="ml-1 rounded-full bg-white/80 px-1.5 py-0.5 text-[10px] font-bold tabular-nums">
@@ -1393,6 +1474,24 @@ export function VideoManager({
       )}
 
       {error && <p className="text-xs font-medium text-red-600">{error}</p>}
+
+      {bilan && (
+        <BilanPublicationDialog
+          key={bilan.n}
+          open
+          onOpenChange={(o) => { if (!o) setBilan(null); }}
+          onConfirm={confirmerBilan}
+          seances={bilan.seances}
+          type={type}
+          contexte={contexte}
+          existantes={videos
+            .filter((v) => bilan.mode === 'depot' || v.id !== bilan.videoId)
+            .map((v) => ({ titre: v.titre, bunnyId: v.bunny_video_id }))}
+          publieDirect={bilan.mode === 'publication' || droits.publier}
+          nomsEleves={nomsEleves}
+          mode={bilan.mode}
+        />
+      )}
     </div>
   );
 }
