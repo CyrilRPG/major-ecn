@@ -40,7 +40,7 @@ const Cle = z.string().min(1).max(120);
 
 const BodySchema = z.object({
   kind: z.enum(['daily', 'recommended', 'intensive', 'reevaluation', 'reevaluation_deep', 'bilan_global']),
-  qcm_count: z.number().int().min(0).max(500),
+  qcm_count: z.number().int().min(1).max(500), // une session vide n'est pas une révision (28/09/2026)
   score_correct: z.number().int().min(0).max(500),
   /** Ratio correct/total par cours_id (clé historique du web). */
   specialty_scores: z.record(Cle, Ratio).default({}),

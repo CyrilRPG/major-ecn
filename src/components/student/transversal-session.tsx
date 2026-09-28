@@ -122,6 +122,23 @@ export function TransversalSession({
     }).catch(() => setRecordError(true));
   }, [isFinished, recorded, total, perCours, perMatiere, questions, score, kind, startedAt]);
 
+  // Aucune question servie : ce n'est pas une révision terminée. Sans ce garde,
+  // l'écran de fin concluait « Révision insuffisante · Score 0 % · 0/0 »
+  // (signalement du 28/09/2026). La page serveur l'écarte déjà ; filet ici.
+  if (total === 0) {
+    return (
+      <div className="mx-auto max-w-lg px-4 py-16 text-center sm:px-6">
+        <h1 className="text-xl font-black tracking-tight text-(--color-ink)">Aucune question disponible pour cette session</h1>
+        <p className="mt-3 text-sm leading-relaxed text-(--color-ink-soft)">
+          Aucun {unitLabel} n’a pu être retenu pour cette révision. Réessayez dans un instant ; si le problème persiste, contactez l’équipe pédagogique.
+        </p>
+        <Button asChild variant="ghost" size="sm" className="mt-8">
+          <Link href={BACK_HREF}><ArrowLeft /> Retour aux révisions transversales</Link>
+        </Button>
+      </div>
+    );
+  }
+
   if (isFinished) {
     if (showCorrections) {
       return <CorrectionsView questions={questions} onBack={() => setShowCorrections(false)} />;

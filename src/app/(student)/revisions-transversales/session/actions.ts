@@ -13,6 +13,8 @@ export type TransversalKind =
   | 'reevaluation_deep'
   | 'bilan_global';
 
+const KINDS: readonly TransversalKind[] = ['daily', 'recommended', 'intensive', 'reevaluation', 'reevaluation_deep', 'bilan_global'];
+
 export type RecordTransversalSessionInput = {
   kind: TransversalKind;
   qcm_count: number;
@@ -47,6 +49,13 @@ export async function recordTransversalSession(
   const supabase = await createClient();
   const user = await getVerifiedUser(supabase);
   if (!user) return { ok: false, error: 'Non authentifié' };
+  // Une session sans question n'est pas une révision : enregistrée, elle
+  // compterait un 0 % (alertes admin, compteurs de maintien) et lèverait le
+  // blocage des 14 jours sans aucune réponse.
+  if (!KINDS.includes(input.kind)) return { ok: false, error: 'Type de session inconnu' };
+  if (!(input.qcm_count > 0) || !(input.score_correct >= 0) || input.score_correct > input.qcm_count) {
+    return { ok: false, error: 'Session vide ou score invalide' };
+  }
 
   const now = new Date().toISOString();
   const { error } = await (supabase as unknown as {

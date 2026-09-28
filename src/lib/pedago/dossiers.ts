@@ -83,6 +83,33 @@ export function estSerieDeQuestionsIsolees(s: SerieForme): boolean {
 }
 
 /**
+ * Banque de questions INDÉPENDANTES, quelle que soit sa longueur : les séries
+ * générées des items d'odontologie (miroir ECN et major-odonto), « QCM · <titre
+ * de l'item> » (40 à 45 QCM) et « Questions rédactionnelles · <Connaissance |
+ * Conduite à tenir | Cas cliniques> · <titre> » (3 à 30 QROC). Chaque question
+ * y porte tout son contexte (« Concernant la définition des anomalies de
+ * nombre… », « Mme L., 28 ans, enceinte de 6 mois… ») — vérifié sur la base le
+ * 28/09/2026 ; aucune autre série de la plateforme n'a ces libellés.
+ *
+ * POURQUOI. Le 20/09/2026, la borne MAX_QUESTIONS_SERIE_ISOLEE les a classées
+ * « sujet importé », à servir entières : une série de 40 ne tient jamais dans
+ * une révision du jour (25 à 40 questions). Un élève d'odontologie en voie
+ * interne, dont le vivier n'a QUE ces séries, recevait une session vide —
+ * affichée « Révision insuffisante · 0/0 » (signalement du 28/09/2026).
+ *
+ * Les sessions de RÉVISION (transversales, consolidation, renforcement,
+ * entraînement ciblé) les piochent donc question par question
+ * (`dossiersDepuisSeries`). L'interrogation de fin de parcours n'est pas
+ * concernée : l'ouvrir aux items d'odontologie ferait peser sur leurs élèves le
+ * verrou « Interrogation obligatoire » — décision pédagogique distincte.
+ */
+export function estBanqueDeQuestionsIndependantes(s: SerieForme): boolean {
+  if (s.vignette && s.vignette.trim()) return false;
+  if (s.type === 'seance') return false;
+  return /^(QCM|Questions rédactionnelles) · /.test((s.label ?? '').trim());
+}
+
+/**
  * Ligne de série telle que les pages la lisent (PostgREST) :
  * `select('id, label, type, vignette, qcm_questions(count)')`.
  */
@@ -107,15 +134,15 @@ export function formeDeSerie(s: SerieRowForme): SerieForme & { id: string } {
 
 /**
  * Carte des séries à servir entières (id → nombre TOTAL de questions), telle
- * que l'attend `regrouperEnUnites`. Toute série qui n'est pas une série de
- * questions isolées y figure.
+ * que l'attend `regrouperEnUnites`. Toute série qui n'est ni une série de
+ * questions isolées ni une banque de questions indépendantes y figure.
  */
 export function dossiersDepuisSeries<S extends SerieForme & { id: string }>(
   series: readonly S[],
 ): Map<string, number> {
   const out = new Map<string, number>();
   for (const s of series) {
-    if (!estSerieDeQuestionsIsolees(s)) out.set(s.id, s.nbQuestions);
+    if (!estSerieDeQuestionsIsolees(s) && !estBanqueDeQuestionsIndependantes(s)) out.set(s.id, s.nbQuestions);
   }
   return out;
 }
@@ -245,6 +272,9 @@ export function regrouperEnUnites<Q extends QuestionDossierable>(
   return { unites, dossiersIncomplets };
 }
 
+/** Longueur tolérée (× la session) de l'unité servie quand aucune ne tient. */
+export const MARGE_UNITE_TROP_LONGUE = 2;
+
 /**
  * Choisit des unités jusqu'à `n` questions, par priorité croissante.
  *
@@ -263,6 +293,9 @@ export function regrouperEnUnites<Q extends QuestionDossierable>(
  * Le résultat est mélangé PAR UNITÉ : les questions d'un dossier restent
  * contiguës et dans l'ordre, ce sont les dossiers et les questions isolées
  * qui alternent.
+ *
+ * Si AUCUNE unité ne tient dans `n`, la plus courte est servie seule, entière,
+ * pourvu qu'elle ne dépasse pas `n × MARGE_UNITE_TROP_LONGUE` questions.
  */
 export function choisirUnites<Q>(
   unites: readonly UniteRevision<Q>[],
@@ -289,6 +322,17 @@ export function choisirUnites<Q>(
     if (compte + u.questions.length > n) continue;
     retenues.push(u);
     compte += u.questions.length;
+  }
+
+  // Aucune unité ne tient (vivier fait de dossiers plus longs que la session) :
+  // la plus courte — la plus prioritaire à longueur égale — est servie ENTIÈRE.
+  // Une session un peu plus longue que prévu vaut mieux qu'une session vide,
+  // que l'écran concluait en « Révision insuffisante · 0/0 » (28/09/2026) et
+  // qui, pour une réévaluation exigée, ne levait jamais le blocage. Au-delà du
+  // double de la session, on s'abstient (révision générale de 354 questions).
+  if (retenues.length === 0 && triees.length > 0) {
+    const plusCourte = triees.reduce((m, u) => (u.questions.length < m.questions.length ? u : m));
+    if (plusCourte.questions.length <= n * MARGE_UNITE_TROP_LONGUE) retenues.push(plusCourte);
   }
 
   for (let i = retenues.length - 1; i > 0; i--) {

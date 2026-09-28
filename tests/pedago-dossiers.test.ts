@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  MARGE_UNITE_TROP_LONGUE,
   MAX_QUESTIONS_SERIE_ISOLEE,
   aplatirUnites,
   choisirUnites,
   dossiersDepuisSeries,
+  estBanqueDeQuestionsIndependantes,
   estSerieDeQuestionsIsolees,
   formeDeSerie,
   regrouperEnUnites,
@@ -296,4 +298,59 @@ test('vivier : VIDE pour un item de QROC seuls, de dossiers seuls, ou dont l’u
   assert.deepEqual(vivierInterrogation(avecPropositions('odonto', MAX_QUESTIONS_SERIE_ISOLEE + 15, 5), sujetLong, propositions), []);
 
   assert.deepEqual(vivierInterrogation([], [], propositions), []);
+});
+
+/* ----------------------------------------------------------------------------
+ * Signalement du 28/09/2026 : « score insuffisant » avant toute réponse.
+ * Élève d'odontologie, voie interne : son vivier ne comptait que des séries
+ * « QCM · <item> » de 40 questions, servies entières depuis le 20/09 — aucune
+ * ne tenait dans une révision du jour de 25, la session était VIDE et l'écran
+ * de fin affichait « Révision insuffisante · Score 0 % · 0/0 ».
+ * -------------------------------------------------------------------------- */
+
+test('banque odonto : « QCM · <item> » et « Questions rédactionnelles · … » sont des questions indépendantes, quelle que soit leur longueur', () => {
+  assert.equal(estBanqueDeQuestionsIndependantes(serie('QCM · Anomalies de nombre', 40)), true);
+  assert.equal(estBanqueDeQuestionsIndependantes(serie('Questions rédactionnelles · Cas cliniques · Gynéco-obstétrique et chirurgie orale', 4, { type: 'qroc' })), true);
+  assert.equal(estBanqueDeQuestionsIndependantes(serie('Questions rédactionnelles · Connaissance · Parodontologie', 30, { type: 'qroc' })), true);
+  // Une vignette ou une séance font toujours un dossier.
+  assert.equal(estBanqueDeQuestionsIndependantes(serie('QCM · Anomalies de nombre', 40, { vignette: 'Un enfant de 8 ans…' })), false);
+  assert.equal(estBanqueDeQuestionsIndependantes(serie('QCM · Séance 3', 40, { type: 'seance' })), false);
+  // Les autres libellés ne sont pas concernés.
+  for (const label of ['QCM — Série 1 · Asthme', 'QCM 1 · Exanthèmes', 'Annales - Médecine générale - 2016 - EVCF', 'REVISION GENERALE', null]) {
+    assert.equal(estBanqueDeQuestionsIndependantes(serie(label, 40)), false, String(label));
+  }
+  // L'interrogation de fin de parcours garde sa règle (décision distincte).
+  assert.equal(estSerieDeQuestionsIsolees(serie('QCM · Anomalies de nombre', 40)), false);
+});
+
+test('dossiersDepuisSeries : une banque odonto n’est pas un dossier — ses questions se piochent une à une', () => {
+  const lignes = [
+    { id: 'banque', label: 'QCM · Pathologies hépatiques et chirurgie orale', type: 'qcm', vignette: null, qcm_questions: [{ count: 40 }] },
+    { id: 'cas', label: 'Questions rédactionnelles · Cas cliniques · Anesthésies locales', type: 'qroc', vignette: null, qcm_questions: [{ count: 4 }] },
+    { id: 'ann', label: 'Annales - Médecine générale - 2016 - EVCF', type: 'qcm', vignette: null, qcm_questions: [{ count: 36 }] },
+  ];
+  assert.deepEqual([...dossiersDepuisSeries(lignes.map(formeDeSerie)).keys()], ['ann']);
+});
+
+test('régression 28/09/2026 : 18 banques de 40 QCM → une révision du jour de 25 questions, pas une session vide', () => {
+  const series = Array.from({ length: 18 }, (_, i) => ({ id: `s${i}`, label: `QCM · Item ${i}`, type: 'qcm', vignette: null, qcm_questions: [{ count: 40 }] }));
+  const questions = series.flatMap((s) => Array.from({ length: 40 }, (_, k) => q(`${s.id}-${k}`, s.id, k + 1)));
+  const { unites } = regrouperEnUnites(questions, dossiersDepuisSeries(series.map(formeDeSerie)));
+  const suite = aplatirUnites(choisirUnites(unites, (x) => x.score, 25, sansMelange));
+  assert.equal(suite.length, 25);
+  assert.ok(suite.every((r) => r.dossier === null));
+});
+
+test('choisir : si AUCUNE unité ne tient, la plus courte est servie entière — jamais une session vide', () => {
+  const dossier = (id: string, n: number, score = 0) =>
+    ({ serieId: id, questions: Array.from({ length: n }, (_, k) => q(`${id}-${k}`, id, k + 1, score)) });
+  // Deux annales (36 et 30 questions) pour une session de 25 : la plus courte, entière.
+  const choix = choisirUnites([dossier('a36', 36), dossier('a30', 30, 5)], (x) => x.score, 25, sansMelange);
+  assert.deepEqual(choix.map((u) => u.serieId), ['a30']);
+  assert.equal(aplatirUnites(choix).length, 30);
+  // Au-delà de la marge, rien : une révision générale de 354 questions n'est pas une révision du jour.
+  assert.deepEqual(choisirUnites([dossier('rg', 25 * MARGE_UNITE_TROP_LONGUE + 1)], (x) => x.score, 25, sansMelange), []);
+  // Dès qu'une unité tient, la règle ordinaire s'applique (pas de repli).
+  const avecIsolee = choisirUnites([dossier('a36', 36), { serieId: null, questions: [q('x', 'qi', 1)] }], (x) => x.score, 25, sansMelange);
+  assert.deepEqual(aplatirUnites(avecIsolee).map((r) => r.question.id), ['x']);
 });

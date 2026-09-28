@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { ReactElement } from 'react';
 import { ArrowLeft, ArrowRight, BookOpen } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
@@ -97,12 +98,11 @@ export default async function TransversalSessionPage({
     .maybeSingle();
   const reprise: RepriseTransversale | null = repriseUtilisable(repriseLue) ? repriseLue : null;
 
-  let suite: { question: { id: string }; dossier: PositionDossier | null }[];
-  let targetN: number;
-  if (reprise) {
-    suite = decoderSuite(reprise.suite);
-    targetN = reprise.suite.length;
-  } else {
+  type Suite = { question: { id: string }; dossier: PositionDossier | null }[];
+
+  /* 3 à 5) Tirage d'une nouvelle suite — ou l'écran qui explique pourquoi le
+        vivier ne permet aucune session. */
+  const tirerSuite = async (): Promise<{ suite: Suite; targetN: number } | { ecran: ReactElement }> => {
     const studiedCoursIds = specs.flatMap((s) => s.studiedCoursIds);
 
     /* 3) Historique de réponses : jamais vu / raté / ancien, par question. */
@@ -174,14 +174,14 @@ export default async function TransversalSessionPage({
     const dossiers = dossiersDepuisSeries(serieRows.map(formeDeSerie));
 
     if (pool.length === 0) {
-      return (
+      return { ecran: (
         <ExplainScreen
           title={`Aucune série de ${unitLabel} disponible`}
           body={`Les spécialités que vous avez étudiées ne contiennent pas encore de ${unitLabel} accessibles pour la révision transversale. Poursuivez votre progression dans les cours : les questions apparaîtront ici dès qu'elles seront disponibles.`}
           ctaHref="/revisions-transversales"
           ctaLabel="Retour au dashboard"
         />
-      );
+      ) };
     }
 
     const accessibleMatieres = new Set(specs.map((s) => s.matiereId));
@@ -196,17 +196,17 @@ export default async function TransversalSessionPage({
     });
 
     if (allQ.length === 0) {
-      return (
+      return { ecran: (
         <ExplainScreen
           title={`Aucune question disponible pour votre profil`}
           body={`Aucun ${unitLabel} n'est disponible dans le périmètre de vos spécialités étudiées. Si le problème persiste, contactez l'équipe pédagogique.`}
           ctaHref="/revisions-transversales"
           ctaLabel="Retour au dashboard"
         />
-      );
+      ) };
     }
 
-    targetN = transversalSessionSize(kind, specs.length);
+    const targetN = transversalSessionSize(kind, specs.length);
     const N = Math.min(targetN, allQ.length);
 
     /* 5) Sélection — priorités du cahier des charges (section 3) :
@@ -264,57 +264,97 @@ export default async function TransversalSessionPage({
     // Le mélange de l'ordre de passage se fait PAR UNITÉ : on conserve la
     // sélection prioritaire, les dossiers restent d'un seul tenant, et l'élève
     // n'enchaîne pas 25 questions jamais vues puis 15 ratées.
-    suite = aplatirUnites(choisirUnites(unites, scoreDe, N));
-  }
-  const retenues = suite.map((r) => r.question.id);
+    const suite = aplatirUnites(choisirUnites(unites, scoreDe, N));
+    if (suite.length === 0) {
+      // Vivier non vide mais fait de sujets complets (dossiers, annales) bien
+      // plus longs que la session : un écran qui le dit, jamais un « 0/0 ».
+      return { ecran: (
+        <ExplainScreen
+          title="Aucune série ne tient dans cette session"
+          body={`Les ${unitLabel} de vos spécialités étudiées sont regroupés en sujets complets (dossiers progressifs, annales) bien plus longs que cette session de ${targetN} questions. Poursuivez votre progression dans les cours : de nouvelles questions viendront l'alimenter.`}
+          ctaHref="/revisions-transversales"
+          ctaLabel="Retour au dashboard"
+        />
+      ) };
+    }
+    return { suite, targetN };
+  };
 
   /* 6) Chargement complet des seules questions retenues (N ≤ 120). */
-  const { data: fullRaw } = await supabase
-    .from('qcm_questions')
-    .select('id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, images, qcm_items(id, lettre, enonce, justification, is_correct, images), qcm_series!inner(cours_id, label, vignette, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
-    .in('id', retenues);
-  const parId = new Map(((fullRaw ?? []) as unknown as QRow[]).map((q) => [q.id, q]));
+  const construireQuestions = async (suite: Suite): Promise<TransversalQuestion[]> => {
+    const retenues = suite.map((r) => r.question.id);
+    if (retenues.length === 0) return [];
+    const { data: fullRaw } = await supabase
+      .from('qcm_questions')
+      .select('id, enonce, order_index, format, reponse_attendue, correction_generale, commentaire_enseignant, images, qcm_items(id, lettre, enonce, justification, is_correct, images), qcm_series!inner(cours_id, label, vignette, cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id))))')
+      .in('id', retenues);
+    const parId = new Map(((fullRaw ?? []) as unknown as QRow[]).map((q) => [q.id, q]));
 
-  // Un dossier dont une question n'aurait pas été rechargée serait servi
-  // amputé : on écarte alors le dossier entier, comme au regroupement.
-  const seriesAmputees = new Set(
-    suite.filter((r) => r.dossier && !parId.has(r.question.id)).map((r) => r.dossier!.serieId),
-  );
+    // Un dossier dont une question n'aurait pas été rechargée serait servi
+    // amputé : on écarte alors le dossier entier, comme au regroupement.
+    const seriesAmputees = new Set(
+      suite.filter((r) => r.dossier && !parId.has(r.question.id)).map((r) => r.dossier!.serieId),
+    );
 
-  // Filet de sécurité : jamais de question qui demande un document ou des
-  // résultats invisibles (« Interprétez les gaz du sang » sans gaz) — voir
-  // lib/qcm/donnees-manquantes. Le dossier entier est écarté.
-  const incompletes = questionsAEcarter(suite, parId);
+    // Filet de sécurité : jamais de question qui demande un document ou des
+    // résultats invisibles (« Interprétez les gaz du sang » sans gaz) — voir
+    // lib/qcm/donnees-manquantes. Le dossier entier est écarté.
+    const incompletes = questionsAEcarter(suite, parId);
 
-  const questions: TransversalQuestion[] = suite.flatMap(({ question, dossier }) => {
-    const q = parId.get(question.id);
-    if (!q || (dossier && seriesAmputees.has(dossier.serieId)) || incompletes.has(question.id)) return [];
-    return [{
-      id: q.id,
-      enonce: q.enonce,
-      vignette: q.qcm_series.vignette,
-      dossier: dossier
-        ? { serie_id: dossier.serieId, label: q.qcm_series.label, position: dossier.position, total: dossier.total }
-        : null,
-      college: q.qcm_series.cours.matieres.nom,
-      matiere_id: q.qcm_series.cours.matieres.id,
-      cours_id: q.qcm_series.cours_id,
-      format: q.format ?? 'qcm',
-      reponse_attendue: q.reponse_attendue,
-      correction_generale: q.correction_generale,
-      commentaire_enseignant: q.commentaire_enseignant,
-      images: q.images ?? [],
-      items: [...(q.qcm_items ?? [])]
-        .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct, images: it.images ?? [] }))
-        .sort((a, b) => a.lettre.localeCompare(b.lettre)),
-    }];
-  });
+    return suite.flatMap(({ question, dossier }) => {
+      const q = parId.get(question.id);
+      if (!q || (dossier && seriesAmputees.has(dossier.serieId)) || incompletes.has(question.id)) return [];
+      return [{
+        id: q.id,
+        enonce: q.enonce,
+        vignette: q.qcm_series.vignette,
+        dossier: dossier
+          ? { serie_id: dossier.serieId, label: q.qcm_series.label, position: dossier.position, total: dossier.total }
+          : null,
+        college: q.qcm_series.cours.matieres.nom,
+        matiere_id: q.qcm_series.cours.matieres.id,
+        cours_id: q.qcm_series.cours_id,
+        format: q.format ?? 'qcm',
+        reponse_attendue: q.reponse_attendue,
+        correction_generale: q.correction_generale,
+        commentaire_enseignant: q.commentaire_enseignant,
+        images: q.images ?? [],
+        items: [...(q.qcm_items ?? [])]
+          .map((it) => ({ id: it.id, lettre: it.lettre, enonce: it.enonce, justification: it.justification, is_correct: it.is_correct, images: it.images ?? [] }))
+          .sort((a, b) => a.lettre.localeCompare(b.lettre)),
+      }];
+    });
+  };
 
   // Point de reprise : dans les questions RECONSTRUITES (un dossier a pu être
-  // écarté depuis). Nouvelle session = on inscrit sa suite, pour qu'un autre
-  // appareil la retrouve.
-  const etatInitial: EtatReprise | null = reprise ? etatDeReprise(reprise, questions) : null;
-  if (!etatInitial && questions.length > 0) {
+  // écarté depuis). Une reprise dont il ne reste plus rien à répondre — ses
+  // questions restantes retirées entre-temps — cède la place à un tirage neuf,
+  // au lieu de servir une session vide ou déjà faite.
+  let questions: TransversalQuestion[] = [];
+  let targetN = 0;
+  let etatInitial: EtatReprise | null = null;
+  if (reprise) {
+    questions = await construireQuestions(decoderSuite(reprise.suite));
+    targetN = reprise.suite.length;
+    etatInitial = etatDeReprise(reprise, questions);
+  }
+  if (!etatInitial) {
+    const tirage = await tirerSuite();
+    if ('ecran' in tirage) return tirage.ecran;
+    questions = await construireQuestions(tirage.suite);
+    targetN = tirage.targetN;
+    if (questions.length === 0) {
+      return (
+        <ExplainScreen
+          title="Aucune question disponible pour votre profil"
+          body={`Les ${unitLabel} retenus pour cette session n'ont pas pu être chargés. Réessayez dans un instant ; si le problème persiste, contactez l'équipe pédagogique.`}
+          ctaHref="/revisions-transversales"
+          ctaLabel="Retour au dashboard"
+        />
+      );
+    }
+    // Nouvelle session : on inscrit sa suite, pour qu'un autre appareil la
+    // retrouve.
     const maintenant = new Date().toISOString();
     const { error } = await db.from(TABLE_REPRISE).upsert({
       user_id: user.id,

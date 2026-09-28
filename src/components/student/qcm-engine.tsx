@@ -45,7 +45,22 @@ export function QcmEngine({
   const [validated, setValidated] = useState(false);
 
   const q = questions[index];
-  if (!q) return null;
+  // Étape sans question (vivier épuisé par la sélection) : un écran blanc
+  // laissait l'élève sans issue. On le dit, sans rien enregistrer — un 0/0
+  // compterait comme une évaluation ratée.
+  if (!q) {
+    return (
+      <div className="mx-auto max-w-lg px-4 py-16 text-center sm:px-6">
+        <h1 className="text-xl font-black tracking-tight text-(--color-ink)">{title}</h1>
+        <p className="mt-3 text-sm leading-relaxed text-(--color-ink-soft)">
+          Aucun QCM n’est disponible pour cette étape pour le moment.
+        </p>
+        <Button asChild variant="ghost" className="mt-8 rounded-xl py-3 text-sm font-bold">
+          <a href="/revisions-transversales">Retour aux révisions transversales</a>
+        </Button>
+      </div>
+    );
+  }
 
   const sel = answers.get(q.id) ?? new Set<string>();
   const total = questions.length;
