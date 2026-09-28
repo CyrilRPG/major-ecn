@@ -142,4 +142,4 @@ export function estTableAbsente(error: { code?: string; message?: string } | nul
 }
 
 export const MESSAGE_TABLE_ABSENTE =
-  'Cette fonctionnalité sera disponible après la mise à jour de la base de données (migration 20260907100000_student_exercises).';
+  'Cette fonctionnalité n’est pas encore disponible. Réessayez un peu plus tard.';
