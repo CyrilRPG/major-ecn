@@ -7,7 +7,11 @@ import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { getMaintienStats, getStudiedSpecialties, loadStudentAttempts } from '@/lib/pedago/maintien';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { transversalSessionSize, requiredReevaluationKind, SEUIL_REEVALUATION } from '@/lib/pedago/status';
-import { aplatirUnites, choisirUnites, dossiersDepuisSeries, formeDeSerie, regrouperEnUnites, type SerieRowForme } from '@/lib/pedago/dossiers';
+import { aplatirUnites, choisirUnites, dossiersDepuisSeries, formeDeSerie, regrouperEnUnites, type PositionDossier, type SerieRowForme } from '@/lib/pedago/dossiers';
+import {
+  COLONNES_REPRISE, TABLE_REPRISE, decoderSuite, encoderSuite, etatDeReprise, repriseUtilisable,
+  type EtatReprise, type RepriseTransversale,
+} from '@/lib/pedago/reprise-transversale';
 import { questionsAEcarter } from '@/lib/qcm/donnees-manquantes';
 import {
   TransversalSession,
@@ -79,168 +83,189 @@ export default async function TransversalSessionPage({
     );
   }
 
-  const studiedCoursIds = specs.flatMap((s) => s.studiedCoursIds);
+  /* 2 bis) Session entamée sur un autre appareil (ou avant un rechargement) :
+        on reprend LA MÊME suite de questions, là où l'élève s'était arrêtée,
+        au lieu d'en tirer une nouvelle. Table absente ou illisible = on
+        retombe sur le tirage, comme avant. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = supabase as any;
+  const { data: repriseLue } = await db
+    .from(TABLE_REPRISE)
+    .select(COLONNES_REPRISE)
+    .eq('user_id', user.id)
+    .eq('kind', kind)
+    .maybeSingle();
+  const reprise: RepriseTransversale | null = repriseUtilisable(repriseLue) ? repriseLue : null;
 
-  /* 3) Historique de réponses : jamais vu / raté / ancien, par question. */
-  type AttemptStat = { seen: number; fails: number; last: number };
-  const attemptStats = new Map<string, AttemptStat>();
-  for (const a of attempts) {
-    const cur = attemptStats.get(a.question_id) ?? { seen: 0, fails: 0, last: 0 };
-    cur.seen++;
-    if (!a.is_correct) cur.fails++;
-    const t = new Date(a.attempted_at).getTime();
-    if (t > cur.last) cur.last = t;
-    attemptStats.set(a.question_id, cur);
-  }
+  let suite: { question: { id: string }; dossier: PositionDossier | null }[];
+  let targetN: number;
+  if (reprise) {
+    suite = decoderSuite(reprise.suite);
+    targetN = reprise.suite.length;
+  } else {
+    const studiedCoursIds = specs.flatMap((s) => s.studiedCoursIds);
 
-  /* 4) Questions EDN accessibles dans les cours étudiés.
-
-        POURQUOI CETTE FORME. L'ancienne version listait d'abord les séries des
-        cours étudiés puis demandait les questions « dont serie_id est dans la
-        liste ». Chez un élève assidu (41 cours, 1 360 séries le 13/09/2026),
-        la liste des séries était tronquée à 1 000 par PostgREST, et l'URL de
-        la seconde requête (37 Ko d'identifiants) était refusée : la page
-        concluait « Aucune question disponible pour votre profil » alors que
-        près de 7 000 questions étaient accessibles. On filtre désormais les
-        questions par COURS (liste courte, par tranches de 50), on lit toutes
-        les pages de 1 000 lignes, sans embarquer les énoncés ni les items —
-        seules les questions retenues sont ensuite chargées en entier. */
-  type PoolRow = {
-    id: string;
-    serie_id: string;
-    order_index: number;
-    format: 'qcm' | 'qroc' | null;
-    qcm_items: { count: number }[] | null;
-    qcm_series: { cours: { matieres: { id: string; semestres: { faculte_id: string } } } };
-  };
-  const COURS_PAR_TRANCHE = 50;
-  const tranches: string[][] = [];
-  for (let i = 0; i < studiedCoursIds.length; i += COURS_PAR_TRANCHE) {
-    tranches.push(studiedCoursIds.slice(i, i + COURS_PAR_TRANCHE));
-  }
-  const [pool, serieRows] = await Promise.all([
-    Promise.all(tranches.map((coursIds) =>
-      fetchAllRows<PoolRow>((from, to) =>
-        supabase
-          .from('qcm_questions')
-          .select('id, serie_id, order_index, format, qcm_items(count), qcm_series!inner(cours_id, cours!inner(matieres!inner(id, semestres!inner(faculte_id))))')
-          .in('qcm_series.cours_id', coursIds)
-          .order('id', { ascending: true })
-          .range(from, to) as never,
-      ),
-    )).then((r) => r.flat()),
-    // TOUTES les séries des cours étudiés, avec ce qui décide de leur forme
-    // (vignette, libellé, type) et leur nombre TOTAL de questions. Seule une
-    // série de questions isolées se pioche question par question ; toute
-    // autre (dossier progressif, annale, entraînement, séance, sujet long) est
-    // servie entière ou pas du tout — règle du 18/09/2026 précisée le
-    // 20/09/2026 (annales servies question par question), voir
-    // lib/pedago/dossiers.ts.
-    Promise.all(tranches.map((coursIds) =>
-      fetchAllRows<SerieRowForme>((from, to) =>
-        supabase
-          .from('qcm_series')
-          .select('id, label, type, vignette, qcm_questions(count)')
-          .in('cours_id', coursIds)
-          .order('id', { ascending: true })
-          .range(from, to) as never,
-      ),
-    )).then((r) => r.flat()),
-  ]);
-  const dossiers = dossiersDepuisSeries(serieRows.map(formeDeSerie));
-
-  if (pool.length === 0) {
-    return (
-      <ExplainScreen
-        title={`Aucune série de ${unitLabel} disponible`}
-        body={`Les spécialités que vous avez étudiées ne contiennent pas encore de ${unitLabel} accessibles pour la révision transversale. Poursuivez votre progression dans les cours : les questions apparaîtront ici dès qu'elles seront disponibles.`}
-        ctaHref="/revisions-transversales"
-        ctaLabel="Retour au dashboard"
-      />
-    );
-  }
-
-  const accessibleMatieres = new Set(specs.map((s) => s.matiereId));
-  const allQ = pool.filter((q) => {
-    const m = q.qcm_series.cours.matieres;
-    if (m.semestres.faculte_id !== EDN_FACULTE_ID) return false;
-    if (!accessibleMatieres.has(m.id)) return false;
-    // On garde les QCM (avec items) ET les QROC (saisie libre, sans items).
-    const isQroc = q.format === 'qroc';
-    if (!isQroc && (q.qcm_items?.[0]?.count ?? 0) === 0) return false;
-    return true;
-  });
-
-  if (allQ.length === 0) {
-    return (
-      <ExplainScreen
-        title={`Aucune question disponible pour votre profil`}
-        body={`Aucun ${unitLabel} n'est disponible dans le périmètre de vos spécialités étudiées. Si le problème persiste, contactez l'équipe pédagogique.`}
-        ctaHref="/revisions-transversales"
-        ctaLabel="Retour au dashboard"
-      />
-    );
-  }
-
-  const targetN = transversalSessionSize(kind, specs.length);
-  const N = Math.min(targetN, allQ.length);
-
-  /* 5) Sélection — priorités du cahier des charges (section 3) :
-        1. questions jamais vues ;
-        2. questions déjà ratées (les plus ratées d'abord) ;
-        3. questions anciennes (dernière tentative > 30 jours) ;
-        4. spécialités fragiles/insuffisantes privilégiées ;
-        5. spécialités validées mais peu revues récemment.
-     Implémentation : score = rang de priorité principal + pondération de la
-     spécialité + bruit aléatoire léger (varier les sessions).
-
-     UNITÉ DE SÉLECTION (règle du 18/09/2026, précisée le 20/09/2026) : une
-     question isolée pour les séries de questions isolées ; la SÉRIE ENTIÈRE,
-     dans l'ordre, pour tout le reste (dossiers progressifs, annales,
-     entraînements, séances, sujets longs) — une question servie hors de son
-     sujet n'a pas les éléments pour être traitée. Une série incomplète est
-     écartée, jamais tronquée. */
-  const now = Date.now();
-  const days30Ms = 30 * 86_400_000;
-
-  // Pondération par spécialité : insuffisante < fragile < non évaluée < validée,
-  // et parmi les validées, la moins revue récemment d'abord.
-  const specWeight = new Map<string, number>();
-  for (const s of specs) {
-    let w: number;
-    if (s.officialStatus === 'insuffisante') w = 0;
-    else if (s.officialStatus === 'fragile') w = 0.5;
-    else if (s.officialStatus === null) w = 1.5;
-    else {
-      // Validée : 2 (revue il y a longtemps) → 3 (revue aujourd'hui).
-      const daysSinceActivity = s.lastActivity ? (now - s.lastActivity.getTime()) / 86_400_000 : 60;
-      w = 3 - Math.min(1, daysSinceActivity / 30);
+    /* 3) Historique de réponses : jamais vu / raté / ancien, par question. */
+    type AttemptStat = { seen: number; fails: number; last: number };
+    const attemptStats = new Map<string, AttemptStat>();
+    for (const a of attempts) {
+      const cur = attemptStats.get(a.question_id) ?? { seen: 0, fails: 0, last: 0 };
+      cur.seen++;
+      if (!a.is_correct) cur.fails++;
+      const t = new Date(a.attempted_at).getTime();
+      if (t > cur.last) cur.last = t;
+      attemptStats.set(a.question_id, cur);
     }
-    specWeight.set(s.matiereId, w);
-  }
 
-  const scoreDe = (q: PoolRow): number => {
-    const st = attemptStats.get(q.id);
-    let bucket: number;
-    if (!st) bucket = 0;                                     // jamais vue
-    else if (st.fails > 0) bucket = 1;                       // déjà ratée
-    else if (now - st.last > days30Ms) bucket = 2;           // ancienne
-    else bucket = 3;                                         // récente et réussie
-    const failBoost = st ? Math.min(0.9, st.fails * 0.3) : 0;
-    const w = specWeight.get(q.qcm_series.cours.matieres.id) ?? 1.5;
-    // Déterministe : le bruit qui varie les sessions est tiré par choisirUnites,
-    // une fois par unité (sinon un dossier le moyennait et ne sortait jamais).
-    return bucket * 10 + w - failBoost;
-  };
+    /* 4) Questions EDN accessibles dans les cours étudiés.
 
-  const { unites, dossiersIncomplets } = regrouperEnUnites(allQ, dossiers);
-  if (dossiersIncomplets.length > 0) {
-    console.warn('[revisions-transversales] dossiers incomplets écartés du vivier', dossiersIncomplets.length);
+          POURQUOI CETTE FORME. L'ancienne version listait d'abord les séries des
+          cours étudiés puis demandait les questions « dont serie_id est dans la
+          liste ». Chez un élève assidu (41 cours, 1 360 séries le 13/09/2026),
+          la liste des séries était tronquée à 1 000 par PostgREST, et l'URL de
+          la seconde requête (37 Ko d'identifiants) était refusée : la page
+          concluait « Aucune question disponible pour votre profil » alors que
+          près de 7 000 questions étaient accessibles. On filtre désormais les
+          questions par COURS (liste courte, par tranches de 50), on lit toutes
+          les pages de 1 000 lignes, sans embarquer les énoncés ni les items —
+          seules les questions retenues sont ensuite chargées en entier. */
+    type PoolRow = {
+      id: string;
+      serie_id: string;
+      order_index: number;
+      format: 'qcm' | 'qroc' | null;
+      qcm_items: { count: number }[] | null;
+      qcm_series: { cours: { matieres: { id: string; semestres: { faculte_id: string } } } };
+    };
+    const COURS_PAR_TRANCHE = 50;
+    const tranches: string[][] = [];
+    for (let i = 0; i < studiedCoursIds.length; i += COURS_PAR_TRANCHE) {
+      tranches.push(studiedCoursIds.slice(i, i + COURS_PAR_TRANCHE));
+    }
+    const [pool, serieRows] = await Promise.all([
+      Promise.all(tranches.map((coursIds) =>
+        fetchAllRows<PoolRow>((from, to) =>
+          supabase
+            .from('qcm_questions')
+            .select('id, serie_id, order_index, format, qcm_items(count), qcm_series!inner(cours_id, cours!inner(matieres!inner(id, semestres!inner(faculte_id))))')
+            .in('qcm_series.cours_id', coursIds)
+            .order('id', { ascending: true })
+            .range(from, to) as never,
+        ),
+      )).then((r) => r.flat()),
+      // TOUTES les séries des cours étudiés, avec ce qui décide de leur forme
+      // (vignette, libellé, type) et leur nombre TOTAL de questions. Seule une
+      // série de questions isolées se pioche question par question ; toute
+      // autre (dossier progressif, annale, entraînement, séance, sujet long) est
+      // servie entière ou pas du tout — règle du 18/09/2026 précisée le
+      // 20/09/2026 (annales servies question par question), voir
+      // lib/pedago/dossiers.ts.
+      Promise.all(tranches.map((coursIds) =>
+        fetchAllRows<SerieRowForme>((from, to) =>
+          supabase
+            .from('qcm_series')
+            .select('id, label, type, vignette, qcm_questions(count)')
+            .in('cours_id', coursIds)
+            .order('id', { ascending: true })
+            .range(from, to) as never,
+        ),
+      )).then((r) => r.flat()),
+    ]);
+    const dossiers = dossiersDepuisSeries(serieRows.map(formeDeSerie));
+
+    if (pool.length === 0) {
+      return (
+        <ExplainScreen
+          title={`Aucune série de ${unitLabel} disponible`}
+          body={`Les spécialités que vous avez étudiées ne contiennent pas encore de ${unitLabel} accessibles pour la révision transversale. Poursuivez votre progression dans les cours : les questions apparaîtront ici dès qu'elles seront disponibles.`}
+          ctaHref="/revisions-transversales"
+          ctaLabel="Retour au dashboard"
+        />
+      );
+    }
+
+    const accessibleMatieres = new Set(specs.map((s) => s.matiereId));
+    const allQ = pool.filter((q) => {
+      const m = q.qcm_series.cours.matieres;
+      if (m.semestres.faculte_id !== EDN_FACULTE_ID) return false;
+      if (!accessibleMatieres.has(m.id)) return false;
+      // On garde les QCM (avec items) ET les QROC (saisie libre, sans items).
+      const isQroc = q.format === 'qroc';
+      if (!isQroc && (q.qcm_items?.[0]?.count ?? 0) === 0) return false;
+      return true;
+    });
+
+    if (allQ.length === 0) {
+      return (
+        <ExplainScreen
+          title={`Aucune question disponible pour votre profil`}
+          body={`Aucun ${unitLabel} n'est disponible dans le périmètre de vos spécialités étudiées. Si le problème persiste, contactez l'équipe pédagogique.`}
+          ctaHref="/revisions-transversales"
+          ctaLabel="Retour au dashboard"
+        />
+      );
+    }
+
+    targetN = transversalSessionSize(kind, specs.length);
+    const N = Math.min(targetN, allQ.length);
+
+    /* 5) Sélection — priorités du cahier des charges (section 3) :
+          1. questions jamais vues ;
+          2. questions déjà ratées (les plus ratées d'abord) ;
+          3. questions anciennes (dernière tentative > 30 jours) ;
+          4. spécialités fragiles/insuffisantes privilégiées ;
+          5. spécialités validées mais peu revues récemment.
+       Implémentation : score = rang de priorité principal + pondération de la
+       spécialité + bruit aléatoire léger (varier les sessions).
+
+       UNITÉ DE SÉLECTION (règle du 18/09/2026, précisée le 20/09/2026) : une
+       question isolée pour les séries de questions isolées ; la SÉRIE ENTIÈRE,
+       dans l'ordre, pour tout le reste (dossiers progressifs, annales,
+       entraînements, séances, sujets longs) — une question servie hors de son
+       sujet n'a pas les éléments pour être traitée. Une série incomplète est
+       écartée, jamais tronquée. */
+    const now = Date.now();
+    const days30Ms = 30 * 86_400_000;
+
+    // Pondération par spécialité : insuffisante < fragile < non évaluée < validée,
+    // et parmi les validées, la moins revue récemment d'abord.
+    const specWeight = new Map<string, number>();
+    for (const s of specs) {
+      let w: number;
+      if (s.officialStatus === 'insuffisante') w = 0;
+      else if (s.officialStatus === 'fragile') w = 0.5;
+      else if (s.officialStatus === null) w = 1.5;
+      else {
+        // Validée : 2 (revue il y a longtemps) → 3 (revue aujourd'hui).
+        const daysSinceActivity = s.lastActivity ? (now - s.lastActivity.getTime()) / 86_400_000 : 60;
+        w = 3 - Math.min(1, daysSinceActivity / 30);
+      }
+      specWeight.set(s.matiereId, w);
+    }
+
+    const scoreDe = (q: PoolRow): number => {
+      const st = attemptStats.get(q.id);
+      let bucket: number;
+      if (!st) bucket = 0;                                     // jamais vue
+      else if (st.fails > 0) bucket = 1;                       // déjà ratée
+      else if (now - st.last > days30Ms) bucket = 2;           // ancienne
+      else bucket = 3;                                         // récente et réussie
+      const failBoost = st ? Math.min(0.9, st.fails * 0.3) : 0;
+      const w = specWeight.get(q.qcm_series.cours.matieres.id) ?? 1.5;
+      // Déterministe : le bruit qui varie les sessions est tiré par choisirUnites,
+      // une fois par unité (sinon un dossier le moyennait et ne sortait jamais).
+      return bucket * 10 + w - failBoost;
+    };
+
+    const { unites, dossiersIncomplets } = regrouperEnUnites(allQ, dossiers);
+    if (dossiersIncomplets.length > 0) {
+      console.warn('[revisions-transversales] dossiers incomplets écartés du vivier', dossiersIncomplets.length);
+    }
+    // Le mélange de l'ordre de passage se fait PAR UNITÉ : on conserve la
+    // sélection prioritaire, les dossiers restent d'un seul tenant, et l'élève
+    // n'enchaîne pas 25 questions jamais vues puis 15 ratées.
+    suite = aplatirUnites(choisirUnites(unites, scoreDe, N));
   }
-  // Le mélange de l'ordre de passage se fait PAR UNITÉ : on conserve la
-  // sélection prioritaire, les dossiers restent d'un seul tenant, et l'élève
-  // n'enchaîne pas 25 questions jamais vues puis 15 ratées.
-  const suite = aplatirUnites(choisirUnites(unites, scoreDe, N));
   const retenues = suite.map((r) => r.question.id);
 
   /* 6) Chargement complet des seules questions retenues (N ≤ 120). */
@@ -285,6 +310,26 @@ export default async function TransversalSessionPage({
     }];
   });
 
+  // Point de reprise : dans les questions RECONSTRUITES (un dossier a pu être
+  // écarté depuis). Nouvelle session = on inscrit sa suite, pour qu'un autre
+  // appareil la retrouve.
+  const etatInitial: EtatReprise | null = reprise ? etatDeReprise(reprise, questions) : null;
+  if (!etatInitial && questions.length > 0) {
+    const maintenant = new Date().toISOString();
+    const { error } = await db.from(TABLE_REPRISE).upsert({
+      user_id: user.id,
+      kind,
+      suite: encoderSuite(questions),
+      answered: 0,
+      score: 0,
+      per_cours: {},
+      per_matiere: {},
+      started_at: maintenant,
+      updated_at: maintenant,
+    }, { onConflict: 'user_id,kind' });
+    if (error) console.warn('[revisions-transversales] reprise non enregistrée', error.message);
+  }
+
   // Statut officiel par spécialité — conditionne les boutons de fin de session
   // (« Consolider » si déjà orange officiellement, « Renforcement » si rouge).
   const officialStatuses: Record<string, 'validee' | 'fragile' | 'insuffisante'> = {};
@@ -299,6 +344,7 @@ export default async function TransversalSessionPage({
       targetCount={targetN}
       unitLabel={unitLabel}
       officialStatuses={officialStatuses}
+      reprise={etatInitial}
     />
   );
 }

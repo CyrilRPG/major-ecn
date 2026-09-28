@@ -15,6 +15,7 @@ import { createClient } from '@/lib/supabase/client';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
 import { cn } from '@/lib/utils';
 import { recordTransversalSession, type TransversalKind } from '@/app/(student)/revisions-transversales/session/actions';
+import { TABLE_REPRISE, type EtatReprise, type ScoresPartiels } from '@/lib/pedago/reprise-transversale';
 
 export type TransversalQuestion = {
   id: string;
@@ -55,6 +56,7 @@ export function TransversalSession({
   targetCount,
   unitLabel = 'QCM',
   officialStatuses = {},
+  reprise = null,
 }: {
   questions: TransversalQuestion[];
   kind: TransversalKind;
@@ -65,23 +67,27 @@ export function TransversalSession({
    *  Renforcement (spec section 4 : ils ne s'affichent que si la spécialité
    *  est DÉJÀ orange/rouge officiellement, pas sur le seul score du jour). */
   officialStatuses?: Record<string, 'validee' | 'fragile' | 'insuffisante'>;
+  /** Session entamée ailleurs (autre appareil, rechargement) : on repart de la
+   *  première question non répondue avec les scores déjà acquis. */
+  reprise?: EtatReprise | null;
 }) {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(reprise?.index ?? 0);
   const [sel, setSel] = useState<Set<string>>(new Set());
   const [outcomes, setOutcomes] = useState<ItemOutcome[] | null>(null);
   // État QROC (voie externe) : réponse saisie, révélation, auto-évaluation.
   const [qrocText, setQrocText] = useState('');
   const [revealed, setRevealed] = useState(false);
   const [selfGrade, setSelfGrade] = useState<'bon' | 'faux' | null>(null);
-  const [score, setScore] = useState(0);
-  const [perCours, setPerCours] = useState<Record<string, { c: number; t: number }>>({});
-  const [perMatiere, setPerMatiere] = useState<Record<string, { c: number; t: number }>>({});
+  const [score, setScore] = useState(reprise?.score ?? 0);
+  const [perCours, setPerCours] = useState<ScoresPartiels>(reprise?.perCours ?? {});
+  const [perMatiere, setPerMatiere] = useState<ScoresPartiels>(reprise?.perMatiere ?? {});
+  const [avisReprise, setAvisReprise] = useState(reprise != null && reprise.index > 0);
   const [done, setDone] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [recorded, setRecorded] = useState(false);
   const [recordError, setRecordError] = useState(false);
   const [showCorrections, setShowCorrections] = useState(false);
-  const [startedAt] = useState(() => new Date().toISOString());
+  const [startedAt] = useState(() => reprise?.startedAt ?? new Date().toISOString());
 
   const total = questions.length;
   const q = questions[index];
@@ -151,21 +157,45 @@ export function TransversalSession({
     });
   };
 
+  // Compte la réponse (score, par cours, par spécialité) puis l'inscrit dans
+  // la ligne de reprise : un autre appareil repartira de la question suivante.
+  const compter = (correct: boolean) => {
+    const plus = (m: ScoresPartiels, cle: string): ScoresPartiels => {
+      const cur = m[cle] ?? { c: 0, t: 0 };
+      return { ...m, [cle]: { c: cur.c + (correct ? 1 : 0), t: cur.t + 1 } };
+    };
+    const nScore = score + (correct ? 1 : 0);
+    const nPerCours = plus(perCours, q.cours_id);
+    const nPerMatiere = plus(perMatiere, q.matiere_id);
+    setScore(nScore);
+    setPerCours(nPerCours);
+    setPerMatiere(nPerMatiere);
+    setAvisReprise(false);
+    void (async () => {
+      const supabase = createClient();
+      const user = await getVerifiedUser(supabase);
+      if (!user) return;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase as any).from(TABLE_REPRISE)
+        .update({
+          answered: index + 1,
+          score: nScore,
+          per_cours: nPerCours,
+          per_matiere: nPerMatiere,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('user_id', user.id)
+        .eq('kind', kind);
+    })().catch(() => undefined);
+  };
+
   // QROC : auto-évaluation Bon/Faux après révélation de la réponse. Enregistre
   // l'attempt (is_correct = self-grade) et met à jour le score / par-cours.
   const selfEvalQroc = (grade: 'bon' | 'faux') => {
     if (isValidated || submitting) return;
     setSubmitting(true);
     const isCorrect = grade === 'bon';
-    if (isCorrect) setScore((s) => s + 1);
-    setPerCours((prev) => {
-      const cur = prev[q.cours_id] ?? { c: 0, t: 0 };
-      return { ...prev, [q.cours_id]: { c: cur.c + (isCorrect ? 1 : 0), t: cur.t + 1 } };
-    });
-    setPerMatiere((prev) => {
-      const cur = prev[q.matiere_id] ?? { c: 0, t: 0 };
-      return { ...prev, [q.matiere_id]: { c: cur.c + (isCorrect ? 1 : 0), t: cur.t + 1 } };
-    });
+    compter(isCorrect);
     setSelfGrade(grade);
     setSubmitting(false);
     // Persistance APRÈS l'affichage : un appel qui traîne ne bloque plus l'élève.
@@ -193,15 +223,7 @@ export function TransversalSession({
       q.items.map((it) => ({ lettre: it.lettre, is_correct: it.is_correct, selected: sel.has(it.lettre) })),
     );
     const oc = q.items.map((it) => perItem[it.lettre]);
-    if (isQuestionCorrect) setScore((s) => s + 1);
-    setPerCours((prev) => {
-      const cur = prev[q.cours_id] ?? { c: 0, t: 0 };
-      return { ...prev, [q.cours_id]: { c: cur.c + (isQuestionCorrect ? 1 : 0), t: cur.t + 1 } };
-    });
-    setPerMatiere((prev) => {
-      const cur = prev[q.matiere_id] ?? { c: 0, t: 0 };
-      return { ...prev, [q.matiere_id]: { c: cur.c + (isQuestionCorrect ? 1 : 0), t: cur.t + 1 } };
-    });
+    compter(isQuestionCorrect);
     setOutcomes(oc);
     setSubmitting(false);
     // Persistance APRÈS l'affichage : un appel qui traîne ne bloque plus l'élève.
@@ -246,6 +268,13 @@ export function TransversalSession({
         <span className="shrink-0">Q<span className="font-semibold text-(--color-ink)">{index + 1}</span>/{total}</span>
       </div>
       <Progress value={(index / total) * 100} className="mb-3" />
+
+      {avisReprise && (
+        <div className="mb-3 flex items-center gap-2 rounded-lg border border-[#6D28D9]/25 bg-[#F1E8FD] px-3 py-2 text-xs text-[#5B21B6]">
+          <RotateCcw className="h-3.5 w-3.5 shrink-0" />
+          Reprise de votre session là où vous l’aviez laissée : {index} {unitLabel} déjà répondus, {score} réussis.
+        </div>
+      )}
 
       {targetCount && total < targetCount && index === 0 && (
         <div className="mb-3 flex items-center gap-2 rounded-lg border border-[#E8742C]/30 bg-[#FFF7E6] px-3 py-2 text-xs text-[#B45B00]">

@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
 import { checkAlertsAfterTransversalSession } from '@/lib/pedago/alerts';
+import { TABLE_REPRISE } from '@/lib/pedago/reprise-transversale';
 
 export type TransversalKind =
   | 'daily'
@@ -61,6 +62,10 @@ export async function recordTransversalSession(
     matiere_scores: input.matiere_scores ?? {},
   });
   if (error) return { ok: false, error: error.message };
+
+  // Session achevée : plus rien à reprendre sur un autre appareil.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (supabase as any).from(TABLE_REPRISE).delete().eq('user_id', user.id).eq('kind', input.kind);
 
   // Chaîne d'alertes (best-effort, jamais bloquante pour l'élève).
   try {
