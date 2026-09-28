@@ -772,6 +772,14 @@ a.ev-round-status:focus-visible { outline: 3px solid var(--ev-gold); outline-off
 .ev-scores-corrections { margin-top: 26px; padding: 24px 26px; border-radius: 14px; background: rgba(5, 10, 16, 0.9); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset; }
 .ev-scores-corrections > p:not(.ev-eyebrow) { margin: 12px 0 16px; font-size: 14.5px; line-height: 1.55; color: #c8ced6; }
 .ev-scores-corrections > div { display: flex; flex-wrap: wrap; gap: 12px; }
+/* Le libellé (« … · manche N ») passe à la ligne au lieu de déborder de la carte. */
+.ev-scores-corrections .ev-btn { max-width: 100%; min-width: 0; white-space: normal; text-align: left; }
+.ev-scores-corrections .ev-btn span { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 640px) {
+  .ev-scores-corrections { padding: 20px 16px; }
+  .ev-scores-corrections .ev-btn { width: 100%; padding: 10px 16px; gap: 10px; letter-spacing: 0.06em; line-height: 1.25; }
+  .ev-scores-corrections .ev-btn span { flex: 1; }
+}
 .ev-board-nobody { text-align: left; }
 .ev-board-nobody p { margin: 8px 0 0; color: #d6dce3; }
 .ev-board-nobody .ev-board-nobody-title { margin: 0; font-family: var(--ev-display); font-size: 21px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: #fff; }

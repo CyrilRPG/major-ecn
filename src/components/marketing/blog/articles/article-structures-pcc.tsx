@@ -108,7 +108,7 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
         {/* Parcours en 4 étapes */}
         <section className="mb-6 rounded-2xl border border-[#ECEEF1] bg-white p-5 shadow-sm">
           <h2 className="mb-4 text-[15px] font-bold text-[#1A2233]">Le parcours PAE en 4 étapes clés</h2>
-          <div className="grid items-stretch gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-4">
             {PARCOURS.map((p, i) => (
               <div key={p.label} className="relative rounded-xl border border-[#ECEEF1] bg-[#FAFBFE] p-4">
                 <span
@@ -131,10 +131,10 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
           </p>
         </section>
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           {/* Contenu */}
           <div className="space-y-6">
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <BoxSection num={1} title="Qui est concerné par la PAE ?">
                 <ul className="space-y-2 text-[13px] text-[#1A2233]">
                   <ListIcon Icon={Users} label="Médecins PADHUE" sub="Diplômes obtenus en dehors de l'UE" />
@@ -253,7 +253,7 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
               </div>
 
               {/* 2 cards : Important (bleu) + À retenir (vert) */}
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {/* Important — bleu */}
                 <div className="rounded-2xl border p-4"
                   style={{ background: '#F0F5FF', borderColor: '#DCE6FF' }}>
@@ -309,7 +309,7 @@ export function ArticleStructuresPcc({ article }: { article: BlogArticleMeta }) 
               </p>
             </BoxSection>
 
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <SmallBlock num={5} title="Les CHU : la structure de référence"
                 bullets={['Encadrement universitaire reconnu', 'Large palette de spécialités', 'Recherche et innovation', 'Formation continue de haut niveau', 'Multiples opportunités professionnelles']} />
               <SmallBlock num={6} title="Établissements privés et ESPIC"

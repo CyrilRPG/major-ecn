@@ -70,7 +70,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
           <p className="mb-3 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#9AA1AE]">
             2. Rémunérations indicatives des médecins étrangers en France selon le statut
           </p>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {STATUS.map((s) => (
               <div key={s.label} className="rounded-xl border border-[#ECEEF1] bg-[#FAFBFE] p-4">
                 <span
@@ -92,7 +92,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
           </p>
         </section>
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           {/* ─── Contenu ─── */}
           <div className="space-y-6">
             <Section
@@ -281,7 +281,7 @@ export function ArticleRemuneration({ article }: { article: BlogArticleMeta }) {
               title="Major ECN, votre partenaire pour réussir les EVC"
               soft
             >
-              <div className="grid items-center gap-4 lg:grid-cols-[1.4fr_1fr]">
+              <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
                 <div>
                   Les Épreuves de Vérification des Connaissances (EVC) constituent une étape déterminante
                   pour les médecins étrangers souhaitant obtenir leur autorisation d&rsquo;exercice en France
@@ -386,7 +386,7 @@ function Section({
           {num}. {title}
         </h2>
       </div>
-      <div className={`grid items-start gap-4 ${hasIllustration ? 'lg:grid-cols-[1.6fr_1fr]' : ''} mt-3`}>
+      <div className={`grid items-start gap-4 ${hasIllustration ? 'lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]' : ''} mt-3`}>
         <div className={`text-[13.5px] leading-relaxed text-[#1A2233] ${right ? 'order-2 lg:order-1' : ''}`}>
           {children}
         </div>

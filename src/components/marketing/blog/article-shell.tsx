@@ -12,7 +12,7 @@ export const ARTICLE_FONT = "'Plus Jakarta Sans', sans-serif";
 export function ArticleFinalCta() {
   return (
     <section className="mt-8 overflow-hidden rounded-2xl bg-[linear-gradient(90deg,#0F1F4D_0%,#5C1827_60%,#C0112E_100%)] p-5 text-white sm:p-6">
-      <div className="grid items-center gap-3 lg:grid-cols-[auto_1fr_auto]">
+      <div className="grid grid-cols-1 items-center gap-3 lg:grid-cols-[auto_minmax(0,1fr)_auto]">
         <Image
           src="/major-ecn-logo.png"
           alt="Major ECN"
@@ -61,7 +61,7 @@ export function ArticleHeader({
         category={article.category}
       />
 
-      <div className="grid items-end gap-5 lg:grid-cols-[1.4fr_1fr]">
+      <div className="grid grid-cols-1 items-end gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <div>
           <span
             className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.18em]"
@@ -130,7 +130,7 @@ function RelatedArticlesSection({ currentSlug }: { currentSlug: string }) {
           Voir tous les articles
         </Link>
       </div>
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {related.map((a) => {
           const c = BLOG_CATEGORIES[a.category];
           return (

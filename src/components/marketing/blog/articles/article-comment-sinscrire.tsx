@@ -63,7 +63,7 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
         />
 
         {/* 4 info cards en intro */}
-        <section className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {INTRO_CARDS.map((c) => (
             <div key={c.t} className="rounded-2xl border border-[#ECEEF1] bg-white p-4 shadow-sm">
               <span className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: c.bg, color: c.fg }}>
@@ -76,7 +76,7 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
         </section>
 
         {/* Sections 1 + 2 + 3 */}
-        <section className="mb-6 grid gap-4 lg:grid-cols-3">
+        <section className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
           {/* Section 1 — Qui peut se présenter */}
           <NumberedBox num={1} title="Qui peut se présenter aux EVC ?">
             <p className="text-[12.5px] text-[#1A2233]">
@@ -128,7 +128,7 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
         </section>
 
         {/* Sections 4 + 5 — côte à côte (infographies) */}
-        <section className="mb-6 grid gap-4 lg:grid-cols-2">
+        <section className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div className="overflow-hidden rounded-2xl border border-[#ECEEF1] bg-white shadow-sm">
             <Image
               src="/blog/infographie-justifier-francais-evc.webp"
@@ -162,7 +162,7 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
 
         {/* Bloc Major ECN — pourquoi choisir + plateforme */}
         <section className="mb-6 overflow-hidden rounded-2xl border border-[#FACBD0] bg-[#FFF1F3] p-5 sm:p-6">
-          <div className="grid gap-5 lg:grid-cols-[1.4fr_0.6fr] lg:items-center">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.6fr)] lg:items-center">
             <div>
               <div className="flex items-center gap-3">
                 <BrandLogo className="h-12 w-auto sm:h-14" />
@@ -212,7 +212,7 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
           <div className="flex flex-wrap items-baseline justify-between gap-3">
             <h3 className="text-[18px] font-extrabold text-[#1A2233]">Ils ont réussi les EVC avec Major ECN</h3>
           </div>
-          <div className="mt-3 grid gap-3 lg:grid-cols-3">
+          <div className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-3">
             {TESTIMONIALS.map((t) => (
               <article key={t.initials} className="rounded-2xl border border-[#ECEEF1] bg-white p-4 shadow-sm">
                 <Quote className="h-5 w-5 text-[#F59E0B]" />
@@ -236,7 +236,7 @@ export function ArticleCommentSinscrire({ article }: { article: BlogArticleMeta 
         </section>
 
         {/* FAQ + CTA finale */}
-        <section className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+        <section className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
           <div className="rounded-2xl border border-[#ECEEF1] bg-white p-5 sm:p-6">
             <h3 className="text-[18px] font-extrabold text-[#1A2233]">FAQ — Vos questions fréquentes</h3>
             <ul className="mt-3 divide-y divide-[#F2F3F5]">

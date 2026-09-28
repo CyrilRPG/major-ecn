@@ -76,7 +76,7 @@ export function ArticleDefisEvc({ article }: { article: BlogArticleMeta }) {
           rightArea={<DashboardMock />}
         />
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           {/* Colonne principale : les 5 défis */}
           <div className="space-y-5">
             {DEFIS.map((d) => (
@@ -108,7 +108,7 @@ export function ArticleDefisEvc({ article }: { article: BlogArticleMeta }) {
 
             {/* Bloc "Votre réussite, notre engagement" */}
             <section className="rounded-2xl border border-[#FACBD0] bg-[linear-gradient(135deg,#FFF1F3_0%,#FFE4E8_100%)] p-5 sm:p-6">
-              <div className="grid items-center gap-4 sm:grid-cols-[auto_1fr_auto]">
+              <div className="grid grid-cols-1 items-center gap-4 sm:grid-cols-[auto_minmax(0,1fr)_auto]">
                 <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-[#C0001F] shadow-sm">
                   <Target className="h-6 w-6" />
                 </span>
@@ -235,7 +235,7 @@ export function ArticleDefisEvc({ article }: { article: BlogArticleMeta }) {
 function DefiBlock({ defi }: { defi: typeof DEFIS[number] }) {
   return (
     <section className="rounded-2xl border border-[#ECEEF1] bg-white p-5 sm:p-6 shadow-sm">
-      <div className="grid gap-5 lg:grid-cols-[1.2fr_1fr]">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         {/* Gauche : numéro + titre + intro + bon à savoir */}
         <div>
           <div className="flex items-start gap-3">
@@ -424,7 +424,7 @@ function DefiExample({ kind }: { kind: ExampleKind }) {
 function DashboardMock() {
   return (
     <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-[#0F1F4D]/15 bg-[#0F1F4D] p-2 shadow-lg lg:aspect-auto lg:h-52">
-      <div className="grid h-full grid-cols-[60px_1fr] gap-1.5">
+      <div className="grid h-full grid-cols-[60px_minmax(0,1fr)] gap-1.5">
         {/* Sidebar */}
         <div className="space-y-1">
           <div className="rounded bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] px-1 py-0.5 text-[6px] font-bold text-white">Accueil</div>

@@ -98,7 +98,7 @@ export async function BlogIndex({
           </span>
         </Link>
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           {/* ───── Colonne principale ───── */}
           <div className="space-y-8">
             {/* Carrousel « À la une » (sélection et ordre gérés dans /admin/blog/ordre) */}
@@ -138,7 +138,7 @@ export async function BlogIndex({
             {/* Ressources Major EVC — grille */}
             <section>
               <h2 className="mb-3 text-base font-bold text-[#1A2233]">Ressources Major EVC</h2>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {visibleArticles.map((a) => (
                   <ArticleCard key={a.slug} article={a} />
                 ))}

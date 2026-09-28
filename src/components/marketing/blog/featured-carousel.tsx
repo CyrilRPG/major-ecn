@@ -51,7 +51,7 @@ export function FeaturedCarousel({ articles }: { articles: BlogArticleMeta[] }) 
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="grid items-stretch gap-0 sm:grid-cols-[0.85fr_1.15fr]">
+      <div className="grid grid-cols-1 items-stretch gap-0 sm:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
         <div className="relative aspect-[4/3] self-center overflow-hidden">
           <Image
             key={article.slug}

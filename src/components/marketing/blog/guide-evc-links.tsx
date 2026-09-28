@@ -148,7 +148,7 @@ export function ArticleGuideFooter({
               <p className="mb-2.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#52607A]">
                 À lire aussi dans le guide
               </p>
-              <ul className="grid gap-2 sm:grid-cols-2">
+              <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {related.map((a) => (
                   <li key={a.slug} className="border-l-2 border-[#FACBD0] pl-3">
                     <Link

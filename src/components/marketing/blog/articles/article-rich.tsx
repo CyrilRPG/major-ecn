@@ -328,7 +328,7 @@ export function ArticleRich({
           </div>
         )}
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           <article className="rounded-2xl border border-[#ECEEF1] bg-white p-5 sm:p-7">
             {toc.length >= 3 && (
               <nav className="mb-6 rounded-xl border border-[#ECEEF1] bg-[#FAFBFE] p-4">

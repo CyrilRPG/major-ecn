@@ -97,7 +97,7 @@ export function ArticleRatioPostes({ article }: { article: BlogArticleMeta }) {
           }
         />
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           {/* ─── Colonne principale ─── */}
           <div>
             {/* Sommaire */}
@@ -136,7 +136,7 @@ export function ArticleRatioPostes({ article }: { article: BlogArticleMeta }) {
             </Paragraph>
 
             {/* Tableau CNG */}
-            <div className="my-6 overflow-hidden rounded-xl border border-[#ECEEF1] shadow-sm">
+            <div className="my-6 overflow-x-auto rounded-xl border border-[#ECEEF1] shadow-sm">
               <table className="w-full text-left text-[13px]">
                 <thead>
                   <tr className="bg-[#0F1F4D] text-white">

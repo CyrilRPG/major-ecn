@@ -328,7 +328,7 @@ export function Article7ErreursEvc({ article }: { article: BlogArticleMeta }) {
         <GuideEvcBreadcrumb className="mb-5" title={article.title} category={article.category} />
 
         {/* ============ HERO ============ */}
-        <section className="grid grid-cols-1 gap-8 lg:grid-cols-[1.15fr_1fr] lg:gap-12">
+        <section className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-12">
           <div>
             <span className="inline-flex items-center rounded-md px-3 py-1 text-[11px] font-extrabold uppercase tracking-[0.2em] text-white"
               style={{ background: RED }}>
@@ -407,7 +407,7 @@ export function Article7ErreursEvc({ article }: { article: BlogArticleMeta }) {
         </section>
 
         {/* ============ CONTENU + SIDEBAR ============ */}
-        <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]">
+        <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="space-y-6">
             {/* Sections numérotées */}
             <article className="space-y-6">

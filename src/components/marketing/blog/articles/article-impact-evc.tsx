@@ -100,7 +100,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
         />
 
         {/* 4 cartes KPI */}
-        <section className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {KPI_CARDS.map((c) => (
             <div key={c.t} className="rounded-2xl border border-[#ECEEF1] bg-white p-4 shadow-sm">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: c.bg, color: c.fg }}>
@@ -114,18 +114,18 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
         </section>
 
         {/* Sections 1 + 2 */}
-        <section className="mb-6 grid gap-4 lg:grid-cols-2">
+        <section className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
           {/* Parcours d'intégration */}
           <div className="rounded-2xl border border-[#ECEEF1] bg-white p-5 sm:p-6 shadow-sm">
             <h2 className="text-[16px] font-extrabold text-[#1A2233]">Le parcours d&rsquo;intégration des médecins diplômés hors UE</h2>
-            <ol className="mt-4 flex items-stretch justify-between gap-1">
+            <ol className="mt-4 flex items-stretch justify-between gap-0.5 sm:gap-1">
               {PARCOURS_STEPS.map((s, i) => (
-                <li key={s.label} className="flex flex-1 items-center gap-1">
-                  <div className="flex flex-1 flex-col items-center text-center">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-full border border-[#ECEEF1] bg-[#FAFBFE] text-[#C0001F]">
+                <li key={s.label} className="flex min-w-0 flex-1 items-center gap-0.5 sm:gap-1">
+                  <div className="flex min-w-0 flex-1 flex-col items-center text-center">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#ECEEF1] bg-[#FAFBFE] text-[#C0001F] sm:h-12 sm:w-12">
                       <s.Icon className="h-5 w-5" />
                     </span>
-                    <p className="mt-2 text-[10.5px] font-bold leading-tight text-[#1A2233]">{s.label}</p>
+                    <p className="mt-2 text-[10.5px] font-bold leading-tight text-[#1A2233] [overflow-wrap:anywhere] [hyphens:auto]">{s.label}</p>
                     {s.sub && <p className="text-[9px] text-[#52607A]">{s.sub}</p>}
                   </div>
                   {i < PARCOURS_STEPS.length - 1 && (
@@ -143,7 +143,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
           {/* Pourquoi les EVC sont indispensables */}
           <div className="rounded-2xl border border-[#ECEEF1] bg-white p-5 sm:p-6 shadow-sm">
             <h2 className="text-[16px] font-extrabold text-[#1A2233]">Pourquoi les EVC sont indispensables ?</h2>
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
               {INDISPENSABLES.map((c) => (
                 <div key={c.t} className="rounded-xl border border-[#ECEEF1] bg-[#FAFBFE] p-3 text-center">
                   <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: c.bg, color: c.fg }}>
@@ -167,7 +167,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
             aux besoins de santé en France.
           </p>
 
-          <div className="mt-6 grid gap-5 lg:grid-cols-[1fr_1fr_1fr]">
+          <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]">
             {/* Colonne 1 : flow vertical */}
             <ol className="space-y-2">
               {FLOW_LEFT.map((s, i) => (
@@ -248,7 +248,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
 
         {/* Bloc Major ECN + plateforme */}
         <section className="mb-6 overflow-hidden rounded-2xl border border-[#FACBD0] bg-[#FFF1F3] p-5 sm:p-6">
-          <div className="grid gap-5 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:items-center">
             <div>
               <p className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#C0001F]">
                 <Sparkles className="h-3 w-3" /> Major ECN
@@ -285,7 +285,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
         </section>
 
         {/* Témoignage + avantages */}
-        <section className="mb-6 grid gap-4 lg:grid-cols-[1fr_1.6fr]">
+        <section className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
           <article className="rounded-2xl border border-[#ECEEF1] bg-white p-5 shadow-sm">
             <p className="text-[13px] font-extrabold text-[#1A2233]">Ils ont réussi les EVC avec Major-ECN</p>
             <div className="mt-3 text-[#F59E0B]">★★★★★</div>
@@ -321,7 +321,7 @@ export function ArticleImpactEvc({ article }: { article: BlogArticleMeta }) {
         </section>
 
         {/* FAQ + CTA finale */}
-        <section className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+        <section className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
           <div className="rounded-2xl border border-[#ECEEF1] bg-white p-5 sm:p-6">
             <h3 className="text-[18px] font-extrabold text-[#1A2233]">FAQ — Vos questions fréquentes</h3>
             <ul className="mt-3 divide-y divide-[#F2F3F5]">

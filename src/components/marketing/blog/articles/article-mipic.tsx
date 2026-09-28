@@ -122,7 +122,7 @@ export function ArticleMipic({ article }: { article: BlogArticleMeta }) {
         </Callout>
 
         {/* Info cards */}
-        <div className="my-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="my-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {INFO_CARDS.map((c) => (
             <div key={c.title} className="rounded-2xl border border-[#ECEEF1] bg-white p-5 shadow-sm">
               <c.Icon className="mb-2 h-6 w-6 text-[#C0001F]" />
@@ -132,7 +132,7 @@ export function ArticleMipic({ article }: { article: BlogArticleMeta }) {
           ))}
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           {/* ─── Colonne principale ─── */}
           <div>
             {/* Sommaire */}
@@ -229,7 +229,7 @@ export function ArticleMipic({ article }: { article: BlogArticleMeta }) {
             {/* ─── Section 4 : Calendrier ─── */}
             <SectionTitle id="postes-calendrier">Postes ouverts et calendrier de la session 2026</SectionTitle>
             <p className="mb-4 text-[14px] font-bold italic text-[#52607A]">Les dates à ne pas manquer</p>
-            <div className="my-6 overflow-hidden rounded-xl border border-[#ECEEF1] shadow-sm">
+            <div className="my-6 overflow-x-auto rounded-xl border border-[#ECEEF1] shadow-sm">
               <table className="w-full text-left text-[13px]">
                 <thead>
                   <tr className="bg-[#0F1F4D] text-white">
@@ -319,7 +319,7 @@ export function ArticleMipic({ article }: { article: BlogArticleMeta }) {
               <p className="mt-3 text-[14px] text-white/70">
                 Depuis 2011, Major ECN accompagne des candidats <strong>PADHUE</strong> sur l&rsquo;ensemble du parcours <strong>EVC / PAE</strong> — et adapte déjà son contenu de médecine interne pour intégrer la pondération MIPIC annoncée par le CNG.
               </p>
-              <div className="mt-5 grid gap-2 sm:grid-cols-2">
+              <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {[
                   'Correcteurs spécialistes en activité',
                   'Cas cliniques inédits, calibrés EVC',
