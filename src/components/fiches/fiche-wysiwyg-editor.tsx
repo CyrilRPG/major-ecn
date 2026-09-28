@@ -21,8 +21,11 @@ import {
   Bold, Italic, Underline as UnderlineIcon, List, ListOrdered,
   Image as ImageIcon, Loader2, FileDown, Eye, AlignLeft, AlignCenter,
   AlignRight, RemoveFormatting, Plus, Trash2, Star, Diamond,
-  TriangleAlert, Rows3,
+  TriangleAlert, Rows3, Highlighter, Eraser, PencilLine, BookOpenCheck,
 } from 'lucide-react';
+import {
+  marquerModifications, contientMarques, compterMarques, CSS_MODIFICATIONS, CLASSE_AJOUT, CLASSE_RETRAIT,
+} from '@/lib/fiches/modifications-visibles';
 import { ficheCss } from '@/lib/fiches/css';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
@@ -52,6 +55,18 @@ export function FicheWysiwygEditor({
   const [previewing, setPreviewing] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
+  // « Faire apparaître les modifications » : décoché = fiche propre. Coché
+  // d'office si la fiche porte déjà des marques (mise à jour précédente).
+  const [montrer, setMontrer] = useState(() => contientMarques(initialHtml));
+  const montrerRef = useRef(montrer);
+  const [vue, setVue] = useState<'edition' | 'eleve'>('edition');
+  const [apercuEleve, setApercuEleve] = useState('');
+  const [nbModifs, setNbModifs] = useState(() => compterMarques(initialHtml));
+  // Version de référence : la fiche telle qu'ouverte (ou telle qu'après
+  // « Retirer les marques »). Sérialisée comme le corps de l'iframe, pour que
+  // la normalisation du navigateur ne passe pas pour une modification.
+  const reference = useRef<string | null>(null);
+
   // Document de l'iframe (construit une seule fois). La charte + le corps de la
   // fiche, isolés du reste de l'app.
   const srcDoc = useMemo(
@@ -74,15 +89,24 @@ export function FicheWysiwygEditor({
   const serialize = useCallback((): string => {
     const d = doc();
     if (!d?.body) return '';
-    const clone = d.body.cloneNode(true) as HTMLElement;
-    clone.removeAttribute('contenteditable');
-    clone.querySelectorAll('[contenteditable]').forEach((el) => el.removeAttribute('contenteditable'));
-    let html = clone.innerHTML;
-    html = html
-      .replace(/<b(\s[^>]*)?>/gi, '<strong>').replace(/<\/b>/gi, '</strong>')
-      .replace(/<i(\s[^>]*)?>/gi, '<em>').replace(/<\/i>/gi, '</em>');
-    return html;
+    return serializeBody(d.body);
   }, []);
+
+  /** Référence paresseuse : le HTML initial passé par le même parseur. */
+  const lireReference = useCallback((): string => {
+    if (reference.current === null) {
+      const d = new DOMParser().parseFromString(`<!doctype html><html><body>${normalizeInbound(initialHtml)}</body></html>`, 'text/html');
+      reference.current = serializeBody(d.body);
+    }
+    return reference.current;
+  }, [initialHtml]);
+
+  /** HTML enregistré et publié : propre, ou avec les modifications apparentes. */
+  const contenu = useCallback((): string => {
+    const actuel = serialize();
+    if (!montrerRef.current) return actuel;
+    return marquerModifications(lireReference(), actuel);
+  }, [serialize, lireReference]);
 
   const scheduleSave = useCallback(() => {
     if (timer.current) clearTimeout(timer.current);
@@ -92,12 +116,12 @@ export function FicheWysiwygEditor({
         const res = await fetch(`/api/fiches/${coursId}/html`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content_html: serialize(), ficheId }),
+          body: JSON.stringify({ content_html: contenu(), ficheId }),
         });
         setSave(res.ok ? 'saved' : 'error');
       } catch { setSave('error'); }
     }, 1200);
-  }, [coursId, ficheId, serialize]);
+  }, [coursId, ficheId, contenu]);
 
   // Branche les écouteurs une fois l'iframe chargée.
   const onFrameLoad = useCallback(() => {
@@ -175,6 +199,44 @@ export function FicheWysiwygEditor({
     scheduleSave(); fitHeight();
   }, [fitHeight, scheduleSave]);
 
+  // ── Modifications apparentes ─────────────────────────────────────────────
+  const basculerMontrer = useCallback((v: boolean) => {
+    montrerRef.current = v;
+    setMontrer(v);
+    if (!v) setVue('edition');
+    setNbModifs(compterMarques(contenu()));
+    scheduleSave();
+  }, [contenu, scheduleSave]);
+
+  const voirRenduEleve = useCallback(() => {
+    const d = doc();
+    const html = contenu();
+    setNbModifs(compterMarques(html));
+    // Même <head> que l'éditeur (charte + surcharges), corps en lecture seule.
+    setApercuEleve(`<!doctype html><html lang="fr"><head>${d?.head.innerHTML ?? ''}</head><body>${html}</body></html>`);
+    setVue('eleve');
+  }, [contenu]);
+
+  /** Accepte toutes les marques : retraits effacés, ajouts gardés sans surlignage. */
+  const retirerMarques = useCallback(() => {
+    const d = doc();
+    if (!d) return;
+    if (!window.confirm('Retirer toutes les marques de modification ? La fiche redevient propre : le texte raturé disparaît et le texte surligné est conservé sans surlignage.')) return;
+    d.querySelectorAll(`del.${CLASSE_RETRAIT}`).forEach((el) => el.remove());
+    d.querySelectorAll(`ins.${CLASSE_AJOUT}`).forEach((el) => el.replaceWith(...Array.from(el.childNodes)));
+    reference.current = serialize();
+    montrerRef.current = false;
+    setMontrer(false);
+    setVue('edition');
+    setNbModifs({ ajouts: 0, retraits: 0 });
+    scheduleSave(); fitHeight();
+  }, [serialize, scheduleSave, fitHeight]);
+
+  // Compteur tenu à jour pendant la saisie (le calcul suit l'enregistrement).
+  useEffect(() => {
+    if (save === 'saved' && montrerRef.current) setNbModifs(compterMarques(contenu()));
+  }, [save, contenu]);
+
   // ── Publication / aperçu ─────────────────────────────────────────────────
   async function renderPdf(savePdf: boolean) {
     const setBusy = savePdf ? setPublishing : setPreviewing;
@@ -183,7 +245,7 @@ export function FicheWysiwygEditor({
       const res = await fetch(`/api/fiches/${coursId}/render-html`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content_html: serialize(), save: savePdf, nom_cours: nomCours, annee, ficheId }),
+        body: JSON.stringify({ content_html: contenu(), save: savePdf, nom_cours: nomCours, annee, ficheId }),
       });
       if (savePdf) {
         const j = (await res.json().catch(() => ({}))) as { ok?: boolean; pages?: number; error?: string };
@@ -203,6 +265,18 @@ export function FicheWysiwygEditor({
       <div className="flex shrink-0 items-center gap-3 border-b border-(--color-border) bg-white px-4 py-2">
         <span className="text-sm font-bold text-(--color-ink)">Édition de la fiche</span>
         <SaveBadge state={save} />
+        <label
+          className={'ml-2 inline-flex cursor-pointer select-none items-center gap-2 rounded-lg border px-2.5 py-1 text-xs font-bold transition-colors ' +
+            (montrer ? 'border-[#C0112E]/40 bg-[#C0112E]/[0.07] text-[#8C0D22]' : 'border-(--color-border) text-(--color-ink-soft) hover:bg-(--color-sand-100)')}
+          title="Coché : les élèves voient l’ancien texte raturé et le nouveau surligné en rouge. Décoché : la fiche reste propre."
+        >
+          <input type="checkbox" className="sr-only" checked={montrer} onChange={(e) => basculerMontrer(e.target.checked)} />
+          <span aria-hidden className={'relative h-4 w-7 rounded-full transition-colors ' + (montrer ? 'bg-[#C0112E]' : 'bg-(--color-border)')}>
+            <span className={'absolute top-0.5 h-3 w-3 rounded-full bg-white shadow transition-all ' + (montrer ? 'left-3.5' : 'left-0.5')} />
+          </span>
+          <Highlighter className="h-3.5 w-3.5" />
+          Faire apparaître les modifications
+        </label>
         <div className="ml-auto flex items-center gap-2">
           {msg && <span className="hidden max-w-[40ch] truncate text-xs text-(--color-ink-soft) lg:inline">{msg}</span>}
           <ActBtn onClick={() => renderPdf(false)} busy={previewing} icon={<Eye className="h-3.5 w-3.5" />} label="Aperçu PDF" />
@@ -261,6 +335,37 @@ export function FicheWysiwygEditor({
         </span>
       </div>
 
+      {/* Modifications apparentes : état, rendu élève, retrait des marques */}
+      {(montrer || nbModifs.ajouts + nbModifs.retraits > 0) && (
+        <div className="flex flex-wrap items-center gap-2 border-b border-[#C0112E]/20 bg-[#C0112E]/[0.05] px-3 py-1.5 text-xs text-[#8C0D22]">
+          <Highlighter className="h-3.5 w-3.5 shrink-0" />
+          <span className="font-semibold">
+            {montrer
+              ? 'Vos changements apparaîtront aux élèves : ancien texte '
+              : 'Cette fiche porte des marques de modification : ancien texte '}
+            <del className="decoration-[#C0112E] opacity-70">raturé</del>, nouveau <ins className="rounded-sm bg-[#C0112E]/15 px-0.5 no-underline">surligné</ins>
+            {nbModifs.ajouts + nbModifs.retraits > 0 && ` — ${nbModifs.ajouts + nbModifs.retraits} passage${nbModifs.ajouts + nbModifs.retraits > 1 ? 's' : ''} marqué${nbModifs.ajouts + nbModifs.retraits > 1 ? 's' : ''}`}
+            . Pensez à « Publier le PDF ».
+          </span>
+          <div className="ml-auto flex items-center gap-1.5">
+            <div className="inline-flex overflow-hidden rounded-md border border-[#C0112E]/30 bg-white">
+              <button type="button" onClick={() => setVue('edition')}
+                className={'inline-flex items-center gap-1 px-2 py-1 font-bold ' + (vue === 'edition' ? 'bg-[#C0112E] text-white' : 'text-[#8C0D22] hover:bg-[#C0112E]/10')}>
+                <PencilLine className="h-3.5 w-3.5" /> Édition
+              </button>
+              <button type="button" onClick={voirRenduEleve}
+                className={'inline-flex items-center gap-1 px-2 py-1 font-bold ' + (vue === 'eleve' ? 'bg-[#C0112E] text-white' : 'text-[#8C0D22] hover:bg-[#C0112E]/10')}>
+                <BookOpenCheck className="h-3.5 w-3.5" /> Rendu élève
+              </button>
+            </div>
+            <button type="button" onClick={retirerMarques}
+              className="inline-flex items-center gap-1 rounded-md border border-[#C0112E]/30 bg-white px-2 py-1 font-bold text-[#8C0D22] hover:bg-[#C0112E]/10">
+              <Eraser className="h-3.5 w-3.5" /> Retirer les marques
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Surface = iframe isolée (rendu réel de la fiche) */}
       <div className="flex-1 overflow-y-auto py-6">
         <iframe
@@ -268,8 +373,20 @@ export function FicheWysiwygEditor({
           title="Aperçu éditable de la fiche"
           onLoad={onFrameLoad}
           srcDoc={srcDoc}
-          className="mx-auto block w-[210mm] max-w-full border-0 bg-white shadow-(--shadow-lifted)"
+          className={'mx-auto w-[210mm] max-w-full border-0 bg-white shadow-(--shadow-lifted) ' + (vue === 'eleve' ? 'hidden' : 'block')}
         />
+        {vue === 'eleve' && (
+          <iframe
+            title="Rendu de la fiche pour les élèves"
+            srcDoc={apercuEleve}
+            onLoad={(e) => {
+              const f = e.currentTarget;
+              const d = f.contentDocument;
+              if (d) f.style.height = `${d.documentElement.offsetHeight + 8}px`;
+            }}
+            className="mx-auto block w-[210mm] max-w-full border-0 bg-white shadow-(--shadow-lifted)"
+          />
+        )}
       </div>
     </div>
   );
@@ -280,7 +397,7 @@ function buildSrcDoc(initialHtml: string): string {
   const css = ficheCss('/fonts/fiches');
   return (
     `<!doctype html><html lang="fr"><head><meta charset="utf-8"/>` +
-    `<style>${css}</style><style>${IFRAME_OVERRIDES}</style></head>` +
+    `<style>${css}</style><style>${IFRAME_OVERRIDES}</style><style>${CSS_MODIFICATIONS}</style></head>` +
     `<body contenteditable="true" spellcheck="true">${normalizeInbound(initialHtml)}</body></html>`
   );
 }
@@ -308,6 +425,18 @@ td:hover { box-shadow: inset 0 0 0 1px rgba(28,46,73,0.15); }
 `;
 
 /* ───────────────────────────── helpers ──────────────────────────────────── */
+/** Corps de fiche → HTML propre (stockage + Chromium) : sans contenteditable,
+ *  <b>/<i> normalisés en <strong>/<em>. */
+function serializeBody(body: HTMLElement): string {
+  const clone = body.cloneNode(true) as HTMLElement;
+  clone.removeAttribute('contenteditable');
+  clone.removeAttribute('spellcheck');
+  clone.querySelectorAll('[contenteditable]').forEach((el) => el.removeAttribute('contenteditable'));
+  return clone.innerHTML
+    .replace(/<b(\s[^>]*)?>/gi, '<strong>').replace(/<\/b>/gi, '</strong>')
+    .replace(/<i(\s[^>]*)?>/gi, '<em>').replace(/<\/i>/gi, '</em>');
+}
+
 function escapeAttr(s: string): string {
   return s.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }

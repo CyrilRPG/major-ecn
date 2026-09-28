@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { launchBrowser } from '@/lib/fiches/chromium';
 import { charteCss } from '@/lib/fiches/charte';
+import { CSS_MODIFICATIONS, contientMarques } from '@/lib/fiches/modifications-visibles';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
 
 export const runtime = 'nodejs';
@@ -71,7 +72,8 @@ function wrapWithCharte(bodyHtml: string, origin: string, title: string): string
   const css = charteCss(`${origin}/fonts/fiches`);
   return (
     `<!doctype html><html lang="fr"><head><meta charset="utf-8"/>` +
-    `<title>${escapeHtml(title)}</title><style>${css}</style></head>` +
+    // Marques « modifications apparentes » (ancien texte raturé, nouveau surligné).
+    `<title>${escapeHtml(title)}</title><style>${css}</style><style>${CSS_MODIFICATIONS}</style></head>` +
     `<body>${bodyHtml}</body></html>`
   );
 }
@@ -112,7 +114,10 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: str
 
   const origin = new URL(req.url).origin;
   const html = isFullDocument(body.content_html)
-    ? body.content_html
+    // Document complet (générateur Python) : styles des marques ajoutés s'il en porte.
+    ? (contientMarques(body.content_html)
+      ? body.content_html.replace(/<\/head>/i, `<style>${CSS_MODIFICATIONS}</style></head>`)
+      : body.content_html)
     : wrapWithCharte(body.content_html, origin, `${nomCours}`);
 
   let pdfBytes: Uint8Array;
