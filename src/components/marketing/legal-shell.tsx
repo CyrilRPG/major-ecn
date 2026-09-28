@@ -37,6 +37,7 @@ export function LegalShell({
         <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
           <Link
             href="/"
+            data-hors-app
             className="inline-flex items-center gap-2 text-[13px] font-bold transition-opacity hover:opacity-80"
             style={{ color: RED }}
           >
@@ -128,7 +129,7 @@ export function LegalShell({
               contact@major-ecn.fr
             </a>
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-3 text-[12.5px]" style={{ color: INK_SOFT }}>
+          <div data-hors-app className="flex flex-wrap items-center justify-center gap-3 text-[12.5px]" style={{ color: INK_SOFT }}>
             <Link href="/mentions-legales" className="hover:underline">Mentions légales</Link>
             <span aria-hidden>·</span>
             <Link href="/confidentialite" className="hover:underline">Confidentialité</Link>

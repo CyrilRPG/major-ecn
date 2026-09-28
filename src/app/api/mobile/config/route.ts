@@ -19,7 +19,8 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   const config = {
     ios_show_signup: process.env.MOBILE_IOS_SHOW_SIGNUP === 'true',
-    android_show_signup: process.env.MOBILE_ANDROID_SHOW_SIGNUP !== 'false',
+    // Google Play interdit les liens vers un paiement externe : désactivé sauf activation explicite.
+    android_show_signup: process.env.MOBILE_ANDROID_SHOW_SIGNUP === 'true',
     min_app_version: process.env.MOBILE_MIN_APP_VERSION ?? '1.0.0',
     signup_url: process.env.MOBILE_SIGNUP_URL ?? 'https://major-ecn.fr/inscription',
     site_url: 'https://major-ecn.fr',
