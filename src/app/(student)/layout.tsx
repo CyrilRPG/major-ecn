@@ -12,6 +12,8 @@ import { ParcoursMajorPopup } from '@/components/student/parcours-major-popup';
 import { ProfileCompletionGate } from '@/components/student/profile-completion-gate';
 import { getNavigatorTree } from '@/lib/data/navigator';
 import { hasMedecineGeneraleAccess, parseScope } from '@/lib/auth/permissions';
+import { PLAN_STUDENT_ENABLED } from '@/lib/modules-flags';
+import { planAvailableFor } from '@/lib/plan/service';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { isUserTargeted } from '@/lib/schemas/satisfaction';
 import { interrogationEnAttente } from '@/lib/pedago/interrogation';
@@ -74,9 +76,15 @@ export default async function StudentLayout({ children }: { children: React.Reac
   // Arbre de navigation et données du bandeau chargés EN PARALLÈLE : on
   // n'attend plus la fin de l'arbre avant de lancer les requêtes de
   // satisfaction/progrès (elles en sont indépendantes) → moins de latence.
-  const [tree, canAccessParcoursMajor, [{ data: recentProgress }, { data: forms }, { data: responses }]] = await Promise.all([
+  // « Mon planning » : le personnel toujours ; un élève si le module est ouvert et
+  // qu'une spécialité de sa formule a son programme dans le planificateur.
+  const planAccessPromise: Promise<boolean> = profile.role !== 'student'
+    ? Promise.resolve(true)
+    : PLAN_STUDENT_ENABLED ? planAvailableFor(profile.permission_scope).catch(() => false) : Promise.resolve(false);
+  const [tree, canAccessParcoursMajor, canAccessPlan, [{ data: recentProgress }, { data: forms }, { data: responses }]] = await Promise.all([
     treePromise,
     parcoursAccessPromise,
+    planAccessPromise,
     Promise.all([
       supabase
         .from('course_progress')
@@ -304,6 +312,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
           weeklyProgressDelta={weeklyProgressDelta}
           isDecouverte={isDecouverte}
           canAccessParcoursMajor={canAccessParcoursMajor}
+          canAccessPlan={canAccessPlan}
         >
           {optionalPending.length > 0 && !onFormPage && (
             <SatisfactionBanner form={optionalPending[0]} />

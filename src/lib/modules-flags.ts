@@ -27,4 +27,12 @@ export const SUIVI_STUDENT_ENABLED = false;
  * l'administrateur et les professeurs y accèdent (vue étudiant), pour la
  * recette. Le back-office /admin/planificateur est toujours disponible.
  */
-export const PLAN_STUDENT_ENABLED = false;
+export const PLAN_STUDENT_ENABLED = true;
+
+/**
+ * Planificateur dans l'app mobile. Distinct du web : l'app installée chez les
+ * élèves doit d'abord être mise à jour sur les stores (la version précédente
+ * parle l'ancien format de /api/mobile/plan). Passer à `true` une fois la
+ * nouvelle version publiée. Le personnel y accède toujours.
+ */
+export const PLAN_MOBILE_ENABLED = false;

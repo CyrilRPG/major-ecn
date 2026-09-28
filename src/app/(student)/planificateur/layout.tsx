@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
 import { PLAN_STUDENT_ENABLED } from '@/lib/modules-flags';
 import { planTablesReady } from '@/lib/plan/db';
+import { planAvailableFor } from '@/lib/plan/service';
 import { PlanTabs } from '@/components/student/plan/plan-tabs';
 
 export const metadata = { title: 'Mon planning' };
@@ -15,6 +16,8 @@ export const dynamic = 'force-dynamic';
 export default async function PlanificateurLayout({ children }: { children: React.ReactNode }) {
   const { profile } = await requireUser();
   if (!PLAN_STUDENT_ENABLED && profile.role === 'student') redirect('/accueil');
+  // Élève dont aucune spécialité n'a encore son programme dans le planificateur : rien à planifier.
+  if (profile.role === 'student' && !(await planAvailableFor(profile.permission_scope))) redirect('/accueil');
   if (!(await planTablesReady())) {
     if (profile.role === 'student') redirect('/accueil');
     return (

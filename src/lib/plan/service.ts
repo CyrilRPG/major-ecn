@@ -19,6 +19,7 @@ import { pickQuestions, scoreEvaluation, type EvalAnswer, type EvalQuestion } fr
 import { computePace, declaredToScore, evaluationOutcome, masteryFromAttempts, mergeMastery, sourceConfidence, type Pace } from './mastery';
 import { computePriority, type PriorityResult } from './priority';
 import { pickNextActivity, type NextActivity } from './next-activity';
+import { shouldShowIntro } from './intro';
 import { addDaysKey, daysBetween } from './revision';
 import { generateSchedule, type MasteryState, type ScheduleSummary } from './scheduler';
 import { referenceMinutes } from './workload';
@@ -141,6 +142,40 @@ function isoWeekday(day: string): number {
   const [y, m, d] = day.split('-').map(Number);
   const wd = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
   return wd === 0 ? 7 : wd;
+}
+
+/**
+ * Spécialités (de premier niveau) ayant un programme dans le planificateur —
+ * gardé 5 minutes en mémoire : sert au menu, sur chaque page de l'espace élève.
+ */
+let plannedCache: { at: number; tops: Set<string> } | null = null;
+export async function planAvailableFor(permissionScope: unknown): Promise<boolean> {
+  if (!plannedCache || Date.now() - plannedCache.at > 5 * 60_000) {
+    const [all, items] = await Promise.all([listColleges(), listItems({ activeOnly: true })]);
+    const parent = new Map(all.map((c) => [c.id, c.parent_matiere_id]));
+    plannedCache = { at: Date.now(), tops: new Set(items.map((i) => parent.get(i.specialite_id) ?? i.specialite_id)) };
+  }
+  const scope = parseScope(permissionScope);
+  return Array.from(plannedCache.tops).some((id) => canAccessCollege(scope, id));
+}
+
+/** Faut-il présenter le planificateur à cet élève (accueil) ? */
+export async function planIntroFor(userId: string, permissionScope: unknown, enabled: boolean): Promise<boolean> {
+  if (!enabled) return false;
+  const [eligible, profile] = await Promise.all([planAvailableFor(permissionScope), getProfile(userId)]);
+  return shouldShowIntro({
+    enabled, eligible, onboardingDone: !!profile?.onboarding_done, seenAt: profile?.intro_seen_at ?? null,
+    dismissCount: profile?.intro_dismiss_count ?? 0, now: new Date(),
+  });
+}
+
+/** Présentation vue : « Plus tard » la repousse, « Créer mon planning » ne compte pas comme un refus. */
+export async function recordIntroSeen(userId: string, dismissed: boolean): Promise<void> {
+  const profile = await getProfile(userId);
+  await upsertProfile(userId, {
+    intro_seen_at: new Date().toISOString(),
+    ...(dismissed ? { intro_dismiss_count: (profile?.intro_dismiss_count ?? 0) + 1 } : {}),
+  });
 }
 
 /** Collèges (spécialités) proposés à l'onboarding : ceux de la portée de l'élève, de premier niveau. */

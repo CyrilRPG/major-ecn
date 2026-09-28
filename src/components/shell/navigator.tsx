@@ -1,4 +1,4 @@
-import { PLAN_STUDENT_ENABLED, SUIVI_STUDENT_ENABLED } from '@/lib/modules-flags';
+import { SUIVI_STUDENT_ENABLED } from '@/lib/modules-flags';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -105,6 +105,7 @@ export function Navigator({
   role = 'student',
   isDecouverte = false,
   canAccessParcoursMajor = false,
+  canAccessPlan = false,
 }: {
   tree: NavCollege[];
   role?: 'student' | 'admin' | 'professor';
@@ -112,6 +113,8 @@ export function Navigator({
    *  deviennent des boutons cadenas qui ouvrent LockedContentModal. */
   isDecouverte?: boolean;
   canAccessParcoursMajor?: boolean;
+  /** Planificateur EVC ouvert à cet utilisateur (programme de sa spécialité paramétré). */
+  canAccessPlan?: boolean;
 }) {
   // Pour les profs : seulement les collèges/cours, pas Accueil/Agenda/etc.
   const isProf = role === 'professor';
@@ -255,7 +258,7 @@ export function Navigator({
         <>
           {isDecouverte ? (
             <>
-              {(PLAN_STUDENT_ENABLED || role !== 'student') && renderLockedTop(CalendarRange, 'Mon planning')}
+              {(canAccessPlan || role !== 'student') && renderLockedTop(CalendarRange, 'Mon planning')}
               {renderLockedTop(Target, 'Entraînement ciblé')}
               {renderLockedTop(RefreshCcw, 'Révisions transversales')}
               {renderLockedTop(CalendarDays, 'Agenda')}
@@ -266,6 +269,13 @@ export function Navigator({
             </>
           ) : (
             <>
+              {canAccessPlan && (
+                <Link href="/planificateur" className={topLevelClass(planActive)}>
+                  <CalendarRange className="h-[18px] w-[18px] shrink-0" />
+                  Mon planning
+                </Link>
+              )}
+
               <Link href="/entrainement" className={topLevelClass(trainActive)}>
                 <Target className="h-[18px] w-[18px] shrink-0" />
                 Entraînement ciblé

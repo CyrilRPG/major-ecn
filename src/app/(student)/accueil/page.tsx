@@ -21,6 +21,9 @@ import { startOfUtcIsoWeek, sumTrackedSeconds, type StudyTimeRow } from '@/lib/s
 import { getMaintienStats, getStudiedSpecialties } from '@/lib/pedago/maintien';
 import { sessionSizesFor } from '@/lib/pedago/status';
 import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
+import { PLAN_STUDENT_ENABLED } from '@/lib/modules-flags';
+import { planIntroFor } from '@/lib/plan/service';
+import { PlanIntroOnHome } from '@/components/student/plan/plan-intro';
 
 export const metadata = { title: 'Accueil' };
 
@@ -37,6 +40,12 @@ type CollegeRow = {
 /* ============================================================
    PAGE
    ============================================================ */
+/** Présentation animée du planificateur, une fois, aux élèves concernés (sans retarder l'accueil). */
+async function PlanIntroSlot({ userId, permissionScope }: { userId: string; permissionScope: unknown }) {
+  const show = await planIntroFor(userId, permissionScope, PLAN_STUDENT_ENABLED).catch(() => false);
+  return <PlanIntroOnHome show={show} />;
+}
+
 export default async function AccueilPage() {
   const { user, profile } = await requireUser();
 
@@ -107,6 +116,11 @@ export default async function AccueilPage() {
         </Suspense>
         {isDecouverte && <DiscoveryUpgradeCta />}
         {isDecouverte && <NouveauxContenusBanner />}
+        {profile.role === 'student' && !isDecouverte && (
+          <Suspense fallback={null}>
+            <PlanIntroSlot userId={user.id} permissionScope={profile.permission_scope} />
+          </Suspense>
+        )}
       </aside>
     </div>
   );

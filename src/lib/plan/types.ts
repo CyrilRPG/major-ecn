@@ -275,6 +275,9 @@ export type PlanProfile = {
   insufficient_ack_at: string | null;
   /** « Terminer pour aujourd'hui » : plus rien n'est programmé ce jour-là. */
   day_closed_on: string | null;
+  /** Présentation animée : dernière fois vue, nombre de « Plus tard ». */
+  intro_seen_at?: string | null;
+  intro_dismiss_count?: number;
   created_at: string;
   updated_at: string;
 };

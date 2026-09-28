@@ -76,6 +76,7 @@ export function AppShell({
   weeklyProgressDelta,
   isDecouverte = false,
   canAccessParcoursMajor = false,
+  canAccessPlan = false,
   children,
 }: {
   profile: Profile;
@@ -87,6 +88,8 @@ export function AppShell({
   isDecouverte?: boolean;
   /** Permission dynamique définie dans Configuration Permissions. */
   canAccessParcoursMajor?: boolean;
+  /** « Mon planning » (planificateur EVC) visible dans le menu. */
+  canAccessPlan?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -162,6 +165,7 @@ export function AppShell({
           role={profile.role as 'student' | 'admin' | 'professor'}
           isDecouverte={isDecouverte}
           canAccessParcoursMajor={canAccessParcoursMajor}
+          canAccessPlan={canAccessPlan}
         />
       </div>
       <SidebarHelpCard isDecouverte={isDecouverte} />

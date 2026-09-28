@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { getCurrentUserAndProfile } from '@/lib/auth/get-profile';
 import { PLAN_STUDENT_ENABLED } from '@/lib/modules-flags';
 import {
-  acknowledgeFirstPlan, acknowledgeInsufficient, claimExtraActivity, closeDay, completeOnboarding, completeSession, logFreeWork, postponeSession,
+  acknowledgeFirstPlan, acknowledgeInsufficient, claimExtraActivity, closeDay, recordIntroSeen, completeOnboarding, completeSession, logFreeWork, postponeSession,
   regeneratePlan, selfPosition, startEvaluation, startSession, submitEvaluation, updateAvailability, voieOfScope,
 } from '@/lib/plan/service';
 import { DECLARED_LEVELS } from '@/lib/plan/types';
@@ -99,6 +99,11 @@ export async function extraTimeAction(budget: number | null): Promise<Ok<{ sessi
     revalidate();
     return { ok: true, sessionId: r.sessionId, itemId: r.activity.itemId, coursId: r.coursId, kind: r.activity.kind, itemName: r.itemName, minutes: r.activity.minutes, reason: r.activity.reason };
   } catch (e) { return fail(e); }
+}
+
+/** Présentation animée vue (« Plus tard » = dismissed). */
+export async function recordIntroSeenAction(dismissed: boolean): Promise<Ok | Err> {
+  try { const { user } = await me(); await recordIntroSeen(user.id, dismissed); return { ok: true }; } catch (e) { return fail(e); }
 }
 
 /** « Terminer pour aujourd'hui ». */

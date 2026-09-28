@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PLAN_STUDENT_ENABLED, SUIVI_STUDENT_ENABLED } from '@/lib/modules-flags';
+import { PLAN_MOBILE_ENABLED, SUIVI_STUDENT_ENABLED } from '@/lib/modules-flags';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -36,7 +36,7 @@ export async function GET() {
     // Modules en recette : l’application affiche les mêmes rubriques que le web,
     // au même moment. Le drapeau est SERVEUR (les routes le revérifient) ; ici
     // il ne sert qu’à masquer une entrée de menu qui répondrait « fermé ».
-    plan_enabled: PLAN_STUDENT_ENABLED,
+    plan_enabled: PLAN_MOBILE_ENABLED,
     suivi_enabled: SUIVI_STUDENT_ENABLED,
   };
   return NextResponse.json(config, {

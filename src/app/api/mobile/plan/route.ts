@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { getBearerUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { PLAN_STUDENT_ENABLED } from '@/lib/modules-flags';
+import { PLAN_MOBILE_ENABLED } from '@/lib/modules-flags';
 import { collegeFamily, getProfile, listActivity, listColleges, listGenerations, listItems, planTablesReady } from '@/lib/plan/db';
 import {
   acknowledgeFirstPlan, acknowledgeInsufficient, claimExtraActivity, closeDay, collegesForStudent, completeOnboarding, completeSession,
@@ -33,7 +33,8 @@ export const dynamic = 'force-dynamic';
  * Tout le moteur (priorité, planning, file de travail) reste SERVEUR : l'app
  * n'affiche que des projections et déclenche les mêmes actions, avec la même
  * validation et les mêmes garde-fous — notamment le drapeau de mise en service
- * (`PLAN_STUDENT_ENABLED`), qui vaut pour le téléphone comme pour le navigateur.
+ * (`PLAN_MOBILE_ENABLED`, distinct du web tant que la nouvelle version de l'app
+ * n'est pas publiée sur les stores).
  *
  * GET  → état complet de l'espace candidat (ou données du premier lancement).
  * GET  ?evaluation=<id> → une évaluation courte et ses questions.
@@ -72,7 +73,7 @@ async function identifier(req: Request) {
     userId: auth.user.id,
     permissionScope: profile?.permission_scope ?? null,
     staff,
-    ouvert: PLAN_STUDENT_ENABLED || staff,
+    ouvert: PLAN_MOBILE_ENABLED || staff,
   } as const;
 }
 
