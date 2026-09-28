@@ -18,6 +18,9 @@ const CORS_PREFIXES = [
   '/api/cours/',
   '/api/student/heartbeat',
   '/api/chat',
+  // Émargement des cours en direct depuis l'app (28/09/2026) : sans CORS, l'appel
+  // échouait sans bruit sur l'appareil.
+  '/api/presences',
 ];
 
 const CORS_HEADERS: Record<string, string> = {
