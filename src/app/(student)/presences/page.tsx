@@ -2,46 +2,20 @@ import Link from 'next/link';
 import { CalendarCheck, CalendarDays, Clock, User, ArrowLeft, GraduationCap, PlayCircle, Video, PenLine, FileText } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
+import {
+  construireFeuilles,
+  feuilleASigner,
+  lienFeuille,
+  repartirFeuilles,
+  LIBELLE_FEUILLE as LIBELLE,
+  type Feuille,
+  type LigneAttendance,
+  type LigneCompletion,
+  type LignePresence,
+} from '@/lib/agenda/feuilles-emargement';
 
 export const metadata = { title: 'Mes présences — Major ECN' };
 export const dynamic = 'force-dynamic';
-
-/**
- * Toutes les feuilles d'émargement de l'élève, comme la vue admin
- * (/api/admin/emargements/[userId]) :
- *   - `course_attendances` → vidéo du cours ou séance approfondie vue sur la
- *     plateforme (signature manuscrite) ;
- *   - `parcours_completions` → interrogation de fin de parcours (PDF signé) ;
- *   - `session_presences`  → sessions Zoom en direct.
- * La page ne lisait que les sessions Zoom : un élève qui avait signé des
- * dizaines de feuilles vidéo voyait « Aucune présence émargée ».
- */
-type Feuille = {
-  id: string;
-  origine: 'video' | 'seance' | 'interrogation' | 'zoom';
-  titre: string;
-  college: string | null;
-  /** Jour de la séance Zoom (AAAA-MM-JJ). */
-  jour: string | null;
-  debut: string | null;
-  fin: string | null;
-  intervenant: string | null;
-  /** Signature (plateforme) ou émargement (Zoom). */
-  signeLe: string | null;
-  /** Obligation née (plateforme) : sert au tri d'une feuille non signée. */
-  requiseLe: string | null;
-  coursId: string | null;
-  signature: string | null;
-  /** Interrogation : note sur 20. */
-  note?: string | null;
-};
-
-const LIBELLE: Record<Feuille['origine'], string> = {
-  video: 'Vidéo du cours',
-  seance: 'Séance approfondie',
-  interrogation: 'Interrogation de fin de parcours',
-  zoom: 'Session Zoom',
-};
 
 function fmtJour(d: string | null): string {
   if (!d) return '—';
@@ -65,6 +39,12 @@ function fmtInstant(iso: string): string {
   }
 }
 
+/**
+ * Toutes les feuilles d'émargement de l'élève, comme la vue admin : vidéos de
+ * cours, séances approfondies, interrogations signées et sessions Zoom — celles
+ * « À signer » en tête. L'assemblage vit dans lib/agenda/feuilles-emargement
+ * (partagé avec l'app mobile via /api/mobile/presences).
+ */
 export default async function PresencesPage() {
   const { user } = await requireUser();
   // Service-role filtré sur l'élève connecté : la page ne dépend ni de la RLS
@@ -83,68 +63,13 @@ export default async function PresencesPage() {
       .select('cours_id, certificate_signed_at, signature_data_url, qcm_test_score, qcm_test_total, cours(titre, matiere_id)')
       .eq('user_id', user.id).not('certificate_signed_at', 'is', null),
   ]);
-  const nomCollege = new Map<string, string>(((matieres ?? []) as { id: string; nom: string }[]).map((m) => [m.id, m.nom]));
-
-  const feuilles: Feuille[] = [
-    ...((attendances ?? []) as {
-      id: string; cours_id: string; cours_titre: string | null; matiere_id: string | null; kind: string;
-      required_at: string; signed_at: string | null; signature_png: string | null;
-    }[]).map((r): Feuille => ({
-      id: r.id,
-      origine: r.kind === 'seance' ? 'seance' : 'video',
-      titre: r.cours_titre ?? 'Cours',
-      college: r.matiere_id ? (nomCollege.get(r.matiere_id) ?? null) : null,
-      jour: null, debut: null, fin: null, intervenant: null,
-      signeLe: r.signed_at,
-      requiseLe: r.required_at,
-      coursId: r.cours_id,
-      signature: r.signature_png,
-    })),
-    ...((completions ?? []) as {
-      cours_id: string; certificate_signed_at: string; signature_data_url: string | null;
-      qcm_test_score: number | null; qcm_test_total: number | null;
-      cours: { titre: string | null; matiere_id: string | null } | null;
-    }[]).map((r): Feuille => ({
-      id: `interrogation-${r.cours_id}`,
-      origine: 'interrogation',
-      titre: r.cours?.titre ?? 'Cours',
-      college: r.cours?.matiere_id ? (nomCollege.get(r.cours.matiere_id) ?? null) : null,
-      jour: null, debut: null, fin: null, intervenant: null,
-      signeLe: r.certificate_signed_at,
-      requiseLe: r.certificate_signed_at,
-      coursId: r.cours_id,
-      signature: r.signature_data_url,
-      note: r.qcm_test_score != null && r.qcm_test_total
-        ? `${((r.qcm_test_score / r.qcm_test_total) * 20).toFixed(1).replace('.', ',')} / 20`
-        : null,
-    })),
-    ...((presences ?? []) as {
-      id: string; event_title: string | null; event_date: string | null; start_time: string | null;
-      end_time: string | null; college: string | null; intervenant: string | null; marked_at: string;
-      signature_png: string | null;
-    }[]).map((r): Feuille => ({
-      id: r.id,
-      origine: 'zoom',
-      titre: r.event_title ?? 'Session',
-      college: r.college,
-      jour: r.event_date, debut: r.start_time, fin: r.end_time, intervenant: r.intervenant,
-      signeLe: r.marked_at,
-      requiseLe: r.marked_at,
-      coursId: null,
-      signature: r.signature_png,
-    })),
-  ].sort((a, b) => (b.signeLe ?? b.requiseLe ?? '').localeCompare(a.signeLe ?? a.requiseLe ?? ''));
-
-  const aSigner = feuilles.filter((f) => f.origine !== 'zoom' && !f.signeLe);
-  const signees = feuilles.filter((f) => !(f.origine !== 'zoom' && !f.signeLe));
-  const n = { video: 0, seance: 0, interrogation: 0, zoom: 0 };
-  for (const f of signees) n[f.origine]++;
-  const resume = [
-    n.video && `${n.video} vidéo${n.video > 1 ? 's' : ''} de cours`,
-    n.seance && `${n.seance} séance${n.seance > 1 ? 's' : ''} approfondie${n.seance > 1 ? 's' : ''}`,
-    n.interrogation && `${n.interrogation} interrogation${n.interrogation > 1 ? 's' : ''}`,
-    n.zoom && `${n.zoom} session${n.zoom > 1 ? 's' : ''} Zoom`,
-  ].filter(Boolean).join(' · ');
+  const feuilles = construireFeuilles({
+    attendances: (attendances ?? []) as LigneAttendance[],
+    completions: (completions ?? []) as LigneCompletion[],
+    presences: (presences ?? []) as LignePresence[],
+    matieres: (matieres ?? []) as { id: string; nom: string }[],
+  });
+  const { aSigner, signees, resume } = repartirFeuilles(feuilles);
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
@@ -217,10 +142,8 @@ export default async function PresencesPage() {
 
 function Ligne({ f }: { f: Feuille }) {
   const Icone = f.origine === 'zoom' ? CalendarCheck : f.origine === 'seance' ? Video : f.origine === 'interrogation' ? FileText : PlayCircle;
-  const lien = !f.coursId ? null
-    : f.origine === 'interrogation' ? `/cours/${f.coursId}`
-    : `/cours/${f.coursId}/${f.origine === 'seance' ? 'seance-approfondie' : 'video'}`;
-  const enAttente = f.origine !== 'zoom' && !f.signeLe;
+  const lien = lienFeuille(f);
+  const enAttente = feuilleASigner(f);
   return (
     <li className="flex flex-col gap-2 rounded-2xl border border-(--color-border) p-4 sm:flex-row sm:items-center sm:gap-4">
       <span
