@@ -1,5 +1,5 @@
 import 'server-only';
-import { parseScope, canAccessCollege, scopeOffers } from '@/lib/auth/permissions';
+import { parseScope, canAccessCollege, scopeOffers, hasMedecineGeneraleAccess } from '@/lib/auth/permissions';
 import { canStudentReadSerie, type QcmAccessContext } from '@/lib/data/qcm-access-rules';
 import { chargerAnnonces } from '@/lib/annonces/server';
 import { dayKeyOf, todayKey } from '@/lib/suivi/format';
@@ -156,18 +156,36 @@ function isoWeekday(day: string): number {
 }
 
 /**
+ * « Mon planning » est RÉSERVÉ aux élèves de Médecine générale (29/09/2026).
+ *
+ * Il s'ouvrait à tout élève ayant accès à une spécialité dotée d'un programme :
+ * les élèves Gériatrie y entraient par leur bonus Gériatrie → MG (qui ajoute
+ * `col-medecine-generale` à leur portée), et ceux de Médecine interne par le
+ * programme MIPIC. `hasMedecineGeneraleAccess` est le critère déjà utilisé par
+ * le Parcours du Major : spécialité payée = MG, ou collèges MG sans Gériatrie.
+ * Un accès intégral (`type: 'all'`) couvre la Médecine générale.
+ */
+export const PLAN_COLLEGES_OUVERTS: ReadonlySet<string> = new Set([MG_COLLEGE_ID]);
+
+export function planEligible(permissionScope: unknown): boolean {
+  const scope = parseScope(permissionScope);
+  return scope.type === 'all' || hasMedecineGeneraleAccess(permissionScope);
+}
+
+/**
  * Spécialités (de premier niveau) ayant un programme dans le planificateur —
  * gardé 5 minutes en mémoire : sert au menu, sur chaque page de l'espace élève.
  */
 let plannedCache: { at: number; tops: Set<string> } | null = null;
 export async function planAvailableFor(permissionScope: unknown): Promise<boolean> {
+  if (!planEligible(permissionScope)) return false;
   if (!plannedCache || Date.now() - plannedCache.at > 5 * 60_000) {
     const [all, items] = await Promise.all([listColleges(), listItems({ activeOnly: true })]);
     const parent = new Map(all.map((c) => [c.id, c.parent_matiere_id]));
     plannedCache = { at: Date.now(), tops: new Set(items.map((i) => parent.get(i.specialite_id) ?? i.specialite_id)) };
   }
   const scope = parseScope(permissionScope);
-  return Array.from(plannedCache.tops).some((id) => canAccessCollege(scope, id));
+  return Array.from(plannedCache.tops).some((id) => PLAN_COLLEGES_OUVERTS.has(id) && canAccessCollege(scope, id));
 }
 
 /** Faut-il présenter le planificateur à cet élève (accueil) ? */
@@ -191,12 +209,14 @@ export async function recordIntroSeen(userId: string, dismissed: boolean): Promi
 
 /** Collèges (spécialités) proposés à l'onboarding : ceux de la portée de l'élève, de premier niveau. */
 export async function collegesForStudent(permissionScope: unknown): Promise<CollegeLite[]> {
+  // Même réserve que `planAvailableFor` : Médecine générale seulement.
+  if (!planEligible(permissionScope)) return [];
   const scope = parseScope(permissionScope);
   const all = await listColleges();
   const tops = all.filter((c) => !c.parent_matiere_id && c.id !== 'col-decouverte');
   const items = await listItems({ activeOnly: true });
   const withItems = new Set(items.map((i) => i.specialite_id));
-  return tops.filter((c) => canAccessCollege(scope, c.id) && collegeFamily(c.id, all).some((id) => withItems.has(id)));
+  return tops.filter((c) => PLAN_COLLEGES_OUVERTS.has(c.id) && canAccessCollege(scope, c.id) && collegeFamily(c.id, all).some((id) => withItems.has(id)));
 }
 
 /* ─── Onboarding (addendum §3) ─── */

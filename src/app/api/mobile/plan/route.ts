@@ -70,11 +70,15 @@ async function identifier(req: Request) {
   }
   // Même règle que le web : tant que le module est fermé, seuls les élèves en sont exclus.
   const staff = !!profile && profile.role !== 'student';
+  // Réservé à la Médecine générale (29/09/2026) : ni le bonus Gériatrie → MG,
+  // ni la Médecine interne. Un élève non concerné voit le module fermé, sur
+  // toutes les branches de cette route (pas seulement le menu).
+  const eligible = staff || await planAvailableFor(profile?.permission_scope ?? null);
   return {
     userId: auth.user.id,
     permissionScope: profile?.permission_scope ?? null,
     staff,
-    ouvert: PLAN_MOBILE_ENABLED || staff,
+    ouvert: staff || (PLAN_MOBILE_ENABLED && eligible),
   } as const;
 }
 

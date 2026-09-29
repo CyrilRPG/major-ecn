@@ -6,7 +6,7 @@ import { getCurrentUserAndProfile } from '@/lib/auth/get-profile';
 import { PLAN_STUDENT_ENABLED } from '@/lib/modules-flags';
 import {
   acknowledgeFirstPlan, acknowledgeInsufficient, claimExtraActivity, closeDay, recordIntroSeen, completeOnboarding, completeSession, logFreeWork, postponeSession,
-  regeneratePlan, selfPosition, startEvaluation, startSession, submitEvaluation, updateAvailability, voieOfScope,
+  regeneratePlan, selfPosition, startEvaluation, startSession, submitEvaluation, updateAvailability, voieOfScope, planAvailableFor,
 } from '@/lib/plan/service';
 import { DECLARED_LEVELS } from '@/lib/plan/types';
 import { todayKey } from '@/lib/suivi/format';
@@ -26,6 +26,11 @@ async function me() {
   if (!user || !profile) throw new Error('Non authentifié');
   if (profile.is_active === false) throw new Error('Compte désactivé');
   if (!PLAN_STUDENT_ENABLED && profile.role === 'student') throw new Error('Le planificateur n’est pas encore ouvert.');
+  // Réservé à la Médecine générale : un élève Gériatrie (bonus MG) ou de
+  // Médecine interne ne doit pas pouvoir l'utiliser, même par appel direct.
+  if (profile.role === 'student' && !(await planAvailableFor(profile.permission_scope))) {
+    throw new Error('Le planificateur est réservé aux élèves de Médecine générale.');
+  }
   return { user, profile };
 }
 const revalidate = () => revalidatePath('/planificateur', 'layout');
