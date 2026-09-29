@@ -11,7 +11,6 @@ import type { CourseSupport } from '@/lib/student/supports';
 import { CourseChatbot } from '@/components/course-chatbot';
 import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
 import { SplitViewToggle, SplitLayout } from './split-view';
-import { AssistantCoachmark } from './assistant-coachmark';
 import { cn } from '@/lib/utils';
 import { rubriqueParDefaut } from '@/lib/videos/rubriques';
 
@@ -149,7 +148,6 @@ export function StudyConsole({
   return (
     <div className="relative">
       {/* 4ᵉ flèche d'onboarding : pointe le bouton « Assistant » (une seule fois). */}
-      <AssistantCoachmark />
       {/* Console header — sticky, page scrolls underneath (so QCM/long content scrolls).
           Mobile : padding réduit, gauge compacte, titre 1 ligne tronqué. */}
       <div className="sticky top-0 z-20 border-b border-(--color-border) bg-(--color-surface)/95 px-3 py-2 backdrop-blur sm:px-4 sm:py-3 lg:px-8">

@@ -6,9 +6,9 @@ import { ImpersonationBanner } from '@/components/impersonation-banner';
 import { AppShell } from '@/components/shell/app-shell';
 import { SatisfactionBanner } from '@/components/student/satisfaction-banner';
 import { ConseilsCenter } from '@/components/student/conseils-center';
-import { StudentTutorialPopup } from '@/components/student/student-tutorial-popup';
-import { OnboardingTour } from '@/components/student/onboarding-tour';
-import { ParcoursMajorPopup } from '@/components/student/parcours-major-popup';
+import { TutorielVideo } from '@/components/student/tutoriel-video';
+import { videoTutoriel } from '@/lib/student/tutoriel-video';
+import { bunnyEmbedUrl } from '@/lib/bunny';
 import { ProfileCompletionGate } from '@/components/student/profile-completion-gate';
 import { getNavigatorTree } from '@/lib/data/navigator';
 import { hasMedecineGeneraleAccess, parseScope } from '@/lib/auth/permissions';
@@ -296,6 +296,16 @@ export default async function StudentLayout({ children }: { children: React.Reac
     }
   }
 
+  // Tutoriel vidéo du profil : ne montre que ce à quoi l'élève a accès.
+  const tutoriel = videoTutoriel({
+    offer: scopeForNav.offer,
+    isDecouverte,
+    medecineGenerale: hasMedecineGeneraleAccess(profile.permission_scope),
+    planning: canAccessPlan,
+    voie: scopeForNav.voie,
+  });
+  const tutorielEmbed = tutoriel ? bunnyEmbedUrl(tutoriel.videoId) : null;
+
   // Vue partagée (iframe du panneau, cf. middleware `x-embed`) : le contenu
   // seul. Ni menu, ni barre, ni popups, ni tutoriel — l'élève a déjà tout cela
   // dans la fenêtre principale. Les gardes ci-dessus (formulaire obligatoire,
@@ -347,25 +357,16 @@ export default async function StudentLayout({ children }: { children: React.Reac
           impersonating={isImpersonating}
         />
       )}
-      {profile.role === 'student' && <ConseilsCenter isDecouverte={isDecouverte} welcome={welcome} />}
-      {/* Parcours d'accueil, dans l'ordre d'apparition : le gros tutoriel, puis
-          l'annonce du Parcours du Major, puis les flèches sur le menu. Chaque
-          étape attend que l'écran soit libre (cf. lib/student/onboarding).
-
-          Montés aussi pour les administrateurs et les professeurs, mais en
-          `replayOnly` : ils ne s'ouvrent alors que sur « Revoir le tutoriel »,
-          ce qui permet de contrôler en vue étudiant ce que voient les élèves. */}
-      {!isDecouverte && scopeForNav.offer !== 'decouverte' && (
-        <StudentTutorialPopup
-          offer={scopeForNav.offer as 'essentiel' | 'intensif' | 'approfondi'}
-          parcoursMajor={canAccessParcoursMajor}
-          replayOnly={profile.role !== 'student'}
-        />
-      )}
-      {canAccessParcoursMajor && (
-        <ParcoursMajorPopup replayOnly={profile.role !== 'student'} />
-      )}
-      <OnboardingTour replayOnly={profile.role !== 'student'} />
+      {profile.role === 'student' && <ConseilsCenter welcome={welcome} />}
+      {/* Accueil = UNE fenêtre : le tutoriel vidéo du profil, avec sous la vidéo
+          le texte d'accueil de l'administration. Le personnel la voit aussi,
+          mais seulement sur demande (bouton « Tutoriel »), pour contrôler ce
+          que voient les élèves. */}
+      <TutorielVideo
+        embedUrl={tutorielEmbed}
+        welcome={isDecouverte || !welcome.active ? null : welcome}
+        replayOnly={profile.role !== 'student'}
+      />
     </div>
   );
 }

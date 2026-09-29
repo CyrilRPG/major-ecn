@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   ArrowRight, CalendarCheck, CalendarDays, CalendarRange, ChevronRight, Home, Lock,
-  MousePointerClick, NotebookPen, PencilRuler, PenLine, RefreshCcw, Star, Target, Trophy, X,
+  NotebookPen, PencilRuler, PenLine, RefreshCcw, Star, Target, Trophy,
 } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
@@ -20,8 +20,6 @@ const ACTIVE_GRADIENT =
 
 /** Identifiant du collège « Découverte » (mode Espace découverte). */
 const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
-/** Clé localStorage : coachmark « Cliquez sur Découverte » montré une seule fois. */
-const DECOUVERTE_COACHMARK_KEY = 'mecn_decouverte_coachmark_v1';
 /** Clé localStorage : l'élève a déjà ouvert « Mon planning » (pastille NEW apaisée). */
 const PLANNING_NEW_VU_KEY = 'mecn_planning_new_vu_v1';
 
@@ -196,34 +194,6 @@ export function Navigator({
     return c?.id ?? null;
   }, [tree]);
 
-  /** Coachmark « Cliquez sur Découverte » — affiché une seule fois (localStorage). */
-  const [showCoachmark, setShowCoachmark] = useState(false);
-  useEffect(() => {
-    if (isProf || !isDecouverte || !decouverteColId) return;
-    let raf = 0;
-    try {
-      if (window.localStorage.getItem(DECOUVERTE_COACHMARK_KEY) !== '1') {
-        // rAF : évite un setState synchrone dans l'effet (et tout mismatch
-        // d'hydratation) — le coachmark apparaît juste après le 1er rendu.
-        raf = requestAnimationFrame(() => setShowCoachmark(true));
-      }
-    } catch {
-      /* localStorage indisponible (mode privé) : on n'affiche pas le coachmark. */
-    }
-    return () => {
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, [isProf, isDecouverte, decouverteColId]);
-
-  const dismissCoachmark = useCallback(() => {
-    setShowCoachmark(false);
-    try {
-      window.localStorage.setItem(DECOUVERTE_COACHMARK_KEY, '1');
-    } catch {
-      /* noop */
-    }
-  }, []);
-
   const homeActive = pathname === '/accueil';
   const trainActive = pathname.startsWith('/entrainement');
   const transversalActive = pathname.startsWith('/revisions-transversales');
@@ -392,10 +362,7 @@ export function Navigator({
             <button
               type="button"
               data-tour="matiere"
-              onClick={() => {
-                toggle(col.id);
-                if (isDecouverteCol) dismissCoachmark();
-              }}
+              onClick={() => toggle(col.id)}
               className="group flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left font-medium text-white/85 transition-colors hover:bg-white/10 hover:text-white"
             >
               <ChevronRight
@@ -410,35 +377,6 @@ export function Navigator({
                 {colTotal}
               </span>
             </button>
-
-            {/* Coachmark « Cliquez sur Découverte » — une seule fois. */}
-            {isDecouverteCol && showCoachmark && (
-              <div className="relative z-30 ml-6 mr-1 mt-2">
-                {/* Flèche pointant vers l'item Découverte au-dessus. */}
-                <span
-                  aria-hidden
-                  className="absolute -top-1.5 left-6 h-3 w-3 rotate-45 rounded-[3px] bg-white"
-                />
-                <div className="relative rounded-xl bg-white p-3 pr-7 shadow-[0_18px_45px_-12px_rgba(0,0,0,0.45)]">
-                  <button
-                    type="button"
-                    onClick={dismissCoachmark}
-                    aria-label="Fermer"
-                    className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                  <p className="flex items-start gap-1.5 text-[12.5px] leading-snug" style={{ color: '#1F2937' }}>
-                    <MousePointerClick className="mt-px h-4 w-4 shrink-0" style={{ color: '#C0112E' }} />
-                    <span>
-                      Cliquez sur{' '}
-                      <span className="font-extrabold" style={{ color: '#C0112E' }}>Découverte</span>{' '}
-                      pour accéder au contenu mis en ligne dans le cadre de la découverte de la plateforme.
-                    </span>
-                  </p>
-                </div>
-              </div>
-            )}
 
             {o && (
               <>

@@ -15,7 +15,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { DrawnAvatar } from '@/components/avatar/drawn-avatar';
 import { effectiveSeed } from '@/lib/avatar';
 import { createClient } from '@/lib/supabase/client';
-import { resetOnboarding } from '@/lib/student/onboarding';
+import { TUTORIEL_OPEN_EVENT } from '@/lib/student/tutoriel-video';
 import type { Profile } from '@/lib/auth/get-profile';
 
 export function UserMenu({ profile }: { profile: Profile }) {
@@ -26,13 +26,11 @@ export function UserMenu({ profile }: { profile: Profile }) {
     router.push('/login');
     router.refresh();
   };
-  /** Rejoue tout le parcours d'accueil : popup pas à pas + flèches sur le menu,
-   *  l'aperçu d'un item et l'assistant. Rechargement complet (et non
-   *  `router.push`) pour que chaque composant se remonte et relise un stockage
-   *  vidé — sinon ceux déjà rendus resteraient sur leur décision de départ. */
+  /** Rouvre le tutoriel vidéo. Hors de l'espace élève (où la fenêtre n'est
+   *  pas montée), passe par l'accueil avec `?tutoriel=1`. */
   const handleReplayTutorial = () => {
-    resetOnboarding();
-    window.location.assign('/accueil?tutoriel=1');
+    if (document.querySelector('[data-onboarding-user]')) window.dispatchEvent(new Event(TUTORIEL_OPEN_EVENT));
+    else window.location.assign('/accueil?tutoriel=1');
   };
   return (
     <DropdownMenu>

@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { Command as CmdIcon, Lightbulb, Menu, PanelLeft, Search } from 'lucide-react';
 import { UserMenu } from '@/components/user-menu';
 import { PlatformTimer } from '@/components/student/platform-timer';
+import { BoutonTutoriel } from '@/components/student/tutoriel-video';
 import type { Profile } from '@/lib/auth/get-profile';
 
 function contextLabel(pathname: string): string {
@@ -71,6 +72,8 @@ export function TopBar({
       </button>
 
       {profile.role === 'student' && <PlatformTimer />}
+
+      <BoutonTutoriel />
 
       {profile.role === 'student' && (
         <button

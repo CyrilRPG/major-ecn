@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { REMINDER_SHORT } from '@/lib/plan/types';
-import { PlanIntroReplayButton } from './plan-intro';
 
 const TABS: { href: string; label: string; exact?: boolean }[] = [
   { href: '/planificateur', label: 'Aujourd’hui', exact: true },
@@ -38,7 +37,6 @@ export function PlanTabs() {
       </nav>
       <p className="mb-4 flex items-start gap-2 rounded-lg border border-(--color-border) bg-(--color-surface-soft) px-3 py-2 text-xs text-(--color-ink-soft)">
         <Info className="mt-px h-3.5 w-3.5 shrink-0" /> <span className="flex-1">{REMINDER_SHORT}</span>
-        <PlanIntroReplayButton className="shrink-0" />
       </p>
     </>
   );

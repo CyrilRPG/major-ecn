@@ -1,13 +1,11 @@
 /**
- * Parcours d'accueil de l'élève — source unique des clés et des utilitaires.
+ * Parcours d'accueil de l'élève — clés et utilitaires.
  *
- * Le tutoriel est une chaîne : popup d'accueil → tutoriel pas à pas → flèches
- * sur le menu → flèche sur l'aperçu d'un item → flèche sur l'assistant. Chaque
- * étape a sa propre clé localStorage ; elles étaient déclarées en double dans
- * quatre composants, ce qui rendait impossible toute remise à zéro globale.
- * Elles sont désormais toutes ici, avec `resetOnboarding()` — indispensable
- * pour « Revoir le tutoriel » : sans lui, une fois les étapes vues, plus
- * personne ne pouvait les revoir (seul le grand popup avait `?tutoriel=1`).
+ * Depuis le 28/09/2026, l'accueil tient en UNE fenêtre : le tutoriel vidéo du
+ * profil (components/student/tutoriel-video), étape `welcome` de la séquence.
+ * Le popup « Bienvenue », le tutoriel pas à pas, l'annonce du Parcours du Major
+ * et les flèches (menu, aperçu, assistant) ont été retirés : ils pouvaient se
+ * superposer. Les clés ci-dessous restent déclarées pour `resetOnboarding()`.
  */
 
 export const ONBOARDING_KEYS = {
