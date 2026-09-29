@@ -45,6 +45,8 @@ export type EditStudentTarget = {
   can_download?: boolean | null;
   /** Spécialités où l'impression des fiches est autorisée (si pas de droit global). */
   download_colleges?: string[] | null;
+  /** Téléchargement des supports vidéo (PDF filigranés), indépendant des fiches. */
+  can_download_supports?: boolean | null;
   /** Session EVC de rattachement (fin d'accès par défaut). */
   evc_session_id?: string | null;
   /** Fin d'accès individuelle — prime sur la date de la session. */
@@ -94,6 +96,7 @@ export function EditStudentDialog({
   const [pseudo, setPseudo] = useState(student.pseudo ?? '');
   const [canDownload, setCanDownload] = useState(student.can_download ?? false);
   const [downloadColleges, setDownloadColleges] = useState<Set<string>>(new Set(student.download_colleges ?? []));
+  const [canDownloadSupports, setCanDownloadSupports] = useState(student.can_download_supports ?? false);
   const [offersSel, setOffersSel] = useState<OfferId[]>(adminOffersFrom(initialScope));
   const [access, setAccess] = useState<AccessValue>(initialAccess);
   const [contentOverrides, setContentOverrides] = useState<Record<string, boolean> | null>(
@@ -115,6 +118,7 @@ export function EditStudentDialog({
     setPseudo(student.pseudo ?? '');
     setCanDownload(student.can_download ?? false);
     setDownloadColleges(new Set(student.download_colleges ?? []));
+    setCanDownloadSupports(student.can_download_supports ?? false);
     setOffersSel(adminOffersFrom(sc));
     setAccess({
       permissionType: sc.type,
@@ -161,6 +165,7 @@ export function EditStudentDialog({
           can_download: canDownload,
           // Droit global → la liste par spécialité devient inutile, on la vide.
           download_colleges: canDownload ? [] : Array.from(downloadColleges),
+          can_download_supports: canDownloadSupports,
           // Surcharges individuelles de contenu.
           content_overrides: contentOverrides,
           // Période d'accès : session de rattachement + éventuelle date individuelle.
@@ -271,6 +276,17 @@ export function EditStudentDialog({
               </p>
             </div>
           </div>
+
+          <label className="flex items-start gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
+            <Checkbox checked={canDownloadSupports} onCheckedChange={(v) => setCanDownloadSupports(!!v)} />
+            <span>
+              <span className="block text-sm font-semibold text-(--color-ink)">Autoriser le téléchargement des supports vidéo</span>
+              <span className="block text-[12px] text-(--color-ink-soft)">
+                Supports PDF des cours vidéo et des séances, filigranés à l’identité de l’élève.
+                N’ouvre ni les fiches de cours ni les fiches éclairs (réglées ci-dessous).
+              </span>
+            </span>
+          </label>
 
           <label className="flex items-start gap-3 rounded-xl border border-(--color-border) px-3 py-2.5 cursor-pointer hover:bg-(--color-primary-soft)">
             <Checkbox checked={canDownload} onCheckedChange={(v) => setCanDownload(!!v)} />

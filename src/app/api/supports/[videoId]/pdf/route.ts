@@ -3,7 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { assertAccessActive } from '@/lib/auth/access';
 import { getRequestUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
-import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
+import { canAccessCollege, canDownloadSupports, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScopeWith } from '@/lib/auth/formula-permissions';
 import { supportVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
 import { watermarkPdf } from '@/lib/fiches/watermark';
@@ -15,8 +15,12 @@ export const dynamic = 'force-dynamic';
  * GET /api/supports/[videoId]/pdf
  *
  * Support d'une séance (ou d'un cours vidéo) : PDF filigrané au nom de l'élève,
- * servi INLINE et jamais en pièce jointe. Le bucket `supports` est privé et
- * illisible par les élèves : ce chemin serveur est le seul accès.
+ * servi INLINE. Le bucket `supports` est privé et illisible par les élèves :
+ * ce chemin serveur est le seul accès.
+ *
+ * `?download=1` le sert en PIÈCE JOINTE, toujours filigrané — réservé au
+ * personnel et aux élèves à qui l'administration a accordé
+ * `can_download_supports` (droit distinct de celui des fiches).
  *
  * Une séance peut porter plusieurs documents : `?doc=<id>` choisit lequel,
  * le premier dans l'ordre d'affichage par défaut.
@@ -44,7 +48,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ videoId: st
   const [{ data: profile }, { data: videoRow }] = await Promise.all([
     supabase
       .from('profiles')
-      .select('first_name, last_name, email, role, permission_scope')
+      .select('first_name, last_name, email, role, permission_scope, can_download_supports')
       .eq('id', user.id)
       .maybeSingle(),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -72,6 +76,13 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ videoId: st
   const doc = (demande && docs.find((d) => d.id === demande)) || docs[0];
   if (!doc) return NextResponse.json({ error: 'Support introuvable' }, { status: 404 });
   if (!profile) return NextResponse.json({ error: 'Profil introuvable' }, { status: 403 });
+  const telechargement = new URL(req.url).searchParams.get('download') === '1';
+  if (telechargement && !canDownloadSupports(profile)) {
+    return NextResponse.json(
+      { error: 'Téléchargement des supports non autorisé. Demandez l’accès à un administrateur.' },
+      { status: 403 },
+    );
+  }
 
   const isStaff = profile.role === 'admin' || profile.role === 'professor';
   if (!isStaff) {
@@ -108,8 +119,16 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ videoId: st
   return new NextResponse(out as unknown as BodyInit, {
     headers: {
       'Content-Type': 'application/pdf',
-      'Content-Disposition': 'inline; filename="support.pdf"',
+      'Content-Disposition': telechargement
+        ? `attachment; filename="${nomFichier(video.titre, doc.titre)}"; filename*=UTF-8''${encodeURIComponent(nomFichier(video.titre, doc.titre))}`
+        : 'inline; filename="support.pdf"',
       'Cache-Control': 'private, no-store',
     },
   });
+}
+
+/** Nom de fichier lisible : « <séance> - <document>.pdf », sans caractères interdits. */
+function nomFichier(titreVideo: string, titreDoc: string | null | undefined): string {
+  const base = [titreVideo, titreDoc].map((t) => (t ?? '').trim()).filter(Boolean).join(' - ') || 'support';
+  return base.replace(/[\\/:*?"<>|\r\n]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 150) + '.pdf';
 }

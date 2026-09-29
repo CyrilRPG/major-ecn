@@ -50,6 +50,7 @@ export type Student = {
   can_download?: boolean | null;
   /** Spécialités où l'impression est autorisée (si pas de droit global). */
   download_colleges?: string[] | null;
+  can_download_supports?: boolean | null;
   /** Session EVC de rattachement (fin d'accès par défaut). */
   evc_session_id?: string | null;
   access_start?: string | null;

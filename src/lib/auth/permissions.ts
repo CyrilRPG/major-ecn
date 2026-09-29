@@ -197,6 +197,20 @@ export function canDownloadFiche(
   return (profile.download_colleges ?? []).includes(collegeId);
 }
 
+/**
+ * Droit de TÉLÉCHARGER les supports des vidéos (PDF filigranés à l'identité
+ * de l'utilisateur). Le personnel l'a toujours ; un élève seulement si
+ * l'administration le lui a accordé (`can_download_supports`). Indépendant de
+ * `canDownloadFiche` : ce droit n'ouvre ni les fiches de cours ni les fiches
+ * éclairs.
+ */
+export function canDownloadSupports(
+  profile: { role?: string | null; can_download_supports?: boolean | null },
+): boolean {
+  if (profile.role === 'admin' || profile.role === 'professor') return true;
+  return profile.can_download_supports === true;
+}
+
 /** Legacy faculté gate kept for unreferenced faculté routes; no-op under the EVC model. */
 export function canAccessFaculte(scope: PermissionScope, _faculteId: string): boolean {
   return scope.type === 'all' || scope.type === 'college';

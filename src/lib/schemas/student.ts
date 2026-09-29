@@ -39,6 +39,9 @@ export const UpdateStudentSchema = z.object({
   /** Spécialités (collèges) où l'impression des fiches est autorisée. Ignoré si
    *  `can_download` est vrai — celui-ci accorde le droit sur toutes. */
   download_colleges: z.array(z.string()).optional(),
+  /** Téléchargement des supports vidéo (PDF filigranés). Indépendant des
+   *  fiches : n'ouvre ni les fiches de cours ni les fiches éclairs. */
+  can_download_supports: z.boolean().optional(),
   voie: z.enum(['interne', 'externe']).optional().nullable(),
   /** Surcharges individuelles de contenu — clés camelCase de ContentAccess.
    *  null / objet vide = aucune surcharge (défauts de la formule). */

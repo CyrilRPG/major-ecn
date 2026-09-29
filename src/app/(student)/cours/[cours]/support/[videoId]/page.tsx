@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowLeft, FileText } from 'lucide-react';
+import { ArrowLeft, Download, FileText } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { canAccessCollege, parseScope, scopeOffers } from '@/lib/auth/permissions';
+import { canAccessCollege, canDownloadSupports, parseScope, scopeOffers } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { supportVisible, eleveAutorise, eleveExclu } from '@/lib/videos/audience';
 import { PdfViewer } from '@/components/student/pdf-viewer';
@@ -20,6 +20,10 @@ import { CATEGORIES_VIDEO, categorieDeVideo } from '@/lib/videos/categories';
  * de téléchargement ni d'impression — et filigrané au nom de l'élève par
  * /api/supports/[videoId]/pdf. Cette page contrôle les mêmes droits que la
  * route, pour que rien ne s'affiche qui ne serait pas servi.
+ *
+ * Exception : un élève à qui l'administration a accordé le téléchargement des
+ * supports (`can_download_supports`) voit un bouton « Télécharger » — le PDF
+ * reste filigrané à son nom.
  */
 export default async function SupportPage({
   params,
@@ -78,6 +82,7 @@ export default async function SupportPage({
   }
 
   const courant = (docId && docs.find((d) => d.id === docId)) || docs[0] || null;
+  const telechargeable = canDownloadSupports(profile);
 
   // Le support prend la couleur de la vidéo dont il dépend : rouge pour un
   // cours vidéo, violet pour une séance approfondie — comme les cartes de
@@ -151,15 +156,28 @@ export default async function SupportPage({
         </div>
       )}
 
+      {telechargeable && (
+        <div className="mb-2 flex justify-end">
+          <a
+            href={`/api/supports/${videoId}/pdf?doc=${courant.id}&download=1`}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs font-bold text-(--color-ink) hover:bg-(--color-sand-100)"
+          >
+            <Download className="h-3.5 w-3.5" /> Télécharger le support
+          </a>
+        </div>
+      )}
+
       <PdfViewer
         key={courant.id}
         src={`/api/supports/${videoId}/pdf?doc=${courant.id}`}
         coursId={coursId}
         initiallyRead={false}
         canMarkRead={false}
-        notice={docs.length > 1
-          ? `${courant.titre} — consultable en ligne uniquement.`
-          : 'Support consultable en ligne uniquement.'}
+        notice={telechargeable
+          ? 'Support téléchargeable — PDF filigrané à votre nom.'
+          : docs.length > 1
+            ? `${courant.titre} — consultable en ligne uniquement.`
+            : 'Support consultable en ligne uniquement.'}
       />
     </div>
   );
