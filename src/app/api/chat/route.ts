@@ -126,6 +126,31 @@ function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
 const MAX_CONTEXT_CHARS = 60_000;
 
 /** Tronque proprement à la fin d'une phrase (point/saut de ligne). */
+type ClientChat = NonNullable<Awaited<ReturnType<typeof getRequestUser>>>['supabase'];
+
+/**
+ * Propositions de QCM d'un item, avec l'énoncé de leur question. Filtrer
+ * `qcm_items` à travers `qcm_questions!inner(qcm_series!inner(cours_id))`
+ * obligeait PostgREST à parcourir les 424 000 propositions de la base : 2,1 s
+ * avant chaque réponse de l'assistant (audit de lenteur du 29/09/2026). On
+ * descend séries → questions → propositions par les index.
+ */
+async function itemsQcmDuCours(supabase: ClientChat, coursId: string, max: number) {
+  const { data: series } = await supabase.from('qcm_series').select('id').eq('cours_id', coursId);
+  const serieIds = (series ?? []).map((s: { id: string }) => s.id).slice(0, 150);
+  if (serieIds.length === 0) return { data: [] };
+  const { data: questions } = await supabase
+    .from('qcm_questions')
+    .select('enonce, qcm_items(enonce, justification)')
+    .in('serie_id', serieIds)
+    .limit(200);
+  type Q = { enonce: string; qcm_items: { enonce: string; justification: string | null }[] | null };
+  const lignes = ((questions ?? []) as Q[]).flatMap((q) =>
+    (q.qcm_items ?? []).map((it) => ({ enonce: it.enonce, justification: it.justification, qcm_questions: { enonce: q.enonce } })),
+  );
+  return { data: lignes.slice(0, max) };
+}
+
 function trim(text: string, max: number): string {
   if (text.length <= max) return text;
   const cut = text.slice(0, max);
@@ -216,11 +241,7 @@ export async function POST(req: Request) {
       .select('recto, verso')
       .eq('cours_id', coursId)
       .limit(150),
-    supabase
-      .from('qcm_items')
-      .select('enonce, justification, qcm_questions!inner(enonce, qcm_series!inner(cours_id))')
-      .eq('qcm_questions.qcm_series.cours_id', coursId)
-      .limit(400),
+    itemsQcmDuCours(supabase, coursId, 400),
   ]);
 
   // 2) Construit le bloc contexte. La fiche passe EN PREMIER avec un
