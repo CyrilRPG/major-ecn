@@ -9,6 +9,8 @@ import {
 import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
+import { Link2 } from 'lucide-react';
+import { LIENS_COLLEGES } from '@/lib/data/liens-colleges';
 import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
 
 /** Active pill : dégradé rouge → orange identique sur tous les items
@@ -440,6 +442,22 @@ export function Navigator({
 
             {o && (
               <>
+                {/* Liens externes du collège (ex. Recommandations ESC en
+                    Cardiologie) : avant le premier item, teinte distincte,
+                    nouvel onglet — ce ne sont pas des items (lib/data/liens-colleges). */}
+                {(LIENS_COLLEGES[col.id] ?? []).map((l) => (
+                  <a
+                    key={l.id}
+                    href={l.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={l.sousTitre}
+                    className="mx-1 flex items-center gap-2 rounded-lg bg-teal-400/10 py-2 pl-9 pr-2.5 font-medium text-teal-200 transition-colors hover:bg-teal-400/20 hover:text-white"
+                  >
+                    <span className="min-w-0 flex-1 break-words leading-snug">{l.titre}</span>
+                    <Link2 className="h-4 w-4 shrink-0" />
+                  </a>
+                ))}
                 {col.cours.map((c) => (
                   <Link
                     key={c.id}
