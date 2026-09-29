@@ -47,7 +47,7 @@ export const TUTORIEL_VIDEOS: Readonly<Record<string, string>> = {
   'approfondi-mg-interne': '2b521959-a964-489f-b480-bf727a705f35',
   'approfondi-planning-externe': '18d4b098-f18b-4f91-911f-503ab5a18cc2',
   'approfondi-planning-interne': '17550edf-6c8c-4775-b0a5-98fdaeabbf98',
-  'decouverte': '95a54a38-84ee-44a2-8a8e-4af074456333',
+  'decouverte': 'd34c9b10-b5fa-45d5-9d57-becca26774c9',
   'essentiel-hors-mg-externe': 'e65d96eb-acda-4555-9df9-3d73078560aa',
   'essentiel-hors-mg-interne': '766a9dda-f260-4311-8639-d719abc89621',
   'essentiel-mg-externe': 'a95d381f-76be-41d4-b955-8a6afbdd881a',
