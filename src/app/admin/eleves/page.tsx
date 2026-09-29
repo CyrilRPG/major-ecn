@@ -55,7 +55,7 @@ export default async function ElevesPage() {
     fetchAllRows<{ id: string }>((from, to) =>
       supabase
         .from('profiles')
-        .select('id, avatar_seed, first_name, last_name, email, phone, address, pseudo, promotion, permission_scope, role, is_active, created_at, can_download, download_colleges, evc_session_id, access_start, access_end')
+        .select('id, avatar_seed, first_name, last_name, email, phone, address, pseudo, promotion, permission_scope, role, is_active, deactivation_reason, deactivation_note, deactivated_at, created_at, can_download, download_colleges, evc_session_id, access_start, access_end')
         .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID)
         // Tri décroissant par date d'inscription (les plus récents en premier) ;
         // `id` départage les ex æquo pour que les tranches ne se chevauchent pas.

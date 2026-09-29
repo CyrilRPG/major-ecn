@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Award, CalendarClock, Download, Loader2, Mail, Search } from 'lucide-react';
+import { Award, CalendarClock, CreditCard, Download, Loader2, Mail, PowerOff, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
@@ -25,6 +25,7 @@ import { DeleteAccountButton } from '@/components/admin/delete-account-button';
 import { ToggleActiveButton } from '@/components/admin/toggle-active-button';
 import { ResendActivationButton } from '@/components/admin/resend-activation-button';
 import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
+import { libelleMotif, parseMotif } from '@/lib/admin/compte-actif-pure';
 
 export type Student = {
   id: string;
@@ -38,6 +39,10 @@ export type Student = {
   promotion: string | null;
   permission_scope: unknown;
   is_active?: boolean | null;
+  /** Motif saisi à la désactivation : 'paiement' | 'autre' (null = non précisé). */
+  deactivation_reason?: string | null;
+  deactivation_note?: string | null;
+  deactivated_at?: string | null;
   created_at?: string;
   /** Vrai si l'élève ne s'est jamais connecté (auth.users.last_sign_in_at nul). */
   never_connected?: boolean | null;
@@ -181,6 +186,7 @@ export function StudentsTable({
   const [period, setPeriod] = useState('all'); // all | 7 | 30 | 90 | 365
   const [access, setAccess] = useState('all'); // all | active | expired
   const [connexion, setConnexion] = useState('all'); // all | never
+  const [compte, setCompte] = useState('all'); // all | actifs | inactifs | inactifs-paiement | inactifs-autre | inactifs-non-precise
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [emailOpen, setEmailOpen] = useState(false);
   const [exportEnCours, setExportEnCours] = useState(false);
@@ -193,6 +199,18 @@ export function StudentsTable({
     const set = new Set<string>();
     for (const s of students) { const sp = specialtyOf(s); if (sp) set.add(sp); }
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'fr'));
+  }, [students]);
+
+  /** Comptes désactivés, par motif (sur l'ensemble). */
+  const inactifs = useMemo(() => {
+    const c = { total: 0, paiement: 0, autre: 0, nonPrecise: 0 };
+    for (const s of students) {
+      if (isActive(s)) continue;
+      c.total++;
+      const m = parseMotif(s.deactivation_reason);
+      if (m === 'paiement') c.paiement++; else if (m === 'autre') c.autre++; else c.nonPrecise++;
+    }
+    return c;
   }, [students]);
 
   /** Compte par catégorie d'abonnement (sur l'ensemble). */
@@ -212,13 +230,15 @@ export function StudentsTable({
       if (offer !== 'all' && offerOf(s) !== offer) return false;
       if (payment === 'paid' && !isPaid(s)) return false;
       if (payment === 'free' && isPaid(s)) return false;
-      if (access === 'active' && (!isActive(s) || isAccessExpired(s, sessionsById))) return false;
-      if (access === 'expired' && isActive(s) && !isAccessExpired(s, sessionsById)) return false;
+      // Dates d'accès seulement : actif / inactif relève du sélecteur « Statut du compte ».
+      if (access === 'active' && isAccessExpired(s, sessionsById)) return false;
+      if (access === 'expired' && !isAccessExpired(s, sessionsById)) return false;
       if (connexion === 'never' && !s.never_connected) return false;
+      if (compte !== 'all' && !matchCompte(s, compte)) return false;
       if (!withinPeriod(s.created_at, period)) return false;
       return true;
     });
-  }, [students, q, promo, specialty, voie, offer, payment, access, connexion, period, sessionsById]);
+  }, [students, q, promo, specialty, voie, offer, payment, access, connexion, compte, period, sessionsById]);
 
   const filteredIds = useMemo(() => filtered.map((s) => s.id), [filtered]);
   const allSelected = filtered.length > 0 && filtered.every((s) => selected.has(s.id));
@@ -275,6 +295,8 @@ export function StudentsTable({
       'Abonnement': offerLabel(offerOf(s)),
       'Paiement': isPaid(s) ? 'Payé' : 'Gratuit (Découverte)',
       'Accès': !isActive(s) ? 'Inactif' : isAccessExpired(s, sessionsById) ? 'Expiré' : 'Actif',
+      'Motif désactivation': isActive(s) ? '' : libelleMotif(s.deactivation_reason) + (s.deactivation_note ? ` — ${s.deactivation_note}` : ''),
+      'Désactivé le': isActive(s) ? '' : fmtDate(s.deactivated_at ?? undefined),
       'Session EVC': (s.evc_session_id && sessionsById.get(s.evc_session_id)?.label) || '—',
       'Accès jusqu\'au': fmtDate(effectiveAccessEnd(s, sessionsById) ?? undefined),
       'Promotion': s.promotion ?? '',
@@ -286,7 +308,7 @@ export function StudentsTable({
     const ws = XLSX.utils.json_to_sheet(rows);
     ws['!cols'] = [
       { wch: 16 }, { wch: 14 }, { wch: 26 }, { wch: 10 }, { wch: 20 }, { wch: 18 },
-      { wch: 14 }, { wch: 18 }, { wch: 14 }, { wch: 10 }, { wch: 28 }, { wch: 16 }, { wch: 28 }, { wch: 14 },
+      { wch: 14 }, { wch: 32 }, { wch: 14 }, { wch: 18 }, { wch: 14 }, { wch: 10 }, { wch: 28 }, { wch: 16 }, { wch: 28 }, { wch: 14 },
     ];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Élèves');
@@ -306,6 +328,31 @@ export function StudentsTable({
             onClick={() => setOffer(c.value)}
           />
         ))}
+      </div>
+
+      {/* Statut du compte : actifs / inactifs, puis motif des inactifs. */}
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <span className="text-xs font-bold text-(--color-ink-soft)">Statut du compte</span>
+        <div className="inline-flex rounded-lg border border-(--color-border) bg-(--color-surface) p-0.5" role="radiogroup" aria-label="Statut du compte">
+          <StatutOption label={`Tous (${students.length})`} active={compte === 'all'} onClick={() => setCompte('all')} />
+          <StatutOption label={`Actifs (${students.length - inactifs.total})`} active={compte === 'actifs'} onClick={() => setCompte('actifs')} />
+          <StatutOption
+            label={`Inactifs (${inactifs.total})`}
+            active={compte.startsWith('inactifs')}
+            onClick={() => setCompte('inactifs')}
+            danger
+          />
+        </div>
+        {compte.startsWith('inactifs') && inactifs.total > 0 && (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="mx-1 h-4 w-px bg-(--color-border)" aria-hidden />
+            <InactifChip label={`Défaut de paiement (${inactifs.paiement})`} active={compte === 'inactifs-paiement'} onClick={() => setCompte(compte === 'inactifs-paiement' ? 'inactifs' : 'inactifs-paiement')} />
+            <InactifChip label={`Autre motif (${inactifs.autre})`} active={compte === 'inactifs-autre'} onClick={() => setCompte(compte === 'inactifs-autre' ? 'inactifs' : 'inactifs-autre')} />
+            {inactifs.nonPrecise > 0 && (
+              <InactifChip label={`Motif à préciser (${inactifs.nonPrecise})`} active={compte === 'inactifs-non-precise'} onClick={() => setCompte(compte === 'inactifs-non-precise' ? 'inactifs' : 'inactifs-non-precise')} />
+            )}
+          </div>
+        )}
       </div>
 
       {/* Recherche + filtres */}
@@ -346,11 +393,11 @@ export function StudentsTable({
           </SelectContent>
         </Select>
         <Select value={access} onValueChange={setAccess}>
-          <SelectTrigger className="w-full lg:w-36"><SelectValue placeholder="Accès" /></SelectTrigger>
+          <SelectTrigger className="w-full lg:w-48"><SelectValue placeholder="Accès" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tout accès</SelectItem>
-            <SelectItem value="active">Actif</SelectItem>
-            <SelectItem value="expired">Expiré / Inactif</SelectItem>
+            <SelectItem value="all">Toute date d&apos;accès</SelectItem>
+            <SelectItem value="active">Accès en cours</SelectItem>
+            <SelectItem value="expired">Accès expiré</SelectItem>
           </SelectContent>
         </Select>
         <Select value={connexion} onValueChange={setConnexion}>
@@ -445,7 +492,11 @@ export function StudentsTable({
               const accessEnd = effectiveAccessEnd(s, sessionsById);
               const accessExpired = isAccessExpired(s, sessionsById);
               return (
-                <TableRow key={s.id} data-state={selected.has(s.id) ? 'selected' : undefined}>
+                <TableRow
+                  key={s.id}
+                  data-state={selected.has(s.id) ? 'selected' : undefined}
+                  className={isActive(s) ? undefined : 'bg-(--color-sand-100)/60 [&_td:not(:last-child)]:opacity-70'}
+                >
                   <TableCell>
                     <input
                       type="checkbox"
@@ -470,7 +521,7 @@ export function StudentsTable({
                           {sp ? `${sp}${voieLabel ? ` (${voieLabel})` : ''}` : '—'}
                         </p>
                         <div className="mt-1 flex flex-wrap items-center gap-1 md:hidden">
-                          {!isActive(s) && <Badge variant="muted">Inactif</Badge>}
+                          {!isActive(s) && <InactifBadge s={s} />}
                           {accessExpired && (
                             <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700">Expiré</span>
                           )}
@@ -488,7 +539,7 @@ export function StudentsTable({
                     <div className="flex flex-wrap items-center gap-1">
                       <Badge variant={scope.offer === 'essentiel' ? 'outline' : 'primary'}>{offerLabel(scope.offer)}</Badge>
                       {isPaid(s) ? <Badge variant="muted">Payé</Badge> : <Badge variant="muted">Gratuit</Badge>}
-                      {!isActive(s) && <Badge variant="muted">Inactif</Badge>}
+                      {!isActive(s) && <InactifBadge s={s} />}
                       {accessExpired && (
                         <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700">Expiré</span>
                       )}
@@ -536,6 +587,10 @@ export function StudentsTable({
                         userId={s.id}
                         displayName={`${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || s.email || 'élève'}
                         isActive={s.is_active !== false}
+                        withMotif
+                        motif={s.deactivation_reason ?? null}
+                        note={s.deactivation_note ?? null}
+                        deactivatedAt={s.deactivated_at ?? null}
                       />
                       <DeleteAccountButton
                         userId={s.id}
@@ -651,6 +706,72 @@ function CategoryChip({ label, active, onClick }: { label: string; active: boole
         active
           ? 'border-(--color-primary) bg-(--color-primary) text-white'
           : 'border-(--color-border) bg-(--color-surface) text-(--color-ink) hover:bg-(--color-sand-100)'
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
+function matchCompte(s: Student, filtre: string): boolean {
+  if (filtre === 'actifs') return isActive(s);
+  if (isActive(s)) return false;
+  const m = parseMotif(s.deactivation_reason);
+  if (filtre === 'inactifs-paiement') return m === 'paiement';
+  if (filtre === 'inactifs-autre') return m === 'autre';
+  if (filtre === 'inactifs-non-precise') return m === null;
+  return true; // 'inactifs'
+}
+
+/** Pastille « Désactivé » avec son motif (la note au survol). */
+function InactifBadge({ s }: { s: Student }) {
+  const m = parseMotif(s.deactivation_reason);
+  const titre = [
+    `Désactivé${s.deactivated_at ? ` le ${fmtDate(s.deactivated_at)}` : ''} — ${libelleMotif(s.deactivation_reason)}`,
+    s.deactivation_note,
+  ].filter(Boolean).join('\n');
+  return (
+    <span
+      title={titre}
+      className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-bold ${
+        m === 'paiement' ? 'bg-red-100 text-red-700' : m === 'autre' ? 'bg-zinc-200 text-zinc-700' : 'bg-amber-100 text-amber-800'
+      }`}
+    >
+      {m === 'paiement' ? <CreditCard className="h-3 w-3" /> : <PowerOff className="h-3 w-3" />}
+      {m === 'paiement' ? 'Désactivé · paiement' : m === 'autre' ? 'Désactivé · autre' : 'Désactivé · motif ?'}
+    </span>
+  );
+}
+
+function InactifChip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full border px-3 py-1.5 text-xs font-bold transition-colors ${
+        active
+          ? 'border-(--color-danger) bg-(--color-danger) text-white'
+          : 'border-(--color-danger)/30 bg-(--color-surface) text-(--color-danger) hover:bg-red-50'
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
+function StatutOption({
+  label, active, onClick, danger = false,
+}: { label: string; active: boolean; onClick: () => void; danger?: boolean }) {
+  return (
+    <button
+      type="button"
+      role="radio"
+      aria-checked={active}
+      onClick={onClick}
+      className={`rounded-md px-3 py-1.5 text-xs font-bold transition-colors ${
+        active
+          ? danger ? 'bg-(--color-danger) text-white' : 'bg-(--color-primary) text-white'
+          : danger ? 'text-(--color-danger) hover:bg-red-50' : 'text-(--color-ink) hover:bg-(--color-sand-100)'
       }`}
     >
       {label}

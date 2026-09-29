@@ -49,6 +49,9 @@ export function LoginForm() {
         const msg = result.error.message ?? '';
         if (msg === 'Invalid login credentials') {
           setAuthError('Email ou mot de passe incorrect.');
+        } else if (result.error.code === 'user_banned' || /banned/i.test(msg)) {
+          // Compte désactivé par un admin : banni côté Auth (lib/admin/compte-actif.ts).
+          setAuthError('Ce compte a été désactivé par l’administrateur. Contactez-nous pour le réactiver.');
         } else if (/failed to fetch|network|522|504|timeout/i.test(msg)) {
           setAuthError('Le service de connexion est temporairement saturé. Réessayez dans quelques secondes.');
         } else {

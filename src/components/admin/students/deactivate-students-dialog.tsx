@@ -10,6 +10,8 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
+import { MotifChoix } from '@/components/admin/toggle-active-button';
+import type { MotifDesactivation } from '@/lib/admin/compte-actif-pure';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -25,20 +27,23 @@ export function DeactivateStudentsDialog() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [emailsText, setEmailsText] = useState('');
+  const [motif, setMotif] = useState<MotifDesactivation | null>(null);
+  const [note, setNote] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<string | null>(null);
   const [pending, start] = useTransition();
 
   const detected = parseEmails(emailsText).length;
 
-  const reset = () => { setEmailsText(''); setError(null); setResult(null); };
+  const reset = () => { setEmailsText(''); setMotif(null); setNote(''); setError(null); setResult(null); };
 
   const submit = () => {
     setError(null); setResult(null);
     const valid = parseEmails(emailsText);
     if (valid.length === 0) { setError('Ajoutez au moins un email valide (séparés par des virgules).'); return; }
+    if (!motif) { setError('Choisissez le motif de la désactivation.'); return; }
     start(async () => {
-      const res = await fetchAvecJetonFrais('/api/admin/deactivate-students-bulk', { emails: valid });
+      const res = await fetchAvecJetonFrais('/api/admin/deactivate-students-bulk', { emails: valid, motif, note: note.trim() || null });
       const j = (await res.json().catch(() => ({}))) as {
         error?: string;
         summary?: { total: number; deactivated: number; notFound: number; skippedSelf: number; skippedNonStudent: number; failed: number };
@@ -73,7 +78,8 @@ export function DeactivateStudentsDialog() {
           </DialogTitle>
           <DialogDescription>
             Collez les emails des élèves à désactiver. Les comptes ne sont pas supprimés&nbsp;: ils
-            perdent tout accès à la plateforme et sont déconnectés. Vous pourrez les réactiver plus tard.
+            perdent tout accès (site, application, contenus téléchargés) et ne peuvent plus se connecter.
+            Vous pourrez les réactiver plus tard.
           </DialogDescription>
         </DialogHeader>
 
@@ -95,6 +101,19 @@ export function DeactivateStudentsDialog() {
           </p>
         </div>
 
+        <div className="space-y-2">
+          <Label>Motif</Label>
+          <MotifChoix value={motif} onChange={setMotif} />
+          <Textarea
+            aria-label="Précision (facultatif)"
+            rows={2}
+            maxLength={500}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="Précision (facultatif) — ex. : échéance de septembre impayée"
+          />
+        </div>
+
         {error && (
           <p className="rounded-lg border border-(--color-danger)/30 bg-red-50 px-3 py-2 text-sm text-(--color-danger)">{error}</p>
         )}
@@ -107,7 +126,7 @@ export function DeactivateStudentsDialog() {
           <Button
             type="button"
             onClick={submit}
-            disabled={pending || detected === 0}
+            disabled={pending || detected === 0 || !motif}
             className="bg-(--color-danger) text-white hover:bg-(--color-danger)/90"
           >
             {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <PowerOff className="h-4 w-4" />}

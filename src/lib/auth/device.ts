@@ -37,10 +37,18 @@ export async function assertDeviceSlot(userId: string, deviceId: string | null |
   // les étudiants sur un incident passager.
   if (error) return { ok: true };
 
+  // Compte désactivé : code DEVICE_REVOKED, le seul que les versions déjà
+  // installées de l'app savent traiter (purge du hors ligne + déconnexion).
+  // Avec `ACCOUNT_DISABLED`, l'app avalait l'erreur et restait utilisable,
+  // cours téléchargés compris. `reason` permet aux nouvelles versions
+  // d'afficher le bon message.
   if (profile?.is_active === false) {
     return {
       ok: false,
-      response: NextResponse.json({ code: 'ACCOUNT_DISABLED', error: 'Compte désactivé' }, { status: 401 }),
+      response: NextResponse.json(
+        { code: 'DEVICE_REVOKED', reason: 'ACCOUNT_DISABLED', error: 'Ce compte a été désactivé.' },
+        { status: 401 },
+      ),
     };
   }
   if (!profile || profile.active_session_id !== deviceId) {

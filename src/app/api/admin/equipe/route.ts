@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
+import { desactiverCompte, reactiverCompte } from '@/lib/admin/compte-actif';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { CreerCollaborateurSchema, ModifierCollaborateurSchema } from '@/lib/auth/equipe-schema';
@@ -155,7 +156,7 @@ async function modifier(adminId: string, body: unknown) {
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
-  const { data: cible } = await a.from('profiles').select('id, role, first_name, last_name, permission_scope').eq('id', p.userId).maybeSingle();
+  const { data: cible } = await a.from('profiles').select('id, role, first_name, last_name, permission_scope, is_active').eq('id', p.userId).maybeSingle();
   if (!cible) return NextResponse.json({ error: 'Compte introuvable.' }, { status: 404 });
   if (cible.role !== 'professor') return NextResponse.json({ error: 'Seul un membre du personnel non administrateur se gère ici.' }, { status: 400 });
 
@@ -167,10 +168,17 @@ async function modifier(adminId: string, body: unknown) {
   });
   const patch: Record<string, unknown> = {};
   if (p.access_end !== undefined) patch.access_end = finDeJournee(p.access_end);
-  if (p.is_active !== undefined) patch.is_active = p.is_active;
   if (Object.keys(patch).length > 0) {
     const { error } = await a.from('profiles').update(patch).eq('id', p.userId);
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+  // Activation : même chemin que les élèves (profil + bannissement Auth).
+  if (p.is_active !== undefined && p.is_active !== (cible.is_active !== false)) {
+    const { error } = p.is_active
+      ? await reactiverCompte(admin, p.userId)
+      : await desactiverCompte(admin, p.userId, { motif: 'autre', par: guard.auth.user.id });
+    if (error) return NextResponse.json({ error }, { status: 500 });
+    patch.is_active = p.is_active;
   }
 
   await logAudit({

@@ -97,13 +97,17 @@ export async function POST(req: Request) {
 
   const deviceId = req.headers.get(DEVICE_HEADER);
   const check = await assertDeviceSlot(auth.user.id, deviceId);
-  let revoked = false;
+  let revoked: { error: string; reason?: string } | null = null;
   if (!check.ok) {
-    const code = await check.response.clone().json().then((b: { code?: string }) => b.code ?? null, () => null);
-    // Seule la perte du créneau laisse passer la file : un compte désactivé
-    // ou une requête sans appareil n'écrit rien.
-    if (code !== 'DEVICE_REVOKED') return check.response;
-    revoked = true;
+    const b = await check.response.clone().json().then(
+      (x: { code?: string; reason?: string; error?: string }) => x,
+      () => ({} as { code?: string; reason?: string; error?: string }),
+    );
+    // Seule la révocation (créneau perdu ou compte désactivé, cf. device.ts)
+    // laisse passer la file — le dernier envoi de l'app avant sa purge ; une
+    // requête sans appareil n'écrit rien.
+    if (b.code !== 'DEVICE_REVOKED') return check.response;
+    revoked = { error: b.error ?? 'Votre compte a été connecté sur un autre appareil.', reason: b.reason };
   }
 
   const body = await req.json().catch(() => ({}));
@@ -426,7 +430,7 @@ export async function POST(req: Request) {
   // Appareil révoqué : la file est appliquée, rien d'autre n'est servi.
   if (revoked) {
     return NextResponse.json(
-      { code: 'DEVICE_REVOKED', error: 'Votre compte a été connecté sur un autre appareil.', applied, rejected },
+      { code: 'DEVICE_REVOKED', reason: revoked.reason, error: revoked.error, applied, rejected },
       { status: 401 },
     );
   }

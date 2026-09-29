@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { z } from 'zod';
+import { desactiverCompte } from '@/lib/admin/compte-actif';
+import { MOTIFS_DESACTIVATION } from '@/lib/admin/compte-actif-pure';
 
 // Boucle séquentielle (mise à jour + déconnexion par élève) : sans
 // `maxDuration`, une désactivation en masse expirait silencieusement.
@@ -9,11 +11,16 @@ export const maxDuration = 300;
 
 /**
  * Désactivation EN MASSE d'élèves par email. Le compte n'est PAS supprimé : on
- * met `is_active = false` (l'élève perd tout accès et est déconnecté). Le mot de
+ * met `is_active = false` et bannit le compte Auth (l'élève perd tout accès et
+ * ne peut plus se connecter), avec le motif choisi. Le mot de
  * passe et les données restent intacts — le compte peut être réactivé plus tard.
  * N'agit que sur des comptes `role = 'student'` (jamais un admin/professeur).
  */
-const Schema = z.object({ emails: z.array(z.string().email()).min(1, 'Au moins un email').max(500, 'Maximum 500 emails') });
+const Schema = z.object({
+  emails: z.array(z.string().email()).min(1, 'Au moins un email').max(500, 'Maximum 500 emails'),
+  motif: z.enum(MOTIFS_DESACTIVATION).nullable().optional(),
+  note: z.string().max(500).nullable().optional(),
+});
 
 export async function POST(req: Request) {
   const guard = await requireAdminRequest(req);
@@ -39,10 +46,11 @@ export async function POST(req: Request) {
   for (const p of found) {
     if (p.id === guard.auth.user.id) { skippedSelf++; continue; }
     if (p.role !== 'student') { skippedNonStudent++; continue; }
-    const { error } = await a.from('profiles').update({ is_active: false }).eq('id', p.id);
+    const { error } = await desactiverCompte(admin, p.id, {
+      motif: parsed.data.motif ?? null, note: parsed.data.note ?? null, par: guard.auth.user.id,
+    });
     if (error) { failed++; continue; }
     deactivated++;
-    try { await a.auth.admin.signOut(p.id); } catch { /* best-effort */ }
   }
   const notFound = emails.filter((e) => !foundEmails.has(e)).length;
 

@@ -1,13 +1,21 @@
 import { NextResponse } from 'next/server';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { desactiverCompte, preciserMotif, reactiverCompte } from '@/lib/admin/compte-actif';
+import { parseMotif } from '@/lib/admin/compte-actif-pure';
 
+/**
+ * Désactive / réactive un compte, ou précise le motif d'un compte déjà
+ * désactivé (`motifSeul: true`). Cf. lib/admin/compte-actif.ts.
+ */
 export async function POST(req: Request) {
   const guard = await requireAdminRequest(req);
   if (!guard.ok) return guard.error;
 
-  const body = (await req.json().catch(() => ({}))) as { userId?: string; isActive?: boolean };
-  if (!body.userId || typeof body.isActive !== 'boolean') {
+  const body = (await req.json().catch(() => ({}))) as {
+    userId?: string; isActive?: boolean; motif?: string | null; note?: string | null; motifSeul?: boolean;
+  };
+  if (!body.userId || (typeof body.isActive !== 'boolean' && !body.motifSeul)) {
     return NextResponse.json({ error: 'userId / isActive manquants' }, { status: 400 });
   }
   if (body.userId === guard.auth.user.id) {
@@ -19,17 +27,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: e instanceof Error ? e.message : 'Service indisponible' }, { status: 500 });
   }
 
-  const { error } = await admin
-    .from('profiles')
-    .update({ is_active: body.isActive } as never)
-    .eq('id', body.userId);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  const motif = parseMotif(body.motif);
+  const note = typeof body.note === 'string' ? body.note.slice(0, 500) : null;
 
-  // Si on désactive, on invalide les sessions actives pour forcer le logout
-  // immédiat. Le mot de passe reste intact côté auth.users.
-  if (!body.isActive) {
-    try { await admin.auth.admin.signOut(body.userId); } catch { /* best-effort */ }
-  }
+  const { error } = body.motifSeul
+    ? await preciserMotif(admin, body.userId, { motif, note })
+    : body.isActive
+      ? await reactiverCompte(admin, body.userId)
+      : await desactiverCompte(admin, body.userId, { motif, note, par: guard.auth.user.id });
+  if (error) return NextResponse.json({ error }, { status: 500 });
 
   return NextResponse.json({ ok: true });
 }
