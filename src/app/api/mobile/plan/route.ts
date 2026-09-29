@@ -11,7 +11,7 @@ import {
   planAvailableFor, planIntroFor, recordIntroSeen,
   startSession, submitEvaluation, syncMasteryFromPlatform, updateAvailability, voieOfScope, type StudentContext,
 } from '@/lib/plan/service';
-import { paceMessage, RELIABLE_CONFIDENCE } from '@/lib/plan/mastery';
+import { masteryProvenance, paceMessage, RELIABLE_CONFIDENCE } from '@/lib/plan/mastery';
 import { fmtMinutes } from '@/lib/plan/analytics';
 import { figuresOf } from '@/lib/plan/figures';
 import { addDaysKey } from '@/lib/plan/revision';
@@ -91,6 +91,9 @@ function vueSeance(ctx: StudentContext, s: PlanSession, coursIds: Map<string, st
     coursId: s.item_id ? coursIds.get(s.item_id) ?? null : null,
     masteryScore: m && Number(m.confidence) > 0 ? Number(m.mastery_score) : null,
     fiable: !!m && Number(m.confidence) >= RELIABLE_CONFIDENCE,
+    // Provenance lisible (source, volume, date, fiabilité) et début réel de la séance.
+    maitriseDetail: m ? masteryProvenance({ ...m, confidence: Number(m.confidence) }) : null,
+    startedAt: s.started_at ?? null,
     canEvaluate: !!item && ctx.evaluable.has(item.id),
     actualMinutes: s.actual_minutes,
     isFuture: s.day > ctx.today,

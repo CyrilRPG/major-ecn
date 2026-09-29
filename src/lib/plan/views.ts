@@ -1,5 +1,5 @@
 import 'server-only';
-import { RELIABLE_CONFIDENCE } from './mastery';
+import { masteryProvenance, RELIABLE_CONFIDENCE } from './mastery';
 import type { StudentContext } from './service';
 import type { PlanSession } from './types';
 import type { SessionView } from '@/components/student/plan/session-card';
@@ -14,6 +14,8 @@ export function toSessionView(ctx: StudentContext, s: PlanSession, coursIds: Map
     part: s.part, parts: s.parts, itemId: s.item_id, itemName: item?.nom_item ?? 'Item du programme',
     coursId: s.item_id ? coursIds.get(s.item_id) ?? null : null,
     masteryScore: m && Number(m.confidence) > 0 ? Number(m.mastery_score) : null,
+    masteryDetail: m ? masteryProvenance({ ...m, confidence: Number(m.confidence) }) : null,
+    startedAt: s.started_at ?? null,
     canEvaluate: !!item && ctx.evaluable.has(item.id),
     isFuture: s.day > ctx.today,
     origin: s.origin ?? 'planning',

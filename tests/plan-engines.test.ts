@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { DEFAULT_CONFIG, mergeConfig, type PlanItem, type PlanPrerequisite } from '../src/lib/plan/types';
-import { declaredToScore, deriveStatus, evaluationOutcome, masteryFromAttempts, mergeMastery, prerequisiteMet } from '../src/lib/plan/mastery';
+import { attemptFormatOfSerie, declaredToScore, deriveStatus, evaluationOutcome, masteryFromAttempts, masteryProvenance, mergeMastery, prerequisiteMet, suggestedActualMinutes } from '../src/lib/plan/mastery';
 import { computePriority, priorityTier, recenceFromYears, sortByPriority } from '../src/lib/plan/priority';
 import { buildGraph, findCycles, unmetChain, wouldCreateCycle } from '../src/lib/plan/prerequisites';
 import { remainingMinutes, splitIntoSessions } from '../src/lib/plan/workload';
@@ -264,4 +264,47 @@ test('§7 concours blanc : source plus fiable qu’un QCM d’entraînement', ()
   const cb = masteryFromAttempts(list, now, DEFAULT_CONFIG, 'concours_blanc')!;
   assert.equal(qcm.score, cb.score);
   assert.ok(cb.confidence > qcm.confidence, `${cb.confidence} > ${qcm.confidence}`);
+});
+
+test('§7 source réelle : chaque réponse garde son format (QCM, QROC, dossier progressif)', () => {
+  assert.equal(attemptFormatOfSerie({ type: 'qcm', kind: 'dp', label: 'DP 1 · Purpura' }), 'dossier_progressif');
+  assert.equal(attemptFormatOfSerie({ type: 'qcm', kind: 'qroc', label: 'DP QROC 3 · Démarche' }), 'dossier_progressif');
+  assert.equal(attemptFormatOfSerie({ type: 'qcm', kind: 'qroc', label: 'QROC 1 · Définition' }), 'qroc');
+  assert.equal(attemptFormatOfSerie({ type: 'qroc', kind: null, label: 'Série' }), 'qroc');
+  assert.equal(attemptFormatOfSerie({ type: 'qcm', kind: 'qcm', label: 'QCM 1' }), 'qcm');
+
+  const now = new Date('2026-09-29T10:00:00Z');
+  const at = '2026-07-11T14:00:00Z';
+  const mk = (format: 'qcm' | 'qroc' | 'dossier_progressif', n: number) => Array.from({ length: n }, () => ({ isCorrect: true, at, format }));
+  const qcmOnly = masteryFromAttempts(mk('qcm', 45), now, DEFAULT_CONFIG)!;
+  const qrocOnly = masteryFromAttempts(mk('qroc', 45), now, DEFAULT_CONFIG)!;
+  assert.equal(qcmOnly.source, 'qcm');
+  assert.equal(qcmOnly.confidence, 0.8, 'QCM seuls : confiance inchangée');
+  assert.equal(qrocOnly.source, 'qroc');
+  assert.equal(qrocOnly.confidence, 0.6, 'un QROC pèse moins');
+  const mixte = masteryFromAttempts([...mk('qcm', 10), ...mk('qroc', 15), ...mk('dossier_progressif', 20)], now, DEFAULT_CONFIG)!;
+  assert.equal(mixte.source, 'dossier_progressif', 'source = format majoritaire');
+  assert.deepEqual(mixte.formats, { qcm: 10, qroc: 15, dossier_progressif: 20 });
+  assert.ok(mixte.confidence > 0.6 && mixte.confidence < 0.8, `${mixte.confidence} entre QROC et QCM`);
+  // Sans format connu (anciens appels) : QCM, comme avant.
+  assert.equal(masteryFromAttempts([{ isCorrect: true, at }, { isCorrect: true, at }, { isCorrect: true, at }], now, DEFAULT_CONFIG)!.source, 'qcm');
+});
+
+test('provenance de la maîtrise affichée : source, volume, date, fiabilité', () => {
+  assert.equal(masteryProvenance({ source: 'auto_evaluation', confidence: 0.3 }), 'niveau déclaré, à confirmer par vos résultats · fiabilité faible');
+  assert.equal(
+    masteryProvenance({ source: 'dossier_progressif', confidence: 0.81, results_count: 45, last_evaluated_at: '2026-07-11T14:31:57Z' }),
+    '45 questions faites sur la plateforme · dernière le 11/07/2026 · fiabilité élevée',
+  );
+  assert.equal(masteryProvenance({ source: 'validation', confidence: 0.6, last_evaluated_at: '2026-09-20T08:00:00Z' }), 'test de validation du 20/09/2026 · fiabilité moyenne');
+  assert.equal(masteryProvenance({ source: 'qcm', confidence: 0 }), null);
+});
+
+test('§10 temps réel : durée proposée = temps écoulé depuis « Commencer » si plausible', () => {
+  const now = new Date('2026-09-29T10:00:00Z');
+  assert.deepEqual(suggestedActualMinutes(60, '2026-09-29T09:18:00Z', now), { minutes: 42, measured: true });
+  assert.deepEqual(suggestedActualMinutes(60, null, now), { minutes: 60, measured: false }, 'jamais commencée');
+  assert.deepEqual(suggestedActualMinutes(60, '2026-09-28T09:00:00Z', now), { minutes: 60, measured: false }, 'onglet laissé ouvert : invraisemblable');
+  assert.deepEqual(suggestedActualMinutes(60, '2026-09-29T09:59:50Z', now), { minutes: 60, measured: false }, 'moins d’une minute');
+  assert.deepEqual(suggestedActualMinutes(20, '2026-09-29T09:10:00Z', now), { minutes: 50, measured: true }, 'court : jusqu’à 60 min');
 });

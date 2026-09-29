@@ -6,6 +6,7 @@ import {
   mergeConfig, parseAvailability,
   type MatrixVersion, type PlanConfig, type PlanEvaluation, type PlanItem, type PlanMastery, type PlanOverlap, type PlanPrerequisite, type PlanProfile, type PlanSession,
 } from './types';
+import { attemptFormatOfSerie, type AttemptFormat } from './mastery';
 
 /**
  * Accès typés aux tables `plan_*` (client service-role, cloisonné par faculté
@@ -384,19 +385,19 @@ export async function listQuestionTags(itemIds: string[]): Promise<{ question_id
 }
 
 /* ─── Tentatives QCM de la plateforme (Assessment Engine) ─── */
-export type AttemptLite = { question_id: string; is_correct: boolean; attempted_at: string; cours_id: string };
+export type AttemptLite = { question_id: string; is_correct: boolean; attempted_at: string; cours_id: string; format?: AttemptFormat };
 export async function listAttemptsForCours(userId: string, coursIds: string[], sinceIso: string): Promise<AttemptLite[]> {
   if (coursIds.length === 0) return [];
-  type Row = { question_id: string; is_correct: boolean; attempted_at: string; qcm_questions: { qcm_series: { cours_id: string } | null } | null };
+  type Row = { question_id: string; is_correct: boolean; attempted_at: string; qcm_questions: { qcm_series: { cours_id: string; type: string | null; kind: string | null; label: string | null } | null } | null };
   const out: AttemptLite[] = [];
   for (let i = 0; i < coursIds.length; i += 50) {
     const chunk = coursIds.slice(i, i + 50);
     const rows = await fetchAllRows<Row>((from, to) =>
-      planDb().from('qcm_attempts').select('question_id, is_correct, attempted_at, qcm_questions!inner(qcm_series!inner(cours_id))')
+      planDb().from('qcm_attempts').select('question_id, is_correct, attempted_at, qcm_questions!inner(qcm_series!inner(cours_id, type, kind, label))')
         .eq('user_id', userId).gte('attempted_at', sinceIso).in('qcm_questions.qcm_series.cours_id', chunk).order('id').range(from, to));
     for (const r of rows) {
-      const cid = r.qcm_questions?.qcm_series?.cours_id;
-      if (cid) out.push({ question_id: r.question_id, is_correct: r.is_correct, attempted_at: r.attempted_at, cours_id: cid });
+      const serie = r.qcm_questions?.qcm_series;
+      if (serie?.cours_id) out.push({ question_id: r.question_id, is_correct: r.is_correct, attempted_at: r.attempted_at, cours_id: serie.cours_id, format: attemptFormatOfSerie(serie) });
     }
   }
   return out;

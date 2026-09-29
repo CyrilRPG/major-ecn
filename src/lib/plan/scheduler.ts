@@ -579,3 +579,23 @@ export function prerequisitesSatisfied(itemId: string, prerequisites: PlanPrereq
   }
   return { ok: missing.length === 0, missing };
 }
+
+/**
+ * Au recalcul, une séance déjà COMMENCÉE aujourd'hui n'est connue du moteur que
+ * par ses minutes : il reprogrammerait le même travail le jour même (deux
+ * réactivations du même item, par exemple). La séance du jour de même item et
+ * de même type est donc retirée — la séance commencée en tient lieu.
+ */
+export function withoutStartedToday<T extends { itemId: string | null; day: string; kind: string }>(
+  sessions: T[], startedToday: { item_id: string | null; kind: string }[], today: string,
+): T[] {
+  const started = new Set(startedToday.filter((s) => s.item_id).map((s) => `${s.item_id}|${s.kind}`));
+  if (started.size === 0) return sessions;
+  const dropped = new Set<string>();
+  return sessions.filter((s) => {
+    const key = `${s.itemId}|${s.kind}`;
+    if (s.day !== today || !s.itemId || !started.has(key) || dropped.has(key)) return true;
+    dropped.add(key);
+    return false;
+  });
+}

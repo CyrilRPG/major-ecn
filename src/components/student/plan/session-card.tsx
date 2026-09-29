@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { completeSessionAction, postponeSessionAction, startEvaluationAction, startSessionAction } from '@/app/(student)/planificateur/actions';
 import { PRIORITY_TIER_LABEL, SESSION_KIND_LABEL, SESSION_STATUS_LABEL, START_NOW_LABEL, type PriorityTier, type SessionKind, type SessionStatus } from '@/lib/plan/types';
+import { suggestedActualMinutes } from '@/lib/plan/mastery';
 import { cn } from '@/lib/utils';
 
 export type SessionView = {
@@ -25,6 +26,10 @@ export type SessionView = {
   itemName: string;
   coursId: string | null;
   masteryScore: number | null;
+  /** Provenance de la maîtrise : source, volume, date, fiabilité. */
+  masteryDetail: string | null;
+  /** Début réel de la séance (« Commencer ») : sert à proposer le temps passé. */
+  startedAt: string | null;
   canEvaluate: boolean;
   /** Séance d'un jour à venir (prévisionnelle) : réalisable dès maintenant. */
   isFuture: boolean;
@@ -48,6 +53,13 @@ export function SessionCard({ s, compact = false }: { s: SessionView; compact?: 
   const [open, setOpen] = useState(false);
   const [askMinutes, setAskMinutes] = useState(false);
   const [minutes, setMinutes] = useState(String(s.minutes));
+  const [measured, setMeasured] = useState(false);
+  const askForMinutes = () => {
+    const d = suggestedActualMinutes(s.minutes, s.startedAt, new Date());
+    setMinutes(String(d.minutes));
+    setMeasured(d.measured);
+    setAskMinutes(true);
+  };
   const tier = (s.priorityTier ?? 'normale') as PriorityTier;
   const done = s.status === 'terminee';
   const run = (fn: () => Promise<{ ok: boolean; error?: string; id?: string }>, after?: (r: { id?: string }) => void) => start(async () => {
@@ -69,7 +81,11 @@ export function SessionCard({ s, compact = false }: { s: SessionView; compact?: 
           <p className="mt-0.5 flex flex-wrap items-center gap-2 text-xs">
             <span className={cn('font-medium', TIER_CLASS[tier])}>{PRIORITY_TIER_LABEL[tier]}</span>
             <Badge variant="outline">{SESSION_KIND_LABEL[s.kind]}{s.part && s.parts && s.parts > 1 ? ` ${s.part}/${s.parts}` : ''}</Badge>
-            {s.masteryScore !== null && <span className="text-(--color-ink-soft)">Maîtrise actuelle : {Math.round(s.masteryScore)} %</span>}
+            {s.masteryScore !== null && (
+              <span className="text-(--color-ink-soft)" title={s.masteryDetail ?? undefined}>
+                Maîtrise actuelle : {Math.round(s.masteryScore)} %{s.masteryDetail && !compact && <span className="text-(--color-ink-muted)"> ({s.masteryDetail})</span>}
+              </span>
+            )}
             {s.status !== 'planifiee' && <Badge variant={done ? 'success' : 'muted'}>{SESSION_STATUS_LABEL[s.status]}</Badge>}
             {s.origin === 'avance' && <Badge variant="outline">Réalisée en avance{s.plannedDay ? ` (prévue le ${s.plannedDay.split('-').reverse().slice(0, 2).join('/')})` : ''}</Badge>}
             {s.origin === 'temps_supplementaire' && <Badge variant="outline">Temps supplémentaire</Badge>}
@@ -116,12 +132,15 @@ export function SessionCard({ s, compact = false }: { s: SessionView; compact?: 
               </>
             )}
             {askMinutes ? (
-              <span className="inline-flex items-center gap-1">
+              <span className="inline-flex flex-wrap items-center gap-1">
                 <Input type="number" min={1} max={600} step={1} value={minutes} onChange={(e) => setMinutes(e.target.value)} className="h-9 w-20 text-sm" aria-label="Minutes réellement passées" />
                 <Button size="sm" disabled={pending} onClick={() => run(() => completeSessionAction(s.id, Math.round(Number(minutes)) || null))}>{pending ? <Loader2 className="animate-spin" /> : <CheckCircle2 />} Valider</Button>
+                <span className="w-full text-xs text-(--color-ink-muted)">
+                  {measured ? 'Temps écoulé depuis « Commencer » : corrigez-le si vous avez fait une pause.' : 'Indiquez le temps réellement passé : vos durées s’adaptent à votre rythme.'}
+                </span>
               </span>
             ) : (
-              <Button size="sm" disabled={pending} onClick={() => setAskMinutes(true)}><CheckCircle2 /> Terminé</Button>
+              <Button size="sm" disabled={pending} onClick={askForMinutes}><CheckCircle2 /> Terminé</Button>
             )}
             <Button size="sm" variant="ghost" disabled={pending} onClick={() => run(() => postponeSessionAction(s.id))}><CalendarClock /> Reporter</Button>
           </div>

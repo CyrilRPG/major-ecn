@@ -106,21 +106,105 @@ export function evaluationOutcome(scorePct: number, config: PlanConfig): 'maitri
   return 'reprogrammer';
 }
 
+/** Format réel d'une question faite sur la plateforme (série QCM, QROC ou dossier progressif). */
+export type AttemptFormat = 'qcm' | 'qroc' | 'dossier_progressif';
+const FORMAT_ORDER: AttemptFormat[] = ['dossier_progressif', 'qcm', 'qroc'];
+
 /**
- * Score de maîtrise déduit des QCM faits sur la plateforme (Assessment
- * Engine, §7, §13) : taux de bonnes réponses, pondéré vers la récence.
+ * Format d'une série : dossier progressif (`kind = 'dp'`, ou libellé « DP … »
+ * — les DP rédactionnels sont des séries `kind = 'qroc'`), QROC, sinon QCM.
  */
-export function masteryFromAttempts(attempts: { isCorrect: boolean; at: string }[], now: Date, config: PlanConfig, source: 'qcm' | 'concours_blanc' = 'qcm'): MasteryValue | null {
+export function attemptFormatOfSerie(serie: { type?: string | null; kind?: string | null; label?: string | null }): AttemptFormat {
+  if (serie.kind === 'dp' || /^\s*DP\b/i.test(serie.label ?? '')) return 'dossier_progressif';
+  if (serie.type === 'qroc' || serie.kind === 'qroc') return 'qroc';
+  return 'qcm';
+}
+
+export type AttemptMeasure = MasteryValue & {
+  /** Format majoritaire des réponses (ou `concours_blanc`) : la « source » affichée. */
+  source: MasterySource;
+  /** Nombre de réponses par format. */
+  formats: Partial<Record<AttemptFormat, number>>;
+};
+
+/**
+ * Score de maîtrise déduit des questions faites sur la plateforme (Assessment
+ * Engine, §7, §13) : taux de bonnes réponses, pondéré vers la récence. La
+ * confiance tient compte du FORMAT de chaque réponse (un QROC pèse moins qu'un
+ * QCM ou un dossier progressif) : moyenne des confiances de chaque format,
+ * calculées sur le nombre total de réponses et pondérées par leur part.
+ */
+export function masteryFromAttempts(attempts: { isCorrect: boolean; at: string; format?: AttemptFormat }[], now: Date, config: PlanConfig, source: 'qcm' | 'concours_blanc' = 'qcm'): AttemptMeasure | null {
   if (attempts.length < config.min_attempts_platform) return null;
   let sum = 0; let weight = 0;
+  const formats: Partial<Record<AttemptFormat, number>> = {};
   for (const a of attempts) {
     const ageDays = Math.max(0, (now.getTime() - new Date(a.at).getTime()) / 86_400_000);
     const w = ageDays <= 30 ? 1 : ageDays <= 90 ? 0.7 : 0.4;
     sum += (a.isCorrect ? 100 : 0) * w;
     weight += w;
+    const f = a.format ?? 'qcm';
+    formats[f] = (formats[f] ?? 0) + 1;
   }
   if (weight === 0) return null;
-  return { score: round2(sum / weight), confidence: round2(sourceConfidence(source, attempts.length)) };
+  const n = attempts.length;
+  if (source === 'concours_blanc') {
+    return { score: round2(sum / weight), confidence: round2(sourceConfidence('concours_blanc', n)), source: 'concours_blanc', formats };
+  }
+  const confidence = FORMAT_ORDER.reduce((c, f) => c + ((formats[f] ?? 0) / n) * sourceConfidence(f, n), 0);
+  const dominant = FORMAT_ORDER.reduce((best, f) => ((formats[f] ?? 0) > (formats[best] ?? 0) ? f : best), FORMAT_ORDER[0]);
+  return { score: round2(sum / weight), confidence: round2(confidence), source: dominant, formats };
+}
+
+/** Fiabilité lisible d'un niveau (jamais le coefficient brut). */
+export function confidenceLabel(confidence: number): 'faible' | 'moyenne' | 'élevée' {
+  if (confidence < RELIABLE_CONFIDENCE) return 'faible';
+  if (confidence < 0.75) return 'moyenne';
+  return 'élevée';
+}
+
+/**
+ * D'où vient la « maîtrise actuelle » affichée au candidat : source, volume,
+ * date de la dernière mesure et fiabilité. Phrase courte, sans formule.
+ */
+export function masteryProvenance(m: { source: string | null; confidence: number; results_count?: number | null; last_evaluated_at?: string | null; origin?: string | null }): string | null {
+  if (!(m.confidence > 0)) return null;
+  const fiab = `fiabilité ${confidenceLabel(m.confidence)}`;
+  const date = m.last_evaluated_at ? frDate(m.last_evaluated_at) : null;
+  const n = m.results_count ?? 0;
+  const questions = `${n} question${n > 1 ? 's' : ''}`;
+  switch (m.source) {
+    case 'auto_evaluation':
+    case null:
+      return `niveau déclaré, à confirmer par vos résultats · ${fiab}`;
+    case 'validation':
+      return `test de validation${date ? ` du ${date}` : ''} · ${fiab}`;
+    case 'concours_blanc':
+      return `${n > 0 ? `${questions}, dont concours blanc` : 'concours blanc'}${date ? ` · dernière le ${date}` : ''} · ${fiab}`;
+    case 'positionnement':
+      return `test de positionnement${date ? ` du ${date}` : ''} · ${fiab}`;
+    default:
+      return `${n > 0 ? `${questions} faites sur la plateforme` : 'questions faites sur la plateforme'}${date ? ` · dernière le ${date}` : ''} · ${fiab}`;
+  }
+}
+
+function frDate(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris', day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+/**
+ * Durée proposée à la clôture d'une séance : temps écoulé depuis « Commencer »
+ * quand il est plausible (au moins 1 min, au plus 3 × la durée prévue et
+ * 4 h), sinon la durée prévue. Le candidat peut toujours la corriger.
+ */
+export function suggestedActualMinutes(planned: number, startedAt: string | null, now: Date): { minutes: number; measured: boolean } {
+  if (startedAt) {
+    const elapsed = Math.round((now.getTime() - new Date(startedAt).getTime()) / 60_000);
+    if (Number.isFinite(elapsed) && elapsed >= 1 && elapsed <= Math.min(240, Math.max(3 * planned, 60))) return { minutes: elapsed, measured: true };
+  }
+  return { minutes: planned, measured: false };
 }
 
 /**

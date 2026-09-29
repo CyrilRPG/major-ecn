@@ -16,13 +16,13 @@ import {
   type CoverageReport, type ItemStatusRow, type PlanExecution, type ProgramCoverage,
 } from './analytics';
 import { pickQuestions, scoreEvaluation, type EvalAnswer, type EvalQuestion } from './assessment';
-import { computePace, declaredToScore, evaluationOutcome, masteryFromAttempts, mergeMastery, sourceConfidence, type Pace } from './mastery';
+import { computePace, declaredToScore, evaluationOutcome, masteryFromAttempts, mergeMastery, sourceConfidence, type AttemptFormat, type Pace } from './mastery';
 import { computePriority, type PriorityResult } from './priority';
 import { pickNextActivity, type NextActivity } from './next-activity';
 import { inheritFromOverlaps, withInheritedMastery, type OverlapSource } from './overlap';
 import { shouldShowIntro } from './intro';
 import { addDaysKey, daysBetween } from './revision';
-import { generateSchedule, type MasteryState, type ScheduleSummary } from './scheduler';
+import { generateSchedule, withoutStartedToday, type MasteryState, type ScheduleSummary } from './scheduler';
 import { referenceMinutes } from './workload';
 import {
   LEARNING_KINDS, parseAvailability,
@@ -349,7 +349,9 @@ export async function regeneratePlan(userId: string, trigger: string, opts: { no
   const version = profile.plan_version + 1;
   // Les séances réalisées ou commencées restent ; les séances futures sont remplacées :
   // une séance manquée ne s'accumule jamais, elle est redistribuée (addendum §7).
-  const rows = result.sessions.map((s, i) => ({
+  // Une séance commencée aujourd'hui tient lieu de sa jumelle recalculée (jamais deux fois le même travail).
+  const startedToday = todaySessions.filter((s) => s.status === 'en_cours');
+  const rows = withoutStartedToday(result.sessions, startedToday, today).map((s, i) => ({
     item_id: s.itemId, day: s.day, order_index: i, minutes: s.minutes, kind: s.kind,
     priority_score: s.priorityScore, priority_tier: s.priorityTier, reason: s.reason, plan_version: version, part: s.part, parts: s.parts,
     origin: 'planning' as const, planned_day: null,
@@ -607,12 +609,13 @@ export async function syncMasteryFromPlatform(userId: string, opts: { force?: bo
   }
   const itemsByQuestion = new Map<string, string[]>();
   for (const t of tags) itemsByQuestion.set(t.question_id, [...(itemsByQuestion.get(t.question_id) ?? []), t.item_id]);
-  const perItem = new Map<string, { isCorrect: boolean; at: string }[]>();
-  const perItemMock = new Map<string, { isCorrect: boolean; at: string }[]>();
+  type Answer = { isCorrect: boolean; at: string; format?: AttemptFormat };
+  const perItem = new Map<string, Answer[]>();
+  const perItemMock = new Map<string, Answer[]>();
   const spread = (list: typeof attempts, target: typeof perItem) => {
     for (const a of list) {
       const targets = new Set([...(itemByCours.get(a.cours_id) ?? []), ...(itemsByQuestion.get(a.question_id) ?? [])]);
-      for (const id of targets) target.set(id, [...(target.get(id) ?? []), { isCorrect: a.is_correct, at: a.attempted_at }]);
+      for (const id of targets) target.set(id, [...(target.get(id) ?? []), { isCorrect: a.is_correct, at: a.attempted_at, format: a.format }]);
     }
   };
   spread(attempts, perItem);
@@ -634,12 +637,14 @@ export async function syncMasteryFromPlatform(userId: string, opts: { force?: bo
     if (!measure) continue;
     const cur = current.get(itemId);
     // Le niveau observé prend progressivement le pas sur le niveau déclaré (fusion pondérée par la confiance).
+    // Source = format majoritaire des réponses (QCM, QROC ou dossier progressif), confiance selon les formats.
     const m = mergeMastery(cur && Number(cur.confidence) > 0 ? { score: Number(cur.mastery_score), confidence: Number(cur.confidence) } : null, measure);
+    const at = list.map((x) => x.at).sort();
     merged.set(itemId, {
-      user_id: userId, item_id: itemId, mastery_score: m.score, confidence: m.confidence, source: 'qcm', origin: 'observe',
-      last_evaluated_at: list.map((x) => x.at).sort().pop() ?? now.toISOString(), last_result: measure.score, ...counts(list),
+      user_id: userId, item_id: itemId, mastery_score: m.score, confidence: m.confidence, source: measure.source, origin: 'observe',
+      last_evaluated_at: at[at.length - 1] ?? now.toISOString(), last_result: measure.score, ...counts(list),
     });
-    history.push({ user_id: userId, item_id: itemId, score: measure.score, confidence: measure.confidence, source: 'qcm', detail: { attempts: list.length } });
+    history.push({ user_id: userId, item_id: itemId, score: measure.score, confidence: measure.confidence, source: measure.source, detail: { attempts: list.length, formats: measure.formats, from: at[0] ?? null, to: at[at.length - 1] ?? null } });
   }
   // Concours blancs (§7, §13) : mesure plus fiable, fusionnée après les QCM d'entraînement.
   for (const [itemId, list] of perItemMock) {

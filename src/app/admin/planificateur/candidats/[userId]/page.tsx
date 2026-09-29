@@ -60,7 +60,7 @@ export default async function PlanCandidatPage({ params }: { params: Promise<{ u
         </SectionCard>
         <SectionCard title="Évolution du niveau (historisation)">
           <ul className="max-h-80 divide-y divide-(--color-border) overflow-auto text-sm">
-            {history.slice(0, 200).map((h) => <li key={h.id} className="flex items-center gap-2 py-1.5"><span className="w-32 text-xs text-(--color-ink-muted)">{fmtDateTime(h.created_at)}</span><span className="min-w-0 flex-1 truncate text-(--color-ink)">{itemName.get(h.item_id) ?? h.item_id}</span><span className="text-xs text-(--color-ink-soft)">{MASTERY_SOURCE_LABEL[h.source as MasterySource] ?? h.source}</span><span className="w-14 text-right tabular-nums text-(--color-ink)">{Math.round(Number(h.score))} %</span></li>)}
+            {history.slice(0, 200).map((h) => <li key={h.id} className="flex items-center gap-2 py-1.5"><span className="w-32 text-xs text-(--color-ink-muted)">{fmtDateTime(h.created_at)}</span><span className="min-w-0 flex-1 truncate text-(--color-ink)">{itemName.get(h.item_id) ?? h.item_id}</span><span className="text-xs text-(--color-ink-soft)">{MASTERY_SOURCE_LABEL[h.source as MasterySource] ?? h.source} · confiance {Number(h.confidence).toFixed(2).replace('.', ',')}</span><span className="w-14 text-right tabular-nums text-(--color-ink)">{Math.round(Number(h.score))} %</span></li>)}
             {history.length === 0 && <li className="py-2 text-(--color-ink-soft)">Aucune mesure.</li>}
           </ul>
         </SectionCard>

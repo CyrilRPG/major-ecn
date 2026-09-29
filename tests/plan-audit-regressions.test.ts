@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { DEFAULT_CONFIG, mergeConfig, type PlanItem, type PlanPrerequisite } from '../src/lib/plan/types';
 import { computePace } from '../src/lib/plan/mastery';
-import { generateSchedule, type MasteryState } from '../src/lib/plan/scheduler';
+import { generateSchedule, withoutStartedToday, type MasteryState } from '../src/lib/plan/scheduler';
 import { pickNextActivity } from '../src/lib/plan/next-activity';
 import { parseImportRows, rowsFromMatrixWorkbook } from '../src/lib/plan/import';
 import { parisDay } from '../src/lib/plan/revision';
@@ -152,4 +152,18 @@ test('cas limites : épreuve aujourd’hui ou passée, aucune disponibilité, au
     for (const v of Object.values(r.summary)) if (typeof v === 'number') assert.ok(Number.isFinite(v), JSON.stringify(r.summary));
   }
   assert.equal(generateSchedule({ ...base, items: [item({ id: 'A' })], availability: DAYS(0), today: '2026-10-05', examDate: '2026-12-01' }).summary.insufficientTime, true);
+});
+
+test('recalcul : une séance commencée aujourd’hui n’est jamais reprogrammée le même jour', () => {
+  const today = '2026-09-29';
+  const planned = [
+    { itemId: 'thrombo', day: today, kind: 'reactivation' },
+    { itemId: 'thrombo', day: '2026-10-12', kind: 'reactivation' },
+    { itemId: 'uro', day: today, kind: 'apprentissage' },
+    { itemId: 'uro', day: today, kind: 'apprentissage' },
+  ];
+  const started = [{ item_id: 'thrombo', kind: 'reactivation' }, { item_id: 'uro', kind: 'apprentissage' }];
+  const kept = withoutStartedToday(planned, started, today);
+  assert.deepEqual(kept.map((s) => `${s.itemId}@${s.day}`), ['thrombo@2026-10-12', 'uro@2026-09-29'], 'la jumelle du jour est retirée, une seule fois ; les jours suivants restent');
+  assert.equal(withoutStartedToday(planned, [], today).length, 4);
 });
