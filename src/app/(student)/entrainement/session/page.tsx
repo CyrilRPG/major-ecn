@@ -86,11 +86,24 @@ export default async function TargetedSessionPage({
 
   if (coursInterrogeables.length === 0) redirect('/entrainement');
 
+  // Échantillon d'items avant la lecture des séries : la liste complète (plus
+  // de 1 000 items en accès total) dépasse la longueur d'URL que PostgREST
+  // accepte, et la lecture des séries, plafonnée à 1 000 lignes, ne gardait
+  // que les premières rangées de la table. Tirer les items au hasard borne
+  // l'URL et répartit le vivier sur tout le périmètre.
+  const ITEMS_ECHANTILLONNES = 80;
+  const itemsMelanges = [...coursInterrogeables];
+  for (let i = itemsMelanges.length - 1; i > 0; i--) {
+    // eslint-disable-next-line react-hooks/purity -- composant serveur, tirage voulu (cf. plus bas)
+    const j = Math.floor(Math.random() * (i + 1));
+    [itemsMelanges[i], itemsMelanges[j]] = [itemsMelanges[j], itemsMelanges[i]];
+  }
+
   const { data: seriesRaw } = await supabase
     .from('qcm_series')
     .select('id')
     .eq('type', 'qcm')
-    .in('cours_id', coursInterrogeables);
+    .in('cours_id', itemsMelanges.slice(0, ITEMS_ECHANTILLONNES));
   const toutesLesSeries = (seriesRaw ?? []).map((s) => s.id as string);
   if (toutesLesSeries.length === 0) redirect('/entrainement');
 

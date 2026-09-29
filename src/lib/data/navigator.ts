@@ -1,6 +1,8 @@
 import 'server-only';
 import { cache } from 'react';
+import { unstable_cache } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import type { Profile } from '@/lib/auth/get-profile';
 import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
 import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
@@ -38,6 +40,22 @@ function isRevisionsGeriatrie(titre: string): boolean {
   const t = titre.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
   return t.includes('revision');
 }
+
+/**
+ * Items d'une faculté ayant une fiche PDF, une vidéo-fichier, une série QCM,
+ * des flashcards (RPC `navigator_contenus_cours`). Identique pour tous les
+ * élèves : cache global de dix minutes.
+ */
+const getContenusCours = unstable_cache(
+  async (faculteId: string): Promise<Record<'fiche' | 'video' | 'qcm' | 'flashcards', string[]>> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (createAdminClient() as any).rpc('navigator_contenus_cours', { p_faculte_id: faculteId });
+    if (error) throw new Error(error.message);
+    return data;
+  },
+  ['navigator-contenus-cours-v1'],
+  { revalidate: 600, tags: ['faculte-content-totals'] },
+);
 
 type Row = {
   semestres:
@@ -86,32 +104,33 @@ export const getNavigatorTree = cache(async (profile: Profile): Promise<NavColle
 
   const row = data as unknown as Row | null;
   const colleges = (row?.semestres ?? []).flatMap((s) => s.matieres ?? []);
-  const coursIds = colleges.flatMap((m) => (m.cours ?? []).map((c) => c.id));
 
-  // 2. Content availability — flat query, no deep nesting
-  const [ficheRes, videoRes, qcmRes, flashRes] = await Promise.all([
-    supabase.from('fiches').select('cours_id').not('storage_path', 'is', null).in('cours_id', coursIds),
-    supabase.from('videos').select('cours_id').not('storage_path', 'is', null).in('cours_id', coursIds),
-    supabase.from('qcm_series').select('cours_id').eq('type', 'qcm').in('cours_id', coursIds),
-    supabase.from('flashcards').select('cours_id').in('cours_id', coursIds),
-  ]);
-
-  const ficheSet = new Set((ficheRes.data ?? []).map((r) => r.cours_id));
-  const videoSet = new Set((videoRes.data ?? []).map((r) => r.cours_id));
-  const qcmSet = new Set((qcmRes.data ?? []).map((r) => r.cours_id));
-  const flashSet = new Set((flashRes.data ?? []).map((r) => r.cours_id));
-
+  // 2. Contenus présents par item — une requête SQL en cache global. Ce
+  // navigateur se charge à CHAQUE page élève : il lançait jusqu'ici quatre
+  // requêtes `.in('cours_id', <1 300 ids>)` sous RLS (fiches, vidéos, séries,
+  // flashcards), chacune tronquée à 1 000 lignes par PostgREST — la palette
+  // de commandes et le vivier de l'entraînement perdaient des items (audit de
+  // lenteur du 29/09/2026).
+  //
   // Progression de chaque item : LA formule commune (lib/progress), la même
   // que la bague de l'item et la liste des items — questions accessibles pour
   // la voie/formule de l'élève (85 %) + couverture fiche/flashcards/vidéo (15 %).
   const isAdmin = profile.role === 'admin';
-  const progression = await chargerProgressionCours({
-    userId: profile.id,
-    faculteId: EDN_FACULTE_ID,
-    scope,
-    staff: isAdmin,
-    cours: colleges.flatMap((m) => m.cours ?? []),
-  });
+  const [contenus, progression] = await Promise.all([
+    // Indicateurs secondaires : une panne ne doit pas faire tomber le layout.
+    getContenusCours(EDN_FACULTE_ID).catch(() => ({ fiche: [], video: [], qcm: [], flashcards: [] })),
+    chargerProgressionCours({
+      userId: profile.id,
+      faculteId: EDN_FACULTE_ID,
+      scope,
+      staff: isAdmin,
+      cours: colleges.flatMap((m) => m.cours ?? []),
+    }),
+  ]);
+  const ficheSet = new Set(contenus.fiche);
+  const videoSet = new Set(contenus.video);
+  const qcmSet = new Set(contenus.qcm);
+  const flashSet = new Set(contenus.flashcards);
 
   // Un sous-collège hérite de l'accès de son collège parent : accorder
   // « Médecine générale » ouvre automatiquement ses sous-collèges

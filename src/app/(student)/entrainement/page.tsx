@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { CollegesChooser } from '@/components/student/colleges-chooser';
+import { contexteEleve, getLotsQuestionsFaculte, type LotQuestionsCours } from '@/lib/progress/course-progress-data';
+import { compterQuestionsAccessibles } from '@/lib/progress/course-progress';
 
 export const metadata = { title: 'Entraînement ciblé' };
 
@@ -18,14 +20,17 @@ export default async function EntrainementPage() {
   const scope = parseScope(profile.permission_scope);
   const supabase = await createClient();
 
-  const [{ data: attemptsRaw }, { data: questionsRaw }] = await Promise.all([
+  const [{ data: attemptsRaw }, lots, ctx] = await Promise.all([
     supabase
       .from('qcm_attempts')
       .select('question_id, is_correct, qcm_questions!inner(qcm_series!inner(cours!inner(matieres!inner(id, nom, semestres!inner(faculte_id)))))')
       .eq('user_id', user.id),
-    supabase
-      .from('qcm_questions')
-      .select('id, qcm_series!inner(cours!inner(matieres!inner(id, semestres!inner(faculte_id))))'),
+    // Questions par collège : les lots de la faculté (cache global) et les
+    // règles d'accès de l'élève. Cette page relisait la table `qcm_questions`
+    // ENTIÈRE sous RLS — 1,7 s par affichage, et tronquée à 1 000 lignes par
+    // PostgREST, donc un décompte faux (audit de lenteur du 29/09/2026).
+    getLotsQuestionsFaculte(EDN_FACULTE_ID),
+    contexteEleve(scope, { staff: profile.role === 'admin' }),
   ]);
 
   const perCollege = new Map<string, { id: string; nom: string; fails: number }>();
@@ -41,13 +46,20 @@ export default async function EntrainementPage() {
     }
   }
 
-  // Nombre de questions disponibles par collège (périmètre EDN + accès)
-  type QRow = { id: string; qcm_series: { cours: { matieres: { id: string; semestres: { faculte_id: string } } } } };
+  // Nombre de questions accessibles par collège (périmètre EDN + accès + voie/formule)
+  const lotsParCollege = new Map<string, LotQuestionsCours[]>();
+  for (const lot of lots) {
+    if (!lotsParCollege.has(lot.matiere_id)) lotsParCollege.set(lot.matiere_id, []);
+    lotsParCollege.get(lot.matiere_id)!.push(lot);
+  }
   const questionsByCollege = new Map<string, number>();
-  for (const q of ((questionsRaw ?? []) as unknown as QRow[])) {
-    const m = q.qcm_series.cours.matieres;
-    if (m.semestres.faculte_id !== EDN_FACULTE_ID || !canAccessCollege(scope, m.id)) continue;
-    questionsByCollege.set(m.id, (questionsByCollege.get(m.id) ?? 0) + 1);
+  for (const [matiereId, l] of lotsParCollege) {
+    if (!canAccessCollege(scope, matiereId)) continue;
+    questionsByCollege.set(matiereId, compterQuestionsAccessibles(l, {
+      voie: ctx.voie,
+      offers: ctx.offers,
+      geriatrieMgBonus: ctx.matieresBonusGeriatrie?.has(matiereId) ?? false,
+    }));
   }
 
   const MAX_Q = 12;

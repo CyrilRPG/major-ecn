@@ -53,25 +53,29 @@ export type SerieFaite = {
   questionsDistinctes: number;
 };
 
-type SerieContenuRow = SerieProgressionRow & {
-  id: string;
-  cours_id: string;
-  qcm_questions: { count: number }[] | null;
-  cours: { matiere_id: string } | null;
-};
-
-const SELECT_CONTENU =
-  'id, label, type, kind, allowed_voies, allowed_offers, mg_series, is_revisions, cours_id, '
-  + 'qcm_questions(count), cours!inner(matiere_id, matieres!inner(semestres!inner(faculte_id)))';
 const FILTRE_FACULTE = 'cours.matieres.semestres.faculte_id';
-const TRANCHE = 1000;
+
+/** Ligne renvoyée par les RPC de progression : une série (ou un lot) et son nombre de questions. */
+type SerieAgregeeRow = SerieProgressionRow & { cours_id: string; matiere_id: string; n: number };
+
+function serieProgression(s: SerieAgregeeRow): SerieProgressionRow {
+  return {
+    label: s.label ?? '',
+    type: s.type ?? null,
+    kind: s.kind ?? null,
+    allowed_voies: s.allowed_voies ?? null,
+    allowed_offers: s.allowed_offers ?? null,
+    mg_series: s.mg_series ?? null,
+    is_revisions: s.is_revisions ?? null,
+  };
+}
 
 /**
  * Clé de regroupement : tout ce que `canStudentReadSerie` lit d'une série.
  * Le libellé n'y entre que par les quatre motifs qu'elle teste — un libellé
  * représentatif suffit ensuite pour rejouer la règle sur le lot entier.
  */
-function cleLot(s: SerieContenuRow): string {
+function cleLot(s: SerieAgregeeRow): string {
   const label = s.label ?? '';
   return [
     s.cours_id,
@@ -88,53 +92,25 @@ function cleLot(s: SerieContenuRow): string {
   ].join('|');
 }
 
+/**
+ * Les séries sont regroupées en SQL (`progression_lots_questions`, migration
+ * 20260929140000) : une requête, ~0,7 s. L'ancienne lecture PostgREST par
+ * tranches OFFSET coûtait ~40 s de base à chaque recalcul — 45 % du temps de la
+ * base la semaine du 22/09/2026. Le regroupement est rejoué ici par `cleLot`
+ * (idempotent) pour ne pas dépendre de la forme exacte des lots SQL.
+ */
 async function lireLotsFaculte(faculteId: string): Promise<LotQuestionsCours[]> {
-  const admin = createAdminClient();
-  const { count, error: countError } = await admin
-    .from('qcm_series')
-    .select('id, cours!inner(matieres!inner(semestres!inner(faculte_id)))', { count: 'exact', head: true })
-    .eq(FILTRE_FACULTE, faculteId)
-    .in('type', ['qcm', 'qroc']);
-  if (countError) throw new Error(countError.message);
-
-  const tranches: [number, number][] = [];
-  for (let from = 0; from < (count ?? 0); from += TRANCHE) tranches.push([from, from + TRANCHE - 1]);
-  const pages = await Promise.all(
-    tranches.map(([from, to]) =>
-      admin
-        .from('qcm_series')
-        .select(SELECT_CONTENU as 'id')
-        .eq(FILTRE_FACULTE, faculteId)
-        .in('type', ['qcm', 'qroc'])
-        .order('id')
-        .range(from, to),
-    ),
-  );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (createAdminClient() as any).rpc('progression_lots_questions', { p_faculte_id: faculteId });
+  if (error) throw new Error(error.message);
 
   const lots = new Map<string, LotQuestionsCours>();
-  for (const page of pages) {
-    if (page.error) throw new Error(page.error.message);
-    for (const s of (page.data ?? []) as unknown as SerieContenuRow[]) {
-      const n = s.qcm_questions?.[0]?.count ?? 0;
-      if (n <= 0) continue;
-      const cle = cleLot(s);
-      const lot = lots.get(cle);
-      if (lot) { lot.n += n; continue; }
-      lots.set(cle, {
-        cours_id: s.cours_id,
-        matiere_id: s.cours?.matiere_id ?? '',
-        n,
-        serie: {
-          label: s.label ?? '',
-          type: s.type ?? null,
-          kind: s.kind ?? null,
-          allowed_voies: s.allowed_voies ?? null,
-          allowed_offers: s.allowed_offers ?? null,
-          mg_series: s.mg_series ?? null,
-          is_revisions: s.is_revisions ?? null,
-        },
-      });
-    }
+  for (const s of (data ?? []) as SerieAgregeeRow[]) {
+    if (s.n <= 0) continue;
+    const cle = cleLot(s);
+    const lot = lots.get(cle);
+    if (lot) { lot.n += s.n; continue; }
+    lots.set(cle, { cours_id: s.cours_id, matiere_id: s.matiere_id ?? '', n: s.n, serie: serieProgression(s) });
   }
   return [...lots.values()];
 }
@@ -150,76 +126,29 @@ export const getLotsQuestionsFaculte = unstable_cache(
   { revalidate: 3600, tags: ['progression-questions', 'faculte-content-totals'] },
 );
 
-/** Questions distinctes tentées par l'élève, par série (toutes facultés). */
+/**
+ * Questions distinctes tentées par l'élève, par série (toutes facultés).
+ * Agrégat SQL `progression_series_faites` : un aller-retour au lieu de la
+ * relecture de toutes ses tentatives par tranches à chaque page.
+ */
 export const chargerSeriesFaites = cache(async (userId: string): Promise<SerieFaite[]> => {
-  const admin = createAdminClient();
-  type AttemptRow = { question_id: string; qcm_questions: { serie_id: string } | null };
-  const attempts = await fetchAllRows<AttemptRow>((from, to) =>
-    admin
-      .from('qcm_attempts')
-      .select('question_id, qcm_questions!inner(serie_id)')
-      .eq('user_id', userId)
-      .order('id')
-      .range(from, to),
-  );
-  const parSerie = new Map<string, Set<string>>();
-  for (const a of attempts) {
-    const serieId = a.qcm_questions?.serie_id;
-    if (!serieId) continue;
-    if (!parSerie.has(serieId)) parSerie.set(serieId, new Set());
-    parSerie.get(serieId)!.add(a.question_id);
-  }
-  if (parSerie.size === 0) return [];
-
-  const ids = [...parSerie.keys()];
-  const LOT_IDS = 100; // borne la longueur de l'URL PostgREST
-  type SerieRow = SerieProgressionRow & { id: string; cours_id: string; cours: { matiere_id: string } | null };
-  const pages = await Promise.all(
-    Array.from({ length: Math.ceil(ids.length / LOT_IDS) }, (_, i) =>
-      admin
-        .from('qcm_series')
-        .select('id, label, type, kind, allowed_voies, allowed_offers, mg_series, is_revisions, cours_id, cours!inner(matiere_id)' as 'id')
-        .in('id', ids.slice(i * LOT_IDS, (i + 1) * LOT_IDS)),
-    ),
-  );
-  const faites: SerieFaite[] = [];
-  for (const page of pages) {
-    if (page.error) throw new Error(page.error.message);
-    for (const s of (page.data ?? []) as unknown as SerieRow[]) {
-      faites.push({
-        serie: {
-          label: s.label ?? '',
-          type: s.type ?? null,
-          kind: s.kind ?? null,
-          allowed_voies: s.allowed_voies ?? null,
-          allowed_offers: s.allowed_offers ?? null,
-          mg_series: s.mg_series ?? null,
-          is_revisions: s.is_revisions ?? null,
-        },
-        cours_id: s.cours_id,
-        matiere_id: s.cours?.matiere_id ?? '',
-        questionsDistinctes: parSerie.get(s.id)?.size ?? 0,
-      });
-    }
-  }
-  return faites;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (createAdminClient() as any).rpc('progression_series_faites', { p_user_id: userId });
+  if (error) throw new Error(error.message);
+  return ((data ?? []) as SerieAgregeeRow[]).map((s) => ({
+    serie: serieProgression(s),
+    cours_id: s.cours_id,
+    matiere_id: s.matiere_id ?? '',
+    questionsDistinctes: s.n,
+  }));
 });
 
-/** Cours dont l'élève a revu au moins une flashcard (toutes facultés). */
+/** Cours dont l'élève a revu au moins une flashcard (toutes facultés) — agrégat SQL. */
 export const chargerCoursAvecFlashcardsFaites = cache(async (userId: string): Promise<Set<string>> => {
-  const admin = createAdminClient();
-  type ReviewRow = { flashcards: { cours_id: string } | null };
-  const rows = await fetchAllRows<ReviewRow>((from, to) =>
-    admin
-      .from('flashcard_reviews')
-      .select('id, flashcards!inner(cours_id)')
-      .eq('user_id', userId)
-      .order('id')
-      .range(from, to),
-  );
-  const set = new Set<string>();
-  for (const r of rows) if (r.flashcards?.cours_id) set.add(r.flashcards.cours_id);
-  return set;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (createAdminClient() as any).rpc('progression_cours_flashcards_faites', { p_user_id: userId });
+  if (error) throw new Error(error.message);
+  return new Set((data ?? []) as string[]);
 });
 
 /**

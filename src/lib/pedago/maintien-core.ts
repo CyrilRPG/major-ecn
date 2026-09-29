@@ -151,8 +151,35 @@ export type StudentAttempt = {
  * élève assidu dépasse vite ce seuil (5 092 tentatives le 13/09/2026) : ses
  * spécialités « étudiées » et l'historique servant à choisir les questions
  * étaient amputés sans que rien ne le signale.
+ *
+ * Lecture en UN appel par la fonction SQL `tentatives_eleve_detail`
+ * (SECURITY INVOKER : même RLS que PostgREST, même ordre). Les tranches OFFSET
+ * avec cinq jointures imbriquées coûtaient 443 ms chacune en moyenne, jusqu'à
+ * 5,6 s, et s'enchaînaient à l'accueil d'un élève assidu (audit du
+ * 29/09/2026). L'ancienne lecture reste le repli si la fonction manque.
  */
 export async function loadStudentAttempts(supabase: AnyClient, userId: string): Promise<StudentAttempt[]> {
+  type Ligne = {
+    question_id: string; is_correct: boolean; attempted_at: string;
+    cours_id: string; matiere_id: string; matiere_nom: string; faculte_id: string;
+  };
+  const { data, error } = await supabase.rpc('tentatives_eleve_detail', { p_user_id: userId });
+  if (!error && Array.isArray(data)) {
+    return (data as Ligne[]).map((a) => ({
+      question_id: a.question_id,
+      is_correct: a.is_correct,
+      attempted_at: a.attempted_at,
+      qcm_questions: {
+        qcm_series: {
+          cours_id: a.cours_id,
+          cours: {
+            matiere_id: a.matiere_id,
+            matieres: { id: a.matiere_id, nom: a.matiere_nom, semestres: { faculte_id: a.faculte_id } },
+          },
+        },
+      },
+    }));
+  }
   return fetchAllRows<StudentAttempt>((from, to) =>
     supabase
       .from('qcm_attempts')
