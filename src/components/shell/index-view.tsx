@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Lock, type LucideIcon } from 'lucide-react';
+import { ArrowRight, ExternalLink, Lock, type LucideIcon } from 'lucide-react';
 
 export function IndexHeader({
   context,
@@ -32,6 +32,8 @@ export type IndexRow = {
   progress?: number;
   badge?: string;
   locked?: boolean;
+  /** Lien vers un site externe (ouvert dans un nouvel onglet), rendu avec une teinte distincte. */
+  externe?: boolean;
 };
 
 function Bar({ value }: { value: number }) {
@@ -70,6 +72,8 @@ export function IndexList({ rows }: { rows: IndexRow[] }) {
               {typeof r.progress === 'number' && <Bar value={r.progress} />}
               {r.locked ? (
                 <Lock className="h-4 w-4 shrink-0 text-(--color-ink-muted)" />
+              ) : r.externe ? (
+                <ExternalLink className="h-4 w-4 shrink-0 text-(--color-accent)" />
               ) : (
                 <ArrowRight className="h-4 w-4 shrink-0 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5" />
               )}
@@ -83,6 +87,20 @@ export function IndexList({ rows }: { rows: IndexRow[] }) {
                 aria-disabled
               >
                 {body}
+              </li>
+            );
+          }
+          if (r.externe) {
+            return (
+              <li key={r.id} className="bg-(--color-accent-soft)/60">
+                <a
+                  href={r.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-(--color-accent-soft) focus-ring"
+                >
+                  {body}
+                </a>
               </li>
             );
           }

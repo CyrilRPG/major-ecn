@@ -1,5 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
-import { CheckCircle2, ClipboardCheck, RefreshCcw, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, ClipboardCheck, Link2, RefreshCcw, ShieldCheck } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { IndexHeader, IndexList, RowIcon, type IndexRow } from '@/components/shell/index-view';
@@ -12,6 +12,7 @@ import {
 import { normalizeSpecialtyStatus } from '@/lib/pedago/status';
 import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
 import { estItemAnnales } from '@/lib/data/annales';
+import { LIENS_COLLEGES } from '@/lib/data/liens-colleges';
 import { chargerAnnonces } from '@/lib/annonces/server';
 import { TEXTES_COMMUNS, epreuvePassee, joursAvant, specialitesDeLEleve } from '@/lib/annonces/concours';
 
@@ -178,7 +179,22 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
   // Les annales EVC ne sont plus un onglet PDF séparé : elles sont publiées
   // corrigées, question par question, dans l'onglet DP · QI des items
   // « Annales - <Collège> » / « Replays - Révisions ».
-  const rows: IndexRow[] = [...actionRows, ...coursRows];
+  // Liens externes du collège (ex. recommandations ESC en Cardiologie) : en
+  // tête des items, avant le premier — ce ne sont pas des items (lib/data/liens-colleges).
+  const lienRows: IndexRow[] = (LIENS_COLLEGES[matiere] ?? []).map((l) => ({
+    id: l.id,
+    href: l.url,
+    title: l.titre,
+    subtitle: l.sousTitre,
+    externe: true,
+    leading: (
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-(--color-accent) text-white">
+        <Link2 className="h-4.5 w-4.5" />
+      </span>
+    ),
+  }));
+
+  const rows: IndexRow[] = [...actionRows, ...lienRows, ...coursRows];
 
   // ── Date d'épreuve de cette spécialité ──────────────────────────────────
   // Lue dans la fiche concours de la spécialité (Admin › Annonces) — la même
@@ -205,7 +221,7 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
 
   return (
     <>
-      <IndexHeader context="Collège EVC" title={m.nom} meta={`${rows.length} item${rows.length > 1 ? 's' : ''}`} />
+      <IndexHeader context="Collège EVC" title={m.nom} meta={`${rows.length - lienRows.length} item${rows.length - lienRows.length > 1 ? 's' : ''}`} />
       {examBanner && (
         <div className="mx-5 mt-4 flex items-center gap-4 rounded-2xl border border-(--color-primary)/25 bg-(--color-primary-soft)/40 px-4 py-3 lg:mx-10">
           <div className="flex flex-col items-center justify-center rounded-xl bg-(--color-primary) px-3 py-1.5 text-white">
