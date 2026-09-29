@@ -22,6 +22,69 @@ import type { TransversalKind } from './actions';
 
 const VALID_KINDS: TransversalKind[] = ['daily', 'recommended', 'intensive', 'reevaluation', 'reevaluation_deep', 'bilan_global'];
 
+type PoolRow = {
+  id: string;
+  serie_id: string;
+  order_index: number;
+  format: 'qcm' | 'qroc' | null;
+  qcm_items: { count: number }[] | null;
+  qcm_series: { cours: { matieres: { id: string; semestres: { faculte_id: string } } } };
+};
+
+/**
+ * Questions (sans énoncé) et séries des cours étudiés, sous la RLS de l'élève.
+ * Un appel à `vivier_revisions_cours` ; repli sur l'ancienne lecture par
+ * tranches si la fonction manque.
+ */
+async function chargerVivier(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  coursIds: string[],
+): Promise<[PoolRow[], SerieRowForme[]]> {
+  type Vivier = {
+    questions: { id: string; serie_id: string; order_index: number; format: 'qcm' | 'qroc' | null; n_items: number; matiere_id: string; faculte_id: string }[];
+    series: { id: string; label: string | null; type: string | null; vignette: string | null; n_questions: number }[];
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any).rpc('vivier_revisions_cours', { p_cours_ids: coursIds });
+  if (!error && data) {
+    const v = data as Vivier;
+    return [
+      v.questions.map((q) => ({
+        id: q.id, serie_id: q.serie_id, order_index: q.order_index, format: q.format,
+        qcm_items: [{ count: q.n_items }],
+        qcm_series: { cours: { matieres: { id: q.matiere_id, semestres: { faculte_id: q.faculte_id } } } },
+      })),
+      v.series.map((s) => ({ id: s.id, label: s.label, type: s.type, vignette: s.vignette, qcm_questions: [{ count: s.n_questions }] })),
+    ];
+  }
+
+  const COURS_PAR_TRANCHE = 50;
+  const tranches: string[][] = [];
+  for (let i = 0; i < coursIds.length; i += COURS_PAR_TRANCHE) tranches.push(coursIds.slice(i, i + COURS_PAR_TRANCHE));
+  return Promise.all([
+    Promise.all(tranches.map((ids) =>
+      fetchAllRows<PoolRow>((from, to) =>
+        supabase
+          .from('qcm_questions')
+          .select('id, serie_id, order_index, format, qcm_items(count), qcm_series!inner(cours_id, cours!inner(matieres!inner(id, semestres!inner(faculte_id))))')
+          .in('qcm_series.cours_id', ids)
+          .order('id', { ascending: true })
+          .range(from, to) as never,
+      ),
+    )).then((r) => r.flat()),
+    Promise.all(tranches.map((ids) =>
+      fetchAllRows<SerieRowForme>((from, to) =>
+        supabase
+          .from('qcm_series')
+          .select('id, label, type, vignette, qcm_questions(count)')
+          .in('cours_id', ids)
+          .order('id', { ascending: true })
+          .range(from, to) as never,
+      ),
+    )).then((r) => r.flat()),
+  ]);
+}
+
 type QRow = {
   id: string;
   enonce: string;
@@ -129,48 +192,22 @@ export default async function TransversalSessionPage({
           questions par COURS (liste courte, par tranches de 50), on lit toutes
           les pages de 1 000 lignes, sans embarquer les énoncés ni les items —
           seules les questions retenues sont ensuite chargées en entier. */
-    type PoolRow = {
-      id: string;
-      serie_id: string;
-      order_index: number;
-      format: 'qcm' | 'qroc' | null;
-      qcm_items: { count: number }[] | null;
-      qcm_series: { cours: { matieres: { id: string; semestres: { faculte_id: string } } } };
-    };
-    const COURS_PAR_TRANCHE = 50;
-    const tranches: string[][] = [];
-    for (let i = 0; i < studiedCoursIds.length; i += COURS_PAR_TRANCHE) {
-      tranches.push(studiedCoursIds.slice(i, i + COURS_PAR_TRANCHE));
-    }
-    const [pool, serieRows] = await Promise.all([
-      Promise.all(tranches.map((coursIds) =>
-        fetchAllRows<PoolRow>((from, to) =>
-          supabase
-            .from('qcm_questions')
-            .select('id, serie_id, order_index, format, qcm_items(count), qcm_series!inner(cours_id, cours!inner(matieres!inner(id, semestres!inner(faculte_id))))')
-            .in('qcm_series.cours_id', coursIds)
-            .order('id', { ascending: true })
-            .range(from, to) as never,
-        ),
-      )).then((r) => r.flat()),
-      // TOUTES les séries des cours étudiés, avec ce qui décide de leur forme
-      // (vignette, libellé, type) et leur nombre TOTAL de questions. Seule une
-      // série de questions isolées se pioche question par question ; toute
-      // autre (dossier progressif, annale, entraînement, séance, sujet long) est
-      // servie entière ou pas du tout — règle du 18/09/2026 précisée le
-      // 20/09/2026 (annales servies question par question), voir
-      // lib/pedago/dossiers.ts.
-      Promise.all(tranches.map((coursIds) =>
-        fetchAllRows<SerieRowForme>((from, to) =>
-          supabase
-            .from('qcm_series')
-            .select('id, label, type, vignette, qcm_questions(count)')
-            .in('cours_id', coursIds)
-            .order('id', { ascending: true })
-            .range(from, to) as never,
-        ),
-      )).then((r) => r.flat()),
-    ]);
+    //
+    // Depuis le 29/09/2026 (audit de lenteur) : une seule fonction SQL,
+    // `vivier_revisions_cours` (SECURITY INVOKER, même RLS que PostgREST),
+    // renvoie les questions ET les séries des cours étudiés — les identifiants
+    // partent dans le corps de la requête. Les tranches OFFSET coûtaient 6,8 s
+    // à l'élève le plus avancé (336 cours), 1,6 s désormais, résultat identique.
+    // L'ancienne lecture reste le repli si la fonction manque.
+    //
+    // Les séries : TOUTES celles des cours étudiés, avec ce qui décide de leur
+    // forme (vignette, libellé, type) et leur nombre TOTAL de questions. Seule
+    // une série de questions isolées se pioche question par question ; toute
+    // autre (dossier progressif, annale, entraînement, séance, sujet long) est
+    // servie entière ou pas du tout — règle du 18/09/2026 précisée le
+    // 20/09/2026 (annales servies question par question), voir
+    // lib/pedago/dossiers.ts.
+    const [pool, serieRows] = await chargerVivier(supabase, studiedCoursIds);
     const dossiers = dossiersDepuisSeries(serieRows.map(formeDeSerie));
 
     if (pool.length === 0) {

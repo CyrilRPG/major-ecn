@@ -73,6 +73,38 @@ export default async function StudentLayout({ children }: { children: React.Reac
   // neutralise dès maintenant, la valeur `null` étant déjà le cas de repli.
   popupAccueilPromise.catch?.(() => null);
 
+  // Gardes de contenu lancées ICI, attendues plus bas à leur place habituelle
+  // (l'ordre des redirections ne change pas). Elles ne dépendent ni de l'arbre
+  // ni des formulaires, mais s'exécutaient APRÈS eux : jusqu'à quatre
+  // allers-retours de plus, en série, sur CHAQUE page élève (audit de lenteur
+  // du 29/09/2026).
+  const hEarly = await headers();
+  const pathnameEarly = hEarly.get('x-invoke-path') ?? hEarly.get('x-pathname') ?? '';
+  const pageDeContenu = /^\/cours\/[^/]+/.test(pathnameEarly) || /^\/matieres\/[^/]+\/?$/.test(pathnameEarly);
+  const revisionStatsPromise = profile.role === 'student' && pageDeContenu
+    ? (supabase as unknown as {
+        from: (t: string) => {
+          select: (s: string) => {
+            eq: (k: string, v: string) => {
+              maybeSingle: () => Promise<{ data: { last_transversal_revision_date: string | null } | null }>;
+            };
+          };
+        };
+      }).from('user_revision_stats')
+        .select('last_transversal_revision_date')
+        .eq('user_id', user.id)
+        .maybeSingle()
+    : Promise.resolve({ data: null });
+  revisionStatsPromise.catch?.(() => null);
+  const interrogationPromise = profile.role === 'student'
+    ? interrogationEnAttente(supabase, {
+        id: user.id,
+        role: profile.role,
+        permission_scope: profile.permission_scope,
+      })
+    : Promise.resolve(null);
+  interrogationPromise.catch?.(() => null);
+
   // Arbre de navigation et données du bandeau chargés EN PARALLÈLE : on
   // n'attend plus la fin de l'arbre avant de lancer les requêtes de
   // satisfaction/progrès (elles en sont indépendantes) → moins de latence.
@@ -164,18 +196,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
     const matiereRootMatch = pathname.match(/^\/matieres\/([^/]+)\/?$/);
 
     if (coursMatch || matiereRootMatch) {
-      const { data: statsRow } = await (supabase as unknown as {
-        from: (t: string) => {
-          select: (s: string) => {
-            eq: (k: string, v: string) => {
-              maybeSingle: () => Promise<{ data: { last_transversal_revision_date: string | null } | null }>;
-            };
-          };
-        };
-      }).from('user_revision_stats')
-        .select('last_transversal_revision_date')
-        .eq('user_id', user.id)
-        .maybeSingle();
+      const { data: statsRow } = await revisionStatsPromise;
       const lastDate = statsRow?.last_transversal_revision_date ?? null;
       const daysSince = lastDate
         ? Math.floor((Date.now() - new Date(lastDate).getTime()) / 86_400_000)
@@ -224,11 +245,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
   // ne doivent jamais être bloqués (sinon : boucle de redirection au login).
   // ───────────────────────────────────────────────────────────────
   if (profile.role === 'student') {
-    const pendingInterrogationId = await interrogationEnAttente(supabase, {
-      id: user.id,
-      role: profile.role,
-      permission_scope: profile.permission_scope,
-    });
+    const pendingInterrogationId = await interrogationPromise;
 
     if (pendingInterrogationId) {
       const interroPath = `/cours/${pendingInterrogationId}/interrogation`;

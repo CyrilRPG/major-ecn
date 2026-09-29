@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { assertCanWrite, assertCanWriteAnyQcm, checkCoursScope, requireContentEditor } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { callClaude, extractJson } from '@/lib/ai/anthropic';
 import { embed, toPgVector } from '@/lib/ai/embeddings';
 import { flashcardsPrompt, qcmPrompt } from '@/lib/ai/prompts';
@@ -85,13 +86,29 @@ export async function reindexCoursAction(coursId: string): Promise<
   }
 
   const admin = createAdminClient();
+  // Propositions QCM de l'item : séries → questions → propositions, par les
+  // index et sans plafond. Le filtre à travers `qcm_questions!inner(qcm_series
+  // !inner(cours_id))` parcourait les 424 000 propositions (2,1 s) et s'arrêtait
+  // à 1 000 lignes : l'index de l'assistant restait incomplet (audit du 29/09/2026).
+  const itemsDuCours = async () => {
+    const { data: series } = await admin.from('qcm_series').select('id').eq('cours_id', coursId);
+    const serieIds = (series ?? []).map((s) => s.id);
+    type Q = { enonce: string; qcm_items: { id: string; enonce: string; justification: string }[] | null };
+    const questions: Q[] = [];
+    for (let i = 0; i < serieIds.length; i += 100) {
+      const tranche = serieIds.slice(i, i + 100);
+      questions.push(...await fetchAllRows<Q>((from, to) =>
+        admin.from('qcm_questions').select('id, enonce, qcm_items(id, enonce, justification)').in('serie_id', tranche).order('id').range(from, to),
+      ));
+    }
+    return {
+      data: questions.flatMap((q) => (q.qcm_items ?? []).map((it) => ({ ...it, qcm_questions: { enonce: q.enonce } }))),
+    };
+  };
   const [{ data: cours }, { data: flashcards }, { data: items }] = await Promise.all([
     admin.from('cours').select('id, titre').eq('id', coursId).maybeSingle(),
     admin.from('flashcards').select('id, recto, verso').eq('cours_id', coursId),
-    admin
-      .from('qcm_items')
-      .select('id, enonce, justification, qcm_questions!inner(enonce, qcm_series!inner(cours_id))')
-      .eq('qcm_questions.qcm_series.cours_id', coursId),
+    itemsDuCours(),
   ]);
   if (!cours) return { error: 'Cours introuvable.' };
 
