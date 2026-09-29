@@ -1,5 +1,6 @@
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { StudentsTable } from '@/components/admin/students/students-table';
 import { AddStudentDialog } from '@/components/admin/students/add-student-dialog';
 import { DeactivateStudentsDialog } from '@/components/admin/students/deactivate-students-dialog';
@@ -21,8 +22,17 @@ export default async function ElevesPage() {
   // SÉQUENTIELLE, et chaque action de la page déclenchant `router.refresh()`,
   // la boucle repartait à chaque clic — d'où l'impression que rien ne répond.
   // Une requête SQL suffit : `auth.users` est dans la même base.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const activiteAuth = (supabase as any).rpc('admin_activite_auth', { p_faculte_id: EDN_FACULTE_ID });
+  // La RPC renvoie une TABLE (une ligne par compte de la faculté, 911 au
+  // 29/09/2026) : PostgREST la plafonne à 1 000 lignes comme une table, d'où
+  // la lecture par tranches, triée sur la clé pour des tranches disjointes.
+  // En cas d'échec, l'ensemble reste vide et le drapeau n'est pas affiché.
+  const activiteAuth = fetchAllRows<{ user_id: string; last_sign_in_at: string | null }>((from, to) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any)
+      .rpc('admin_activite_auth', { p_faculte_id: EDN_FACULTE_ID })
+      .order('user_id')
+      .range(from, to),
+  ).catch(() => []);
 
   // Les formules ne dépendent d'aucune des autres lectures : elles rejoignent
   // la même vague au lieu d'ajouter un troisième aller-retour derrière.
@@ -38,13 +48,21 @@ export default async function ElevesPage() {
     }),
   );
 
-  const [{ data: students }, { data: fac }, { data: evcSessions }, { data: activite }, offers] = await Promise.all([
-    supabase
-      .from('profiles')
-      .select('id, avatar_seed, first_name, last_name, email, phone, address, pseudo, promotion, permission_scope, role, is_active, created_at, can_download, download_colleges, evc_session_id, access_start, access_end')
-      .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID)
-      // Tri décroissant par date d'inscription (les plus récents en premier).
-      .order('created_at', { ascending: false, nullsFirst: false }),
+  const [students, { data: fac }, { data: evcSessions }, activite, offers] = await Promise.all([
+    // Lecture par tranches : PostgREST tronque EN SILENCE à 1 000 lignes, et
+    // avec ce tri ce sont les élèves les plus anciens qui disparaîtraient de la
+    // liste, des compteurs, des filtres et de l'export (869 élèves au 29/09/2026).
+    fetchAllRows<{ id: string }>((from, to) =>
+      supabase
+        .from('profiles')
+        .select('id, avatar_seed, first_name, last_name, email, phone, address, pseudo, promotion, permission_scope, role, is_active, created_at, can_download, download_colleges, evc_session_id, access_start, access_end')
+        .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID)
+        // Tri décroissant par date d'inscription (les plus récents en premier) ;
+        // `id` départage les ex æquo pour que les tranches ne se chevauchent pas.
+        .order('created_at', { ascending: false, nullsFirst: false })
+        .order('id')
+        .range(from, to),
+    ),
     supabase
       .from('facultes')
       .select('semestres(matieres(id, nom, order_index, parent_matiere_id))')
@@ -73,11 +91,9 @@ export default async function ElevesPage() {
   // reste vide et le drapeau n'est simplement pas affiché — comme avant, la page
   // ne doit pas tomber pour un indicateur secondaire.
   const jamaisConnectes = new Set(
-    ((activite ?? []) as { user_id: string; last_sign_in_at: string | null }[])
-      .filter((r) => !r.last_sign_in_at)
-      .map((r) => r.user_id),
+    activite.filter((r) => !r.last_sign_in_at).map((r) => r.user_id),
   );
-  const studentsWithLogin = ((students ?? []) as unknown as { id: string }[]).map((s) => ({
+  const studentsWithLogin = students.map((s) => ({
     ...s,
     never_connected: jamaisConnectes.has(s.id),
   }));
@@ -89,7 +105,7 @@ export default async function ElevesPage() {
           <p className="text-xs font-medium text-(--color-ink-muted)">Administration</p>
           <h1 className="mt-1 text-xl font-semibold tracking-tight text-(--color-ink)">Élèves</h1>
           <p className="mt-0.5 text-sm text-(--color-ink-soft)">
-            {(students ?? []).length} élève{(students ?? []).length > 1 ? 's' : ''} inscrit{(students ?? []).length > 1 ? 's' : ''}.
+            {students.length} élève{students.length > 1 ? 's' : ''} inscrit{students.length > 1 ? 's' : ''}.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
