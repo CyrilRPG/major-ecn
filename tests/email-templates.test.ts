@@ -63,6 +63,13 @@ const all: Record<string, Mail> = {
   diagnostic: T.diagnosticLeadEmail({ firstName: 'Rania', email: 'r@example.test', score: 100, maxScore: 163, profileLabel: 'Méthodique' }),
   'guide-lead': T.guideLeadNotificationEmail({ firstName: 'Omar', email: 'o@example.test', phone: '0600000000', abVariant: 'A' }),
   'guide-delivery': T.guideDeliveryEmail({ firstName: 'Omar', guideUrl: 'https://major-ecn.fr/guides/guide-methodologie-evc-2026.pdf' }),
+  nouveauxContenus: T.nouveauxContenusEmail({
+    firstName: 'Lina', college: 'Pédiatrie', item: 'Item 47 — Suivi de l’enfant', url: 'https://www.major-ecn.fr/cours/c1/video',
+    contenus: [
+      { titre: 'Séance 1 — Croissance', aVenir: false, supports: ['Diaporama.pdf', 'Dossiers.pdf'] },
+      { titre: 'Séance 2 — Vaccinations', aVenir: true, dateSeance: 'lundi 6 octobre à 18 h', supports: ['Dossiers à préparer.pdf'] },
+    ],
+  }),
   broadcast: T.adminBroadcastEmail({ subject: 'Info', message: 'Bonjour\n\nVoir https://www.major-ecn.fr/revisions' }),
   'suivi-shell': { subject: 'RDV', html: emailShell({ title: 'RDV confirmé', bodyHtml: textToHtml('Bonjour Sara,\n\nVotre rendez-vous est confirmé.'), cta: { label: 'Voir mes rendez-vous', url: 'https://www.major-ecn.fr/mes-rendez-vous' } }) },
   'arena-confirmation': A.confirmationEmail(t, p, 'https://www.major-ecn.fr/arena/confirmer?t=x'),

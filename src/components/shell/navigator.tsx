@@ -20,6 +20,30 @@ const ACTIVE_GRADIENT =
 const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
 /** Clé localStorage : coachmark « Cliquez sur Découverte » montré une seule fois. */
 const DECOUVERTE_COACHMARK_KEY = 'mecn_decouverte_coachmark_v1';
+/** Clé localStorage : l'élève a déjà ouvert « Mon planning » (pastille NEW apaisée). */
+const PLANNING_NEW_VU_KEY = 'mecn_planning_new_vu_v1';
+
+/** Pastille « NEW » à droite d'une entrée du menu. Dorée tant que l'élève n'a
+ *  pas ouvert la rubrique, puis discrète (blanc translucide) : elle reste
+ *  lisible sans attirer l'œil. Sur l'entrée active (dégradé rouge), elle
+ *  passe en blanc pour ne pas se fondre dans le fond. */
+function NewBadge({ vu, active }: { vu: boolean; active: boolean }) {
+  return (
+    <span
+      className={cn(
+        'ml-auto inline-flex h-[18px] shrink-0 items-center rounded-full px-1.5 text-[9.5px] font-extrabold leading-none tracking-[0.08em] transition-colors duration-300',
+        active
+          ? 'bg-white text-[#E4002B]'
+          : vu
+            ? 'bg-white/10 text-white/60 ring-1 ring-inset ring-white/15'
+            : 'bg-[linear-gradient(90deg,#F5C84B_0%,#F59E0B_100%)] text-[#3B1D00] shadow-[0_2px_10px_-2px_rgba(245,158,11,0.65)]',
+      )}
+      aria-label="Nouveau"
+    >
+      NEW
+    </span>
+  );
+}
 
 function ProgressDot({ value, active }: { value: number; active?: boolean }) {
   const v = Math.min(100, Math.max(0, value));
@@ -204,6 +228,30 @@ export function Navigator({
   const agendaActive = pathname.startsWith('/agenda');
   const rendezVousActive = pathname.startsWith('/mes-rendez-vous');
   const planActive = pathname.startsWith('/planificateur');
+
+  /** Pastille « NEW » de « Mon planning » : apaisée dès la première ouverture
+   *  (clic ou arrivée directe sur /planificateur), mémorisée par navigateur. */
+  const [planningVu, setPlanningVu] = useState(false);
+  const marquerPlanningVu = useCallback(() => {
+    setPlanningVu(true);
+    try {
+      window.localStorage.setItem(PLANNING_NEW_VU_KEY, '1');
+    } catch {
+      /* localStorage indisponible (mode privé) : l'état reste en mémoire. */
+    }
+  }, []);
+  useEffect(() => {
+    let dejaVu = planActive;
+    try {
+      dejaVu = dejaVu || window.localStorage.getItem(PLANNING_NEW_VU_KEY) === '1';
+    } catch {
+      /* noop */
+    }
+    if (!dejaVu) return;
+    // rAF : pas de setState synchrone dans l'effet (ni d'écart d'hydratation).
+    const raf = requestAnimationFrame(() => (planActive ? marquerPlanningVu() : setPlanningVu(true)));
+    return () => cancelAnimationFrame(raf);
+  }, [planActive, marquerPlanningVu]);
   const notesActive = pathname.startsWith('/notes');
   const revoirActive = pathname.startsWith('/revoir');
   const mesEntrainementsActive = pathname.startsWith('/mes-entrainements');
@@ -270,9 +318,10 @@ export function Navigator({
           ) : (
             <>
               {canAccessPlan && (
-                <Link href="/planificateur" className={topLevelClass(planActive)}>
+                <Link href="/planificateur" onClick={marquerPlanningVu} className={topLevelClass(planActive)}>
                   <CalendarRange className="h-[18px] w-[18px] shrink-0" />
                   Mon planning
+                  <NewBadge vu={planningVu} active={planActive} />
                 </Link>
               )}
 

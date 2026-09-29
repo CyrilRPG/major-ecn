@@ -28,3 +28,21 @@ export function extractBunnyVideoId(input: string): string | null {
   const loose = trimmed.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
   return loose ? loose[0].toLowerCase() : null;
 }
+
+/**
+ * Hôte CDN de la bibliothèque Bunny Stream de la plateforme (691475). Il n'a
+ * rien de secret : il figure dans la page publique d'embed de chaque vidéo
+ * (`thumbnailUrl` du JSON-LD) — d'où la valeur en dur, utilisable côté
+ * navigateur comme le repli de bibliothèque de `lib/bunny`.
+ */
+export const BUNNY_CDN_HOST_PUBLIC = 'vz-0164558f-c12.b-cdn.net';
+
+/**
+ * Miniature d'une vidéo (image choisie ou générée par bunny.net). La zone CDN
+ * refuse les requêtes SANS en-tête Referer (anti-hotlink) : l'`<img>` doit
+ * garder `referrerPolicy="origin"` (ou la politique par défaut du navigateur).
+ */
+export function bunnyMiniatureUrl(videoId: string): string | null {
+  const id = extractBunnyVideoId(videoId);
+  return id ? `https://${BUNNY_CDN_HOST_PUBLIC}/${id}/thumbnail.jpg` : null;
+}

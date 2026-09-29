@@ -149,11 +149,11 @@ function Hero() {
                 Découvrir les formules
               </Link>
               <Link
-                href="/contact"
+                href="#programme"
                 className="inline-flex items-center justify-center rounded-lg bg-white px-7 py-3.5 text-[14.5px] font-black tracking-tight transition-colors hover:bg-[#FDF2F4]"
                 style={{ border: `1.5px solid ${RED}`, color: RED }}
               >
-                Être conseillé sur ma préparation
+                Voir le programme
               </Link>
             </div>
 

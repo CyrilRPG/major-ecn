@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { AlertTriangle, CalendarClock, CheckCircle2, FileText, Info, Loader2, Send, Video } from 'lucide-react';
+import { AlertTriangle, CalendarClock, CheckCircle2, FileText, Info, Loader2, Mail, Send, Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
@@ -52,7 +52,8 @@ export function BilanPublicationDialog({
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: () => void;
+  /** `alerter` : la case « Alerter les élèves concernés » est cochée. */
+  onConfirm: (options: { alerter: boolean }) => void;
   seances: SeanceAuBilan[];
   type: TypeVideoBilan;
   contexte?: ContexteVideo | null;
@@ -66,6 +67,7 @@ export function BilanPublicationDialog({
   const unite = type === 'cours' ? 'vidéo' : 'séance';
   const pluriel = seances.length > 1 ? 's' : '';
   const [bunny, setBunny] = useState<Record<number, EtatBunny>>({});
+  const [alerter, setAlerter] = useState(false);
 
   // Vérification sur bunny.net de chaque lien, à l'ouverture du bilan.
   useEffect(() => {
@@ -267,11 +269,43 @@ export function BilanPublicationDialog({
           })}
         </ol>
 
+        {/* Alerte e-mail : seulement si le contenu sera visible dès la
+            confirmation (un dépôt « À valider » s'annonce à sa publication). */}
+        {publieDirect ? (
+          <label
+            className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 text-[13px] transition-colors ${
+              alerter ? 'border-[#7C3AED]/60 bg-[#F3EAFF]/60' : 'border-(--color-border) bg-(--color-surface) hover:bg-(--color-surface-soft)'
+            }`}
+          >
+            <input
+              type="checkbox"
+              checked={alerter}
+              onChange={(e) => setAlerter(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 accent-[#7C3AED]"
+            />
+            <span className="min-w-0">
+              <span className="flex items-center gap-1.5 font-semibold text-(--color-ink)">
+                <Mail className="h-4 w-4 text-[#7C3AED]" />
+                Alerter les élèves concernés
+              </span>
+              <span className="mt-0.5 block text-[12px] text-(--color-ink-soft)">
+                Un e-mail Major ECN part à chaque élève qui a accès {seances.length > 1 ? 'à ces contenus' : 'à ce contenu'} (formule,
+                voie, exclusions respectées), avec la liste des {unite}s et supports qu’il peut ouvrir.
+              </span>
+            </span>
+          </label>
+        ) : (
+          <p className="flex items-start gap-1.5 text-[12px] text-(--color-ink-muted)">
+            <Mail className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+            Les élèves pourront être alertés par e-mail au moment de la publication.
+          </p>
+        )}
+
         <DialogFooter className="gap-2 sm:justify-between">
           <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
             Corriger
           </Button>
-          <Button type="button" onClick={onConfirm}>
+          <Button type="button" onClick={() => onConfirm({ alerter: publieDirect && alerter })}>
             <Send />
             {mode === 'publication'
               ? 'Confirmer et publier'

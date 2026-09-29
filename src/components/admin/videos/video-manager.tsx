@@ -3,16 +3,17 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  CalendarClock, Check, ChevronDown, ChevronUp, FileText, GripVertical, Loader2, Paperclip, Pencil,
-  Plus, Search, Trash2, UserMinus, UserPlus, Video, X,
+  CalendarClock, Check, ChevronDown, ChevronUp, FileText, GripVertical, Loader2, Mail, Paperclip, Pencil,
+  Plus, Search, Trash2, UserMinus, UserPlus, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 import { extractBunnyVideoId } from '@/lib/bunny-link';
 import { BunnyApercu } from './bunny-apercu';
+import { MiniatureVideo } from './miniature-video';
 import { BilanPublicationDialog, type ContexteVideo, type SeanceAuBilan } from './bilan-publication-dialog';
 import {
-  addVideoAction, addVideoSupportAction, deleteVideoAction, deleteVideosAction, listStudentsAction,
+  addVideoAction, addVideoSupportAction, alerterElevesVideosAction, deleteVideoAction, deleteVideosAction, listStudentsAction,
   moveVideoSupportAction, publishVideoAction, removeVideoSupportAction, renameVideoAction, reorderVideosAction, unpublishVideoAction,
   renameVideoSupportAction, replaceVideoLinkAction, updateVideoAudienceAction,
   updateVideoLiveAtAction, updateVideoRubriqueAction, updateVideoSupportAudienceAction,
@@ -668,20 +669,55 @@ export function VideoManager({
     });
   }
 
-  function confirmerBilan() {
+  function confirmerBilan({ alerter }: { alerter: boolean }) {
     const b = bilan;
     setBilan(null);
     if (!b) return;
-    if (b.mode === 'publication') run(() => publishVideoAction({ videoId: b.videoId }));
-    else void handleSaveAll();
+    setInfoAlerte(null);
+    if (b.mode === 'publication') {
+      run(async () => {
+        const res = await publishVideoAction({ videoId: b.videoId });
+        if (!('error' in res) && alerter) void envoyerAlerte([b.videoId]);
+        return res;
+      });
+    } else void handleSaveAll(alerter);
   }
 
-  async function handleSaveAll() {
+  // « Alerter les élèves concernés » (case du bilan) : un e-mail par élève
+  // ayant accès, envoyé côté serveur une fois les vidéos ET supports en ligne.
+  const [infoAlerte, setInfoAlerte] = useState<{ ton: 'envoi' | 'ok' | 'info' | 'erreur'; texte: string } | null>(null);
+  async function envoyerAlerte(videoIds: string[]) {
+    if (videoIds.length === 0) return;
+    setInfoAlerte({ ton: 'envoi', texte: 'Envoi des e-mails aux élèves concernés…' });
+    try {
+      const r = await alerterElevesVideosAction({ videoIds });
+      if ('error' in r) setInfoAlerte({ ton: 'erreur', texte: r.error });
+      else if (r.destinataires === 0) {
+        setInfoAlerte({
+          ton: 'info',
+          texte: r.horsLigne > 0
+            ? 'Aucun e-mail envoyé : le contenu n’est pas encore en ligne pour les élèves.'
+            : 'Aucun élève n’a accès à ce contenu pour le moment : aucun e-mail envoyé.',
+        });
+      } else {
+        setInfoAlerte({
+          ton: r.echecs > 0 ? 'erreur' : 'ok',
+          texte: `E-mail envoyé à ${r.envoyes} élève${r.envoyes > 1 ? 's' : ''} concerné${r.envoyes > 1 ? 's' : ''}`
+            + (r.echecs > 0 ? ` — ${r.echecs} envoi${r.echecs > 1 ? 's' : ''} en échec.` : '.'),
+        });
+      }
+    } catch {
+      setInfoAlerte({ ton: 'erreur', texte: 'L’envoi des e-mails n’a pas pu être confirmé (connexion ?). Vérifiez le journal avant de relancer.' });
+    }
+  }
+
+  async function handleSaveAll(alerter = false) {
     setError(null);
     setSaving(true);
     const total = seances.reduce((acc, s) => acc + 1 + s.supports.length, 0);
     let current = 0;
     const supabase = createClient();
+    const creees: string[] = [];
 
     for (let i = 0; i < seances.length; i++) {
       const s = seances[i];
@@ -712,6 +748,7 @@ export function VideoManager({
       }
 
       current++;
+      creees.push(res.videoId);
 
       for (const sup of s.supports) {
         setSaveProgress({ current, total, label: `Support « ${sup.titre} » → « ${s.titre} »…` });
@@ -746,6 +783,10 @@ export function VideoManager({
       }
     }
 
+    if (alerter) {
+      setSaveProgress({ current, total, label: 'Envoi des e-mails aux élèves concernés…' });
+      await envoyerAlerte(creees);
+    }
     setSaving(false);
     cancelAdding();
     apresModification();
@@ -1079,6 +1120,32 @@ export function VideoManager({
         </p>
       )}
 
+      {infoAlerte && (
+        <div
+          role={infoAlerte.ton === 'erreur' ? 'alert' : 'status'}
+          className={`flex items-start gap-2 rounded-xl border px-3 py-2 text-[12.5px] font-medium ${
+            infoAlerte.ton === 'ok' ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+              : infoAlerte.ton === 'erreur' ? 'border-red-200 bg-red-50 text-red-700'
+                : 'border-[#7C3AED]/30 bg-[#F3EAFF] text-[#5B21B6]'
+          }`}
+        >
+          {infoAlerte.ton === 'envoi'
+            ? <Loader2 className="mt-px h-3.5 w-3.5 shrink-0 animate-spin" />
+            : <Mail className="mt-px h-3.5 w-3.5 shrink-0" />}
+          <p className="min-w-0 flex-1">{infoAlerte.texte}</p>
+          {infoAlerte.ton !== 'envoi' && (
+            <button
+              type="button"
+              onClick={() => setInfoAlerte(null)}
+              aria-label="Fermer le message"
+              className="rounded p-0.5 opacity-70 hover:opacity-100"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </div>
+      )}
+
       {alerteListe && (
         <div role="alert" className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-[12.5px] font-medium text-red-700">
           <p className="min-w-0 flex-1">{alerteListe}</p>
@@ -1217,9 +1284,7 @@ export function VideoManager({
                 <span className="w-6 shrink-0 text-center text-xs font-bold tabular-nums text-(--color-ink-muted)">
                   {i + 1}
                 </span>
-                {v.a_venir
-                  ? <CalendarClock className="h-4 w-4 shrink-0 text-[#B26A00]" />
-                  : <Video className="h-4 w-4 shrink-0 text-[#7C3AED]" />}
+                <MiniatureVideo videoId={v.bunny_video_id} titre={v.titre} aVenir={v.a_venir} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold text-(--color-ink)">{v.titre}</p>
                   {v.a_venir && (

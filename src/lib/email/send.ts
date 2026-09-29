@@ -149,3 +149,60 @@ export async function sendEmail(input: SendEmailInput): Promise<SendResult> {
   if (!j.id || typeof j.id !== 'string') throw new Error('Le service d’email n’a pas fourni d’accusé d’envoi.');
   return { ok: true, id: j.id };
 }
+
+export type BatchEmail = { to: string; subject: string; html: string; text?: string };
+
+/**
+ * Envoi groupé via l'API « batch » de Resend : jusqu'à 100 e-mails par appel,
+ * un appel ne compte que pour UNE requête dans la limite de débit (2 req/s par
+ * défaut) — là où des centaines d'envois unitaires prennent des 429.
+ *
+ * Chaque e-mail a un seul destinataire (jamais d'adresses d'élèves visibles
+ * entre elles). Pas de BCC : la copie interne recevrait des centaines de
+ * doublons. Un lot en échec passager (429/5xx) est réessayé trois fois.
+ */
+export async function sendEmailBatch(emails: BatchEmail[]): Promise<{ sent: number; failed: number; error?: string }> {
+  if (emails.length === 0) return { sent: 0, failed: 0 };
+  if (process.env.EMAIL_DRY_RUN === '1' && process.env.NODE_ENV !== 'production') {
+    console.info('[email:dry-run:batch]', { count: emails.length, subject: emails[0].subject });
+    return { sent: emails.length, failed: 0 };
+  }
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return { sent: 0, failed: emails.length, error: 'RESEND_API_KEY non configurée.' };
+  const from = process.env.EMAIL_FROM ?? FALLBACK_FROM;
+
+  let sent = 0;
+  let failed = 0;
+  let lastError: string | undefined;
+  for (let i = 0; i < emails.length; i += 100) {
+    const lot = emails.slice(i, i + 100);
+    if (i > 0) await new Promise((r) => setTimeout(r, 600));
+    for (let attempt = 0; ; attempt++) {
+      let status = 0;
+      let body = '';
+      try {
+        const res = await fetch(`${RESEND_URL}/batch`, {
+          method: 'POST',
+          signal: AbortSignal.timeout(30_000),
+          headers: { 'content-type': 'application/json', authorization: `Bearer ${key}` },
+          body: JSON.stringify(lot.map((e) => ({ from, to: [e.to], subject: e.subject, html: e.html, text: e.text }))),
+        });
+        status = res.status;
+        if (res.ok) { sent += lot.length; break; }
+        body = await res.text().catch(() => '');
+      } catch (e) {
+        body = e instanceof Error ? e.message : 'Erreur réseau';
+      }
+      // Erreur réseau (délai dépassé…) : l'envoi a pu partir, on ne rejoue pas.
+      const passager = status === 429 || status >= 500;
+      if (!passager || attempt >= 3) {
+        failed += lot.length;
+        lastError = `Resend ${status || 'réseau'}: ${body.slice(0, 200)}`;
+        console.error('[Resend] échec envoi groupé', { status, body: body.slice(0, 300), count: lot.length });
+        break;
+      }
+      await new Promise((r) => setTimeout(r, 1_100 * (attempt + 1)));
+    }
+  }
+  return { sent, failed, ...(lastError ? { error: lastError } : {}) };
+}

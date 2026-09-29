@@ -23,6 +23,13 @@ import { accesOnglets, lireScopeEquipe, peutContenu, type DroitContenu } from '@
 import { bunnyEmbedLibraryId, bunnyEmbedUrl } from '@/lib/bunny';
 import { dureeIsoEnSecondes } from '@/lib/videos/bibliotheque';
 import { deplacerElement, ecrituresOrdre, elementDeplace, memesIdentifiants } from '@/lib/videos/ordre';
+import { enLigne, contenusPourEleve, type CoursAAlerter, type VideoAAlerter } from '@/lib/videos/alerte-eleves';
+import { fetchAllRows } from '@/lib/supabase/fetch-all-pure';
+import { parseScope, scopeOffers, type ContentAccess } from '@/lib/auth/permissions';
+import { fetchContentAccessForScopeWith } from '@/lib/auth/formula-permissions';
+import type { PermissionScope } from '@/types/domain';
+import { sendEmailBatch, siteUrl, type BatchEmail } from '@/lib/email/send';
+import { nouveauxContenusEmail } from '@/lib/email/templates';
 
 /**
  * Bibliothèque vidéo de l'administration (onglet « Vidéos ») : navigation
@@ -1563,4 +1570,151 @@ async function renumber(a: any, coursId: string, type: VideoType) {
       await a.from('videos').update({ order_index: i }).eq('id', list[i].id);
     }
   }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Alerte e-mail des élèves concernés (29/09/2026)                    */
+/* ------------------------------------------------------------------ */
+
+export type AlerteElevesResultat =
+  | { ok: true; destinataires: number; envoyes: number; echecs: number; horsLigne: number }
+  | { error: string };
+
+/**
+ * « Alerter les élèves concernés » : case du bilan de publication. Un e-mail
+ * au gabarit Major ECN par élève, qui ne liste que les vidéos et supports
+ * qu'IL peut ouvrir (mêmes règles que la page élève, cf. lib/videos/alerte-eleves).
+ *
+ * N'annonce que des vidéos EN LIGNE : une vidéo déposée « À valider » ou
+ * programmée plus tard est ignorée (l'alerte se donne alors à la publication).
+ * Réservé aux personnes qui ont le droit « Publier ».
+ */
+export async function alerterElevesVideosAction(input: { videoIds: string[] }): Promise<AlerteElevesResultat> {
+  const ids = Array.from(new Set((input.videoIds ?? []).filter((x) => typeof x === 'string' && x))).slice(0, 50);
+  if (ids.length === 0) return { error: 'Aucune vidéo à annoncer.' };
+  let ctx: Exclude<Awaited<ReturnType<typeof guardVideo>>, { error: string }> | null = null;
+  for (const id of ids) {
+    const g = await guardVideo(id, 'publier');
+    if ('error' in g) return { error: g.error };
+    ctx ??= g;
+  }
+  if (!ctx) return { error: 'Aucune vidéo à annoncer.' };
+  const a = ctx.a;
+
+  const { data: vids, error: vErr } = await a
+    .from('videos')
+    .select('id, titre, type, cours_id, status, publish_at, bunny_video_id, live_at, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(titre, order_index, voies, offers)')
+    .in('id', ids);
+  if (vErr) return { error: vErr.message };
+  type Ligne = {
+    id: string; titre: string; type: VideoType | null; cours_id: string; status: string | null; publish_at: string | null;
+    bunny_video_id: string | null; live_at: string | null; order_index: number | null;
+    voies: string[] | null; offers: string[] | null; denied_user_ids: string[] | null; allowed_user_ids: string[] | null;
+    video_supports: { titre: string; order_index: number | null; voies: string[] | null; offers: string[] | null }[] | null;
+  };
+  const toutes = (vids ?? []) as Ligne[];
+  const maintenant = Date.now();
+  const enLigneRows = toutes.filter((v) => enLigne(v, maintenant));
+  const horsLigne = toutes.length - enLigneRows.length;
+  if (enLigneRows.length === 0) return { ok: true, destinataires: 0, envoyes: 0, echecs: 0, horsLigne };
+
+  const coursIds = Array.from(new Set(enLigneRows.map((v) => v.cours_id)));
+  const { data: coursRows, error: cErr } = await a
+    .from('cours')
+    .select('id, titre, matiere_id, access_type, matieres(nom, access_type)')
+    .in('id', coursIds);
+  if (cErr) return { error: cErr.message };
+  const coursParId = new Map(
+    ((coursRows ?? []) as {
+      id: string; titre: string; matiere_id: string; access_type: 'all' | 'specific' | null;
+      matieres: { nom: string | null; access_type: 'all' | 'specific' | null } | null;
+    }[]).map((c) => [c.id, c]),
+  );
+
+  // Tous les élèves actifs (par tranches : PostgREST tronque à 1 000 lignes).
+  type Eleve = { id: string; email: string | null; first_name: string | null; permission_scope: unknown };
+  let eleves: Eleve[];
+  try {
+    eleves = await fetchAllRows<Eleve>((from, to) => a
+      .from('profiles')
+      .select('id, email, first_name, permission_scope')
+      .eq('role', 'student')
+      .eq('faculte_id', EDN_FACULTE_ID)
+      .eq('is_active', true)
+      .not('email', 'is', null)
+      .order('id')
+      .range(from, to));
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Lecture des élèves impossible.' };
+  }
+
+  // Droits de formule : une lecture par combinaison de formules, pas par élève.
+  const accesParCle = new Map<string, Promise<ContentAccess>>();
+  const accesPour = (scope: PermissionScope) => {
+    const cle = JSON.stringify([Array.from(new Set(scopeOffers(scope))).sort(), scope.content_overrides ?? null]);
+    let p = accesParCle.get(cle);
+    if (!p) { p = fetchContentAccessForScopeWith(a, scope); accesParCle.set(cle, p); }
+    return p;
+  };
+
+  const emails: BatchEmail[] = [];
+  const destinataires = new Set<string>();
+  for (const coursId of coursIds) {
+    const c = coursParId.get(coursId);
+    if (!c) continue;
+    const cours: CoursAAlerter = {
+      id: c.id, titre: c.titre, matiere_id: c.matiere_id,
+      access_type: c.access_type, college_access_type: c.matieres?.access_type ?? null,
+    };
+    const videos: VideoAAlerter[] = enLigneRows
+      .filter((v) => v.cours_id === coursId)
+      .sort((x, y) => (x.order_index ?? 0) - (y.order_index ?? 0))
+      .map((v) => ({
+        id: v.id, titre: v.titre, type: v.type === 'seance_approfondie' ? 'seance_approfondie' : 'cours',
+        bunny_video_id: v.bunny_video_id, live_at: v.live_at,
+        voies: v.voies, offers: v.offers, denied_user_ids: v.denied_user_ids, allowed_user_ids: v.allowed_user_ids,
+        supports: (v.video_supports ?? []).slice().sort((x, y) => (x.order_index ?? 0) - (y.order_index ?? 0)),
+      }));
+    const page = videos.every((v) => v.type === 'seance_approfondie') ? 'seance-approfondie' : 'video';
+    const url = `${siteUrl()}/cours/${encodeURIComponent(coursId)}/${page}`;
+
+    for (const el of eleves) {
+      const email = (el.email ?? '').trim();
+      if (!email.includes('@')) continue;
+      const scope = parseScope(el.permission_scope);
+      const contenus = contenusPourEleve({ id: el.id, scope, access: await accesPour(scope) }, cours, videos);
+      if (contenus.length === 0) continue;
+      destinataires.add(el.id);
+      const mail = nouveauxContenusEmail({
+        firstName: el.first_name,
+        college: c.matieres?.nom ?? null,
+        item: c.titre,
+        url,
+        contenus: contenus.map((x) => ({
+          titre: x.titre, aVenir: x.aVenir, supports: x.supports,
+          dateSeance: x.aVenir ? formaterDateSeance(x.liveAt) : null,
+        })),
+      });
+      emails.push({ to: email, subject: mail.subject, html: mail.html, text: mail.text });
+    }
+  }
+
+  const envoi = await sendEmailBatch(emails);
+  await logAudit({
+    actor: ctx.profile,
+    action: 'update',
+    entity: 'video',
+    entityId: enLigneRows[0].id,
+    coursId: ctx.cours.id,
+    coursTitre: ctx.cours.titre,
+    matiereNom: ctx.cours.matiereNom,
+    description: `Alerte e-mail « nouveaux contenus » : ${envoi.sent} élève${envoi.sent > 1 ? 's' : ''} prévenu${envoi.sent > 1 ? 's' : ''}`
+      + (envoi.failed ? `, ${envoi.failed} échec${envoi.failed > 1 ? 's' : ''}` : '')
+      + ` (${enLigneRows.map((v) => `« ${v.titre} »`).join(', ')})`,
+    diff: { videoIds: enLigneRows.map((v) => v.id), envoyes: envoi.sent, echecs: envoi.failed, erreur: envoi.error ?? null },
+  });
+  if (emails.length > 0 && envoi.sent === 0) {
+    return { error: `L’envoi des e-mails a échoué${envoi.error ? ` (${envoi.error})` : ''}. Les vidéos sont bien publiées.` };
+  }
+  return { ok: true, destinataires: destinataires.size, envoyes: envoi.sent, echecs: envoi.failed, horsLigne };
 }

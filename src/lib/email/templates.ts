@@ -1023,3 +1023,100 @@ export function adminBroadcastEmail({ subject, message }: { subject: string; mes
   return { subject, html, text: majorText([message, '', '— L’équipe Major ECN']) };
 }
 
+
+/* ============================================================
+   Nouvelles vidéos / nouveaux supports de cours (bibliothèque vidéo)
+   ============================================================ */
+
+type NouveauContenu = {
+  titre: string;
+  /** Séance à venir : seuls les dossiers à préparer sont en ligne. */
+  aVenir: boolean;
+  /** Date de la séance en direct, déjà formatée (« lundi 6 octobre à 18 h »). */
+  dateSeance?: string | null;
+  supports: string[];
+};
+
+type NouveauxContenusArgs = {
+  firstName?: string | null;
+  /** Collège (« Pédiatrie ») et item (« Item 47 — Suivi de l'enfant »). */
+  college: string | null;
+  item: string;
+  contenus: NouveauContenu[];
+  url: string;
+};
+
+/**
+ * « Alerter les élèves concernés » : case cochée au dépôt ou à la publication
+ * de vidéos dans la bibliothèque. Un e-mail par élève, qui ne liste QUE ce que
+ * cet élève peut ouvrir (cf. lib/videos/alerte-eleves).
+ */
+export function nouveauxContenusEmail({ firstName, college, item, contenus, url }: NouveauxContenusArgs) {
+  const nbVideos = contenus.filter((c) => !c.aVenir).length;
+  const nbSupports = contenus.reduce((n, c) => n + c.supports.length, 0);
+  const pl = (n: number, un: string, plusieurs: string) => (n > 1 ? plusieurs : un);
+  const quoi = nbVideos > 0 && nbSupports > 0
+    ? `${pl(nbVideos, 'Nouvelle vidéo', 'Nouvelles vidéos')} et ${pl(nbSupports, 'support de cours', 'supports de cours')}`
+    : nbVideos > 0
+      ? pl(nbVideos, 'Nouvelle vidéo', 'Nouvelles vidéos')
+      : pl(nbSupports, 'Nouveau support de cours', 'Nouveaux supports de cours');
+  const subject = `${quoi} en ligne — ${item}`;
+  const ou = college ? `${college} › ${item}` : item;
+  const hello = firstName && firstName.trim() ? firstName.trim() : null;
+
+  const decompte = [
+    nbVideos > 0 ? `${nbVideos} ${pl(nbVideos, 'nouvelle vidéo', 'nouvelles vidéos')}` : null,
+    nbSupports > 0 ? `${nbSupports} ${pl(nbSupports, 'support de cours', 'supports de cours')}` : null,
+  ].filter(Boolean).join(' et ');
+
+  const ligne = (c: NouveauContenu) => {
+    const detail = c.aVenir
+      ? `Dossiers à préparer${c.dateSeance ? ` — séance le ${c.dateSeance}` : ''}`
+      : c.supports.length > 0 ? 'Vidéo et supports de cours' : 'Vidéo';
+    const docs = c.supports.length > 0
+      ? `<br><span style="font-size:13px;line-height:20px;color:${MAJOR.muted};">${c.supports.map((s) => `Support&nbsp;: ${esc(s)}`).join('<br>')}</span>`
+      : '';
+    return `<strong style="color:${MAJOR.ink};">${esc(c.titre)}</strong><br><span style="font-size:13px;line-height:20px;color:${MAJOR.bordeauxBtn};font-weight:600;">${esc(detail)}</span>${docs}`;
+  };
+
+  const bodyHtml = [
+    sectionTitle('Ce qui vient d’être publié'),
+    iconList(contenus.map(ligne), { icon: '&#9654;', html: true, size: 15 }),
+    button(url, 'Voir les nouveaux contenus'),
+    linkFallback(url),
+    signature({ closing: 'Bonne séance de travail,' }),
+  ].join('\n');
+
+  const html = majorEmail({
+    subject,
+    preheader: `${decompte} dans ${ou}.`,
+    eyebrow: 'Nouveau sur votre espace',
+    title: quoi,
+    lead: item,
+    // Sans photo : le titre, l'item et le texte varient en longueur et
+    // chevaucheraient l'illustration du bandeau (29/09/2026).
+    photo: false,
+    intro: greeting(hello)
+      + pHtml(`Votre équipe pédagogique vient de mettre en ligne ${esc(decompte)} dans <strong style="color:${MAJOR.ink};">${esc(ou)}</strong>.`)
+      + p('Ils sont dès maintenant disponibles dans votre espace Major ECN.'),
+    bodyHtml,
+    reason: 'Vous recevez cet e-mail car ces contenus font partie de votre préparation sur Major ECN.',
+  });
+
+  const text = majorText([
+    `Bonjour${hello ? ` ${hello}` : ''},`,
+    '',
+    `Votre équipe pédagogique vient de mettre en ligne ${decompte} dans ${ou}.`,
+    '',
+    ...contenus.flatMap((c) => [
+      `• ${c.titre}${c.aVenir ? ` (dossiers à préparer${c.dateSeance ? `, séance le ${c.dateSeance}` : ''})` : ''}`,
+      ...c.supports.map((s) => `    – ${s}`),
+    ]),
+    '',
+    `Voir les nouveaux contenus : ${url}`,
+    '',
+    'Bonne séance de travail,',
+    'L’équipe Major ECN',
+  ]);
+  return { subject, html, text };
+}
