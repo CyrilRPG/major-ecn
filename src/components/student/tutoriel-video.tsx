@@ -10,7 +10,8 @@
  * d'accueil réglé par l'administration (titre, accroche, introduction, « Par où
  * commencer ? ») s'affiche SOUS la vidéo, dans la même fenêtre.
  *
- * S'ouvre seule une fois (clé cloisonnée par compte), quand l'écran est libre
+ * S'ouvre seule UNE fois par compte (profiles.tutoriel_video_vu_at, renseigné
+ * dès l'ouverture ; clé locale en appoint), quand l'écran est libre
  * (complétion de profil, émargement… passent d'abord) ; se rouvre à tout moment
  * par le bouton « Tutoriel » de la barre du haut ou « Revoir le tutoriel ».
  */
@@ -22,6 +23,7 @@ import {
   declareStep, isReplayRequested, markStepActive, markStepDone, readFlag, whenStepTurnComes, writeFlag,
 } from '@/lib/student/onboarding';
 import { TUTORIEL_OPEN_EVENT, TUTORIEL_VU_KEY } from '@/lib/student/tutoriel-video';
+import { marquerTutorielVu } from '@/app/(student)/tutoriel/actions';
 
 const RED = '#E4002B';
 
@@ -29,13 +31,16 @@ export function TutorielVideo({
   embedUrl,
   welcome,
   replayOnly = false,
+  dejaVu = false,
 }: {
   /** Lecteur Bunny de la vidéo du profil ; `null` = pas de vidéo pour ce profil. */
   embedUrl: string | null;
   /** Texte d'accueil de l'administration (null : Découverte, ou désactivé pour la spécialité). */
   welcome: WelcomeConfig | null;
-  /** Personnel : ne s'ouvre que sur demande (bouton), jamais seul. */
+  /** Personnel (ou « se connecter en tant que ») : ne s'ouvre que sur demande (bouton), jamais seul. */
   replayOnly?: boolean;
+  /** Déjà ouvert automatiquement une fois pour ce compte (sur n'importe quel appareil). */
+  dejaVu?: boolean;
 }) {
   const [ouvert, setOuvert] = useState(false);
   // Lecture automatique seulement après un geste de l'élève (bouton) : sinon le
@@ -53,15 +58,17 @@ export function TutorielVideo({
   useEffect(() => {
     if (!embedUrl && !welcome) return;
     const rejouer = isReplayRequested();
-    const vaSOuvrir = rejouer || (!replayOnly && !readFlag(TUTORIEL_VU_KEY));
+    const vaSOuvrir = rejouer || (!replayOnly && !dejaVu && !readFlag(TUTORIEL_VU_KEY));
     const retirer = declareStep('welcome', vaSOuvrir);
     if (!vaSOuvrir) return retirer;
     const annuler = whenStepTurnComes('welcome', () => {
       markStepActive('welcome');
       setOuvert(true);
+      // Vu dès l'ouverture : ni un rechargement ni un autre appareil ne la rouvrent.
+      if (!rejouer) { writeFlag(TUTORIEL_VU_KEY); void marquerTutorielVu().catch(() => {}); }
     });
     return () => { annuler(); retirer(); };
-  }, [embedUrl, welcome, replayOnly]);
+  }, [embedUrl, welcome, replayOnly, dejaVu]);
 
   const fermer = useCallback(() => {
     writeFlag(TUTORIEL_VU_KEY);

@@ -365,7 +365,8 @@ export default async function StudentLayout({ children }: { children: React.Reac
       <TutorielVideo
         embedUrl={tutorielEmbed}
         welcome={isDecouverte || !welcome.active ? null : welcome}
-        replayOnly={profile.role !== 'student'}
+        replayOnly={profile.role !== 'student' || isImpersonating}
+        dejaVu={!!(profile as { tutoriel_video_vu_at?: string | null }).tutoriel_video_vu_at}
       />
     </div>
   );
