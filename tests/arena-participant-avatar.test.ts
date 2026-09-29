@@ -2,14 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { resolveParticipantAvatars, type AvatarProfile } from '../src/lib/arena/participant-avatar';
 import { computeStandings, leaderboardRows } from '../src/lib/arena/ranking';
-import { encoderAvatar } from '../src/lib/avatars/traits';
 
 const participant = (avatar_seed = '1fhze0ln') => ({
   id: 'participant', pseudo: 'Interniste', email: 'student@example.test',
   faculte_id: 'major-ecn', avatar_seed, anonymized_at: null as string | null,
 });
 const profile: AvatarProfile = {
-  email: 'student@example.test', faculte_id: 'major-ecn', avatar_seed: 'statue',
+  email: 'student@example.test', faculte_id: 'major-ecn', avatar_seed: 'av-042',
 };
 
 test('ancienne graine : le profil, la navigation et le classement reçoivent le portrait enregistré', async () => {
@@ -18,7 +17,7 @@ test('ancienne graine : le profil, la navigation et le classement reçoivent le 
     assert.deepEqual(emails, [profile.email]);
     return [profile];
   });
-  assert.equal(resolved.avatar_seed, 'statue');
+  assert.equal(resolved.avatar_seed, 'av-042');
   assert.equal(original.avatar_seed, '1fhze0ln', 'la résolution ne modifie pas la graine persistée');
   assert.deepEqual(Object.keys(resolved), Object.keys(original), 'aucune donnée pédagogique ajoutée');
 
@@ -30,30 +29,30 @@ test('ancienne graine : le profil, la navigation et le classement reçoivent le 
       { thresholdPct: 50, minRoundsFinal: 3, isFinal: false },
     );
     const rows = leaderboardRows(standings, 10);
-    assert.equal(standings[0].avatarSeed, 'statue', 'le rang ne remplace jamais le personnage');
-    if (rows.length) assert.equal(rows[0].avatarSeed, 'statue');
+    assert.equal(standings[0].avatarSeed, 'av-042', 'le rang ne remplace jamais le personnage');
+    if (rows.length) assert.equal(rows[0].avatarSeed, 'av-042');
     assert.ok(!JSON.stringify(rows).includes(profile.email), 'le classement reste pseudonyme');
   }
 });
 
 test('un personnage Arena déjà sélectionné reste conservé, même si le profil pédagogique diffère', async () => {
-  const original = [participant('medecin-07'), participant('casque')];
+  const original = [participant('av-007'), participant('av-310-k2x9')];
   const result = await resolveParticipantAvatars(original, async () => { throw new Error('lecture inutile'); });
   assert.equal(result, original);
 });
 
 test('un nouveau choix pédagogique est relu pour les comptes à ancienne graine', async () => {
   const input = [participant()];
-  assert.equal((await resolveParticipantAvatars(input, async () => [profile]))[0].avatar_seed, 'statue');
-  assert.equal((await resolveParticipantAvatars(input, async () => [{ ...profile, avatar_seed: 'medecin-09' }]))[0].avatar_seed, 'medecin-09');
+  assert.equal((await resolveParticipantAvatars(input, async () => [profile]))[0].avatar_seed, 'av-042');
+  assert.equal((await resolveParticipantAvatars(input, async () => [{ ...profile, avatar_seed: 'av-099' }]))[0].avatar_seed, 'av-099');
 });
 
 test('aucun choix arbitraire sans profil correspondant, avec un profil invalide ou ambigu', async () => {
   for (const profiles of [
     [], [{ ...profile, email: 'someone-else@example.test' }],
     [{ ...profile, faculte_id: 'major-odonto' }],
-    [{ ...profile, avatar_seed: null }], [{ ...profile, avatar_seed: 'casque' }],
-    [profile, { ...profile, avatar_seed: 'lion' }],
+    [{ ...profile, avatar_seed: null }], [{ ...profile, avatar_seed: 'c1-1234567' }],
+    [profile, { ...profile, avatar_seed: 'av-100' }],
   ]) {
     const original = participant();
     const [resolved] = await resolveParticipantAvatars([original], async () => profiles);
@@ -76,17 +75,17 @@ test('tous les anciens participants sont résolus par lots bornés, avec adresse
   });
   assert.deepEqual(sizes, [100, 100, 6]);
   assert.equal(result.length, 205);
-  assert.ok(result.every(p => p.avatar_seed === 'statue'));
+  assert.ok(result.every(p => p.avatar_seed === 'av-042'));
 });
 
 test('une erreur de lecture est remontée et ne devient pas un faux avatar par défaut', async () => {
   await assert.rejects(resolveParticipantAvatars([participant()], async () => { throw new Error('profil indisponible'); }), /profil indisponible/);
 });
 
-test('cloisonnement : un médaillon composé dans l’Arena n’est jamais remplacé par celui du compte Major ECN', async () => {
-  // EVC Arena et Major ECN sont deux identités distinctes depuis le 21/09/2026.
-  const medaillonArena = encoderAvatar({ portrait: 6, fond: 4, cadre: 3, embleme: 2 });
-  const medaillonProfil = encoderAvatar({ portrait: 12, fond: 1 });
+test('cloisonnement : un portrait choisi dans l’Arena n’est jamais remplacé par celui du compte Major ECN', async () => {
+  // EVC Arena et Major ECN sont deux identités distinctes.
+  const medaillonArena = 'av-006';
+  const medaillonProfil = 'av-012';
   let interroge = false;
   const resolus = await resolveParticipantAvatars(
     [{ email: 'a@b.test', faculte_id: 'major-ecn', avatar_seed: medaillonArena, anonymized_at: null }],

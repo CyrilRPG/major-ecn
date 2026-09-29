@@ -3,7 +3,9 @@ import {
   tournamentFinalSummary,
   type FinalVariant,
 } from "@/lib/arena/final-summary";
-import { DEFAULT_ARENA_AVATAR } from "@/components/arena/avatars";
+import { PORTRAITS } from "@/lib/avatars/portraits";
+
+const DEFAULT_ARENA_AVATAR = PORTRAITS[11].code;
 
 export function finalFixture(variant: FinalVariant, showEffectif: boolean) {
   const rounds = [1, 2, 3].map((number, i) => ({

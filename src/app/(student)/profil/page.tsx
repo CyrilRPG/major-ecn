@@ -167,9 +167,9 @@ export default async function ProfilPage() {
           Votre avatar
         </p>
         <p className="mt-2 mb-4 text-sm text-(--color-ink-soft)">
-          Composez votre personnage : visage, cheveux, tenue, coiffe,
-          accessoires et fond se règlent séparément. Il vous suit sur le forum,
-          dans votre espace et sur EVC Arena.
+          Choisissez votre portrait étape par étape : profil, teint, cheveux,
+          coiffure, accessoires, tenue, fond… Chaque étape ne propose que ce
+          qui existe réellement. Il vous suit sur le forum et dans votre espace.
         </p>
         <AvatarPicker initialSeed={effectiveSeed(profile.id, profile.avatar_seed)} />
       </section>

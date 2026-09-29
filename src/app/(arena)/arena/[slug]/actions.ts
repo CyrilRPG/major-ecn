@@ -4,9 +4,8 @@ import { unstable_rethrow } from "next/navigation";
 import { after } from "next/server";
 
 import { revalidatePath } from "next/cache";
-import { estAvatarPlanche } from "@/components/arena/avatars";
-import { avatarDepuisChaine, canoniserAvatar, estAvatarCompose } from "@/lib/avatars/traits";
-import { avatarEstLibre, trouverAvatarLibre, type SondeAvatars } from "@/lib/avatars/unicite";
+import { avatarsDejaPris, avatarEstLibre, trouverAvatarLibre, type SondeAvatars } from "@/lib/avatars/unicite";
+import { avatarDepuisChaine, canoniserAvatar, estAvatarPortrait, estAvatarSimple } from "@/lib/avatars/portraits";
 import { z } from "zod";
 import { siteUrl } from "@/lib/email/send";
 import {
@@ -58,7 +57,6 @@ import {
   isValidPseudo,
   normalizeEmail,
   pseudoKey,
-  randomAvatarSeed,
   toPublicQuestion,
   type AttemptRow,
   type PublicQuestion,
@@ -165,9 +163,10 @@ export async function registerParticipant(
     );
   if (pseudoForbidden(input.pseudo))
     return err("Ce pseudonyme n’est pas autorisé.");
-  // Un avatar composé dans l'atelier, ou un médaillon de l'ancienne planche
-  // (lien d'inscription ouvert avant la refonte, client mobile non à jour).
-  if (!estAvatarCompose(input.avatarSeed) && !estAvatarPlanche(input.avatarSeed))
+  // Un portrait du catalogue. Un ancien code (page ouverte avant la refonte
+  // du 29/09/2026) est ramené au portrait qu'il affichait.
+  const avatarDemande = canoniserAvatar(input.avatarSeed);
+  if (!estAvatarSimple(avatarDemande))
     return err("Choisissez un avatar de la plateforme.");
 
   const email = normalizeEmail(input.email);
@@ -201,15 +200,18 @@ export async function registerParticipant(
     };
   }
 
-  // Un avatar par participant : l'atelier prévient en direct, ce contrôle
-  // rattrape la course entre deux inscriptions simultanées.
-  const avatarSeed = estAvatarCompose(input.avatarSeed)
-    ? canoniserAvatar(input.avatarSeed)
-    : input.avatarSeed;
-  if (estAvatarCompose(avatarSeed) && !(await avatarEstLibre(avatarSeed, sondeAvatars(t.id))))
-    return err(
-      "Cet avatar vient d’être pris dans cette Arena. Changez un détail — la couleur du fond suffit — puis réessayez.",
-    );
+  // Un portrait par participant : le parcours prévient en direct, ce contrôle
+  // rattrape la course entre deux inscriptions simultanées. Un tournoi plus
+  // peuplé que le catalogue reçoit le même portrait sous un code distinct.
+  let avatarSeed = avatarDemande;
+  if (!(await avatarEstLibre(avatarSeed, sondeAvatars(t.id)))) {
+    const libre = await trouverAvatarLibre(avatarSeed, sondeAvatars(t.id));
+    if (estAvatarSimple(libre))
+      return err(
+        "Ce portrait vient d’être pris dans cette Arena. Choisissez-en un autre — la dernière étape propose des portraits proches.",
+      );
+    avatarSeed = libre;
+  }
 
   const key = pseudoKey(input.pseudo);
   const { data: clash } = await db
@@ -241,7 +243,7 @@ export async function registerParticipant(
       specialty: input.specialty,
       pseudo: input.pseudo,
       pseudo_key: key,
-      avatar_seed: avatarSeed || randomAvatarSeed(),
+      avatar_seed: avatarSeed,
       timezone: input.timezone ?? null,
       consent_tournament_at: new Date().toISOString(),
       consent_tournament_version: CONSENT_VERSION,
@@ -264,7 +266,7 @@ export async function registerParticipant(
       // L'index d'unicité des avatars a le dernier mot sur la course.
       if (/avatar/i.test(`${error?.message} ${error?.details ?? ""}`))
         return err(
-          "Cet avatar vient d’être pris dans cette Arena. Changez un détail — la couleur du fond suffit — puis réessayez.",
+          "Ce portrait vient d’être pris dans cette Arena. Choisissez-en un autre, puis réessayez.",
         );
       return err("Ce pseudonyme ou cette adresse est déjà utilisé.");
     }
@@ -304,7 +306,7 @@ export type JoinResult = Ok<{ participantId: string; href: string; already: bool
 /**
  * Une personne connectée (adresse déjà confirmée dans un autre tournoi)
  * rejoint CE tournoi sans ressaisir son identité : prénom, nom, spécialité et
- * médaillon repris de son inscription, pseudonyme proposé (modifiable). Le
+ * portrait repris de son inscription, pseudonyme proposé (modifiable). Le
  * consentement au tournoi reste une case explicite (§3.1, une inscription =
  * un consentement) et la prospection n'est jamais reprise d'office. Aucune
  * confirmation par email : la session prouve déjà la possession de l'adresse.
@@ -378,10 +380,10 @@ export async function joinTournament(slug: string, raw: JoinInput): Promise<Join
           .eq("tournament_id", t.id).eq("invite_code", input.inviteCode).maybeSingle();
         invitedBy = inviter?.id ?? null;
       }
-      // Même médaillon que dans l'autre tournoi s'il est libre ici, sinon la variante libre la plus proche.
-      const wanted = estAvatarCompose(person.avatar_seed) ? person.avatar_seed : avatarDepuisChaine(person.email, "arena");
+      // Même portrait que dans l'autre tournoi s'il est libre ici, sinon le portrait libre le plus ressemblant.
+      const wanted = estAvatarPortrait(person.avatar_seed) ? person.avatar_seed : avatarDepuisChaine(person.email);
       for (let attempt = 0; attempt < 3 && !joined; attempt++) {
-        const avatar = (await trouverAvatarLibre(wanted, sondeAvatars(t.id))) ?? randomAvatarSeed();
+        const avatar = await trouverAvatarLibre(wanted, sondeAvatars(t.id));
         const { data, error } = await db.from("arena_participants").insert({
           tournament_id: t.id,
           first_name: person.first_name,
@@ -1018,27 +1020,25 @@ export async function submitReport(
 }
 
 /**
- * Cet avatar est-il encore libre dans ce tournoi ? Appelée en direct par
- * l'atelier d'inscription.
+ * Parmi ces portraits, lesquels sont déjà portés dans ce tournoi ? Appelée
+ * par la dernière étape du parcours d'inscription.
  *
- * La réponse porte sur UN code et ne dit rien d'autre : ni combien d'avatars
- * sont pris, ni combien de personnes sont inscrites (§7). Le catalogue compte
- * plusieurs milliards de combinaisons : un tirage au hasard ne renseigne sur
- * rien.
+ * La réponse ne porte que sur les codes demandés (40 au plus) et ne dit rien
+ * d'autre : ni combien de portraits sont pris, ni combien de personnes sont
+ * inscrites (§7).
  */
 export async function avatarsPris(
   slug: string,
   codes: string[],
 ): Promise<Ok<{ pris: string[] }> | Err> {
   try {
-    // Bornes dures : la dernière étape de l'atelier propose une poignée de
-    // candidats, jamais une exploration du catalogue.
-    const demandes = [...new Set(codes.filter(estAvatarCompose).map(canoniserAvatar))].slice(0, 40);
+    // Bornes dures : la dernière étape du parcours montre quelques dizaines
+    // de portraits, jamais une exploration du catalogue.
+    const demandes = codes.filter(estAvatarSimple);
     if (!demandes.length) return { ok: true, pris: [] };
     const v = await visibleTournament(slug);
     if (!v) return err("Tournoi introuvable.");
-    const occupes = await sondeAvatars(v.tournament.id)(demandes);
-    return { ok: true, pris: [...occupes] };
+    return { ok: true, pris: await avatarsDejaPris(demandes, sondeAvatars(v.tournament.id)) };
   } catch (error) {
     unstable_rethrow(error);
     console.error("[arena] action échouée", error);
@@ -1059,12 +1059,9 @@ export async function choisirAvatar(
     if (!v) return err("Tournoi introuvable.");
     const p = await currentParticipant(v.tournament.id);
     if (!p) return err("Session expirée.");
-    if (!estAvatarCompose(avatarId) && !estAvatarPlanche(avatarId))
+    if (!estAvatarPortrait(avatarId))
       return err("Avatar inconnu.");
-    const memeAvatar = estAvatarCompose(avatarId) && estAvatarCompose(p.avatar_seed)
-      ? canoniserAvatar(avatarId) === canoniserAvatar(p.avatar_seed)
-      : avatarId === p.avatar_seed;
-    if (!memeAvatar)
+    if (avatarId !== p.avatar_seed)
       return err(
         "Votre personnage est conservé pendant toute l’Arena. Seul son habillage évolue selon votre classement cumulé.",
       );

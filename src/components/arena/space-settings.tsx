@@ -21,7 +21,7 @@ import { FormError } from './form-ui';
 
 /**
  * « Mon compte Arena » — maquette client du 24/09/2026 (14_50_00) : carte de
- * profil (médaillon, pseudonyme, e-mail, « Modifier mon profil »), spécialité ·
+ * profil (portrait, pseudonyme, e-mail, « Modifier mon profil »), spécialité ·
  * édition · participation, consentement n° 2 (§3.1, jamais pré-coché), liste
  * du compte, déconnexion et suppression du compte (§3.1). « Modifier mon
  * profil » ouvre le changement de pseudonyme tant qu'aucune manche n'est
@@ -86,7 +86,7 @@ export function SpaceSettings({
                 </div>
               </form>
             ) : (
-              <p>Votre pseudonyme et votre médaillon sont fixés depuis votre première manche : ils vous suivent jusqu’au classement final. Votre adresse e-mail reste privée et n’apparaît jamais dans le classement.</p>
+              <p>Votre pseudonyme et votre portrait sont fixés depuis votre première manche : ils vous suivent jusqu’au classement final. Votre adresse e-mail reste privée et n’apparaît jamais dans le classement.</p>
             )}
           </div>
         )}

@@ -4,24 +4,23 @@ import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
-import { AvatarAtelier } from '@/components/avatar/avatar-atelier';
+import { AvatarParcours } from '@/components/avatar/avatar-parcours';
 import { avatarsPris, checkPseudo, registerParticipant } from '@/app/(arena)/arena/[slug]/actions';
 import { CONSENT_MARKETING, CONSENT_TOURNAMENT } from '@/lib/arena/texts';
 import { browserTimezone } from '@/lib/arena/time';
-import { avatarAuHasard, avatarDepuisChaine } from '@/lib/avatars/traits';
+import { avatarAuHasard, avatarDepuisChaine } from '@/lib/avatars/portraits';
 import { ArenaButton, ARENA, BODY } from './arena-ui';
 import { CheckRow, Field, FormError, SelectInput, TextInput, type FieldStatus } from './form-ui';
 
 /**
  * Formulaire d'inscription (§3, maquette « 1. Inscription » + « 2. Modération
  * pseudonyme ») : prénom, nom, email, spécialité, pseudonyme obligatoires ;
- * médaillon composé en quatre étapes ; deux cases de consentement
- * distinctes, jamais
- * pré-cochées. Pas de numéro de téléphone. Le pseudonyme est vérifié en
+ * portrait choisi trait par trait, unique dans le tournoi ; deux cases de
+ * consentement distinctes, jamais pré-cochées. Pas de numéro de téléphone. Le pseudonyme est vérifié en
  * direct (mots interdits, format, disponibilité).
  */
 /** Personnage affiché le temps que le navigateur en tire un au hasard. */
-const AVATAR_DEPART = avatarDepuisChaine('evc-arena', 'arena');
+const AVATAR_DEPART = avatarDepuisChaine('evc-arena');
 
 const PSEUDO_RULES = [
   'Pas de mots interdits',
@@ -59,12 +58,12 @@ export function RegisterForm({
   // Sélection initiale tirée au sort côté navigateur : un rendu serveur
   // aléatoire ferait diverger l'hydratation.
   useEffect(() => {
-    const t = window.setTimeout(() => setSeed(avatarAuHasard(Math.random, 'arena')), 0);
+    const t = window.setTimeout(() => setSeed(avatarAuHasard()), 0);
     return () => window.clearTimeout(t);
   }, []);
 
   /**
-   * Médaillons déjà pris, parmi ceux que l'atelier propose à sa dernière
+   * Portraits déjà pris, parmi ceux que le parcours montre à sa dernière
    * étape. La réponse ne porte que sur les codes demandés : elle ne dit rien
    * du nombre d'inscrits (§7 — aucun effectif, nulle part).
    */
@@ -163,15 +162,14 @@ export function RegisterForm({
 
       <div>
         <p className="mb-2 text-[12px] font-semibold" style={{ color: ARENA.textSoft, fontFamily: BODY }}>Votre personnage pour toute l’Arena</p>
-        <p className="mb-4 text-xs leading-relaxed" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Composez votre médaillon en quatre étapes : portrait, fond, cadre, emblème. Vous le conserverez toute l’Arena ; sa couronne Or, Argent, Bronze ou Standard dépendra uniquement de votre classement cumulé actuel. <strong style={{ color: ARENA.textSoft }}>Deux participants ne portent jamais le même médaillon : à la dernière étape, ceux qui sont déjà pris apparaissent grisés.</strong></p>
-        <AvatarAtelier
+        <p className="mb-4 text-xs leading-relaxed" style={{ color: ARENA.textMuted, fontFamily: BODY }}>Choisissez votre portrait étape par étape : profil, teint, cheveux, coiffure, accessoires, tenue, fond… Vous le conserverez toute l’Arena ; sa couronne Or, Argent, Bronze ou Standard dépendra uniquement de votre classement cumulé actuel. <strong style={{ color: ARENA.textSoft }}>Deux participants ne portent jamais le même portrait : à la dernière étape, ceux qui sont déjà pris apparaissent grisés.</strong></p>
+        <AvatarParcours
           valeur={avatarSeed}
           onChange={setSeed}
           theme="arena"
-          perimetre="arena"
           verifierDisponibilite={verifierDisponibilite}
           onDisponibilite={setDispo}
-          legende="Votre médaillon tel qu’il apparaîtra dans le classement."
+          legende="Votre portrait tel qu’il apparaîtra dans le classement."
         />
 
       </div>
@@ -190,14 +188,14 @@ export function RegisterForm({
       </div>
 
       <FormError>{error}</FormError>
-      {/* Le médaillon est vérifié à la dernière étape de l'atelier : on ne
+      {/* Le portrait est vérifié à la dernière étape du parcours : on ne
           laisse pas partir une inscription vers un avatar déjà pris. */}
       <ArenaButton type="submit" size="lg" disabled={pending || dispo === 'pris' || dispo === 'verification'} className="w-full">
         {pending ? 'Inscription…' : 'Je m’inscris'}
       </ArenaButton>
       {dispo === 'pris' && (
         <p role="status" className="text-center text-[12px] font-semibold" style={{ color: ARENA.redSoft, fontFamily: BODY }}>
-          Choisissez un médaillon disponible à la dernière étape pour poursuivre.
+          Choisissez un portrait disponible à la dernière étape pour poursuivre.
         </p>
       )}
       <p className="text-center text-[13px]" style={{ color: ARENA.textMuted, fontFamily: BODY }}>

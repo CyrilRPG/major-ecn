@@ -1,13 +1,7 @@
-import Image from 'next/image';
-import { effectiveSeed, platformAvatarUrl } from '@/lib/avatar';
-import { libelleAvatar } from '@/components/arena/avatars';
-import { ComposedAvatarSvg } from '@/components/avatar/composed-avatar';
-import { decrireAvatar, estAvatarCompose } from '@/lib/avatars/traits';
+import { effectiveSeed } from '@/lib/avatar';
+import { PortraitAvatar } from '@/components/avatar/portrait-avatar';
 
-/**
- * Avatar du compte Major ECN. Un avatar composé est dessiné sur place (SVG,
- * aucune requête) ; un médaillon de l'ancienne planche reste servi en image.
- */
+/** Avatar du compte Major ECN : un portrait du catalogue. */
 export function DrawnAvatar({
   seed, size = 40, className = '', title,
 }: {
@@ -16,25 +10,12 @@ export function DrawnAvatar({
   className?: string;
   title?: string;
 }) {
-  const avatarId = effectiveSeed(seed, seed);
-  if (estAvatarCompose(avatarId)) {
-    return (
-      <ComposedAvatarSvg
-        seed={avatarId}
-        size={size}
-        title={title ?? decrireAvatar(avatarId)}
-        className={`shrink-0 rounded-full ${className}`}
-      />
-    );
-  }
   return (
-    <Image
-      src={platformAvatarUrl(avatarId)}
-      alt={title ?? libelleAvatar(avatarId)}
-      width={size}
-      height={size}
-      className={`shrink-0 rounded-full object-contain ${className}`}
-      unoptimized
+    <PortraitAvatar
+      seed={effectiveSeed(seed, seed)}
+      size={size}
+      title={title}
+      className={`shrink-0 rounded-full ${className}`}
     />
   );
 }

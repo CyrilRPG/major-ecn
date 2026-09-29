@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import { AvatarDistinctions } from '@/components/arena/avatar-distinctions';
 import { AvatarRankHistory } from '@/components/arena/avatar-rank-history';
-import { AVATARS_PLANCHE, DEFAULT_ARENA_AVATAR } from '@/components/arena/avatars';
+import { PORTRAITS, decrireAvatar } from '@/lib/avatars/portraits';
 import { Leaderboard } from '@/components/arena/leaderboard';
 import { ArenaPage, type ShellNav } from '@/components/arena/arena-shell';
 import type { RankHistoryEntry } from '@/lib/arena/rank-history';
 import { distinctionFor, scorePct } from '@/lib/arena/performance';
+
+const DEFAULT_ARENA_AVATAR = PORTRAITS[11].code;
 
 /** Local fixtures, behind the preview route's development-only guard. */
 export function AvatarShowcase({ nav }: { nav: ShellNav }) {
@@ -24,7 +26,7 @@ export function AvatarShowcase({ nav }: { nav: ShellNav }) {
   }));
   const rows = step ? Array.from({ length: 6 }, (_, i) => ({
     rank: i + 1, pseudo: rank === i + 1 ? 'DrHorus27' : ['Asclepios', 'DrMinerva', 'Medicus', 'Hygie', 'DrAtlas', 'Panacee'][i],
-    avatarSeed: rank === i + 1 ? seed : ['medecin-01', 'medecin-02', 'medecin-03', 'lion', 'hibou', 'casque'][i],
+    avatarSeed: rank === i + 1 ? seed : ['av-001', 'av-064', 'av-127', 'av-190', 'av-251', 'av-305'][i],
     totalScore: rank ? step * 10 + rank - i - 1 : 0, roundsPlayed: step, me: rank === i + 1,
     distinction: distinctionFor(i + 1, scorePct(rank ? step * 10 + rank - i - 1 : 0, step * 13)),
   })) : [];
@@ -34,7 +36,7 @@ export function AvatarShowcase({ nav }: { nav: ShellNav }) {
     <section className="ae-panel ae-avatar-simulation">
       <h2>Simulation du parcours</h2><p>Aperçu local avec des données fictives. Publiez les trois manches pour vérifier l’apparence actuelle et le palmarès.</p>
       <div className="ae-avatar-controls">
-        <label>Personnage<select value={seed} disabled={step > 0} onChange={e => setSeed(e.target.value)}>{AVATARS_PLANCHE.map(a => <option value={a.id} key={a.id}>{a.label}</option>)}</select></label>
+        <label>Personnage<select value={seed} disabled={step > 0} onChange={e => setSeed(e.target.value)}>{PORTRAITS.slice(0, 40).map(p => <option value={p.code} key={p.code}>{p.numero}. {decrireAvatar(p.code).replace('Avatar : ', '')}</option>)}</select></label>
         <label>Parcours<select value={scenario} onChange={e => { setScenario(e.target.value); setStep(0); }}><option value="1,2,1">1er → 2e → 1er</option><option value="3,6,2">3e → 6e → 2e</option></select></label>
         <button disabled={step === 3} onClick={() => setStep(n => n + 1)}>Publier la manche {Math.min(3, step + 1)}</button>
         <button disabled={step === 0} onClick={() => setStep(0)}>Recommencer</button>

@@ -1,5 +1,5 @@
 import { ArenaAvatar } from './arena-avatar';
-import { DEFAULT_ARENA_AVATAR } from './avatars';
+import { PORTRAITS } from '@/lib/avatars/portraits';
 import { avatarAppearance, AVATAR_DISTINCTIONS } from '@/lib/arena/avatar-appearance';
 import { DEFAULT_DISTINCTION_PCT, type Distinction } from '@/lib/arena/performance';
 
@@ -7,7 +7,7 @@ import { DEFAULT_DISTINCTION_PCT, type Distinction } from '@/lib/arena/performan
  * Planche des quatre habillages. Une distinction exige la place (1re, 2e, 3e)
  * ET le niveau de distinction : un premier sous le seuil reste Standard.
  */
-export function AvatarDistinctions({ seed = DEFAULT_ARENA_AVATAR, distinctionPct = DEFAULT_DISTINCTION_PCT }: { seed?: string; distinctionPct?: number }) {
+export function AvatarDistinctions({ seed = PORTRAITS[11].code, distinctionPct = DEFAULT_DISTINCTION_PCT }: { seed?: string; distinctionPct?: number }) {
   const tiers: { distinction: Distinction | null; rank: number | null }[] = [
     { distinction: null, rank: null },
     { distinction: 'bronze', rank: 3 },

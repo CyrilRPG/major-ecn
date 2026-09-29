@@ -3,7 +3,7 @@
  * connaissent pas) et petits utilitaires purs partagés client/serveur.
  */
 import type { Bareme, QType } from './scoring';
-import { avatarAuHasard } from '@/lib/avatars/traits';
+import { avatarAuHasard } from '@/lib/avatars/portraits';
 import type { TournamentStatus } from './time';
 
 export type ArenaItem = {
@@ -312,9 +312,8 @@ export function isValidPseudo(pseudo: string): boolean {
 }
 
 /**
- * Graine d'avatar attribuée par défaut : un avatar composé tiré au hasard.
- * Les médaillons de la planche et les graines aléatoires historiques
- * (« k3f9x2a1 ») restent lisibles côté rendu.
+ * Graine d'avatar attribuée par défaut : un portrait du catalogue tiré au
+ * hasard. Les anciens codes restent lisibles côté rendu.
  */
 export function randomAvatarSeed(): string {
   return avatarAuHasard();

@@ -1,21 +1,17 @@
+import { parRessemblance } from '@/lib/avatars/parcours';
 import {
-  avatarAuHasard,
+  PORTRAITS,
+  avatarDoublon,
   canoniserAvatar,
-  variantesProches,
-  type Perimetre,
+  portraitAffiche,
   type Rng,
-} from '@/lib/avatars/traits';
+} from '@/lib/avatars/portraits';
 
 /**
- * Unicité d'un médaillon dans un périmètre.
+ * Unicité d'un portrait dans un tournoi EVC Arena.
  *
- * EVC Arena et Major ECN sont CLOISONNÉS : l'unicité d'un tournoi ne dit rien
- * des comptes de la plateforme, et réciproquement. Chaque appelant fournit sa
- * propre sonde, qui interroge sa propre table ; la même combinaison peut donc
- * exister des deux côtés sans conflit.
- *
- * Le catalogue compte plusieurs millions de combinaisons : la contrainte n'a
- * jamais à refuser quelqu'un, elle le déplace d'un cran.
+ * Seule l'Arena l'impose : sur Major ECN, plusieurs comptes peuvent porter le
+ * même portrait. L'appelant fournit la sonde, qui interroge sa table.
  *
  * Contrainte du cahier des charges Arena (§7) : rien de ce qui sort d'ici ne
  * doit laisser deviner un effectif. On répond sur les codes DEMANDÉS, jamais
@@ -28,34 +24,28 @@ export type SondeAvatars = (codes: string[]) => Promise<Set<string>>;
 const LOT = 40;
 
 /**
- * Le code demandé s'il est libre, sinon la première variante proche libre,
- * sinon un tirage complet. Ne renvoie `null` que si la base est injoignable
- * — l'appelant laisse alors la contrainte d'unicité trancher à l'insertion.
+ * Le portrait demandé s'il est libre, sinon le portrait libre qui lui
+ * ressemble le plus. Un tournoi plus peuplé que le catalogue reçoit, en
+ * dernier recours, le même portrait sous un code distinct
+ * (`avatarDoublon`) : personne n'est jamais refusé.
  */
 export async function trouverAvatarLibre(
   souhaite: string,
   estPris: SondeAvatars,
-  perimetre: Perimetre = 'arena',
   rng: Rng = Math.random,
-): Promise<string | null> {
-  const vise = canoniserAvatar(souhaite);
-  const candidats = [vise, ...variantesProches(vise, rng, perimetre)];
-  // Après les variantes proches, des tirages complets : le cas ne se présente
-  // qu'avec un catalogue saturé, impossible en pratique, mais la boucle ne
-  // doit pas pouvoir rendre la main sans réponse.
-  for (let i = 0; i < 4 * LOT; i++) candidats.push(avatarAuHasard(rng, perimetre));
-
+): Promise<string> {
+  const reference = portraitAffiche(souhaite);
+  const candidats = parRessemblance(PORTRAITS, reference).map((p) => p.code);
   for (let debut = 0; debut < candidats.length; debut += LOT) {
-    const lot = [...new Set(candidats.slice(debut, debut + LOT))];
-    if (!lot.length) continue;
+    const lot = candidats.slice(debut, debut + LOT);
     const pris = await estPris(lot);
     const libre = lot.find((code) => !pris.has(code));
     if (libre) return libre;
   }
-  return null;
+  return avatarDoublon(reference.code, rng);
 }
 
-/** Le code demandé est-il libre dans ce périmètre ? */
+/** Le code demandé est-il libre ? */
 export async function avatarEstLibre(souhaite: string, estPris: SondeAvatars): Promise<boolean> {
   const vise = canoniserAvatar(souhaite);
   return !(await estPris([vise])).has(vise);

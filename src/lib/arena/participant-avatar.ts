@@ -1,6 +1,5 @@
-import { estAvatarPlanche } from '@/components/arena/avatars';
 import { isPlatformAvatar } from '@/lib/avatar';
-import { estAvatarCompose } from '@/lib/avatars/traits';
+import { estAvatarPortrait } from '@/lib/avatars/portraits';
 
 type AvatarParticipant = {
   email: string;
@@ -18,13 +17,12 @@ export type AvatarProfile = {
 const emailKey = (email: string) => email.trim().toLowerCase();
 
 /**
- * Les anciennes graines Arena (« k3f9x2a1 ») dessinent un emblème procédural,
- * pas le portrait enregistré sur Major ECN. Pour ces comptes SEULEMENT, on
- * retrouve ce portrait.
+ * Une graine Arena qui n'est pas un portrait du catalogue (code antérieur à
+ * la refonte du 29/09/2026) : pour ces comptes SEULEMENT, on affiche le
+ * portrait du compte Major ECN de même adresse, s'il en existe un.
  *
- * Un médaillon composé, comme un portrait de la planche, est un choix fait
- * DANS l'Arena : il reste l'identité du tournoi. Depuis le 21/09/2026 les deux
- * mondes sont cloisonnés — l'avatar du compte Major ECN ne s'y substitue plus.
+ * Un portrait du catalogue est un choix fait DANS l'Arena : il reste
+ * l'identité du tournoi, l'avatar du compte Major ECN ne s'y substitue pas.
  * Résolution commune aux pages personnelles et au classement, sans modifier la
  * base ni transmettre les données du profil pédagogique aux composants publics.
  */
@@ -34,10 +32,9 @@ export async function resolveParticipantAvatars<T extends AvatarParticipant>(
 ): Promise<T[]> {
   const legacy = participants.filter(p =>
     p.faculte_id === 'major-ecn' && !p.anonymized_at
-    && !estAvatarPlanche(p.avatar_seed)
-    // Un médaillon composé est un choix fait DANS l'Arena : les deux mondes
-    // sont cloisonnés, on n'y substitue jamais l'avatar du compte Major ECN.
-    && !estAvatarCompose(p.avatar_seed),
+    // Un portrait est un choix fait DANS l'Arena : on n'y substitue jamais
+    // l'avatar du compte Major ECN.
+    && !estAvatarPortrait(p.avatar_seed),
   );
   const emails = [...new Set(legacy.flatMap(p => [p.email, emailKey(p.email)]).filter(Boolean))];
   if (!emails.length) return participants;

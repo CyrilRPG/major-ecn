@@ -6,7 +6,7 @@ import { MissedRound, RoundResults } from "@/components/arena/round-results";
 import { DEFAULT_BAREME } from "@/lib/arena/scoring";
 import { DesignQuestion } from "./question";
 import { AvatarShowcase } from './avatars';
-import { DEFAULT_ARENA_AVATAR } from '@/components/arena/avatars';
+import { PORTRAITS } from '@/lib/avatars/portraits';
 import { TournamentFinal } from '@/components/arena/tournament-final';
 import { finalFixture } from './final-fixture';
 import type { FinalVariant } from '@/lib/arena/final-summary';
@@ -21,6 +21,8 @@ import { InviteBox } from '@/components/arena/invite-box';
 import { PasserelleBlock } from '@/components/arena/passerelle-block';
 import { JoinForm } from '@/components/arena/join-form';
 import { seasonFixture, spaceFixture } from './season-fixture';
+
+const DEFAULT_ARENA_AVATAR = PORTRAITS[11].code;
 
 /** Écrans de résultat du cahier des charges complémentaire (score /20 → /10, rang, publication, statut Major ECN). */
 const RESULT_STATES: Record<string, { score: number; rank: number | null; published: boolean; audience: PasserelleAudience; label: string }> = {
