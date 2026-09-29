@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { upsertAgendaEvent, deleteAgendaEvent } from '@/app/(student)/agenda/actions';
 import { etatEmargement, instantParis, libelleJourLong } from '@/lib/agenda/planning';
+import { cesure } from '@/lib/cesure';
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /*  Évènements « plateforme » (créés par admin, déjà filtrés côté serveur     */
@@ -235,8 +236,8 @@ export function AgendaWeek({
                         <Clock className="h-3.5 w-3.5" />
                         {e.start_time ? `${e.start_time.slice(0, 5)}${e.end_time ? ` – ${e.end_time.slice(0, 5)}` : ''}` : 'Journée'}
                       </span>
-                      <span className="mt-2 block text-sm font-semibold leading-snug text-(--color-ink) hyphens-auto [overflow-wrap:anywhere]">
-                        {e.title}
+                      <span className="mt-2 block text-sm font-semibold leading-snug text-(--color-ink) hyphens-manual [overflow-wrap:anywhere]">
+                        {cesure(e.title)}
                       </span>
                       {e.college && (
                         <span
@@ -271,8 +272,8 @@ export function AgendaWeek({
                         <Clock className="h-3.5 w-3.5" />
                         {e.start_time ? `${e.start_time.slice(0, 5)}${e.end_time ? ` – ${e.end_time.slice(0, 5)}` : ''}` : 'Journée'}
                       </span>
-                      <span className="mt-2 block text-sm font-semibold leading-snug text-(--color-ink) hyphens-auto [overflow-wrap:anywhere]">
-                        {e.title}
+                      <span className="mt-2 block text-sm font-semibold leading-snug text-(--color-ink) hyphens-manual [overflow-wrap:anywhere]">
+                        {cesure(e.title)}
                       </span>
                       {e.category && (
                         <span
