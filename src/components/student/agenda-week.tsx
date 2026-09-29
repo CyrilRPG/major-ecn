@@ -228,14 +228,14 @@ export function AgendaWeek({
                       key={`pf-${e.id}`}
                       type="button"
                       onClick={() => setSelectedPlatform(e)}
-                      className="group flex flex-col rounded-xl border border-transparent p-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-soft) focus-ring"
+                      className="group flex min-w-0 flex-col rounded-xl border border-transparent p-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-soft) focus-ring"
                       style={{ background: pal.bg }}
                     >
                       <span className="flex items-center gap-1.5 text-xs font-semibold" style={{ color: pal.fg }}>
                         <Clock className="h-3.5 w-3.5" />
                         {e.start_time ? `${e.start_time.slice(0, 5)}${e.end_time ? ` – ${e.end_time.slice(0, 5)}` : ''}` : 'Journée'}
                       </span>
-                      <span className="mt-2 block text-sm font-semibold leading-snug text-(--color-ink)">
+                      <span className="mt-2 block text-sm font-semibold leading-snug text-(--color-ink) hyphens-auto [overflow-wrap:anywhere]">
                         {e.title}
                       </span>
                       {e.college && (
@@ -264,14 +264,14 @@ export function AgendaWeek({
                       key={e.id}
                       type="button"
                       onClick={() => setSelectedPersonal(e)}
-                      className="group flex flex-col rounded-xl border border-dashed p-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-soft) focus-ring"
+                      className="group flex min-w-0 flex-col rounded-xl border border-dashed p-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-soft) focus-ring"
                       style={{ background: c.bg, borderColor: c.fg + '55' }}
                     >
                       <span className="flex items-center gap-1.5 text-xs font-semibold" style={{ color: c.fg }}>
                         <Clock className="h-3.5 w-3.5" />
                         {e.start_time ? `${e.start_time.slice(0, 5)}${e.end_time ? ` – ${e.end_time.slice(0, 5)}` : ''}` : 'Journée'}
                       </span>
-                      <span className="mt-2 block text-sm font-semibold leading-snug text-(--color-ink)">
+                      <span className="mt-2 block text-sm font-semibold leading-snug text-(--color-ink) hyphens-auto [overflow-wrap:anywhere]">
                         {e.title}
                       </span>
                       {e.category && (
