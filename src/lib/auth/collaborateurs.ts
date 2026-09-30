@@ -777,6 +777,41 @@ export function deployerPerimetre(perimetre: Perimetre, enfantsDe: EnfantsDe): P
 }
 
 /**
+ * Restriction historique à certains items (`scope.cours`) face au périmètre
+ * qu'on vient d'enregistrer. Le dialogue ne montre ni ne saisit cette liste :
+ * la recopier telle quelle ferme silencieusement tout ce que l'administrateur
+ * croit ouvrir, car dès qu'elle existe elle l'emporte sur les collèges
+ * (`profCanAccessCours`, RLS `accessible_cours_ids`). Incident du 30/09/2026 :
+ * un enseignant passé en « Endocrinologie » gardait 37 items d'autres
+ * spécialités et ne voyait plus rien.
+ *
+ *  - items hors du nouveau périmètre (ou supprimés) → retirés ;
+ *  - plus aucun item retenu → plus de restriction (spécialités entières) ;
+ *  - restriction conservée → chaque collège AJOUTÉ y entre avec tous ses items,
+ *    sans quoi il resterait vide.
+ */
+export function ajusterCoursHerites(p: {
+  cours: string[] | undefined;
+  /** Collège (matiere_id) de chaque item hérité encore existant. */
+  collegeDe: Record<string, string>;
+  anciensColleges: string[];
+  /** Périmètre DÉPLOYÉ (sous-collèges compris). */
+  nouveauxColleges: string[] | 'toutes';
+  /** Items de chaque collège ajouté. */
+  itemsDe: Record<string, string[]>;
+}): string[] | undefined {
+  if (!p.cours?.length || p.nouveauxColleges === 'toutes') return undefined;
+  const nouveaux = new Set(p.nouveauxColleges);
+  const retenus = p.cours.filter((id) => { const c = p.collegeDe[id]; return !!c && nouveaux.has(c); });
+  if (retenus.length === 0) return undefined;
+  const anciens = new Set(p.anciensColleges);
+  for (const c of p.nouveauxColleges) {
+    if (!anciens.has(c)) retenus.push(...(p.itemsDe[c] ?? []));
+  }
+  return Array.from(new Set(retenus));
+}
+
+/**
  * Replie un périmètre pour l'affichage et l'édition : les sous-collèges d'un
  * parent présent sont implicites et disparaissent de la liste.
  */

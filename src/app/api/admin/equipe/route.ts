@@ -5,7 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { CreerCollaborateurSchema, ModifierCollaborateurSchema } from '@/lib/auth/equipe-schema';
 import { composerScope, resumeModules } from '@/lib/auth/collaborateurs';
-import { appliquerScope } from '@/lib/equipe/server';
+import { appliquerScope, coursHeritesAjustes } from '@/lib/equipe/server';
 import { logAudit } from '@/lib/audit/log';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { invitationEquipeEmail } from '@/lib/email/templates';
@@ -160,8 +160,9 @@ async function modifier(adminId: string, body: unknown) {
   if (!cible) return NextResponse.json({ error: 'Compte introuvable.' }, { status: 404 });
   if (cible.role !== 'professor') return NextResponse.json({ error: 'Seul un membre du personnel non administrateur se gère ici.' }, { status: 400 });
 
-  // La restriction historique à certains items est conservée telle quelle.
-  const coursHerites = Array.isArray(cible.permission_scope?.cours) ? (cible.permission_scope.cours as string[]) : undefined;
+  // La restriction historique à certains items suit le nouveau périmètre
+  // (cf. ajusterCoursHerites) : recopiée telle quelle, elle fermait tout.
+  const coursHerites = await coursHeritesAjustes(a, cible.permission_scope, p.perimetre);
   const scope = await appliquerScope(p.userId, {
     fonction: p.fonction ?? null, modele: p.modele ?? null, modules: p.modules, perimetre: p.perimetre,
     cours: coursHerites, mfa_obligatoire: !!p.mfa_obligatoire,

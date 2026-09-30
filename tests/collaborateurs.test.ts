@@ -15,6 +15,7 @@ import {
   resumeModules,
   type Modules,
   deployerPerimetre,
+  ajusterCoursHerites,
   replierPerimetre,
   accesOnglets,
   pagesDuScope,
@@ -233,4 +234,40 @@ test('invitation : adaptée au poste, jamais « professeur » pour un monteur vi
   const rien = invitationEquipeEmail({ firstName: '', setupUrl: 'https://exemple.test/x', scope: composerScope({ modules: modulesVides(), perimetre: { specialites: 'toutes', formules: {} } }) });
   assert.match(rien.subject, /Collaborateur/);
   assert.doesNotMatch(rien.html, /Ce à quoi vous aurez accès/);
+});
+
+test('ajusterCoursHerites : la restriction historique suit le périmètre enregistré', () => {
+  const collegeDe = { g1: 'col-mg-geriatrie', g2: 'col-mg-geriatrie', n1: 'col-mg-nephrologie' };
+  const itemsDe = { 'col-mg-endocrinologie': ['e1', 'e2'] };
+
+  // Incident du 30/09/2026 : passé en Endocrinologie seule, il gardait ses
+  // items d'autres spécialités et ne voyait plus rien. Plus de restriction.
+  assert.equal(ajusterCoursHerites({
+    cours: ['g1', 'g2', 'n1'], collegeDe, itemsDe,
+    anciensColleges: ['col-mg-geriatrie', 'col-mg-nephrologie'],
+    nouveauxColleges: ['col-mg-endocrinologie'],
+  }), undefined);
+
+  // Collège retiré : ses items partent, les autres restent restreints.
+  assert.deepEqual(ajusterCoursHerites({
+    cours: ['g1', 'n1'], collegeDe, itemsDe,
+    anciensColleges: ['col-mg-geriatrie', 'col-mg-nephrologie'],
+    nouveauxColleges: ['col-mg-geriatrie'],
+  }), ['g1']);
+
+  // Collège ajouté à une restriction conservée : il entre en entier.
+  assert.deepEqual(ajusterCoursHerites({
+    cours: ['g1'], collegeDe, itemsDe,
+    anciensColleges: ['col-mg-geriatrie'],
+    nouveauxColleges: ['col-mg-geriatrie', 'col-mg-endocrinologie'],
+  }), ['g1', 'e1', 'e2']);
+
+  // Périmètre inchangé : restriction intacte ; items supprimés (sans collège) retirés.
+  assert.deepEqual(ajusterCoursHerites({
+    cours: ['g1', 'disparu'], collegeDe, itemsDe,
+    anciensColleges: ['col-mg-geriatrie'], nouveauxColleges: ['col-mg-geriatrie'],
+  }), ['g1']);
+
+  assert.equal(ajusterCoursHerites({ cours: ['g1'], collegeDe, itemsDe, anciensColleges: [], nouveauxColleges: 'toutes' }), undefined);
+  assert.equal(ajusterCoursHerites({ cours: undefined, collegeDe, itemsDe, anciensColleges: [], nouveauxColleges: ['x'] }), undefined);
 });

@@ -3,7 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import {
-  composerScope, deployerPerimetre, lireScopeEquipe, normaliserPerimetre, roleSuiviDeScope,
+  ajusterCoursHerites, composerScope, deployerPerimetre, lireScopeEquipe, normaliserPerimetre, roleSuiviDeScope,
   type EnfantsDe, type ParentDe,
   type EntreeScope, type ScopeEquipe,
 } from '@/lib/auth/collaborateurs';
@@ -132,6 +132,45 @@ export async function hierarchieColleges(): Promise<HierarchieColleges> {
     id: m.id, nom: m.nom, enfants: rows.filter((e) => e.parent_matiere_id === m.id).map((e) => ({ id: e.id, nom: e.nom })),
   }));
   return { arbre, parentDe, enfantsDe, noms };
+}
+
+/**
+ * Restriction historique à certains items d'un collaborateur, ajustée au
+ * périmètre qu'on s'apprête à enregistrer (cf. `ajusterCoursHerites`).
+ */
+export async function coursHeritesAjustes(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  a: any,
+  ancienScope: { cours?: unknown; colleges?: unknown } | null | undefined,
+  perimetre: unknown,
+): Promise<string[] | undefined> {
+  const cours = Array.isArray(ancienScope?.cours)
+    ? (ancienScope.cours as unknown[]).filter((x): x is string => typeof x === 'string')
+    : [];
+  if (cours.length === 0) return undefined;
+  const anciensColleges = Array.isArray(ancienScope?.colleges)
+    ? (ancienScope.colleges as unknown[]).filter((x): x is string => typeof x === 'string')
+    : [];
+  const { enfantsDe } = await hierarchieColleges();
+  const nouveauxColleges = deployerPerimetre(normaliserPerimetre(perimetre), enfantsDe).specialites;
+  if (nouveauxColleges === 'toutes') return undefined;
+
+  // Tranches : une longue liste d'ids dans in() dépasse la taille d'URL admise.
+  const collegeDe: Record<string, string> = {};
+  for (let i = 0; i < cours.length; i += 150) {
+    const { data, error } = await a.from('cours').select('id, matiere_id').in('id', cours.slice(i, i + 150));
+    if (error) throw new Error(error.message);
+    for (const r of (data ?? []) as { id: string; matiere_id: string }[]) collegeDe[r.id] = r.matiere_id;
+  }
+  const ajoutes = nouveauxColleges.filter((c) => !anciensColleges.includes(c));
+  const itemsDe: Record<string, string[]> = {};
+  if (ajoutes.length > 0) {
+    // Toute la médecine générale dépasse les 1 000 lignes d'une réponse PostgREST.
+    const lignes = await fetchAllRows<{ id: string; matiere_id: string }>((from, to) => a
+      .from('cours').select('id, matiere_id').in('matiere_id', ajoutes).order('id').range(from, to));
+    for (const r of lignes) (itemsDe[r.matiere_id] ??= []).push(r.id);
+  }
+  return ajusterCoursHerites({ cours, collegeDe, anciensColleges, nouveauxColleges, itemsDe });
 }
 
 /**
