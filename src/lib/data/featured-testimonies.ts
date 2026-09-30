@@ -16,6 +16,38 @@ export type Featured = {
 
 export const FEATURED_TESTIMONIES: Featured[] = [
   {
+    // Mis en avant en tête de liste (demande de Cyril, 30/09/2026).
+    slug: 'dr-saranya-ilanserane-gundugolanu',
+    name: 'Dr ILANSERANE GUNDUGOLANU Saranya',
+    initials: 'SI',
+    spec: 'Odontologie',
+    role: '1re place — Lauréate EVC Odontologie 2023',
+    photo: '/temoignages/dr-saranya-ilanserane-gundugolanu.jpg',
+    quote: "Je recommande vivement la préparation Major ECN pour la qualité de son accompagnement et de son enseignement.",
+    paragraphs: [
+      "Je recommande vivement la préparation Major ECN pour la qualité de son accompagnement et de son enseignement.",
+      "Cette préparation m’a permis d’acquérir une méthode de travail structurée, de mieux organiser mes révisions et d’aborder le concours avec davantage de confiance et de sérénité.",
+      "La qualité des enseignements, la disponibilité des enseignants ainsi que la pertinence de leurs conseils ont été particulièrement précieux tout au long de ma préparation.",
+      "Cet accompagnement a largement contribué à ma progression et à mes résultats, et je suis très reconnaissante envers toute l’équipe pour son investissement et son professionnalisme.",
+      "Je souhaite à Major ECN une très belle continuation et beaucoup de réussite dans l’accompagnement des futurs candidats.",
+    ],
+  },
+  {
+    slug: 'dr-mohamed-ghorbel',
+    name: 'Dr Mohamed GHORBEL',
+    initials: 'MG',
+    spec: 'Chirurgie orthopédique et traumatologique',
+    role: 'Lauréat EVC 2025 — Chirurgie orthopédique et traumatologique',
+    photo: '/temoignages/dr-mohamed-ghorbel.jpg',
+    quote: "Cette préparation m’a vraiment permis d’aller à l’essentiel, de m’entraîner efficacement et d’arriver beaucoup plus à l’aise le jour J.",
+    paragraphs: [
+      "En étant en poste, je n’avais pas énormément de temps pour préparer les EVC. J’ai beaucoup apprécié la préparation Major ECN parce qu’elle m’a permis de me concentrer sur l’essentiel et surtout de beaucoup m’entraîner.",
+      "Personnellement, j’aime travailler avec les QCM et j’ai pu en faire énormément pendant la préparation. À force de m’entraîner, j’ai gagné en rapidité et en automatismes, et je l’ai vraiment ressenti le jour de l’épreuve.",
+      "Les séances régulières m’ont aussi permis de garder un rythme malgré mon travail. Et comme nous étions en petit groupe, les cours étaient très interactifs : on pouvait facilement poser nos questions et échanger avec l’enseignant.",
+      "Pour quelqu’un qui travaille et qui dispose de peu de temps, cette préparation m’a vraiment permis d’aller à l’essentiel, de m’entraîner efficacement et d’arriver beaucoup plus à l’aise le jour J.",
+    ],
+  },
+  {
     slug: "dr-ahmed-sifaoui",
     name: "Dr Ahmed SIFAOUI",
     initials: "AS",

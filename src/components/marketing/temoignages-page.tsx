@@ -180,7 +180,13 @@ type WrittenTesti = {
   slug?: string;
 };
 const WRITTEN: WrittenTesti[] = [
-  { name: 'Dr Ahmed SIFAOUI',    spec: 'Gériatrie',                   initials: 'AS',
+  { name: 'Dr ILANSERANE GUNDUGOLANU Saranya', spec: 'Odontologie',  initials: 'SI',
+    photo: '/temoignages/dr-saranya-ilanserane-gundugolanu.jpg', slug: 'dr-saranya-ilanserane-gundugolanu',
+    short: "Je recommande vivement la préparation Major ECN pour la qualité de son accompagnement et de son enseignement." },
+  { name: 'Dr Mohamed GHORBEL', spec: 'Chirurgie orthopédique et traumatologique', initials: 'MG',
+    photo: '/temoignages/dr-mohamed-ghorbel.jpg', slug: 'dr-mohamed-ghorbel',
+    short: "Cette préparation m’a vraiment permis d’aller à l’essentiel, de m’entraîner efficacement et d’arriver beaucoup plus à l’aise le jour J." },
+  { name: 'Dr Ahmed SIFAOUI',   spec: 'Gériatrie',                   initials: 'AS',
     photo: '/temoignages/dr-ahmed-sifaoui.png', slug: 'dr-ahmed-sifaoui',
     short: "Une méthode et un cadre qui font la différence, même quand le nombre de postes se réduit." },
   { name: 'Mme Lilia Ould Benahmed', spec: 'Odontologie',            initials: 'LO',
@@ -241,6 +247,7 @@ const SPECIALTIES = [
   'Ophtalmologie',
   'Psychiatrie',
   'Chirurgie viscérale',
+  'Chirurgie orthopédique et traumatologique',
   'Radiodiagnostic et imagerie médicale',
   'Endocrinologie',
 ] as const;
