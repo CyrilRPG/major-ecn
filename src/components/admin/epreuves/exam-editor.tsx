@@ -44,7 +44,7 @@ const fromLocalInput = (v: string): string | null => (v ? new Date(v).toISOStrin
 
 const inputCls = 'w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)';
 
-export function ExamEditor({ exam, questions, colleges, promos, students }: { exam: ExamData; questions: ExamQuestionData[]; colleges: CollegeOption[]; promos: string[]; students: StudentOption[] }) {
+export function ExamEditor({ exam, questions, colleges, students }: { exam: ExamData; questions: ExamQuestionData[]; colleges: CollegeOption[]; students: StudentOption[] }) {
   const router = useRouter();
   const [pending, start] = useTransition();
   const [msg, setMsg] = useState<string | null>(null);
@@ -62,7 +62,6 @@ export function ExamEditor({ exam, questions, colleges, promos, students }: { ex
   const [minOffer, setMinOffer] = useState(exam.min_offer ?? '');
   const [voies, setVoies] = useState<Set<string>>(new Set(exam.voies ?? []));
   const [targetColleges, setTargetColleges] = useState<Set<string>>(new Set(exam.target_colleges ?? []));
-  const [targetPromos, setTargetPromos] = useState<Set<string>>(new Set(exam.target_promos ?? []));
   // Ciblage nominatif : élèves spécifiques (masque les autres critères).
   const [specificMode, setSpecificMode] = useState((exam.target_user_ids ?? []).length > 0);
   const [targetUsers, setTargetUsers] = useState<Set<string>>(new Set(exam.target_user_ids ?? []));
@@ -115,7 +114,8 @@ export function ExamEditor({ exam, questions, colleges, promos, students }: { ex
         min_offer: specificMode ? null : (minOffer || null),
         target_colleges: specificMode ? [] : Array.from(targetColleges),
         voies: specificMode ? [] : Array.from(voies),
-        target_promos: specificMode ? [] : Array.from(targetPromos),
+        // Ciblage par promotion retiré le 30/09/2026 (notion supprimée de la plateforme).
+        target_promos: [],
         target_user_ids: specificMode ? Array.from(targetUsers) : [],
         exam_mode: examMode,
         open_at: examMode === 'scheduled' ? fromLocalInput(openAt) : null,
@@ -266,16 +266,6 @@ export function ExamEditor({ exam, questions, colleges, promos, students }: { ex
                     ))}
                   </div>
                 </Field>
-              </div>
-              <div className="mt-3">
-                <p className="mb-1.5 text-xs font-semibold text-(--color-ink)">Promotions ciblées (vide = toutes)</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {promos.map((p) => (
-                    <label key={p} className={`flex cursor-pointer items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs ${targetPromos.has(p) ? 'border-(--color-primary) bg-(--color-primary-soft)' : 'border-(--color-border)'}`}>
-                      <input type="checkbox" checked={targetPromos.has(p)} onChange={() => toggle(setTargetPromos, p)} /> {p}
-                    </label>
-                  ))}
-                </div>
               </div>
               <div className="mt-3">
                 <p className="mb-1.5 text-xs font-semibold text-(--color-ink)">Collèges ciblés (vide = tous les accessibles)</p>

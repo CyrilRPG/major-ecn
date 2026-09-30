@@ -12,12 +12,6 @@ export async function saveInterrogationResult(input: {
   const user = await getVerifiedUser(supa);
   if (!user) return { ok: false, error: 'Non authentifié' };
 
-  const { data: profile } = await supa
-    .from('profiles')
-    .select('promotion')
-    .eq('id', user.id)
-    .maybeSingle();
-
   const { error } = await (supa as unknown as {
     from: (t: string) => {
       upsert: (v: Record<string, unknown>, o: { onConflict: string }) => Promise<{ error: { message: string } | null }>;
@@ -29,7 +23,6 @@ export async function saveInterrogationResult(input: {
       qcm_test_score: input.score,
       qcm_test_total: input.total,
       qcm_test_completed_at: new Date().toISOString(),
-      promotion: profile?.promotion ?? null,
     },
     { onConflict: 'user_id,cours_id' },
   );

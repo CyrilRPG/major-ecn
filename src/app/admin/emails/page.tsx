@@ -8,7 +8,6 @@ import type { Offer } from '@/types/domain';
 import { SPECIALTIES } from '@/lib/data/guide-data';
 import { CopyButton } from '@/components/admin/copy-button';
 
-const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'] as const;
 // Inclut « decouverte » pour permettre de cibler uniquement les élèves de
 // l'Espace Découverte.
 const OFFER_OPTIONS: Offer[] = ['decouverte', 'essentiel', 'intensif', 'approfondi'];
@@ -19,7 +18,6 @@ const VOIES = [
 
 type SearchParams = {
   audience?: string;
-  promo?: string;
   offer?: string;
   scope?: string;
   college?: string;
@@ -80,7 +78,6 @@ export default async function AdminEmailsPage({
   let filterApplied = false;
 
   // Filtres « élèves »
-  const promoF = sp.promo && (PROMOS as readonly string[]).includes(sp.promo) ? sp.promo : 'all';
   const offerF: 'all' | Offer = (OFFER_OPTIONS as string[]).includes(sp.offer ?? '')
     ? (sp.offer as Offer) : 'all';
   const collegeF = sp.college ?? '';
@@ -102,13 +99,12 @@ export default async function AdminEmailsPage({
   if (!isLeadAudience) {
     const { data: students } = await supabase
       .from('profiles')
-      .select('id, first_name, last_name, email, promotion, permission_scope')
+      .select('id, first_name, last_name, email, permission_scope')
       .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID)
       .order('last_name', { ascending: true });
 
     const filtered = (students ?? []).filter((s) => {
       if (!s.email) return false;
-      if (promoF !== 'all' && s.promotion !== promoF) return false;
 
       const scope = parseScope(s.permission_scope);
       // L'audience « Espace Découverte » est par définition la formule decouverte.
@@ -128,10 +124,10 @@ export default async function AdminEmailsPage({
         id: s.id,
         name: `${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || '—',
         email: s.email as string,
-        tags: [s.promotion ?? '—', offerLabel(scope.offer)],
+        tags: [offerLabel(scope.offer)],
       };
     });
-    filterApplied = promoF !== 'all' || offerF !== 'all' || !!collegeF;
+    filterApplied = offerF !== 'all' || !!collegeF;
   } else {
     // Leads (tables protégées par RLS → client service-role). Les colonnes
     // `active` / `profile_label` ne figurent pas dans les types générés.
@@ -232,15 +228,6 @@ export default async function AdminEmailsPage({
 
         {!isLeadAudience ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Field label="Promotion">
-              <select name="promo" defaultValue={promoF} className={selectClass}>
-                <option value="all">Toutes les promotions</option>
-                {PROMOS.map((p) => (
-                  <option key={p} value={p}>{p}</option>
-                ))}
-              </select>
-            </Field>
-
             {audience === 'students' && (
               <Field label="Formule souscrite">
                 <select name="offer" defaultValue={offerF} className={selectClass}>

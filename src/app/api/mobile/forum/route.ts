@@ -60,7 +60,7 @@ type Profil = {
 
 /** Pseudo public de l'élève : le sien, sinon un pseudo discret — JAMAIS son nom. */
 function pseudoEleve(p: Profil): string {
-  return (p.pseudo ?? '').trim() || generatePseudo(p.first_name ?? '', p.last_name ?? '', p.promotion ?? 'X');
+  return (p.pseudo ?? '').trim() || generatePseudo(p.first_name ?? '', p.last_name ?? '');
 }
 
 const SELECT_FIL = 'id, body, created_at, student_id, student_pseudo, cours_id, cours_titre, matiere_nom, matiere_id, is_public, status, forum_answers(id, body, created_at, professor_id, professor_name), forum_replies(id, body, created_at, author_id, author_role, author_name)';

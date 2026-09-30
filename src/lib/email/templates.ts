@@ -325,11 +325,10 @@ type AdminSignupArgs = {
   firstName: string;
   lastName: string;
   email: string;
-  promotion: string | null;
   collegesWish: string | null;
   adminUrl: string;
 };
-export function adminSignupNotificationEmail({ firstName, lastName, email, promotion, collegesWish, adminUrl }: AdminSignupArgs) {
+export function adminSignupNotificationEmail({ firstName, lastName, email, collegesWish, adminUrl }: AdminSignupArgs) {
   const subject = `🎓 Nouvelle inscription : ${firstName} ${lastName}`;
   const bodyHtml = [
     p('Un nouveau prospect s’est inscrit via la vitrine.'),
@@ -337,7 +336,6 @@ export function adminSignupNotificationEmail({ firstName, lastName, email, promo
       ['Prénom', esc(firstName)],
       ['Nom', esc(lastName)],
       ['Email', mono(email)],
-      promotion ? ['Promotion', esc(promotion)] : null,
       collegesWish ? ['Collèges', esc(collegesWish)] : null,
     ], { title: 'Prospect' }),
     button(adminUrl, 'Ouvrir le panneau admin'),
@@ -346,7 +344,6 @@ export function adminSignupNotificationEmail({ firstName, lastName, email, promo
   const text = majorText([
     `Nouvelle inscription : ${firstName} ${lastName}`,
     `Email : ${email}`,
-    promotion ? `Promotion : ${promotion}` : '',
     collegesWish ? `Collèges : ${collegesWish}` : '',
     '',
     `Admin : ${adminUrl}`,

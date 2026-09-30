@@ -99,7 +99,6 @@ export default async function FormulairesAdminPage() {
                       <p className="mt-1 line-clamp-2 text-sm text-(--color-ink-soft)">{f.intro_text}</p>
                     )}
                     <div className="mt-2 flex flex-wrap gap-1 text-[11px]">
-                      <Badge variant="muted">{f.target_promo ?? 'Toutes promos'}</Badge>
                       <Badge variant="muted">{offerLabel(f.target_offer)}</Badge>
                       <Badge variant="muted">{collegeLabel(f.target_college)}</Badge>
                       <Badge variant="primary">{f.fields.length} champ{f.fields.length > 1 ? 's' : ''}</Badge>

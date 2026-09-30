@@ -1,4 +1,4 @@
-import { CalendarCheck, CalendarClock, GraduationCap, KeyRound, Mail, Phone, Sparkles, User } from 'lucide-react';
+import { CalendarCheck, CalendarClock, KeyRound, Mail, Phone, Sparkles, User } from 'lucide-react';
 import { requireUser, getProfessorScope } from '@/lib/auth/require-role';
 import { parseScope, offerLabel } from '@/lib/auth/permissions';
 import { isSubscriber, isTrialExpired, trialDaysLeft } from '@/lib/auth/trial';
@@ -29,7 +29,7 @@ export default async function ProfilPage() {
   const scope = parseScope(profile.permission_scope);
   const pseudo =
     profile.pseudo ??
-    generatePseudo(profile.first_name ?? '', profile.last_name ?? '', profile.promotion ?? 'X');
+    generatePseudo(profile.first_name ?? '', profile.last_name ?? '');
 
   const subscriber = isSubscriber(profile);
   const expired = isTrialExpired(profile);
@@ -119,7 +119,6 @@ export default async function ProfilPage() {
           <Info label="Nom" value={profile.last_name ?? '—'} icon={<User className="h-3.5 w-3.5" />} />
           <Info label="Email" value={profile.email ?? '—'} icon={<Mail className="h-3.5 w-3.5" />} mono />
           <Info label="Téléphone" value={profile.phone ?? 'Non renseigné'} icon={<Phone className="h-3.5 w-3.5" />} />
-          <Info label="Promotion" value={profile.promotion ?? '—'} icon={<GraduationCap className="h-3.5 w-3.5" />} />
           {profile.trial_until && (
             <Info
               label="Fin de l’essai"

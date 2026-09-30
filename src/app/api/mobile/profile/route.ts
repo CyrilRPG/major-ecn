@@ -108,11 +108,11 @@ export async function POST(req: Request) {
   }
 
   if (body.action === 'regenerate_pseudo') {
-    // Même règle que l'action web `regeneratePseudoAction` : initiales + promo
-    // + suffixe court, décliné jusqu'à trouver un pseudo libre.
+    // Même règle que l'action web `regeneratePseudoAction` : initiales + suffixe
+    // court, décliné jusqu'à trouver un pseudo libre.
     const admin = createAdminClient() as any;
-    const { data: me } = await db.from('profiles').select('first_name, last_name, promotion').eq('id', auth.user.id).maybeSingle();
-    const base = generatePseudo(me?.first_name ?? '', me?.last_name ?? '', me?.promotion ?? 'X');
+    const { data: me } = await db.from('profiles').select('first_name, last_name').eq('id', auth.user.id).maybeSingle();
+    const base = generatePseudo(me?.first_name ?? '', me?.last_name ?? '');
     let candidate: string | null = null;
     for (let i = 0; i < 50 && !candidate; i++) {
       const trial = i === 0 ? base : `${base}-${i + 1}`;

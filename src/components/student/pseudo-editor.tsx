@@ -47,7 +47,7 @@ export function PseudoEditor({ initial }: { initial: string }) {
           name="pseudo"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="prenom.nom.promo"
+          placeholder="ex. jdu-7k3"
           className="flex-1 rounded-xl border border-(--color-border) bg-(--color-surface) px-4 py-2.5 font-mono text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)"
         />
         <button
@@ -62,7 +62,7 @@ export function PseudoEditor({ initial }: { initial: string }) {
           type="button"
           onClick={onRegenerate}
           disabled={pending}
-          title="Regénérer un pseudo à partir de prénom + nom + promo"
+          title="Regénérer un pseudo à partir des initiales"
           className="inline-flex items-center justify-center gap-2 rounded-xl border border-(--color-border) bg-(--color-surface) px-3.5 py-2.5 text-sm font-medium text-(--color-ink-soft) hover:border-(--color-primary)/40 hover:text-(--color-ink) disabled:opacity-50"
         >
           <RotateCcw className="h-4 w-4" />

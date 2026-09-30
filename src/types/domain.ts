@@ -45,7 +45,6 @@ export type PermissionScope = ({ type: 'all' } | { type: 'college'; colleges: st
   content_overrides?: Record<string, boolean>;
 };
 
-export type Promotion = 'D2' | 'D3' | 'D4' | 'PAE' | 'Autre';
 
 export type Difficulty = 'tres_facile' | 'facile' | 'difficile' | 'tres_difficile';
 

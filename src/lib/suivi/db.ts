@@ -302,7 +302,6 @@ export type StudentLite = {
   last_name: string | null;
   email: string | null;
   phone: string | null;
-  promotion: string | null;
   permission_scope: unknown;
   is_active: boolean | null;
   created_at: string;
@@ -310,7 +309,7 @@ export type StudentLite = {
   access_start: string | null;
   access_end: string | null;
 };
-export const STUDENT_COLUMNS = 'id, first_name, last_name, email, phone, promotion, permission_scope, is_active, created_at, evc_session_id, access_start, access_end';
+export const STUDENT_COLUMNS = 'id, first_name, last_name, email, phone, permission_scope, is_active, created_at, evc_session_id, access_start, access_end';
 
 export async function getStudent(userId: string): Promise<StudentLite | null> {
   const { data } = await suiviDb().from('profiles').select(STUDENT_COLUMNS)

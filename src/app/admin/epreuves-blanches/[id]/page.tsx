@@ -9,8 +9,6 @@ import { ExamEditor, type ExamData, type ExamQuestionData, type CollegeOption } 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Éditer une épreuve' };
 
-const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'];
-
 export default async function EditExamPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   await requireAdmin();
@@ -49,7 +47,6 @@ export default async function EditExamPage({ params }: { params: Promise<{ id: s
         exam={exam as ExamData}
         questions={(qs ?? []) as ExamQuestionData[]}
         colleges={colleges}
-        promos={PROMOS}
         students={students}
       />
     </main>

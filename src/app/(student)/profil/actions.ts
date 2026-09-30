@@ -53,11 +53,7 @@ export async function updatePseudoAction(formData: FormData): Promise<Result> {
 export async function regeneratePseudoAction(): Promise<Result> {
   const { user, profile } = await requireUser();
   const supabase = await createClient();
-  const base = generatePseudo(
-    profile.first_name ?? '',
-    profile.last_name ?? '',
-    profile.promotion ?? 'X',
-  );
+  const base = generatePseudo(profile.first_name ?? '', profile.last_name ?? '');
 
   // Find a free variant
   let candidate = base;

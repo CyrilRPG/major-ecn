@@ -55,7 +55,7 @@ export default async function FicheCandidatPage({ params }: { params: Promise<{ 
           <Link href="/admin/suivi/candidats" className="text-xs text-(--color-ink-muted) hover:underline">← Candidats</Link>
           <h1 className="mt-1 text-xl font-semibold tracking-tight text-(--color-ink)">{fiche.name}</h1>
           <p className="mt-1 text-sm text-(--color-ink-soft)">
-            {fiche.student.email}{fiche.student.phone ? ` · ${fiche.student.phone}` : ''}{fiche.student.promotion ? ` · ${fiche.student.promotion}` : ''}
+            {fiche.student.email}{fiche.student.phone ? ` · ${fiche.student.phone}` : ''}
           </p>
           <div className="mt-2 flex flex-wrap gap-1.5">
             <Badge>{fiche.specialty || 'Spécialité non renseignée'}</Badge>

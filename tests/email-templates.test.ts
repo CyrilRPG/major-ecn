@@ -49,7 +49,7 @@ const all: Record<string, Mail> = {
   'invitation-admin': T.invitationEquipeEmail({ firstName: 'Paul', setupUrl: setup, scope: null, administrateur: true }),
   'forum-question-sans-email': T.forumNewQuestionEmail({ professorFirstName: 'Claire', studentPseudo: 'Hippo-42', coursTitre: null, matiereNom: null, questionBody: 'Question ?', qaUrl: 'https://www.major-ecn.fr/admin/qa' }),
   'forum-answer': T.forumNewAnswerEmail({ studentFirstName: 'Sara', professorName: 'Dr Martin', coursTitre: null, answerBody: 'Réponse.', forumUrl: 'https://www.major-ecn.fr/forum' }),
-  'admin-signup': T.adminSignupNotificationEmail({ firstName: 'Léa', lastName: 'Morel', email: 'lea@example.test', promotion: null, collegesWish: null, adminUrl: 'https://www.major-ecn.fr/admin' }),
+  'admin-signup': T.adminSignupNotificationEmail({ firstName: 'Léa', lastName: 'Morel', email: 'lea@example.test', collegesWish: null, adminUrl: 'https://www.major-ecn.fr/admin' }),
   satisfaction: T.satisfactionSubmittedEmail({ formTitle: 'Bilan', studentName: 'Sara', studentEmail: null, responsesUrl: 'https://www.major-ecn.fr/admin/formulaires/1' }),
   contact: T.contactMessageEmail({ name: 'Nadia', email: 'nadia@example.test', phone: null, subject: 'Question', message: 'Bonjour' }),
   recrutement: T.recrutementEmail({ name: 'Julien', email: 'julien@example.test', phone: null, message: null, attachmentNames: [] }),

@@ -1,8 +1,10 @@
 /**
  * Pseudo auto-généré — discret, ne révèle pas le prénom/nom en clair.
- * Format : `{initiales}-{promo}-{base36}` (ex. `jd-D2-7k3` pour Jean Dupont D2).
- * Les initiales (1–3 lettres), la promo et un suffixe court garantissent
- * l'unicité tout en restant énigmatiques (pas de prénom ou nom lisible).
+ * Format : `{initiales}-{base36}` (ex. `jdu-7k3` pour Jean Dupont).
+ * Les initiales (1–3 lettres) et un suffixe court garantissent l'unicité
+ * (uniquePseudo) tout en restant énigmatiques (pas de prénom ou nom lisible).
+ * La promotion n'y entre plus depuis le 30/09/2026 (notion retirée de la
+ * plateforme) ; les pseudos déjà attribués (« jd-X-7k3 ») restent valables.
  */
 
 function normalize(s: string): string {
@@ -28,10 +30,8 @@ function randSuffix(len = 3): string {
   return s;
 }
 
-export function generatePseudo(firstName: string, lastName: string, promotion: string | null | undefined): string {
-  const ini = initialsOf(firstName, lastName);
-  const promo = (promotion ?? 'X').replace(/[^A-Za-z0-9]/g, '').toUpperCase() || 'X';
-  return `${ini}-${promo}-${randSuffix(3)}`;
+export function generatePseudo(firstName: string, lastName: string): string {
+  return `${initialsOf(firstName, lastName)}-${randSuffix(3)}`;
 }
 
 /**
@@ -43,7 +43,7 @@ export async function uniquePseudo(
   exists: (candidate: string) => Promise<boolean>,
 ): Promise<string> {
   if (!(await exists(base))) return base;
-  // Replace just the suffix and retry — keep initials/promo stable.
+  // Replace just the suffix and retry — keep the initials stable.
   const root = base.replace(/-[^-]+$/, '');
   for (let i = 0; i < 200; i++) {
     const c = `${root}-${randSuffix(3)}`;

@@ -226,7 +226,6 @@ export type StudentLite = {
   id: string;
   nom: string;
   email: string | null;
-  promotion: string | null;
 };
 
 /** Items d'un collège, avec le nombre de vidéos de chaque catégorie. */
@@ -347,17 +346,16 @@ export async function listStudentsAction(): Promise<{ students: StudentLite[] } 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (admin as any)
     .from('profiles')
-    .select('id, first_name, last_name, email, promotion')
+    .select('id, first_name, last_name, email')
     .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID)
     .order('last_name', { ascending: true, nullsFirst: false })
     .order('first_name', { ascending: true, nullsFirst: false });
   if (error) return { error: error.message };
-  const students = ((data ?? []) as { id: string; first_name: string | null; last_name: string | null; email: string | null; promotion: string | null }[])
+  const students = ((data ?? []) as { id: string; first_name: string | null; last_name: string | null; email: string | null }[])
     .map((s) => ({
       id: s.id,
       nom: `${s.first_name ?? ''} ${s.last_name ?? ''}`.trim() || (s.email ?? 'Élève sans nom'),
       email: s.email,
-      promotion: s.promotion,
     }));
   return { students };
 }

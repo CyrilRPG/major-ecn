@@ -16,7 +16,6 @@ import {
 } from '@/lib/schemas/satisfaction';
 import { createSatisfactionFormAction } from '@/app/admin/formulaires/actions';
 
-const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'] as const;
 const OFFERS = [
   { value: 'essentiel', label: 'Essentiel' },
   { value: 'intensif', label: 'Intensif' },
@@ -43,7 +42,6 @@ export function FormBuilderDialog({ colleges }: { colleges: { id: string; nom: s
   const [intro, setIntro] = useState('');
   const [mandatory, setMandatory] = useState(false);
   const [active, setActive] = useState(true);
-  const [targetPromo, setTargetPromo] = useState('');
   const [targetOffer, setTargetOffer] = useState('');
   const [targetCollege, setTargetCollege] = useState('');
   const [allowUpload, setAllowUpload] = useState(false);
@@ -54,7 +52,7 @@ export function FormBuilderDialog({ colleges }: { colleges: { id: string; nom: s
 
   const reset = () => {
     setTitle(''); setIntro(''); setMandatory(false); setActive(true);
-    setTargetPromo(''); setTargetOffer(''); setTargetCollege('');
+    setTargetOffer(''); setTargetCollege('');
     setAllowUpload(false); setUploadLabel('Fichier à joindre');
     setFields([{ key: 'avis', label: 'Votre avis', type: 'textarea', required: true }]);
     setError(null);
@@ -96,7 +94,6 @@ export function FormBuilderDialog({ colleges }: { colleges: { id: string; nom: s
         intro_text: intro.trim() || undefined,
         mandatory,
         active,
-        target_promo: targetPromo || undefined,
         target_offer: targetOffer || undefined,
         target_college: targetCollege || undefined,
         fields: normalized,
@@ -172,18 +169,7 @@ export function FormBuilderDialog({ colleges }: { colleges: { id: string; nom: s
           {/* Ciblage */}
           <div className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-4">
             <p className="mb-3 text-sm font-semibold text-(--color-ink)">Ciblage</p>
-            <div className="grid gap-3 sm:grid-cols-3">
-              <div className="space-y-1.5">
-                <Label>Promotion</Label>
-                <select
-                  value={targetPromo}
-                  onChange={(e) => setTargetPromo(e.target.value)}
-                  className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-2.5 py-2 text-sm"
-                >
-                  <option value="">Toutes</option>
-                  {PROMOS.map((p) => <option key={p} value={p}>{p}</option>)}
-                </select>
-              </div>
+            <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label>Formule souscrite</Label>
                 <select

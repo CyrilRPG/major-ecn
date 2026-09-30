@@ -150,7 +150,7 @@ function StudentPicker({
 
   const filtered = (students ?? []).filter((s) => {
     if (!q.trim()) return true;
-    const t = `${s.nom} ${s.email ?? ''} ${s.promotion ?? ''}`.toLowerCase();
+    const t = `${s.nom} ${s.email ?? ''}`.toLowerCase();
     return t.includes(q.trim().toLowerCase());
   });
   const selNoms = (students ?? []).filter((s) => selected.includes(s.id));
@@ -200,7 +200,7 @@ function StudentPicker({
 
       {selected.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1.5">
-          {(students ? selNoms : selected.map((id) => ({ id, nom: 'Élève', email: null, promotion: null }))).map((s) => (
+          {(students ? selNoms : selected.map((id) => ({ id, nom: 'Élève', email: null }))).map((s) => (
             <span key={s.id} className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium ${c.chip}`}>
               {s.nom}
               <button
@@ -225,7 +225,7 @@ function StudentPicker({
               type="text"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Rechercher un élève (nom, e-mail, promotion)…"
+              placeholder="Rechercher un élève (nom, e-mail)…"
               className="w-full bg-transparent py-1.5 text-sm outline-none"
             />
           </div>
@@ -251,9 +251,6 @@ function StudentPicker({
                         className={`h-4 w-4 ${c.check}`}
                       />
                       <span className="min-w-0 flex-1 truncate text-(--color-ink)">{s.nom}</span>
-                      {s.promotion && (
-                        <span className="shrink-0 text-[11px] text-(--color-ink-muted)">{s.promotion}</span>
-                      )}
                     </label>
                   </li>
                 ))

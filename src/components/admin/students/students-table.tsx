@@ -36,7 +36,6 @@ export type Student = {
   phone: string | null;
   address?: string | null;
   pseudo?: string | null;
-  promotion: string | null;
   permission_scope: unknown;
   is_active?: boolean | null;
   /** Motif saisi à la désactivation : 'paiement' | 'autre' (null = non précisé). */
@@ -59,8 +58,6 @@ export type Student = {
 };
 
 export type EvcSessionOption = { id: string; label: string; default_access_end: string; is_default?: boolean };
-
-const PROMOS = ['D2', 'D3', 'D4', 'PAE', 'Autre'];
 
 /** Catégories d'abonnement (ordre d'affichage). */
 const OFFER_CATS: { value: Offer; label: string }[] = [
@@ -104,21 +101,35 @@ const COLLEGE_TO_SPECIALTY: Record<string, string> = {
   'col-imagerie-medicale': 'Radiologie et imagerie médicale',
 };
 
-function specialtyFromColleges(colleges: string[]): string {
+/** Collèges ouverts hors de la faculté Major ECN (la liste `colleges` de la page
+ *  ne les contient pas) : accès Odontologie donnés avant le collège miroir. */
+const COLLEGES_HORS_FACULTE: Record<string, string> = {
+  'col-odontologie': 'Odontologie',
+};
+
+/**
+ * Spécialité affichée pour un accès « par collège » sans spécialité saisie.
+ * La table ci-dessus ne connaît que les spécialités vendues : un élève ouvert à
+ * la main sur Biologie médicale, ORL, Ophtalmologie… restait sans spécialité.
+ * Repli sur le nom du collège (collèges racines seulement, un sous-collège
+ * suivant son parent).
+ */
+function specialtyFromColleges(colleges: string[], nomsColleges: Map<string, string>): string {
   const names = colleges
-    .map((c) => COLLEGE_TO_SPECIALTY[c])
+    .map((c) => COLLEGE_TO_SPECIALTY[c] ?? nomsColleges.get(c) ?? COLLEGES_HORS_FACULTE[c])
     .filter(Boolean);
-  return names.join(', ');
+  return Array.from(new Set(names)).join(', ');
 }
 
-function specialtyOf(s: Student): string {
+function specialtyOf(s: Student, nomsColleges: Map<string, string>): string {
   const r = rawScope(s);
   const explicit = (r.paid_specialty || r.signup?.specialty || r.specialty_wish || '').toString().trim();
   if (explicit) return explicit;
   if (r.type === 'college' && Array.isArray(r.colleges)) {
     const real = r.colleges.filter((c) => c !== 'col-decouverte');
-    if (real.length > 0) return specialtyFromColleges(real);
+    if (real.length > 0) return specialtyFromColleges(real, nomsColleges);
   }
+  if (r.type === 'all') return 'Tous les collèges';
   return '';
 }
 function voieOf(s: Student): string {
@@ -157,14 +168,41 @@ function isAccessExpired(s: Student, sessionsById: Map<string, EvcSessionOption>
   const end = effectiveAccessEnd(s, sessionsById);
   return !!end && new Date(end).getTime() < Date.now();
 }
-function withinPeriod(iso: string | undefined, period: string): boolean {
-  if (period === 'all') return true;
+/** 'AAAA-MM-JJ' (champ date du navigateur) → minuit LOCAL de ce jour, jamais UTC. */
+function debutJourLocal(jour: string): number | null {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(jour);
+  if (!m) return null;
+  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])).getTime();
+}
+/** Date du jour au format des champs date, en heure locale. */
+function jourLocal(d: Date): string {
+  const p = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+/**
+ * Inscription comprise entre `du` et `au` inclus (jours en heure locale ; une
+ * borne vide = pas de borne). « au » couvre toute la journée : on compare au
+ * minuit du lendemain.
+ */
+function inscritEntre(iso: string | undefined, du: string, au: string): boolean {
+  if (!du && !au) return true;
   if (!iso) return false;
   const t = new Date(iso).getTime();
   if (Number.isNaN(t)) return false;
-  const now = Date.now();
-  const days = period === '7' ? 7 : period === '30' ? 30 : period === '90' ? 90 : period === '365' ? 365 : 0;
-  return now - t <= days * 86_400_000;
+  const debut = du ? debutJourLocal(du) : null;
+  const finIncluse = au ? debutJourLocal(au) : null;
+  if (debut != null && t < debut) return false;
+  if (finIncluse != null && t >= finIncluse + 86_400_000) return false;
+  return true;
+}
+/** Raccourcis de période : bornes « du » / « au » pré-remplies. */
+function bornesRaccourci(raccourci: string): { du: string; au: string } {
+  if (raccourci === 'all') return { du: '', au: '' };
+  const aujourdhui = new Date();
+  const debut = new Date(aujourdhui.getFullYear(), aujourdhui.getMonth(), aujourdhui.getDate());
+  if (raccourci === 'annee') debut.setMonth(0, 1);
+  else debut.setDate(debut.getDate() - (Number(raccourci) - 1));
+  return { du: jourLocal(debut), au: jourLocal(aujourdhui) };
 }
 
 export function StudentsTable({
@@ -179,12 +217,15 @@ export function StudentsTable({
   sessions?: EvcSessionOption[];
 }) {
   const [q, setQ] = useState('');
-  const [promo, setPromo] = useState('all');
-  const [specialty, setSpecialty] = useState('all');
+  const [specialty, setSpecialty] = useState('all'); // all | none | <libellé>
   const [voie, setVoie] = useState('all'); // all | interne | externe | none
   const [offer, setOffer] = useState<'all' | Offer>('all');
   const [payment, setPayment] = useState('all'); // all | paid | free
-  const [period, setPeriod] = useState('all'); // all | 7 | 30 | 90 | 365
+  // Inscription : bornes « du / au » (jours locaux, vides = sans borne) ; le
+  // raccourci ne fait que les pré-remplir, 'perso' dès qu'on les modifie.
+  const [raccourci, setRaccourci] = useState('all'); // all | 7 | 30 | 90 | annee | perso
+  const [inscritDu, setInscritDu] = useState('');
+  const [inscritAu, setInscritAu] = useState('');
   const [access, setAccess] = useState('all'); // all | active | expired
   const [connexion, setConnexion] = useState('all'); // all | never
   const [compte, setCompte] = useState('all'); // all | actifs | inactifs | inactifs-paiement | inactifs-autre | inactifs-non-precise
@@ -195,12 +236,28 @@ export function StudentsTable({
 
   const sessionsById = useMemo(() => new Map(sessions.map((s) => [s.id, s])), [sessions]);
 
+  /** Spécialité de chaque élève, calculée une fois (repli sur le nom du collège). */
+  const specialtyById = useMemo(() => {
+    const noms = new Map(colleges.filter((c) => !c.parentId).map((c) => [c.id, c.nom]));
+    return new Map(students.map((s) => [s.id, specialtyOf(s, noms)]));
+  }, [students, colleges]);
+  const spOf = (s: Student) => specialtyById.get(s.id) ?? '';
+
   /** Liste triée des spécialités présentes. */
   const specialties = useMemo(() => {
     const set = new Set<string>();
-    for (const s of students) { const sp = specialtyOf(s); if (sp) set.add(sp); }
+    for (const sp of specialtyById.values()) if (sp) set.add(sp);
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'fr'));
-  }, [students]);
+  }, [specialtyById]);
+  const sansSpecialite = useMemo(() => Array.from(specialtyById.values()).filter((sp) => !sp).length, [specialtyById]);
+  const jamaisConnectes = useMemo(() => students.filter((s) => s.never_connected).length, [students]);
+
+  function choisirRaccourci(v: string) {
+    setRaccourci(v);
+    const b = bornesRaccourci(v);
+    setInscritDu(b.du);
+    setInscritAu(b.au);
+  }
 
   /** Comptes désactivés, par motif (sur l'ensemble). */
   const inactifs = useMemo(() => {
@@ -223,10 +280,10 @@ export function StudentsTable({
 
   const filtered = useMemo(() => {
     return students.filter((s) => {
-      const full = `${s.first_name ?? ''} ${s.last_name ?? ''} ${s.email ?? ''} ${specialtyOf(s)}`.toLowerCase();
+      const sp = specialtyById.get(s.id) ?? '';
+      const full = `${s.first_name ?? ''} ${s.last_name ?? ''} ${s.email ?? ''} ${sp}`.toLowerCase();
       if (q && !full.includes(q.toLowerCase())) return false;
-      if (promo !== 'all' && s.promotion !== promo) return false;
-      if (specialty !== 'all' && specialtyOf(s) !== specialty) return false;
+      if (specialty !== 'all' && sp !== (specialty === 'none' ? '' : specialty)) return false;
       if (voie !== 'all' && voieKeyOf(s) !== (voie === 'none' ? '' : voie)) return false;
       if (offer !== 'all' && offerOf(s) !== offer) return false;
       if (payment === 'paid' && !isPaid(s)) return false;
@@ -236,10 +293,10 @@ export function StudentsTable({
       if (access === 'expired' && !isAccessExpired(s, sessionsById)) return false;
       if (connexion === 'never' && !s.never_connected) return false;
       if (compte !== 'all' && !matchCompte(s, compte)) return false;
-      if (!withinPeriod(s.created_at, period)) return false;
+      if (!inscritEntre(s.created_at, inscritDu, inscritAu)) return false;
       return true;
     });
-  }, [students, q, promo, specialty, voie, offer, payment, access, connexion, compte, period, sessionsById]);
+  }, [students, specialtyById, q, specialty, voie, offer, payment, access, connexion, compte, inscritDu, inscritAu, sessionsById]);
 
   const filteredIds = useMemo(() => filtered.map((s) => s.id), [filtered]);
   const allSelected = filtered.length > 0 && filtered.every((s) => selected.has(s.id));
@@ -291,7 +348,7 @@ export function StudentsTable({
     const rows = filtered.map((s) => ({
       'Nom': s.last_name ?? '',
       'Prénom': s.first_name ?? '',
-      'Spécialité': specialtyOf(s) || '—',
+      'Spécialité': spOf(s) || '—',
       'Voie': voieOf(s),
       'Abonnement': offerLabel(offerOf(s)),
       'Paiement': isPaid(s) ? 'Payé' : 'Gratuit (Découverte)',
@@ -300,16 +357,16 @@ export function StudentsTable({
       'Désactivé le': isActive(s) ? '' : fmtDate(s.deactivated_at ?? undefined),
       'Session EVC': (s.evc_session_id && sessionsById.get(s.evc_session_id)?.label) || '—',
       'Accès jusqu\'au': fmtDate(effectiveAccessEnd(s, sessionsById) ?? undefined),
-      'Promotion': s.promotion ?? '',
       'Adresse': s.address ?? '',
       'Téléphone': s.phone ?? '',
       'Email': s.email ?? '',
       'Inscription': fmtDate(s.created_at),
+      'Connexion': s.never_connected ? 'Jamais connecté' : 'Déjà connecté',
     }));
     const ws = XLSX.utils.json_to_sheet(rows);
     ws['!cols'] = [
       { wch: 16 }, { wch: 14 }, { wch: 26 }, { wch: 10 }, { wch: 20 }, { wch: 18 },
-      { wch: 14 }, { wch: 32 }, { wch: 14 }, { wch: 18 }, { wch: 14 }, { wch: 10 }, { wch: 28 }, { wch: 16 }, { wch: 28 }, { wch: 14 },
+      { wch: 14 }, { wch: 32 }, { wch: 14 }, { wch: 18 }, { wch: 14 }, { wch: 28 }, { wch: 16 }, { wch: 28 }, { wch: 14 }, { wch: 16 },
     ];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Élèves');
@@ -356,6 +413,20 @@ export function StudentsTable({
         )}
       </div>
 
+      {/* Connexion : isoler ceux qui n'ont jamais ouvert leur compte, pour les relancer. */}
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <span className="text-xs font-bold text-(--color-ink-soft)">Connexion</span>
+        <div className="inline-flex rounded-lg border border-(--color-border) bg-(--color-surface) p-0.5" role="radiogroup" aria-label="Connexion">
+          <StatutOption label={`Tous (${students.length})`} active={connexion === 'all'} onClick={() => setConnexion('all')} />
+          <StatutOption label={`Jamais connectés (${jamaisConnectes})`} active={connexion === 'never'} onClick={() => setConnexion('never')} />
+        </div>
+        {connexion === 'never' && (
+          <span className="text-xs text-(--color-ink-soft)">
+            « Message à la liste » écrit à tous ceux affichés ; le bouton de renvoi du lien d&apos;activation est dans les actions de chaque élève.
+          </span>
+        )}
+      </div>
+
       {/* Recherche + filtres */}
       <div className="mb-3 flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center">
         <div className="relative flex-1 min-w-[220px]">
@@ -367,6 +438,7 @@ export function StudentsTable({
           <SelectContent>
             <SelectItem value="all">Toutes spécialités</SelectItem>
             {specialties.map((sp) => <SelectItem key={sp} value={sp}>{sp}</SelectItem>)}
+            {sansSpecialite > 0 && <SelectItem value="none">Non renseignée ({sansSpecialite})</SelectItem>}
           </SelectContent>
         </Select>
         <Select value={voie} onValueChange={setVoie}>
@@ -401,30 +473,53 @@ export function StudentsTable({
             <SelectItem value="expired">Accès expiré</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={connexion} onValueChange={setConnexion}>
-          <SelectTrigger className="w-full lg:w-44"><SelectValue placeholder="Connexion" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Toute connexion</SelectItem>
-            <SelectItem value="never">Jamais connecté</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={period} onValueChange={setPeriod}>
-          <SelectTrigger className="w-full lg:w-44"><SelectValue placeholder="Inscription" /></SelectTrigger>
+      </div>
+
+      {/* Date d'inscription : raccourcis ou bornes libres « du / au » (incluses). */}
+      <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+        <span className="text-xs font-bold text-(--color-ink-soft)">Inscrit</span>
+        <Select value={raccourci} onValueChange={choisirRaccourci}>
+          <SelectTrigger className="w-full sm:w-52"><SelectValue placeholder="Inscription" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Toute date</SelectItem>
             <SelectItem value="7">7 derniers jours</SelectItem>
             <SelectItem value="30">30 derniers jours</SelectItem>
             <SelectItem value="90">90 derniers jours</SelectItem>
-            <SelectItem value="365">Cette année</SelectItem>
+            <SelectItem value="annee">Depuis le 1er janvier</SelectItem>
+            <SelectItem value="perso">Période personnalisée</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={promo} onValueChange={setPromo}>
-          <SelectTrigger className="w-full lg:w-32"><SelectValue placeholder="Promo" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Toutes promos</SelectItem>
-            {PROMOS.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
-          </SelectContent>
-        </Select>
+        <label className="flex items-center gap-2 text-sm text-(--color-ink-soft)">
+          du
+          <Input
+            type="date"
+            className="w-full sm:w-40"
+            value={inscritDu}
+            max={inscritAu || undefined}
+            onChange={(e) => { setInscritDu(e.target.value); setRaccourci('perso'); }}
+            aria-label="Inscrit à partir du"
+          />
+        </label>
+        <label className="flex items-center gap-2 text-sm text-(--color-ink-soft)">
+          au
+          <Input
+            type="date"
+            className="w-full sm:w-40"
+            value={inscritAu}
+            min={inscritDu || undefined}
+            onChange={(e) => { setInscritAu(e.target.value); setRaccourci('perso'); }}
+            aria-label="Inscrit jusqu'au"
+          />
+        </label>
+        {(inscritDu || inscritAu) && (
+          <button
+            type="button"
+            onClick={() => choisirRaccourci('all')}
+            className="self-start text-xs font-bold text-(--color-primary) hover:underline sm:self-auto"
+          >
+            Effacer les dates
+          </button>
+        )}
       </div>
 
       {/* Barre d'actions */}
@@ -488,7 +583,7 @@ export function StudentsTable({
           ) : (
             filtered.map((s) => {
               const scope = parseScope(s.permission_scope);
-              const sp = specialtyOf(s);
+              const sp = spOf(s);
               const voieLabel = voieOf(s);
               const accessEnd = effectiveAccessEnd(s, sessionsById);
               const accessExpired = isAccessExpired(s, sessionsById);

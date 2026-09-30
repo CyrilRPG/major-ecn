@@ -55,7 +55,6 @@ type StudentRow = {
   last_name: string | null;
   email: string | null;
   phone: string | null;
-  promotion: string | null;
   created_at: string;
   is_active: boolean | null;
   permission_scope: unknown;
@@ -79,7 +78,7 @@ export default async function CrmPage() {
   const [students, activityRows, notesRaw, alertsRaw, { data: matieresRaw }] = await Promise.all([
     fetchAllRows<StudentRow>((from, to) =>
       adm.from('profiles')
-        .select('id, first_name, last_name, email, phone, promotion, created_at, is_active, permission_scope')
+        .select('id, first_name, last_name, email, phone, created_at, is_active, permission_scope')
         .eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID)
         .order('last_name').order('id')
         .range(from, to)),
@@ -157,7 +156,6 @@ export default async function CrmPage() {
       last_name: s.last_name,
       email: s.email,
       phone: s.phone,
-      promotion: s.promotion,
       offer: s.offer,
       lastRevision: a?.last_revision ? new Date(a.last_revision) : null,
       revisions30d: a?.revisions_30d ?? 0,

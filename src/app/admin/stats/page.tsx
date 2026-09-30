@@ -43,7 +43,7 @@ export default async function AdminStatsPage() {
       .from('qcm_attempts')
       .select('id, user_id, is_correct, attempted_at, qcm_questions!inner(serie_id, qcm_series!inner(cours_id, cours!inner(id, titre, matieres!inner(id, nom))))'),
     supabase.from('qcm_sessions').select('id, user_id, started_at').gte('started_at', thirtyDaysAgo.toISOString()),
-    supabase.from('profiles').select('id, avatar_seed, first_name, last_name, promotion, permission_scope, email').eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID),
+    supabase.from('profiles').select('id, avatar_seed, first_name, last_name, permission_scope, email').eq('role', 'student').eq('faculte_id', EDN_FACULTE_ID),
     // Source canonique du compteur affiché aux élèves. L'ancien calcul ne
     // regardait que le temps renseigné sur les QCM (+ un forfait flashcard),
     // ce qui affichait 0 min malgré des heures de fiches et vidéos enregistrées.
@@ -132,7 +132,6 @@ export default async function AdminStatsPage() {
         avatarSeed: effectiveSeed(p.id, p.avatar_seed),
         name: `${p.first_name ?? ''} ${p.last_name ?? ''}`.trim() || 'Sans nom',
         email: p.email as string | null,
-        promotion: p.promotion as string | null,
         minutes: Math.round(sec / 60),
       };
     })
@@ -146,7 +145,6 @@ export default async function AdminStatsPage() {
         id: userId,
         avatarSeed: effectiveSeed(userId, p?.avatar_seed),
         name: `${p?.first_name ?? ''} ${p?.last_name ?? ''}`.trim() || 'Sans nom',
-        promotion: p?.promotion,
         attempts: s.total,
         rate: s.total > 0 ? Math.round((s.correct / s.total) * 100) : 0,
       };
@@ -220,7 +218,6 @@ export default async function AdminStatsPage() {
                 <TableRow>
                   <TableHead>Élève</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Promo</TableHead>
                   <TableHead className="text-right">Activité (min/sem)</TableHead>
                 </TableRow>
               </TableHeader>
@@ -234,7 +231,6 @@ export default async function AdminStatsPage() {
                       </div>
                     </TableCell>
                     <TableCell className="text-sm text-(--color-ink-soft)">{u.email ?? '—'}</TableCell>
-                    <TableCell>{u.promotion && <Badge variant="outline">{u.promotion}</Badge>}</TableCell>
                     <TableCell className="text-right">
                       <Badge variant={u.minutes === 0 ? 'danger' : 'warning'}>{u.minutes} min</Badge>
                     </TableCell>
@@ -259,7 +255,6 @@ export default async function AdminStatsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Élève</TableHead>
-                  <TableHead>Promo</TableHead>
                   <TableHead className="text-right">Tentatives</TableHead>
                   <TableHead className="text-right">Réussite</TableHead>
                 </TableRow>
@@ -273,7 +268,6 @@ export default async function AdminStatsPage() {
                         <span className="font-medium">{u.name}</span>
                       </div>
                     </TableCell>
-                    <TableCell>{u.promotion && <Badge variant="outline">{u.promotion}</Badge>}</TableCell>
                     <TableCell className="text-right tabular-nums">{u.attempts}</TableCell>
                     <TableCell className="text-right">
                       <Badge variant={u.rate >= 70 ? 'success' : u.rate >= 50 ? 'warning' : 'danger'}>{u.rate}%</Badge>

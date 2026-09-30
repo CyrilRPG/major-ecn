@@ -49,7 +49,7 @@ export async function askQuestionAction(input: {
 
   const pseudo =
     profile.pseudo ??
-    generatePseudo(profile.first_name ?? '', profile.last_name ?? '', profile.promotion ?? 'X');
+    generatePseudo(profile.first_name ?? '', profile.last_name ?? '');
 
   // Look up cours/matiere context if provided.
   let coursTitre: string | null = null;
@@ -268,7 +268,7 @@ export async function addReplyAction(input: z.infer<typeof ReplySchema>): Promis
   // aussi) : pseudo, sinon pseudo généré comme pour une question.
   const authorName = (profile.pseudo ?? '').trim()
     || (profile.role === 'student'
-      ? generatePseudo(profile.first_name ?? '', profile.last_name ?? '', profile.promotion ?? 'X')
+      ? generatePseudo(profile.first_name ?? '', profile.last_name ?? '')
       : '')
     || [profile.first_name, profile.last_name].filter(Boolean).join(' ').trim()
     || profile.email

@@ -30,7 +30,6 @@ type Student = {
   last_name: string | null;
   email: string | null;
   phone: string | null;
-  promotion: string | null;
   offer: Offer;
   lastRevision: Date | null;
   revisions30d: number;
@@ -327,7 +326,6 @@ function StudentCard({
             {/* Seuil du cahier des charges : alerte P2 sous 15 révisions / 30 j. */}
             <InfoCell label="Révisions / 30j" value={String(s.revisions30d)} warn={s.revisions30d < 15} />
             <InfoCell label="Épreuves blanches réalisées" value={String(s.epreuvesBlanches)} warn={s.epreuvesBlanches === 0} />
-            <InfoCell label="Promotion" value={s.promotion ?? '—'} />
             <InfoCell label="Téléphone" value={s.phone ?? '—'} />
           </div>
 

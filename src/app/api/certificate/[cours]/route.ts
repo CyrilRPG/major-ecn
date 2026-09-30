@@ -55,7 +55,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: completion } = await (supabase as any)
     .from('parcours_completions')
-    .select('certificate_signed_at, signature_data_url, promotion, qcm_test_score, qcm_test_total, qcm_test_completed_at')
+    .select('certificate_signed_at, signature_data_url, qcm_test_score, qcm_test_total, qcm_test_completed_at')
     .eq('user_id', targetUserId).eq('cours_id', coursId).maybeSingle();
 
   if (!completion?.certificate_signed_at) {
@@ -63,14 +63,13 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   }
 
   const [{ data: target }, { data: cours }] = await Promise.all([
-    supabase.from('profiles').select('first_name, last_name, promotion, email').eq('id', targetUserId).maybeSingle(),
+    supabase.from('profiles').select('first_name, last_name, email').eq('id', targetUserId).maybeSingle(),
     supabase.from('cours').select('titre, matieres(nom)').eq('id', coursId).maybeSingle(),
   ]);
 
   const firstName = target?.first_name ?? '';
   const lastName  = target?.last_name ?? '';
   const fullName  = `${firstName} ${lastName}`.trim() || target?.email || '—';
-  const promotion = (completion as { promotion?: string | null }).promotion ?? target?.promotion ?? '—';
   const coursTitre = cours?.titre ?? '—';
   const matiereNom = (cours as { matieres?: { nom?: string } } | null)?.matieres?.nom ?? '';
   const parcours = matiereNom ? `${matiereNom} - ${coursTitre}` : coursTitre;
@@ -176,8 +175,6 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   page.drawText(ansi('Élève'), { x: 75, y: idBoxY + 36, size: 8.5, font: fontBold, color: INK_SOFT });
   page.drawText(ansi(fullName.toUpperCase()), { x: 75, y: idBoxY + 18, size: 14, font: fontSerifBold, color: INK });
 
-  page.drawText(ansi('Promotion'), { x: width / 2 + 10, y: idBoxY + 36, size: 8.5, font: fontBold, color: INK_SOFT });
-  page.drawText(ansi(promotion), { x: width / 2 + 10, y: idBoxY + 18, size: 12, font: fontSerifBold, color: INK });
 
   /* ── Tableau d'émargement ── */
   // Colonnes : Date | Heure | Parcours suivi | Note | Signature

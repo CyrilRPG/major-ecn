@@ -18,7 +18,7 @@ export default async function FormResponsesPage({ params }: { params: Promise<{ 
 
   const { data: responses } = await admin
     .from('satisfaction_responses')
-    .select('id, user_id, answers, file_path, skipped, submitted_at, profiles:user_id(first_name, last_name, email, promotion)')
+    .select('id, user_id, answers, file_path, skipped, submitted_at, profiles:user_id(first_name, last_name, email)')
     .eq('form_id', id)
     .order('submitted_at', { ascending: false });
 
@@ -29,7 +29,7 @@ export default async function FormResponsesPage({ params }: { params: Promise<{ 
     file_path: string | null;
     skipped: boolean;
     submitted_at: string;
-    profiles: { first_name: string | null; last_name: string | null; email: string | null; promotion: string | null } | null;
+    profiles: { first_name: string | null; last_name: string | null; email: string | null } | null;
   };
   const rows = (responses ?? []) as unknown as Resp[];
   const fields = (form.fields ?? []) as FormField[];
@@ -81,7 +81,7 @@ export default async function FormResponsesPage({ params }: { params: Promise<{ 
                     {r.profiles?.first_name} {r.profiles?.last_name}
                   </p>
                   <p className="text-xs text-(--color-ink-muted)">
-                    {r.profiles?.email} {r.profiles?.promotion ? ` · ${r.profiles.promotion}` : ''}
+                    {r.profiles?.email}
                   </p>
                 </div>
                 <p className="text-xs text-(--color-ink-muted)">
