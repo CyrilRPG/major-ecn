@@ -9,13 +9,13 @@ import {
 } from 'lucide-react';
 import type { CalendrierEvc } from '@/lib/evc-calendrier/types';
 import { useMaintenant } from '@/lib/evc-calendrier/use-maintenant';
-import { libelleDureeCourt, libelleDureeLong } from '@/lib/marketing/visite-guidee';
+import { libelleDureeLong } from '@/lib/marketing/visite-guidee';
 import type { SourceVideo } from '@/lib/marketing/video-evenements';
 import { envoyerEvenementVideo } from '@/lib/marketing/video-suivi';
 import { ModaleVisiteGuidee } from '@/components/marketing/visite-guidee/modale-visite-guidee';
 import { HeroCaptureCarte } from './hero-capture-carte';
 import {
-  INK_SOFT, JAKARTA, MANROPE, NAVY, PINK_BG, RED, RED_DEEP, RED_GRADIENT,
+  INK_SOFT, JAKARTA, MANROPE, NAVY, RED, RED_DEEP, RED_GRADIENT,
 } from './home-ui';
 
 /* ============================================================
@@ -45,8 +45,9 @@ const TRUST_BAR = [
   { Icon: UsersRound, big: 'PH, CCA et spécialistes engagés à vos côtés', small: 'jusqu’aux EVC' },
 ];
 
-/** Position du bouton play : centre de l'écran de l'ordinateur dans la capture (1 504 × 914). */
-const PLAY = { x: 657 / 1504, y: 366 / 914 };
+/** Position du bouton play dans la capture (1 504 × 914). */
+// Sous la ligne des compteurs (progression, temps, QROC, items maîtrisés) : ils restent lisibles.
+const PLAY = { x: 657 / 1504, y: 560 / 914 };
 
 const CTA_DECOUVERTE = { href: '/espace-decouverte', label: 'Accéder à l’espace découverte gratuit' };
 
@@ -166,28 +167,6 @@ export function HomeHero({
               </Link>
             </div>
 
-            {/* Troisième élément, discret : la visite guidée en vidéo */}
-            <button
-              type="button"
-              onClick={() => ouvrirVideo('hero_button')}
-              className="group mt-5 inline-flex items-center gap-3 rounded-xl py-1 pr-3 text-left"
-              aria-haspopup="dialog"
-            >
-              <span
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-transform group-hover:scale-110"
-                style={{ background: PINK_BG, color: RED_DEEP }}
-              >
-                <Play className="ml-0.5 h-4 w-4" fill="currentColor" />
-              </span>
-              <span className="leading-tight">
-                <span className="block text-[14px] font-black tracking-tight underline-offset-4 group-hover:underline" style={{ color: NAVY }}>
-                  Découvrir la plateforme
-                </span>
-                <span className="mt-0.5 block text-[12.5px]" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
-                  Visite guidée • {libelleDureeCourt()}
-                </span>
-              </span>
-            </button>
           </motion.div>
 
           {/* ============ DROITE — badge + visuel plateforme cliquable ============ */}
@@ -232,7 +211,7 @@ export function HomeHero({
               >
                 <span className="absolute inset-0 transition-[filter] duration-300 group-hover:brightness-[0.9]">
                   <Image
-                    src="/homepage/hero-plateforme-base.png"
+                    src="/homepage/hero-plateforme-docteur.png"
                     alt="Plateforme Major ECN — tableau de bord de préparation aux EVC et cours en direct avec un enseignant"
                     fill
                     priority
@@ -256,7 +235,7 @@ export function HomeHero({
                   </span>
                   <span
                     className="relative flex items-center justify-center rounded-full bg-white shadow-[0_18px_45px_-10px_rgba(15,23,51,0.55)] ring-[6px] ring-white/45 transition-transform duration-300 group-hover:scale-[1.14]"
-                    style={{ width: 'clamp(50px, 8.6cqw, 96px)', height: 'clamp(50px, 8.6cqw, 96px)' }}
+                    style={{ width: 'clamp(44px, 7cqw, 80px)', height: 'clamp(44px, 7cqw, 80px)' }}
                   >
                     {!reduit && <span aria-hidden className="absolute inset-0 animate-ping rounded-full bg-white/60 [animation-duration:2.4s]" />}
                     <Play className="relative ml-[8%] h-[44%] w-[44%]" fill={RED_DEEP} style={{ color: RED_DEEP }} />

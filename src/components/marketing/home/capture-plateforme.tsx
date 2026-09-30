@@ -14,7 +14,7 @@ export function CapturePlateforme({ calendrier, rendu, className }: { calendrier
   const maintenant = useMaintenant(rendu);
   return (
     <span className={`relative block aspect-[1504/914] ${className ?? ''}`} style={{ containerType: 'inline-size' }}>
-      <Image src="/homepage/hero-plateforme-base.png" alt="" fill sizes="(max-width: 1280px) 100vw, 1280px" className="object-contain" />
+      <Image src="/homepage/hero-plateforme-docteur.png" alt="" fill sizes="(max-width: 1280px) 100vw, 1280px" className="object-contain" />
       <HeroCaptureCarte calendrier={calendrier} maintenant={maintenant} />
     </span>
   );

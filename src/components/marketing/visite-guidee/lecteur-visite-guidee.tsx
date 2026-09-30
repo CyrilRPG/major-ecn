@@ -213,7 +213,7 @@ export function LecteurVisiteGuidee({
           >
             {affiche ?? (
               <span className="relative block h-full w-full">
-                <Image src="/homepage/hero-plateforme-base.png" alt="" fill sizes="(max-width: 1280px) 100vw, 1280px" className="object-contain" />
+                <Image src="/homepage/hero-plateforme-docteur.png" alt="" fill sizes="(max-width: 1280px) 100vw, 1280px" className="object-contain" />
               </span>
             )}
           </span>

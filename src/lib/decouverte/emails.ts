@@ -4,7 +4,7 @@
  * 3.jpg R3 ; l'ancien accès suit la structure de R3), retouches comprises :
  *  - fond blanc, beaucoup d'espace, bleu marine + bordeaux ;
  *  - logo OFFICIEL (public/email/major-ecn-logo*.png, jamais reconstruit) ;
- *  - VRAIE capture ordinateur + tablette (public/email/decouverte-plateforme.png,
+ *  - VRAIE capture ordinateur + tablette (public/email/decouverte-plateforme-v2.png,
  *    tirée du hero, sans aucun élément daté) ;
  *  - polices du site (Plus Jakarta Sans pour les titres, Manrope pour le
  *    texte) chargées pour les messageries qui les acceptent, repli Arial ;
@@ -104,7 +104,7 @@ function hero(m: Modele): string {
 ${surtitre}<h1 class="dc-h1" style="margin:0;font-family:${F_TITRE};font-size:${taille}px;line-height:${Math.round(taille * 1.16)}px;font-weight:800;letter-spacing:-0.6px;color:${COULEURS.marine};">${titreHtml(m.titre)}</h1>
 </td>
 <td class="dc-col dc-img" width="276" valign="middle" style="width:276px;padding:0 8px 0 0;">
-<img src="${emailAsset('decouverte-plateforme.png')}" width="276" height="168" alt="La plateforme Major ECN sur ordinateur et tablette" style="display:block;width:276px;height:168px;border:0;">
+<img src="${emailAsset('decouverte-plateforme-v2.png')}" width="276" height="168" alt="La plateforme Major ECN sur ordinateur et tablette" style="display:block;width:276px;height:168px;border:0;">
 </td>
 </tr></table>
 </td></tr>`;

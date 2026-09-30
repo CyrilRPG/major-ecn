@@ -1,6 +1,8 @@
 """
-Produit public/homepage/hero-plateforme-base.png à partir de la capture
+Produit public/homepage/hero-plateforme-docteur.png à partir de la capture
 public/homepage/hero-plateforme.png (1504×914, PNG détouré ordinateur + tablette).
+Le titre du tableau de bord y affiche « Bonjour, Docteur » : le prénom réel de
+la capture d'origine a été remplacé le 01/10/2026 (maquette publique).
 
 POURQUOI. La capture figeait « J-146 », la période d'inscription et les postes
 de la carte « Médecine Générale — EVC Session 2026 » du tableau de bord : une
@@ -29,7 +31,7 @@ from PIL import Image
 
 RACINE = Path(__file__).resolve().parent.parent
 SOURCE = RACINE / "public" / "homepage" / "hero-plateforme.png"
-CIBLE = RACINE / "public" / "homepage" / "hero-plateforme-base.png"
+CIBLE = RACINE / "public" / "homepage" / "hero-plateforme-docteur.png"
 
 im = Image.open(SOURCE).convert("RGBA")
 src = im.copy().load()

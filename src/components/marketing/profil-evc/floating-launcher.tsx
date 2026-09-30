@@ -57,7 +57,7 @@ export function FloatingLauncher() {
           <OptionPill
             label="Profil EVC gratuit"
             Icon={BarChart3}
-            gradient="linear-gradient(100deg, #6B0F2A 0%, #8B1550 45%, #7A1FA2 100%)"
+            gradient="linear-gradient(100deg, #6B0F1E 0%, #A5122A 55%, #C0112E 100%)"
             open={open}
             delay={60}
             onClick={openProfil}
@@ -65,7 +65,7 @@ export function FloatingLauncher() {
           <OptionPill
             label="Guide EVC gratuit"
             Icon={BookOpen}
-            gradient="linear-gradient(135deg, #880F2E 0%, #5B21B6 100%)"
+            gradient="linear-gradient(135deg, #14254E 0%, #8B0E22 100%)"
             open={open}
             delay={0}
             onClick={openGuide}
@@ -79,7 +79,7 @@ export function FloatingLauncher() {
           aria-label={open ? 'Fermer' : 'Ressources gratuites'}
           aria-expanded={open}
           className="launcher-fab relative flex h-[58px] items-center gap-2.5 rounded-[50px] border-0 px-4 text-white transition-all duration-200 sm:h-[62px] sm:px-5"
-          style={{ background: 'linear-gradient(100deg, #6B0F2A 0%, #8B1550 45%, #7A1FA2 100%)' }}
+          style={{ background: 'linear-gradient(100deg, #6B0F1E 0%, #A5122A 55%, #C0112E 100%)' }}
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/14 sm:h-10 sm:w-10">
             {open ? <X className="h-5 w-5" strokeWidth={2.4} /> : <Gift className="h-5 w-5" strokeWidth={2.2} />}

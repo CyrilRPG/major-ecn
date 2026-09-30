@@ -11,7 +11,7 @@ import { JAKARTA, MANROPE } from './home-ui';
 /* ============================================================
    CARTE VIVANTE DE LA CAPTURE DU HERO (brief B3).
 
-   La capture `hero-plateforme-base.png` est la vraie capture du tableau de
+   La capture `hero-plateforme-docteur.png` est la vraie capture du tableau de
    bord élève, dont on a effacé (scripts/nettoyer-hero-plateforme.py) tout ce
    qui dépend du calendrier : le titre de la carte de droite, l'encart « Il
    vous reste J-N », la période d'inscription, les postes, et la seconde carte

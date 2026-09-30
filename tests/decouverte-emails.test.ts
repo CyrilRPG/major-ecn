@@ -101,7 +101,7 @@ test('marque : logo officiel, vraie capture, polices du site, jamais de réseau 
     const h = rendu(t).html;
     assert.ok(h.includes('/email/major-ecn-logo.png'), 'logo officiel');
     assert.ok(h.includes('/email/major-ecn-logo-white.png'), 'logo blanc du pied');
-    assert.ok(h.includes('/email/decouverte-plateforme.png'), 'capture produit');
+    assert.ok(h.includes('/email/decouverte-plateforme-v2.png'), 'capture produit');
     assert.ok(h.includes('Plus+Jakarta+Sans') && h.includes('Manrope'), 'polices du site');
     assert.match(h, /Arial, Helvetica, sans-serif/);
     assert.doesNotMatch(h, /linkedin|instagram|youtube|facebook|twitter|tiktok|Suivez-nous/i);

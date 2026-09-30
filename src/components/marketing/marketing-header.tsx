@@ -29,7 +29,6 @@ const NAV: NavItem[] = [
   { href: '/tarifs',      label: 'Tarifs et inscriptions' },
   { href: '/faq',         label: 'FAQ' },
   { href: '/blog',        label: 'Blog' },
-  { href: '/recrutement', label: 'Recrutement' },
   { href: '/contact',     label: 'Contact' },
 ];
 
@@ -78,7 +77,7 @@ function DesktopDropdown({ item, tight }: { item: Extract<NavItem, { children: a
 
 /**
  * Bouton « Offerts » du header mobile (template sticky, pixel-perfect) :
- * pastille 36 px dégradé violet/bordeaux #6A1B9A → #D81B60, texte blanc
+ * pastille 36 px dégradé bordeaux → rouge de la charte (le violet d'origine sortait de la charte), texte blanc
  * semi-bold 13 px, icône cadeau 16 px, badge jaune 20 px, bords 10 px.
  * Le menu déroulant s'affiche sous le bouton, aligné à droite, et se ferme
  * au clic en dehors ou sur un item.
@@ -114,9 +113,9 @@ function OffertsButton() {
         aria-label="Offerts — 2 ressources gratuites"
         className="relative flex h-9 items-center gap-1.5 px-3 text-[13px] font-semibold text-white transition-[filter] duration-150 active:brightness-110"
         style={{
-          background: 'linear-gradient(100deg, #6A1B9A 0%, #D81B60 100%)',
+          background: 'linear-gradient(100deg, #8B0E22 0%, #C0112E 100%)',
           borderRadius: 10,
-          boxShadow: '0 2px 6px rgba(106,27,154,0.25)',
+          boxShadow: '0 2px 6px rgba(139,14,34,0.3)',
         }}
       >
         <Gift className="h-4 w-4" strokeWidth={2.2} />
@@ -147,7 +146,7 @@ function OffertsButton() {
             onClick={() => fire('open-profil-popup')}
             className="mt-2 flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left text-[13px] font-semibold text-(--color-ink) hover:bg-(--color-surface-sunken)"
           >
-            <BarChart3 className="h-4.5 w-4.5 shrink-0" style={{ color: '#6A1B9A' }} />
+            <BarChart3 className="h-4.5 w-4.5 shrink-0" style={{ color: '#C0112E' }} />
             Profil EVC — Découvrez votre profil gratuitement
           </button>
         </div>

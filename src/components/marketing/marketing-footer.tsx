@@ -62,6 +62,7 @@ const COLS: { title: string; links: { label: string; href: string; Icon: React.C
       { label: "Témoignages",              href: "/temoignages", Icon: MessageCircle },
       { label: "Foire aux questions",           href: "/faq",         Icon: HelpCircle },
       { label: "Nous contacter",                href: "/contact",     Icon: Mail },
+      { label: "Recrutement",                   href: "/recrutement", Icon: Users },
       { label: "Se connecter",                  href: "/login",       Icon: LogIn },
     ],
   },

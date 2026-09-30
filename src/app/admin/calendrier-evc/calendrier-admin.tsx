@@ -213,7 +213,7 @@ export function CalendrierAdmin({
         </div>
         <div className="mx-auto max-w-3xl">
           <div className="relative aspect-[1504/914] w-full" style={{ containerType: 'inline-size' }}>
-            <Image src="/homepage/hero-plateforme-base.png" alt="" fill sizes="768px" className="object-contain" />
+            <Image src="/homepage/hero-plateforme-docteur.png" alt="" fill sizes="768px" className="object-contain" />
             <HeroCaptureCarte calendrier={calendrier} maintenant={instant} />
           </div>
         </div>

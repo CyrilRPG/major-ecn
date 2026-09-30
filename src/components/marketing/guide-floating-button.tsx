@@ -28,7 +28,7 @@ export function GuideFloatingButton() {
     filter: brightness(1);
   }
   88% {
-    box-shadow: 0 8px 32px rgba(139,15,46,0.5), 0 0 28px rgba(91,33,182,0.4);
+    box-shadow: 0 8px 32px rgba(139,15,46,0.5), 0 0 28px rgba(192,17,46,0.35);
     filter: brightness(1.15);
   }
   94% {
@@ -42,7 +42,7 @@ export function GuideFloatingButton() {
 .guide-fab:hover {
   animation: none;
   filter: brightness(1.18);
-  box-shadow: 0 8px 32px rgba(139,15,46,0.5), 0 0 28px rgba(91,33,182,0.4);
+  box-shadow: 0 8px 32px rgba(139,15,46,0.5), 0 0 28px rgba(192,17,46,0.35);
   transform: translateY(-2px);
 }
 .guide-fab:active {
@@ -57,7 +57,8 @@ export function GuideFloatingButton() {
         aria-label="Télécharger le Guide EVC gratuitement"
         className="guide-fab fixed z-[9990] flex cursor-pointer items-center border-0 text-white transition-all duration-200 bottom-5 right-5 h-[56px] w-[180px] gap-2.5 rounded-[50px] px-4 sm:bottom-6 sm:right-6 sm:h-[64px] sm:w-[220px] sm:gap-3 sm:px-5"
         style={{
-          background: 'linear-gradient(135deg, #880F2E 0%, #5B21B6 100%)',
+          // Charte du site : marine → bordeaux (le violet d'origine ressemblait à un widget tiers).
+          background: 'linear-gradient(135deg, #14254E 0%, #8B0E22 100%)',
         }}
       >
         <BookOpen className="h-[22px] w-[22px] shrink-0 text-white sm:h-[26px] sm:w-[26px]" strokeWidth={2.2} />
@@ -66,7 +67,7 @@ export function GuideFloatingButton() {
         </span>
         <span
           className="ml-auto shrink-0 rounded-full px-[8px] py-[3px] text-[9px] font-black uppercase tracking-wider sm:px-[10px] sm:py-[4px] sm:text-[10px]"
-          style={{ background: '#FFC107', color: '#FFFFFF' }}
+          style={{ background: '#FFFFFF', color: '#C0112E' }}
         >
           Gratuit
         </span>
