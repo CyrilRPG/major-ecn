@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
-  ArrowRight, Award, GraduationCap, Play, ShieldCheck, Users, UsersRound,
+  ArrowRight, Award, Clock, GraduationCap, Play, ShieldCheck, Users, UsersRound,
 } from 'lucide-react';
 import type { CalendrierEvc } from '@/lib/evc-calendrier/types';
 import { useMaintenant } from '@/lib/evc-calendrier/use-maintenant';
-import { libelleDureeLong } from '@/lib/marketing/visite-guidee';
+import { libelleDureeCourt, libelleDureeLong } from '@/lib/marketing/visite-guidee';
 import type { SourceVideo } from '@/lib/marketing/video-evenements';
 import { envoyerEvenementVideo } from '@/lib/marketing/video-suivi';
 import { ModaleVisiteGuidee } from '@/components/marketing/visite-guidee/modale-visite-guidee';
@@ -46,8 +46,8 @@ const TRUST_BAR = [
 ];
 
 /** Position du bouton play dans la capture (1 504 × 914). */
-// Sous la ligne des compteurs (progression, temps, QROC, items maîtrisés) : ils restent lisibles.
-const PLAY = { x: 657 / 1504, y: 560 / 914 };
+// Au centre de l'écran de l'ordinateur, bien visible (maquette de Cyril du 01/10/2026).
+const PLAY = { x: 657 / 1504, y: 330 / 914 };
 
 const CTA_DECOUVERTE = { href: '/espace-decouverte', label: 'Accéder à l’espace découverte gratuit' };
 
@@ -95,7 +95,7 @@ export function HomeHero({
       <div aria-hidden className="pointer-events-none absolute -right-40 top-40 -z-10 h-[600px] w-[600px] rounded-full bg-[#B11226]/5 blur-3xl" />
 
       <div className="mx-auto w-full max-w-[88rem] px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-8">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-x-8 lg:gap-y-9">
           {/* ============ GAUCHE ============ */}
           <motion.div
             initial={{ opacity: 0, x: -36 }}
@@ -121,7 +121,7 @@ export function HomeHero({
             <span aria-hidden className="mt-6 block h-1 w-16 rounded-full" style={{ background: RED }} />
 
             {/* Ligne de qualification — corps nettement plus petit que le H1. */}
-            <p className="mt-5 text-[1.02rem] font-black leading-snug tracking-tight sm:text-[1.2rem]" style={{ color: NAVY }}>
+            <p className="mt-5 text-[1.02rem] font-black leading-snug tracking-tight sm:text-[1.2rem] lg:text-[1.06rem] xl:text-[1.14rem]" style={{ color: NAVY }}>
               Préparation aux <span style={{ color: RED }}>EVC {session}</span> — voie interne{' '}
               <span style={{ color: RED }}>(QCM)</span> et voie externe <span style={{ color: RED }}>(QROC)</span>
             </p>
@@ -147,26 +147,6 @@ export function HomeHero({
               ))}
             </ol>
 
-            {/* CTA — découverte gratuite en principal, spécialité en secondaire */}
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-stretch">
-              <Link
-                href="/espace-decouverte"
-                className="group inline-flex items-center justify-center gap-3 rounded-xl px-6 py-4 text-[14.5px] font-black tracking-tight text-white shadow-[0_16px_40px_-14px_rgba(192,17,46,0.65)] transition-transform hover:scale-[1.02] sm:text-[15px]"
-                style={{ background: RED_GRADIENT }}
-              >
-                Accéder à l’espace découverte gratuit
-                <ArrowRight className="h-5 w-5 shrink-0 transition-transform group-hover:translate-x-1" />
-              </Link>
-              <Link
-                href="/specialites"
-                className="group inline-flex items-center justify-center gap-3 rounded-xl border-2 bg-white px-6 py-4 text-[14.5px] font-black tracking-tight transition-colors hover:bg-[#FBEEEF] sm:text-[15px]"
-                style={{ borderColor: '#E7C9CD', color: RED_DEEP }}
-              >
-                Choisir ma spécialité
-                <ArrowRight className="h-5 w-5 shrink-0 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-
           </motion.div>
 
           {/* ============ DROITE — badge + visuel plateforme cliquable ============ */}
@@ -174,7 +154,7 @@ export function HomeHero({
             initial={{ opacity: 0, x: 36, scale: 0.98 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             transition={{ duration: 1, ease: 'easeOut', delay: 0.15 }}
-            className="relative lg:-mr-8 xl:-mr-14"
+            className="relative order-3 lg:order-none lg:-mr-8 xl:-mr-14"
           >
             {/* Badge conservé : contenus actualisés en continu */}
             <div className="mb-4 flex justify-center lg:mb-2 lg:justify-end lg:pr-6">
@@ -221,35 +201,69 @@ export function HomeHero({
                   <HeroCaptureCarte calendrier={calendrier} maintenant={maintenant} />
                 </span>
 
-                {/* Bouton play, en permanence au centre de l'écran de l'ordinateur. */}
+                {/* Gros bouton play au centre de l'écran de l'ordinateur, carte « Découvrir la plateforme » dessous. */}
                 <span
                   className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
                   style={{ left: `${PLAY.x * 100}%`, top: `${PLAY.y * 100}%` }}
                 >
                   <span
-                    aria-hidden
-                    className="pointer-events-none absolute -top-[2.6em] whitespace-nowrap rounded-full bg-[#0F1733]/85 px-3 py-1 font-bold text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
-                    style={{ fontFamily: MANROPE, fontSize: 'clamp(10.5px, 1.45cqw, 15px)' }}
-                  >
-                    Voir la plateforme en action
-                  </span>
-                  <span
-                    className="relative flex items-center justify-center rounded-full bg-white shadow-[0_18px_45px_-10px_rgba(15,23,51,0.55)] ring-[6px] ring-white/45 transition-transform duration-300 group-hover:scale-[1.14]"
-                    style={{ width: 'clamp(44px, 7cqw, 80px)', height: 'clamp(44px, 7cqw, 80px)' }}
+                    className="relative flex items-center justify-center rounded-full bg-white shadow-[0_22px_50px_-12px_rgba(15,23,51,0.55)] ring-[7px] ring-white/50 transition-transform duration-300 group-hover:scale-[1.08]"
+                    style={{ width: 'clamp(64px, 12cqw, 124px)', height: 'clamp(64px, 12cqw, 124px)' }}
                   >
                     {!reduit && <span aria-hidden className="absolute inset-0 animate-ping rounded-full bg-white/60 [animation-duration:2.4s]" />}
-                    <Play className="relative ml-[8%] h-[44%] w-[44%]" fill={RED_DEEP} style={{ color: RED_DEEP }} />
+                    <Play className="relative ml-[8%] h-[42%] w-[42%]" fill={RED} style={{ color: RED }} />
                   </span>
                   <span
-                    className="mt-[0.7em] whitespace-nowrap rounded-full bg-white/92 px-3 py-1 font-black italic tracking-tight shadow-[0_8px_24px_-12px_rgba(15,23,51,0.5)]"
-                    style={{ color: NAVY, fontFamily: JAKARTA, fontSize: 'clamp(10.5px, 1.5cqw, 16px)' }}
+                    className="mt-[0.9em] flex flex-col items-center whitespace-nowrap rounded-xl bg-white px-[1.2em] py-[0.6em] shadow-[0_16px_40px_-16px_rgba(15,23,51,0.55)]"
+                    style={{ fontSize: 'clamp(11px, 1.6cqw, 17px)' }}
                   >
-                    Voir la plateforme en vidéo · {libelleDureeLong()}
+                    <span className="font-black tracking-tight" style={{ color: NAVY, fontFamily: JAKARTA }}>Découvrir la plateforme</span>
+                    <span className="mt-[0.15em] inline-flex items-center gap-[0.35em] text-[0.8em] font-semibold" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
+                      Visite guidée · {libelleDureeCourt()} <Clock className="h-[1em] w-[1em]" />
+                    </span>
                   </span>
                 </span>
               </button>
             </motion.div>
           </motion.div>
+          {/* CTA — sous le texte et le visuel (après le texte sur téléphone) :
+              découverte gratuite, spécialité, puis la visite guidée. */}
+          <div className="order-2 lg:order-none lg:col-span-2">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+              <Link
+                href="/espace-decouverte"
+                className="group inline-flex items-center justify-center gap-3 rounded-xl px-6 py-4 text-[14.5px] font-black tracking-tight text-white shadow-[0_16px_40px_-14px_rgba(192,17,46,0.65)] transition-transform hover:scale-[1.02] sm:text-[15px]"
+                style={{ background: RED_GRADIENT }}
+              >
+                Accéder à l’espace découverte gratuit
+                <ArrowRight className="h-5 w-5 shrink-0 transition-transform group-hover:translate-x-1" />
+              </Link>
+              <Link
+                href="/specialites"
+                className="group inline-flex items-center justify-center gap-3 rounded-xl border-2 bg-white px-6 py-4 text-[14.5px] font-black tracking-tight transition-colors hover:bg-[#FBEEEF] sm:text-[15px]"
+                style={{ borderColor: '#E7C9CD', color: RED_DEEP }}
+              >
+                Choisir ma spécialité
+                <ArrowRight className="h-5 w-5 shrink-0 transition-transform group-hover:translate-x-1" />
+              </Link>
+                          {/* Troisième entrée, discrète : la visite guidée (même vidéo que l'ordinateur). */}
+              <button
+                type="button"
+                onClick={() => ouvrirVideo('hero_button')}
+                aria-haspopup="dialog"
+                className="group inline-flex items-center justify-center gap-3.5 rounded-xl px-2 py-2 text-left sm:justify-start sm:pl-3"
+              >
+                <span
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_10px_28px_-10px_rgba(192,17,46,0.55)] ring-1 ring-[#F3D9DD] transition-transform duration-300 group-hover:scale-110"
+                >
+                  <Play className="ml-0.5 h-5 w-5" fill={RED} style={{ color: RED }} />
+                </span>
+                <span className="text-[15px] font-black tracking-tight underline-offset-4 group-hover:underline sm:text-[16px]" style={{ color: NAVY }}>
+                  Voir la plateforme en {libelleDureeCourt()}
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
