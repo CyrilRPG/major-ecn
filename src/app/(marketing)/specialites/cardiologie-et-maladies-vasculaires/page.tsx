@@ -1,3 +1,4 @@
+import { chargerFaitsSpecialite } from '@/lib/evc-calendrier/server';
 import { CardiologiePageContent } from '@/components/marketing/cardiologie-page';
 import { lireSpecialite } from '@/lib/tunnel-inscription';
 import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
@@ -65,7 +66,7 @@ export default async function CardiologiePage({
           faqSchema(FAQ_CARDIO.map((f) => ({ q: f.q, a: reponseTexteCardio(f, prixApprofondie) }))),
         ]}
       />
-      <CardiologiePageContent specialite={specialite} prixApprofondie={prixApprofondie} />
+      <CardiologiePageContent faits={await chargerFaitsSpecialite('cardiologie-et-maladies-vasculaires')} specialite={specialite} prixApprofondie={prixApprofondie} />
     </>
   );
 }

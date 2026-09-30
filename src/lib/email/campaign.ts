@@ -15,15 +15,18 @@ export const CAMPAIGNS: Record<
 
 const RESEND_URL = 'https://api.resend.com/emails';
 
-/** HTML de l'étape `key` (gabarit commun Major ECN, cf. ./campaigns/index.ts). */
-export function loadTemplate(key: CampaignKey): string {
-  return renderCampaignHtml(key);
+/** HTML de l'étape `key` (gabarit commun Major ECN, cf. ./campaigns/index.ts).
+ *  `unsubscribeUrl` : lien de désinscription propre au destinataire. */
+export function loadTemplate(key: CampaignKey, unsubscribeUrl?: string): string {
+  return renderCampaignHtml(key, unsubscribeUrl);
 }
 
 export async function sendCampaignEmail(
   to: string,
   subject: string,
   html: string,
+  /** En-têtes (List-Unsubscribe / List-Unsubscribe-Post). */
+  headers?: Record<string, string>,
 ): Promise<{ ok: boolean; error?: string }> {
   const key = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM ?? 'Major ECN <contact@major-ecn.fr>';
@@ -32,7 +35,7 @@ export async function sendCampaignEmail(
   const res = await fetch(RESEND_URL, {
     method: 'POST',
     headers: { 'content-type': 'application/json', authorization: `Bearer ${key}` },
-    body: JSON.stringify({ from, to: [to], subject, html }),
+    body: JSON.stringify({ from, to: [to], subject, html, ...(headers ? { headers } : {}) }),
   });
 
   if (!res.ok) {

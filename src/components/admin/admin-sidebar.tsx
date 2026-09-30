@@ -3,11 +3,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AlertTriangle, BarChart3, BookOpen, CalendarCheck, CalendarClock, CalendarDays, CalendarRange, ChevronDown, Clapperboard, ClipboardList, Cog, Eye, FileSignature, GraduationCap, Library, ListTree, Mail, Megaphone, MessageCircle, MessagesSquare, MonitorPlay, Newspaper, PencilRuler, Receipt, ScrollText, ShieldCheck, Sparkles, Ticket, Timer, Trophy, Upload, UserCog, Users, X } from 'lucide-react';
+import { AlertTriangle, BarChart3, BellRing, BookOpen, CalendarCheck, CalendarClock, CalendarDays, CalendarRange, ChevronDown, Clapperboard, ClipboardList, Cog, Eye, FileSignature, GraduationCap, Library, ListTree, Mail, Megaphone, MessageCircle, MessagesSquare, MonitorPlay, Newspaper, PencilRuler, Receipt, ScrollText, ShieldCheck, Sparkles, Ticket, Timer, Trophy, Upload, UserCog, Users, X } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
 import type { AccesOnglets } from '@/lib/auth/collaborateurs';
+import { useResumeRelances } from '@/components/admin/relances-decouverte/use-resume';
 
 /**
  * `onglet` : entrée ouverte à un membre du personnel dont les permissions
@@ -28,6 +29,8 @@ const GROUPS: Group[] = [
       { href: '/admin/eleves', label: 'Élèves', Icon: Users },
       { href: '/admin/equipe', label: 'Équipe & Permissions', Icon: GraduationCap, adminOnly: true },
       { href: '/admin/leads', label: 'Leads', Icon: Users, adminOnly: true },
+      // Relances de l'Offre Découverte : administrateurs et membres du module Suivi (pastille = relances échues).
+      { href: '/admin/relances-decouverte', label: 'Relances Découverte', Icon: BellRing, onglet: 'suivi' },
     ],
   },
   {
@@ -56,6 +59,8 @@ const GROUPS: Group[] = [
     Icon: CalendarDays,
     items: [
       { href: '/admin/sessions', label: 'Sessions EVC', Icon: CalendarClock, adminOnly: true },
+      // Source unique des dates d'épreuve, inscriptions et postes (accueil, pages spécialités, fiches élèves).
+      { href: '/admin/calendrier-evc', label: 'Calendrier EVC', Icon: CalendarRange, adminOnly: true },
       { href: '/admin/agenda', label: 'Agenda', Icon: CalendarDays },
       { href: '/admin/emargements', label: 'Feuilles d’émargement', Icon: FileSignature, adminOnly: true },
     ],
@@ -113,6 +118,9 @@ export function AdminSidebar({ profile, onglets }: { profile: Profile; onglets: 
   const isActive = (href: string) => path === href || path.startsWith(href + '/');
 
   const isProf = profile.role === 'professor';
+  // Pastille « à relancer » (relances échues + anciens accès) : visible de qui voit l'entrée.
+  const resume = useResumeRelances(!isProf || onglets.suivi, path);
+  const pastille = resume ? resume.aRelancer + resume.anciensAcces : 0;
 
   // Groupes visibles (au moins un item accessible après filtrage) + item Vue étudiant.
   const visibleGroups = useMemo(
@@ -201,7 +209,10 @@ export function AdminSidebar({ profile, onglets }: { profile: Profile; onglets: 
                     )}
                   >
                     <it.Icon className="h-[18px] w-[18px]" />
-                    {it.label}
+                    <span className="flex-1">{it.label}</span>
+                    {it.href === '/admin/relances-decouverte' && pastille > 0 && (
+                      <span className="rounded-full bg-[#E4002B] px-1.5 text-[11px] font-bold tabular-nums text-white" aria-label={`${pastille} à relancer`}>{pastille}</span>
+                    )}
                   </Link>
                 ))}
               </div>

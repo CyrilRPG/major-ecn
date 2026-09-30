@@ -35,6 +35,7 @@ import { welcomeEmail, decouverteSignupNotificationEmail } from '@/lib/email/tem
 import { verifyTurnstile, clientIp } from '@/lib/turnstile';
 import { spamCheck } from '@/lib/anti-spam';
 import { enrollInCampaign } from '@/lib/email/campaign-enroll';
+import { enregistrerAccesInitial, enregistrerDemande, tracerNouvelleDemande } from '@/lib/decouverte/serveur';
 
 const Schema = z.object({
   firstName: z.string().trim().min(1, 'Prénom requis').max(100),
@@ -172,6 +173,9 @@ export async function POST(req: Request) {
     // Email déjà utilisé : on N'ÉCRASE PAS le compte existant. On renvoie une
     // erreur claire avec une invitation à se connecter directement.
     log('user-existing-block', { userId: found.id });
+    // Relances Découverte : la nouvelle demande est tracée dans la timeline du
+    // candidat existant — jamais de seconde fiche (cahier §26).
+    await tracerNouvelleDemande({ userId: found.id, email, details: { specialite: specialty, voie: voie || null, session, pays: country } });
     return NextResponse.json(
       {
         ok: false,
@@ -200,6 +204,7 @@ export async function POST(req: Request) {
       // sans qu'on l'ait trouvé, on renvoie le même flag existingAccount
       // pour que la page d'inscription propose « Se connecter ».
       if (/already|exist|duplicate/i.test(msg)) {
+        await tracerNouvelleDemande({ userId: null, email, details: { specialite: specialty, voie: voie || null, session, pays: country } });
         return NextResponse.json(
           {
             ok: false,
@@ -241,6 +246,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: pErr.message }, { status: 500 });
   }
   log('profile-upserted', { isNew });
+
+  // Relances Découverte : fiche candidat + « demande » + « compte créé ».
+  const candidatId = await enregistrerDemande({
+    userId, email, prenom: firstName, nom: lastName, telephone: phone || null, specialite: specialty || null,
+    voie: chosenVoie, session, pays: country,
+  });
 
   enrollInCampaign(email, firstName, 'espace_decouverte').catch(() => {});
 
@@ -297,6 +308,8 @@ export async function POST(req: Request) {
   // 4) Envoi de l'email : Resend (template custom) puis Supabase en fallback
   let emailVia: 'resend' | 'supabase' | null = null;
   let emailError: string | null = null;
+  let resendId: string | null = null;
+  let sujetActivation = 'E-mail d’activation';
 
   // -- Tentative 1 : Resend
   try {
@@ -305,9 +318,11 @@ export async function POST(req: Request) {
       setupUrl,
       role: 'student',
     });
+    sujetActivation = subject;
     const r = await sendEmail({ to: email, subject, html, text });
     if (r.ok) {
       emailVia = 'resend';
+      resendId = r.id;
       log('email-sent-resend', { id: r.id });
     } else {
       emailError = r.error;
@@ -360,6 +375,11 @@ export async function POST(req: Request) {
 
   const emailSent = !!emailVia;
   log('end', { emailSent, emailVia, emailError });
+
+  // Accès initial (J0) horodaté : point de départ de la cadence R1/R2/R3.
+  if (candidatId) {
+    await enregistrerAccesInitial({ candidatId, email, ok: emailSent, via: emailVia, resendId, sujet: sujetActivation, erreur: emailError });
+  }
 
   return NextResponse.json({
     ok: true,

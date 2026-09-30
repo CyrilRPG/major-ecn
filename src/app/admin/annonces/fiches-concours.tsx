@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo, useState, useTransition } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { CalendarCheck, Check, ChevronRight, Copy, Loader2, Plus, Save, Search, Trash2, X } from 'lucide-react';
+import { CalendarCheck, CalendarRange, Check, ChevronRight, Copy, Loader2, Lock, Plus, Save, Search, Trash2, X } from 'lucide-react';
 import {
   datesAVenir, etatInscription, isoVersSaisieParis, joursAvant, normaliserFiche, saisieParisVersIso,
   type FicheConcours,
@@ -10,7 +11,11 @@ import {
 import { enregistrerFiche, retirerFiche, type ChampFiche } from './actions';
 
 export type Specialite = { id: string; nom: string };
-export type LigneFiche = { id: string; nom: string; fiche: FicheConcours; heritee: boolean };
+/** `calendrier` : nom de la ligne du Calendrier EVC reliée (date, inscriptions et postes gérés là-bas), sinon null. */
+export type LigneFiche = { id: string; nom: string; fiche: FicheConcours; heritee: boolean; calendrier: string | null };
+
+/** Champs d'une fiche que le Calendrier EVC fournit pour une spécialité reliée. */
+const CHAMPS_CALENDRIER: ChampFiche[] = ['date_epreuve', 'inscriptions', 'postes'];
 
 export const inputCls =
   'w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-ink) outline-none transition-colors focus:border-(--color-primary)';
@@ -135,8 +140,30 @@ function depuisBrouillon(b: Brouillon): FicheConcours {
   });
 }
 
+/** Date d'épreuve, inscriptions et postes d'une spécialité reliée : lecture seule. */
+function GereParCalendrier({ f, nom }: { f: FicheConcours; nom: string }) {
+  const fmtInstant = (iso: string | null) => (iso
+    ? new Date(iso).toLocaleString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' })
+    : '—');
+  return (
+    <div className="rounded-xl border border-dashed border-(--color-border) bg-(--color-sand-100)/50 p-3 text-sm">
+      <p className="flex flex-wrap items-center gap-2 text-xs font-bold text-(--color-ink-soft)">
+        <Lock className="h-3.5 w-3.5" /> Géré dans Calendrier EVC <span className="font-normal">(ligne « {nom} »)</span>
+        <Link href="/admin/calendrier-evc" className="ml-auto inline-flex items-center gap-1 text-(--color-primary) underline-offset-2 hover:underline">
+          <CalendarRange className="h-3.5 w-3.5" /> Modifier dans Calendrier EVC
+        </Link>
+      </p>
+      <dl className="mt-2 grid gap-x-6 gap-y-1 text-(--color-ink) sm:grid-cols-2">
+        <div><dt className={labelCls}>Date de l’épreuve écrite</dt><dd>{f.date_epreuve ? fmt(f.date_epreuve) : '—'}</dd></div>
+        <div><dt className={labelCls}>Postes (externe / interne)</dt><dd>{f.postes_externe ?? '—'} / {f.postes_interne ?? '—'}</dd></div>
+        <div className="sm:col-span-2"><dt className={labelCls}>Inscriptions (heure de Paris)</dt><dd>{fmtInstant(f.inscription_debut)} → {fmtInstant(f.inscription_fin)}</dd></div>
+      </dl>
+    </div>
+  );
+}
+
 function FicheForm({
-  initiale, specialites, collegeFixe, dejaRemplies, onFermer,
+  initiale, specialites, collegeFixe, dejaRemplies, onFermer, calendrier = null,
 }: {
   initiale: FicheConcours;
   specialites: Specialite[];
@@ -144,13 +171,15 @@ function FicheForm({
   collegeFixe?: Specialite;
   dejaRemplies: string[];
   onFermer: () => void;
+  /** Ligne du Calendrier EVC reliée : date, inscriptions et postes en lecture seule. */
+  calendrier?: string | null;
 }) {
   const router = useRouter();
   const [pending, start] = useTransition();
   const [b, setB] = useState<Brouillon>(() => versBrouillon(initiale));
   const [cibles, setCibles] = useState<string[]>([]);
   const [copie, setCopie] = useState(false);
-  const [champsCopie, setChampsCopie] = useState<ChampFiche[]>(['date_epreuve', 'inscriptions', 'dates']);
+  const [champsCopie, setChampsCopie] = useState<ChampFiche[]>(calendrier ? ['dates'] : ['date_epreuve', 'inscriptions', 'dates']);
   const [msg, setMsg] = useState<{ ok: boolean; texte: string } | null>(null);
 
   const set = <K extends keyof Brouillon>(k: K, v: Brouillon[K]) => { setB((x) => ({ ...x, [k]: v })); setMsg(null); };
@@ -179,6 +208,13 @@ function FicheForm({
         </div>
       )}
 
+      {calendrier ? <GereParCalendrier f={initiale} nom={calendrier} /> : (<>
+      {!collegeFixe && (
+        <p className="text-[11px] text-(--color-ink-muted)">
+          Pour une spécialité reliée au <Link href="/admin/calendrier-evc" className="underline">Calendrier EVC</Link>, la date,
+          les inscriptions et les postes saisis ici sont ignorés : ils viennent du calendrier.
+        </p>
+      )}
       <div className="grid gap-4 sm:grid-cols-3">
         <label className="block">
           <span className={labelCls}>Date de l’épreuve écrite</span>
@@ -212,6 +248,7 @@ function FicheForm({
           </label>
         )}
       </div>
+      </>)}
 
       <div>
         <span className={labelCls}>Calendrier (dates clés)</span>
@@ -264,7 +301,7 @@ function FicheForm({
           {copie && (
             <div className="space-y-3 border-t border-(--color-border) p-3">
               <div className="flex flex-wrap gap-3">
-                {CHAMPS.map((c) => (
+                {CHAMPS.filter((c) => !calendrier || !CHAMPS_CALENDRIER.includes(c.key)).map((c) => (
                   <label key={c.key} className="flex items-center gap-1.5 text-xs font-semibold text-(--color-ink-soft)">
                     <input type="checkbox" checked={champsCopie.includes(c.key)} onChange={() => setChampsCopie((x) => (x.includes(c.key) ? x.filter((k) => k !== c.key) : [...x, c.key]))} />
                     {c.label}
@@ -375,6 +412,7 @@ export function FichesConcours({ lignes, specialites }: { lignes: LigneFiche[]; 
                   <span className="flex items-center gap-2 text-sm font-bold text-(--color-ink)">
                     {l.nom}
                     {l.heritee && <span className="rounded-full bg-[#FFEAD9] px-2 py-0.5 text-[10px] font-bold text-[#B45B00]">reprise des anciens blocs</span>}
+                    {l.calendrier && <span className="rounded-full bg-[#E8EEFF] px-2 py-0.5 text-[10px] font-bold text-[#2848A8]">Calendrier EVC</span>}
                   </span>
                   <span className="mt-1 block"><Resume f={l.fiche} /></span>
                 </span>
@@ -385,7 +423,7 @@ export function FichesConcours({ lignes, specialites }: { lignes: LigneFiche[]; 
             </div>
             {open && (
               <div className="border-t border-(--color-border) p-4">
-                <FicheForm initiale={l.fiche} specialites={specialites} collegeFixe={{ id: l.id, nom: l.nom }} dejaRemplies={remplies} onFermer={() => setOuverte(null)} />
+                <FicheForm initiale={l.fiche} specialites={specialites} collegeFixe={{ id: l.id, nom: l.nom }} dejaRemplies={remplies} onFermer={() => setOuverte(null)} calendrier={l.calendrier} />
               </div>
             )}
           </div>

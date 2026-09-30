@@ -30,7 +30,7 @@ export default async function AdminAnnoncesPage({ searchParams }: { searchParams
   const ordre = new Map(specialites.map((s, i) => [s.id, i]));
 
   const lignes: LigneFiche[] = [...d.fiches.entries()]
-    .map(([id, fiche]) => ({ id, nom: nomDe.get(id) ?? id, fiche, heritee: d.heritees.has(id) }))
+    .map(([id, fiche]) => ({ id, nom: nomDe.get(id) ?? id, fiche, heritee: d.heritees.has(id), calendrier: d.calendrier.get(id) ?? null }))
     .sort((a, b) => (ordre.get(a.id) ?? 999) - (ordre.get(b.id) ?? 999));
 
   const messages: LigneMessage[] = d.messages.map((m) => ({

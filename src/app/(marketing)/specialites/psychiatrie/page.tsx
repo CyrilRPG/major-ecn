@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { chargerFaitsSpecialite } from "@/lib/evc-calendrier/server";
+import { valeurPostes } from "@/lib/evc-calendrier/faits";
 import { PsychiatrieRadiologiePage, type GuideLie } from "@/components/marketing/psychiatrie-radiologie-page";
 import { JsonLd, breadcrumbSchema, courseSchema, faqSchema } from "@/components/seo/json-ld";
 import faqPsychiatrie from "@/lib/data/faq-psychiatrie.json";
@@ -6,7 +8,7 @@ import { getPublishedArticles } from "@/lib/data/blog-articles";
 import { getDbPublishedArticles } from "@/lib/data/blog-db";
 import { PSY_ARTICLES_CLUSTER, PSY_FORMULES, PSY_PROGRAMME } from "@/lib/data/psychiatrie-radiologie";
 
-export const metadata: Metadata = {
+const METADATA: Metadata = {
   title: "Préparation EVC Psychiatrie 2026",
   description:
     "Préparez les EVC de psychiatrie du 10 décembre 2026 : 450 postes en voie interne, 198 en voie externe. Programme, QCM, annales corrigées et accompagnement Major ECN.",
@@ -31,6 +33,16 @@ export const metadata: Metadata = {
   },
 };
 
+/** Description : date et postes lus dans le Calendrier EVC. */
+export async function generateMetadata(): Promise<Metadata> {
+  const f = await chargerFaitsSpecialite("psychiatrie");
+  if (!f) return METADATA;
+  return {
+    ...METADATA,
+    description: `Préparez les EVC de psychiatrie${f.dateCourte ? ` du ${f.dateCourte}` : ""} : ${valeurPostes(f.postesInterne)} postes en voie interne, ${valeurPostes(f.postesExterne)} en voie externe. Programme, QCM, annales corrigées et accompagnement Major ECN.`,
+  };
+}
+
 /** La liste des articles liés suit les publications du blog. */
 export const revalidate = 300;
 
@@ -51,7 +63,7 @@ async function guidesPublies(): Promise<GuideLie[]> {
 /** Le composant de page est un composant client : le JSON-LD est émis ici,
     côté serveur, comme sur les autres pages spécialité. */
 export default async function PsychiatriePage() {
-  const guides = await guidesPublies();
+  const [guides, faits] = await Promise.all([guidesPublies(), chargerFaitsSpecialite("psychiatrie")]);
   return (
     <>
       <JsonLd
@@ -77,7 +89,7 @@ export default async function PsychiatriePage() {
           faqSchema(faqPsychiatrie.map(({ q, a }) => ({ q, a: a.replaceAll("**", "") }))),
         ]}
       />
-      <PsychiatrieRadiologiePage kind="psychiatrie" guides={guides} />
+      <PsychiatrieRadiologiePage kind="psychiatrie" faits={faits} guides={guides} />
     </>
   );
 }

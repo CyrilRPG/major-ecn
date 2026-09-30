@@ -68,11 +68,18 @@ export type SendEmailInput = {
   cc?: string[];
   /** Pièces jointes à joindre via l'API Resend. */
   attachments?: EmailAttachment[];
+  /** En-têtes du message (ex. `List-Unsubscribe`, `List-Unsubscribe-Post`). */
+  headers?: Record<string, string>;
+  /** Clé d'idempotence Resend (`Idempotency-Key`, 24 h) : une requête rejouée
+   *  avec la même clé et la même charge utile ne produit JAMAIS un second e-mail. */
+  idempotencyKey?: string;
+  /** Pas de copie cachée (envois en nombre : relances, campagnes). */
+  sansBcc?: boolean;
 };
 
 export type SendResult =
   | { ok: true; id: string }
-  | { ok: false; error: string };
+  | { ok: false; error: string; status?: number };
 
 /** Base URL publique de l'app pour construire les liens d'email.
  *
@@ -115,7 +122,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendResult> {
   }
   if (!key) return { ok: false, error: 'RESEND_API_KEY non configurée.' };
 
-  const bcc = buildBcc();
+  const bcc = input.sansBcc ? [] : buildBcc();
 
   const res = await fetch(RESEND_URL, {
     method: 'POST',
@@ -123,6 +130,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendResult> {
     headers: {
       'content-type': 'application/json',
       authorization: `Bearer ${key}`,
+      ...(input.idempotencyKey ? { 'Idempotency-Key': input.idempotencyKey } : {}),
     },
     body: JSON.stringify({
       from,
@@ -136,6 +144,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendResult> {
       ...(input.attachments && input.attachments.length > 0
         ? { attachments: input.attachments }
         : {}),
+      ...(input.headers && Object.keys(input.headers).length > 0 ? { headers: input.headers } : {}),
     }),
   });
 
@@ -143,7 +152,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendResult> {
     const body = await res.text().catch(() => '');
     // Log côté serveur pour faciliter le diagnostic en prod
     console.error('[Resend] échec envoi', { status: res.status, body: body.slice(0, 300), to: input.to, from });
-    return { ok: false, error: `Resend ${res.status}: ${body.slice(0, 200)}` };
+    return { ok: false, error: `Resend ${res.status}: ${body.slice(0, 200)}`, status: res.status };
   }
   const j = (await res.json().catch(() => ({}))) as { id?: string };
   if (!j.id || typeof j.id !== 'string') throw new Error('Le service d’email n’a pas fourni d’accusé d’envoi.');

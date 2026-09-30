@@ -10,6 +10,7 @@ import {
 import { MeshGradient, NoiseTexture } from './premium-ui';
 import { TurnstileWidget } from './turnstile-widget';
 import { EVENEMENTS, pousserEvenement } from '@/lib/analytics/evenements';
+import { signalerInscriptionApresVideo } from '@/lib/marketing/video-suivi';
 
 const RED = '#C0112E';
 const RED_DEEP = '#8B0E22';
@@ -162,6 +163,10 @@ export function EspaceDecouverteForm() {
       // Conversion Google Ads « Formulaire inscription » : poussée avant la
       // redirection, sinon la navigation emporterait l'événement.
       pousserEvenement(EVENEMENTS.signupForm, { form_type: 'espace-decouverte' });
+      // Vidéo de présentation : si ce navigateur l'a lancée, l'inscription compte
+      // dans le « taux d'inscription après visionnage » (/admin/calendrier-evc).
+      // Beacon, jamais bloquant, parti avant la redirection.
+      signalerInscriptionApresVideo();
       {
         const base = j.redirectTo ?? '/espace-decouverte/confirmation';
         const sep = base.includes('?') ? '&' : '?';

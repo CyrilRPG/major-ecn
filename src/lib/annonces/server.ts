@@ -5,6 +5,8 @@ import {
   collegesVises, completerFiche, ficheDepuisAncienBloc, ficheDepuisSection, ficheEstVide, ficheVide, normaliserFiche,
   type AncienBloc, type FicheConcours, type MessageAnnonce,
 } from './concours';
+import { chargerCalendrierEvc } from '@/lib/evc-calendrier/server';
+import { epreuveParCollege, inscriptionEffective } from '@/lib/evc-calendrier/dates';
 
 /**
  * Lecture des annonces de l'accueil (fiches concours + messages libres),
@@ -30,6 +32,12 @@ export type DonneesAnnonces = {
   anciensBlocs: (AncienBloc & { visible: boolean })[];
   /** Nombre de lignes des anciennes sections génériques encore en base. */
   anciennesSections: number;
+  /**
+   * Spécialités reliées au Calendrier EVC (table `evc_calendrier`) : leur date
+   * d'épreuve, leur période d'inscription et leurs postes viennent de là, et de
+   * là seulement. Valeur : nom de la ligne du calendrier.
+   */
+  calendrier: Map<string, string>;
 };
 
 /**
@@ -125,9 +133,35 @@ export async function chargerAnnonces(client: any, options: { messagesMasques?: 
     if (!saisie) heritees.add(id);
   }
 
+  // 4. Calendrier EVC — source unique des dates d'épreuve, inscriptions et
+  //    postes (brief du 30/09/2026, B1). Pour une spécialité reliée à une ligne
+  //    du calendrier, ces champs sont REMPLACÉS par ceux de la table ; la fiche
+  //    ne garde que ce qui lui est propre (dates clés, note, lien). Le
+  //    planificateur (`examDateForCollege`) lit ces fiches : il suit donc la
+  //    même date. Une fiche retirée par l'administrateur reste retirée.
+  const calendrier = new Map<string, string>();
+  const cal = await chargerCalendrierEvc();
+  const maintenant = Date.now();
+  for (const sp of specialites) {
+    const e = epreuveParCollege(cal, sp.id, maintenant);
+    if (!e) continue;
+    calendrier.set(sp.id, e.nom);
+    if (saisies.get(sp.id)?.retiree) continue;
+    const insc = inscriptionEffective(e, cal.reglages, maintenant);
+    fiches.set(sp.id, {
+      ...(fiches.get(sp.id) ?? ficheVide()),
+      date_epreuve: e.date_epreuve,
+      inscription_debut: insc.debut,
+      inscription_fin: insc.fin,
+      inscription_texte: null,
+      postes_externe: e.postes_externe || null,
+      postes_interne: e.postes_interne || null,
+    });
+  }
+
   const messages = lignes
     .filter((b) => !TYPES_REMPLACES.has(b.kind))
     .map((b) => ({ ...b, data: b.data ?? {} }));
 
-  return { specialites, parentDe, fiches, heritees, messages, anciensBlocs, anciennesSections };
+  return { specialites, parentDe, fiches, heritees, messages, anciensBlocs, anciennesSections, calendrier };
 }

@@ -1,3 +1,4 @@
+import { chargerFaitsSpecialite } from '@/lib/evc-calendrier/server';
 import { AnesthesiePageContent } from '@/components/marketing/anesthesie-page';
 import { lireSpecialite } from '@/lib/tunnel-inscription';
 
@@ -44,5 +45,5 @@ export default async function AnesthesieReanimationPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const specialite = lireSpecialite(await searchParams);
-  return <AnesthesiePageContent specialite={specialite} />;
+  return <AnesthesiePageContent faits={await chargerFaitsSpecialite('anesthesie-reanimation')} specialite={specialite} />;
 }

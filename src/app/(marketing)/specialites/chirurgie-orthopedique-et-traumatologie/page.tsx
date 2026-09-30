@@ -1,3 +1,4 @@
+import { chargerFaitsSpecialite } from '@/lib/evc-calendrier/server';
 import { OrthopediePageContent } from '@/components/marketing/orthopedie-page';
 import { lireSpecialite } from '@/lib/tunnel-inscription';
 
@@ -10,7 +11,7 @@ const DESCRIPTION =
 const URL = '/specialites/chirurgie-orthopedique-et-traumatologie';
 const IMAGE = '/specialites/orthopedie/og.jpg';
 
-export const metadata = {
+const metadata = {
   alternates: { canonical: URL },
   title: TITRE,
   description: DESCRIPTION,
@@ -38,11 +39,24 @@ export const metadata = {
   },
 };
 
+/** Description : postes lus dans le Calendrier EVC. */
+export async function generateMetadata() {
+  const f = await chargerFaitsSpecialite('chirurgie-orthopedique-et-traumatologie');
+  if (f?.postesInterne == null) return metadata;
+  const description = DESCRIPTION.replace(/\d+ postes en voie interne/, `${f.postesInterne} postes en voie interne`);
+  return {
+    ...metadata,
+    description,
+    openGraph: { ...metadata.openGraph, description },
+    twitter: { ...metadata.twitter, description },
+  };
+}
+
 export default async function ChirurgieOrthopediquePage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const specialite = lireSpecialite(await searchParams);
-  return <OrthopediePageContent specialite={specialite} />;
+  return <OrthopediePageContent faits={await chargerFaitsSpecialite('chirurgie-orthopedique-et-traumatologie')} specialite={specialite} />;
 }

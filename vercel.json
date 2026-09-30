@@ -41,6 +41,10 @@
     {
       "path": "/api/cron/plan-sweep",
       "schedule": "30 3 * * *"
+    },
+    {
+      "path": "/api/cron/decouverte-sync",
+      "schedule": "15 5 * * *"
     }
   ]
 }

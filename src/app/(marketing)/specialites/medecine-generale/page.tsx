@@ -1,3 +1,4 @@
+import { chargerFaitsSpecialite } from '@/lib/evc-calendrier/server';
 import { MedecineGeneralePageContent } from '@/components/marketing/medecine-generale-page';
 import { lireSpecialite } from '@/lib/tunnel-inscription';
 import { APPROFONDI_SPECIALTIES } from '@/lib/stripe/approfondi';
@@ -85,6 +86,7 @@ export default async function MedecineGeneralePage({
         ]}
       />
       <MedecineGeneralePageContent
+        faits={await chargerFaitsSpecialite('medecine-generale')}
         specialite={specialite}
         paliersApprofondie={paliersApprofondiMedecineGenerale()}
       />

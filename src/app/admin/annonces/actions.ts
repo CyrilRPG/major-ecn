@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { chargerAnnonces } from '@/lib/annonces/server';
+import { chargerCalendrierEvc } from '@/lib/evc-calendrier/server';
 import {
   SECTION_CONCOURS, SECTIONS_HERITEES, TYPES_REMPLACES, collegesVises, normaliserFiche,
   type FicheConcours,
@@ -78,11 +79,18 @@ export async function enregistrerFiche(input: { colleges: string[]; fiche: unkno
 
   // Valeurs actuelles (anciens blocs compris) pour une copie partielle.
   const actuelles = champs ? (await chargerAnnonces(admin)).fiches : null;
+  // Spécialités reliées au Calendrier EVC : date, inscriptions et postes ne sont
+  // jamais enregistrés dans leur fiche (la table `evc_calendrier` fait foi).
+  const cal = await chargerCalendrierEvc();
+  const reliees = new Set(cal.epreuves.filter((e) => e.actif && e.college_id).map((e) => e.college_id!));
   for (const c of colleges.data) {
     let cible = fiche;
     if (champs && actuelles) {
       cible = { ...(actuelles.get(c) ?? normaliserFiche({})), retiree: false };
       for (const ch of champs.data) for (const k of CLES_PAR_CHAMP[ch]) (cible as Record<string, unknown>)[k] = fiche[k];
+    }
+    if (reliees.has(c)) {
+      cible = { ...cible, date_epreuve: null, inscription_debut: null, inscription_fin: null, inscription_texte: null, postes_externe: null, postes_interne: null };
     }
     const err = await ecrireFiche(admin, c, cible);
     if (err) return { ok: false, error: err };

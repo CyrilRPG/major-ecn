@@ -29,9 +29,10 @@ import {
 export type CampaignContentKey = 'j1' | 'j3' | 'j5' | 'j7';
 
 /**
- * Désinscription : réponse à la boîte contact (aucun jeton par destinataire
- * n'existe encore pour `campaign_recipients.unsubscribed`). Lien fonctionnel,
- * contrairement à l'ancien `href="#"`.
+ * Désinscription PAR DÉFAUT : réponse à la boîte contact. Le cron de la
+ * campagne passe désormais à chaque destinataire son lien signé vers la page
+ * de désinscription (/d/c/…, opposition durable) ; ce mailto ne sert plus
+ * qu'aux aperçus et aux envois sans destinataire identifié.
  */
 export const CAMPAIGN_UNSUBSCRIBE_URL = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Désinscription des e-mails Major ECN')}`;
 
@@ -260,8 +261,8 @@ const CAMPAIGNS = (): Record<CampaignContentKey, Campaign> => ({
   },
 });
 
-/** HTML complet d'une étape de la campagne. */
-export function renderCampaignHtml(key: CampaignContentKey): string {
+/** HTML complet d'une étape de la campagne (`unsubscribeUrl` : lien propre au destinataire). */
+export function renderCampaignHtml(key: CampaignContentKey, unsubscribeUrl: string = CAMPAIGN_UNSUBSCRIBE_URL): string {
   const c = CAMPAIGNS()[key];
   return majorEmail({
     subject: c.subject,
@@ -274,11 +275,11 @@ export function renderCampaignHtml(key: CampaignContentKey): string {
     // Le bandeau illustré de l'article tient lieu de visuel : pas de photo de bureau en plus.
     photo: false,
     reason: 'Vous recevez cet email car vous vous êtes inscrit(e) sur Major ECN.',
-    unsubscribeUrl: CAMPAIGN_UNSUBSCRIBE_URL,
+    unsubscribeUrl,
   });
 }
 
 /** Version texte d'une étape de la campagne. */
-export function renderCampaignText(key: CampaignContentKey): string {
-  return majorText(CAMPAIGNS()[key].text, { audience: 'marketing', unsubscribeUrl: CAMPAIGN_UNSUBSCRIBE_URL });
+export function renderCampaignText(key: CampaignContentKey, unsubscribeUrl: string = CAMPAIGN_UNSUBSCRIBE_URL): string {
+  return majorText(CAMPAIGNS()[key].text, { audience: 'marketing', unsubscribeUrl });
 }

@@ -50,7 +50,10 @@ export function voieOfScope(permissionScope: unknown): Voie | null {
 
 /**
  * Date de l'épreuve écrite de la spécialité (fiche concours de l'accueil),
- * 'YYYY-MM-DD'. Les fiches sont gardées 5 minutes en mémoire : chaque action
+ * 'YYYY-MM-DD'. Pour une spécialité reliée au Calendrier EVC (table
+ * `evc_calendrier`, /admin/calendrier-evc), `chargerAnnonces` y reporte la date
+ * de la table : planificateur, fiche élève et accueil public affichent la même.
+ * Les fiches sont gardées 5 minutes en mémoire : chaque action
  * du candidat recalcule son planning, inutile de relire l'accueil à chaque fois.
  */
 let fichesCache: { at: number; dates: Map<string, string>; parent: Map<string, string | null> } | null = null;

@@ -33,7 +33,14 @@ export type AuditEntity =
   // Gestion des accès collaborateurs (cahier des charges 18/09/2026).
   | 'collaborator'
   | 'student_followup'
-  | 'pedagogical_note';
+  | 'pedagogical_note'
+  // Relances de l'Offre Découverte (opérations d'envoi, paramètres, fiches).
+  | 'decouverte_relance'
+  | 'decouverte_parametres'
+  | 'decouverte_candidat'
+  // Calendrier EVC (dates d'épreuve, inscriptions, postes, réglages de session).
+  | 'evc_calendrier'
+  | 'evc_calendrier_sessions';
 
 export type AuditPayload = {
   actor: Pick<Profile, 'id' | 'first_name' | 'last_name' | 'email' | 'role'>;

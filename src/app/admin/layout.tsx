@@ -6,6 +6,7 @@ import { ongletsDe } from '@/lib/auth/onglets-equipe';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { UserMenu } from '@/components/user-menu';
 import { ImpersonationBanner } from '@/components/impersonation-banner';
+import { BanniereRelancesDecouverte } from '@/components/admin/relances-decouverte/banniere';
 
 export const metadata = { title: 'Administration' };
 
@@ -40,6 +41,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <header className="flex h-16 shrink-0 items-center justify-end gap-3 border-b border-(--color-border) bg-(--color-surface) px-4">
             <UserMenu profile={profile} />
           </header>
+          {/* Notification « candidats Offre Découverte à relancer » (pages d'atterrissage). */}
+          <BanniereRelancesDecouverte visible={onglets.suivi} />
           <div className="min-w-0 flex-1">{children}</div>
         </div>
       </div>

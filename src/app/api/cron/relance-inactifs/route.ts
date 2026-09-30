@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { relanceInactiveEmail } from '@/lib/email/templates';
+import { fetchAllRows } from '@/lib/supabase/fetch-all';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -14,6 +15,12 @@ export const maxDuration = 300;
  * (colonne `profiles.last_relance_at`). Un élève qui s'est déjà connecté au
  * moins une fois (`auth.users.last_sign_in_at` non nul) n'est jamais relancé.
  * Chaque relance embarque un lien d'activation frais.
+ *
+ * Offre Découverte (30/09/2026) : les candidats découverte ne sont PLUS
+ * relancés ici. Leurs relances (R1/R2/R3, ancien accès) passent par le module
+ * /admin/relances-decouverte, sous contrôle administrateur, sans boucle
+ * automatique — cahier des charges du client. Les adresses et comptes sous
+ * opposition (désinscription, plainte) sont exclus eux aussi.
  *
  * ⚠️ Générer un lien INVALIDE le précédent du même type : GoTrue n'en garde
  * qu'un seul par utilisateur. Ce cron était la première cause des « lien plus
@@ -64,13 +71,31 @@ export async function GET(req: Request) {
   }
 
   // 2) Élèves actifs.
-  const { data: studs } = await a
+  // Lecture intégrale par tranches : PostgREST tronque en silence à 1 000 lignes.
+  const studs = await fetchAllRows((from, to) => a
     .from('profiles')
-    .select('id, email, first_name, last_relance_at')
+    .select('id, email, first_name, last_relance_at, permission_scope')
     .eq('role', 'student')
-    .eq('is_active', true);
+    .eq('is_active', true)
+    .order('id')
+    .range(from, to));
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const students = (studs ?? []) as { id: string; email: string | null; first_name: string | null; last_relance_at: string | null }[];
+  const tous = (studs ?? []) as { id: string; email: string | null; first_name: string | null; last_relance_at: string | null; permission_scope: any }[];
+  // Candidats de l'Offre Découverte : relancés par leur module dédié uniquement.
+  const estDecouverte = (ps: { offer?: unknown; espace_decouverte?: unknown } | null) =>
+    !!ps && (ps.offer === 'decouverte' || (ps.espace_decouverte === true && !ps.offer));
+  // Oppositions (désinscriptions, plaintes) : jamais relancés.
+  const oppositions = await fetchAllRows<{ email_normalise: string; user_id: string | null }>((from, to) =>
+    a.from('communication_oppositions').select('email_normalise, user_id').order('id').range(from, to)).catch(() => null);
+  if (!oppositions) return NextResponse.json({ ok: false, error: 'Oppositions illisibles : aucune relance envoyée.' }, { status: 503 });
+  const emailsOpposes = new Set(oppositions.map((o) => o.email_normalise));
+  const comptesOpposes = new Set(oppositions.map((o) => o.user_id).filter(Boolean));
+  let exclusDecouverte = 0, exclusOpposition = 0;
+  const students = tous.filter((s) => {
+    if (estDecouverte(s.permission_scope)) { exclusDecouverte++; return false; }
+    if (comptesOpposes.has(s.id) || (s.email && emailsOpposes.has(s.email.trim().toLowerCase()))) { exclusOpposition++; return false; }
+    return true;
+  });
 
   const now = Date.now();
   let sent = 0, failed = 0, skippedRecent = 0, alreadyConnected = 0, noEmail = 0;
@@ -123,7 +148,7 @@ export async function GET(req: Request) {
     ok: true,
     summary: {
       candidates: students.length, sent, failed, skippedRecent, alreadyConnected, noEmail,
-      skippedInvitationFraiche, skippedLienIndisponible,
+      skippedInvitationFraiche, skippedLienIndisponible, exclusDecouverte, exclusOpposition,
     },
   });
 }

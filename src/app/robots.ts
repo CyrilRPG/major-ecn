@@ -37,6 +37,8 @@ export default function robots(): MetadataRoute.Robots {
           '/cours',
           '/forum',
           '/annales',
+          // Liens personnels des e-mails de relance (accès, désinscription…) : jamais explorés.
+          '/d/',
         ],
       },
     ],

@@ -28,6 +28,8 @@ const STATIC_ROUTES: {
   { path: '/guide-methodologie-evc-2026', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/profil-evc', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/plateforme', priority: 0.9, changeFrequency: 'monthly' },
+  // Visite guidée en vidéo de la plateforme (lecteur, sans jeton d'accès).
+  { path: '/visite-guidee', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/tarifs', priority: 0.9, changeFrequency: 'monthly' },
   { path: '/formules/essentielle', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/formules/programme-approfondi', priority: 0.8, changeFrequency: 'monthly' },

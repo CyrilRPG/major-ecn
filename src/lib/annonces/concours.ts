@@ -1,4 +1,5 @@
 import type { PermissionScope } from '@/types/domain';
+import { ecartJours, jourParis } from '@/lib/evc-calendrier/dates';
 
 /**
  * Annonces de l'accueil — refonte du 24/09/2026.
@@ -195,10 +196,13 @@ export function specialitesDeLEleve(scope: PermissionScope, parentDe: ReadonlyMa
 
 const JOUR = 86_400_000;
 
-/** Jours restants avant une date (AAAA-MM-JJ), à minuit heure locale. */
+/**
+ * Jours restants avant une date (AAAA-MM-JJ), en jours calendaires de PARIS
+ * (comme le bandeau et la carte de l'accueil) : le serveur tourne en UTC et
+ * l'élève peut être à l'étranger, seul le jour de Rungis compte.
+ */
 export function joursAvant(dateIso: string, maintenant = Date.now()): number {
-  const cible = new Date(dateIso.length === 10 ? `${dateIso}T00:00:00` : dateIso).getTime();
-  return Math.max(0, Math.ceil((cible - maintenant) / JOUR));
+  return Math.max(0, ecartJours(jourParis(maintenant), dateIso.slice(0, 10)));
 }
 
 export type EtatInscription =
@@ -227,7 +231,7 @@ export function datesAVenir(f: FicheConcours, maintenant = Date.now()): DateCle[
 /** L'épreuve est-elle passée ? (la fiche n'a alors plus rien d'utile à dire) */
 export function epreuvePassee(f: FicheConcours, maintenant = Date.now()): boolean {
   if (!f.date_epreuve) return false;
-  return new Date(`${f.date_epreuve.slice(0, 10)}T23:59:59`).getTime() < maintenant && datesAVenir(f, maintenant).length === 0;
+  return f.date_epreuve.slice(0, 10) < jourParis(maintenant) && datesAVenir(f, maintenant).length === 0;
 }
 
 /* ───────────────────────── messages libres ───────────────────────── */

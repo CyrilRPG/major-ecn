@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { CALENDRIER_ARTICLE, EPREUVES_2026, POSTES_INTERNE, VOIES_ARTICLE } from './evc-calendrier-2026';
+import { CALENDRIER_ARTICLE, VOIES_ARTICLE } from './evc-calendrier-2026';
 import { lienSpecialite } from '@/lib/data/pages-specialites';
+import { bornesSession, epreuvesSession, formatJour, nombreFr, totauxPostes } from '@/lib/evc-calendrier/dates';
+import type { CalendrierEvc, EpreuveEvc } from '@/lib/evc-calendrier/types';
 import {
   BORDER, INK_MUTED, INK_SOFT, JAKARTA, MANROPE, NAVY, RED, RED_DEEP,
   RED_GRADIENT,
@@ -12,33 +14,18 @@ import {
 /* ============================================================
    BLOC POSTES — un chiffre focal, puis la donnée dense.
 
+   Données : table `evc_calendrier` (session en cours) et totaux officiels
+   des réglages — plus aucun chiffre écrit dans ce composant.
+
    Les DEUX listes sont rendues en permanence, y compris côté serveur :
    la bascule ne fait que masquer l'inactive en CSS. Un système d'onglets
    qui construirait la liste au clic ferait disparaître la moitié du
    contenu pour les moteurs de recherche.
    ============================================================ */
 
-const TOTAL_EXTERNE = 1003;
-const TOTAL_INTERNE = 2896;
-
-/** Les trois spécialités mises en avant en voie externe : elles portent
-    l'histoire de la session et les deux nouveautés 2026. */
-const VEDETTES = ['medecine-interne', 'psychiatrie', 'geriatrie'];
-
-const externeVedettes = VEDETTES
-  .map((s) => EPREUVES_2026.find((e) => e.slug === s))
-  .filter(Boolean) as typeof EPREUVES_2026;
-
-const externeLignes = [...EPREUVES_2026]
-  .filter((e) => !VEDETTES.includes(e.slug))
-  .sort((a, b) => b.externe - a.externe);
-
-const interneLignes = [...POSTES_INTERNE].sort((a, b) => b.postes - a.postes);
-
-// Chaque ligne mène à la spécialité elle-même : sa page dédiée quand elle
-// existe, sinon sa carte dans l'annuaire. Avant, seules deux lignes avaient un
-// lien propre et toutes les autres tombaient en haut de l'annuaire.
-const lien = (slug: string) => lienSpecialite(slug);
+// Chaque ligne mène à la spécialité elle-même : l'URL saisie dans le
+// calendrier, sinon sa page dédiée ou sa carte dans l'annuaire.
+const lien = (e: EpreuveEvc) => e.url_page ?? lienSpecialite(e.slug);
 
 /** Ligne dense : nom, barre proportionnelle, chiffre. La barre rend
     l'écart entre spécialités lisible d'un coup d'œil. */
@@ -73,10 +60,23 @@ function Ligne({
   );
 }
 
-export function HomeSpecialitesSection() {
+export function HomeSpecialitesSection({ calendrier }: { calendrier: CalendrierEvc }) {
   const [voie, setVoie] = useState<'externe' | 'interne'>('externe');
-  const maxExterne = Math.max(...externeLignes.map((e) => e.externe));
-  const maxInterne = Math.max(...interneLignes.map((e) => e.postes));
+  const session = calendrier.reglages.session_en_cours;
+  const lignes = epreuvesSession(calendrier);
+  const totaux = totauxPostes(calendrier);
+  const bornes = bornesSession(lignes);
+  const source = calendrier.reglages.source_postes;
+
+  // Voie externe : les trois spécialités les plus dotées en vedette, les autres en liste.
+  const externe = lignes.filter((e) => (e.postes_externe ?? 0) > 0).sort((a, b) => b.postes_externe! - a.postes_externe!);
+  const externeVedettes = externe.slice(0, 3);
+  const externeLignes = externe.slice(3);
+  const aucuneChirurgie = !externe.some((e) => /chirurg/i.test(e.nom));
+  // Voie interne : les dix spécialités les plus dotées, par volume décroissant.
+  const interneLignes = lignes.filter((e) => (e.postes_interne ?? 0) > 0).sort((a, b) => b.postes_interne! - a.postes_interne!).slice(0, 10);
+  const maxExterne = Math.max(1, ...externeLignes.map((e) => e.postes_externe!));
+  const maxInterne = Math.max(1, ...interneLignes.map((e) => e.postes_interne!));
 
   return (
     <section id="specialites" className="py-16 sm:py-20 lg:py-24" style={{ fontFamily: JAKARTA, background: 'linear-gradient(180deg, #FFFFFF 0%, #FBFBFD 100%)' }}>
@@ -84,19 +84,19 @@ export function HomeSpecialitesSection() {
         {/* Point focal : un seul chiffre, très gros. */}
         <div className="text-center">
           <p className="text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ color: RED }}>
-            Postes ouverts — session 2026
+            Postes ouverts — session {session}
           </p>
           <p className="mt-4 text-[3.4rem] font-black leading-none tabular-nums sm:text-[5rem]" style={{ color: NAVY, letterSpacing: '-0.04em' }}>
-            {(TOTAL_EXTERNE + TOTAL_INTERNE).toLocaleString('fr-FR')}
+            {nombreFr(totaux.externe + totaux.interne)}
           </p>
           <p className="mt-3 text-[16px] font-black tracking-tight sm:text-[18px]" style={{ color: RED_DEEP }}>
-            postes ouverts aux EVC 2026
+            postes ouverts aux EVC {session}
           </p>
           <p className="mx-auto mt-4 max-w-2xl text-[14px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
-            <span className="font-bold" style={{ color: NAVY }}>1 003 en voie externe</span>, répartis entre treize
-            spécialités médicales — aucune spécialité chirurgicale.{' '}
-            <span className="font-bold" style={{ color: NAVY }}>2 896 en voie interne</span>, ouverte à plus de
-            quarante spécialités. Arrêté du 12 juin 2026.
+            <span className="font-bold" style={{ color: NAVY }}>{nombreFr(totaux.externe)} en voie externe</span>, répartis entre{' '}
+            {totaux.specialitesExterne} spécialités{aucuneChirurgie ? ' médicales — aucune spécialité chirurgicale' : ''}.{' '}
+            <span className="font-bold" style={{ color: NAVY }}>{nombreFr(totaux.interne)} en voie interne</span>, ouverte à plus de
+            quarante spécialités.{source ? ` ${source}.` : ''}
           </p>
         </div>
 
@@ -122,14 +122,15 @@ export function HomeSpecialitesSection() {
           {/* ---------- Voie externe ---------- */}
           <div id="postes-externe" role="tabpanel" className={voie === 'externe' ? 'block' : 'hidden'}>
             <p className="mt-6 text-center text-[13px]" style={{ color: INK_MUTED, fontFamily: MANROPE }}>
-              1 003 postes · 13 spécialités · épreuves du 10 novembre 2026 au 15 janvier 2027
+              {nombreFr(totaux.externe)} postes · {totaux.specialitesExterne} spécialités
+              {bornes && <> · épreuves du {formatJour(bornes.premiere, { semaine: false })} au {formatJour(bornes.derniere, { semaine: false })}</>}
             </p>
 
             <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
               {externeVedettes.map((s) => (
                 <Link
                   key={s.slug}
-                  href={lien(s.slug)}
+                  href={lien(s)}
                   className="flex flex-col rounded-2xl bg-white px-6 py-6 transition-transform duration-300 hover:-translate-y-1"
                   style={{ border: `1px solid ${BORDER}`, boxShadow: '0 24px 60px -58px rgba(15,27,61,0.55)' }}
                 >
@@ -140,13 +141,15 @@ export function HomeSpecialitesSection() {
                     {s.nom}
                   </p>
                   <p className="mt-4 text-[2.4rem] font-black leading-none tabular-nums" style={{ color: RED_DEEP, letterSpacing: '-0.03em' }}>
-                    {s.externe}
+                    {s.postes_externe}
                   </p>
                   <p className="text-[12.5px]" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
-                    postes en voie externe{s.interne != null ? ` · ${s.interne} en interne` : ''}
+                    postes en voie externe{s.postes_interne != null ? ` · ${s.postes_interne} en interne` : ''}
                   </p>
                   <p className="mt-4 border-t pt-3 text-[12px]" style={{ borderColor: BORDER, color: INK_MUTED, fontFamily: MANROPE }}>
-                    Épreuve le <span className="font-black" style={{ color: NAVY }}>{s.label}</span>
+                    {s.date_epreuve
+                      ? <>Épreuve le <span className="font-black" style={{ color: NAVY }}>{formatJour(s.date_epreuve)}</span></>
+                      : 'Date d’épreuve à paraître'}
                   </p>
                 </Link>
               ))}
@@ -157,11 +160,11 @@ export function HomeSpecialitesSection() {
                 <Ligne
                   key={s.slug}
                   nom={s.nom}
-                  valeur={s.externe}
+                  valeur={s.postes_externe!}
                   max={maxExterne}
-                  href={lien(s.slug)}
+                  href={lien(s)}
                   couleur={RED}
-                  date={s.label}
+                  date={s.date_epreuve ? formatJour(s.date_epreuve) : undefined}
                 />
               ))}
             </div>
@@ -170,12 +173,12 @@ export function HomeSpecialitesSection() {
           {/* ---------- Voie interne ---------- */}
           <div id="postes-interne" role="tabpanel" className={voie === 'interne' ? 'block' : 'hidden'}>
             <p className="mt-6 text-center text-[13px]" style={{ color: INK_MUTED, fontFamily: MANROPE }}>
-              2 896 postes · plus de 40 spécialités
+              {nombreFr(totaux.interne)} postes · plus de 40 spécialités
             </p>
 
             <div className="mt-6 rounded-2xl bg-white px-2 py-1 sm:px-3" style={{ border: `1px solid ${BORDER}` }}>
               {interneLignes.map((s) => (
-                <Ligne key={s.slug} nom={s.nom} valeur={s.postes} max={maxInterne} href={lien(s.slug)} couleur={NAVY} />
+                <Ligne key={s.slug} nom={s.nom} valeur={s.postes_interne!} max={maxInterne} href={lien(s)} couleur={NAVY} />
               ))}
             </div>
 

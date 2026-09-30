@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { valeurPostes, type FaitsSpecialite } from '@/lib/evc-calendrier/faits';
 import { useState } from 'react';
 import { Reveal } from './reveal';
 import { AccompagnementSpecialite } from './accompagnement-humain';
@@ -136,7 +137,7 @@ function Voies({ psy, fond = '#FFFFFF' }: { psy: boolean; fond?: string }) {
   );
 }
 
-function Hero({ psy }: { psy: boolean }) {
+function Hero({ psy, faits }: { psy: boolean; faits: FaitsSpecialite | null }) {
   const spec = psy ? 'psychiatrie' : 'radiologie';
   return (
     <section style={{ fontFamily: FONT }}>
@@ -165,9 +166,9 @@ function Hero({ psy }: { psy: boolean }) {
                 </>
               )}
             </h1>
-            {!psy && (
+            {!psy && faits && (
               <p className="mt-4 text-[13px] font-black uppercase tracking-[0.08em]" style={{ color: RED_DEEP }}>
-                8 décembre 2026 · 72 postes en voie externe
+                {faits.dateCourte ?? 'Date à paraître'} · {valeurPostes(faits.postesExterne)} postes en voie externe
               </p>
             )}
 
@@ -295,17 +296,25 @@ function Hero({ psy }: { psy: boolean }) {
  * repères : ils occupaient deux sections entières pour quatre informations.
  * Ici, une seule bande, lisible en quelques secondes.
  */
-function BandeauEcheancePsy() {
+function BandeauEcheancePsy({ faits }: { faits: FaitsSpecialite | null }) {
+  // Date, postes et lieu : Calendrier EVC (les valeurs de PSY_CHIFFRES_CLES ne
+  // servent plus qu'aux deux preuves fixes, expérience et médecins accompagnés).
+  const chiffres = PSY_CHIFFRES_CLES.map((c, i) => {
+    if (i === 0) return { ...c, valeur: faits?.dateCourte ?? 'À paraître', note: faits?.lieu ?? c.note };
+    if (i === 1) return { ...c, valeur: `${valeurPostes(faits?.postesInterne)} postes` };
+    if (i === 2) return { ...c, valeur: `${valeurPostes(faits?.postesExterne)} postes` };
+    return c;
+  });
   return (
     <section className="py-10 sm:py-12" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
         <Reveal>
           <div className="rounded-[1.25rem] px-6 py-7 sm:px-9" style={{ background: PAPER, border: `1px solid ${LINE}` }}>
             <p className="text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ color: RED }}>
-              EVC Psychiatrie 2026
+              EVC Psychiatrie {faits?.session ?? 2026}
             </p>
             <div className="mt-6 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-5">
-              {PSY_CHIFFRES_CLES.map((c, i) => (
+              {chiffres.map((c, i) => (
                 <div
                   key={c.valeur}
                   className="lg:pl-7 lg:first:pl-0"
@@ -346,7 +355,7 @@ function BandeauEcheancePsy() {
 
 const ARRETE = 'https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054245644';
 
-function BlocSession({ psy }: { psy: boolean }) {
+function BlocSession({ psy, faits }: { psy: boolean; faits: FaitsSpecialite | null }) {
   return (
     <section className="py-12 sm:py-14" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -364,12 +373,8 @@ function BlocSession({ psy }: { psy: boolean }) {
               </h2>
               <p className="mt-4 text-[15px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
                 Épreuve le{' '}
-                <span className="font-black" style={{ color: NAVY }}>
-                  <time dateTime={psy ? '2026-12-10' : '2026-12-08'}>
-                    {psy ? 'jeudi 10 décembre 2026' : 'mardi 8 décembre 2026'}
-                  </time>
-                </span>
-                , Espace Jean-Monnet, Rungis.
+                <span className="font-black" style={{ color: NAVY }}>{faits?.dateLongue ?? 'à paraître'}</span>
+                , {faits?.lieu ?? 'Espace Jean Monnet, Rungis'}.
               </p>
               <p className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13.5px] font-bold">
                 <a href={ARRETE} target="_blank" rel="noreferrer" className="underline underline-offset-4" style={{ color: RED }}>
@@ -384,7 +389,7 @@ function BlocSession({ psy }: { psy: boolean }) {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="rounded-2xl bg-white px-6 py-6" style={{ border: `1px solid ${LINE}` }}>
                 <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: RED_DEEP, letterSpacing: '-0.03em' }}>
-                  {psy ? '198' : '72'}
+                  {valeurPostes(faits?.postesExterne)}
                 </p>
                 <p className="mt-2 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
                   postes ouverts
@@ -393,7 +398,7 @@ function BlocSession({ psy }: { psy: boolean }) {
               </div>
               <div className="rounded-2xl bg-white px-6 py-6" style={{ border: `1px solid ${LINE}` }}>
                 <p className="text-[1.35rem] font-black leading-tight" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
-                  Session 2026
+                  Session {faits?.session ?? 2026}
                 </p>
                 <p className="mt-2 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
                   Épreuves à
@@ -1848,7 +1853,7 @@ function AppelFinal({ psy }: { psy: boolean }) {
 
 /* ============================================================ */
 
-export function PsychiatrieRadiologiePage({ kind, guides = [] }: { kind: SpecialtyKind; guides?: GuideLie[] }) {
+export function PsychiatrieRadiologiePage({ kind, guides = [], faits = null }: { kind: SpecialtyKind; guides?: GuideLie[]; faits?: FaitsSpecialite | null }) {
   const psy = kind === 'psychiatrie';
   const nom = psy ? 'Psychiatrie' : 'Radiologie & Imagerie médicale';
   return (
@@ -1865,7 +1870,7 @@ export function PsychiatrieRadiologiePage({ kind, guides = [] }: { kind: Special
         </p>
       </nav>
 
-      <Hero psy={psy} />
+      <Hero psy={psy} faits={faits} />
 
       {/*
         L'ordre de la page psychiatrie raconte une histoire, dans cet ordre :
@@ -1882,7 +1887,7 @@ export function PsychiatrieRadiologiePage({ kind, guides = [] }: { kind: Special
       */}
       {psy ? (
         <>
-          <BandeauEcheancePsy />
+          <BandeauEcheancePsy faits={faits} />
           <Methode psy />
           <TemoignageSectionPsy />
           <ApercuTarifsPsy />
@@ -1897,7 +1902,7 @@ export function PsychiatrieRadiologiePage({ kind, guides = [] }: { kind: Special
         </>
       ) : (
         <>
-          <BlocSession psy={false} />
+          <BlocSession psy={false} faits={faits} />
           <Reperes psy={false} />
           <Methode psy={false} />
           <AccompagnementSpecialite />

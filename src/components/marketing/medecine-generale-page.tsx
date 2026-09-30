@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { valeurPostes, type FaitsSpecialite } from '@/lib/evc-calendrier/faits';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Reveal } from './reveal';
@@ -174,7 +175,7 @@ const ARTICLE_MG = 'evc-medecine-generale-2026-changement-jury';
 const ARTICLE_CALENDRIER = 'calendrier-evc-2026-dates-epreuves-specialites';
 const ARTICLE_RATIO = 'evc-ratio-candidats-postes-choix-specialite-2026';
 
-function BlocSession() {
+function BlocSession({ faits }: { faits: FaitsSpecialite | null }) {
   return (
     <section className="py-12 sm:py-14" style={{ fontFamily: FONT, background: '#FFFFFF' }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -185,17 +186,17 @@ function BlocSession() {
           >
             <div>
               <p className="text-[11.5px] font-black uppercase tracking-[0.16em]" style={{ color: RED }}>
-                Session 2026
+                Session {faits?.session ?? 2026}
               </p>
               <h2 className="mt-3 text-[1.5rem] font-black leading-tight tracking-tight sm:text-[1.8rem]" style={{ color: NAVY, letterSpacing: '-0.02em' }}>
                 Médecine générale
               </h2>
               <p className="mt-4 text-[15px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-                <span className="font-black" style={{ color: NAVY }}>89 postes en voie interne.</span>{' '}
-                <span className="font-black" style={{ color: RED_DEEP }}>35 postes en voie externe.</span>
+                <span className="font-black" style={{ color: NAVY }}>{valeurPostes(faits?.postesInterne)} postes en voie interne.</span>{' '}
+                <span className="font-black" style={{ color: RED_DEEP }}>{valeurPostes(faits?.postesExterne)} postes en voie externe.</span>
                 <br />
-                Épreuve le <span className="font-black" style={{ color: NAVY }}>vendredi 15 janvier 2027</span>,
-                Espace Jean-Monnet, Rungis.
+                Épreuve le <span className="font-black" style={{ color: NAVY }}>{faits?.dateLongue ?? 'à paraître'}</span>,
+                {faits?.lieu ?? 'Espace Jean Monnet, Rungis'}.
               </p>
               <p className="mt-3 text-[12.5px]" style={{ color: INK_MUTED, fontFamily: FONT_BODY }}>
                 Source : arrêté du 12 juin 2026.
@@ -212,14 +213,14 @@ function BlocSession() {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="rounded-2xl bg-white px-6 py-6" style={{ border: `1px solid ${LINE}` }}>
-                <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: NAVY, letterSpacing: '-0.03em' }}>89</p>
+                <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: NAVY, letterSpacing: '-0.03em' }}>{valeurPostes(faits?.postesInterne)}</p>
                 <p className="mt-2 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
                   postes ouverts
                   <span className="block font-black" style={{ color: NAVY }}>en voie interne</span>
                 </p>
               </div>
               <div className="rounded-2xl bg-white px-6 py-6" style={{ border: `1px solid ${LINE}` }}>
-                <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: RED_DEEP, letterSpacing: '-0.03em' }}>35</p>
+                <p className="text-[3rem] font-black leading-none tabular-nums" style={{ color: RED_DEEP, letterSpacing: '-0.03em' }}>{valeurPostes(faits?.postesExterne)}</p>
                 <p className="mt-2 text-[13px] leading-snug" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
                   postes ouverts
                   <span className="block font-black" style={{ color: NAVY }}>en voie externe</span>
@@ -1235,16 +1236,19 @@ function CtaFinal() {
 export function MedecineGeneralePageContent({
   specialite,
   paliersApprofondie = [],
+  faits = null,
 }: {
   specialite?: string;
   paliersApprofondie?: { heures: string; prix: string }[];
+  /** Date, postes et lieu lus dans le Calendrier EVC (page serveur). */
+  faits?: FaitsSpecialite | null;
 }) {
   return (
     <div className="overflow-x-hidden" style={{ background: '#FFFFFF' }}>
       <AncreTunnel actif />
       <FilAriane />
       <Hero />
-      <BlocSession />
+      <BlocSession faits={faits} />
       <Introduction />
       <Voies />
       <Programme />

@@ -1,61 +1,69 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { CALENDRIER_ARTICLE, EPREUVES_2026 } from './evc-calendrier-2026';
+import { etatBandeau, formatJour, libelleJ } from '@/lib/evc-calendrier/dates';
+import type { CalendrierEvc } from '@/lib/evc-calendrier/types';
+import { useMaintenant } from '@/lib/evc-calendrier/use-maintenant';
 import { JAKARTA, MANROPE } from './home-ui';
 
 /* ============================================================
-   BANDEAU COMPTE À REBOURS — prochaine épreuve de la session.
-   Les épreuves s'étalent du 10 novembre 2026 au 15 janvier 2027 et
-   chaque spécialité a sa propre date : le bandeau vise donc la
-   prochaine épreuve à venir, pas une date unique.
+   BANDEAU COMPTE À REBOURS — prochaine épreuve de la session (B2, B5).
+
+   Alimenté par la table `evc_calendrier` (et elle seule), il se met à jour
+   seul : dès qu'une date est passée, la spécialité suivante s'affiche et le
+   compteur se recalcule ; le jour d'une épreuve, la spécialité du jour reste
+   affichée avec « Jour J » ; après la dernière épreuve, tant que la session
+   suivante n'est pas publiée : « Session N+1 : calendrier à paraître ».
+   Calcul en jours calendaires de Paris (B6), recalculé au moins toutes les
+   heures et pile au passage de minuit à Paris (useMaintenant).
    ============================================================ */
 
-export function HomeCountdown() {
-  // La prochaine épreuve dépend de la date du visiteur : on ne la calcule
-  // qu'après le montage, sinon le rendu serveur et le rendu client diffèrent.
-  const [etat, setEtat] = useState<{ jours: number; nom: string; label: string } | null>(null);
+export function HomeCountdown({ calendrier, rendu }: { calendrier: CalendrierEvc; rendu: number }) {
+  return <BandeauEvc calendrier={calendrier} maintenant={useMaintenant(rendu)} />;
+}
 
-  useEffect(() => {
-    const calcule = () => {
-      const n = new Date();
-      const aujourdhui = Date.UTC(n.getFullYear(), n.getMonth(), n.getDate());
-      const prochaine = EPREUVES_2026.find((e) => Date.UTC(e.a, e.m - 1, e.j) >= aujourdhui);
-      if (!prochaine) return setEtat(null);
-      const jours = Math.round((Date.UTC(prochaine.a, prochaine.m - 1, prochaine.j) - aujourdhui) / 86_400_000);
-      setEtat({ jours, nom: prochaine.nom, label: prochaine.label });
-    };
-    calcule();
-    const t = setInterval(calcule, 60 * 60 * 1000);
-    return () => clearInterval(t);
-  }, []);
+/** Rendu du bandeau pour un instant donné (accueil, et aperçu « simuler la date » de l'administration). */
+export function BandeauEvc({ calendrier, maintenant }: { calendrier: CalendrierEvc; maintenant: number }) {
+  const etat = etatBandeau(calendrier, maintenant);
+  const lien = calendrier.reglages.url_deroule;
+
+  let badge: string | null = null;
+  let titre: string;
+  let suite: string | null = null;
+  let cta = 'Voir la date de ma spécialité';
+  if (etat.etat === 'a_paraitre') {
+    titre = `Session ${etat.annee} : calendrier à paraître.`;
+    cta = 'Consulter le déroulé de la session en cours →';
+  } else {
+    const noms = etat.epreuves.map((e) => e.nom).join(', ');
+    const lieu = etat.epreuves[0]?.lieu ?? 'Espace Jean Monnet, Rungis';
+    badge = etat.etat === 'jour_j' ? 'Jour J' : libelleJ(etat.jours);
+    titre = `${etat.etat === 'jour_j' ? 'Épreuve EVC aujourd’hui' : 'Prochaine épreuve EVC'} : ${noms}, ${formatJour(etat.date)}`;
+    suite = `${lieu}. Chaque spécialité a sa propre date.`;
+  }
 
   return (
     <aside
-      aria-label="Compte à rebours avant les épreuves EVC 2026"
+      aria-label={`Calendrier des épreuves EVC ${calendrier.reglages.session_en_cours}`}
       className="relative z-10"
       style={{ fontFamily: JAKARTA, background: 'linear-gradient(100deg, #6B0F1E 0%, #A5122A 45%, #C0112E 100%)' }}
     >
       <div className="mx-auto flex max-w-[88rem] flex-col items-center gap-x-6 gap-y-3 px-4 py-3.5 text-center sm:px-6 lg:flex-row lg:justify-center lg:px-8 lg:text-left">
-        {etat && (
-          <p className="shrink-0 rounded-lg bg-white/15 px-3.5 py-1.5 text-[15px] font-black tabular-nums text-white">
-            J−{etat.jours}
+        {badge && (
+          <p className="shrink-0 whitespace-nowrap rounded-lg bg-white/15 px-3.5 py-1.5 text-[15px] font-black tabular-nums text-white">
+            {badge}
           </p>
         )}
         <p className="text-[13.5px] leading-snug text-white/90" style={{ fontFamily: MANROPE }}>
-          <span className="font-black text-white" style={{ fontFamily: JAKARTA }}>
-            {etat ? `Prochaine épreuve EVC : ${etat.nom}, ${etat.label}` : 'Épreuves EVC 2026 : du 10 novembre 2026 au 15 janvier 2027'}
-          </span>
-          {' — '}
-          Espace Jean Monnet, Rungis. Chaque spécialité a sa propre date.
+          <span className="font-black text-white" style={{ fontFamily: JAKARTA }}>{titre}</span>
+          {suite && <>{' — '}{suite}</>}
         </p>
         <Link
-          href={`/blog/${CALENDRIER_ARTICLE}`}
+          href={lien}
           className="shrink-0 rounded-lg bg-white px-4 py-2 text-[12.5px] font-black tracking-tight transition-transform hover:scale-[1.03]"
           style={{ color: '#8B0E22' }}
         >
-          Voir la date de ma spécialité
+          {cta}
         </Link>
       </div>
     </aside>

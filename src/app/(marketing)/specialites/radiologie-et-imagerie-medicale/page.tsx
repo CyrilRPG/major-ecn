@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { chargerFaitsSpecialite } from "@/lib/evc-calendrier/server";
+import { valeurPostes } from "@/lib/evc-calendrier/faits";
 import { PsychiatrieRadiologiePage } from "@/components/marketing/psychiatrie-radiologie-page";
 import { JsonLd, breadcrumbSchema, faqSchema } from "@/components/seo/json-ld";
 import faqRadiologie from "@/lib/data/faq-radiologie.json";
 
-export const metadata: Metadata = {
+const METADATA: Metadata = {
   title: "Préparation EVC Radiologie et Imagerie médicale 2026",
   description:
     "Préparez les EVC de radiologie du 8 décembre 2026 : 72 postes en voie externe, dossiers avec iconographie, QCM, QROC, annales et cours Major ECN.",
@@ -30,7 +32,20 @@ export const metadata: Metadata = {
 
 /** Le composant de page est un composant client : le JSON-LD est émis ici,
     côté serveur, comme sur les autres pages spécialité. */
-export default function RadiologiePage() {
+/** Date et postes lus dans le Calendrier EVC (cache 5 min, invalidé à l'enregistrement). */
+export const revalidate = 300;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const f = await chargerFaitsSpecialite("radiodiagnostic-et-imagerie-medicale");
+  if (!f) return METADATA;
+  return {
+    ...METADATA,
+    description: `Préparez les EVC de radiologie${f.dateCourte ? ` du ${f.dateCourte}` : ""} : ${valeurPostes(f.postesExterne)} postes en voie externe, dossiers avec iconographie, QCM, QROC, annales et cours Major ECN.`,
+  };
+}
+
+export default async function RadiologiePage() {
+  const faits = await chargerFaitsSpecialite("radiodiagnostic-et-imagerie-medicale");
   return (
     <>
       <JsonLd
@@ -43,7 +58,7 @@ export default function RadiologiePage() {
           faqSchema(faqRadiologie.map(({ q, a }) => ({ q, a: a.replaceAll("**", "") }))),
         ]}
       />
-      <PsychiatrieRadiologiePage kind="radiologie" />
+      <PsychiatrieRadiologiePage kind="radiologie" faits={faits} />
     </>
   );
 }

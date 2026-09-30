@@ -1,3 +1,4 @@
+import { chargerFaitsSpecialite } from '@/lib/evc-calendrier/server';
 import { PediatriePageContent, type PalierApprofondi } from '@/components/marketing/pediatrie-page';
 import { lireSpecialite } from '@/lib/tunnel-inscription';
 import { APPROFONDI_SPECIALTIES } from '@/lib/stripe/approfondi';
@@ -70,7 +71,7 @@ export default async function PediatriePage({
           faqSchema(FAQ_PEDIA.map((f) => ({ q: f.q, a: reponseTextePedia(f, paliers[0]?.prix ?? '') }))),
         ]}
       />
-      <PediatriePageContent specialite={specialite} paliers={paliers} />
+      <PediatriePageContent faits={await chargerFaitsSpecialite('pediatrie')} specialite={specialite} paliers={paliers} />
     </>
   );
 }
