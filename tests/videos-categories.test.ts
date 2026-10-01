@@ -32,7 +32,7 @@ const LIGNES = [
   // Séances approfondies : Programme Approfondi + Formule Intensive, les deux voies.
   ...[1, 2, 3].map((n) => ({
     id: `sa-${n}`, titre: `SEANCE ${n}`, type: 'seance_approfondie', rubrique: null, order_index: n - 1,
-    bunny_video_id: `b-sa-${n}`, storage_path: null, serie_id: null, unlock_direct: null,
+    bunny_disponible: true, storage_path: null, serie_id: null, unlock_direct: null,
     voies: ['interne', 'externe'], offers: ['approfondi', 'intensif'],
     denied_user_ids: null, allowed_user_ids: null,
     video_supports: [
@@ -43,7 +43,7 @@ const LIGNES = [
   // Séances intensives « supplémentaires » : Programme Approfondi, voie interne seule.
   ...[1, 2].map((n) => ({
     id: `c-${n}`, titre: `SEANCE ${n} SUPPLEMENTAIRE`, type: 'cours', rubrique: null, order_index: n - 1,
-    bunny_video_id: `b-c-${n}`, storage_path: null, serie_id: null, unlock_direct: null,
+    bunny_disponible: true, storage_path: null, serie_id: null, unlock_direct: null,
     voies: ['interne'], offers: ['approfondi'],
     denied_user_ids: null, allowed_user_ids: null,
     video_supports: [

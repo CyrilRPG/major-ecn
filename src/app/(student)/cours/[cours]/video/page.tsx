@@ -9,6 +9,7 @@ import { VideoPlayer } from '@/components/student/video-player';
 import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
 import { EmargementGate } from '@/components/student/emargement-gate';
 import { bunnyEmbedUrl } from '@/lib/bunny';
+import { lireGuidBunny } from '@/lib/videos/source-bunny';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { blocVideoOuvert } from '@/lib/videos/audience';
@@ -191,8 +192,9 @@ export default async function CoursVideoPage({
 
   // L'embed ne dépend d'aucune configuration serveur (cf. bunny.ts) : quand la
   // clé API manquait en production, cette page affichait « Vidéo bientôt
-  // disponible » pour TOUS les cours alors que les vidéos existaient.
-  const bunnyId = video.bunny_video_id;
+  // disponible » pour TOUS les cours alors que les vidéos existaient. Le GUID
+  // se lit au service-role, une fois l'audience filtrée (cf. source-bunny.ts).
+  const bunnyId = video.bunny_disponible ? await lireGuidBunny(video.id) : null;
   const embedUrl = bunnyId ? bunnyEmbedUrl(bunnyId) : null;
   let signedUrl: string | null = null;
   if (!embedUrl && video.storage_path) {

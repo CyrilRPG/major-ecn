@@ -4,6 +4,7 @@ import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { assertAccessActive } from '@/lib/auth/access';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { resoudreVideoLecture } from '@/lib/auth/acces-lecture-item';
+import { lireGuidBunny } from '@/lib/videos/source-bunny';
 import { bunnySignedMp4Url, getBunnyVideoInfo } from '@/lib/bunny';
 import { siteUrl } from '@/lib/email/send';
 
@@ -55,7 +56,8 @@ export async function GET(req: Request, ctx: { params: Promise<{ cours: string }
     .eq('id', choix.video.id)
     .maybeSingle();
   const video = {
-    bunny_video_id: choix.video.bunny_video_id,
+    // GUID au service-role, contrôles faits (cf. source-bunny.ts).
+    bunny_video_id: choix.video.bunny_disponible ? await lireGuidBunny(choix.video.id) : null,
     storage_path: choix.video.storage_path,
     duration_seconds: (duree as { duration_seconds?: number | null } | null)?.duration_seconds ?? null,
   };

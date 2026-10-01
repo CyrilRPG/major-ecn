@@ -97,7 +97,7 @@ export async function GET(req: Request) {
       // charge donc toujours, et on filtre par audience ci-dessous.
       auth.supabase
         .from('videos')
-        .select('cours_id, bunny_video_id, storage_path, duration_seconds, voies, offers, denied_user_ids, allowed_user_ids, updated_at')
+        .select('cours_id, bunny_disponible, storage_path, duration_seconds, voies, offers, denied_user_ids, allowed_user_ids, updated_at')
         .in('cours_id', includedIds)
         .eq('type', 'cours')
         .order('order_index', { ascending: true }),
@@ -127,7 +127,7 @@ export async function GET(req: Request) {
   for (const r of videos) {
     // Séance à venir (pas encore de vidéo, seulement des dossiers) : rien à
     // lire ni à télécharger dans l'application.
-    if (!r.bunny_video_id && !r.storage_path) continue;
+    if (!r.bunny_disponible && !r.storage_path) continue;
     const visible = isStaff || videoVisible(
       r as { voies?: string[] | null; offers?: string[] | null; denied_user_ids?: string[] | null; allowed_user_ids?: string[] | null },
       { offres: scopeOffers(scope), voie: scope.voie ?? null, droitFormule: content.video, userId: auth.user.id },
@@ -165,7 +165,9 @@ export async function GET(req: Request) {
         fiche: fiche ? { pages: fiche.pages, updated_at: fiche.updated_at } : null,
         video: video
           ? {
-              bunny_video_id: video.bunny_video_id,
+              // Le GUID n'est remis que par /api/cours/[cours]/video-embed,
+              // contrôles faits : le manifeste dit seulement qu'il existe.
+              has_bunny: !!video.bunny_disponible,
               has_storage_fallback: !!video.storage_path,
               duration_seconds: video.duration_seconds,
               updated_at: video.updated_at,

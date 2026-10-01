@@ -25,7 +25,12 @@ export type ReplayVideo = {
   type: CategorieVideo;
   rubrique: string | null;
   order_index: number | null;
-  bunny_video_id: string | null;
+  /**
+   * Une vidéo Bunny existe. Le GUID n'est PAS chargé ici : la colonne
+   * `bunny_video_id` n'est lisible qu'au service-role, et seulement après les
+   * contrôles d'accès (`lib/videos/source-bunny.ts`).
+   */
+  bunny_disponible: boolean;
   storage_path: string | null;
   /** Date de la séance en direct (séance à venir, cf. `a-venir.ts`). */
   live_at: string | null;
@@ -47,8 +52,9 @@ export type Replays = {
   autoriseParVideo: boolean;
 };
 
-type Ligne = Omit<ReplayVideo, 'type' | 'supports' | 'live_at'> & {
+type Ligne = Omit<ReplayVideo, 'type' | 'supports' | 'live_at' | 'bunny_disponible'> & {
   type: string | null;
+  bunny_disponible?: boolean | null;
   /** Absente tant que la migration « séance à venir » n'est pas appliquée. */
   live_at?: string | null;
   video_supports?: { id: string; titre: string; order_index: number; voies: string[] | null; offers: string[] | null }[] | null;
@@ -91,7 +97,7 @@ export function filtrerReplays(lignes: readonly Ligne[], ctx: ContexteEleve): Re
       type,
       rubrique: v.rubrique ?? null,
       order_index: v.order_index ?? null,
-      bunny_video_id: v.bunny_video_id ?? null,
+      bunny_disponible: !!v.bunny_disponible,
       storage_path: v.storage_path ?? null,
       live_at: v.live_at ?? null,
       serie_id: v.serie_id ?? null,
@@ -116,7 +122,7 @@ export async function chargerReplays(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any)
       .from('videos')
-      .select(`id, titre, type, rubrique, order_index, bunny_video_id, storage_path, ${colonnes}serie_id, unlock_direct, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)`)
+      .select(`id, titre, type, rubrique, order_index, bunny_disponible, storage_path, ${colonnes}serie_id, unlock_direct, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)`)
       .eq('cours_id', coursId)
       .order('order_index', { ascending: true })
       .order('created_at', { ascending: true }) as Promise<{ data: unknown[] | null; error: { message?: string } | null }>;

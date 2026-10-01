@@ -98,7 +98,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     .select(`
       id, titre, description, matiere_id, access_type, hidden_blocks,
       matieres(nom, access_type),
-      videos(id, titre, type, rubrique, storage_path, bunny_video_id, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)),
+      videos(id, titre, type, rubrique, storage_path, bunny_disponible, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)),
       fiches(storage_path), flashcards(id)
     `)
     .eq('id', coursId)
@@ -199,7 +199,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any)
       .from('videos')
-      .select('id, bunny_video_id, storage_path, titre, type, rubrique, order_index, serie_id, unlock_direct, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)')
+      .select('id, bunny_disponible, storage_path, titre, type, rubrique, order_index, serie_id, unlock_direct, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)')
       .eq('cours_id', coursId)
       .eq('type', 'seance_approfondie')
       // Ordre choisi par l'administrateur (Contenu › Séances approfondies).
@@ -247,7 +247,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   /** Vidéos de COURS de l'item (plusieurs possibles, ordonnées côté admin). */
   const coursVideos = ((c.videos ?? []) as unknown as {
     id: string; titre: string; type: string | null; rubrique: string | null;
-    storage_path: string | null; bunny_video_id: string | null;
+    storage_path: string | null; bunny_disponible: boolean | null;
     order_index: number | null; voies: string[] | null; offers: string[] | null;
     denied_user_ids: string[] | null; allowed_user_ids: string[] | null;
     video_supports?: SupportOverride[] | null;
@@ -262,7 +262,7 @@ export default async function CoursApercuPage({ params }: { params: Promise<{ co
   );
 
   type SAVid = {
-    id: string; titre: string; bunny_video_id: string | null; storage_path?: string | null; serie_id: string | null;
+    id: string; titre: string; bunny_disponible: boolean | null; storage_path?: string | null; serie_id: string | null;
     type?: string | null; rubrique?: string | null; order_index?: number | null;
     unlock_direct?: boolean | null;
     voies?: string[] | null; offers?: string[] | null;

@@ -9,11 +9,15 @@
  * d'administration) comme côté client (bibliothèque vidéo).
  */
 
-type AvecSource = { bunny_video_id?: string | null; storage_path?: string | null };
+/**
+ * `bunny_disponible` : ce que lisent les élèves (colonne générée) ; le GUID
+ * `bunny_video_id` n'est lisible qu'au service-role (administration).
+ */
+type AvecSource = { bunny_video_id?: string | null; bunny_disponible?: boolean | null; storage_path?: string | null };
 
 /** L'entrée porte une vidéo regardable (Bunny ou fichier). */
 export function aUneVideo(v: AvecSource): boolean {
-  return !!v.bunny_video_id || !!v.storage_path;
+  return !!v.bunny_video_id || !!v.bunny_disponible || !!v.storage_path;
 }
 
 /** Séance annoncée dont la vidéo n'est pas encore déposée. */

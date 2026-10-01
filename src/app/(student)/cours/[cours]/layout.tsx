@@ -25,7 +25,7 @@ type CourseVideoRow = {
   type: string | null;
   rubrique?: string | null;
   storage_path: string | null;
-  bunny_video_id: string | null;
+  bunny_disponible: boolean | null;
   order_index: number | null;
   voies: string[] | null;
   offers: string[] | null;
@@ -51,7 +51,7 @@ export default async function CoursLayout({
     .select(`
       id, titre, matiere_id, access_type, hidden_blocks,
       matieres(nom, access_type, semestres(label, faculte_id)),
-      videos(id, titre, type, rubrique, storage_path, bunny_video_id, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)),
+      videos(id, titre, type, rubrique, storage_path, bunny_disponible, order_index, voies, offers, denied_user_ids, allowed_user_ids, video_supports(id, titre, order_index, voies, offers)),
       fiches(storage_path),
       flashcards(id),
       course_progress(video_watched, fiche_read)

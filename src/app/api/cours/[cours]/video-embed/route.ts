@@ -4,6 +4,7 @@ import { getRequestUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { bunnyEmbedUrl } from '@/lib/bunny';
 import { resoudreVideoLecture } from '@/lib/auth/acces-lecture-item';
+import { lireGuidBunny } from '@/lib/videos/source-bunny';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,8 +32,9 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
   if ('refus' in choix) return choix.refus;
   const video = choix.video;
 
-  // L'embed ne dépend d'aucune configuration serveur (cf. bunny.ts).
-  const bunnyId = video.bunny_video_id;
+  // L'embed ne dépend d'aucune configuration serveur (cf. bunny.ts). Le GUID
+  // se lit au service-role, contrôles faits (cf. source-bunny.ts).
+  const bunnyId = video.bunny_disponible ? await lireGuidBunny(video.id) : null;
   if (bunnyId) {
     return NextResponse.json({ embedUrl: bunnyEmbedUrl(bunnyId) });
   }

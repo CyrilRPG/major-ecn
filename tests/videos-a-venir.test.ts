@@ -58,7 +58,7 @@ test('replays : la séance à venir garde sa date et ses dossiers', () => {
   const r = filtrerReplays([
     {
       id: 'v1', titre: 'Séance 1', type: 'cours', rubrique: null, order_index: 0,
-      bunny_video_id: null, storage_path: null, live_at: '2026-09-30T16:00:00Z',
+      bunny_disponible: false, storage_path: null, live_at: '2026-09-30T16:00:00Z',
       serie_id: null, unlock_direct: null, voies: ['interne', 'externe'], offers: ['intensif'],
       denied_user_ids: null, allowed_user_ids: null,
       video_supports: [{ id: 'd1', titre: 'Dossier 1', order_index: 0, voies: null, offers: null }],
@@ -68,4 +68,21 @@ test('replays : la séance à venir garde sa date et ses dossiers', () => {
   assert.equal(r.cours[0].live_at, '2026-09-30T16:00:00Z');
   assert.deepEqual(r.cours[0].supports.map((s) => s.id), ['d1']);
   assert.equal(seanceMontrable(r.cours[0], r.cours[0].supports.length), true);
+});
+
+test('élève : la vidéo Bunny se reconnaît sans son GUID (bunny_disponible)', () => {
+  assert.equal(aUneVideo({ bunny_disponible: true, storage_path: null }), true);
+  assert.equal(estSeanceAVenir({ bunny_disponible: false, storage_path: null }), true);
+  const scope = { type: 'college', colleges: ['col-mir'], offer: 'intensif', voie: 'interne' } as PermissionScope;
+  const r = filtrerReplays([
+    {
+      id: 'v1', titre: 'Séance 1', type: 'cours', rubrique: null, order_index: 0,
+      bunny_disponible: true, storage_path: null, serie_id: null, unlock_direct: null,
+      voies: null, offers: null, denied_user_ids: null, allowed_user_ids: null, video_supports: [],
+    },
+  ], { userId: 'u', scope, access: undefined, isAdmin: false });
+  assert.equal(r.cours[0].bunny_disponible, true);
+  assert.equal(aUneVideo(r.cours[0]), true);
+  // Le GUID ne transite jamais par les replays (il est lu au service-role).
+  assert.equal('bunny_video_id' in r.cours[0], false);
 });

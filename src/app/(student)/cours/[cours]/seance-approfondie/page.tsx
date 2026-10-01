@@ -13,6 +13,7 @@ import { chargerReplays, compterReplays, type ReplayVideo } from '@/lib/videos/r
 import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
 import { EmargementGate } from '@/components/student/emargement-gate';
 import { bunnyEmbedUrl } from '@/lib/bunny';
+import { lireGuidsBunny } from '@/lib/videos/source-bunny';
 import { EmptyState } from '@/components/empty-state';
 import { RubriqueEditor } from '@/components/student/rubrique-editor';
 import { CategorieSwitch, type CategorieSwitchItem } from '@/components/student/replays/categorie-switch';
@@ -210,6 +211,8 @@ export default async function SeanceApprofondiePage({
 
   const hrefListe = `/cours/${coursId}/seance-approfondie${embed ? `?embed=${encodeURIComponent(embed)}` : ''}`;
   const hrefVideo = (v: ReplayVideo) => `/cours/${coursId}/seance-approfondie?v=${v.id}${embedQs}`;
+  // GUID Bunny des seules séances ouvertes, au service-role (cf. source-bunny.ts).
+  const guids = await lireGuidsBunny(saVideos.filter((v) => v.bunny_disponible && isUnlocked(v)).map((v) => v.id));
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
@@ -254,7 +257,7 @@ export default async function SeanceApprofondiePage({
 
       <div className="space-y-8">
         {saVideos.map((v) => {
-          const bunnyId = v.bunny_video_id;
+          const bunnyId = guids.get(v.id) ?? null;
           const embedUrl = bunnyId ? bunnyEmbedUrl(bunnyId) : null;
           const unlocked = isUnlocked(v);
           const position = allSaVideos.indexOf(v);
