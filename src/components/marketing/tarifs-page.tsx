@@ -512,7 +512,9 @@ const COMPARATIF: Groupe[] = [
     lignes: [
       { label: 'Coaching : parcours du Major (médecine générale)', e: false, i: true, a: true },
       { label: 'Coaching personnalisé', e: false, i: false, a: true },
-      { label: 'Échanges avec l’équipe', e: false, i: false, a: true },
+      // Toutes les formules posent leurs questions ; Intensive et Approfondie ajoutent le direct.
+      { label: 'Questions à l’équipe pédagogique via la plateforme / par email', e: true, i: true, a: true },
+      { label: 'Interactions en direct avec les enseignants pendant les séances', e: false, i: true, a: true },
       { label: 'Suivi individualisé de la progression', e: false, i: false, a: true },
     ],
   },

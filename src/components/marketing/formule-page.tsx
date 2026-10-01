@@ -6,7 +6,7 @@ import {
   ArrowRight, BookOpen, Calendar, Check, CheckCircle2, ClipboardCheck, Clock,
   FileText, GraduationCap, Heart, Layers3, LineChart, Lock, MessageCircle,
   Play, Quote, Shield, ShieldCheck, Star, Stethoscope, Target,
-  TrendingUp, Trophy, Users, Video,
+  Sparkles, TrendingUp, Trophy, Users, Video,
 } from 'lucide-react';
 import { Reveal } from './reveal';
 import { FAQSection } from './manus-sections';
@@ -19,7 +19,6 @@ import {
 import type { FormuleId } from '@/lib/stripe';
 import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
 import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty, specialtyByName } from '@/lib/data/enrollable-colleges';
-import { deSpecialite } from '@/lib/stripe/copy';
 import { DrapeauOrigine } from './drapeau-origine';
 import { EtablissementSanteBanner } from './etablissement-sante-banner';
 
@@ -50,6 +49,8 @@ const CONFIGS: Record<Variant, {
   color: string; colorSoft: string; label: string; tagline: string;
   price: string; pricePrefix?: string; hero: string; desc: string;
   cta: string; ctaSecondary?: string; badge?: string;
+  /** Phrase mise en avant juste sous le titre (Intensive : ce qui s'ajoute à l'Essentielle). */
+  sousTitre?: string;
   features: string[]; contentItems: { Icon: typeof BookOpen; t: string; d: string }[];
 }> = {
   essentielle: {
@@ -71,6 +72,7 @@ const CONFIGS: Record<Variant, {
   intensive: {
     color: '#C0112E', colorSoft: '#FDE8EC',
     label: 'FORMULE INTENSIVE', tagline: 'Finalisez votre préparation\ndans les derniers mois avant les EVC',
+    sousTitre: 'Toute l’Essentielle + 18 h de cours en direct avec nos enseignants + replays',
     price: '995', hero: '/formules/hero-formule-intensive.jpg',
     desc: "Pour les candidats disposant déjà de bases solides et souhaitant bénéficier de révisions guidées, de corrections détaillées et de rappels ciblés avant l'examen.",
     cta: 'Commencer maintenant',
@@ -163,6 +165,15 @@ export function FormulePageContent({
                 <h1 className="mt-5 text-balance text-3xl font-black leading-[1.06] tracking-tight whitespace-pre-line sm:text-4xl lg:text-5xl xl:text-[3.25rem]"
                   style={{ color: NAVY }}>{c.tagline}</h1>
               </Reveal>
+              {c.sousTitre && (
+                <Reveal delay={0.18}>
+                  <p className="mt-5 inline-flex items-center gap-2.5 rounded-2xl border-2 px-5 py-3 text-[16px] font-black leading-snug tracking-tight sm:text-[18px]"
+                    style={{ background: c.colorSoft, borderColor: c.color, color: c.color }}>
+                    <Sparkles className="h-5 w-5 shrink-0" />
+                    {c.sousTitre}
+                  </p>
+                </Reveal>
+              )}
               <Reveal delay={0.2}>
                 <p className="mt-5 text-[15.5px] leading-relaxed sm:text-base" style={{ color: INK_SOFT }}>{c.desc}</p>
               </Reveal>
@@ -568,6 +579,15 @@ function PaymentSection({
   // pas celui acheté. Valeur initiale = celle pré-sélectionnée par le
   // formulaire, pour éviter tout décalage au premier rendu.
   const [checkoutSpecialty, setCheckoutSpecialty] = useState<string>(specialiteTunnel ?? ENROLLABLE_SPECIALTY_NAMES[0]);
+  // La liste présélectionne une spécialité par défaut : tant que le candidat n'en a pas
+  // choisi une (tunnel d'une page spécialité, ou changement dans le formulaire), le
+  // récapitulatif parle de « votre spécialité » au lieu d'annoncer la spécialité par défaut.
+  const specialiteParDefaut = specialiteTunnel ?? ENROLLABLE_SPECIALTY_NAMES[0];
+  const [specialiteChoisie, setSpecialiteChoisie] = useState<boolean>(!!specialiteTunnel);
+  const surChangementSpecialite = (s: string) => {
+    setCheckoutSpecialty(s);
+    if (s !== specialiteParDefaut) setSpecialiteChoisie(true);
+  };
   const isApprofondi = variant === 'approfondi';
 
   // Palette par variant
@@ -665,7 +685,10 @@ function PaymentSection({
                       // sélectionnée à l'inscription).
                       isContentPendingSpecialty(checkoutSpecialty)
                         ? `Accès à ${checkoutSpecialty} dès la mise en ligne des contenus`
-                        : `Accès complet aux contenus ${deSpecialite(checkoutSpecialty)}`,
+                        : specialiteChoisie
+                          ? `Accès aux contenus complets de votre spécialité : ${checkoutSpecialty}`
+                          : 'Accès aux contenus complets de votre spécialité',
+                      ...(variant === 'intensive' ? ['18 h de cours en direct + replays'] : []),
                       'QCM, fiches, flashcards, méthodologie EVC',
                       'Annales corrigées des sessions précédentes',
                       'Email de confirmation + activation immédiate',
@@ -743,7 +766,7 @@ function PaymentSection({
                   label={`Payer ${c.price} € et créer mon compte`}
                   color={ctaColor}
                   initialSpecialty={specialiteTunnel}
-                  onSpecialtyChange={setCheckoutSpecialty}
+                  onSpecialtyChange={surChangementSpecialite}
                 />
               )}
             </div>
