@@ -43,6 +43,10 @@ export type PermissionScope = ({ type: 'all' } | { type: 'college'; colleges: st
    *  les noms camelCase de ContentAccess (fiche, video, qcm…). true/false écrase
    *  le défaut de la formule. Absent ⇒ aucune surcharge. */
   content_overrides?: Record<string, boolean>;
+  /** Items du collège Découverte ouverts au compte (item de sa spécialité +
+   *  Méthodologie EVC). Ne restreint QUE `col-decouverte` ; absent ⇒ items non
+   *  restreints de ce collège. Cf. lib/decouverte/items-specialite.ts. */
+  decouverte_cours?: string[];
 };
 
 

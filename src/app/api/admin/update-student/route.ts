@@ -4,6 +4,11 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { UpdateStudentSchema } from '@/lib/schemas/student';
 import { highestOffer, type Offer } from '@/types/domain';
 import { applyGeriatrieMgBonus } from '@/lib/auth/geriatrie-mg-bonus';
+import {
+  DECOUVERTE_COLLEGE_ID,
+  coursDecouvertePourSpecialite,
+  specialiteDecouverteDuScope,
+} from '@/lib/decouverte/items-specialite';
 
 export async function PATCH(req: Request) {
   const guard = await requireAdminRequest(req);
@@ -29,6 +34,7 @@ export async function PATCH(req: Request) {
   // (type/collèges/offre) et ne doit pas effacer ces informations.
   // paid_voie / paid_specialty sont RECALCULÉS depuis le formulaire (l'admin peut
   // changer la voie / accorder ou retirer Médecine générale), pas préservés.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: existing } = await (admin as any)
     .from('profiles').select('permission_scope').eq('id', id).maybeSingle();
   const prev = (existing?.permission_scope ?? {}) as Record<string, unknown>;
@@ -79,9 +85,19 @@ export async function PATCH(req: Request) {
   const overridesField = content_overrides && Object.keys(content_overrides).length > 0
     ? { content_overrides } : {};
 
+  // Item découverte de la spécialité choisie à l'inscription (Pédiatrie,
+  // Gynécologie-obstétrique, Médecine d'urgence) : RECALCULÉ depuis la
+  // spécialité conservée dans `signup` / `specialty_wish`, pour qu'une édition
+  // admin ne le fasse pas disparaître (le scope est reconstruit ci-dessous) et
+  // qu'il suive la spécialité. Ne restreint que le collège Découverte.
+  const decouverteCours = coursDecouvertePourSpecialite(specialiteDecouverteDuScope(prev));
+  const decouverteField = decouverteCours
+    && (permission_type === 'all' || collegesAvecBonus.includes(DECOUVERTE_COLLEGE_ID))
+    ? { decouverte_cours: decouverteCours } : {};
+
   const permission_scope =
     permission_type === 'all'
-      ? { type: 'all' as const, offer, ...offersField, ...meta, ...specialtyFields, ...voieFields, ...overridesField }
+      ? { type: 'all' as const, offer, ...offersField, ...meta, ...specialtyFields, ...voieFields, ...overridesField, ...decouverteField }
       : {
           type: 'college' as const,
           colleges: collegesAvecBonus,
@@ -92,8 +108,10 @@ export async function PATCH(req: Request) {
           ...specialtyFields,
           ...voieFields,
           ...overridesField,
+          ...decouverteField,
         };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await (admin as any)
     .from('profiles')
     .update({

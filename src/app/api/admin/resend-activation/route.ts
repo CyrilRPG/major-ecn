@@ -18,6 +18,9 @@ import { sendEmail, siteUrl } from '@/lib/email/send';
 import { invitationEquipeEmail, purchaseConfirmationEmail, resetPasswordEmail, welcomeEmail } from '@/lib/email/templates';
 import { scopeEquipeResolu } from '@/lib/auth/onglets-equipe';
 import { FORMULES, type FormuleId } from '@/lib/stripe';
+import { isDecouverteOnly } from '@/lib/auth/trial';
+import { parseScope } from '@/lib/auth/permissions';
+import { contenuDecouverte, specialiteDecouverteDuScope } from '@/lib/decouverte/items-specialite';
 
 type ScopeWithFormule = { paid_formule?: string; paid_offer?: string; paid_specialty?: string };
 
@@ -124,7 +127,13 @@ export async function POST(req: Request) {
     } else {
       const tmpl = dejaActive
         ? resetPasswordEmail({ firstName: prof.first_name ?? '', resetUrl: setupUrl })
-        : welcomeEmail({ firstName: prof.first_name ?? 'futur lauréat', setupUrl, role: 'student' });
+        : welcomeEmail({
+            firstName: prof.first_name ?? 'futur lauréat', setupUrl, role: 'student',
+            // Compte découverte : l'item de SA spécialité, adapté à sa voie.
+            decouverte: isDecouverteOnly(prof)
+              ? contenuDecouverte(specialiteDecouverteDuScope(prof.permission_scope), parseScope(prof.permission_scope).voie)
+              : null,
+          });
       const r = await sendEmail({ to: prof.email, subject, html: tmpl.html, text: tmpl.text });
       if (r.ok) { emailVia = 'resend'; }
       else { emailError = r.error; }

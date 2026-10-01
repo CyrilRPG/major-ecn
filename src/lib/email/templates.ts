@@ -6,6 +6,7 @@
  */
 
 import { presentationPoste, type ScopeEquipe } from '@/lib/auth/collaborateurs';
+import type { ContenuDecouverte } from '@/lib/decouverte/items-specialite';
 import {
   button,
   callout,
@@ -70,9 +71,12 @@ type WelcomeArgs = {
   setupUrl: string;
   /** 'student' = espace découverte, 'professor' = compte intervenant. */
   role: 'student' | 'professor';
+  /** Contenu découverte de la spécialité choisie (lib/decouverte/items-specialite,
+   *  `contenuDecouverte`). Absent ⇒ annonce générique. */
+  decouverte?: ContenuDecouverte | null;
 };
 
-export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subject: string; html: string; text: string } {
+export function welcomeEmail({ firstName, setupUrl, role, decouverte }: WelcomeArgs): { subject: string; html: string; text: string } {
   const isProf = role === 'professor';
   const eyebrow = isProf ? 'Bienvenue dans l’équipe pédagogique' : 'Bienvenue chez Major ECN';
   const title = isProf ? 'Activez votre espace professeur' : 'Activez votre compte étudiant';
@@ -84,15 +88,21 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
     : '🎓 Bienvenue chez Major ECN — activez votre espace découverte';
 
   const prenom = (firstName ?? '').trim();
+  // Item découverte de la spécialité choisie : « Pédiatrie : Méningites… —
+  // fiche de cours, 10 QCM dont 1 dossier progressif, 10 flashcards ».
+  const contenuTitre = decouverte
+    ? `Votre item découverte de ${decouverte.specialite} : ${decouverte.theme}`
+    : 'Votre espace découverte est actif';
+  const contenuLignes = decouverte?.lignes ?? ['10 QCM EVC', '1 cas clinique', '1 fiche pédagogique', '10 flashcards'];
   const bodyHtml = [
     button(setupUrl, 'Choisir mon mot de passe'),
     secureNote(`Lien sécurisé — valable ${dureeLien()} et à usage unique`),
     linkFallback(setupUrl),
     isProf ? '' : callout({
       tone: 'navy',
-      title: 'Votre espace découverte est actif',
+      title: contenuTitre,
       html: small('Aperçu concret de la plateforme et de notre méthode de préparation aux EVC :', { margin: '0 0 12px' })
-        + iconList(['10 QCM EVC', '1 cas clinique', '1 fiche pédagogique', '10 flashcards'], { size: 14 })
+        + iconList(contenuLignes, { size: 14 })
         + small('Sans carte bancaire · Sans engagement.', { color: MAJOR.muted, italic: true }),
     }),
     isProf ? '' : preparationBlock(),
@@ -119,7 +129,7 @@ export function welcomeEmail({ firstName, setupUrl, role }: WelcomeArgs): { subj
     intro,
     '',
     `Choisissez votre mot de passe : ${setupUrl}`,
-    ...(isProf ? [] : ['', 'Votre espace découverte est actif : 10 QCM EVC, 1 cas clinique, 1 fiche pédagogique, 10 flashcards. Sans carte bancaire · Sans engagement.']),
+    ...(isProf ? [] : ['', `${contenuTitre} — ${contenuLignes.join(', ')}. Sans carte bancaire · Sans engagement.`]),
     '',
     `Lien valable ${dureeLien()} et à usage unique. Pour toute question : contact@major-ecn.fr`,
     '— Major ECN',

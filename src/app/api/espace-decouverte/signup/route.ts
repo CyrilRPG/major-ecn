@@ -36,6 +36,12 @@ import { verifyTurnstile, clientIp } from '@/lib/turnstile';
 import { spamCheck } from '@/lib/anti-spam';
 import { enrollInCampaign } from '@/lib/email/campaign-enroll';
 import { enregistrerAccesInitial, enregistrerDemande, tracerNouvelleDemande } from '@/lib/decouverte/serveur';
+import {
+  DECOUVERTE_COLLEGE_ID,
+  contenuDecouverte,
+  coursDecouvertePourSpecialite,
+  voieDemandeeALInscription,
+} from '@/lib/decouverte/items-specialite';
 
 const Schema = z.object({
   firstName: z.string().trim().min(1, 'Prénom requis').max(100),
@@ -60,9 +66,6 @@ const Schema = z.object({
   elapsedMs: z.number().optional(),
 });
 
-const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
-/** Spécialité déclenchant le sous-champ Voie interne/externe. */
-const MG_NAME = 'Médecine générale';
 
 /** Petit logger structuré pour faciliter la lecture des Logs Vercel. */
 function log(label: string, payload: Record<string, unknown> = {}) {
@@ -134,11 +137,16 @@ export async function POST(req: Request) {
     );
   }
 
-  // Voie choisie à l'inscription (MG uniquement) : promue en champ de 1er niveau
-  // `voie` pour qu'elle se répercute IMMÉDIATEMENT sur la plateforme pédagogique
-  // — parseScope() (admin/app) et current_voie() (RLS) la lisent, donc l'élève
-  // découverte voit d'emblée le contenu QROC (externe) ou QCM/DP (interne).
-  const chosenVoie = specialty === MG_NAME ? (voie || null) : null;
+  // Voie choisie à l'inscription (MG et spécialités à item découverte dédié) :
+  // promue en champ de 1er niveau `voie` pour qu'elle se répercute IMMÉDIATEMENT
+  // sur la plateforme pédagogique — parseScope() (admin/app) et current_voie()
+  // (RLS) la lisent, donc l'élève découverte voit d'emblée le contenu QROC
+  // (externe) ou QCM/DP (interne).
+  const chosenVoie = voieDemandeeALInscription(specialty) ? (voie || null) : null;
+  // Item découverte de la spécialité (Pédiatrie, Gynécologie-obstétrique,
+  // Médecine d'urgence) + Méthodologie EVC. Sans item dédié, la clé est omise :
+  // l'élève voit « Pneumologie » et « Méthodologie EVC ».
+  const decouverteCours = coursDecouvertePourSpecialite(specialty);
 
   const permission_scope = {
     type: 'college' as const,
@@ -147,6 +155,7 @@ export async function POST(req: Request) {
     espace_decouverte: true,
     specialty_wish: specialty || null,
     ...(chosenVoie ? { voie: chosenVoie } : {}),
+    ...(decouverteCours ? { decouverte_cours: decouverteCours } : {}),
     // Informations d'inscription saisies dans le formulaire découverte —
     // affichées côté admin (liste élèves).
     signup: {
@@ -263,7 +272,7 @@ export async function POST(req: Request) {
       email,
       phone: phone || null,
       specialty: specialty || null,
-      voie: specialty === MG_NAME ? (voie || null) : null,
+      voie: chosenVoie,
       session,
       country,
       passedEvc,
@@ -317,6 +326,7 @@ export async function POST(req: Request) {
       firstName,
       setupUrl,
       role: 'student',
+      decouverte: contenuDecouverte(specialty, chosenVoie),
     });
     sujetActivation = subject;
     const r = await sendEmail({ to: email, subject, html, text });

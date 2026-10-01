@@ -1,6 +1,19 @@
 import type { Offer, PermissionScope } from '@/types/domain';
 import { OFFERS, highestOffer } from '@/types/domain';
 
+/** Collège « Découverte » (cf. lib/decouverte/items-specialite.ts — ce module,
+ *  partagé octet pour octet avec l'app mobile, n'importe que `@/types`). */
+const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
+
+/** `permission_scope.decouverte_cours` : items du collège Découverte ouverts au
+ *  compte. `undefined` si absent ou invalide (⇒ items non restreints). */
+function parseDecouverteCours(raw: unknown): string[] | undefined {
+  if (!raw || typeof raw !== 'object') return undefined;
+  const v = (raw as { decouverte_cours?: unknown }).decouverte_cours;
+  if (!Array.isArray(v)) return undefined;
+  return v.filter((x): x is string => typeof x === 'string');
+}
+
 function parseOffer(raw: unknown): Offer {
   if (raw && typeof raw === 'object') {
     const r = raw as { offer?: unknown; espace_decouverte?: unknown; paid_formule?: unknown; type?: unknown };
@@ -64,7 +77,11 @@ export function parseScope(raw: unknown): PermissionScope {
   const voie = parseVoie(raw);
   const offersField = offers ? { offers } : {};
   const contentOverrides = parseContentOverrides(raw);
-  const overridesField = contentOverrides ? { content_overrides: contentOverrides } : {};
+  const decouverteCours = parseDecouverteCours(raw);
+  const overridesField = {
+    ...(contentOverrides ? { content_overrides: contentOverrides } : {}),
+    ...(decouverteCours ? { decouverte_cours: decouverteCours } : {}),
+  };
   if (raw && typeof raw === 'object' && 'type' in raw) {
     const t = (raw as { type: unknown }).type;
     if (t === 'all') return { type: 'all', offer, ...offersField, voie, ...overridesField };
@@ -165,6 +182,13 @@ export function canAccessCours(
   coursId: string,
   accessType: 'all' | 'specific' = 'all',
 ): boolean {
+  // Collège Découverte : `decouverte_cours` (item de la spécialité choisie à
+  // l'inscription + Méthodologie EVC) fait foi, quel que soit `access_type`.
+  // Miroir de la RLS `accessible_cours_ids()` (migration 20261001120000).
+  if (collegeId === DECOUVERTE_COLLEGE_ID && scope.decouverte_cours) {
+    const collegeOuvert = scope.type === 'all' || scope.colleges.includes(collegeId);
+    return collegeOuvert && scope.decouverte_cours.includes(coursId);
+  }
   if (accessType === 'specific') {
     if (scope.type !== 'college') return false;
     if (!scope.colleges.includes(collegeId)) return false;

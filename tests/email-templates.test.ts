@@ -13,6 +13,7 @@ import * as A from '../src/lib/arena/emails';
 import { emailShell, textToHtml } from '../src/lib/suivi/emails';
 import { composerScope, ROLES_MODELES } from '../src/lib/auth/collaborateurs';
 import { DEFAULT_BAREME } from '../src/lib/arena/scoring';
+import { contenuDecouverte } from '../src/lib/decouverte/items-specialite';
 
 // Lu à l'appel (siteUrl, signature des liens, base des visuels) : fixé avant tout rendu.
 process.env.NEXT_PUBLIC_SITE_URL = 'https://www.major-ecn.fr';
@@ -44,6 +45,7 @@ const arenaParticipant: Record<string, Mail> = {
 
 const all: Record<string, Mail> = {
   'welcome-student': T.welcomeEmail({ firstName: '', setupUrl: setup, role: 'student' }),
+  'welcome-student-pediatrie': T.welcomeEmail({ firstName: 'Sara', setupUrl: setup, role: 'student', decouverte: contenuDecouverte('Pédiatrie', 'externe') }),
   'welcome-professor': T.welcomeEmail({ firstName: 'Claire', setupUrl: setup, role: 'professor' }),
   'invitation-equipe': T.invitationEquipeEmail({ firstName: 'Anne', setupUrl: setup, scope }),
   'invitation-admin': T.invitationEquipeEmail({ firstName: 'Paul', setupUrl: setup, scope: null, administrateur: true }),

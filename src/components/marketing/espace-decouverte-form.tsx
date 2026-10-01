@@ -11,6 +11,7 @@ import { MeshGradient, NoiseTexture } from './premium-ui';
 import { TurnstileWidget } from './turnstile-widget';
 import { EVENEMENTS, pousserEvenement } from '@/lib/analytics/evenements';
 import { signalerInscriptionApresVideo } from '@/lib/marketing/video-suivi';
+import { voieDemandeeALInscription } from '@/lib/decouverte/items-specialite';
 
 const RED = '#C0112E';
 const RED_DEEP = '#8B0E22';
@@ -27,13 +28,11 @@ const BORDER = '#E5E9F0';
 /** Le captcha est requis côté UI uniquement si la clé publique est configurée. */
 const TURNSTILE_ENABLED = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
-/** Spécialité « Médecine générale » — déclenche le champ Voie interne/externe. */
-const MG_NAME = 'Médecine générale';
-
 /* Liste EXACTE des spécialités de /specialites (specialites-page.tsx),
  * dans le même ordre (par famille). À garder synchronisée. */
 const SPECIALITES = [
   'Médecine générale',
+  'Médecine d’urgence',
   'Cardiologie et maladies vasculaires',
   'Pneumologie',
   'Gastro-entérologie et hépatologie',
@@ -45,6 +44,7 @@ const SPECIALITES = [
   'Dermatologie et vénéréologie',
   'Oncologie',
   'Médecine interne polyvalente',
+  'Médecine intensive et réanimation',
   'Réanimation médicale',
   'Gériatrie',
   'Médecine physique et de réadaptation',
@@ -116,13 +116,17 @@ export function EspaceDecouverteForm() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [existingAccount, setExistingAccount] = useState(false);
+  // Voie interne (QCM) / externe (QROC) : demandée pour la Médecine générale et
+  // les spécialités dont l'espace découverte porte un item dédié (Pédiatrie,
+  // Gynécologie, Médecine d'urgence) — elle trie leurs questions dès l'arrivée.
+  const voieDemandee = voieDemandeeALInscription(specialty);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!firstName.trim() || !lastName.trim() || !email.trim()) return;
     if (!phone.trim()) { setError('Le numéro de téléphone est obligatoire.'); return; }
     if (!specialty) { setError('Veuillez sélectionner votre spécialité visée.'); return; }
-    if (specialty === MG_NAME && !voie) { setError('Pour la médecine générale, précisez la voie (interne ou externe).'); return; }
+    if (voieDemandee && !voie) { setError('Précisez votre voie de concours (interne ou externe).'); return; }
     if (!session) { setError('Veuillez sélectionner la session visée.'); return; }
     if (!country) { setError('Veuillez indiquer votre pays de résidence.'); return; }
     if (!passedEvc) { setError('Indiquez si vous avez déjà passé les EVC.'); return; }
@@ -138,7 +142,7 @@ export function EspaceDecouverteForm() {
         body: JSON.stringify({
           firstName, lastName, email, phone,
           specialty,
-          voie: specialty === MG_NAME ? voie : '',
+          voie: voieDemandee ? voie : '',
           session, country, passedEvc,
           consents: { cgu: acceptTerms, cgs: acceptTerms, timestamp: new Date().toISOString() },
           turnstileToken: captchaToken,
@@ -347,13 +351,13 @@ export function EspaceDecouverteForm() {
                 icon={Stethoscope}
                 placeholder="Spécialité visée"
                 value={specialty}
-                onChange={(v) => { setSpecialty(v); if (v !== MG_NAME) setVoie(''); }}
+                onChange={(v) => { setSpecialty(v); if (!voieDemandeeALInscription(v)) setVoie(''); }}
                 options={SPECIALITES}
                 required
               />
 
-              {/* Voie — uniquement si Médecine générale */}
-              {specialty === MG_NAME && (
+              {/* Voie — Médecine générale et spécialités à item découverte dédié */}
+              {voieDemandee && (
                 <SelectField
                   icon={Route}
                   placeholder="Voie (interne ou externe)"
@@ -531,7 +535,7 @@ export function EspaceDecouverteForm() {
                   </h3>
                   <ul className="mt-3 space-y-2 text-[13px] leading-relaxed" style={{ color: INK }}>
                     {[
-                      <>L&rsquo;espace découverte est actuellement présenté à travers des contenus de <strong>Médecine Générale</strong>.</>,
+                      <>L&rsquo;espace découverte vous ouvre un item complet de <strong>votre spécialité</strong> en <strong>Médecine générale</strong>, <strong>Pédiatrie</strong>, <strong>Gynécologie-obstétrique</strong> et <strong>Médecine d&rsquo;urgence</strong> : fiche de cours, 10 QCM ou QROC selon votre voie, 10 flashcards. Les autres spécialités le découvrent à travers un item de Médecine générale.</>,
                       <>Major ECN accompagne les candidats aux EVC dans <strong>toutes les spécialités</strong>.</>,
                       <>La plateforme <strong>s&rsquo;enrichit progressivement</strong> de nouveaux contenus et fonctionnalités.</>,
                       <>Si votre spécialité n&rsquo;est pas encore disponible dans l&rsquo;environnement de démonstration, vous bénéficiez néanmoins de l&rsquo;ensemble des <strong>ressources pédagogiques</strong> prévues dans votre préparation.</>,

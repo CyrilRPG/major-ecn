@@ -930,7 +930,7 @@ export function EspaceDecouverteSection() {
               </Link>
 
               <p className="mt-4 text-xs leading-snug" style={{ color: ED_INK_SOFT }}>
-                Espace découverte basé sur des contenus de <span className="font-semibold">Médecine Générale</span>.
+                Espace découverte : un item de <span className="font-semibold">votre spécialité</span> en Médecine générale, Pédiatrie, Gynécologie-obstétrique et Médecine d&rsquo;urgence.
                 <br />
                 Les préparations sont disponibles dans les <span className="font-semibold">toutes les spécialités EVC</span>.
               </p>
