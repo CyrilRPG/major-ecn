@@ -9,7 +9,7 @@ import { VideoPlayer } from '@/components/student/video-player';
 import { BunnyVideoPlayer } from '@/components/student/bunny-video-player';
 import { EmargementGate } from '@/components/student/emargement-gate';
 import { bunnyEmbedUrl } from '@/lib/bunny';
-import { lireGuidBunny } from '@/lib/videos/source-bunny';
+import { lireGuidBunny, signerVideoStockee } from '@/lib/videos/source-bunny';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { blocVideoOuvert } from '@/lib/videos/audience';
@@ -196,11 +196,10 @@ export default async function CoursVideoPage({
   // se lit au service-role, une fois l'audience filtrée (cf. source-bunny.ts).
   const bunnyId = video.bunny_disponible ? await lireGuidBunny(video.id) : null;
   const embedUrl = bunnyId ? bunnyEmbedUrl(bunnyId) : null;
-  let signedUrl: string | null = null;
-  if (!embedUrl && video.storage_path) {
-    const { data } = await supabase.storage.from('videos').createSignedUrl(video.storage_path, 60 * 60);
-    signedUrl = data?.signedUrl ?? null;
-  }
+  // Repli Storage : signé au service-role lui aussi, audience filtrée.
+  const signedUrl = !embedUrl && video.storage_path
+    ? await signerVideoStockee(video.storage_path, 60 * 60)
+    : null;
   const hrefListe = `/cours/${coursId}/video${embed ? `?embed=${encodeURIComponent(embed)}` : ''}`;
   const hrefVideo = (v: ReplayVideo) => `/cours/${coursId}/video?v=${v.id}${embedQs}`;
 

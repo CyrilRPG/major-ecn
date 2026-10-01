@@ -30,3 +30,15 @@ export async function lireGuidsBunny(videoIds: readonly string[]): Promise<Map<s
 export async function lireGuidBunny(videoId: string): Promise<string | null> {
   return (await lireGuidsBunny([videoId])).get(videoId) ?? null;
 }
+
+/**
+ * URL signée d'un fichier du bucket privé `videos` (repli des vidéos sans
+ * Bunny), pour un appelant qui a DÉJÀ autorisé la lecture. Signée au
+ * service-role : la policy `storage_videos_auth_read` ouvrait tout le bucket à
+ * n'importe quel compte connecté, quels que soient la formule, la voie ou le
+ * déblocage ; elle est réservée aux admins depuis la migration 20261001160000.
+ */
+export async function signerVideoStockee(storagePath: string, ttlSecondes: number): Promise<string | null> {
+  const { data } = await createAdminClient().storage.from('videos').createSignedUrl(storagePath, ttlSecondes);
+  return data?.signedUrl ?? null;
+}

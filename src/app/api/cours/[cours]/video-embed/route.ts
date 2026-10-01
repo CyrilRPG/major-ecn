@@ -4,7 +4,7 @@ import { getRequestUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { bunnyEmbedUrl } from '@/lib/bunny';
 import { resoudreVideoLecture } from '@/lib/auth/acces-lecture-item';
-import { lireGuidBunny } from '@/lib/videos/source-bunny';
+import { lireGuidBunny, signerVideoStockee } from '@/lib/videos/source-bunny';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,9 +39,10 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ cours: stri
     return NextResponse.json({ embedUrl: bunnyEmbedUrl(bunnyId) });
   }
 
+  // Repli Storage : signé au service-role, contrôles faits (cf. source-bunny.ts).
   if (video.storage_path) {
-    const { data } = await supabase.storage.from('videos').createSignedUrl(video.storage_path, 3600);
-    if (data?.signedUrl) return NextResponse.json({ signedUrl: data.signedUrl });
+    const signedUrl = await signerVideoStockee(video.storage_path, 3600);
+    if (signedUrl) return NextResponse.json({ signedUrl });
   }
 
   return NextResponse.json({ error: 'Vidéo non disponible' }, { status: 404 });
