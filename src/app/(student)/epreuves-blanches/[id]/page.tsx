@@ -4,8 +4,7 @@ import { ArrowLeft, CalendarClock } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { parseScope } from '@/lib/auth/permissions';
-import { isExamTargeted } from '@/lib/exams/targeting';
+import { epreuveOuverteAEleve } from '@/lib/exams/acces-eleve';
 import { examWindow, resultsVisible, type AccessOverride } from '@/lib/exams/window';
 import { ExamRunner } from '@/components/student/exam-runner';
 import { ExamResults } from '@/components/student/exam-results';
@@ -17,14 +16,14 @@ export const dynamic = 'force-dynamic';
 export default async function StudentExamPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { user, profile } = await requireUser();
-  const scope = parseScope(profile.permission_scope);
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const a = admin as any;
 
   const { data: exam } = await a.from('mock_exams').select('*').eq('id', id).eq('status', 'published').maybeSingle();
   if (!exam) notFound();
-  if (!isExamTargeted(exam, scope, (profile as { promotion?: string }).promotion, user.id)) redirect('/epreuves-blanches');
+  // Interrogations d'item ou de spécialité exclues, ciblage et date de publication.
+  if (!(await epreuveOuverteAEleve(exam, { ...profile, id: user.id }, { pageEpreuve: true }))) redirect('/epreuves-blanches');
 
   const now = Date.now();
   const back = (

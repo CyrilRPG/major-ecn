@@ -4,8 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { requireUser } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { parseScope } from '@/lib/auth/permissions';
-import { isExamTargeted } from '@/lib/exams/targeting';
+import { epreuveOuverteAEleve } from '@/lib/exams/acces-eleve';
 import { examWindow, type AccessOverride } from '@/lib/exams/window';
 import { gradeExamAnswer, summarizeExam, type GradableQuestion, type BaremeConfig } from '@/lib/exams/scoring';
 import { finaliserCopie } from '@/lib/exams/finalisation';
@@ -36,8 +35,7 @@ export async function startExam(input: unknown): Promise<{ ok: true; submissionI
 
   const { data: exam } = await a.from('mock_exams').select('*').eq('id', parsed.data.examId).eq('status', 'published').maybeSingle();
   if (!exam) return { ok: false, error: 'Épreuve indisponible' };
-  const scope = parseScope(profile.permission_scope);
-  if (!isExamTargeted(exam, scope, (profile as { promotion?: string }).promotion, user.id)) return { ok: false, error: 'Épreuve non accessible' };
+  if (!(await epreuveOuverteAEleve(exam, { ...profile, id: user.id }))) return { ok: false, error: 'Épreuve non accessible' };
 
   // Copie déjà terminée ?
   const { data: doneSub } = await a.from('mock_exam_submissions').select('id').eq('exam_id', exam.id).eq('user_id', user.id).in('status', ['submitted', 'graded']).maybeSingle();
@@ -70,8 +68,7 @@ export async function submitExam(input: unknown): Promise<{ ok: true; submission
 
   const { data: exam } = await a.from('mock_exams').select('*').eq('id', examId).eq('status', 'published').maybeSingle();
   if (!exam) return { ok: false, error: 'Épreuve indisponible' };
-  const scope = parseScope(profile.permission_scope);
-  if (!isExamTargeted(exam, scope, (profile as { promotion?: string }).promotion, user.id)) return { ok: false, error: 'Épreuve non accessible' };
+  if (!(await epreuveOuverteAEleve(exam, { ...profile, id: user.id }))) return { ok: false, error: 'Épreuve non accessible' };
 
   // Copie déjà soumise ? (une seule copie active par épreuve)
   const { data: existing } = await a

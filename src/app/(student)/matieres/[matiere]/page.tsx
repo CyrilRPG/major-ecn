@@ -221,7 +221,7 @@ export default async function MatierePage({ params }: { params: Promise<{ matier
 
   return (
     <>
-      <IndexHeader context="Collège EVC" title={m.nom} meta={`${rows.length - lienRows.length} item${rows.length - lienRows.length > 1 ? 's' : ''}`} />
+      <IndexHeader context="Collège EVC" title={m.nom} meta={`${coursRows.length} item${coursRows.length > 1 ? 's' : ''}`} />
       {examBanner && (
         <div className="mx-5 mt-4 flex items-center gap-4 rounded-2xl border border-(--color-primary)/25 bg-(--color-primary-soft)/40 px-4 py-3 lg:mx-10">
           <div className="flex flex-col items-center justify-center rounded-xl bg-(--color-primary) px-3 py-1.5 text-white">
