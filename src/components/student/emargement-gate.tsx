@@ -79,22 +79,41 @@ export function EmargementGate({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const requestedRef = useRef(initialPending || initialSigned);
+  const blockedRef = useRef(blocked);
+  useEffect(() => { blockedRef.current = blocked; }, [blocked]);
 
+  // Pause + sortie du plein écran : en plein écran (lecteur Bunny sur Android
+  // notamment), la modale est cachée derrière la vidéo. Une seule pause ne
+  // suffisait pas — l'élève relançait la lecture et regardait sans signer
+  // (02/10/2026). Même logique que l'app mobile (BarriereEmargement).
   const pauseVideo = useCallback(() => {
     window.dispatchEvent(new CustomEvent(VIDEO_PAUSE_EVENT));
+    const d = document as Document & {
+      webkitFullscreenElement?: Element | null;
+      webkitExitFullscreen?: () => void;
+    };
+    if (d.fullscreenElement) void d.exitFullscreen().catch(() => undefined);
+    else if (d.webkitFullscreenElement) d.webkitExitFullscreen?.();
   }, []);
 
-  // Déclenchement au seuil.
+  // Déclenchement au seuil ; tant que la barrière est posée, toute reprise de
+  // la lecture (plein écran, commande du lecteur, autre onglet) est suspendue
+  // aussitôt : les lecteurs n'émettent de progression qu'en lecture.
   useEffect(() => {
     if (signed) return;
 
     async function onProgress(e: Event) {
       const detail = (e as CustomEvent<VideoProgressDetail>).detail;
       if (!detail || detail.coursId !== coursId) return;
+      if (blockedRef.current) {
+        pauseVideo();
+        return;
+      }
       if (detail.ratio < ATTENDANCE_THRESHOLD) return;
       if (requestedRef.current) return;
       requestedRef.current = true;
 
+      blockedRef.current = true;
       setBlocked(true);
       pauseVideo();
       try {
