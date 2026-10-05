@@ -10,7 +10,7 @@ import { VIDEO_PAUSE_EVENT, VIDEO_PROGRESS_EVENT, type VideoProgressDetail } fro
 
 const SPEEDS = [0.75, 1, 1.25, 1.5, 2];
 
-export function VideoPlayer({ src, coursId }: { src: string; coursId: string }) {
+export function VideoPlayer({ src, coursId, videoId }: { src: string; coursId: string; videoId?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -28,7 +28,7 @@ export function VideoPlayer({ src, coursId }: { src: string; coursId: string }) 
         // Alimente la barrière d'émargement (seuil à 20 %).
         window.dispatchEvent(
           new CustomEvent<VideoProgressDetail>(VIDEO_PROGRESS_EVENT, {
-            detail: { coursId, ratio: v.currentTime / v.duration, seconds: v.currentTime },
+            detail: { coursId, videoId: videoId ?? null, ratio: v.currentTime / v.duration, seconds: v.currentTime },
           }),
         );
       }
@@ -55,7 +55,7 @@ export function VideoPlayer({ src, coursId }: { src: string; coursId: string }) 
       v.removeEventListener('loadedmetadata', onMeta);
       window.removeEventListener(VIDEO_PAUSE_EVENT, onGatePause);
     };
-  }, [coursId, markedDone]);
+  }, [coursId, videoId, markedDone]);
 
   const toggle = () => {
     const v = ref.current; if (!v) return;

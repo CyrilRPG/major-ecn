@@ -89,29 +89,6 @@ export default async function CoursVideoPage({
 
   const watermarkText = `Accès réservé à ${profile.first_name} ${profile.last_name} — ${user.email}`;
 
-  // Émargement : l'état fait autorité côté serveur, pour qu'un rechargement ne
-  // permette pas de contourner la signature. Les admins et professeurs
-  // consultent les cours sans être soumis à l'obligation.
-  const isStudent = profile.role === 'student';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: attendance } = await (supabase as any)
-    .from('course_attendances')
-    .select('signed_at')
-    .eq('user_id', user.id)
-    .eq('cours_id', coursId)
-    .eq('kind', 'video')
-    .maybeSingle();
-
-  const gate = isStudent ? (
-    <EmargementGate
-      coursId={coursId}
-      coursTitre={c.titre}
-      studentName={`${profile.first_name ?? ''} ${profile.last_name ?? ''}`.trim() || (user.email ?? '')}
-      initialPending={!!attendance && !attendance.signed_at}
-      initialSigned={!!attendance?.signed_at}
-    />
-  ) : null;
-
   if (allVideos.length === 0) {
     return (
       <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
@@ -186,6 +163,33 @@ export default async function CoursVideoPage({
   // Séance à venir : ni lecteur ni émargement (rien à regarder), les dossiers
   // à préparer sous l'annonce.
   const aVenir = estSeanceAVenir(video);
+
+  // Émargement PAR SÉANCE (05/10/2026) : la feuille de CETTE vidéo. L'état fait
+  // autorité côté serveur, pour qu'un rechargement ne permette pas de
+  // contourner la signature. Les admins et professeurs consultent les cours
+  // sans être soumis à l'obligation.
+  const isStudent = profile.role === 'student';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: attendance } = isStudent ? await (supabase as any)
+    .from('course_attendances')
+    .select('signed_at')
+    .eq('user_id', user.id)
+    .eq('cours_id', coursId)
+    .eq('kind', 'video')
+    .eq('video_id', video.id)
+    .maybeSingle() : { data: null };
+
+  const gate = isStudent ? (
+    <EmargementGate
+      coursId={coursId}
+      coursTitre={c.titre}
+      videoId={video.id}
+      videoTitre={video.titre}
+      studentName={`${profile.first_name ?? ''} ${profile.last_name ?? ''}`.trim() || (user.email ?? '')}
+      initialPending={!!attendance && !attendance.signed_at}
+      initialSigned={!!attendance?.signed_at}
+    />
+  ) : null;
   const position = allVideos.indexOf(video);
   const precedente = position > 0 ? allVideos[position - 1] : null;
   const suivante = position < allVideos.length - 1 ? allVideos[position + 1] : null;
@@ -230,9 +234,9 @@ export default async function CoursVideoPage({
       {aVenir ? (
         <SeanceAVenir liveAt={video.live_at} nbSupports={video.supports.length} accent={CAT.accent} fond={CAT.fond} />
       ) : embedUrl ? (
-        <BunnyVideoPlayer embedUrl={embedUrl} coursId={coursId} watermarkText={watermarkText} />
+        <BunnyVideoPlayer embedUrl={embedUrl} coursId={coursId} videoId={video.id} watermarkText={watermarkText} />
       ) : signedUrl ? (
-        <VideoPlayer src={signedUrl} coursId={coursId} />
+        <VideoPlayer src={signedUrl} coursId={coursId} videoId={video.id} />
       ) : (
         <div className="rounded-xl border border-(--color-border) bg-(--color-surface) py-2">
           <EmptyState

@@ -116,12 +116,13 @@ export default async function StudentLayout({ children }: { children: React.Reac
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data } = await (supabase as any)
           .from('course_attendances')
-          .select('cours_id, kind, cours_titre, matiere_id, required_at')
+          .select('cours_id, kind, video_id, video_titre, cours_titre, matiere_id, required_at')
           .eq('user_id', user.id)
           .is('signed_at', null)
           .order('required_at', { ascending: true });
         const lignes = (data ?? []) as {
-          cours_id: string; kind: string | null; cours_titre: string | null; matiere_id: string | null;
+          cours_id: string; kind: string | null; video_id: string | null; video_titre: string | null;
+          cours_titre: string | null; matiere_id: string | null;
         }[];
         if (lignes.length === 0) return [];
         const ids = Array.from(new Set(lignes.map((l) => l.matiere_id).filter((m): m is string => !!m)));
@@ -132,6 +133,8 @@ export default async function StudentLayout({ children }: { children: React.Reac
         return lignes.map((l) => ({
           coursId: l.cours_id,
           kind: l.kind === 'seance' ? 'seance' as const : 'video' as const,
+          videoId: l.video_id,
+          videoTitre: l.video_titre,
           coursTitre: l.cours_titre ?? 'Cours',
           college: l.matiere_id ? noms.get(l.matiere_id) ?? null : null,
         }));

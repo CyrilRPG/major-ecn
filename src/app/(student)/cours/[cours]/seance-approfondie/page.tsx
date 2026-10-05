@@ -198,34 +198,43 @@ export default async function SeanceApprofondiePage({
     );
   }
 
-  // Émargement du cours : même obligation que sur la page vidéo, l'état vient
-  // de la base pour résister au rechargement.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: attendance } = await (supabase as any)
-    .from('course_attendances')
-    .select('signed_at')
-    .eq('user_id', user.id)
-    .eq('cours_id', coursId)
-    .eq('kind', 'seance')
-    .maybeSingle();
-
   const hrefListe = `/cours/${coursId}/seance-approfondie${embed ? `?embed=${encodeURIComponent(embed)}` : ''}`;
   const hrefVideo = (v: ReplayVideo) => `/cours/${coursId}/seance-approfondie?v=${v.id}${embedQs}`;
   // GUID Bunny des seules séances ouvertes, au service-role (cf. source-bunny.ts).
   const guids = await lireGuidsBunny(saVideos.filter((v) => v.bunny_disponible && isUnlocked(v)).map((v) => v.id));
 
+  // Émargement PAR SÉANCE (05/10/2026) : une feuille par vidéo lisible ici,
+  // même obligation que sur la page vidéo ; l'état vient de la base pour
+  // résister au rechargement.
+  const lisibles = saVideos.filter((v) => isUnlocked(v) && !estSeanceAVenir(v) && guids.has(v.id));
+  const feuilles = new Map<string, string | null>();
+  if (profile.role === 'student' && lisibles.length > 0) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data } = await (supabase as any)
+      .from('course_attendances')
+      .select('video_id, signed_at')
+      .eq('user_id', user.id)
+      .eq('cours_id', coursId)
+      .eq('kind', 'seance')
+      .in('video_id', lisibles.map((v) => v.id));
+    for (const r of (data ?? []) as { video_id: string; signed_at: string | null }[]) feuilles.set(r.video_id, r.signed_at);
+  }
+
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-6 lg:px-8">
-      {profile.role === 'student' && (
+      {profile.role === 'student' && lisibles.map((v) => (
         <EmargementGate
+          key={v.id}
           coursId={coursId}
           coursTitre={c.titre}
           kind="seance"
+          videoId={v.id}
+          videoTitre={v.titre}
           studentName={`${profile.first_name ?? ''} ${profile.last_name ?? ''}`.trim() || (user.email ?? '')}
-          initialPending={!!attendance && !attendance.signed_at}
-          initialSigned={!!attendance?.signed_at}
+          initialPending={feuilles.has(v.id) && !feuilles.get(v.id)}
+          initialSigned={!!feuilles.get(v.id)}
         />
-      )}
+      ))}
       {allSaVideos.length > 1 && (
         <Link
           href={hrefListe}
@@ -300,7 +309,7 @@ export default async function SeanceApprofondiePage({
                 // dossiers à préparer juste en dessous.
                 <SeanceAVenir liveAt={v.live_at} nbSupports={v.supports.length} accent={CAT.accent} fond={CAT.fond} />
               ) : embedUrl ? (
-                <BunnyVideoPlayer embedUrl={embedUrl} coursId={coursId} watermarkText={watermarkText} />
+                <BunnyVideoPlayer embedUrl={embedUrl} coursId={coursId} videoId={v.id} watermarkText={watermarkText} />
               ) : (
                 <div className="rounded-xl border border-(--color-border) bg-(--color-surface) py-2">
                   <EmptyState

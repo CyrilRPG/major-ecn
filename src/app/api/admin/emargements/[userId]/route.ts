@@ -14,6 +14,7 @@
  *
  * Réservé aux admins.
  */
+import { titreFeuille } from '@/lib/emargement';
 import { NextResponse } from 'next/server';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -79,7 +80,7 @@ export async function GET(
     await Promise.all([
       db.from('profiles').select('first_name, last_name, email').eq('id', userId).maybeSingle(),
       db.from('course_attendances')
-        .select('id, cours_id, cours_titre, matiere_id, kind, required_at, signed_at, signature_png, watched_ratio')
+        .select('id, cours_id, cours_titre, video_titre, matiere_id, kind, required_at, signed_at, signature_png, watched_ratio')
         .eq('user_id', userId).order('required_at', { ascending: false }),
       db.from('session_presences')
         .select('id, event_title, event_date, start_time, end_time, college, intervenant, marked_at, signature_png')
@@ -99,7 +100,7 @@ export async function GET(
   );
 
   type ARow = {
-    id: string; cours_id: string; cours_titre: string | null; matiere_id: string | null;
+    id: string; cours_id: string; cours_titre: string | null; video_titre: string | null; matiere_id: string | null;
     kind: string; required_at: string; signed_at: string | null;
     signature_png: string | null; watched_ratio: number | null;
   };
@@ -114,7 +115,7 @@ export async function GET(
     source: 'plateforme',
     typeLabel: r.kind === 'seance' ? 'Séance approfondie' : 'Vidéo du cours',
     college: r.matiere_id ? (collegeName.get(r.matiere_id) ?? r.matiere_id) : null,
-    titre: r.cours_titre ?? r.cours_id,
+    titre: titreFeuille(r.cours_titre, r.video_titre) ?? r.cours_id,
     date: r.signed_at,
     requiredAt: r.required_at,
     signed: !!r.signed_at,

@@ -1,3 +1,4 @@
+import { titreFeuille } from '@/lib/emargement';
 import { NextResponse } from 'next/server';
 import { getBearerUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
@@ -35,7 +36,7 @@ export async function GET(req: Request) {
   const db = createAdminClient() as any;
   const [a, p, m, c] = await Promise.all([
     db.from('course_attendances')
-      .select('id, cours_id, cours_titre, matiere_id, kind, required_at, signed_at, signature_png')
+      .select('id, cours_id, cours_titre, video_titre, matiere_id, kind, required_at, signed_at, signature_png')
       .eq('user_id', userId),
     db.from('session_presences')
       .select('id, event_title, event_date, start_time, end_time, college, intervenant, marked_at, signature_png')
@@ -52,7 +53,9 @@ export async function GET(req: Request) {
   }
 
   const feuilles = construireFeuilles({
-    attendances: (a.data ?? []) as LigneAttendance[],
+    // Feuille par séance : la séance s'ajoute au titre de l'item.
+    attendances: ((a.data ?? []) as (LigneAttendance & { video_titre: string | null })[])
+      .map((r) => ({ ...r, cours_titre: titreFeuille(r.cours_titre, r.video_titre) })),
     completions: (c.data ?? []) as LigneCompletion[],
     presences: (p.data ?? []) as LignePresence[],
     matieres: (m.data ?? []) as { id: string; nom: string }[],

@@ -1,3 +1,4 @@
+import { titreFeuille } from '@/lib/emargement';
 import Link from 'next/link';
 import { CalendarCheck, CalendarDays, Clock, User, ArrowLeft, GraduationCap, PlayCircle, Video, PenLine, FileText } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
@@ -53,7 +54,7 @@ export default async function PresencesPage() {
   const db = createAdminClient() as any;
   const [{ data: attendances }, { data: presences }, { data: matieres }, { data: completions }] = await Promise.all([
     db.from('course_attendances')
-      .select('id, cours_id, cours_titre, matiere_id, kind, required_at, signed_at, signature_png')
+      .select('id, cours_id, cours_titre, video_titre, matiere_id, kind, required_at, signed_at, signature_png')
       .eq('user_id', user.id),
     db.from('session_presences')
       .select('id, event_title, event_date, start_time, end_time, college, intervenant, marked_at, signature_png')
@@ -64,7 +65,9 @@ export default async function PresencesPage() {
       .eq('user_id', user.id).not('certificate_signed_at', 'is', null),
   ]);
   const feuilles = construireFeuilles({
-    attendances: (attendances ?? []) as LigneAttendance[],
+    // Feuille par séance : la séance s'ajoute au titre de l'item.
+    attendances: ((attendances ?? []) as (LigneAttendance & { video_titre: string | null })[])
+      .map((r) => ({ ...r, cours_titre: titreFeuille(r.cours_titre, r.video_titre) })),
     completions: (completions ?? []) as LigneCompletion[],
     presences: (presences ?? []) as LignePresence[],
     matieres: (matieres ?? []) as { id: string; nom: string }[],

@@ -1,3 +1,4 @@
+import { titreFeuille } from '@/lib/emargement';
 import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { EmargementsGlobal, type FeuilleAdmin } from '@/components/admin/emargements/emargements-global';
@@ -37,8 +38,8 @@ export default async function AdminEmargementsPage() {
   let feuilles: FeuilleAdmin[] = [];
   try {
     const [attendances, presences, zoomSansSignature, completions, matieres] = await Promise.all([
-      toutes<{ id: string; user_id: string; cours_id: string; cours_titre: string | null; matiere_id: string | null; kind: string; required_at: string; signed_at: string | null; watched_ratio: number | null }>(
-        db, 'course_attendances', 'id, user_id, cours_id, cours_titre, matiere_id, kind, required_at, signed_at, watched_ratio'),
+      toutes<{ id: string; user_id: string; cours_id: string; cours_titre: string | null; video_titre: string | null; matiere_id: string | null; kind: string; required_at: string; signed_at: string | null; watched_ratio: number | null }>(
+        db, 'course_attendances', 'id, user_id, cours_id, cours_titre, video_titre, matiere_id, kind, required_at, signed_at, watched_ratio'),
       toutes<{ id: string; user_id: string; event_title: string | null; event_date: string | null; start_time: string | null; end_time: string | null; college: string | null; intervenant: string | null; marked_at: string }>(
         db, 'session_presences', 'id, user_id, event_title, event_date, start_time, end_time, college, intervenant, marked_at'),
       // Signatures non lues (PNG lourds) : seules les feuilles Zoom SANS tracé sont repérées.
@@ -67,7 +68,7 @@ export default async function AdminEmargementsPage() {
         id: r.id,
         userId: r.user_id, eleve: eleve(r.user_id).nom, email: eleve(r.user_id).email,
         type: r.kind === 'seance' ? 'seance' : 'video',
-        titre: r.cours_titre ?? 'Cours',
+        titre: titreFeuille(r.cours_titre, r.video_titre) ?? 'Cours',
         college: r.matiere_id ? (college.get(r.matiere_id) ?? null) : null,
         date: r.signed_at ?? r.required_at,
         signe: !!r.signed_at,

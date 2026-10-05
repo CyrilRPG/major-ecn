@@ -69,6 +69,8 @@ export async function GET(req: Request) {
       .eq('user_id', auth.user.id)
       .eq('cours_id', coursId)
       .eq('kind', kind)
+    // L'app ne transmet pas la séance : feuille à l'item (cf. migration 20261005120000).
+    .is('video_id', null)
       .maybeSingle(),
   ]);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -114,6 +116,8 @@ export async function POST(req: Request) {
       .eq('user_id', userId)
       .eq('cours_id', coursId)
       .eq('kind', kind)
+    // L'app ne transmet pas la séance : feuille à l'item (cf. migration 20261005120000).
+    .is('video_id', null)
       .is('signed_at', null)
       .select('id')
       .maybeSingle();
@@ -141,6 +145,8 @@ export async function POST(req: Request) {
     .eq('user_id', userId)
     .eq('cours_id', coursId)
     .eq('kind', kind)
+    // L'app ne transmet pas la séance : feuille à l'item (cf. migration 20261005120000).
+    .is('video_id', null)
     .maybeSingle();
   if (existante) return NextResponse.json({ ok: true, signed: !!existante.signed_at });
 

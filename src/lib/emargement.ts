@@ -17,6 +17,8 @@ export const VIDEO_PAUSE_EVENT = 'mecn:video-pause';
 
 export type VideoProgressDetail = {
   coursId: string;
+  /** Séance lue (videos.id) : l'émargement est tenu par séance. */
+  videoId?: string | null;
   /** Progression entre 0 et 1. */
   ratio: number;
   seconds: number;
@@ -29,4 +31,13 @@ export const EMARGEMENT_SIGNE_EVENT = 'mecn:emargement-signe';
 export type EmargementSigneDetail = {
   coursId: string;
   kind: 'video' | 'seance';
+  /** Séance signée ; null = feuille à l'item. */
+  videoId: string | null;
 };
+
+/** Intitulé d'une feuille : l'item, puis la séance quand la feuille est tenue
+ *  par séance (« Replays - Révisions — Séance 3 : cardiologie »). */
+export function titreFeuille(coursTitre: string | null, videoTitre: string | null | undefined): string | null {
+  if (!videoTitre) return coursTitre;
+  return coursTitre ? `${coursTitre} — ${videoTitre}` : videoTitre;
+}

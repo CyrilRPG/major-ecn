@@ -17,10 +17,13 @@ import { VIDEO_PAUSE_EVENT, VIDEO_PROGRESS_EVENT, type VideoProgressDetail } fro
 export function BunnyVideoPlayer({
   embedUrl,
   coursId,
+  videoId,
   watermarkText,
 }: {
   embedUrl: string;
   coursId: string;
+  /** Séance lue : la barrière d'émargement tient une feuille par séance. */
+  videoId?: string;
   watermarkText?: string;
 }) {
   const frameRef = useRef<HTMLIFrameElement>(null);
@@ -68,7 +71,7 @@ export function BunnyVideoPlayer({
           // Alimente la barrière d'émargement (seuil à 20 %).
           window.dispatchEvent(
             new CustomEvent<VideoProgressDetail>(VIDEO_PROGRESS_EVENT, {
-              detail: { coursId, ratio: seconds / duration, seconds },
+              detail: { coursId, videoId: videoId ?? null, ratio: seconds / duration, seconds },
             }),
           );
         }

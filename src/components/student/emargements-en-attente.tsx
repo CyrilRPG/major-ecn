@@ -25,6 +25,9 @@ import { EMARGEMENT_SIGNE_EVENT, type EmargementSigneDetail } from '@/lib/emarge
 export type FeuilleEnAttente = {
   coursId: string;
   kind: 'video' | 'seance';
+  /** Séance émargée ; null = feuille à l'item (antérieure au 05/10/2026). */
+  videoId: string | null;
+  videoTitre: string | null;
   coursTitre: string;
   college: string | null;
 };
@@ -58,7 +61,7 @@ export function EmargementsEnAttente({
     setError(null);
     try {
       const res = await fetchAvecJetonFrais('/api/emargement', {
-        action: 'sign', coursId: f.coursId, kind: f.kind, signaturePng: signature,
+        action: 'sign', coursId: f.coursId, kind: f.kind, videoId: f.videoId ?? undefined, signaturePng: signature,
       });
       const json = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) {
@@ -70,7 +73,7 @@ export function EmargementsEnAttente({
       }
       // La barrière du lecteur, si la vidéo est ouverte derrière, se lève aussi.
       window.dispatchEvent(new CustomEvent<EmargementSigneDetail>(EMARGEMENT_SIGNE_EVENT, {
-        detail: { coursId: f.coursId, kind: f.kind },
+        detail: { coursId: f.coursId, kind: f.kind, videoId: f.videoId },
       }));
       setSignature(null);
       const suite = restantes.slice(1);
@@ -126,6 +129,11 @@ export function EmargementsEnAttente({
             {f.coursTitre}
             {f.college && <span className="font-semibold" style={{ color: '#5B6478' }}> · {f.college}</span>}
           </p>
+          {f.videoTitre && (
+            <p className="text-[13px] font-semibold" style={{ color: '#0F1F4D' }}>
+              Séance : {f.videoTitre}
+            </p>
+          )}
           <p className="mt-1 text-[12px]" style={{ color: '#5B6478' }}>
             Signataire · <strong style={{ color: '#0F1F4D' }}>{studentName}</strong>
           </p>
@@ -140,7 +148,7 @@ export function EmargementsEnAttente({
 
         <div className="mt-4">
           {/* `key` : un pavé vierge pour chaque feuille. */}
-          <SignaturePad key={`${f.coursId}:${f.kind}`} onChange={setSignature} disabled={busy} />
+          <SignaturePad key={`${f.coursId}:${f.kind}:${f.videoId ?? ''}`} onChange={setSignature} disabled={busy} />
         </div>
 
         {error && (

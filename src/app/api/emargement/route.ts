@@ -11,6 +11,11 @@
  *     existante (garanti aussi par la RLS : UPDATE réservé aux lignes non
  *     signées).
  *
+ * Émargement PAR SÉANCE (05/10/2026) : `videoId` désigne la vidéo regardée ;
+ * chaque séance d'un item a sa propre feuille. Sans `videoId`, la feuille
+ * visée est celle « à l'item » (video_id NULL) : feuilles antérieures au
+ * 05/10/2026, et app mobile qui ne transmet pas encore la séance.
+ *
  * L'état vit en base, pas dans le navigateur : recharger la page ne permet pas
  * d'échapper à l'émargement.
  */
@@ -31,7 +36,17 @@ type Body = {
   watchedRatio?: number;
   watchedSeconds?: number;
   signaturePng?: string;
+  /** Séance (videos.id) émargée ; absent = feuille à l'item. */
+  videoId?: string;
 };
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Filtre « cette feuille » : la séance donnée, ou la feuille à l'item. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function feuille(q: any, videoId: string | null) {
+  return videoId ? q.eq('video_id', videoId) : q.is('video_id', null);
+}
 
 /** La vidéo du cours et la séance approfondie sont deux séances de formation
  *  distinctes : chacune s'émarge séparément. */
@@ -56,6 +71,8 @@ export async function POST(req: Request) {
   const coursId = (body.coursId ?? '').trim();
   if (!coursId) return NextResponse.json({ error: 'Cours manquant' }, { status: 400 });
   const kind = parseKind(body.kind);
+  const videoId = typeof body.videoId === 'string' && UUID.test(body.videoId.trim()) ? body.videoId.trim() : null;
+  if (body.videoId && !videoId) return NextResponse.json({ error: 'Séance invalide' }, { status: 400 });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = auth.supabase as any;
@@ -71,13 +88,16 @@ export async function POST(req: Request) {
 
     // `.is('signed_at', null)` rend l'opération idempotente et empêche qu'un
     // second envoi ne remplace la signature déjà enregistrée.
-    const { data, error } = await db
-      .from('course_attendances')
-      .update({ signed_at: new Date().toISOString(), signature_png: signature })
-      .eq('user_id', user.id)
-      .eq('cours_id', coursId)
-      .eq('kind', kind)
-      .is('signed_at', null)
+    const { data, error } = await feuille(
+      db
+        .from('course_attendances')
+        .update({ signed_at: new Date().toISOString(), signature_png: signature })
+        .eq('user_id', user.id)
+        .eq('cours_id', coursId)
+        .eq('kind', kind)
+        .is('signed_at', null),
+      videoId,
+    )
       .select('id')
       .maybeSingle();
 
@@ -105,13 +125,15 @@ export async function POST(req: Request) {
   }
 
   // ── action 'require' (défaut) ──────────────────────────────────────────
-  const { data: existing } = await db
-    .from('course_attendances')
-    .select('id, signed_at')
-    .eq('user_id', user.id)
-    .eq('cours_id', coursId)
-    .eq('kind', kind)
-    .maybeSingle();
+  const { data: existing } = await feuille(
+    db
+      .from('course_attendances')
+      .select('id, signed_at')
+      .eq('user_id', user.id)
+      .eq('cours_id', coursId)
+      .eq('kind', kind),
+    videoId,
+  ).maybeSingle();
 
   if (existing) {
     return NextResponse.json({ ok: true, signed: !!existing.signed_at });
@@ -125,6 +147,21 @@ export async function POST(req: Request) {
     .maybeSingle();
   if (!c) return NextResponse.json({ error: 'Cours introuvable' }, { status: 404 });
 
+  // La séance doit appartenir à ce cours et à ce type de séance.
+  let videoTitre: string | null = null;
+  if (videoId) {
+    const { data: v } = await db
+      .from('videos')
+      .select('id, titre, cours_id, type')
+      .eq('id', videoId)
+      .maybeSingle();
+    const typeAttendu = kind === 'seance' ? 'seance_approfondie' : 'cours';
+    if (!v || v.cours_id !== coursId || (v.type ?? 'cours') !== typeAttendu) {
+      return NextResponse.json({ error: 'Séance introuvable' }, { status: 404 });
+    }
+    videoTitre = v.titre ?? null;
+  }
+
   const ratio = typeof body.watchedRatio === 'number' && Number.isFinite(body.watchedRatio)
     ? Math.min(1, Math.max(0, body.watchedRatio))
     : null;
@@ -136,6 +173,8 @@ export async function POST(req: Request) {
     user_id: user.id,
     cours_id: coursId,
     kind,
+    video_id: videoId,
+    video_titre: videoTitre,
     watched_ratio: ratio,
     watched_seconds: seconds,
     cours_titre: c.titre,

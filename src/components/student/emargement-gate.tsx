@@ -34,22 +34,22 @@ import {
  * réseau ou un jeton périmé obligeait l'étudiant à tout recommencer — et,
  * la modale n'étant pas fermable, le laissait bloqué sur le cours.
  */
-function cleSignature(coursId: string, kind: string) {
-  return `mecn:emargement:${coursId}:${kind}`;
+function cleSignature(coursId: string, kind: string, videoId: string | null) {
+  return `mecn:emargement:${coursId}:${kind}${videoId ? `:${videoId}` : ''}`;
 }
 
-function lireSignatureGardee(coursId: string, kind: string): string | null {
+function lireSignatureGardee(coursId: string, kind: string, videoId: string | null): string | null {
   try {
-    const v = window.localStorage.getItem(cleSignature(coursId, kind));
+    const v = window.localStorage.getItem(cleSignature(coursId, kind, videoId));
     return v && v.startsWith('data:image/png;base64,') ? v : null;
   } catch {
     return null;
   }
 }
 
-function garderSignature(coursId: string, kind: string, png: string | null) {
+function garderSignature(coursId: string, kind: string, videoId: string | null, png: string | null) {
   try {
-    const cle = cleSignature(coursId, kind);
+    const cle = cleSignature(coursId, kind, videoId);
     if (png) window.localStorage.setItem(cle, png);
     else window.localStorage.removeItem(cle);
   } catch {
@@ -62,6 +62,8 @@ export function EmargementGate({
   coursTitre,
   studentName,
   kind = 'video',
+  videoId = null,
+  videoTitre = null,
   initialPending,
   initialSigned,
 }: {
@@ -70,6 +72,9 @@ export function EmargementGate({
   studentName: string;
   /** Séance de formation émargée : vidéo du cours ou séance approfondie. */
   kind?: 'video' | 'seance';
+  /** Séance lue : une feuille par séance (05/10/2026). */
+  videoId?: string | null;
+  videoTitre?: string | null;
   /** Émargement déjà dû et non signé au chargement (source : base). */
   initialPending: boolean;
   /** Déjà signé : la barrière ne se déclenchera plus. */
@@ -107,6 +112,7 @@ export function EmargementGate({
     async function onProgress(e: Event) {
       const detail = (e as CustomEvent<VideoProgressDetail>).detail;
       if (!detail || detail.coursId !== coursId) return;
+      if ((detail.videoId ?? null) !== videoId) return;
       if (blockedRef.current) {
         pauseVideo();
         return;
@@ -123,6 +129,7 @@ export function EmargementGate({
           action: 'require',
           coursId,
           kind,
+          videoId: videoId ?? undefined,
           watchedRatio: detail.ratio,
           watchedSeconds: detail.seconds,
         });
@@ -133,21 +140,21 @@ export function EmargementGate({
 
     window.addEventListener(VIDEO_PROGRESS_EVENT, onProgress);
     return () => window.removeEventListener(VIDEO_PROGRESS_EVENT, onProgress);
-  }, [coursId, kind, signed, pauseVideo]);
+  }, [coursId, kind, videoId, signed, pauseVideo]);
 
   // Feuille signée depuis la fenêtre des émargements en attente (layout) :
   // la barrière de ce cours n'a plus lieu d'être.
   useEffect(() => {
     function onSigne(e: Event) {
       const d = (e as CustomEvent<EmargementSigneDetail>).detail;
-      if (!d || d.coursId !== coursId || d.kind !== kind) return;
-      garderSignature(coursId, kind, null);
+      if (!d || d.coursId !== coursId || d.kind !== kind || d.videoId !== videoId) return;
+      garderSignature(coursId, kind, videoId, null);
       setSigned(true);
       setBlocked(false);
     }
     window.addEventListener(EMARGEMENT_SIGNE_EVENT, onSigne);
     return () => window.removeEventListener(EMARGEMENT_SIGNE_EVENT, onSigne);
-  }, [coursId, kind]);
+  }, [coursId, kind, videoId]);
 
   // Tant que la barrière est levée, la vidéo reste en pause et la page ne
   // défile pas derrière la modale.
@@ -162,16 +169,16 @@ export function EmargementGate({
   const envoyer = useCallback(async (png: string) => {
     // La signature est gardée AVANT l'envoi : si l'onglet est fermé ou la
     // requête perdue, elle sera rejouée au prochain chargement.
-    garderSignature(coursId, kind, png);
+    garderSignature(coursId, kind, videoId, png);
 
     // Filet : si l'appel « require » a échoué (réseau), on le rejoue pour que
     // la ligne existe avant de tenter la signature.
     await fetchAvecJetonFrais('/api/emargement', {
-      action: 'require', coursId, kind,
+      action: 'require', coursId, kind, videoId: videoId ?? undefined,
     }).catch(() => null);
 
     const res = await fetchAvecJetonFrais('/api/emargement', {
-      action: 'sign', coursId, kind, signaturePng: png,
+      action: 'sign', coursId, kind, videoId: videoId ?? undefined, signaturePng: png,
     });
     const json = (await res.json().catch(() => ({}))) as { error?: string };
     if (!res.ok) {
@@ -181,10 +188,10 @@ export function EmargementGate({
           : json.error ?? 'Enregistrement impossible',
       );
     }
-    garderSignature(coursId, kind, null);
+    garderSignature(coursId, kind, videoId, null);
     setSigned(true);
     setBlocked(false);
-  }, [coursId, kind]);
+  }, [coursId, kind, videoId]);
 
   async function submit() {
     if (!signature || busy) return;
@@ -206,7 +213,7 @@ export function EmargementGate({
   const rattrapageRef = useRef(false);
   useEffect(() => {
     if (!blocked || signed || rattrapageRef.current) return;
-    const gardee = lireSignatureGardee(coursId, kind);
+    const gardee = lireSignatureGardee(coursId, kind, videoId);
     if (!gardee) return;
     rattrapageRef.current = true;
     // Pas de `busy` ici : les deux actions serveur sont idempotentes (une
@@ -221,7 +228,7 @@ export function EmargementGate({
     envoyer(gardee).catch(() => {
       setError('Votre signature précédente n’a pas pu être enregistrée. Signez à nouveau, ou réessayez.');
     });
-  }, [blocked, signed, coursId, kind, envoyer]);
+  }, [blocked, signed, coursId, kind, videoId, envoyer]);
 
   if (!blocked) return null;
 
@@ -246,7 +253,8 @@ export function EmargementGate({
               Émargement obligatoire
             </h2>
             <p className="mt-1 text-[13px] leading-snug" style={{ color: '#5B6478' }}>
-              Vous avez commencé <strong>{coursTitre}</strong>. La réglementation de la
+              Vous avez commencé <strong>{coursTitre}</strong>
+              {videoTitre && <> — séance « <strong>{videoTitre}</strong> »</>}. La réglementation de la
               formation professionnelle impose de signer votre feuille d’émargement pour
               attester de votre participation, même partielle.
             </p>
