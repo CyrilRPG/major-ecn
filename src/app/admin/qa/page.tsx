@@ -1,10 +1,10 @@
 import { Bot, MessagesSquare } from 'lucide-react';
 import { requireOnglet } from '@/lib/auth/require-role';
-import { ongletsDe, scopeEquipeResolu } from '@/lib/auth/onglets-equipe';
-import { collegesDesQuestions, questionDansPerimetre } from '@/lib/auth/collaborateurs';
+import { ongletsDe } from '@/lib/auth/onglets-equipe';
+import { collegesDesItems, porteeQuestions, questionsDansPortee } from '@/lib/forum/routage';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { identitePourLecteur, loadStudentIdentities, loadStudentScopes, type LecteurIdentite } from '@/lib/admin/student-identity';
+import { identitePourLecteur, loadStudentIdentities, type LecteurIdentite } from '@/lib/admin/student-identity';
 import { QaRow, type QaQuestionView } from '@/components/admin/qa/qa-row';
 import { AiQuestionsTable, type AiQuestionRow } from '@/components/admin/qa/ai-questions-table';
 
@@ -17,24 +17,23 @@ export default async function AdminQaPage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  // Réservé aux enseignants (et aux administrateurs) : un monteur vidéo, un
-  // commercial ou un rédacteur n'ont pas à lire ni à répondre au forum.
-  const { profile, isAdmin } = await requireOnglet('qa');
-  // Périmètre d'un enseignant : les questions des collèges qui lui sont
-  // ouverts (colonne `matiere_id` de la question). 'toutes' = sans filtre ;
-  // une question hors cours suit la spécialité de l'élève (même règle que le
-  // mail « Nouvelle question » et les actions : `questionDansPerimetre`).
-  const scopeEquipe = isAdmin ? null : await scopeEquipeResolu(profile);
-  const perimetre = isAdmin ? 'toutes' : collegesDesQuestions(scopeEquipe);
-  // Filtre SQL : collèges du périmètre + questions hors cours (triées ensuite).
+  // Réservé aux professeurs référents (et aux administrateurs) : un monteur
+  // vidéo, un commercial, un rédacteur ou un enseignant non référent n'ont pas
+  // à lire ni à répondre au forum.
+  const { user, profile, isAdmin } = await requireOnglet('qa');
+  // Spécialités dont l'enseignant est référent (colonne `matiere_id` de la
+  // question) : en médecine générale, le sous-collège ; un professeur limité à
+  // certains items, les collèges de ces items. 'toutes' = sans filtre ; une
+  // question hors collège suit la spécialité de l'élève (même règle que le
+  // mail « Nouvelle question » et les actions : `porteeQuestions`).
+  const portee = await porteeQuestions(profile);
+  const perimetre = portee.specialites;
+  // Filtre SQL : collèges du périmètre + questions hors collège (triées ensuite).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const filtreSql = (q: any) => (perimetre === 'toutes' ? q
     : q.or(perimetre.length > 0 ? `matiere_id.in.(${perimetre.join(',')}),matiere_id.is.null` : 'matiere_id.is.null'));
-  const garderHorsCours = async <T extends { matiere_id: string | null; student_id: string | null }>(rows: T[]): Promise<T[]> => {
-    if (perimetre === 'toutes') return rows;
-    const scopes = await loadStudentScopes(createAdminClient(), rows.filter((r) => !r.matiere_id).map((r) => r.student_id));
-    return rows.filter((r) => r.matiere_id || questionDansPerimetre(scopeEquipe, null, r.student_id ? scopes.get(r.student_id) : undefined));
-  };
+  const garderHorsCours = <T extends { matiere_id: string | null; student_id: string | null }>(rows: T[]): Promise<T[]> =>
+    questionsDansPortee(portee, rows, (r) => ({ matiereId: r.matiere_id, eleveId: r.student_id }));
   // Identité de l'élève : nom et prénom pour tous ; l'e-mail reste réservé aux
   // administrateurs, le lien vers la fiche à qui a le module Suivi élèves.
   const lecteur: LecteurIdentite = { admin: isAdmin, suivi: isAdmin || (await ongletsDe(profile)).suivi };
@@ -55,7 +54,7 @@ export default async function AdminQaPage({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let query = (supabase as any)
       .from('forum_questions')
-      .select('id, body, ai_context, created_at, student_id, student_pseudo, matiere_id, cours_titre, matiere_nom, status, is_public, forum_answers(id, body, created_at, professor_name)')
+      .select('id, body, ai_context, created_at, student_id, student_pseudo, matiere_id, cours_titre, matiere_nom, status, is_public, forum_answers(id, body, created_at, professor_id, professor_name)')
       .order('created_at', { ascending: false });
     if (forumStatus !== 'all') query = query.eq('status', forumStatus);
     query = filtreSql(query);
@@ -64,7 +63,7 @@ export default async function AdminQaPage({
       id: string; body: string; ai_context: string | null; created_at: string;
       student_id: string | null; student_pseudo: string; matiere_id: string | null; cours_titre: string | null; matiere_nom: string | null;
       status: 'pending' | 'answered' | 'archived'; is_public: boolean;
-      forum_answers: Array<{ id: string; body: string; created_at: string; professor_name: string }>;
+      forum_answers: Array<{ id: string; body: string; created_at: string; professor_id: string | null; professor_name: string }>;
     };
     const data = await garderHorsCours((brut ?? []) as LigneForum[]);
     // Le pseudo automatique ne dit pas QUI écrit : l'équipe doit pouvoir
@@ -120,20 +119,13 @@ export default async function AdminQaPage({
     if (perimetre !== 'toutes') {
       // Même périmètre que le forum : les questions posées sur un item d'un
       // collège de l'enseignant, ou sans item par un élève de sa spécialité.
-      // Collège de chaque item lu par tranches de 200.
-      const coursIds = [...new Set(brut.map((r) => r.cours_id).filter((id): id is string => !!id))];
-      const collegeDe = new Map<string, string>();
-      for (let i = 0; i < coursIds.length; i += 200) {
-        const { data: cours } = await createAdminClient()
-          .from('cours').select('id, matiere_id').in('id', coursIds.slice(i, i + 200));
-        for (const c of (cours ?? []) as { id: string; matiere_id: string }[]) collegeDe.set(c.id, c.matiere_id);
-      }
-      // Question sans item : elle suit la spécialité de l'élève.
-      const scopes = await loadStudentScopes(createAdminClient(), brut.filter((r) => !(r.cours_id && collegeDe.get(r.cours_id))).map((r) => r.user_id));
-      brut = brut.filter((r) => {
-        const college = r.cours_id ? collegeDe.get(r.cours_id) ?? null : null;
-        return questionDansPerimetre(scopeEquipe, college, r.user_id ? scopes.get(r.user_id) : undefined);
-      }).slice(0, 200);
+      // Collège de chaque item lu par tranches ; question sans item : elle
+      // suit la spécialité de l'élève.
+      const collegeDe = await collegesDesItems(brut.map((r) => r.cours_id).filter((id): id is string => !!id));
+      brut = (await questionsDansPortee(portee, brut, (r) => ({
+        matiereId: r.cours_id ? collegeDe[r.cours_id] ?? null : null,
+        eleveId: r.user_id,
+      }))).slice(0, 200);
     }
     const identites = await loadStudentIdentities(createAdminClient(), brut.map((r) => r.user_id));
     aiRows = brut.map((r) => {
@@ -143,8 +135,8 @@ export default async function AdminQaPage({
   }
 
   const FORUM_TABS: Array<{ key: typeof forumStatus; label: string }> = [
-    { key: 'pending',  label: `En attente${pendingCount ? ` (${pendingCount})` : ''}` },
-    { key: 'answered', label: 'Répondues' },
+    { key: 'pending',  label: `À traiter${pendingCount ? ` (${pendingCount})` : ''}` },
+    { key: 'answered', label: 'Déjà traitées' },
     { key: 'archived', label: 'Archivées' },
     { key: 'all',      label: 'Toutes' },
   ];
@@ -221,7 +213,7 @@ export default async function AdminQaPage({
             </div>
           ) : (
             <div className="space-y-4">
-              {forumRows.map((q) => <QaRow key={q.id} q={q} />)}
+              {forumRows.map((q) => <QaRow key={q.id} q={q} currentUserId={user.id} />)}
             </div>
           )}
         </>

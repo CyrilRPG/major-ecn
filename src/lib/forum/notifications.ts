@@ -3,7 +3,8 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { forumNewQuestionEmail } from '@/lib/email/templates';
 import { CONTACT_EMAIL, button, esc, majorEmail, majorText, pHtml, quote, summaryTable } from '@/lib/email/layout';
-import { recoitQuestionEleve } from '@/lib/auth/collaborateurs';
+import { lireScopeEquipe, recoitQuestionEleve } from '@/lib/auth/collaborateurs';
+import { contexteRoutage } from '@/lib/forum/routage';
 
 /**
  * Notifications du forum — partagées par l'action web `askQuestionAction`
@@ -11,11 +12,14 @@ import { recoitQuestionEleve } from '@/lib/auth/collaborateurs';
  */
 
 /**
- * Envoie un email à chaque enseignant dont le périmètre couvre le collège de
- * la question (`recoitQuestionEleve`) : comptes actifs et non expirés, avec au
- * moins un type pédagogique — jamais un monteur vidéo, un commercial ni un
- * rédacteur blog. Une question hors cours part aux enseignants de la
- * spécialité de l'élève. Le mail ne porte PAS l'adresse de l'élève.
+ * Envoie un email à chaque professeur RÉFÉRENT du collège de la question
+ * (`recoitQuestionEleve`) : comptes actifs et non expirés, enseignants dont la
+ * case « Professeur référent » n'est pas décochée — jamais un monteur vidéo,
+ * un commercial ni un rédacteur blog. En médecine générale, seuls les
+ * référents du sous-collège choisi par l'élève ; un professeur limité à
+ * certains items ne reçoit que les questions des collèges de ces items. Une
+ * question hors collège part aux référents de la spécialité de l'élève. Le
+ * mail ne porte PAS l'adresse de l'élève.
  */
 export async function notifyProfessorsOfNewQuestion(args: {
   questionId: string;
@@ -37,7 +41,8 @@ export async function notifyProfessorsOfNewQuestion(args: {
 
   if (!profs?.length) return;
 
-  const targets = profs.filter((p) => recoitQuestionEleve(p, args.matiereId, args.eleveScope));
+  const ctx = await contexteRoutage(profs.map((p) => lireScopeEquipe(p.permission_scope)));
+  const targets = profs.filter((p) => recoitQuestionEleve(p, args.matiereId, args.eleveScope, ctx));
 
   if (targets.length === 0) return;
 

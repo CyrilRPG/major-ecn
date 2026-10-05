@@ -2,14 +2,14 @@
 
 import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { AlertTriangle, Loader2, Plus, ShieldCheck, UserCog } from 'lucide-react';
+import { AlertTriangle, GraduationCap, Loader2, Plus, ShieldCheck, UserCog } from 'lucide-react';
 import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { CONTENT_TYPES, CONTENT_TYPE_LABEL, type ContentType } from '@/lib/schemas/professor';
 import {
   DROIT_BLOG_LABEL, DROIT_CONTENU_LABEL, FORMULES, FORMULE_LABEL, MODULE_LABEL, PAGE_SECURITE, POPULATION_LABEL, ROLES_MODELES,
-  accesOnglets, composerScope, modulesVides, pagesDuScope, perimetreVide, replierPerimetre,
+  accesOnglets, composerScope, estEnseignant, modulesVides, pagesDuScope, perimetreVide, replierPerimetre,
   type Formule, type Modules, type Perimetre, type RoleModele,
 } from '@/lib/auth/collaborateurs';
 
@@ -24,6 +24,8 @@ export type CollaborateurInitial = {
   modules: Modules;
   perimetre: Perimetre;
   mfa_obligatoire: boolean;
+  /** Professeur référent (questions des élèves + vidéos). */
+  referent: boolean;
   /** YYYY-MM-DD ou null. */
   access_end: string | null;
   is_active: boolean;
@@ -71,6 +73,8 @@ export function CollaborateurDialog({
   // tous les collèges au monteur vidéo créé le 24/09/2026.
   const [perimetre, setPerimetre] = useState<Perimetre>(() => (initial?.perimetre ? replierPerimetre(initial.perimetre, parentDe) : perimetreVide()));
   const [mfa, setMfa] = useState(initial?.mfa_obligatoire ?? false);
+  // Tout enseignant est référent par défaut ; l'administrateur décoche ici.
+  const [referent, setReferent] = useState(initial?.referent ?? true);
   const [accessEnd, setAccessEnd] = useState(initial?.access_end ?? '');
   const [actif, setActif] = useState(initial?.is_active ?? true);
 
@@ -117,13 +121,14 @@ export function CollaborateurDialog({
   // Aperçu de ce que la personne verra réellement, calculé avec les mêmes
   // règles que les gardes du serveur (`accesOnglets`, `pagesDuScope`).
   const apercu = useMemo(() => {
-    const scope = composerScope({ modules, perimetre });
+    const scope = composerScope({ modules, perimetre, referent });
     const acces = accesOnglets(scope);
     return {
       pages: pagesDuScope(scope).filter((pg) => pg.href !== PAGE_SECURITE).map((pg) => pg.label),
       questions: acces.qa,
+      enseignant: estEnseignant(scope),
     };
-  }, [modules, perimetre]);
+  }, [modules, perimetre, referent]);
   const nbSpecialites = specialitesChoisies.length;
 
   const enregistrer = () => {
@@ -132,7 +137,7 @@ export function CollaborateurDialog({
     start(async () => {
       const commun = {
         fonction: fonction || null, modele: modele || null, modules, perimetre,
-        mfa_obligatoire: mfa, access_end: accessEnd || null, is_active: actif,
+        mfa_obligatoire: mfa, referent, access_end: accessEnd || null, is_active: actif,
       };
       const body = mode === 'creer'
         ? { ...commun, first_name: firstName, last_name: lastName, email, phone: phone || null }
@@ -234,6 +239,29 @@ export function CollaborateurDialog({
                 </div>
                 <p className="text-xs text-(--color-ink-muted)">Sans « Publier », les articles de la personne rejoignent la file « En attente de validation ».</p>
               </Bloc>
+
+              {/* Référent : questions des élèves + vidéos, sur ses spécialités. */}
+              <div className={`rounded-xl border p-3 ${!apercu.enseignant ? 'border-(--color-border) bg-(--color-surface-soft)' : referent ? 'border-[#16793C]/40 bg-[#F3FBF5]' : 'border-(--color-border) bg-white'}`}>
+                <label className={`flex items-start gap-2 text-sm text-(--color-ink) ${apercu.enseignant ? 'cursor-pointer' : 'cursor-not-allowed opacity-70'}`}>
+                  <input
+                    type="checkbox"
+                    checked={apercu.enseignant && referent}
+                    disabled={!apercu.enseignant}
+                    onChange={(e) => setReferent(e.target.checked)}
+                    className="mt-0.5 h-4 w-4"
+                  />
+                  <span>
+                    <span className="flex items-center gap-1.5 font-bold">
+                      <GraduationCap className="h-4 w-4 text-[#16793C]" /> Professeur référent
+                    </span>
+                    <span className="block text-xs text-(--color-ink-muted)">
+                      {apercu.enseignant
+                        ? 'Sur ses spécialités : reçoit par mail et voit les questions des élèves, et dispose de l’onglet « Vidéos » pour déposer à l’avance une vidéo ou un support de cours. Décoché : ni questions, ni vidéos.'
+                        : 'Concerne les enseignants : cochez au moins un type pédagogique (fiches, QCM, DP, QROC, annales, flashcards) dans « Vidéos & contenus pédagogiques ».'}
+                    </span>
+                  </span>
+                </label>
+              </div>
             </section>
 
             {/* ── Périmètre ── */}
@@ -323,7 +351,9 @@ export function CollaborateurDialog({
                 <span className="font-semibold text-(--color-ink)">Questions des élèves : </span>
                 {apercu.questions
                   ? `${toutesSpecialites ? 'reçues et visibles pour toutes les spécialités' : 'reçues et visibles pour les spécialités cochées seulement'} — avec le nom et le prénom de l’élève, jamais son adresse e-mail.`
-                  : 'jamais — ni mail, ni page Questions / Réponses (réservé aux enseignants : fiches, QCM, DP, QROC, annales ou flashcards).'}
+                  : apercu.enseignant
+                    ? 'jamais — ni mail, ni page Questions / Réponses : la case « Professeur référent » est décochée.'
+                    : 'jamais — ni mail, ni page Questions / Réponses (réservé aux professeurs référents).'}
               </p>
               <p className="mt-0.5">
                 <span className="font-semibold text-(--color-ink)">Collèges : </span>

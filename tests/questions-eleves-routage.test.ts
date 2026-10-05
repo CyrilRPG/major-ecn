@@ -2,13 +2,19 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   ROLES_MODELES,
-  collegesDesQuestions,
+  accesOnglets,
+  collegesDeLEleve,
   composerScope,
   eleveVisiblePourScope,
+  estReferent,
   lireScopeEquipe,
   normaliserPerimetre,
   perimetreVide,
+  peutContenu,
   recoitQuestionEleve,
+  resumeModules,
+  specialitesReferent,
+  type ScopeEquipe,
 } from '../src/lib/auth/collaborateurs';
 import { getProfessorScope, profCanAccessCollege } from '../src/lib/auth/prof-content-access';
 import {
@@ -25,6 +31,11 @@ import {
  */
 
 const MG = ['col-medecine-generale', 'col-mg-cardiologie', 'col-mg-hematologie'];
+/** Sous-collège → parent, tel que `parentDesColleges` le lit en base. */
+const PARENT_DE = { 'col-mg-cardiologie': 'col-medecine-generale', 'col-mg-hematologie': 'col-medecine-generale' };
+
+/** Filtre SQL des questions avec collège (compte sans restriction d'items). */
+const collegesDesQuestions = (scope: ScopeEquipe | null) => specialitesReferent(scope, {});
 
 const scopeDe = (modele: keyof typeof ROLES_MODELES, specialites: 'toutes' | string[]) =>
   composerScope({ modele, modules: structuredClone(ROLES_MODELES[modele].modules), perimetre: { specialites, formules: {} } });
@@ -95,18 +106,107 @@ test('une question hors cours suit la spécialité de l’élève', () => {
 test('compte désactivé, expiré, sans e-mail ou administrateur : pas de mail', () => {
   const s = scopeDe('enseignant_relecteur', 'toutes');
   assert.equal(recoitQuestionEleve(profil(s, { is_active: false }), 'col-geriatrie'), false);
-  assert.equal(recoitQuestionEleve(profil(s, { access_end: '2026-01-01T00:00:00Z' }), 'col-geriatrie', undefined, Date.parse('2026-09-25')), false);
+  assert.equal(recoitQuestionEleve(profil(s, { access_end: '2026-01-01T00:00:00Z' }), 'col-geriatrie', undefined, {}, Date.parse('2026-09-25')), false);
   assert.equal(recoitQuestionEleve(profil(s, { email: null }), 'col-geriatrie'), false);
   assert.equal(recoitQuestionEleve(profil(s, { role: 'admin' }), 'col-geriatrie'), false);
   assert.equal(recoitQuestionEleve(profil(s, { role: 'student' }), 'col-geriatrie'), false);
 });
 
 test('un professeur historique (content_permissions) suit la même règle', () => {
-  const borgne = { role: 'professor', type: 'college', colleges: MG, cours: ['c1'], content_permissions: { qcm: 'rw', flashcards: 'rw' } };
-  assert.equal(recoitQuestionEleve(profil(borgne), 'col-mg-cardiologie'), true);
-  assert.equal(recoitQuestionEleve(profil(borgne), 'col-geriatrie'), false);
+  const geriatre = { role: 'professor', type: 'college', colleges: ['col-geriatrie'], content_permissions: { qcm: 'rw', flashcards: 'rw' } };
+  assert.equal(recoitQuestionEleve(profil(geriatre), 'col-geriatrie'), true);
+  assert.equal(recoitQuestionEleve(profil(geriatre), 'col-mg-cardiologie'), false);
   const videoSeule = { role: 'professor', type: 'all', colleges: [], content_permissions: { video: 'rw', qcm: 'none' } };
   assert.equal(recoitQuestionEleve(profil(videoSeule), 'col-geriatrie'), false);
+});
+
+/* ─────────────────── médecine générale : le sous-collège décide (05/10/2026) ─────────────────── */
+
+test('MG : un professeur limité aux items d’un sous-collège ne reçoit que ce sous-collège', () => {
+  // Format historique réel (Dr Borgne) : 21 collèges MG + les items d'hématologie.
+  const borgne = { role: 'professor', type: 'college', colleges: MG, cours: ['h1', 'h2'], content_permissions: { qcm: 'rw', flashcards: 'rw' } };
+  const ctx = { parentDe: PARENT_DE, collegeDeItem: { h1: 'col-mg-hematologie', h2: 'col-mg-hematologie' } };
+  assert.equal(recoitQuestionEleve(profil(borgne), 'col-mg-hematologie', undefined, ctx), true);
+  // Avant le 05/10/2026 : ses 21 collèges lui envoyaient toute la MG.
+  assert.equal(recoitQuestionEleve(profil(borgne), 'col-mg-cardiologie', undefined, ctx), false);
+  assert.equal(recoitQuestionEleve(profil(borgne), 'col-medecine-generale', undefined, ctx), false);
+  // Question générale d'un élève de MG (sans collège) : pas pour un sous-collège.
+  const eleveMg = { type: 'college', colleges: MG, offer: 'intensif' };
+  assert.equal(recoitQuestionEleve(profil(borgne), null, eleveMg, ctx), false);
+  // Collèges de ses items inconnus : il n'est référent de rien, plutôt que de tout.
+  assert.equal(recoitQuestionEleve(profil(borgne), 'col-mg-hematologie', undefined, {}), false);
+});
+
+test('MG : la question générale d’un élève va aux référents de toute la médecine générale', () => {
+  const toutMg = scopeDe('enseignant_relecteur', MG);
+  const cardio = scopeDe('enseignant_relecteur', ['col-mg-cardiologie']);
+  const eleveMg = { type: 'college', colleges: ['col-decouverte', ...MG], offer: 'intensif' };
+  const ctx = { parentDe: PARENT_DE };
+  assert.deepEqual(collegesDeLEleve(eleveMg, PARENT_DE), ['col-medecine-generale']);
+  assert.equal(recoitQuestionEleve(profil(toutMg), null, eleveMg, ctx), true);
+  assert.equal(recoitQuestionEleve(profil(cardio), null, eleveMg, ctx), false);
+  // Le sous-collège choisi par l'élève : ses référents, et ceux de toute la MG.
+  assert.equal(recoitQuestionEleve(profil(cardio), 'col-mg-cardiologie', eleveMg, ctx), true);
+  assert.equal(recoitQuestionEleve(profil(toutMg), 'col-mg-cardiologie', eleveMg, ctx), true);
+  assert.equal(recoitQuestionEleve(profil(cardio), 'col-mg-hematologie', eleveMg, ctx), false);
+  // Un élève avec seulement des sous-collèges remonte aussi au parent.
+  assert.deepEqual(collegesDeLEleve({ type: 'college', colleges: ['col-mg-cardiologie'], offer: 'intensif' }, PARENT_DE), ['col-medecine-generale']);
+});
+
+/* ─────────────────────────── professeur référent (05/10/2026) ─────────────────────────── */
+
+test('tout enseignant est référent par défaut, y compris les comptes historiques', () => {
+  const nouveau = scopeDe('enseignant_relecteur', ['col-geriatrie']);
+  assert.equal(nouveau.referent, true);
+  assert.equal(estReferent(nouveau), true);
+  const historique = lireScopeEquipe({ role: 'professor', type: 'college', colleges: ['col-geriatrie'], content_permissions: { qcm: 'rw' } });
+  assert.equal(historique?.referent, true);
+  assert.equal(estReferent(historique), true);
+  // Le monteur vidéo n'enseigne pas : jamais référent, quelle que soit la case.
+  assert.equal(estReferent(scopeDe('gestionnaire_video', 'toutes')), false);
+});
+
+test('référent : questions des élèves + onglet Vidéos, dépôt sans le type « vidéo »', () => {
+  // Enseignant sans le type vidéo coché (cas de la plupart des professeurs).
+  const scope = composerScope({
+    modules: { ...ROLES_MODELES.enseignant_relecteur.modules, contenus: { ...ROLES_MODELES.enseignant_relecteur.modules.contenus, publier: false, supprimer: false, types: ['qcm', 'fiche'] } },
+    perimetre: { specialites: ['col-geriatrie'], formules: {} },
+  });
+  assert.equal(accesOnglets(scope).qa, true);
+  assert.equal(accesOnglets(scope).videos, true);
+  assert.equal(peutContenu(scope, 'creer', 'video'), true);
+  assert.equal(peutContenu(scope, 'modifier', 'video'), true);
+  // Publier et supprimer suivent ses droits : sans eux, le dépôt passe « À valider ».
+  assert.equal(peutContenu(scope, 'publier', 'video'), false);
+  assert.equal(peutContenu(scope, 'supprimer', 'video'), false);
+  assert.equal(recoitQuestionEleve(profil(scope), 'col-geriatrie'), true);
+});
+
+test('non référent : ni questions, ni vidéos — même avec le type « vidéo » coché', () => {
+  const scope = composerScope({
+    modules: structuredClone(ROLES_MODELES.enseignant_relecteur.modules),
+    perimetre: { specialites: ['col-geriatrie'], formules: {} },
+    referent: false,
+  });
+  assert.ok(scope.modules.contenus.types.includes('video'));
+  assert.equal(scope.referent, false);
+  assert.deepEqual(accesOnglets(scope), { contenu: true, videos: false, qa: false, entrainements: true, suivi: false, blog: false });
+  for (const droit of ['creer', 'modifier', 'publier', 'supprimer'] as const) assert.equal(peutContenu(scope, droit, 'video'), false, droit);
+  // Le reste de son travail d'enseignant est intact.
+  assert.equal(peutContenu(scope, 'modifier', 'fiche'), true);
+  assert.equal(recoitQuestionEleve(profil(scope), 'col-geriatrie'), false);
+  assert.equal(recoitQuestionEleve(profil(scope), null, { type: 'college', colleges: ['col-geriatrie'], offer: 'intensif' }), false);
+  assert.deepEqual(specialitesReferent(scope, {}), []);
+  // La case décochée survit à la relecture du scope enregistré.
+  assert.equal(lireScopeEquipe(JSON.parse(JSON.stringify(scope)))?.referent, false);
+  assert.ok(resumeModules(scope).some((l) => l.startsWith('Non référent')));
+});
+
+test('le monteur vidéo garde ses vidéos, case référent ou non', () => {
+  const monteur = composerScope({ modules: ROLES_MODELES.gestionnaire_video.modules, perimetre: { specialites: 'toutes', formules: {} }, referent: false });
+  assert.equal(accesOnglets(monteur).videos, true);
+  assert.equal(peutContenu(monteur, 'creer', 'video'), true);
+  assert.equal(accesOnglets(monteur).qa, false);
 });
 
 /* ─────────────────────────── identité de l'élève ─────────────────────────── */

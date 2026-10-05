@@ -8,6 +8,7 @@ import { SplitViewProvider, type SplitSupport } from '@/components/student/split
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { canRead, canReadAnyQcm } from '@/lib/schemas/professor';
+import { estReferent, lireScopeEquipe } from '@/lib/auth/collaborateurs';
 import type { CourseSupport } from '@/lib/student/supports';
 import { hiddenBlocksVisibility, parseHiddenBlocks } from '@/lib/student/blocs';
 import { estTitreRevisions } from '@/lib/videos/revisions';
@@ -160,7 +161,8 @@ export default async function CoursLayout({
   const profVisibility = profScope
     ? {
         fiche: canRead(profScope, 'fiche'),
-        video: canRead(profScope, 'video'),
+        // Le professeur référent dépose vidéos et supports : il les voit aussi côté élève.
+        video: canRead(profScope, 'video') || estReferent(lireScopeEquipe(profile.permission_scope)),
         // L'onglet « DP · QI » porte les trois sous-types : il reste visible dès
         // qu'un seul est lisible (le contenu, lui, est filtré série par série).
         qcm: canReadAnyQcm(profScope),

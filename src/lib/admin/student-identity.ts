@@ -16,7 +16,7 @@ export type { LecteurIdentite, StudentIdentity } from './student-identity-pure';
 /**
  * `permission_scope` brut d'un lot d'élèves (par tranches de 200) : sert à
  * router une question HORS COURS vers les enseignants de la spécialité de
- * l'élève (`questionDansPerimetre(scope, null, scopeEleve)`).
+ * l'élève (`questionsDansPortee`, lib/forum/routage).
  */
 export async function loadStudentScopes(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

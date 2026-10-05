@@ -50,6 +50,8 @@ const Droits = z.object({
   modules: ModulesSchema,
   perimetre: PerimetreSchema,
   mfa_obligatoire: z.boolean().optional(),
+  /** Professeur référent (questions des élèves + vidéos) ; absent = oui. */
+  referent: z.boolean().optional(),
   /** Date de fin d'accès (YYYY-MM-DD), vide = sans fin. */
   access_end: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().nullable(),
   is_active: z.boolean().optional(),

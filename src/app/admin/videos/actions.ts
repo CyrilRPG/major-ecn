@@ -3,7 +3,6 @@ import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 
 import { revalidatePath } from 'next/cache';
 import {
-  assertCanWrite,
   peutCreerItemRevisions,
   profCanAccessCours,
   requireContentEditor,
@@ -71,7 +70,9 @@ type Ctx = {
  * Droit fin du cahier des charges (18/09/2026, §5) sur les vidéos : créer /
  * modifier / publier / supprimer. L'administrateur a tout ; un membre du
  * personnel suit son module « Contenus » (un professeur historique y a tous
- * les droits, comme avant).
+ * les droits, comme avant) — et, enseignant, sa case « Professeur référent »
+ * (05/10/2026) : référent, il dépose et modifie vidéos et supports ; non
+ * référent, plus rien.
  */
 function droitVideo(profile: Ctx['profile'], droit: DroitContenu): boolean {
   if (profile.role === 'admin') return true;
@@ -85,14 +86,13 @@ const REFUS_DROIT: Record<DroitContenu, string> = {
   supprimer: 'Votre accès ne permet pas de supprimer une vidéo.',
 };
 
-/** Contrôles communs : éditeur de contenu, droit d'écriture vidéo, droit fin, périmètre. */
+/**
+ * Contrôles communs : éditeur de contenu, droit fin sur les vidéos (`droitVideo` :
+ * un professeur référent dépose et modifie même sans le type « vidéo » coché,
+ * un enseignant non référent n'y touche pas), périmètre de l'item.
+ */
 async function guard(coursId: string, droit: DroitContenu = 'modifier'): Promise<Ctx | { error: string }> {
   const { profile, scope } = await requireContentEditor();
-  try {
-    assertCanWrite(scope, 'video');
-  } catch (e) {
-    return { error: e instanceof Error ? e.message : 'Permission insuffisante.' };
-  }
   if (!droitVideo(profile, droit)) return { error: REFUS_DROIT[droit] };
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -574,11 +574,6 @@ export async function addVideoToRevisionsAction(input: {
   allowedUserIds?: string[];
 }): Promise<AddResult> {
   const { profile, scope } = await requireContentEditor();
-  try {
-    assertCanWrite(scope, 'video');
-  } catch (e) {
-    return { error: e instanceof Error ? e.message : 'Permission insuffisante.' };
-  }
   // L'item de révisions n'est qu'un conteneur de vidéos : le créer fait partie
   // de la mission de quiconque peut DÉPOSER une vidéo (monteur vidéo compris),
   // pourvu que le collège soit dans son périmètre. Un compte restreint à
@@ -1055,11 +1050,6 @@ export async function deleteVideosAction(input: {
   videoIds: string[];
 }): Promise<DeleteVideosResult> {
   const { profile, scope } = await requireContentEditor();
-  try {
-    assertCanWrite(scope, 'video');
-  } catch (e) {
-    return { error: e instanceof Error ? e.message : 'Permission insuffisante.' };
-  }
   if (!droitVideo(profile, 'supprimer')) return { error: REFUS_DROIT.supprimer };
 
   const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

@@ -2,8 +2,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
-import { collegesDesQuestions, lireScopeEquipe, questionDansPerimetre } from '@/lib/auth/collaborateurs';
-import { loadStudentScopes } from '@/lib/admin/student-identity';
+import { porteeQuestions, questionsDansPortee, type PorteeQuestions } from '@/lib/forum/routage';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { ForumView, type ForumQuestionRow, type ForumCollege } from '@/components/forum/forum-view';
 
@@ -24,22 +23,28 @@ export default async function ForumPage({
   // ─── Arborescence collèges accessibles (pour le formulaire élève) ───
   const { data: facRaw } = await supabase
     .from('facultes')
-    .select('semestres(matieres(id, nom, order_index, cours(id, titre, order_index)))')
+    .select('semestres(matieres(id, nom, order_index, parent_matiere_id, cours(id, titre, order_index)))')
     .eq('id', EDN_FACULTE_ID)
     .maybeSingle();
   type FacRow = { semestres?: { matieres?: Array<{
-    id: string; nom: string; order_index: number | null;
+    id: string; nom: string; order_index: number | null; parent_matiere_id: string | null;
     cours?: { id: string; titre: string; order_index: number | null }[] | null;
   }> }[] };
   const studentScope = parseScope(profile.permission_scope);
+  const toutesMatieres = ((facRaw as unknown as FacRow | null)?.semestres ?? []).flatMap((s) => s.matieres ?? []);
+  const nomDe = new Map(toutesMatieres.map((m) => [m.id, m.nom]));
+  // Un collège qui a des sous-collèges (médecine générale) : l'élève choisit le
+  // sous-collège, qui désigne les professeurs référents de sa question.
+  const parents = new Set(toutesMatieres.map((m) => m.parent_matiere_id).filter((id): id is string => !!id));
   const collegesForForm: ForumCollege[] = role === 'student'
-    ? ((facRaw as unknown as FacRow | null)?.semestres ?? [])
-        .flatMap((s) => s.matieres ?? [])
+    ? toutesMatieres
         .filter((m) => canAccessCollege(studentScope, m.id))
         .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
         .map((m) => ({
           id: m.id,
           nom: m.nom,
+          parentNom: m.parent_matiere_id ? nomDe.get(m.parent_matiere_id) ?? null : parents.has(m.id) ? m.nom : null,
+          estParent: parents.has(m.id),
           cours: (m.cours ?? [])
             .filter((c) => canAccessCours(studentScope, m.id, c.id))
             .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
@@ -48,16 +53,17 @@ export default async function ForumPage({
         .filter((m) => m.cours.length > 0)
     : [];
 
-  // ─── Périmètre prof : ids de collèges accessibles avec ≥ une permission ───
+  // ─── Périmètre prof : collèges dont il est professeur référent ───
   // Même règle que la page Q&R et le mail « Nouvelle question »
-  // (`collegesDesQuestions`) : enseignants seulement — un monteur vidéo, un
-  // commercial ou un rédacteur blog ne voit aucune question — bornés aux
-  // collèges de leur périmètre (questions hors cours : spécialité de l'élève).
+  // (`porteeQuestions`) : professeurs référents seulement — un monteur vidéo,
+  // un commercial, un rédacteur blog ou un enseignant non référent ne voit
+  // aucune question — bornés à leurs spécialités (en médecine générale, au
+  // sous-collège ; questions hors collège : spécialité de l'élève).
   let profAccessibleMatiereIds: string[] | 'all' | null = null;
-  const scopeEquipe = role === 'professor' ? lireScopeEquipe(profile.permission_scope) : null;
+  let portee: PorteeQuestions | null = null;
   if (role === 'professor') {
-    const c = collegesDesQuestions(scopeEquipe);
-    profAccessibleMatiereIds = c === 'toutes' ? 'all' : c;
+    portee = await porteeQuestions(profile);
+    profAccessibleMatiereIds = portee.specialites === 'toutes' ? 'all' : portee.specialites;
   }
 
   // ─── Onglet public/privé ───
@@ -106,14 +112,10 @@ export default async function ForumPage({
   const { data } = await query;
   let rows = (data ?? []) as ForumQuestionRow[];
 
-  // Enseignant restreint : une question hors cours n'est gardée que si
-  // l'élève appartient à l'une de ses spécialités (`questionDansPerimetre`).
-  if (role === 'professor' && Array.isArray(profAccessibleMatiereIds) && profAccessibleMatiereIds.length > 0) {
-    const horsCours = rows.filter((r) => !r.matiere_id);
-    if (horsCours.length > 0) {
-      const scopes = await loadStudentScopes(createAdminClient(), horsCours.map((r) => r.student_id));
-      rows = rows.filter((r) => r.matiere_id || questionDansPerimetre(scopeEquipe, null, r.student_id ? scopes.get(r.student_id) : undefined));
-    }
+  // Référent restreint : une question hors collège n'est gardée que si elle
+  // relève de la spécialité de l'élève (`questionsDansPortee`).
+  if (portee) {
+    rows = await questionsDansPortee(portee, rows, (r) => ({ matiereId: r.matiere_id, eleveId: r.student_id }));
   }
 
   // Filtre client-side : recherche texte

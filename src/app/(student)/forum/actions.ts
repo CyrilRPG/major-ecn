@@ -9,32 +9,35 @@ import { generatePseudo } from '@/lib/auth/pseudo';
 import { notifyProfessorsOfNewQuestion } from '@/lib/forum/notifications';
 import { ELEVE_SANS_NOM, identityContext, identityFromProfile } from '@/lib/admin/student-identity';
 import { logAudit } from '@/lib/audit/log';
-import { lireScopeEquipe, questionDansPerimetre } from '@/lib/auth/collaborateurs';
+import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
+import { questionPourMembre } from '@/lib/forum/routage';
 
 type Result = { ok: true; id: string } | { error: string };
 
 /**
  * Un membre du personnel (non administrateur) peut-il agir sur cette
  * question ? Même règle que la page Q&R et le mail de notification
- * (`questionDansPerimetre`) : enseignant — jamais un monteur vidéo, un
- * commercial ni un rédacteur blog — ET collège de la question dans son
- * périmètre ; une question hors cours suit la spécialité de l'élève.
+ * (`questionPourMembre`) : professeur RÉFÉRENT — jamais un monteur vidéo, un
+ * commercial, un rédacteur blog ni un enseignant non référent — dont les
+ * spécialités couvrent le collège de la question ; une question hors collège
+ * suit la spécialité de l'élève.
  */
 async function profCanAccessForumQuestion(
-  permissionScope: unknown,
+  profile: { id: string; role?: string | null; permission_scope?: unknown },
   q: { matiere_id: string | null; student_id?: string | null },
 ): Promise<boolean> {
-  let eleveScope: unknown;
-  if (!q.matiere_id && q.student_id) {
-    const { data } = await createAdminClient().from('profiles').select('permission_scope').eq('id', q.student_id).maybeSingle();
-    eleveScope = (data as { permission_scope?: unknown } | null)?.permission_scope;
-  }
-  return questionDansPerimetre(lireScopeEquipe(permissionScope), q.matiere_id, eleveScope);
+  return questionPourMembre(profile, q);
 }
 
 export async function askQuestionAction(input: {
   body: string;
   coursId?: string | null;
+  /**
+   * Collège choisi par l'élève (sous-collège en médecine générale) quand la
+   * question ne vise pas un item précis : c'est lui qui désigne les
+   * professeurs référents qui la reçoivent.
+   */
+  matiereId?: string | null;
   aiContext?: string | null;
 }): Promise<Result> {
   const body = input.body?.trim();
@@ -67,6 +70,17 @@ export async function askQuestionAction(input: {
       const m = (c as { matieres?: { nom?: string } }).matieres;
       matiereNom = m?.nom ?? null;
     }
+  } else if (input.matiereId) {
+    // Question sans item précis : le collège choisi (en médecine générale, le
+    // sous-collège) suffit à la router vers ses référents — à condition que
+    // l'élève y ait accès, jamais un collège forcé à la main.
+    if (profile.role === 'student' && !canAccessCollege(parseScope(profile.permission_scope), input.matiereId)) {
+      return { error: 'Ce collège ne fait pas partie de ton accès.' };
+    }
+    const { data: m } = await supabase.from('matieres').select('id, nom').eq('id', input.matiereId).maybeSingle();
+    if (!m) return { error: 'Collège introuvable.' };
+    matiereId = m.id;
+    matiereNom = m.nom;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -132,7 +146,7 @@ export async function toggleQuestionPublicAction(questionId: string): Promise<{ 
   if (!q) return { error: 'Question introuvable.' };
 
   if (profile.role === 'professor') {
-    if (!(await profCanAccessForumQuestion(profile.permission_scope, q))) {
+    if (!(await profCanAccessForumQuestion(profile, q))) {
       return { error: 'Vous n\'avez pas accès au collège de cette question.' };
     }
   }
@@ -185,7 +199,7 @@ export async function postProfessorAnswerAction(input: z.infer<typeof AnswerSche
   if (!q) return { error: 'Question introuvable.' };
 
   if (profile.role === 'professor') {
-    if (!(await profCanAccessForumQuestion(profile.permission_scope, q))) {
+    if (!(await profCanAccessForumQuestion(profile, q))) {
       return { error: 'Vous n\'avez pas accès au collège de cette question.' };
     }
   }
@@ -259,7 +273,7 @@ export async function addReplyAction(input: z.infer<typeof ReplySchema>): Promis
     return { error: 'Vous ne pouvez répondre que dans vos propres discussions.' };
   }
   if (profile.role === 'professor') {
-    if (!(await profCanAccessForumQuestion(profile.permission_scope, q))) {
+    if (!(await profCanAccessForumQuestion(profile, q))) {
       return { error: 'Vous n\'avez pas accès au collège de cette question.' };
     }
   }

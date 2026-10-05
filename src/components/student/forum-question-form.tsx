@@ -1,11 +1,36 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, MessageCircleQuestion, Send } from 'lucide-react';
 import { askQuestionAction } from '@/app/(student)/forum/actions';
 
-type College = { id: string; nom: string; cours: { id: string; titre: string }[] };
+type College = {
+  id: string;
+  nom: string;
+  /** Collège parent (médecine générale) d'un sous-collège, ou le collège lui-même s'il a des sous-collèges. */
+  parentNom?: string | null;
+  /** Collège qui a des sous-collèges : ses items sont transversaux (annales, entraînements). */
+  estParent?: boolean;
+  cours: { id: string; titre: string }[];
+};
+
+/** Options du sélecteur : collèges seuls, ou groupés sous leur collège parent. */
+type Entree = { type: 'college'; college: College } | { type: 'groupe'; nom: string; colleges: College[] };
+
+function entreesDe(colleges: College[]): Entree[] {
+  const out: Entree[] = [];
+  const groupes = new Map<string, Extract<Entree, { type: 'groupe' }>>();
+  for (const c of colleges) {
+    if (!c.parentNom) { out.push({ type: 'college', college: c }); continue; }
+    let g = groupes.get(c.parentNom);
+    if (!g) { g = { type: 'groupe', nom: c.parentNom, colleges: [] }; groupes.set(c.parentNom, g); out.push(g); }
+    g.colleges.push(c);
+  }
+  // Dans un groupe, les sous-collèges d'abord, le transversal du parent en dernier.
+  for (const g of groupes.values()) g.colleges.sort((a, b) => Number(!!a.estParent) - Number(!!b.estParent));
+  return out;
+}
 
 export function ForumQuestionForm({ colleges }: { colleges: College[] }) {
   const [body, setBody] = useState('');
@@ -17,12 +42,23 @@ export function ForumQuestionForm({ colleges }: { colleges: College[] }) {
   const [pending, start] = useTransition();
   const router = useRouter();
 
+  const entrees = useMemo(() => entreesDe(colleges), [colleges]);
+  const avecSousColleges = entrees.some((e) => e.type === 'groupe');
+  // Le collège est obligatoire dès que l'élève en a un : c'est lui qui désigne
+  // les professeurs référents qui reçoivent la question.
+  const collegeRequis = colleges.length > 0;
   const selectedCollege = colleges.find((c) => c.id === matiereId);
   const courses = selectedCollege?.cours ?? [];
 
   const submit = () => {
     setError(null);
     setSuccess(false);
+    if (collegeRequis && !matiereId) {
+      setError(avecSousColleges
+        ? 'Choisis le collège de ta question — en médecine générale, le sous-collège.'
+        : 'Choisis le collège de ta question.');
+      return;
+    }
     if (!body.trim() || body.trim().length < 8) {
       setError('Formule ta question en au moins 8 caractères.');
       return;
@@ -31,6 +67,7 @@ export function ForumQuestionForm({ colleges }: { colleges: College[] }) {
       const res = await askQuestionAction({
         body: body.trim(),
         coursId: coursId || null,
+        matiereId: matiereId || null,
       });
       if ('error' in res) {
         setError(res.error);
@@ -58,12 +95,18 @@ export function ForumQuestionForm({ colleges }: { colleges: College[] }) {
         </button>
         {success && (
           <p className="mt-2 text-center text-xs font-medium text-(--color-success)">
-            Ta question a été transmise à l'équipe pédagogique.
+            Ta question a été transmise aux professeurs référents.
           </p>
         )}
       </div>
     );
   }
+
+  const optionCollege = (c: College) => (
+    <option key={c.id} value={c.id}>
+      {c.estParent ? `${c.nom} — transversal (annales, entraînements)` : c.nom}
+    </option>
+  );
 
   return (
     <div className="mt-6 rounded-2xl border border-(--color-primary)/30 bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
@@ -77,35 +120,47 @@ export function ForumQuestionForm({ colleges }: { colleges: College[] }) {
         </button>
       </div>
 
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        <label className="block text-xs">
-          <span className="mb-1 block font-bold text-(--color-ink)">Collège (facultatif)</span>
-          <select
-            value={matiereId}
-            onChange={(e) => { setMatiereId(e.target.value); setCoursId(''); }}
-            className="w-full rounded-lg border border-(--color-border) bg-white px-3 py-2 text-sm text-(--color-ink) outline-none focus:border-(--color-primary)"
-          >
-            <option value="">Aucun collège précis</option>
-            {colleges.map((c) => (
-              <option key={c.id} value={c.id}>{c.nom}</option>
-            ))}
-          </select>
-        </label>
-        <label className="block text-xs">
-          <span className="mb-1 block font-bold text-(--color-ink)">Item / cours (facultatif)</span>
-          <select
-            value={coursId}
-            onChange={(e) => setCoursId(e.target.value)}
-            disabled={!selectedCollege}
-            className="w-full rounded-lg border border-(--color-border) bg-white px-3 py-2 text-sm text-(--color-ink) outline-none focus:border-(--color-primary) disabled:bg-(--color-sand-100) disabled:text-(--color-ink-muted)"
-          >
-            <option value="">Aucun item précis</option>
-            {courses.map((c) => (
-              <option key={c.id} value={c.id}>{c.titre}</option>
-            ))}
-          </select>
-        </label>
-      </div>
+      {collegeRequis && (
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <label className="block text-xs">
+            <span className="mb-1 block font-bold text-(--color-ink)">
+              {avecSousColleges ? 'Collège / sous-collège' : 'Collège'}
+            </span>
+            <select
+              value={matiereId}
+              required
+              onChange={(e) => { setMatiereId(e.target.value); setCoursId(''); }}
+              className="w-full rounded-lg border border-(--color-border) bg-white px-3 py-2 text-sm text-(--color-ink) outline-none focus:border-(--color-primary)"
+            >
+              <option value="" disabled>Choisis le collège…</option>
+              {entrees.map((e) => (e.type === 'college'
+                ? optionCollege(e.college)
+                : <optgroup key={`g-${e.nom}`} label={e.nom}>{e.colleges.map(optionCollege)}</optgroup>))}
+            </select>
+          </label>
+          <label className="block text-xs">
+            <span className="mb-1 block font-bold text-(--color-ink)">Item / cours (facultatif)</span>
+            <select
+              value={coursId}
+              onChange={(e) => setCoursId(e.target.value)}
+              disabled={!selectedCollege}
+              className="w-full rounded-lg border border-(--color-border) bg-white px-3 py-2 text-sm text-(--color-ink) outline-none focus:border-(--color-primary) disabled:bg-(--color-sand-100) disabled:text-(--color-ink-muted)"
+            >
+              <option value="">Aucun item précis</option>
+              {courses.map((c) => (
+                <option key={c.id} value={c.id}>{c.titre}</option>
+              ))}
+            </select>
+          </label>
+          <p className="text-[11px] leading-snug text-(--color-ink-muted) sm:col-span-2">
+            {selectedCollege
+              ? `Ta question part aux professeurs référents de « ${selectedCollege.nom} ».`
+              : avecSousColleges
+                ? 'En médecine générale, choisis le sous-collège : ta question part directement à ses professeurs référents.'
+                : 'Ta question part aux professeurs référents du collège choisi.'}
+          </p>
+        </div>
+      )}
 
       <label className="mt-3 block text-xs">
         <span className="mb-1 block font-bold text-(--color-ink)">Ta question</span>
@@ -132,7 +187,7 @@ export function ForumQuestionForm({ colleges }: { colleges: College[] }) {
         <button
           type="button"
           onClick={submit}
-          disabled={pending || body.trim().length < 8}
+          disabled={pending || body.trim().length < 8 || (collegeRequis && !matiereId)}
           className="inline-flex items-center gap-2 rounded-xl bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] px-5 py-2.5 text-sm font-bold text-white shadow-(--shadow-soft) disabled:opacity-60"
         >
           {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}

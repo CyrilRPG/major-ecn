@@ -106,6 +106,14 @@ export type ScopeEquipe = {
   modules: Modules;
   perimetre: Perimetre;
   mfa_obligatoire: boolean;
+  /**
+   * Professeur référent de ses spécialités (demande de Cyril, 05/10/2026) :
+   * reçoit les questions des élèves et ouvre l'onglet « Vidéos » (dépôt d'une
+   * vidéo ou d'un support à l'avance). Coché par défaut — un compte qui n'a
+   * jamais porté la clé est référent — et ne vaut que pour un enseignant
+   * (`estReferent`).
+   */
+  referent: boolean;
 };
 
 export const MODULE_LABEL: Record<keyof Modules, string> = {
@@ -292,6 +300,7 @@ export function lireScopeEquipe(
   const fonction = typeof s.fonction === 'string' && s.fonction.trim() ? s.fonction.trim() : null;
   const modele = estRoleModele(s.modele) ? s.modele : null;
   const mfa = bool(s.mfa_obligatoire);
+  const referent = bool(s.referent, true);
 
   let modules: Modules;
   let perimetre: Perimetre;
@@ -327,7 +336,7 @@ export function lireScopeEquipe(
     };
   }
 
-  return composerScope({ fonction, modele, modules, perimetre, cours, mfa_obligatoire: mfa });
+  return composerScope({ fonction, modele, modules, perimetre, cours, mfa_obligatoire: mfa, referent });
 }
 
 export function estRoleModele(v: unknown): v is RoleModele {
@@ -344,6 +353,8 @@ export type EntreeScope = {
   /** Restriction historique à certains items (conservée, jamais saisie ici). */
   cours?: string[];
   mfa_obligatoire?: boolean;
+  /** Professeur référent ; absent = oui (défaut de tout enseignant). */
+  referent?: boolean;
 };
 
 /** Niveau historique d'un type de contenu, dérivé du module Contenus. */
@@ -380,6 +391,7 @@ export function composerScope(entree: EntreeScope): ScopeEquipe {
     modules,
     perimetre,
     mfa_obligatoire: bool(entree.mfa_obligatoire),
+    referent: bool(entree.referent, true),
   };
 }
 
@@ -388,6 +400,14 @@ export function composerScope(entree: EntreeScope): ScopeEquipe {
 export function peutContenu(scope: ScopeEquipe | null, droit: DroitContenu, type?: ContentType): boolean {
   if (!scope) return false;
   const m = scope.modules.contenus;
+  if (type === 'video' && estEnseignant(scope)) {
+    // Les vidéos d'un enseignant tiennent à la case « Professeur référent » :
+    // référent, il dépose une vidéo ou un support dans ses spécialités même
+    // sans le type « vidéo » coché (publier et supprimer suivent ses droits) ;
+    // non référent, il n'y touche plus, type coché ou non.
+    if (!scope.referent) return false;
+    return droit === 'creer' || droit === 'modifier' || m[droit];
+  }
   if (!m.actif || !m[droit]) return false;
   return type ? m.types.includes(type) : true;
 }
@@ -499,9 +519,9 @@ const TYPES_ENTRAINEMENT: readonly ContentType[] = ['qcm', 'dp', 'qroc', 'flashc
 export type AccesOnglets = {
   /** « Contenu » (fiches, QCM, flashcards…) : au moins un type pédagogique. */
   contenu: boolean;
-  /** « Vidéos » : le type vidéo. */
+  /** « Vidéos » : enseignant référent, ou type vidéo pour qui n'enseigne pas (monteur). */
   videos: boolean;
-  /** « Questions / Réponses » : réservé aux enseignants (type pédagogique). */
+  /** « Questions / Réponses » : réservé aux enseignants référents. */
   qa: boolean;
   /** « Entraînements d'élèves » : QCM / DP / QROC ou flashcards. */
   entrainements: boolean;
@@ -523,42 +543,97 @@ export const ACCES_ADMIN: Readonly<AccesOnglets> = {
 export function accesOnglets(scope: ScopeEquipe | null): AccesOnglets {
   const types = scope && scope.modules.contenus.actif ? scope.modules.contenus.types : [];
   const pedagogique = types.some((t) => TYPES_PEDAGOGIQUES.includes(t));
+  const referent = estReferent(scope);
   return {
     contenu: pedagogique,
-    videos: types.includes('video'),
-    qa: pedagogique,
+    // Un enseignant n'a les vidéos que référent (case du crayon) ; un monteur
+    // vidéo, qui n'enseigne pas, les garde par son type « vidéo ».
+    videos: pedagogique ? referent : types.includes('video'),
+    qa: referent,
     entrainements: types.some((t) => TYPES_ENTRAINEMENT.includes(t)),
     suivi: !!scope?.modules.suivi.actif,
     blog: !!scope?.modules.blog.actif,
   };
 }
 
+/* ─────────────────────────── professeur référent ─────────────────────────── */
+
 /**
- * Une question du forum relève-t-elle de ce collaborateur ? Il faut répondre
- * aux questions (enseignant) ET que le collège de la question soit dans son
- * périmètre. Une question hors cours (sans collège) ne revient qu'aux
- * enseignants « toutes spécialités ».
+ * Enseignant : au moins un type pédagogique (fiches, QCM, DP, QROC, annales,
+ * flashcards) dans le module Contenus. Jamais un monteur vidéo, un commercial
+ * ni un rédacteur blog.
  */
-export function questionDansPerimetre(
-  scope: ScopeEquipe | null,
-  matiereId: string | null | undefined,
-  eleveScope?: unknown,
-): boolean {
-  if (!scope || !accesOnglets(scope).qa) return false;
-  if (matiereId) return specialiteAutorisee(scope.perimetre, matiereId);
-  if (scope.perimetre.specialites === 'toutes') return true;
-  // Question hors cours (forum général, assistant IA) : elle revient aux
-  // enseignants de la spécialité de l'élève — ses collèges, hors Découverte.
-  // Élève inconnu ou en accès intégral : « toutes spécialités » seulement.
-  return collegesDeLEleve(eleveScope).some((c) => specialiteAutorisee(scope.perimetre, c));
+export function estEnseignant(scope: ScopeEquipe | null): boolean {
+  return !!scope && scope.modules.contenus.actif && scope.modules.contenus.types.some((t) => TYPES_PEDAGOGIQUES.includes(t));
 }
 
-/** Collèges d'un élève pour le routage d'une question hors cours ([] si accès intégral ou inconnu). */
-export function collegesDeLEleve(eleveScope: unknown): string[] {
+/**
+ * Professeur référent de ses spécialités (demande de Cyril, 05/10/2026) :
+ * tout enseignant l'est par défaut, l'administrateur peut décocher la case
+ * dans le crayon d'« Équipe & Permissions ». Le référent — et lui seul —
+ * reçoit les questions des élèves (mail + page Questions / Réponses) et ouvre
+ * l'onglet « Vidéos ». Plusieurs référents peuvent couvrir le même collège.
+ */
+export function estReferent(scope: ScopeEquipe | null): boolean {
+  return !!scope && scope.referent && estEnseignant(scope);
+}
+
+/** Collège (matiere_id) de chaque item, lu en base par l'appelant. */
+export type CollegeDeItem = Readonly<Record<string, string>>;
+
+/**
+ * Spécialités dont ce collaborateur est référent : `'toutes'`, ou la liste
+ * des collèges dont il reçoit les questions — vide s'il n'est pas référent.
+ *
+ * Un compte à restriction d'items (`cours[]`, format historique « 21 collèges
+ * de médecine générale + les 13 items d'hématologie ») n'est référent que des
+ * collèges qui contiennent l'un de ses items : avant le 05/10/2026, ses
+ * 21 collèges lui faisaient recevoir les questions de toute la médecine
+ * générale. `collegeDeItem` porte le collège de chacun de ses items.
+ */
+export function specialitesReferent(scope: ScopeEquipe | null, collegeDeItem: CollegeDeItem): 'toutes' | string[] {
+  if (!scope || !estReferent(scope)) return [];
+  const specialites = scope.perimetre.specialites;
+  if (specialites === 'toutes') return 'toutes';
+  const items = scope.cours ?? [];
+  if (items.length === 0) return [...specialites];
+  const avecItems = new Set(items.map((id) => collegeDeItem[id]).filter((c): c is string => !!c));
+  return specialites.filter((c) => avecItems.has(c));
+}
+
+/**
+ * Une question relève-t-elle de ces spécialités (`specialitesReferent`) ?
+ * Une question rattachée à un collège revient aux référents de CE collège —
+ * en médecine générale, l'élève choisit le sous-collège : seuls ses référents
+ * la reçoivent. Une question hors collège (anciennes questions, « question
+ * générale » de l'app, assistant IA sans item) suit la SPÉCIALITÉ de l'élève :
+ * ses collèges hors Découverte, chaque sous-collège remplacé par son collège
+ * parent (`parentDe`) — une question générale d'un élève de médecine générale
+ * va aux référents de toute la médecine générale, pas à ceux de chaque
+ * sous-collège. Élève inconnu ou en accès intégral : « toutes » seulement.
+ */
+export function questionDansPortee(
+  portee: 'toutes' | readonly string[],
+  matiereId: string | null | undefined,
+  eleveScope?: unknown,
+  parentDe: ParentDe = {},
+): boolean {
+  if (portee === 'toutes') return true;
+  if (portee.length === 0) return false;
+  if (matiereId) return portee.includes(matiereId);
+  return collegesDeLEleve(eleveScope, parentDe).some((c) => portee.includes(c));
+}
+
+/**
+ * Spécialités d'un élève pour le routage d'une question hors collège ([] si
+ * accès intégral ou inconnu) : ses collèges hors Découverte, un sous-collège
+ * remonté à son collège parent.
+ */
+export function collegesDeLEleve(eleveScope: unknown, parentDe: ParentDe = {}): string[] {
   if (!eleveScope || typeof eleveScope !== 'object') return [];
   const ps = parseScope(eleveScope);
   if (ps.type !== 'college') return [];
-  return ps.colleges.filter((c) => c !== 'col-decouverte');
+  return Array.from(new Set(ps.colleges.filter((c) => c !== 'col-decouverte').map((c) => parentDe[c] ?? c)));
 }
 
 /** Profil lu en base pour décider des destinataires d'une question d'élève. */
@@ -570,38 +645,30 @@ export type ProfilDestinataireQuestion = {
   permission_scope?: unknown;
 };
 
+/** Hiérarchie des collèges et collège des items, résolus côté serveur. */
+export type ContexteRoutage = { parentDe?: ParentDe; collegeDeItem?: CollegeDeItem };
+
 /**
  * Ce membre du personnel doit-il RECEVOIR le mail « Nouvelle question
  * d'élève » ? SOURCE UNIQUE du routage des questions (mail, page Q&R, forum
- * côté équipe) : un compte actif, non expiré, qui répond aux questions
- * (au moins un type pédagogique — jamais un monteur vidéo, un commercial ni un
- * rédacteur blog) et dont le périmètre couvre le collège de la question — ou,
- * pour une question hors cours, l'un des collèges de l'élève (`eleveScope` =
- * son `permission_scope`).
+ * côté équipe) : un compte actif, non expiré, enseignant RÉFÉRENT (jamais un
+ * monteur vidéo, un commercial, un rédacteur blog ni un enseignant dont la
+ * case « référent » est décochée) dont les spécialités couvrent la question
+ * (`questionDansPortee`). `eleveScope` = le `permission_scope` de l'élève.
  */
 export function recoitQuestionEleve(
   p: ProfilDestinataireQuestion,
   matiereId: string | null | undefined,
   eleveScope?: unknown,
+  ctx: ContexteRoutage = {},
   now = Date.now(),
 ): boolean {
   if (p.role !== 'professor') return false;
   if (!p.email) return false;
   if (p.is_active === false) return false;
   if (accesEquipeExpire(p, now)) return false;
-  return questionDansPerimetre(lireScopeEquipe(p.permission_scope), matiereId, eleveScope);
-}
-
-/**
- * Filtre SQL des questions AVEC collège pour un membre du personnel :
- * `'toutes'` (aucun filtre), ou la liste des collèges dont il voit les
- * questions — vide pour qui ne répond pas aux questions. Les questions hors
- * cours se filtrent ensuite une à une avec `questionDansPerimetre(scope,
- * null, scopeDeLEleve)`.
- */
-export function collegesDesQuestions(scope: ScopeEquipe | null): 'toutes' | string[] {
-  if (!scope || !accesOnglets(scope).qa) return [];
-  return scope.perimetre.specialites === 'toutes' ? 'toutes' : [...scope.perimetre.specialites];
+  const portee = specialitesReferent(lireScopeEquipe(p.permission_scope), ctx.collegeDeItem ?? {});
+  return questionDansPortee(portee, matiereId, eleveScope, ctx.parentDe);
 }
 
 /* ─────────────────────────────── navigation ─────────────────────────────── */
@@ -697,7 +764,9 @@ export function presentationPoste(scope: ScopeEquipe | null): {
         : 'rédiger les articles du blog — vos brouillons passent « En attente de validation » avant publication.';
       break;
     case 'enseignant_relecteur':
-      mission = 'enrichir et relire les contenus pédagogiques de votre spécialité (fiches, QCM, flashcards…) et répondre aux questions des élèves.';
+      mission = estReferent(scope)
+        ? 'enrichir et relire les contenus pédagogiques de votre spécialité (fiches, QCM, flashcards…), répondre aux questions des élèves en tant que professeur référent et déposer vidéos et supports de cours.'
+        : 'enrichir et relire les contenus pédagogiques de votre spécialité (fiches, QCM, flashcards…).';
       break;
     case 'responsable_complet':
       mission = 'piloter le suivi des élèves, les contenus pédagogiques et le blog, sur tout votre périmètre.';
@@ -731,6 +800,11 @@ export function resumeModules(scope: ScopeEquipe): string[] {
     const droits = (['creer', 'modifier_siens', 'modifier_tous', 'publier', 'depublier', 'supprimer'] as const)
       .filter((d) => blog[d]).map((d) => DROIT_BLOG_LABEL[d].toLowerCase());
     out.push(`Blog : ${droits.join(' / ') || 'consultation seule'}`);
+  }
+  if (estEnseignant(scope)) {
+    out.push(scope.referent
+      ? 'Professeur référent : questions des élèves et vidéos de ses spécialités'
+      : 'Non référent : ni questions des élèves ni vidéos');
   }
   if (out.length === 0) out.push('Aucun module — accès limité à la sécurité du compte.');
   return out;

@@ -21,11 +21,17 @@ import {
   pagesDuScope,
   posteDuScope,
   presentationPoste,
-  questionDansPerimetre,
+  questionDansPortee,
+  specialitesReferent,
+  type ScopeEquipe,
 } from '../src/lib/auth/collaborateurs';
 import { invitationEquipeEmail } from '../src/lib/email/templates';
 import { getProfessorScope, profCanAccessCours, canEditCoursContent } from '../src/lib/auth/prof-content-access';
 import { canRead, canWrite } from '../src/lib/schemas/professor';
+
+/** Une question relève-t-elle de ce scope (compte sans restriction d'items) ? */
+const questionDansPerimetre = (scope: ScopeEquipe | null, matiereId: string | null) =>
+  questionDansPortee(specialitesReferent(scope, {}), matiereId);
 
 /**
  * Moteur de permissions du cahier des charges (18/09/2026) :
@@ -186,8 +192,10 @@ test('onglets : un monteur vidéo n’ouvre ni Contenu, ni Q&R, ni Entraînement
   // Compte historique : content_permissions → mêmes onglets qu'un compte récent.
   const legacyVideo = lireScopeEquipe({ role: 'professor', type: 'all', colleges: [], content_permissions: { video: 'rw', qcm: 'none' } });
   assert.deepEqual(accesOnglets(legacyVideo), { contenu: false, videos: true, qa: false, entrainements: false, suivi: false, blog: false });
+  // Enseignant historique sans clé `referent` : référent par défaut (05/10/2026),
+  // donc onglet Vidéos ouvert même sans le type « vidéo ».
   const legacyProf = lireScopeEquipe({ role: 'professor', type: 'college', colleges: ['col-geriatrie'], content_permissions: { qcm: 'rw', fiche: 'read' } }, 'lecture');
-  assert.deepEqual(accesOnglets(legacyProf), { contenu: true, videos: false, qa: true, entrainements: true, suivi: true, blog: false });
+  assert.deepEqual(accesOnglets(legacyProf), { contenu: true, videos: true, qa: true, entrainements: true, suivi: true, blog: false });
   assert.deepEqual(accesOnglets(null), { contenu: false, videos: false, qa: false, entrainements: false, suivi: false, blog: false });
 });
 

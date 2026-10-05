@@ -27,12 +27,14 @@ export const dynamic = 'force-dynamic';
  * GET → {
  *   role,
  *   questions: Fil[]   // publiques + celles de l'élève, plus récentes d'abord
- *   colleges: { id, nom, cours: { id, titre }[] }[]  // pour « Poser une question »
+ *   colleges: { id, nom, parent_nom, est_parent, cours: { id, titre }[] }[]  // pour « Poser une question »
  * }
  * Un Fil n'expose ni l'identifiant ni le nom réel d'un élève : pseudo, avatar,
  * et `mine` (c'est l'élève connecté).
  *
- * POST { action: 'ask', body, cours_id? }            → { ok, id }
+ * POST { action: 'ask', body, cours_id?, matiere_id? } → { ok, id }
+ *   `matiere_id` : collège choisi sans item précis (en médecine générale, le
+ *   sous-collège) — il désigne les professeurs référents qui reçoivent la question.
  * POST { action: 'reply', question_id, body }        → { ok }
  * POST { action: 'report', question_id, cible, cible_id?, motif? } → { ok }
  *   Signalement (règle Apple 1.2) : l'équipe est prévenue par e-mail.
@@ -136,21 +138,27 @@ export async function GET(req: Request) {
 
   // Collèges et cours proposés pour une question : ceux de la faculté Major
   // ECN que l'élève a le droit d'ouvrir — même filtre que la page web.
-  let colleges: { id: string; nom: string; cours: { id: string; titre: string }[] }[] = [];
+  let colleges: { id: string; nom: string; parent_nom: string | null; est_parent: boolean; cours: { id: string; titre: string }[] }[] = [];
   if (profile.role === 'student') {
     const { data: fac } = await db
       .from('facultes')
-      .select('semestres(matieres(id, nom, order_index, cours(id, titre, order_index)))')
+      .select('semestres(matieres(id, nom, order_index, parent_matiere_id, cours(id, titre, order_index)))')
       .eq('id', EDN_FACULTE_ID)
       .maybeSingle();
-    type Mat = { id: string; nom: string; order_index: number | null; cours?: { id: string; titre: string; order_index: number | null }[] | null };
+    type Mat = { id: string; nom: string; order_index: number | null; parent_matiere_id: string | null; cours?: { id: string; titre: string; order_index: number | null }[] | null };
     const scope = parseScope(profile.permission_scope);
-    colleges = (((fac as { semestres?: { matieres?: Mat[] }[] } | null)?.semestres ?? []).flatMap((s) => s.matieres ?? []))
+    const toutes = ((fac as { semestres?: { matieres?: Mat[] }[] } | null)?.semestres ?? []).flatMap((s) => s.matieres ?? []);
+    const nomDe = new Map(toutes.map((m) => [m.id, m.nom]));
+    const parents = new Set(toutes.map((m) => m.parent_matiere_id).filter((id): id is string => !!id));
+    colleges = toutes
       .filter((m) => canAccessCollege(scope, m.id))
       .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
       .map((m) => ({
         id: m.id,
         nom: m.nom,
+        // Médecine générale : sous-collèges regroupés sous leur collège parent.
+        parent_nom: m.parent_matiere_id ? nomDe.get(m.parent_matiere_id) ?? null : parents.has(m.id) ? m.nom : null,
+        est_parent: parents.has(m.id),
         cours: (m.cours ?? [])
           .filter((c) => canAccessCours(scope, m.id, c.id))
           .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
@@ -163,7 +171,7 @@ export async function GET(req: Request) {
 }
 
 const PostSchema = z.discriminatedUnion('action', [
-  z.object({ action: z.literal('ask'), body: z.string(), cours_id: z.string().max(120).nullish() }),
+  z.object({ action: z.literal('ask'), body: z.string(), cours_id: z.string().max(120).nullish(), matiere_id: z.string().max(120).nullish() }),
   z.object({ action: z.literal('reply'), question_id: z.string().uuid(), body: z.string() }),
   z.object({
     action: z.literal('report'),
@@ -174,7 +182,7 @@ const PostSchema = z.discriminatedUnion('action', [
   }),
 ]);
 
-async function poser(auth: RequestAuth, profile: Profil, texte: string, coursId: string | null) {
+async function poser(auth: RequestAuth, profile: Profil, texte: string, coursId: string | null, collegeChoisi: string | null) {
   const body = texte.trim();
   if (body.length < 8) return NextResponse.json({ error: 'Formulez une question d’au moins 8 caractères.' }, { status: 400 });
   if (body.length > 4000) return NextResponse.json({ error: 'Question trop longue (4000 caractères max).' }, { status: 400 });
@@ -196,6 +204,16 @@ async function poser(auth: RequestAuth, profile: Profil, texte: string, coursId:
     coursTitre = c.titre;
     matiereId = c.matiere_id;
     matiereNom = (c as { matieres?: { nom?: string } }).matieres?.nom ?? null;
+  } else if (collegeChoisi) {
+    // Collège sans item précis (en médecine générale, le sous-collège) : il
+    // suffit à router la question vers ses référents — s'il est dans l'accès.
+    if (profile.role === 'student' && !canAccessCollege(parseScope(profile.permission_scope), collegeChoisi)) {
+      return NextResponse.json({ error: 'Collège indisponible.' }, { status: 400 });
+    }
+    const { data: m } = await db.from('matieres').select('id, nom').eq('id', collegeChoisi).maybeSingle();
+    if (!m) return NextResponse.json({ error: 'Collège indisponible.' }, { status: 400 });
+    matiereId = m.id;
+    matiereNom = m.nom;
   }
 
   const pseudo = pseudoEleve(profile);
@@ -250,7 +268,7 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: 'Données invalides.' }, { status: 400 });
   const input = parsed.data;
 
-  if (input.action === 'ask') return poser(auth, profile, input.body, input.cours_id ?? null);
+  if (input.action === 'ask') return poser(auth, profile, input.body, input.cours_id ?? null, input.matiere_id ?? null);
 
   const db = auth.supabase as any;
   // La question doit être lisible par l'élève (RLS : publique ou la sienne).

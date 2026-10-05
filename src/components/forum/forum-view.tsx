@@ -15,7 +15,15 @@ import {
   addReplyAction, postProfessorAnswerAction, toggleQuestionPublicAction,
 } from '@/app/(student)/forum/actions';
 
-export type ForumCollege = { id: string; nom: string; cours: { id: string; titre: string }[] };
+export type ForumCollege = {
+  id: string;
+  nom: string;
+  /** Collège parent (sous-collège de médecine générale), ou le collège lui-même s'il a des sous-collèges. */
+  parentNom?: string | null;
+  /** Collège qui a des sous-collèges : ses items sont transversaux (annales, entraînements). */
+  estParent?: boolean;
+  cours: { id: string; titre: string }[];
+};
 export type ForumAnswer = { id: string; body: string; created_at: string; professor_name: string; professor_id?: string | null; avatar_seed?: string | null };
 export type ForumReply = {
   id: string;
@@ -480,6 +488,16 @@ type ThreadItem =
   | { kind: 'answer'; data: ForumAnswer }
   | { kind: 'reply'; data: ForumReply };
 
+/** Auteurs des réponses officielles, « vous » pour la personne connectée. */
+function traitePar(answers: ForumAnswer[], currentUserId: string): string {
+  const noms: string[] = [];
+  for (const a of answers) {
+    const nom = a.professor_id && a.professor_id === currentUserId ? 'vous' : a.professor_name;
+    if (!noms.includes(nom)) noms.push(nom);
+  }
+  return noms.join(', ');
+}
+
 function QuestionCard({
   q, role, currentUserId,
 }: { q: ForumQuestionRow; role: Role; currentUserId: string }) {
@@ -545,6 +563,13 @@ function QuestionCard({
             {!answered ? (
               <span className="inline-flex items-center gap-1 rounded-full bg-[#FEF3E2] px-2 py-0.5 text-[11px] font-semibold text-[#B26A00]">
                 En attente
+              </span>
+            ) : isStaff ? (
+              // Plusieurs référents par collège : on voit d'emblée qu'un
+              // collègue a déjà traité la question, et lequel.
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#E7F6EC] px-2 py-0.5 text-[11px] font-bold text-[#16793C]">
+                <CheckCircle2 className="h-3 w-3" />
+                Déjà traité · par {traitePar(answers, currentUserId)}
               </span>
             ) : (
               <span className="inline-flex items-center gap-1 rounded-full bg-[#E7F6EC] px-2 py-0.5 text-[11px] font-semibold text-[#16793C]">

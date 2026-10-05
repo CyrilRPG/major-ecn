@@ -2,8 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { requireOnglet } from '@/lib/auth/require-role';
-import { questionDansPerimetre } from '@/lib/auth/collaborateurs';
-import { scopeEquipeResolu } from '@/lib/auth/onglets-equipe';
+import { questionPourMembre } from '@/lib/forum/routage';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, siteUrl } from '@/lib/email/send';
@@ -14,10 +13,11 @@ type Result = { ok: true } | { error: string };
 const HORS_PERIMETRE_QA = 'Cette question ne relève pas de votre périmètre.';
 
 /**
- * Garde commune des actions Q&R : réservées aux enseignants et aux
- * administrateurs (`requireOnglet('qa')`), et, pour un enseignant, bornées aux
- * questions des collèges de son périmètre. Les actions passent par le client
- * de session : on revérifie ici la question visée, sans se fier au navigateur.
+ * Garde commune des actions Q&R : réservées aux professeurs référents et aux
+ * administrateurs (`requireOnglet('qa')`), et, pour un référent, bornées aux
+ * questions de ses spécialités (`questionPourMembre`). Les actions passent par
+ * le client de session : on revérifie ici la question visée, sans se fier au
+ * navigateur.
  */
 async function acteurQa(questionId: string | null) {
   const acteur = await requireOnglet('qa');
@@ -27,15 +27,8 @@ async function acteurQa(questionId: string | null) {
   const { data: q } = await (createAdminClient() as any)
     .from('forum_questions').select('matiere_id, student_id').eq('id', questionId).maybeSingle();
   if (!q) return { ...acteur, refus: 'Question introuvable.' };
-  const { matiere_id: matiereId, student_id: eleveId } = q as { matiere_id: string | null; student_id: string | null };
-  // Question hors cours : elle suit la spécialité de l'élève.
-  let eleveScope: unknown;
-  if (!matiereId && eleveId) {
-    const { data: e } = await createAdminClient().from('profiles').select('permission_scope').eq('id', eleveId).maybeSingle();
-    eleveScope = (e as { permission_scope?: unknown } | null)?.permission_scope;
-  }
-  const scope = await scopeEquipeResolu(acteur.profile);
-  return { ...acteur, refus: questionDansPerimetre(scope, matiereId, eleveScope) ? null : HORS_PERIMETRE_QA };
+  const dansPortee = await questionPourMembre(acteur.profile, q as { matiere_id: string | null; student_id: string | null });
+  return { ...acteur, refus: dansPortee ? null : HORS_PERIMETRE_QA };
 }
 
 function professorName(p: { first_name: string | null; last_name: string | null; email: string | null; pseudo?: string | null; role?: string | null }) {

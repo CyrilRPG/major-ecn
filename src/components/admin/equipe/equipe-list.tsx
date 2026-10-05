@@ -10,7 +10,7 @@ import { ToggleActiveButton } from '@/components/admin/toggle-active-button';
 import { ResendActivationButton } from '@/components/admin/resend-activation-button';
 import { CollaborateurDialog, type CollaborateurInitial } from './collaborateur-dialog';
 import {
-  FORMULES, POSTE_LABEL, formulesPour, posteDuScope, replierPerimetre,
+  FORMULES, POSTE_LABEL, estEnseignant, formulesPour, posteDuScope, replierPerimetre,
   type Perimetre, type PosteEquipe, type ScopeEquipe,
 } from '@/lib/auth/collaborateurs';
 
@@ -257,7 +257,7 @@ export function EquipeList({ rows, colleges }: { rows: LigneEquipe[]; colleges: 
               const initial: CollaborateurInitial | undefined = s ? {
                 userId: r.id, first_name: r.first_name, last_name: r.last_name, email: r.email, phone: r.phone,
                 fonction: s.fonction, modele: s.modele, modules: s.modules, perimetre: s.perimetre,
-                mfa_obligatoire: s.mfa_obligatoire, access_end: r.access_end ? r.access_end.slice(0, 10) : null, is_active: r.is_active,
+                mfa_obligatoire: s.mfa_obligatoire, referent: s.referent, access_end: r.access_end ? r.access_end.slice(0, 10) : null, is_active: r.is_active,
               } : undefined;
               return (
                 <tr key={r.id} className="border-t border-(--color-border) align-top">
@@ -280,6 +280,9 @@ export function EquipeList({ rows, colleges }: { rows: LigneEquipe[]; colleges: 
                       <div className="flex flex-wrap gap-1">
                         {s.modules.suivi.actif && <Badge tone="primary">Suivi élèves{s.modules.suivi.gerer ? ' · gère' : s.modules.suivi.rediger ? ' · rédige' : ' · lit'}</Badge>}
                         {s.modules.contenus.actif && <Badge tone="primary">Contenus · {(['creer', 'modifier', 'publier', 'supprimer'] as const).filter((d) => s.modules.contenus[d]).map((d) => d.slice(0, 4)).join('/') || 'lecture'}</Badge>}
+                        {estEnseignant(s) && (s.referent
+                          ? <Badge tone="ok">Professeur référent</Badge>
+                          : <Badge>Non référent</Badge>)}
                         {s.modules.blog.actif && <Badge tone="primary">Blog{s.modules.blog.publier ? ' · publie' : ' · à valider'}</Badge>}
                         {!s.modules.suivi.actif && !s.modules.contenus.actif && !s.modules.blog.actif && <Badge>Aucun module</Badge>}
                         {s.modele && <Badge>modèle : {POSTE_LABEL[s.modele].toLowerCase()}</Badge>}

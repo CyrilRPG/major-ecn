@@ -61,7 +61,7 @@ export async function POST(req: Request) {
   }
   const p = parsed.data;
   const scope = composerScope({
-    fonction: p.fonction ?? null, modele: p.modele ?? null, modules: p.modules, perimetre: p.perimetre, mfa_obligatoire: !!p.mfa_obligatoire,
+    fonction: p.fonction ?? null, modele: p.modele ?? null, modules: p.modules, perimetre: p.perimetre, mfa_obligatoire: !!p.mfa_obligatoire, referent: p.referent !== false,
   });
 
   const admin = createAdminClient();
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
   // Miroir du module de suivi (suivi_staff_roles). Le scope enregistré (périmètre
   // déployé sur les sous-collèges) est celui que décrit l'invitation.
   const scopeEnregistre = await appliquerScope(created.user.id, {
-    fonction: p.fonction ?? null, modele: p.modele ?? null, modules: p.modules, perimetre: p.perimetre, mfa_obligatoire: !!p.mfa_obligatoire,
+    fonction: p.fonction ?? null, modele: p.modele ?? null, modules: p.modules, perimetre: p.perimetre, mfa_obligatoire: !!p.mfa_obligatoire, referent: p.referent !== false,
   });
 
   // Invitation : lien de création de mot de passe (Resend, repli Supabase).
@@ -135,7 +135,7 @@ export async function POST(req: Request) {
     entity: 'collaborator',
     entityId: created.user.id,
     description: `Création du collaborateur ${p.first_name} ${p.last_name} (${p.fonction ?? 'sans fonction'}) — ${resumeModules(scope).join(' · ')}`,
-    diff: { modules: scope.modules, perimetre: scope.perimetre, access_end: p.access_end ?? null, mfa_obligatoire: scope.mfa_obligatoire },
+    diff: { modules: scope.modules, perimetre: scope.perimetre, access_end: p.access_end ?? null, mfa_obligatoire: scope.mfa_obligatoire, referent: scope.referent },
   });
 
   return NextResponse.json({
@@ -165,7 +165,7 @@ async function modifier(adminId: string, body: unknown) {
   const coursHerites = await coursHeritesAjustes(a, cible.permission_scope, p.perimetre);
   const scope = await appliquerScope(p.userId, {
     fonction: p.fonction ?? null, modele: p.modele ?? null, modules: p.modules, perimetre: p.perimetre,
-    cours: coursHerites, mfa_obligatoire: !!p.mfa_obligatoire,
+    cours: coursHerites, mfa_obligatoire: !!p.mfa_obligatoire, referent: p.referent !== false,
   });
   const patch: Record<string, unknown> = {};
   if (p.access_end !== undefined) patch.access_end = finDeJournee(p.access_end);
@@ -188,7 +188,7 @@ async function modifier(adminId: string, body: unknown) {
     entity: 'collaborator',
     entityId: p.userId,
     description: `Permissions de ${cible.first_name ?? ''} ${cible.last_name ?? ''} — ${resumeModules(scope).join(' · ')}`,
-    diff: { modules: scope.modules, perimetre: scope.perimetre, ...patch, mfa_obligatoire: scope.mfa_obligatoire },
+    diff: { modules: scope.modules, perimetre: scope.perimetre, ...patch, mfa_obligatoire: scope.mfa_obligatoire, referent: scope.referent },
   });
   return NextResponse.json({ ok: true, scope });
 }
