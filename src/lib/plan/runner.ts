@@ -1,5 +1,6 @@
 import 'server-only';
 import { createHmac, timingSafeEqual } from 'node:crypto';
+import { after } from 'next/server';
 import { canStudentReadSerie } from '@/lib/data/qcm-access-rules';
 import { accessFor, coursAllowed, exposuresFor } from '@/lib/checkup/server/pool';
 import { aplatirUnites, choisirUnites, dossiersDepuisSeries, regrouperEnUnites } from '@/lib/pedago/dossiers';
@@ -255,14 +256,21 @@ export async function answerRunner(userId: string, token: string, questionId: st
     created_at: at, expires_at: null, origin_activity_id: `planner:${a.id}`, origin_question_id: canonical, estimated_duration_minutes: null,
     metadata: { question_id: questionId, activity_type: a.activity_type, ...(recentlySeen ? { recently_seen: true } : {}), ...(isQroc ? { self_assessed: true } : {}) },
   };
-  const examDate = (await getProfile(userId))?.exam_date ?? null;
-  await ingestSignals(userId, [signal], { examDate, plannerActive: true, ...(completed ? { activityCompleted: true, activityLabel: 'activité du planning' } : {}) })
-    .catch((e) => console.error('[plan] signal non transmis :', e instanceof Error ? e.message : e));
-  if (completed) {
-    await insertEvents([{ event_key: `fin:planner:${a.id}`, user_id: userId, item_id: centralItem, event_type: 'PLANNER_ACTIVITY_COMPLETED', source: 'planner_activity', activity_id: `planner:${a.id}`, detail: { type: a.activity_type, unites: validated } }]).catch(() => undefined);
-    await addLog({ user_id: userId, item_id: a.item_id, kind: 'activite_terminee', minutes: patch.actual_minutes ?? null, detail: { activite: a.id, unites: validated, prevues: a.planned_units } });
-    await refreshPlan(userId, 'activite_terminee', { wait: false }).catch(() => undefined);
-  }
+  // Signal au moteur central, fin d'activité et recalcul : après la réponse (`after`) — la correction
+  // s'affiche sans attendre le moteur central ; hors d'une requête (script), tout reste synchrone.
+  const followUp = async () => {
+    const examDate = (await getProfile(userId))?.exam_date ?? null;
+    await ingestSignals(userId, [signal], { examDate, plannerActive: true, ...(completed ? { activityCompleted: true, activityLabel: 'activité du planning' } : {}) })
+      .catch((e) => console.error('[plan] signal non transmis :', e instanceof Error ? e.message : e));
+    if (completed) {
+      await insertEvents([{ event_key: `fin:planner:${a.id}`, user_id: userId, item_id: centralItem, event_type: 'PLANNER_ACTIVITY_COMPLETED', source: 'planner_activity', activity_id: `planner:${a.id}`, detail: { type: a.activity_type, unites: validated } }]).catch(() => undefined);
+      await addLog({ user_id: userId, item_id: a.item_id, kind: 'activite_terminee', minutes: patch.actual_minutes ?? null, detail: { activite: a.id, unites: validated, prevues: a.planned_units } });
+      await refreshPlan(userId, 'activite_terminee', { wait: false }).catch(() => undefined);
+    }
+  };
+  let deferred = false;
+  try { after(followUp); deferred = true; } catch { /* hors d'une requête */ }
+  if (!deferred) await followUp();
   return {
     result, correct: items.filter((i) => i.is_correct).map((i) => i.lettre), items, reponseAttendue: q.reponse_attendue, correction: q.correction_generale, autoMatch,
     validated, planned, completed,

@@ -5,7 +5,7 @@ import { MG_COLLEGE_ID } from '@/lib/auth/geriatrie-mg-bonus';
 import { chargerAnnonces } from '@/lib/annonces/server';
 import { examDateFromCalendar } from '@/lib/moteur/server/candidate';
 import { PLAN_STUDENT_ENABLED } from '@/lib/modules-flags';
-import { listColleges, listItems, listPreparations, planDb } from './db';
+import { clearReferenceCache, listColleges, listItems, listPreparations, planDb } from './db';
 import type { PlanPreparation, Voie } from './types';
 
 /**
@@ -44,7 +44,7 @@ async function plannable(): Promise<Plannable> {
   plannableCache = { at: Date.now(), preparations, withItems };
   return plannableCache;
 }
-export function invalidatePlannable(): void { plannableCache = null; }
+export function invalidatePlannable(): void { plannableCache = null; clearReferenceCache(); }
 
 /** Préparations proposées à ce compte (onboarding, changement de spécialité). */
 export async function preparationsFor(permissionScope: unknown, opts: { staff?: boolean } = {}): Promise<PlanPreparation[]> {

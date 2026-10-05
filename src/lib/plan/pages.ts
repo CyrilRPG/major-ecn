@@ -4,7 +4,7 @@ import { addDays, daysBetween, safeTimezone, workDay, workDayWindow, type DayKey
 import { dayCompletion } from './completion';
 import { loadAccount, isStaffRole, loadPlannerContext, PlannerUnavailable, type PlannerContext } from './context';
 import {
-  collegeFamily, getDayReport, getParams, getProfile, listActivities, listColleges, listDayMetrics, listDayPlans, listGenerations, listItemsByIds, listUnits, planDb,
+  cachedColleges, collegeFamily, getDayReport, getParams, getProfile, listActivities, listDayMetrics, listDayPlans, listGenerations, listItemsByIds, listUnits, planDb,
   type PlanActivityRow,
 } from './db';
 import { dayBudget, startDayOf, unitsByActivity, type PlanSummary } from './engine';
@@ -151,12 +151,19 @@ export async function todayData(env: PlannerEnv): Promise<TodayData> {
   const { userId, profile, ctx, today } = env;
   const params = await getParams();
   const horizon = addDays(today, params.composition.planning_days);
-  const acts = await listActivities(userId, { from: addDays(today, -1), to: horizon });
-  const names = await namesFor(acts, ctx);
-  const cards = new Map(toCards(acts, ctx, names).map((c) => [c.id, c]));
+  const yDay = addDays(today, -1);
+  // Lectures indépendantes en parallèle (un aller-retour au lieu de cinq).
+  const [acts, plans, gens, yReport, todayReport] = await Promise.all([
+    listActivities(userId, { from: yDay, to: horizon }),
+    listDayPlans(userId, yDay, today),
+    listGenerations(userId, 1),
+    getDayReport(userId, yDay),
+    getDayReport(userId, today),
+  ]);
   const todays = acts.filter((a) => a.scheduled_date === today);
+  const [names, unitRows] = await Promise.all([namesFor(acts, ctx), listUnits(userId, { activityIds: todays.map((a) => a.id) })]);
+  const cards = new Map(toCards(acts, ctx, names).map((c) => [c.id, c]));
   const startDay = startDayOf(profile, env.tz, params.day.close_time);
-  const plans = await listDayPlans(userId, addDays(today, -1), today);
   const plan = plans.get(today);
   // Le programme d'un jour suit sa version en vigueur (complément « réalisation » §9) : une activité sortie
   // d'une version (reprise le jour même après une pause) n'est plus au programme de ce jour.
@@ -164,7 +171,7 @@ export async function todayData(env: PlannerEnv): Promise<TodayData> {
   const todayIds = inVersion(today);
   const planActs = todays.filter((a) => IN_PLAN(a) && (!todayIds || todayIds.has(a.id))).sort((a, b) => a.order_index - b.order_index);
   const extras = todays.filter((a) => a.status !== 'CANCELLED' && !IN_PLAN(a));
-  const units = unitsByActivity(await listUnits(userId, { activityIds: todays.map((a) => a.id) }));
+  const units = unitsByActivity(unitRows);
   const window = workDayWindow(today, env.tz, params.day.close_time);
   const inWindow = (id: string) => new Set((units.get(id) ?? []).filter((u) => { const t = Date.parse(u.validated_at); return t >= window.start.getTime() && t < window.end.getTime(); }).map((u) => u.unit_key)).size;
   const completedIds = new Set(todays.filter((a) => a.status === 'COMPLETED').map((a) => a.id));
@@ -179,20 +186,18 @@ export async function todayData(env: PlannerEnv): Promise<TodayData> {
   }
   // Alerte J+1 (« Alertes » §28) : la veille incomplète, montrée une seule fois.
   let yesterday: TodayData['yesterday'] = null;
-  const yDay = addDays(today, -1);
   const yIds = inVersion(yDay);
   const yActs = acts.filter((a) => a.scheduled_date === yDay && IN_PLAN(a) && (!yIds || yIds.has(a.id)));
   if (yActs.length > 0) {
     const yDone = yActs.filter((a) => a.status === 'COMPLETED').length;
-    const report = await getDayReport(userId, yDay);
+    const report = yReport;
     // Jamais d'alerte sur la journée de démarrage (création, conversion ou reprise du planning, « Alertes » §48-§49).
     if (yDone < yActs.length && !report?.j1_alert_shown_at && startDay !== null && yDay > startDay) {
       yesterday = { day: yDay, done: yDone, planned: yActs.length, remaining: yActs.filter((a) => a.status !== 'COMPLETED').map((a) => cards.get(a.id)!) };
     }
   }
-  const gen = (await listGenerations(userId, 1))[0];
+  const gen = gens[0];
   const summary = (gen?.summary as unknown as PlanSummary | undefined) ?? null;
-  const todayReport = await getDayReport(userId, today);
   // Bloc Parcours du Major (§29) : coaching publié aujourd'hui ; pertinent s'il sert une activité du jour.
   let parcours: TodayData['parcours'] = null;
   if (ctx && ctx.coachings.length > 0) {
@@ -234,9 +239,13 @@ export async function suiviData(env: PlannerEnv): Promise<SuiviData> {
   const { userId, profile, today } = env;
   const params = await getParams();
   const from = addDays(today, -97);
-  const [metrics, units] = await Promise.all([
+  // Lectures indépendantes en parallèle (un aller-retour au lieu de quatre).
+  const [metrics, units, plans, todayActs, gens] = await Promise.all([
     listDayMetrics(userId, from, addDays(today, -1)),
     listUnits(userId, { since: workDayWindow(addDays(today, -14), env.tz, params.day.close_time).start.toISOString() }),
+    listDayPlans(userId, today, today),
+    listActivities(userId, { from: today, to: today }),
+    listGenerations(userId, 1),
   ]);
   const days: SuiviDay[] = metrics.map((m) => ({
     day: m.day, rate: m.completion_rate, off: m.off, plannedWeight: m.planned_weight, validatedWeight: m.validated_weight,
@@ -244,10 +253,9 @@ export async function suiviData(env: PlannerEnv): Promise<SuiviData> {
     progressionWeight: m.progression_weight, revisionWeight: m.revision_weight,
   }));
   // Aujourd'hui, en direct, sur la version en vigueur de la journée.
-  const plans = await listDayPlans(userId, today, today);
   const plan = plans.get(today);
   if (plan) {
-    const acts = await listActivities(userId, { from: today, to: today });
+    const acts = todayActs;
     const byAct = unitsByActivity(units);
     const window = workDayWindow(today, env.tz, params.day.close_time);
     const inWindow = (id: string) => new Set((byAct.get(id) ?? []).filter((u) => { const t = Date.parse(u.validated_at); return t >= window.start.getTime() && t < window.end.getTime(); }).map((u) => u.unit_key)).size;
@@ -256,7 +264,7 @@ export async function suiviData(env: PlannerEnv): Promise<SuiviData> {
   }
   // Maîtrise observée sur les activités réalisées : résultats des unités évaluées, jour de travail du candidat.
   const unitResults = units.filter((u) => u.result !== null).map((u) => ({ day: workDay(new Date(u.validated_at), env.tz, params.day.close_time), result: u.result as number }));
-  const gen = (await listGenerations(userId, 1))[0];
+  const gen = gens[0];
   const target = (gen?.summary as { targetProgression?: number } | undefined)?.targetProgression ?? params.composition.initial_progression;
   // Début du planificateur : son activation, ou la première journée clôturée si elle est plus ancienne (profil repris).
   const activated = profile.planner_activated_at ? workDay(new Date(profile.planner_activated_at), env.tz, params.day.close_time) : null;
@@ -281,9 +289,16 @@ export type OverviewData = {
 
 export async function overviewData(env: PlannerEnv): Promise<OverviewData> {
   const { userId, profile, ctx, today } = env;
-  const gen = (await listGenerations(userId, 1))[0];
+  // Lectures indépendantes en parallèle (un aller-retour au lieu de quatre).
+  const [gens, metrics, { data: mocks }, colleges] = await Promise.all([
+    listGenerations(userId, 1),
+    listDayMetrics(userId, addDays(today, -30), addDays(today, -1)),
+    planDb().from('mock_exams').select('id, title, open_at, close_at, status, specialite_id, college_id, target_colleges')
+      .eq('status', 'published').or(`close_at.is.null,close_at.gte.${new Date().toISOString()}`).order('open_at', { nullsFirst: false }).limit(30),
+    cachedColleges(),
+  ]);
+  const gen = gens[0];
   const summary = (gen?.summary as unknown as PlanSummary | undefined) ?? null;
-  const metrics = await listDayMetrics(userId, addDays(today, -30), addDays(today, -1));
   const last14 = metrics.filter((m) => m.day >= addDays(today, -14) && !m.off);
   const planned = last14.reduce((s, m) => s + m.planned_weight, 0);
   const validated = last14.reduce((s, m) => s + m.validated_weight, 0);
@@ -301,9 +316,7 @@ export async function overviewData(env: PlannerEnv): Promise<OverviewData> {
     }
   }
   // Concours blancs publiés de la préparation (ses collèges compris) : échéances majeures, jamais ajoutées automatiquement au planning.
-  const { data: mocks } = await planDb().from('mock_exams').select('id, title, open_at, close_at, status, specialite_id, college_id, target_colleges')
-    .eq('status', 'published').or(`close_at.is.null,close_at.gte.${new Date().toISOString()}`).order('open_at', { nullsFirst: false }).limit(30);
-  const family = new Set(profile.specialite_id ? collegeFamily(profile.specialite_id, await listColleges()) : []);
+  const family = new Set(profile.specialite_id ? collegeFamily(profile.specialite_id, colleges) : []);
   const mockExams = ((mocks ?? []) as { id: string; title: string; open_at: string | null; close_at: string | null; specialite_id: string | null; college_id: string | null; target_colleges: string[] | null }[])
     .filter((m) => [m.specialite_id, m.college_id, ...(m.target_colleges ?? [])].some((c) => !!c && family.has(c)))
     .map((m) => ({ id: m.id, title: m.title, openAt: m.open_at, closeAt: m.close_at }));
@@ -376,10 +389,9 @@ export type ObjectivesData = {
 };
 export async function objectivesData(env: PlannerEnv): Promise<ObjectivesData> {
   const { profile, ctx } = env;
-  const account = await loadAccount(env.userId);
+  const [account, colleges] = await Promise.all([loadAccount(env.userId), cachedColleges()]);
   const staff = isStaffRole(account?.role);
   const preps = account ? await preparationsFor(account.permission_scope, { staff }) : [];
-  const colleges = await listColleges();
   return {
     profile: {
       availability: profile.availability, unavailable_days: profile.unavailable_days, exam_date: profile.exam_date, exam_date_source: profile.exam_date_source,

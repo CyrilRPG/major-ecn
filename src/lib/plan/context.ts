@@ -13,8 +13,8 @@ import { type PlanParams } from './config';
 import { addDays, parisDay, safeTimezone, workDay, type DayKey } from './clock';
 import type { CoachingResource } from './composer';
 import {
-  collegeFamily, flashcardCounts, getActiveMatrixVersion, getParameterSet, getPreparation, getProfile, listColleges, listCoachings, listDomains,
-  listItems, listPlannerItemStates, listPrerequisites, parcoursCompletions, planDb,
+  cachedActiveItems, cachedActiveMatrixVersion, cachedCoachings, cachedColleges, cachedDomains, cachedPreparation, cachedPrerequisites,
+  collegeFamily, flashcardCounts, getParameterSet, getProfile, listPlannerItemStates, parcoursCompletions, planDb,
   type CoachingFull, type CollegeLite, type PlannerItemStateRow,
 } from './db';
 import { itemView, type CentralStateLite, type PlanItemView } from './items';
@@ -157,19 +157,20 @@ export async function loadPlannerContext(userId: string, opts: { now?: Date; pro
   if (!profile || !profile.onboarding_done || !profile.specialite_id || !profile.exam_date) throw new PlannerUnavailable('Planificateur non configuré.');
   if (!account) throw new PlannerUnavailable('Compte introuvable.');
   const params = paramSet.params;
-  const preparation = await getPreparation(profile.specialite_id);
+  // Données de référence : cache mémoire de quelques minutes (db.ts), vidé à chaque modification d'administration.
+  const preparation = await cachedPreparation(profile.specialite_id);
   if (!preparation) throw new PlannerUnavailable('Préparation inconnue.');
   const staff = isStaffRole(account.role);
   const tz = safeTimezone(profile.timezone, params.day.default_timezone);
   const today = workDay(now, tz, params.day.close_time);
   const parisToday = parisDay(now);
   const voie = profile.voie;
-  const colleges = await listColleges();
+  const colleges = await cachedColleges();
   const family = collegeFamily(preparation.specialite_id, colleges);
   const [items, domains, matrix, plannerStates, centralRows, needRows, reviewRows, catalog, parcoursOk] = await Promise.all([
-    listItems({ specialites: family, activeOnly: true }),
-    preparation.curriculum_structure === 'HIERARCHICAL' ? listDomains(preparation.specialite_id, { activeOnly: true }) : Promise.resolve([] as PlanDomain[]),
-    getActiveMatrixVersion(preparation.specialite_id),
+    cachedActiveItems(family),
+    preparation.curriculum_structure === 'HIERARCHICAL' ? cachedDomains(preparation.specialite_id) : Promise.resolve([] as PlanDomain[]),
+    cachedActiveMatrixVersion(preparation.specialite_id),
     listPlannerItemStates(userId),
     listItemStates(userId),
     listActiveNeeds(userId),
@@ -185,7 +186,7 @@ export async function loadPlannerContext(userId: string, opts: { now?: Date; pro
   const itemByCours = new Map(items.filter((i) => i.cours_id).map((i) => [i.cours_id!, i.id]));
   const coursIds = items.map((i) => i.cours_id).filter((x): x is string => !!x);
   const [prerequisites, content] = await Promise.all([
-    listPrerequisites(items.map((i) => i.id)),
+    cachedPrerequisites(preparation.specialite_id, items.map((i) => i.id)),
     contentByCours(preparation.specialite_id, account.permission_scope, voie, coursIds, userId),
   ]);
 
@@ -240,7 +241,7 @@ export async function loadPlannerContext(userId: string, opts: { now?: Date; pro
   let coachings: CoachingFull[] = [];
   const parcoursState = new Map<string, 'completed' | 'current' | 'locked_prev' | 'locked_date'>();
   if (parcoursOk) {
-    const [all, completions] = await Promise.all([listCoachings(preparation.specialite_id), parcoursCompletions(userId)]);
+    const [all, completions] = await Promise.all([cachedCoachings(preparation.specialite_id), parcoursCompletions(userId)]);
     coachings = all.filter((c) => c.active && c.parcours_active);
     const lite = coachings.filter((c) => c.parcours_id && c.available_at).map((c) => ({ id: c.parcours_id!, numero: c.numero ?? 0, titre: c.title, sousTitre: null, availableAt: c.available_at! }));
     const states = computeStates(lite, completions.map((x) => ({ parcoursId: x.parcours_id, band: x.band as 'a_retravailler' | 'en_bonne_voie' | 'maitrise', score: x.score })), now, false);

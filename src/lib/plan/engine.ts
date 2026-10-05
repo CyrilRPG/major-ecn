@@ -1,5 +1,6 @@
 import 'server-only';
 import { AsyncLocalStorage } from 'node:async_hooks';
+import { after } from 'next/server';
 import { randomUUID } from 'node:crypto';
 import { attemptResult, type AttemptRow } from '@/lib/moteur/server/collector';
 import { insertEvents, listEvents, moteurDb, withUserLock } from '@/lib/moteur/server/db';
@@ -12,7 +13,7 @@ import { compose, dayAvailability, type ActivityDraft, type DayPlanSummary, type
 import { activityCompletion, closeOutcome, dayCompletion, periodCompletion, reconcile, type ReconcilableActivity, type UnitCandidate } from './completion';
 import { isStaffRole, loadPlannerContext, PlannerUnavailable, type PlannerContext } from './context';
 import {
-  addGeneration, addLog, addStatusHistory, closeDayPlan, deleteForecasts, getActiveMatrixVersion, getParams, getProfile, insertActivities, insertDayPlan, insertUnits, listActivities,
+  addGeneration, addLog, addStatusHistory, cachedActiveMatrixVersion, closeDayPlan, deleteForecasts, getParams, getProfile, insertActivities, insertDayPlan, insertUnits, listActivities,
   listDayMetrics, listDayPlans, listDoneActivities, listGenerations, listUnits, planDb, updateActivities, upsertDayMetrics, upsertDayReport,
   upsertPlannerItemStates, upsertProfile,
   type ActivityUnitRow, type DayPlanEntry, type DayPlanRow, type NewActivity, type PlanActivityRow,
@@ -251,41 +252,50 @@ export function startDayOf(profile: Pick<PlanProfile, 'planner_activated_at' | '
 }
 
 /**
- * Le planning est-il à jour ? Une consultation ne recalcule que si la journée
- * a changé, si le moteur central a demandé un recalcul depuis la dernière
+ * Le planning est-il à jour ? Une consultation recalcule si la journée a
+ * changé, si le moteur central a demandé un recalcul depuis la dernière
  * génération, si une nouvelle version de la matrice s'est appliquée depuis,
- * ou si la dernière génération date de plus d'une heure
- * (`maxAgeMs` : le balayage horaire passe 24 h pour ne pas recalculer tout
- * le monde chaque heure — la clôture de 04:00 et les demandes du moteur
- * central suffisent).
+ * ou si la dernière génération date de plus d'une heure (`maxAgeMs` : le
+ * balayage horaire passe 24 h).
+ *
+ * Seul le cas URGENT bloque la page : la journée du jour n'existe pas encore
+ * (nouveau jour, fin de pause, premier calcul) — il faut afficher le programme
+ * du jour. Sinon, une consultation de page (aucun `trigger`) n'attend plus le
+ * recalcul : il part après la réponse (`after`), la page suivante en profite.
+ * Le balayage (`trigger` fourni) reste synchrone.
  */
-export async function ensureFresh(userId: string, opts: { now?: Date; trigger?: string; maxAgeMs?: number } = {}): Promise<boolean> {
+export async function ensureFresh(userId: string, opts: { now?: Date; trigger?: string; maxAgeMs?: number; background?: boolean } = {}): Promise<boolean> {
   const profile = await getProfile(userId);
   if (!profile?.onboarding_done || profile.planner_status === 'desactive' || profile.planner_status === 'a_reconfigurer') return false;
   const now = opts.now ?? new Date();
   const params = await getParams();
   const today = workDay(now, safeTimezone(profile.timezone, params.day.default_timezone), params.day.close_time);
   const last = profile.last_generated_at ? Date.parse(profile.last_generated_at) : 0;
-  let stale = !last || now.getTime() - last > (opts.maxAgeMs ?? 60 * 60_000) || (profile.last_closed_day ?? '') < addDays(today, -1)
-    || (profile.planner_status === 'en_pause' && !!profile.pause_until && profile.pause_until <= today);
-  if (!stale) {
-    const ev = await listEvents(userId, { types: ['PLANNER_RECALCULATION_REQUIRED'], limit: 1 }).catch(() => []);
-    stale = ev.length > 0 && Date.parse(ev[0].created_at) > last;
-  }
-  if (!stale) {
-    const plans = await listDayPlans(userId, today, today);
-    stale = !plans.has(today);
-  }
-  if (!stale && profile.specialite_id) {
-    // Nouvelle version de la matrice appliquée depuis la dernière génération : le futur est recalculé.
-    const v = await getActiveMatrixVersion(profile.specialite_id).catch(() => null);
-    stale = !!v?.activated_at && Date.parse(v.activated_at) > last;
-  }
+  const pauseEnded = profile.planner_status === 'en_pause' && !!profile.pause_until && profile.pause_until <= today;
+  if (profile.planner_status === 'en_pause' && !pauseEnded) return false;
+  // Trois lectures indépendantes : un seul aller-retour vers la base.
+  const [plans, events, version] = await Promise.all([
+    listDayPlans(userId, today, today),
+    listEvents(userId, { types: ['PLANNER_RECALCULATION_REQUIRED'], limit: 1 }).catch(() => []),
+    profile.specialite_id ? cachedActiveMatrixVersion(profile.specialite_id).catch(() => null) : Promise.resolve(null),
+  ]);
+  const urgent = !last || (profile.last_closed_day ?? '') < addDays(today, -1) || pauseEnded || !plans.has(today);
+  const stale = urgent || now.getTime() - last > (opts.maxAgeMs ?? 60 * 60_000)
+    || (events.length > 0 && Date.parse(events[0].created_at) > last)
+    || (!!version?.activated_at && Date.parse(version.activated_at) > last);
   if (!stale) return false;
-  const r = await refreshPlan(userId, opts.trigger ?? 'consultation', { now, wait: false }).catch((e) => {
+  const run = () => refreshPlan(userId, opts.trigger ?? 'consultation', { now, wait: false }).catch((e) => {
     console.error('[plan] recalcul :', e instanceof Error ? e.message : e);
     return null;
   });
+  if (!urgent && (opts.background ?? opts.trigger === undefined)) {
+    try {
+      // Après la réponse, l'état est relu : deux pages ouvertes coup sur coup ne recalculent qu'une fois.
+      after(async () => { await ensureFresh(userId, { maxAgeMs: opts.maxAgeMs, background: false, trigger: opts.trigger ?? 'consultation' }); });
+      return false;
+    } catch { /* hors d'une requête (script) : recalcul synchrone */ }
+  }
+  const r = await run();
   return !!r?.ran;
 }
 

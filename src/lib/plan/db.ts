@@ -307,6 +307,32 @@ export async function listColleges(): Promise<CollegeLite[]> {
 export function collegeFamily(collegeId: string, colleges: CollegeLite[]): string[] {
   return [collegeId, ...colleges.filter((c) => c.parent_matiere_id === collegeId).map((c) => c.id)];
 }
+
+/*
+ * Données de référence du contexte élève (préparation, collèges, items, domaines, prérequis,
+ * version de matrice, coachings) : quelques minutes en mémoire — chaque page « Mon planning »
+ * les relisait (une dizaine d'allers-retours vers la base). Les écrans d'administration lisent
+ * toujours la base directement ; toute modification vide le cache (`clearReferenceCache`, appelé
+ * par `invalidatePlannable`), les autres instances se mettent à jour à l'expiration.
+ */
+const REFERENCE_TTL = 5 * 60_000;
+const referenceCache = new Map<string, { at: number; value: Promise<unknown> }>();
+function memo<T>(key: string, load: () => Promise<T>, ttl = REFERENCE_TTL): Promise<T> {
+  const hit = referenceCache.get(key);
+  if (hit && Date.now() - hit.at < ttl) return hit.value as Promise<T>;
+  const value = load();
+  referenceCache.set(key, { at: Date.now(), value });
+  value.catch(() => { if (referenceCache.get(key)?.value === value) referenceCache.delete(key); });
+  return value;
+}
+export function clearReferenceCache(): void { referenceCache.clear(); }
+export const cachedPreparation = (id: string) => memo(`prep:${id}`, () => getPreparation(id));
+export const cachedColleges = () => memo('colleges', () => listColleges());
+export const cachedActiveItems = (family: string[]) => memo(`items:${[...family].sort().join(',')}`, () => listItems({ specialites: family, activeOnly: true }));
+export const cachedDomains = (prep: string) => memo(`domains:${prep}`, () => listDomains(prep, { activeOnly: true }));
+export const cachedPrerequisites = (prep: string, itemIds: string[]) => memo(`prereq:${prep}:${[...itemIds].sort().join(",")}`, () => listPrerequisites(itemIds));
+export const cachedActiveMatrixVersion = (prep: string) => memo(`matrix:${prep}`, () => getActiveMatrixVersion(prep), 2 * 60_000);
+export const cachedCoachings = (prep: string) => memo(`coachings:${prep}`, () => listCoachings(prep));
 export type CoursLite = { id: string; titre: string; matiere_id: string; importance: number; order_index: number };
 export async function listCoursOfColleges(collegeIds: string[]): Promise<CoursLite[]> {
   if (collegeIds.length === 0) return [];
