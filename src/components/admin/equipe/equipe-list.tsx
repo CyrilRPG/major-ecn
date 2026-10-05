@@ -3,14 +3,14 @@
 import { useMemo, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Eye, Loader2, LogIn, Search, ShieldCheck, ShieldOff, X } from 'lucide-react';
+import { Eye, GraduationCap, Loader2, LogIn, Search, ShieldCheck, ShieldOff, X } from 'lucide-react';
 import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 import { Button } from '@/components/ui/button';
 import { ToggleActiveButton } from '@/components/admin/toggle-active-button';
 import { ResendActivationButton } from '@/components/admin/resend-activation-button';
 import { CollaborateurDialog, type CollaborateurInitial } from './collaborateur-dialog';
 import {
-  FORMULES, POSTE_LABEL, estEnseignant, formulesPour, posteDuScope, replierPerimetre,
+  FORMULES, POSTE_LABEL, estEnseignant, estReferent, formulesPour, posteDuScope, replierPerimetre,
   type Perimetre, type PosteEquipe, type ScopeEquipe,
 } from '@/lib/auth/collaborateurs';
 
@@ -43,7 +43,8 @@ export type LigneEquipe = {
 
 /* ───────────────────────── recherche & filtres ───────────────────────── */
 
-type FiltreRole = 'tous' | 'admin' | PosteEquipe;
+/** `referents` : enseignants dont la case « Professeur référent » est cochée (tous postes confondus). */
+type FiltreRole = 'tous' | 'admin' | 'referents' | PosteEquipe;
 type Statut = 'actifs' | 'desactives' | 'expires';
 type FiltreStatut = 'tous' | Statut;
 
@@ -51,6 +52,7 @@ const FILTRES_ROLE: { key: FiltreRole; label: string }[] = [
   { key: 'tous', label: 'Tous' },
   { key: 'admin', label: 'Administrateurs' },
   { key: 'enseignant_relecteur', label: 'Enseignants' },
+  { key: 'referents', label: 'Enseignants référents' },
   { key: 'commercial', label: 'Commerciaux' },
   { key: 'gestionnaire_video', label: 'Gestionnaires vidéo' },
   { key: 'redacteur_blog', label: 'Rédacteurs blog' },
@@ -70,9 +72,12 @@ const normaliser = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g,
 const chiffres = (s: string) => s.replace(/\D/g, '');
 
 /** Rôle d'une ligne : administrateur, ou poste du collaborateur (modèle, sinon déduit de ses modules). */
-function roleDe(r: LigneEquipe): Exclude<FiltreRole, 'tous'> {
+function roleDe(r: LigneEquipe): Exclude<FiltreRole, 'tous' | 'referents'> {
   return r.role === 'admin' ? 'admin' : posteDuScope(r.scope);
 }
+
+/** Enseignant référent : reçoit les questions des élèves et a l'onglet Vidéos. */
+const estLigneReferente = (r: LigneEquipe) => r.role === 'professor' && estReferent(r.scope);
 
 function statutDe(r: LigneEquipe, maintenant: number): Statut {
   if (!r.is_active) return 'desactives';
@@ -145,6 +150,7 @@ export function EquipeList({ rows, colleges }: { rows: LigneEquipe[]; colleges: 
       const texte = normaliser([
         r.first_name, r.last_name, r.email, r.phone, r.scope?.fonction,
         role === 'admin' ? 'administrateur' : POSTE_LABEL[role],
+        estLigneReferente(r) ? 'enseignant référent' : null,
       ].filter(Boolean).join(' '));
       if (q.split(/\s+/).every((mot) => texte.includes(mot))) return true;
       // Téléphone saisi avec ou sans espaces / points.
@@ -154,14 +160,19 @@ export function EquipeList({ rows, colleges }: { rows: LigneEquipe[]; colleges: 
 
   const compteurs = useMemo(() => {
     const c: Record<FiltreRole, number> = {
-      tous: avantRole.length, admin: 0, enseignant_relecteur: 0, commercial: 0, gestionnaire_video: 0,
+      tous: avantRole.length, admin: 0, referents: 0, enseignant_relecteur: 0, commercial: 0, gestionnaire_video: 0,
       redacteur_blog: 0, responsable_complet: 0, personnalise: 0,
     };
-    for (const r of avantRole) c[roleDe(r)] += 1;
+    for (const r of avantRole) {
+      c[roleDe(r)] += 1;
+      if (estLigneReferente(r)) c.referents += 1;
+    }
     return c;
   }, [avantRole]);
 
-  const visibles = filtreRole === 'tous' ? avantRole : avantRole.filter((r) => roleDe(r) === filtreRole);
+  const visibles = filtreRole === 'tous' ? avantRole
+    : filtreRole === 'referents' ? avantRole.filter(estLigneReferente)
+    : avantRole.filter((r) => roleDe(r) === filtreRole);
   const filtreActif = recherche.trim() !== '' || filtreRole !== 'tous' || filtreStatut !== 'tous';
   const reinitialiser = () => { setRecherche(''); setFiltreRole('tous'); setFiltreStatut('tous'); };
 
@@ -269,6 +280,11 @@ export function EquipeList({ rows, colleges }: { rows: LigneEquipe[]; colleges: 
                       : (
                         <div className="mt-1 flex flex-wrap items-center gap-1.5">
                           <Badge tone={poste === 'personnalise' ? 'muted' : 'primary'}>{POSTE_LABEL[poste]}</Badge>
+                          {estLigneReferente(r) && (
+                            <span title="Enseignant référent : questions des élèves et onglet Vidéos sur ses spécialités">
+                              <Badge tone="ok"><GraduationCap className="h-3 w-3" /> Enseignant référent</Badge>
+                            </span>
+                          )}
                           {s?.fonction && <span className="text-xs font-medium text-(--color-ink-soft)">{s.fonction}</span>}
                         </div>
                       )}
@@ -280,9 +296,7 @@ export function EquipeList({ rows, colleges }: { rows: LigneEquipe[]; colleges: 
                       <div className="flex flex-wrap gap-1">
                         {s.modules.suivi.actif && <Badge tone="primary">Suivi élèves{s.modules.suivi.gerer ? ' · gère' : s.modules.suivi.rediger ? ' · rédige' : ' · lit'}</Badge>}
                         {s.modules.contenus.actif && <Badge tone="primary">Contenus · {(['creer', 'modifier', 'publier', 'supprimer'] as const).filter((d) => s.modules.contenus[d]).map((d) => d.slice(0, 4)).join('/') || 'lecture'}</Badge>}
-                        {estEnseignant(s) && (s.referent
-                          ? <Badge tone="ok">Professeur référent</Badge>
-                          : <Badge>Non référent</Badge>)}
+                        {estEnseignant(s) && !s.referent && <Badge>Non référent</Badge>}
                         {s.modules.blog.actif && <Badge tone="primary">Blog{s.modules.blog.publier ? ' · publie' : ' · à valider'}</Badge>}
                         {!s.modules.suivi.actif && !s.modules.contenus.actif && !s.modules.blog.actif && <Badge>Aucun module</Badge>}
                         {s.modele && <Badge>modèle : {POSTE_LABEL[s.modele].toLowerCase()}</Badge>}
