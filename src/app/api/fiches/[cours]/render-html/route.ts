@@ -137,7 +137,7 @@ async function rendrePdf(
       });
       // Titre de couverture : un mot trop long pour sa colonne passerait sous le
       // logo. On réduit le corps jusqu'à ce qu'il tienne (contrôle du 06/10/2026).
-      document.querySelectorAll('.cover-title').forEach((titre) => {
+      document.querySelectorAll<HTMLElement>('.cover-title').forEach((titre) => {
         let taille = parseFloat(getComputedStyle(titre).fontSize);
         while (titre.scrollWidth > titre.clientWidth + 1 && taille > 16) {
           taille -= 1;
@@ -147,9 +147,9 @@ async function rendrePdf(
       // Page de garde trop haute (titre long + plan long) : la légende passerait
       // sous la page. On resserre titre puis plan jusqu'à ce que tout tienne.
       document.querySelectorAll('.cover-content').forEach((zone) => {
-        const titre = zone.querySelector('.cover-title');
-        const textes = [...zone.querySelectorAll('.cover-plan-text')];
-        const liens = [...zone.querySelectorAll('.cover-plan-link')];
+        const titre = zone.querySelector<HTMLElement>('.cover-title');
+        const textes = [...zone.querySelectorAll<HTMLElement>('.cover-plan-text')];
+        const liens = [...zone.querySelectorAll<HTMLElement>('.cover-plan-link')];
         // Le bas du dernier bloc (légende) doit rester au-dessus de la marge basse.
         const deborde = () => {
           const cadre = zone.getBoundingClientRect();
