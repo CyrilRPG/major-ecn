@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, cache } from 'react';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -31,6 +31,8 @@ import { SectionTitle, StudentHero, StudentPage, heroCta } from '@/components/st
 import { BienDemarrer } from '@/components/student/guide/bien-demarrer';
 import { chargerPriseEnMain } from '@/lib/student/prise-en-main';
 import { chargerConseil } from '@/lib/student/conseil';
+import type { Conseil, ConseilCle } from '@/lib/student/conseil-core';
+import type { PriseEnMain } from '@/lib/student/prise-en-main-core';
 import { ConseilDuJour } from '@/components/student/guide/conseil-du-jour';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { CHECKUP_STUDENT_ENABLED, PLAN_STUDENT_ENABLED } from '@/lib/modules-flags';
@@ -113,22 +115,18 @@ export default async function AccueilPage() {
         }
       />
 
-      {profile.role === 'student' && !isDecouverte && (
-        <Suspense fallback={null}>
-          <GuideAccueil
-            userId={user.id}
-            tutorielVu={!!(profile as { tutoriel_video_vu_at?: string | null }).tutoriel_video_vu_at}
-            promotion={(profile as { promotion?: string | null }).promotion ?? null}
-            permissionScope={profile.permission_scope}
-            engine={engine}
-            checkup={moteurOuvert(profile, CHECKUP_STUDENT_ENABLED)}
-          />
-        </Suspense>
-      )}
+      {/* Prise en main (« Bien démarrer ») tant qu'elle n'est pas terminée ni masquée. */}
+      <Suspense fallback={null}>
+        <BienDemarrerAccueil />
+      </Suspense>
 
       <div className="grid w-full gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
         {/* ============ COLONNE PRINCIPALE ============ */}
         <div className="flex min-w-0 flex-col gap-4">
+          {/* Conseil du jour : ici sur téléphone et tablette, dans la colonne de droite sur ordinateur. */}
+          <Suspense fallback={null}>
+            <ConseilAccueil variante="bande" className="xl:hidden" />
+          </Suspense>
           {engine && (
             <Suspense fallback={<PedagoTodaySkeleton />}>
               <PedagoToday userId={user.id} />
@@ -148,6 +146,9 @@ export default async function AccueilPage() {
 
         {/* ============ SIDEBAR DROITE ============ */}
         <aside className="space-y-3">
+          <Suspense fallback={null}>
+            <ConseilAccueil variante="carte" className="hidden xl:block" />
+          </Suspense>
           {/* Planning « Mes 30 prochains jours » : séances en direct ciblées
               (mêmes règles que /agenda) + évènements personnels. Streamé à part. */}
           <Suspense fallback={<Planning30JoursSkeleton />}>
@@ -165,25 +166,48 @@ export default async function AccueilPage() {
 }
 
 /**
- * Guide de l'accueil, sous l'en-tête : la bande « Bien démarrer » tant que la
- * prise en main n'est pas terminée (ni masquée), puis « Le conseil du jour »,
- * calculé automatiquement d'après l'activité de l'élève. Jamais les deux.
+ * Guide de l'accueil, calculé une fois par affichage (React `cache`) :
+ * - « Bien démarrer » tant que la prise en main n'est pas terminée ni masquée ;
+ * - « Le conseil du jour », TOUJOURS proposé (automatique, d'après l'activité
+ *   de l'élève). Tant que la bande est là, il évite les étapes qu'elle porte
+ *   déjà : les deux se complètent, sans se répéter.
+ * Élèves des formules payantes seulement (l'offre Découverte a son parcours).
  */
-async function GuideAccueil({ userId, tutorielVu, promotion, permissionScope, engine, checkup }: {
-  userId: string; tutorielVu: boolean; promotion: string | null; permissionScope: unknown; engine: boolean; checkup: boolean;
-}) {
+const guideAccueil = cache(async (): Promise<{ p: PriseEnMain | null; conseil: Conseil | null }> => {
+  const { user, profile } = await requireUser();
+  const scope = parseScope(profile.permission_scope);
+  const decouverte = scope.offer === 'decouverte' && scope.type === 'college' && scope.colleges.includes('col-decouverte');
+  if (profile.role !== 'student' || decouverte) return { p: null, conseil: null };
+  const engine = moteurOuvert(profile, PEDAGO_ENGINE_STUDENT_ENABLED);
+  const checkup = moteurOuvert(profile, CHECKUP_STUDENT_ENABLED);
   const [planning, parcours] = await Promise.all([
-    PLAN_STUDENT_ENABLED ? planAvailableFor(permissionScope).catch(() => false) : Promise.resolve(false),
-    fetchContentAccessForScope(parseScope(permissionScope))
-      .then((a) => a.parcoursMajor && hasMedecineGeneraleAccess(permissionScope)).catch(() => false),
+    PLAN_STUDENT_ENABLED ? planAvailableFor(profile.permission_scope).catch(() => false) : Promise.resolve(false),
+    fetchContentAccessForScope(scope).then((a) => a.parcoursMajor && hasMedecineGeneraleAccess(profile.permission_scope)).catch(() => false),
   ]);
-  const p = await chargerPriseEnMain(userId, { tutorielVu, ouverts: { checkup, moteur: engine, planning } });
-  if (p) return <BienDemarrer p={p} />;
-  const conseil = await chargerConseil(userId, { permissionScope, promotion, engine, checkup, planning, parcours }).catch((e) => {
+  const p = await chargerPriseEnMain(user.id, {
+    tutorielVu: !!(profile as { tutoriel_video_vu_at?: string | null }).tutoriel_video_vu_at,
+    ouverts: { checkup, moteur: engine, planning },
+  }).catch(() => null);
+  const exclure = (p?.etapes ?? []).filter((e) => !e.fait && e.cle !== 'tutoriel').map((e) => e.cle as ConseilCle);
+  const conseil = await chargerConseil(user.id, {
+    permissionScope: profile.permission_scope,
+    promotion: (profile as { promotion?: string | null }).promotion ?? null,
+    engine, checkup, planning, parcours, exclure,
+  }).catch((e) => {
     console.error('[guide] conseil du jour :', e instanceof Error ? e.message : e);
     return null;
   });
-  return conseil ? <ConseilDuJour conseil={conseil} /> : null;
+  return { p, conseil };
+});
+
+async function BienDemarrerAccueil() {
+  const { p } = await guideAccueil();
+  return p ? <BienDemarrer p={p} /> : null;
+}
+
+async function ConseilAccueil({ variante, className }: { variante: 'bande' | 'carte'; className?: string }) {
+  const { conseil } = await guideAccueil();
+  return conseil ? <ConseilDuJour conseil={conseil} variante={variante} className={className} /> : null;
 }
 
 /* ============================================================

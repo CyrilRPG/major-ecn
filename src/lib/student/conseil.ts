@@ -14,7 +14,11 @@ import { choisirConseil, CONSEIL_CLES, type Conseil, type ConseilCle, type Faits
  */
 export async function chargerConseil(
   userId: string,
-  opts: { permissionScope: unknown; promotion: string | null; engine: boolean; checkup: boolean; planning: boolean; parcours: boolean },
+  opts: {
+    permissionScope: unknown; promotion: string | null; engine: boolean; checkup: boolean; planning: boolean; parcours: boolean;
+    /** Conseils à ne pas proposer (étapes déjà portées par la bande « Bien démarrer »). */
+    exclure?: Iterable<ConseilCle>;
+  },
 ): Promise<Conseil | null> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- tables hors types générés
   const db = createAdminClient() as any;
@@ -71,7 +75,7 @@ export async function chargerConseil(
   }
   const marques = new Map(reperes.map((r) => [r.cle, r.first_at]));
   const vues: Partial<Record<ConseilCle, string>> = {};
-  const masques = new Set<string>();
+  const masques = new Set<string>(opts.exclure ?? []);
   for (const cle of CONSEIL_CLES) {
     const vu = marques.get(`suggestion-vue:${cle}`);
     if (vu) vues[cle] = vu;
