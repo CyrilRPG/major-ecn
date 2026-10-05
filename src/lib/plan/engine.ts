@@ -1,4 +1,5 @@
 import 'server-only';
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { randomUUID } from 'node:crypto';
 import { attemptResult, type AttemptRow } from '@/lib/moteur/server/collector';
 import { insertEvents, listEvents, moteurDb, withUserLock } from '@/lib/moteur/server/db';
@@ -217,9 +218,36 @@ async function applyUnitProgress(userId: string, a: PlanActivityRow, all: Pick<A
 }
 
 /* ─── Recalcul ─── */
+/** Recalculs en cours dans ce processus (le verrou en base est réentrant : il ne protège pas d'un appel imbriqué). */
+const refreshing = new Set<string>();
+const insideRefresh = new AsyncLocalStorage<string>();
+
 export async function refreshPlan(userId: string, trigger: string, opts: RefreshOptions = {}): Promise<RefreshResult> {
-  const run = await withUserLock(userId, () => refreshUnlocked(userId, trigger, opts), { wait: opts.wait ?? true, seconds: 120 });
-  return run.ran ? run.value : { ran: false, reason: 'verrou', summary: null };
+  // Un seul recalcul à la fois par candidat : un appel imbriqué ou concurrent n'écrit jamais un second programme
+  // (incident du 05/10/2026 : deux recalculs simultanés avaient doublé un planning).
+  if (insideRefresh.getStore() === userId) return { ran: false, reason: 'en_cours', summary: null };
+  if (refreshing.has(userId)) {
+    if (!(opts.wait ?? true)) return { ran: false, reason: 'en_cours', summary: null };
+    const deadline = Date.now() + 15_000;
+    while (refreshing.has(userId) && Date.now() < deadline) await new Promise((r) => setTimeout(r, 250));
+    if (refreshing.has(userId)) return { ran: false, reason: 'en_cours', summary: null };
+  }
+  refreshing.add(userId);
+  try {
+    const run = await withUserLock(userId, () => insideRefresh.run(userId, () => refreshUnlocked(userId, trigger, opts)), { wait: opts.wait ?? true, seconds: 120 });
+    return run.ran ? run.value : { ran: false, reason: 'verrou', summary: null };
+  } finally {
+    refreshing.delete(userId);
+  }
+}
+
+/**
+ * Journée de démarrage (« Alertes » §48-§49) : jour de travail, dans le fuseau du candidat, de la création,
+ * de la conversion V4.1 ou de la dernière reprise du planning.
+ */
+export function startDayOf(profile: Pick<PlanProfile, 'planner_activated_at' | 'planner_reactivated_at' | 'v41_migrated_at'>, tz: string, closeTime: string): DayKey | null {
+  const last = [profile.planner_activated_at, profile.planner_reactivated_at, profile.v41_migrated_at].filter((s): s is string => !!s).sort().at(-1);
+  return last ? workDay(new Date(last), tz, closeTime) : null;
 }
 
 /**
@@ -463,6 +491,11 @@ async function refreshUnlocked(userId: string, triggerIn: string, opts: RefreshO
   });
 
   // 12. Persistance : prévisions remplacées, activités engagées conservées, reprise des activités partielles.
+  // Garde-fou : si un autre recalcul a figé la journée depuis la lecture de l'état, on n'écrit rien (jamais deux programmes).
+  if (!freezeToday) {
+    const latest = (await listDayPlans(userId, today, today)).get(today);
+    if (latest && latest.version !== todayPlan?.version) return { ran: false, reason: 'concurrent', summary: null };
+  }
   const genId = randomUUID();
   const fromDay = freezeToday ? addDays(today, 1) : today;
   await deleteForecasts(userId, fromDay, new Set(kept.map((a) => a.id)));
@@ -570,6 +603,7 @@ async function closeDays(ctx: PlannerContext, profile: PlanProfile, acts: PlanAc
   const p = ctx.params;
   const userId = ctx.userId;
   const gens = await listGenerations(userId, 200);
+  const startDay = startDayOf(profile, ctx.tz, p.day.close_time);
   for (let day = from; day <= to; day = addDays(day, 1)) {
     const window = workDayWindow(day, ctx.tz, p.day.close_time);
     const dayActs = acts.filter((a) => a.scheduled_date === day);
@@ -580,6 +614,17 @@ async function closeDays(ctx: PlannerContext, profile: PlanProfile, acts: PlanAc
         user_id: userId, day, availability_minutes: dayBudget(profile, p, day), off: dayActs.filter(inDayPlan).length === 0, phase: null, target_progression: null,
         entries: entriesFor(day, dayActs, units, window.start), reason: 'cloture', generation_id: null,
       });
+    }
+    // Journée de démarrage (« Alertes » §48-§49) : ce qui n'a pas été commencé le jour de création, de conversion
+    // ou de reprise du planning sort de la journée — ni retard, ni 0 %, ni alerte le lendemain.
+    const untouched = new Set<string>();
+    if (p.day.start_day_grace && day === startDay) {
+      for (const a of dayActs) {
+        if (!OPEN.includes(a.status) || a.started_at || a.checkpoint_at || (units.get(a.id) ?? []).length > 0) continue;
+        untouched.add(a.id);
+        Object.assign(a, { status: 'CANCELLED' as ActivityStatus, cancellation_reason: 'START_DAY', closed_at: window.end.toISOString() });
+      }
+      if (untouched.size > 0) await updateActivities(userId, Array.from(untouched), { status: 'CANCELLED', cancellation_reason: 'START_DAY', closed_at: window.end.toISOString() });
     }
     // Activités restées ouvertes : clôture selon les unités réellement validées (§18.1).
     for (const a of dayActs.filter((x) => OPEN.includes(x.status))) {
@@ -598,10 +643,10 @@ async function closeDays(ctx: PlannerContext, profile: PlanProfile, acts: PlanAc
       await addLog({ user_id: userId, item_id: a.item_id, kind: 'activite_cloturee', detail: { activite: a.id, statut: status, unites: validated, prevues: a.planned_units } });
     }
     // Taux de la journée sur sa version figée : unités validées pendant la journée, jamais le temps passé.
-    const entries = plan?.entries ?? [];
+    const entries = (plan?.entries ?? []).filter((e) => !untouched.has(e.activityId));
     const inWindow = (id: string) => new Set((units.get(id) ?? []).filter((u) => { const t = Date.parse(u.validated_at); return t >= window.start.getTime() && t < window.end.getTime(); }).map((u) => u.unit_key)).size;
     const completed = new Set(acts.filter((a) => a.status === 'COMPLETED').map((a) => a.id));
-    const c = dayCompletion({ day, off: !plan || plan.off, entries: entries.map((e) => ({ activityId: e.activityId, plannedUnits: e.plannedUnits, weight: e.weight, measurable: e.measurable })) }, inWindow, completed);
+    const c = dayCompletion({ day, off: !plan || plan.off || (untouched.size > 0 && entries.length === 0), entries: entries.map((e) => ({ activityId: e.activityId, plannedUnits: e.plannedUnits, weight: e.weight, measurable: e.measurable })) }, inWindow, completed);
     const entryIds = new Set(entries.map((e) => e.activityId));
     const extraUnits = acts.filter((a) => !entryIds.has(a.id) && (a.origin === 'ADDED' || a.origin === 'ADVANCE' || a.origin === 'EXTRA')).reduce((s, a) => s + inWindow(a.id), 0);
     const gen = gens.filter((g) => Date.parse(g.created_at) < window.end.getTime()).sort((a, b) => b.created_at.localeCompare(a.created_at))[0];
@@ -609,7 +654,7 @@ async function closeDays(ctx: PlannerContext, profile: PlanProfile, acts: PlanAc
     const evaluable = !c.off;
     const conforming = evaluable && proj ? (proj.projectedCoverage >= p.priority_mode.exit_coverage_threshold - 1e-9 && proj.p1Absorbable && c.rate !== null && c.rate >= p.priority_mode.exit_completion_threshold - 1e-9) : null;
     const postponed = dayActs.filter((a) => a.status === 'POSTPONED');
-    const cancelled = dayActs.filter((a) => a.status === 'CANCELLED' && a.cancellation_reason !== 'REGENERATED');
+    const cancelled = dayActs.filter((a) => a.status === 'CANCELLED' && a.cancellation_reason !== 'REGENERATED' && a.cancellation_reason !== 'START_DAY');
     await upsertDayMetrics([{
       user_id: userId, day, off: c.off, availability_minutes: plan?.availability_minutes ?? dayBudget(profile, p, day), completion_rate: c.rate === null ? null : Math.round(c.rate * 10_000) / 10_000,
       planned_weight: round2(c.plannedWeight), validated_weight: round2(c.validatedWeight), activities_planned: c.activitiesPlanned, activities_completed: c.activitiesCompleted,

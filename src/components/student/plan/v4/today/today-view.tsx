@@ -137,6 +137,9 @@ export function TodayView({ data, action, figures }: { data: TodayData; action: 
                 <>{data.progress.done}/{data.progress.planned} activité{data.progress.planned > 1 ? 's' : ''} réalisée{data.progress.planned > 1 ? 's' : ''} · {fmtMinutes(data.progress.minutesPlanned)} prévues{pct !== null ? ` · programme réalisé : ${pct} %` : ''}</>
               )}
             </p>
+            {data.isStartDay && data.progress.planned > 0 && (
+              <p className="mt-1 text-[13.5px] text-(--pl-muted)">Journée de démarrage : commencez à votre rythme, ce que vous ne faites pas aujourd’hui ne compte ni comme un retard ni dans votre suivi.</p>
+            )}
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {next && <Link href={`/planificateur/activite/${next.id}`} className="inline-flex h-[42px] items-center gap-1.5 rounded-full bg-(--pl-pill) px-[18px] text-[14.5px] font-semibold text-white transition hover:brightness-110">Continuer maintenant<ChevronRight className="h-4 w-4" strokeWidth={2.4} /></Link>}

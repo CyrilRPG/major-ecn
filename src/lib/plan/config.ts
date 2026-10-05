@@ -99,7 +99,11 @@ export type PlanParams = {
   /** §16 — « Mes erreurs prioritaires ». */
   errors: { activity_min: number; activity_max: number };
   /** §18 — clôture de journée (fuseau du candidat). */
-  day: { close_time: string; priority_exit_evaluation_time: string; default_timezone: string; partial_min_ratio: number };
+  /**
+   * `start_day_grace` (« Alertes » §48-§49, proposition) : le jour de création, de conversion ou de reprise du planning,
+   * ce qui n'a pas été commencé sort de la journée à sa clôture (ni retard, ni 0 %, ni alerte J+1).
+   */
+  day: { close_time: string; priority_exit_evaluation_time: string; default_timezone: string; partial_min_ratio: number; start_day_grace: boolean };
   /** §19 — mode prioritaire. */
   priority_mode: {
     entry_projected_coverage_below: number;
@@ -167,7 +171,7 @@ export const DEFAULT_PARAMS: PlanParams = {
     short_version_share: 0.4,
   },
   errors: { activity_min: 10, activity_max: 20 },
-  day: { close_time: '04:00', priority_exit_evaluation_time: '04:05', default_timezone: 'Europe/Paris', partial_min_ratio: 0.1 },
+  day: { close_time: '04:00', priority_exit_evaluation_time: '04:05', default_timezone: 'Europe/Paris', partial_min_ratio: 0.1, start_day_grace: true },
   priority_mode: {
     entry_projected_coverage_below: 0.85,
     entry_p1_horizon_days: 21,
@@ -292,6 +296,7 @@ export const PARAM_META: ParamMeta[] = [
   { path: 'day.priority_exit_evaluation_time', label: 'Évaluation de sortie du mode prioritaire', section: '§19 Mode prioritaire', kind: 'time', cdc: true },
   { path: 'day.default_timezone', label: 'Fuseau horaire par défaut', section: '§18 Retard', kind: 'text', cdc: true },
   n('day.partial_min_ratio', 'Progression exploitable minimale', '§18 Retard', true, 0, 1),
+  { path: 'day.start_day_grace', label: 'Journée de démarrage : ce qui n’est pas commencé le jour de création, de conversion ou de reprise ne compte pas', section: 'Alertes §48-§49', kind: 'boolean', cdc: false },
   n('priority_mode.entry_projected_coverage_below', 'Entrée : couverture projetée inférieure à', '§19 Mode prioritaire', true, 0, 1),
   n('priority_mode.entry_p1_horizon_days', 'Entrée : horizon du backlog P1', '§19 Mode prioritaire', true, 1, 120, 1, 'jours'),
   n('priority_mode.entry_completion_below', 'Entrée : réalisation inférieure à', '§19 Mode prioritaire', true, 0, 1),

@@ -7,7 +7,7 @@ import {
   collegeFamily, getDayReport, getParams, getProfile, listActivities, listColleges, listDayMetrics, listDayPlans, listGenerations, listItemsByIds, listUnits, planDb,
   type PlanActivityRow,
 } from './db';
-import { dayBudget, unitsByActivity, type PlanSummary } from './engine';
+import { dayBudget, startDayOf, unitsByActivity, type PlanSummary } from './engine';
 import { displayLevel, type PlanItemView } from './items';
 import {
   ACTIVITY_STATUS_LABEL, ACTIVITY_TYPE_LABEL, BADGE_LABEL, BLOCK_KIND_LABEL, COACHING_TYPE_LABEL,
@@ -135,6 +135,8 @@ export type TodayData = {
   closedByUser: boolean;
   /** « Je ne peux pas terminer aujourd'hui » déclaré : le reste est reporté, pas de « J'ai encore du temps ». */
   declaredIncomplete: boolean;
+  /** Journée de démarrage : ce qui n'est pas commencé aujourd'hui ne comptera pas (« Alertes » §48-§49). */
+  isStartDay: boolean;
   yesterday: { day: DayKey; done: number; planned: number; remaining: ActivityCard[] } | null;
   summary: PlanSummary | null;
   parcours: { id: string; numero: number | null; title: string; type: string; minutes: number; relevantActivityId: string | null } | null;
@@ -153,6 +155,7 @@ export async function todayData(env: PlannerEnv): Promise<TodayData> {
   const names = await namesFor(acts, ctx);
   const cards = new Map(toCards(acts, ctx, names).map((c) => [c.id, c]));
   const todays = acts.filter((a) => a.scheduled_date === today);
+  const startDay = startDayOf(profile, env.tz, params.day.close_time);
   const plans = await listDayPlans(userId, addDays(today, -1), today);
   const plan = plans.get(today);
   // Le programme d'un jour suit sa version en vigueur (complément « réalisation » §9) : une activité sortie
@@ -182,7 +185,8 @@ export async function todayData(env: PlannerEnv): Promise<TodayData> {
   if (yActs.length > 0) {
     const yDone = yActs.filter((a) => a.status === 'COMPLETED').length;
     const report = await getDayReport(userId, yDay);
-    if (yDone < yActs.length && !report?.j1_alert_shown_at && profile.planner_activated_at && profile.planner_activated_at.slice(0, 10) < today) {
+    // Jamais d'alerte sur la journée de démarrage (création, conversion ou reprise du planning, « Alertes » §48-§49).
+    if (yDone < yActs.length && !report?.j1_alert_shown_at && startDay !== null && yDay > startDay) {
       yesterday = { day: yDay, done: yDone, planned: yActs.length, remaining: yActs.filter((a) => a.status !== 'COMPLETED').map((a) => cards.get(a.id)!) };
     }
   }
@@ -212,7 +216,7 @@ export async function todayData(env: PlannerEnv): Promise<TodayData> {
       minutesPlanned: planActs.reduce((s, a) => s + a.estimated_duration_minutes, 0), rate: live?.rate ?? null, open: openActs.length,
     },
     dayDone: planActs.length > 0 && openActs.length === 0 && planActs.some((a) => a.status === 'COMPLETED'),
-    closedByUser: profile.day_closed_on === today, declaredIncomplete: todayReport?.choice === 'impossible', yesterday, summary, parcours,
+    closedByUser: profile.day_closed_on === today, declaredIncomplete: todayReport?.choice === 'impossible', isStartDay: params.day.start_day_grace && startDay === today, yesterday, summary, parcours,
     recap: {
       minutesDone: doneToday.reduce((s, a) => s + (a.actual_minutes ?? a.estimated_duration_minutes), 0), activities: doneToday.length,
       consolidations: doneToday.filter((a) => a.activity_type === 'CONSOLIDATE' || a.activity_type === 'REACTIVATE').length, errorsCorrected: errorsUnits, nextReactivations,

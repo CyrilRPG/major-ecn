@@ -120,12 +120,13 @@ export const OPEN_ACTIVITY_STATUSES: ReadonlySet<ActivityStatus> = new Set(['PEN
  */
 export type CancellationReason =
   | 'SPECIALITY_CHANGED' | 'NEED_SATISFIED' | 'NEED_OBSOLETE' | 'REPLACED' | 'REGENERATED' | 'EVC_PASSED' | 'MATRIX_CHANGED'
-  | 'PLANNER_PAUSED' | 'PLANNER_DISABLED' | 'UNAVAILABLE' | 'CANDIDATE_CANCELLED' | 'ITEM_REMOVED';
+  | 'PLANNER_PAUSED' | 'PLANNER_DISABLED' | 'UNAVAILABLE' | 'CANDIDATE_CANCELLED' | 'ITEM_REMOVED' | 'START_DAY';
 /** Libellés (back-office) des motifs d'annulation. */
 export const CANCELLATION_REASON_LABEL: Record<CancellationReason, string> = {
   SPECIALITY_CHANGED: 'changement de spécialité', NEED_SATISFIED: 'besoin satisfait', NEED_OBSOLETE: 'besoin devenu sans objet', REPLACED: 'remplacée',
   REGENERATED: 'recalcul', EVC_PASSED: 'épreuve passée', MATRIX_CHANGED: 'nouvelle matrice', PLANNER_PAUSED: 'planificateur en pause',
   PLANNER_DISABLED: 'planificateur désactivé', UNAVAILABLE: 'indisponibilité déclarée', CANDIDATE_CANCELLED: 'retirée par le candidat', ITEM_REMOVED: 'item retiré',
+  START_DAY: 'journée de démarrage (non commencée, non comptée)',
 };
 /**
  * Origine d'une activité : générée par le planificateur, ajoutée par le
