@@ -58,6 +58,12 @@ export default function LoginPage() {
                 >
                   <LoginForm />
                 </Suspense>
+                {/* Sans JavaScript, le bouton reste inactif (soumission native bloquée). */}
+                <noscript>
+                  <p className="mt-4 text-sm text-(--color-ink-soft)">
+                    La connexion nécessite JavaScript : activez-le dans votre navigateur.
+                  </p>
+                </noscript>
               </div>
             </div>
           </div>

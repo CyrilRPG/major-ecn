@@ -25,6 +25,11 @@ export default function ForgotPasswordPage() {
             </p>
             <div className="mt-6">
               <ForgotPasswordForm />
+              <noscript>
+                <p className="mt-4 text-sm text-(--color-ink-soft)">
+                  Cette page nécessite JavaScript : activez-le dans votre navigateur.
+                </p>
+              </noscript>
             </div>
             <p className="mt-6 rounded-xl border border-(--color-border) bg-(--color-surface-soft) px-4 py-3 text-xs leading-relaxed text-(--color-ink-soft)">
               Vous participez à <strong>EVC Arena</strong> (tournoi de QCM) ? Il n’y a pas de mot de passe : la connexion se fait par un lien envoyé à votre adresse email, depuis <Link href="/arena/connexion" className="font-semibold text-(--color-primary) underline-offset-4 hover:underline">la page de connexion de l’arène</Link>.

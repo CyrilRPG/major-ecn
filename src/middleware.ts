@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
+import { redirectionSansSaisie } from '@/lib/formulaires-publics';
 
 /**
  * CORS pour l'application mobile (Capacitor). L'app tourne sous une origine
@@ -67,6 +68,14 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith('/api/')) {
     return NextResponse.next({ request });
   }
+
+  // Pages à formulaire public (identification, contact) : jamais de saisie dans
+  // une URL. Soumission native d'un formulaire (POST) ou URL déjà polluée
+  // (favoris, historique) → 303 vers la même page en GET, sans les champs de
+  // son formulaire ; le corps du POST n'est jamais lu. Avant updateSession, qui
+  // renvoie un compte connecté vers /app en recopiant la query string.
+  const sansSaisie = redirectionSansSaisie(request);
+  if (sansSaisie) return NextResponse.redirect(sansSaisie, 303);
 
   return updateSession(request);
 }

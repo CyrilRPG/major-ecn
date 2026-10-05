@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { createClient } from '@/lib/supabase/client';
+import { useHydrate } from '@/lib/use-hydrate';
 
 const schema = z.object({
   email: z.string().email('Adresse email invalide'),
@@ -32,6 +33,7 @@ export function LoginForm() {
         : null,
   );
   const [showPassword, setShowPassword] = useState(false);
+  const hydrate = useHydrate();
 
   const {
     register,
@@ -99,7 +101,11 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    // Soumission native (clic avant hydratation, extension qui appelle
+    // form.submit()) : en POST, e-mail et mot de passe restent dans le corps,
+    // jamais dans l'URL. Le middleware renvoie ce POST vers /login en GET
+    // (lib/auth/formulaires-auth.ts).
+    <form method="post" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-1.5">
         <Label htmlFor="email">Adresse email</Label>
         <Input id="email" type="email" autoComplete="email" placeholder="exemple@email.com" {...register('email')} />
@@ -145,7 +151,7 @@ export function LoginForm() {
         </div>
       )}
 
-      <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+      <Button type="submit" size="lg" className="w-full" disabled={!hydrate || isSubmitting}>
         {isSubmitting ? <Loader2 className="animate-spin" /> : null}
         Se connecter
       </Button>

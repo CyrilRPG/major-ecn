@@ -6,12 +6,14 @@ import { AlertCircle, CheckCircle2, Loader2, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useHydrate } from '@/lib/use-hydrate';
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState('');
   const [pending, setPending] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hydrate = useHydrate();
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -61,7 +63,9 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    // POST : une soumission native ne met jamais l'adresse dans l'URL
+    // (lib/auth/formulaires-auth.ts).
+    <form method="post" onSubmit={onSubmit} className="space-y-4">
       <div className="space-y-1.5">
         <Label htmlFor="email">Adresse email</Label>
         <div className="relative">
@@ -84,7 +88,7 @@ export function ForgotPasswordForm() {
           <span>{error}</span>
         </div>
       )}
-      <Button type="submit" size="lg" className="w-full" disabled={pending}>
+      <Button type="submit" size="lg" className="w-full" disabled={!hydrate || pending}>
         {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
         Envoyer le lien de réinitialisation
       </Button>

@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { TurnstileWidget } from './turnstile-widget';
 import { EVENEMENTS, pousserEvenement } from '@/lib/analytics/evenements';
+import { useHydrate } from '@/lib/use-hydrate';
 
 /** Le captcha est requis côté UI uniquement si la clé publique est configurée. */
 const TURNSTILE_ENABLED = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
@@ -130,6 +131,7 @@ export function ContactForm({ motifInitial }: { motifInitial?: string } = {}) {
   const [profOpen, setProfOpen] = useState(false);
   const [captchaToken, setCaptchaToken] = useState('');
   const [captchaNonce, setCaptchaNonce] = useState(0);
+  const hydrate = useHydrate();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -223,7 +225,11 @@ export function ContactForm({ motifInitial }: { motifInitial?: string } = {}) {
   const inputStyle = { borderColor: BORDER, color: NAVY } as const;
 
   return (
-    <form onSubmit={onSubmit}
+    // Soumission native (clic avant l'hydratation, extension qui appelle
+    // form.submit()) : en POST, nom, e-mail, téléphone et message restent dans le
+    // corps, jamais dans l'URL ni dans GTM ; le middleware renvoie ce POST vers
+    // /contact en GET (lib/formulaires-publics.ts, qui liste les champs nommés).
+    <form method="post" onSubmit={onSubmit}
       className="rounded-3xl border bg-white p-6 shadow-[0_30px_80px_-30px_rgba(15,27,61,0.25)] sm:p-7"
       style={{ borderColor: BORDER }}>
       <div className="flex items-start gap-3">
@@ -397,13 +403,22 @@ export function ContactForm({ motifInitial }: { motifInitial?: string } = {}) {
         </p>
       )}
 
-      <button type="submit" disabled={status === 'submitting'}
+      <button type="submit" disabled={!hydrate || status === 'submitting'}
         className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-2xl py-3.5 text-[15px] font-extrabold text-white shadow-[0_18px_40px_-18px_rgba(192,17,46,0.55)] transition-transform hover:scale-[1.01] disabled:opacity-60"
         style={{ background: `linear-gradient(135deg, ${RED} 0%, ${RED_DEEP} 100%)` }}>
         {status === 'submitting' ? <Loader2 className="h-5 w-5 animate-spin" /> : null}
         {status === 'submitting' ? 'Envoi…' : 'Envoyer le message'}
         {status !== 'submitting' && <ArrowRight className="h-5 w-5" />}
       </button>
+
+      {/* Sans JavaScript, le bouton reste inactif (soumission native bloquée). */}
+      <noscript>
+        <p className="mt-3 text-center text-[12.5px]" style={{ color: INK_SOFT }}>
+          Le formulaire nécessite JavaScript : activez-le dans votre navigateur, ou
+          écrivez-nous à{' '}
+          <a href={`mailto:${CONTACT_EMAIL}`} className="font-bold underline" style={{ color: RED }}>{CONTACT_EMAIL}</a>.
+        </p>
+      </noscript>
 
       <p className="mt-3 text-center text-[11.5px]" style={{ color: INK_MUTED }}>
         En envoyant ce formulaire, vous acceptez d’être recontacté par l’équipe

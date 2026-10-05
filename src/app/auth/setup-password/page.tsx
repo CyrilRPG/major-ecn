@@ -201,7 +201,9 @@ export default function SetupPasswordPage() {
           )}
 
           {(status === 'ready' || status === 'submitting' || status === 'error') && (
-            <form onSubmit={onSubmit} className="mt-6 space-y-4">
+            // POST : une soumission native ne met jamais le mot de passe dans
+            // l'URL (lib/auth/formulaires-auth.ts).
+            <form method="post" onSubmit={onSubmit} className="mt-6 space-y-4">
               {/* Lever l'ambiguïté quand plusieurs comptes ont servi sur ce
                   navigateur : l'élève voit noir sur blanc lequel il configure. */}
               {emailCible && (
