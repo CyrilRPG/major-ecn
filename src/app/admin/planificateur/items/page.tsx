@@ -26,7 +26,7 @@ export default async function PlanItemsPage({ searchParams }: { searchParams: Pr
   const active = items.filter((i) => i.actif && (i.statut ?? 'active') === 'active');
   const hard = active.filter((i) => i.hard_priority).length;
   const st = hardPriorityStatus(active.length, hard, paramSet.params);
-  const tone = st.blocked ? 'bg-red-100 text-red-800' : st.alert ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800';
+  const tone = st.blocked ? 'bg-red-100 text-red-800' : st.alert ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800';
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 lg:px-8">
       <header className="mb-6 flex flex-wrap items-start justify-between gap-3 border-b border-(--color-border) pb-5">

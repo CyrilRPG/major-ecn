@@ -20,7 +20,8 @@ import { fmtMinutes } from '../today/activity-card';
 import { Btn, CancelDialog, ErrorText, PostponeDialog } from '../today/dialogs';
 
 const RESULT_UI = {
-  positive: { label: 'Correct', Icon: CheckCircle2, cls: 'text-emerald-700 dark:text-emerald-300' },
+  // Vert standard : dans le thème de la plateforme, emerald-* et teal-* sont redéfinis en rouge (globals.css).
+  positive: { label: 'Correct', Icon: CheckCircle2, cls: 'text-green-700 dark:text-green-400' },
   partial: { label: 'Partiel', Icon: MinusCircle, cls: 'text-amber-700 dark:text-amber-300' },
   incorrect: { label: 'À revoir', Icon: XCircle, cls: 'text-red-700 dark:text-red-300' },
 } as const;
@@ -244,8 +245,8 @@ function Runner({ session, onDone }: { session: RunnerSession; onDone: () => voi
             <textarea value={text} onChange={(e) => setText(e.target.value)} readOnly={!!qroc} rows={4} maxLength={5000} aria-label="Votre réponse" placeholder="Rédigez votre réponse…"
               className="w-full rounded-[12px] border border-(--pl-card-border) bg-(--pl-card) p-3 text-[14.5px] text-(--pl-ink) read-only:bg-(--pl-info)" />
             {qroc && (
-              <div className="rounded-[12px] border border-emerald-600/30 bg-emerald-50/50 p-3 dark:bg-emerald-900/10">
-                <p className="text-[11px] font-bold uppercase text-emerald-700 dark:text-emerald-300">Correction Major ECN</p>
+              <div className="rounded-[12px] border border-green-600/30 bg-green-50/60 p-3 dark:bg-green-900/15">
+                <p className="text-[11px] font-bold uppercase text-green-700 dark:text-green-400">Correction Major ECN</p>
                 {qroc.reponseAttendue && <p className="mt-1 text-[14px] font-semibold text-(--pl-ink)">{reponseModele(qroc.reponseAttendue)}</p>}
                 {qroc.reponseAttendue && <VariantesAcceptees reponseAttendue={qroc.reponseAttendue} className="mt-0.5 text-xs text-(--pl-muted)" />}
                 {qroc.correction && <RichTextZoom><div className="mt-2 whitespace-pre-line text-[14px] text-(--pl-text)"><RichText html={qroc.correction} /></div></RichTextZoom>}
