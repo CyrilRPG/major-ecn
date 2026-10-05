@@ -3,9 +3,14 @@
 import { getCurrentUserAndProfile } from '@/lib/auth/get-profile';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { RUBRIQUES, type RubriqueCle } from './rubriques';
+import { CONSEIL_CLES } from './conseil-core';
 
-/** Repères acceptés : rubrique ouverte, ou carte « Bien démarrer » masquée. */
-const REPERES = new Set<string>([...Object.keys(RUBRIQUES).map((c) => `vu:${c}`), 'bien-demarrer:masque']);
+/** Repères acceptés : rubrique ouverte, carte « Bien démarrer » masquée, conseil du jour affiché ou écarté. */
+const REPERES = new Set<string>([
+  ...Object.keys(RUBRIQUES).map((c) => `vu:${c}`),
+  'bien-demarrer:masque',
+  ...CONSEIL_CLES.flatMap((c) => [`suggestion-vue:${c}`, `suggestion-masquee:${c}`]),
+]);
 
 /**
  * Enregistre un repère du guide élève (table `student_guide_marks`, écriture

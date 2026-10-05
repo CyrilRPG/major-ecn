@@ -79,7 +79,10 @@ export async function updateSession(request: NextRequest) {
     path.startsWith('/notes') ||
     path.startsWith('/parcours') ||
     path.startsWith('/presences') ||
-    path.startsWith('/revoir');
+    path.startsWith('/revoir') ||
+    path.startsWith('/mes-entrainements') ||
+    // Mode d'emploi de la plateforme (élève) — pas « /guide », qui capterait /guide-evc (public).
+    path.startsWith('/mode-emploi');
 
   // Pages PUBLIQUES (vitrine, blog, guide, APIs…) : aucun appel Supabase.
   if (!isProtectedRoute && !isAuthRoute) {

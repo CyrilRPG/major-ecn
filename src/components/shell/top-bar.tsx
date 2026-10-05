@@ -32,6 +32,7 @@ function contextLabel(pathname: string): string {
   if (pathname.startsWith('/revoir')) return 'Questions à revoir';
   if (pathname.startsWith('/mes-entrainements')) return 'Mes entraînements';
   if (pathname.startsWith('/epreuves-blanches')) return 'Épreuves blanches';
+  if (pathname.startsWith('/mode-emploi')) return 'Mode d’emploi';
   return 'Mon espace';
 }
 

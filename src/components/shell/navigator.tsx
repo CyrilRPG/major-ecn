@@ -283,8 +283,8 @@ export function Navigator({
       default: return true;
     }
   };
-  /** En Découverte, tout est verrouillé sauf l'accueil et le Parcours du Major. */
-  const verrouillee = (cle: RubriqueCle) => isDecouverte && cle !== 'accueil' && cle !== 'parcours';
+  /** En Découverte, tout est verrouillé sauf l'accueil, le Parcours du Major et le mode d'emploi. */
+  const verrouillee = (cle: RubriqueCle) => isDecouverte && cle !== 'accueil' && cle !== 'parcours' && cle !== 'mode-emploi';
   const nouveaute = (cle: RubriqueCle): cle is Nouveaute => cle === 'planning' || cle === 'priorites' || cle === 'checkup';
 
   /** Une entrée du menu, avec son rôle en infobulle (« à quoi ça sert »). */

@@ -79,7 +79,8 @@ export function BienDemarrer({ p }: { p: PriseEnMain }) {
         {action}
       </div>
       <p className="mt-2 text-[12px] leading-snug text-(--color-ink-soft)">
-        <span className="font-bold text-[#14254E]">Prochaine étape : {n.titre}.</span> {n.pourquoi}
+        <span className="font-bold text-[#14254E]">Prochaine étape : {n.titre}.</span> {n.pourquoi}{' '}
+        <Link href="/mode-emploi" className="whitespace-nowrap font-semibold text-[#C0112E] hover:underline">Comprendre la méthode</Link>
       </p>
     </section>
   );

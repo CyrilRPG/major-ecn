@@ -7,7 +7,8 @@ import { DEFAULT_ENGAGEMENT_CONFIG, LEVEL_LABEL, type EngagementLevel } from '@/
 import { DEFAULT_CHECKUP_CONFIG, FORMAT_LABEL, STATUS_LABEL as CHECKUP_STATUS_LABEL, type CheckupFormat, type CheckupStatus } from '@/lib/checkup/types';
 import { MODULE_TITLE, settingsLeaves } from '@/lib/moteur/settings-labels';
 import { accessibleSpecialties } from '@/lib/checkup/server/pool';
-import { bankOverview, candidateAdminView, checkupSessions, findCandidate, openEpisodesAll } from '@/lib/moteur/server/admin';
+import { bankOverview, candidateAdminView, checkupSessions, findCandidate, openEpisodesAll, usageRubriques, type UsageLigne } from '@/lib/moteur/server/admin';
+import { FAMILLES, ORDRE_MENU, RUBRIQUES, type RubriqueCle } from '@/lib/student/rubriques';
 import { fmtDateTime } from '@/lib/suivi/format';
 import { cn } from '@/lib/utils';
 import { SettingsEditor } from './settings-editor';
@@ -22,6 +23,7 @@ const TABS = [
   { key: 'banque', label: 'Banque du Check-up' },
   { key: 'candidat', label: 'Vue candidat' },
   { key: 'alertes', label: 'Alertes ouvertes' },
+  { key: 'usage', label: 'Usage des rubriques' },
 ] as const;
 type Tab = (typeof TABS)[number]['key'];
 
@@ -152,6 +154,9 @@ export default async function MoteurPedagogiquePage({ searchParams }: { searchPa
         {view && <CandidateView v={view} />}
       </div>
     );
+  } else if (tab === 'usage') {
+    const u = await usageRubriques();
+    body = <UsageView u={u} />;
   } else {
     const eps = await openEpisodesAll();
     body = (
@@ -260,6 +265,78 @@ function CandidateView({ v }: { v: NonNullable<Awaited<ReturnType<typeof candida
         <h2 className="text-sm font-bold">Check-up</h2>
         <ul className="mt-2 space-y-1">{v.checkups.map((c) => <li key={c.id}>{fmtDateTime(c.started_at)} · {CHECKUP_STATUS_LABEL[c.status as CheckupStatus] ?? c.status} · {c.scope_kind} · {c.score_percent === null ? '—' : Math.round(Number(c.score_percent))} %</li>)}{v.checkups.length === 0 && <li className="text-(--color-ink-muted)">Aucun.</li>}</ul>
       </section>
+    </div>
+  );
+}
+
+/** Activité réelle prise en compte pour chaque rubrique (RPC admin_usage_rubriques) ; null : ouvertures seulement. */
+const ACTIVITE_DE: Partial<Record<RubriqueCle, { cle: string; source: string }>> = {
+  planning: { cle: 'planning', source: 'planning créé ou activité réalisée' },
+  priorites: { cle: 'revision-ciblee', source: 'révision ciblée réalisée' },
+  checkup: { cle: 'checkup', source: 'Check-up terminé' },
+  entrainement: { cle: 'entrainement', source: 'question répondue (mesuré depuis le 05/10/2026)' },
+  transversales: { cle: 'transversales', source: 'session terminée' },
+  epreuves: { cle: 'epreuves', source: 'copie remise' },
+  parcours: { cle: 'parcours', source: 'parcours terminé' },
+  notes: { cle: 'notes', source: 'note enregistrée' },
+  revoir: { cle: 'revoir', source: 'question mise de côté' },
+  'mes-entrainements': { cle: 'mes-entrainements', source: 'exercice créé' },
+};
+
+/**
+ * Usage des rubriques — lecture seule : rien à régler, les conseils du jour
+ * des élèves sont calculés automatiquement à partir de ces mêmes activités.
+ */
+function UsageView({ u }: { u: { base: number; activite: Map<string, UsageLigne>; ouverture: Map<string, UsageLigne> } }) {
+  const pct = (n: number) => (u.base > 0 ? Math.round((n / u.base) * 100) : 0);
+  return (
+    <div className="space-y-4">
+      <p className="text-sm text-(--color-ink-soft)">
+        Élèves actifs hors offre Découverte : <strong className="text-(--color-ink)">{u.base}</strong>. « Utilisée » compte les élèves ayant réellement une activité dans la rubrique ; « ouverte » compte les ouvertures enregistrées par le menu depuis le 05/10/2026. Lecture seule : les conseils du jour des élèves se calculent automatiquement, sans réglage.
+      </p>
+      <div className="overflow-x-auto rounded-2xl border border-(--color-border)">
+        <table className="w-full min-w-[860px] text-sm">
+          <thead className="bg-(--color-surface-soft) text-left text-xs text-(--color-ink-muted)">
+            <tr>
+              <th className="px-3 py-2">Rubrique</th>
+              <th className="px-3 py-2">Utilisée (total)</th>
+              <th className="px-3 py-2 text-right">30 j</th>
+              <th className="px-3 py-2 text-right">7 j</th>
+              <th className="px-3 py-2 text-right">Ouverte (total)</th>
+              <th className="px-3 py-2 text-right">Ouverte 7 j</th>
+              <th className="px-3 py-2">Activité comptée</th>
+            </tr>
+          </thead>
+          <tbody>
+            {FAMILLES.flatMap((f) => ORDRE_MENU[f.cle].map((cle, i) => {
+              const a = ACTIVITE_DE[cle];
+              const act = a ? u.activite.get(a.cle) : undefined;
+              const ouv = u.ouverture.get(cle);
+              return (
+                <tr key={cle} className={cn('border-t border-(--color-border)', i === 0 && 'border-t-2')}>
+                  <td className="px-3 py-2">
+                    {i === 0 && <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-(--color-ink-muted)">{f.titre}</span>}
+                    <span className="font-medium text-(--color-ink)">{RUBRIQUES[cle].label}</span>
+                  </td>
+                  <td className="px-3 py-2">
+                    {a ? (
+                      <span className="flex items-center gap-2">
+                        <span className="w-24 shrink-0 tabular-nums"><strong>{act?.total ?? 0}</strong> <span className="text-xs text-(--color-ink-muted)">({pct(act?.total ?? 0)} %)</span></span>
+                        <span className="h-1.5 w-28 overflow-hidden rounded-full bg-(--color-sand-200)"><span className="block h-full rounded-full bg-(--color-primary)" style={{ width: `${pct(act?.total ?? 0)}%` }} /></span>
+                      </span>
+                    ) : <span className="text-xs text-(--color-ink-muted)">—</span>}
+                  </td>
+                  <td className="px-3 py-2 text-right tabular-nums">{a ? act?.j30 ?? 0 : '—'}</td>
+                  <td className="px-3 py-2 text-right tabular-nums">{a ? act?.j7 ?? 0 : '—'}</td>
+                  <td className="px-3 py-2 text-right tabular-nums">{ouv?.total ?? 0}</td>
+                  <td className="px-3 py-2 text-right tabular-nums">{ouv?.j7 ?? 0}</td>
+                  <td className="px-3 py-2 text-xs text-(--color-ink-muted)">{a?.source ?? 'ouvertures seulement'}</td>
+                </tr>
+              );
+            }))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

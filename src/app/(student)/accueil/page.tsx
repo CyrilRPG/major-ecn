@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permissions';
+import { parseScope, canAccessCollege, canAccessCours, hasMedecineGeneraleAccess } from '@/lib/auth/permissions';
 import { AnnouncementsWidget } from '@/components/student/announcements-widget';
 import { Planning30Jours, Planning30JoursSkeleton } from '@/components/student/planning-30-jours';
 import { NouveauxContenusBanner } from '@/components/espace-decouverte/nouveaux-contenus-modal';
@@ -30,6 +30,9 @@ import { activiteQuotidienne, secondesSemaine } from './donnees';
 import { SectionTitle, StudentHero, StudentPage, heroCta } from '@/components/student/ui/page-kit';
 import { BienDemarrer } from '@/components/student/guide/bien-demarrer';
 import { chargerPriseEnMain } from '@/lib/student/prise-en-main';
+import { chargerConseil } from '@/lib/student/conseil';
+import { ConseilDuJour } from '@/components/student/guide/conseil-du-jour';
+import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { CHECKUP_STUDENT_ENABLED, PLAN_STUDENT_ENABLED } from '@/lib/modules-flags';
 import { planAvailableFor } from '@/lib/plan/service';
 
@@ -112,7 +115,14 @@ export default async function AccueilPage() {
 
       {profile.role === 'student' && !isDecouverte && (
         <Suspense fallback={null}>
-          <PriseEnMainAccueil userId={user.id} tutorielVu={!!(profile as { tutoriel_video_vu_at?: string | null }).tutoriel_video_vu_at} permissionScope={profile.permission_scope} engine={engine} checkup={moteurOuvert(profile, CHECKUP_STUDENT_ENABLED)} />
+          <GuideAccueil
+            userId={user.id}
+            tutorielVu={!!(profile as { tutoriel_video_vu_at?: string | null }).tutoriel_video_vu_at}
+            promotion={(profile as { promotion?: string | null }).promotion ?? null}
+            permissionScope={profile.permission_scope}
+            engine={engine}
+            checkup={moteurOuvert(profile, CHECKUP_STUDENT_ENABLED)}
+          />
         </Suspense>
       )}
 
@@ -154,13 +164,26 @@ export default async function AccueilPage() {
   );
 }
 
-/** Bande « Bien démarrer » : six étapes cochées d'après l'activité réelle (lib/student/prise-en-main). */
-async function PriseEnMainAccueil({ userId, tutorielVu, permissionScope, engine, checkup }: {
-  userId: string; tutorielVu: boolean; permissionScope: unknown; engine: boolean; checkup: boolean;
+/**
+ * Guide de l'accueil, sous l'en-tête : la bande « Bien démarrer » tant que la
+ * prise en main n'est pas terminée (ni masquée), puis « Le conseil du jour »,
+ * calculé automatiquement d'après l'activité de l'élève. Jamais les deux.
+ */
+async function GuideAccueil({ userId, tutorielVu, promotion, permissionScope, engine, checkup }: {
+  userId: string; tutorielVu: boolean; promotion: string | null; permissionScope: unknown; engine: boolean; checkup: boolean;
 }) {
-  const planning = PLAN_STUDENT_ENABLED && (await planAvailableFor(permissionScope).catch(() => false));
+  const [planning, parcours] = await Promise.all([
+    PLAN_STUDENT_ENABLED ? planAvailableFor(permissionScope).catch(() => false) : Promise.resolve(false),
+    fetchContentAccessForScope(parseScope(permissionScope))
+      .then((a) => a.parcoursMajor && hasMedecineGeneraleAccess(permissionScope)).catch(() => false),
+  ]);
   const p = await chargerPriseEnMain(userId, { tutorielVu, ouverts: { checkup, moteur: engine, planning } });
-  return p ? <BienDemarrer p={p} /> : null;
+  if (p) return <BienDemarrer p={p} />;
+  const conseil = await chargerConseil(userId, { permissionScope, promotion, engine, checkup, planning, parcours }).catch((e) => {
+    console.error('[guide] conseil du jour :', e instanceof Error ? e.message : e);
+    return null;
+  });
+  return conseil ? <ConseilDuJour conseil={conseil} /> : null;
 }
 
 /* ============================================================

@@ -156,3 +156,23 @@ export async function candidateAdminView(userId: string): Promise<CandidateAdmin
     history: (hist ?? []) as CandidateAdminView['history'],
   };
 }
+
+/* ─── Usage des rubriques élève (lecture seule) ─── */
+export type UsageLigne = { mesure: 'base' | 'activite' | 'ouverture'; rubrique: string; total: number; j30: number | null; j7: number | null };
+
+/**
+ * Usage des rubriques par les élèves actifs (hors Découverte) : activité réelle
+ * et ouvertures mesurées par le menu — RPC `admin_usage_rubriques` (agrégats en
+ * base, clé de service seulement).
+ */
+export async function usageRubriques(): Promise<{ base: number; activite: Map<string, UsageLigne>; ouverture: Map<string, UsageLigne> }> {
+  const { data, error } = await moteurDb().rpc('admin_usage_rubriques');
+  if (error) throw new Error(error.message);
+  const rows = ((data ?? []) as { mesure: UsageLigne['mesure']; rubrique: string; total: number | string; j30: number | string | null; j7: number | string | null }[])
+    .map((r) => ({ mesure: r.mesure, rubrique: r.rubrique, total: Number(r.total), j30: r.j30 === null ? null : Number(r.j30), j7: r.j7 === null ? null : Number(r.j7) }));
+  return {
+    base: rows.find((r) => r.mesure === 'base')?.total ?? 0,
+    activite: new Map(rows.filter((r) => r.mesure === 'activite').map((r) => [r.rubrique, r])),
+    ouverture: new Map(rows.filter((r) => r.mesure === 'ouverture').map((r) => [r.rubrique, r])),
+  };
+}

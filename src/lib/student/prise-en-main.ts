@@ -9,7 +9,7 @@ import { priseEnMain, type Ouverts, type PriseEnMain } from './prise-en-main-cor
  */
 export async function chargerPriseEnMain(
   userId: string,
-  opts: { tutorielVu: boolean; ouverts: Ouverts },
+  opts: { tutorielVu: boolean; ouverts: Ouverts; /** Mode d'emploi : l'état complet, même masquée ou terminée. */ toujours?: boolean },
 ): Promise<PriseEnMain | null> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- tables hors types générés
   const db = createAdminClient() as any;
@@ -32,10 +32,10 @@ export async function chargerPriseEnMain(
     une(db.from('transversal_sessions').select('id').eq('user_id', userId).not('completed_at', 'is', null).limit(1)),
   ]);
 
-  if (reperes.has('bien-demarrer:masque')) return null;
+  if (reperes.has('bien-demarrer:masque') && !opts.toujours) return null;
   const p = priseEnMain(
     { tutoriel: opts.tutorielVu, checkup, priorites: reperes.has('vu:priorites'), planning, ciblee, transversale },
     opts.ouverts,
   );
-  return p.terminee ? null : p;
+  return p.terminee && !opts.toujours ? null : p;
 }

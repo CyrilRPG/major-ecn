@@ -62,6 +62,13 @@ export function AideRubrique({ cle }: { cle: RubriqueCle }) {
             </p>
           </div>
 
+          {cle !== 'mode-emploi' && (
+            <Link href="/mode-emploi" className="flex items-center justify-between gap-3 rounded-xl bg-(--color-surface-soft) px-3.5 py-2.5 text-[13px] font-semibold text-[#14254E] transition-colors hover:bg-[#FDF4F5] focus-ring">
+              <span className="flex items-center gap-2"><Compass className="h-4 w-4 text-[#8B0E22]" aria-hidden /> Mode d’emploi complet de la plateforme</span>
+              <ArrowRight className="h-4 w-4 text-(--color-ink-muted)" aria-hidden />
+            </Link>
+          )}
+
           {r.vers.length > 0 && (
             <div className="flex flex-wrap gap-2 border-t border-(--color-border) pt-4">
               {r.vers.map((v) => {

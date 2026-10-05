@@ -1,5 +1,5 @@
 import {
-  CalendarCheck, CalendarDays, CalendarRange, ClipboardCheck, Gauge, Home, NotebookPen, PencilRuler, PenLine,
+  CalendarCheck, CalendarDays, CalendarRange, ClipboardCheck, Compass, Gauge, Home, NotebookPen, PencilRuler, PenLine,
   RefreshCcw, Star, Target, Trophy, type LucideIcon,
 } from 'lucide-react';
 
@@ -14,7 +14,7 @@ import {
 export type RubriqueCle =
   | 'accueil' | 'planning' | 'priorites' | 'checkup'
   | 'entrainement' | 'transversales' | 'epreuves' | 'parcours'
-  | 'agenda' | 'rendez-vous' | 'notes' | 'revoir' | 'mes-entrainements';
+  | 'agenda' | 'rendez-vous' | 'notes' | 'revoir' | 'mes-entrainements' | 'mode-emploi';
 
 export type Famille = 'piloter' | 'entrainer' | 'outils';
 
@@ -132,13 +132,20 @@ export const RUBRIQUES: Record<RubriqueCle, Rubrique> = {
     lien: 'Créez-les depuis un item (Flashcards ou Dossiers progressifs & QI) ; les meilleurs peuvent rejoindre la base commune.',
     vers: [],
   },
+  'mode-emploi': {
+    cle: 'mode-emploi', href: '/mode-emploi', label: 'Mode d’emploi', famille: 'outils', Icon: Compass,
+    role: 'Comment fonctionne Major ECN : la boucle pédagogique, votre journée type et chaque rubrique expliquée.',
+    quand: 'Au démarrage, puis dès que vous vous demandez à quoi sert une page.',
+    lien: 'Il relie toutes les rubriques entre elles : chaque résultat met à jour vos priorités, qui réorganisent votre planning.',
+    vers: ['accueil', 'checkup', 'priorites'],
+  },
 };
 
 /** Ordre d'affichage dans le menu, par famille. */
 export const ORDRE_MENU: Record<Famille, RubriqueCle[]> = {
   piloter: ['accueil', 'planning', 'priorites', 'checkup'],
   entrainer: ['entrainement', 'transversales', 'epreuves', 'parcours'],
-  outils: ['agenda', 'rendez-vous', 'notes', 'revoir', 'mes-entrainements'],
+  outils: ['agenda', 'rendez-vous', 'notes', 'revoir', 'mes-entrainements', 'mode-emploi'],
 };
 
 /** Étapes de la boucle pédagogique (aide « ? ») et rubriques qui les portent. */
