@@ -22,8 +22,10 @@ import { SignaturePad } from './signature-pad';
 import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 import {
   ATTENDANCE_THRESHOLD,
+  EMARGEMENT_SIGNE_EVENT,
   VIDEO_PAUSE_EVENT,
   VIDEO_PROGRESS_EVENT,
+  type EmargementSigneDetail,
   type VideoProgressDetail,
 } from '@/lib/emargement';
 
@@ -132,6 +134,20 @@ export function EmargementGate({
     window.addEventListener(VIDEO_PROGRESS_EVENT, onProgress);
     return () => window.removeEventListener(VIDEO_PROGRESS_EVENT, onProgress);
   }, [coursId, kind, signed, pauseVideo]);
+
+  // Feuille signée depuis la fenêtre des émargements en attente (layout) :
+  // la barrière de ce cours n'a plus lieu d'être.
+  useEffect(() => {
+    function onSigne(e: Event) {
+      const d = (e as CustomEvent<EmargementSigneDetail>).detail;
+      if (!d || d.coursId !== coursId || d.kind !== kind) return;
+      garderSignature(coursId, kind, null);
+      setSigned(true);
+      setBlocked(false);
+    }
+    window.addEventListener(EMARGEMENT_SIGNE_EVENT, onSigne);
+    return () => window.removeEventListener(EMARGEMENT_SIGNE_EVENT, onSigne);
+  }, [coursId, kind]);
 
   // Tant que la barrière est levée, la vidéo reste en pause et la page ne
   // défile pas derrière la modale.

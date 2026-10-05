@@ -21,3 +21,12 @@ export type VideoProgressDetail = {
   ratio: number;
   seconds: number;
 };
+
+/** Émis quand une feuille est signée hors du lecteur (fenêtre des émargements
+ *  en attente) : la barrière du lecteur de ce cours se lève aussitôt. */
+export const EMARGEMENT_SIGNE_EVENT = 'mecn:emargement-signe';
+
+export type EmargementSigneDetail = {
+  coursId: string;
+  kind: 'video' | 'seance';
+};

@@ -10,6 +10,7 @@ import { TutorielVideo } from '@/components/student/tutoriel-video';
 import { videoTutoriel } from '@/lib/student/tutoriel-video';
 import { bunnyEmbedUrl } from '@/lib/bunny';
 import { ProfileCompletionGate } from '@/components/student/profile-completion-gate';
+import { EmargementsEnAttente, type FeuilleEnAttente } from '@/components/student/emargements-en-attente';
 import { getNavigatorTree } from '@/lib/data/navigator';
 import { hasMedecineGeneraleAccess, parseScope } from '@/lib/auth/permissions';
 import { PLAN_STUDENT_ENABLED } from '@/lib/modules-flags';
@@ -104,6 +105,39 @@ export default async function StudentLayout({ children }: { children: React.Reac
       })
     : Promise.resolve(null);
   interrogationPromise.catch?.(() => null);
+
+  // Émargements dus : toute vidéo visionnée (seuil franchi) sans feuille signée.
+  // Une signature par vidéo est exigée à l'ouverture de la plateforme, quelle
+  // que soit la page (fenêtre non fermable, cf. EmargementsEnAttente). Jamais
+  // pour un administrateur connecté « en tant que » : il ne signe pas à la
+  // place de l'élève.
+  const feuillesDuesPromise: Promise<FeuilleEnAttente[]> = profile.role === 'student' && !isImpersonating
+    ? (async () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data } = await (supabase as any)
+          .from('course_attendances')
+          .select('cours_id, kind, cours_titre, matiere_id, required_at')
+          .eq('user_id', user.id)
+          .is('signed_at', null)
+          .order('required_at', { ascending: true });
+        const lignes = (data ?? []) as {
+          cours_id: string; kind: string | null; cours_titre: string | null; matiere_id: string | null;
+        }[];
+        if (lignes.length === 0) return [];
+        const ids = Array.from(new Set(lignes.map((l) => l.matiere_id).filter((m): m is string => !!m)));
+        const { data: mats } = ids.length
+          ? await supabase.from('matieres').select('id, nom').in('id', ids)
+          : { data: [] as { id: string; nom: string }[] };
+        const noms = new Map(((mats ?? []) as { id: string; nom: string }[]).map((m) => [m.id, m.nom]));
+        return lignes.map((l) => ({
+          coursId: l.cours_id,
+          kind: l.kind === 'seance' ? 'seance' as const : 'video' as const,
+          coursTitre: l.cours_titre ?? 'Cours',
+          college: l.matiere_id ? noms.get(l.matiere_id) ?? null : null,
+        }));
+      })()
+    : Promise.resolve([]);
+  feuillesDuesPromise.catch?.(() => []);
 
   // Arbre de navigation et données du bandeau chargés EN PARALLÈLE : on
   // n'attend plus la fin de l'arbre avant de lancer les requêtes de
@@ -306,6 +340,10 @@ export default async function StudentLayout({ children }: { children: React.Reac
   });
   const tutorielEmbed = tutoriel ? bunnyEmbedUrl(tutoriel.videoId) : null;
 
+  const feuillesDues = await feuillesDuesPromise.catch(() => [] as FeuilleEnAttente[]);
+  const studentName = `${(profile as { first_name?: string | null }).first_name ?? ''} ${(profile as { last_name?: string | null }).last_name ?? ''}`.trim()
+    || (user.email ?? '');
+
   // Vue partagée (iframe du panneau, cf. middleware `x-embed`) : le contenu
   // seul. Ni menu, ni barre, ni popups, ni tutoriel — l'élève a déjà tout cela
   // dans la fenêtre principale. Les gardes ci-dessus (formulaire obligatoire,
@@ -356,6 +394,9 @@ export default async function StudentLayout({ children }: { children: React.Reac
           initialPhone={(profile as { phone?: string | null }).phone ?? null}
           impersonating={isImpersonating}
         />
+      )}
+      {feuillesDues.length > 0 && (
+        <EmargementsEnAttente feuilles={feuillesDues} studentName={studentName} />
       )}
       {profile.role === 'student' && <ConseilsCenter welcome={welcome} />}
       {/* Accueil = UNE fenêtre : le tutoriel vidéo du profil, avec sous la vidéo
