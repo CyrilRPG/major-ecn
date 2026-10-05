@@ -1,55 +1,33 @@
 import Link from 'next/link';
-import { listColleges, listProfiles, listStudentsByIds, planDb } from '@/lib/plan/db';
-import { fetchAllRows } from '@/lib/supabase/fetch-all';
+import { candidatesList } from '@/lib/plan/admin';
+import { PLANNER_STATUS_LABEL, type PlannerStatus } from '@/lib/plan/types';
 import { fmtDateShort, fmtDateTime } from '@/lib/suivi/format';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-/** Candidats ayant un planning : couverture, avancement, dernier recalcul. */
+/** Candidats ayant un planning : statut, mode prioritaire, réalisation sur 7 jours, dernier recalcul. */
 export default async function PlanCandidatsPage() {
-  const [profiles, colleges] = await Promise.all([listProfiles(), listColleges()]);
-  const onboarded = profiles.filter((p) => p.onboarding_done);
-  const students = new Map((await listStudentsByIds(onboarded.map((p) => p.user_id))).map((s) => [s.id, s]));
-  const nameOf = new Map(colleges.map((c) => [c.id, c.nom]));
-  type M = { user_id: string; status: string };
-  // Par tranches de 100 candidats (URL PostgREST bornée) — aucun candidat n'est laissé de côté.
-  const ids = onboarded.map((p) => p.user_id);
-  const mastery: M[] = [];
-  for (let i = 0; i < ids.length; i += 100) {
-    const chunk = ids.slice(i, i + 100);
-    mastery.push(...await fetchAllRows<M>((from, to) => planDb().from('plan_mastery').select('user_id, status').in('user_id', chunk).order('user_id').order('item_id').range(from, to)));
-  }
-  const stats = new Map<string, { total: number; covered: number }>();
-  for (const m of mastery) {
-    const s = stats.get(m.user_id) ?? { total: 0, covered: 0 };
-    s.total++; if (m.status === 'maitrise' || m.status === 'a_reactiver' || m.status === 'a_consolider') s.covered++;
-    stats.set(m.user_id, s);
-  }
+  const rows = await candidatesList();
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 lg:px-8">
       <header className="mb-6 border-b border-(--color-border) pb-5">
         <h1 className="text-xl font-semibold tracking-tight text-(--color-ink)">Candidats</h1>
-        <p className="mt-1 text-sm text-(--color-ink-soft)">{onboarded.length} candidat(s) avec un planning généré.</p>
+        <p className="mt-1 text-sm text-(--color-ink-soft)">{rows.length} candidat(s) avec un planning. La réalisation se mesure aux unités validées (questions soumises, cartes auto-évaluées), jamais au temps passé.</p>
       </header>
       <div className="overflow-x-auto rounded-(--radius-card) border border-(--color-border) bg-(--color-surface)">
         <Table>
-          <TableHeader><TableRow><TableHead>Candidat</TableHead><TableHead>Spécialité</TableHead><TableHead>Voie</TableHead><TableHead>Épreuves</TableHead><TableHead>Couverture</TableHead><TableHead>Dernier recalcul</TableHead><TableHead>Information acceptée</TableHead></TableRow></TableHeader>
+          <TableHeader><TableRow><TableHead>Candidat</TableHead><TableHead>Préparation</TableHead><TableHead>Épreuve</TableHead><TableHead>Statut</TableHead><TableHead>Réalisation 7 j</TableHead><TableHead>Dernier recalcul</TableHead></TableRow></TableHeader>
           <TableBody>
-            {onboarded.length === 0 && <TableRow><TableCell colSpan={7} className="text-sm text-(--color-ink-soft)">Aucun candidat n’a encore généré de planning.</TableCell></TableRow>}
-            {onboarded.map((p) => {
-              const s = students.get(p.user_id);
-              const st = stats.get(p.user_id);
-              return (
-                <TableRow key={p.user_id}>
-                  <TableCell><Link href={`/admin/planificateur/candidats/${p.user_id}`} className="font-medium text-(--color-ink) underline-offset-4 hover:underline">{[s?.first_name, s?.last_name].filter(Boolean).join(' ') || s?.email || p.user_id.slice(0, 8)}</Link><br /><span className="text-xs text-(--color-ink-muted)">{s?.email}</span></TableCell>
-                  <TableCell className="text-sm">{p.specialite_id ? nameOf.get(p.specialite_id) ?? p.specialite_id : '—'}</TableCell>
-                  <TableCell className="text-sm">{p.voie ?? '—'}</TableCell>
-                  <TableCell className="text-sm">{p.exam_date ? fmtDateShort(`${p.exam_date}T12:00:00Z`) : '—'}</TableCell>
-                  <TableCell className="text-sm tabular-nums">{st && st.total > 0 ? `${Math.round((st.covered / st.total) * 100)} % (${st.covered}/${st.total})` : '—'}</TableCell>
-                  <TableCell className="text-xs text-(--color-ink-soft)">{fmtDateTime(p.last_generated_at)} · v{p.plan_version}</TableCell>
-                  <TableCell className="text-xs text-(--color-ink-soft)">{fmtDateTime(p.consent_accepted_at)} (v{p.consent_version ?? '—'})</TableCell>
-                </TableRow>
-              );
-            })}
+            {rows.length === 0 && <TableRow><TableCell colSpan={6} className="text-sm text-(--color-ink-soft)">Aucun candidat n’a encore de planning.</TableCell></TableRow>}
+            {rows.map((r) => (
+              <TableRow key={r.userId}>
+                <TableCell><Link href={`/admin/planificateur/candidats/${r.userId}`} className="font-medium text-(--color-ink) underline-offset-4 hover:underline">{r.name}</Link><br /><span className="text-xs text-(--color-ink-muted)">{r.email}</span></TableCell>
+                <TableCell className="text-sm">{r.specialite ?? '—'}</TableCell>
+                <TableCell className="text-sm">{r.examDate ? fmtDateShort(`${r.examDate}T12:00:00Z`) : '—'}</TableCell>
+                <TableCell className="text-sm">{PLANNER_STATUS_LABEL[r.status as PlannerStatus] ?? r.status}{r.priorityMode ? ' · mode prioritaire' : ''}{!r.migrated ? ' · ancienne version' : ''}</TableCell>
+                <TableCell className="text-sm tabular-nums">{r.completion7 === null ? '—' : `${Math.round(r.completion7 * 100)} %`}</TableCell>
+                <TableCell className="text-xs text-(--color-ink-soft)">{fmtDateTime(r.lastGenerated)}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>

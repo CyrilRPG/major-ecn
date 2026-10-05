@@ -12,12 +12,12 @@ const STUDY_PREFIXES = [
   '/cours/',
   '/entrainement',
   '/revisions-transversales',
-  // Une épreuve blanche, un niveau du Parcours du Major, une évaluation du
+  // Une épreuve blanche, un niveau du Parcours du Major, une activité du
   // planificateur : les pages de détail seulement (les listes restent de la
   // navigation).
   '/epreuves-blanches/',
   '/parcours/',
-  '/planificateur/evaluation/',
+  '/planificateur/activite/',
   // Une passation d'EVC Check-up (et sa correction), pas l'écran de lancement.
   '/checkup/',
 ];

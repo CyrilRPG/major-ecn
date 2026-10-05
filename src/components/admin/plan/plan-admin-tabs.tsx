@@ -6,10 +6,12 @@ import { cn } from '@/lib/utils';
 
 const TABS: { href: string; label: string; exact?: boolean }[] = [
   { href: '/admin/planificateur', label: 'Vue d’ensemble', exact: true },
+  { href: '/admin/planificateur/structure', label: 'Préparations et structure' },
   { href: '/admin/planificateur/items', label: 'Matrice pédagogique' },
   { href: '/admin/planificateur/versions', label: 'Versions' },
+  { href: '/admin/planificateur/coachings', label: 'Coachings' },
   { href: '/admin/planificateur/candidats', label: 'Candidats' },
-  { href: '/admin/planificateur/reglages', label: 'Réglages du moteur' },
+  { href: '/admin/planificateur/reglages', label: 'Paramètres' },
 ];
 
 export function PlanAdminTabs() {

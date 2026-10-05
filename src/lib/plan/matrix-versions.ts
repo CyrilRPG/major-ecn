@@ -2,12 +2,14 @@ import 'server-only';
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { todayKey } from '@/lib/suivi/format';
 import {
-  collegeFamily, getActiveMatrixVersion, getConfig, getMatrixVersion, getProfile, listColleges, listCoursOfColleges, listCoursWithContent, listItems,
-  listMatrixVersions, listProfiles, planDb,
+  collegeFamily, getMatrixVersion, getParams, listColleges, listCoursOfColleges, listCoursWithContent, listDomains, listItems,
+  listMatrixVersions, listProfiles, planDb, syncStructure, upsertDomain,
 } from './db';
+import { invalidatePlannable } from './access';
+import { refreshPlan } from './engine';
 import { parseImportRows, parseVersionCode } from './import';
-import { regeneratePlan, syncMasteryFromPlatform } from './service';
-import type { MatrixVersion, PlanItem } from './types';
+import { hardPriorityStatus } from './matrix';
+import type { PlanItem } from './types';
 import {
   checkVersionNumber, normName, planMatrixChanges, summarizeChanges, type ChangeSummary, type MatrixChange, type PlannedChange, type VersionItemInput,
 } from './versions';
@@ -18,7 +20,7 @@ import {
  * passé.
  *  - Publier = enregistrer MIPIC_2026_V<n> avec sa date d'activation ; si la
  *    date est atteinte, la version s'applique aussitôt, sinon le balayage
- *    quotidien l'applique à sa date.
+ *    horaire l'applique à sa date.
  *  - Appliquer = mettre le référentiel à l'état de la version (statuts,
  *    coefficients, recouvrements), sans jamais supprimer un item ni toucher
  *    au travail des élèves ; puis recalculer le planning FUTUR de chaque élève
@@ -67,8 +69,8 @@ async function resolveVersion(input: PublishInput): Promise<{ ok: true; value: R
   if (versionError) return { ok: false, error: versionError };
   if (published.some((v) => v.status === 'programmee')) return { ok: false, error: 'Une version de cette matrice est déjà programmée : activez-la ou annulez-la d’abord.' };
 
-  const config = await getConfig();
-  const { items, issues, columns } = parseImportRows(input.rows, { defaultSpecialite: input.specialiteId, levels: config.levels });
+  const params = await getParams();
+  const { items, issues, columns } = parseImportRows(input.rows, { defaultSpecialite: input.specialiteId, levels: params.matrix.levels });
   if (items.length === 0) return { ok: false, error: issues[0]?.message ?? 'Aucune ligne exploitable.' };
   const family = colleges.filter((c) => collegeFamily(input.specialiteId, colleges).includes(c.id));
   const resolveSpe = (s: string): string | null => {
@@ -117,8 +119,29 @@ async function resolveVersion(input: PublishInput): Promise<{ ok: true; value: R
     if (has('origine')) fields.origine = it.origine;
     if (has('notes', 'niveau_attente')) fields.notes = it.notes;
     if (it.matrix) Object.assign(fields, it.matrix);
-    incoming.push({ specialite_id: spe, nom_item: it.nom_item, cours_id: coursId, statut, fields, recouvrements: it.recouvrements });
+    // Champs V4.1 (§3) : seulement les cases renseignées.
+    if (it.difficulte !== null) fields.difficulte = it.difficulte;
+    if (it.besoin_entrainement !== null) fields.besoin_entrainement = it.besoin_entrainement;
+    if (it.pertinence_2026 !== null) fields.pertinence_2026 = it.pertinence_2026;
+    if (it.notions_incontournables.length > 0) fields.notions_incontournables = it.notions_incontournables;
+    if (it.occurrence_details.length > 0) fields.occurrence_details = it.occurrence_details;
+    if (it.hard_priority !== null) fields.hard_priority = it.hard_priority;
+    if (it.display_order !== null) fields.display_order = it.display_order;
+    incoming.push({ specialite_id: spe, nom_item: it.nom_item, cours_id: coursId, statut, fields, recouvrements: it.recouvrements, domaine: it.domaine });
   }
+  // Domaines fournis par la matrice : un seul pour toute la préparation serait un niveau artificiel.
+  const domainLabels = new Set(incoming.map((r) => r.domaine).filter((d): d is string => !!d).map(normName));
+  if (domainLabels.size === 1) {
+    issues.push({ line: 0, message: 'Un seul domaine dans le fichier : référentiel traité comme plat, aucun domaine créé.' });
+    for (const r of incoming) r.domaine = null;
+  }
+  // hard_priority (§9.5) : au-delà de 10 % des items actifs de la version, publication refusée.
+  const activeRows = incoming.filter((r) => r.statut === 'active');
+  const hard = activeRows.filter((r) => (r.fields.hard_priority as boolean | undefined) ?? existingByKey.get(`${r.specialite_id}|${normName(r.nom_item)}`)?.hard_priority ?? false).length;
+  const hardStatus = hardPriorityStatus(activeRows.length, hard, params);
+  const hardPct = `${Math.round(hardStatus.share * 1000) / 10} %`;
+  if (hardStatus.blocked) return { ok: false, error: `Cette version placerait ${hard} items en hard_priority, soit ${hardPct} des items actifs (blocage au-delà de 10 %). Retirez des hard_priority du fichier ; une dérogation se pose item par item.` };
+  if (hardStatus.alert) issues.push({ line: 0, message: `${hard} items en hard_priority, soit ${hardPct} des items actifs (plafond recommandé : 5 %).` });
   const changes = planMatrixChanges(existing, incoming);
   return {
     ok: true,
@@ -160,7 +183,8 @@ export async function publishMatrixVersion(input: PublishInput, opts: { dryRun: 
  * (recalculé contre l'état ACTUEL de la base), instantané, archivage de la
  * version précédente, puis recalcul du planning futur des élèves concernés
  * dans la limite de `regenBudgetMs` — les autres sont recalculés à leur
- * prochaine visite (`ensurePlanFresh`) ou par le balayage quotidien.
+ * prochaine visite ou par le balayage horaire (`ensureFresh` compare la date
+ * d'activation de la version à leur dernière génération).
  */
 export async function activateMatrixVersion(versionId: string, opts: { now?: Date; regenBudgetMs?: number } = {}): Promise<
   { ok: true; summary: ChangeSummary; regenerated: number; remaining: number } | { ok: false; error: string }
@@ -181,6 +205,19 @@ export async function activateMatrixVersion(versionId: string, opts: { now?: Dat
     const family = collegeFamily(v.specialite_id, colleges);
     const existing = await listItems({ specialites: family });
     const incoming = (Array.isArray(v.payload) ? v.payload : []) as VersionItemInput[];
+    // Domaines de la matrice : reproduits tels quels (créés au besoin), jamais inventés.
+    const labels = Array.from(new Set(incoming.map((r) => r.domaine?.trim()).filter((d): d is string => !!d)));
+    if (new Set(labels.map(normName)).size >= 2) {
+      const current = await listDomains(v.specialite_id);
+      let next = current.reduce((m, d) => Math.max(m, d.order_index), 0);
+      const idOf = new Map<string, string>();
+      for (const l of labels) {
+        if (idOf.has(normName(l))) continue;
+        const found = current.find((d) => normName(d.label) === normName(l));
+        idOf.set(normName(l), found?.id ?? await upsertDomain({ specialite_id: v.specialite_id, label: l, order_index: ++next, active: true }));
+      }
+      for (const r of incoming) if (r.domaine && idOf.has(normName(r.domaine))) r.fields = { ...r.fields, domain_id: idOf.get(normName(r.domaine)) };
+    }
     const changes = planMatrixChanges(existing, incoming);
     const byId = new Map(existing.map((i) => [i.id, i]));
     const snapshot: Record<string, unknown>[] = [];
@@ -204,6 +241,9 @@ export async function activateMatrixVersion(versionId: string, opts: { now?: Dat
       });
     }
     const overlaps = await applyOverlaps(incoming, family);
+    // Préparation, domaines réels et ordre d'affichage des nouveaux items.
+    await syncStructure();
+    invalidatePlannable();
     await db.from('plan_matrix_version_items').delete().eq('version_id', v.id);
     for (let i = 0; i < snapshot.length; i += 200) {
       const { error } = await db.from('plan_matrix_version_items').insert(snapshot.slice(i, i + 200));
@@ -266,8 +306,7 @@ async function regenerateSpecialty(specialiteId: string, budgetMs: number, now: 
   for (const p of profiles) {
     if (Date.now() - started > budgetMs) break;
     try {
-      await syncMasteryFromPlatform(p.user_id, { force: true, now });
-      await regeneratePlan(p.user_id, 'nouvelle_matrice', { now });
+      await refreshPlan(p.user_id, 'nouvelle_matrice', { now });
       regenerated++;
     } catch (e) {
       console.error('[plan] recalcul après nouvelle matrice :', p.user_id, e instanceof Error ? e.message : e);
@@ -276,7 +315,7 @@ async function regenerateSpecialty(specialiteId: string, budgetMs: number, now: 
   return { regenerated, remaining: profiles.length - regenerated };
 }
 
-/** Versions programmées dont la date est atteinte (balayage quotidien, visite d'un élève). */
+/** Versions programmées dont la date est atteinte (balayage horaire). */
 let dueCheckedAt = 0;
 export async function activateDueMatrixVersions(now: Date = new Date(), opts: { force?: boolean } = {}): Promise<string[]> {
   if (!opts.force && Date.now() - dueCheckedAt < 5 * 60_000) return [];
@@ -290,29 +329,6 @@ export async function activateDueMatrixVersions(now: Date = new Date(), opts: { 
     else console.error('[plan] activation de', v.code, ':', r.error);
   }
   return done;
-}
-
-/** Date d'activation de la version en vigueur, par spécialité (balayage quotidien). */
-export async function activationBySpecialty(): Promise<Map<string, string>> {
-  const out = new Map<string, string>();
-  for (const v of await listMatrixVersions()) if (v.status === 'active' && v.activated_at) out.set(v.specialite_id, v.activated_at);
-  return out;
-}
-
-/**
- * Planning calculé AVANT l'activation de la version en vigueur : il est
- * recalculé (futur seulement) avant d'être affiché. Rend true si recalculé.
- */
-export async function ensurePlanFresh(userId: string): Promise<boolean> {
-  await activateDueMatrixVersions().catch(() => []);
-  const profile = await getProfile(userId);
-  if (!profile?.onboarding_done || !profile.specialite_id || !profile.exam_date) return false;
-  const v: Pick<MatrixVersion, 'activated_at'> | null = await getActiveMatrixVersion(profile.specialite_id);
-  if (!v?.activated_at) return false;
-  if (profile.last_generated_at && Date.parse(profile.last_generated_at) >= Date.parse(v.activated_at)) return false;
-  await syncMasteryFromPlatform(userId, { force: true }).catch(() => 0);
-  await regeneratePlan(userId, 'nouvelle_matrice');
-  return true;
 }
 
 /** Annulation d'une version programmée (jamais d'une version appliquée : on publie une version suivante). */

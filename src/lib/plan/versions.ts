@@ -27,6 +27,8 @@ export type VersionItemInput = {
   fields: Record<string, unknown>;
   /** Recouvrements nommés (résolus à l'application). */
   recouvrements: { nom: string; part: number }[];
+  /** Domaine fourni par la matrice (libellé, résolu à l'application ; jamais inventé). */
+  domaine?: string | null;
 };
 
 export type PlannedChange = {
@@ -59,7 +61,7 @@ function canon(v: unknown): string {
 }
 
 /** Colonnes qui ne sont pas des coefficients (leur changement n'est pas une « modification »). */
-const NOT_COEFFICIENTS = new Set(['origine', 'notes']);
+const NOT_COEFFICIENTS = new Set(['origine', 'notes', 'display_order', 'domain_id', 'notions_incontournables', 'occurrence_details']);
 
 /**
  * Changements à appliquer pour passer du référentiel actuel de la spécialité

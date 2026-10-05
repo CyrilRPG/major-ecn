@@ -124,10 +124,10 @@ test('bandeau : des questions sans temps mesuré rendent le jour actif sans inve
 
 test('temps compté : pages de travail seulement, listes exclues', async () => {
   const { isStudyRoute } = await import('../src/lib/student/study-route');
-  for (const p of ['/cours/abc', '/entrainement/session', '/revisions-transversales/session', '/epreuves-blanches/42', '/parcours/3', '/planificateur/evaluation/9']) {
+  for (const p of ['/cours/abc', '/entrainement/session', '/revisions-transversales/session', '/epreuves-blanches/42', '/parcours/3', '/planificateur/activite/9']) {
     assert.equal(isStudyRoute(p), true, p);
   }
-  for (const p of ['/accueil', '/epreuves-blanches', '/parcours', '/planificateur', '/agenda', null]) {
+  for (const p of ['/accueil', '/epreuves-blanches', '/parcours', '/planificateur', '/planificateur/suivi', '/agenda', null]) {
     assert.equal(isStudyRoute(p), false, String(p));
   }
 });

@@ -27,9 +27,25 @@
  * La priorité /5 de chaque voie devient le score de voie /100 (× 20) ; la
  * charge en heures devient le temps de référence en minutes. Colonne
  * facultative « Recouvrements » : « Nom d'item (40 %) ; Autre item ».
+ *
+ * Champs V4.1 (§3), facultatifs dans tous les formats : Domaine | Ordre |
+ * Difficulté | Besoin d'entraînement | Pertinence 2026 | Notions
+ * incontournables (« a ; b ») | hard_priority (oui/non) | Occurrences
+ * détaillées (« 2019 DP 2 ; 2023 QCM »). Une colonne absente ou une case vide
+ * ne modifie jamais la valeur déjà réglée dans le back-office.
  */
-import { recenceFromYears } from './priority';
 import type { ItemStatut, MatrixCriteria, MatrixLevel } from './types';
+
+/** Récence d'apparition aux annales (1–5) déduite des années, quand le fichier ne la donne pas. */
+export function recenceFromYears(years: number[], currentYear: number): number {
+  if (years.length === 0) return 1;
+  const ago = currentYear - Math.max(...years);
+  if (ago <= 1) return 5;
+  if (ago === 2) return 4;
+  if (ago <= 4) return 3;
+  if (ago <= 6) return 2;
+  return 1;
+}
 
 export type ImportRow = {
   specialite: string;
@@ -53,6 +69,19 @@ export type ImportRow = {
   origine: string | null;
   /** Recouvrements déclarés : part des connaissances de l'item déjà couverte par un autre. */
   recouvrements: { nom: string; part: number }[];
+  /* Champs V4.1 (§3) — null / vide quand la case est vide : rien n'est écrasé. */
+  difficulte: number | null;
+  besoin_entrainement: number | null;
+  /** Pertinence 2026 (0–5), distincte de l'historique. */
+  pertinence_2026: number | null;
+  notions_incontournables: string[];
+  /** Garantie de planification (§9.5) : null = case vide, l'item garde son réglage. */
+  hard_priority: boolean | null;
+  /** Domaine du référentiel hiérarchique, par son libellé (jamais créé s'il n'existe pas). */
+  domaine: string | null;
+  display_order: number | null;
+  /** Historique détaillé : année, type et poids de chaque occurrence. */
+  occurrence_details: { annee: number; type: string | null; poids: number | null }[];
   /** Matrice maître (null pour un item hors matrice). */
   matrix: {
     /** Six critères (matrice MG) ou critères partiels (matrice versionnée : centralité seule). */
@@ -102,6 +131,15 @@ const ALIASES: Record<string, string> = {
   centralite_polyvalente_5: 'c_centralite_poly', centralite_polyvalente: 'c_centralite_poly',
   priorite_externe_5: 'prio5_externe', priorite_interne_qcm_5: 'prio5_interne', priorite_interne_5: 'prio5_interne',
   recouvrements: 'recouvrements', recouvrement: 'recouvrements', recouvre: 'recouvrements',
+  // Matrice V4.1 (§3)
+  difficulte: 'difficulte', difficulte_5: 'difficulte',
+  besoin_d_entrainement: 'besoin_entrainement', besoin_entrainement: 'besoin_entrainement', besoin_d_entrainement_5: 'besoin_entrainement',
+  pertinence_2026: 'pertinence_2026', pertinence_2026_5: 'pertinence_2026',
+  notions_incontournables: 'notions', notions_cles: 'notions', notions: 'notions',
+  hard_priority: 'hard_priority', priorite_garantie: 'hard_priority', priorite_absolue: 'hard_priority',
+  domaine: 'domaine', domain: 'domaine', sous_specialite: 'domaine', sous_domaine: 'domaine',
+  ordre: 'display_order', ordre_affichage: 'display_order', ordre_d_affichage: 'display_order', display_order: 'display_order',
+  occurrences_detaillees: 'occurrences_detail', detail_des_occurrences: 'occurrences_detail', occurrences_evc_detail: 'occurrences_detail', historique_detaille: 'occurrences_detail',
 };
 
 export function parseImportRows(rows: Record<string, unknown>[], opts: { defaultSpecialite?: string | null; currentYear?: number; levels?: { p1: number; p2: number; p3: number } } = {}): { items: ImportRow[]; issues: ImportIssue[]; columns: Set<string> } {
@@ -185,6 +223,14 @@ export function parseImportRows(rows: Record<string, unknown>[], opts: { default
       prerequis_indispensables: parseList(r.prerequis_indispensables), prerequis_recommandes: parseList(r.prerequis_recommandes),
       statut, origine: str(r.origine) || null, recouvrements: parseOverlaps(r.recouvrements),
       matrix,
+      difficulte: str(r.difficulte) === '' ? null : int(r.difficulte, 3, 1, 5, line, 'Difficulté', issues),
+      besoin_entrainement: str(r.besoin_entrainement) === '' ? null : int(r.besoin_entrainement, 3, 1, 5, line, 'Besoin d’entraînement', issues),
+      pertinence_2026: str(r.pertinence_2026) === '' ? null : decIn(r.pertinence_2026, 0, 5, line, 'Pertinence 2026', issues),
+      notions_incontournables: parseList(r.notions).slice(0, 40).map((n) => n.slice(0, 300)),
+      hard_priority: str(r.hard_priority) === '' ? null : parseBool(r.hard_priority, false),
+      domaine: str(r.domaine) || null,
+      display_order: str(r.display_order) === '' ? null : int(r.display_order, 0, 0, 100000, line, 'Ordre d’affichage', issues),
+      occurrence_details: parseOccurrences(r.occurrences_detail),
     });
   });
   return { items, issues, columns };
@@ -311,6 +357,35 @@ function dec(v: unknown): number | null {
   return Number.isFinite(n) && n >= 0 && n <= 100 ? Math.round(n * 100) / 100 : null;
 }
 
+/** Décimal borné (pertinence 0–5 : « 4,5 » reste 4,5) ; hors bornes ramené et signalé. */
+function decIn(v: unknown, min: number, max: number, line: number, field: string, issues: ImportIssue[]): number | null {
+  const s = str(v).replace(',', '.');
+  const n = Number(s);
+  if (!Number.isFinite(n)) { issues.push({ line, message: `${field} : « ${s} » n’est pas un nombre (ignoré)` }); return null; }
+  if (n < min || n > max) { issues.push({ line, message: `${field} : ${n} hors bornes ${min}–${max} (ramené)` }); return Math.max(min, Math.min(max, n)); }
+  return Math.round(n * 100) / 100;
+}
+
+/**
+ * Historique détaillé (§3) : « 2019 DP 2 ; 2023 QCM ; 2025 (QROC, 1,5) » →
+ * année, type et poids de chaque occurrence (séparateurs « ; », « | » ou
+ * retour à la ligne). Une entrée sans année lisible est ignorée.
+ */
+export function parseOccurrences(v: unknown): { annee: number; type: string | null; poids: number | null }[] {
+  const s = str(v);
+  if (!s) return [];
+  const out: { annee: number; type: string | null; poids: number | null }[] = [];
+  for (const part of s.split(/[;|\n]+/)) {
+    const m = /^\s*(\d{4})\b[\s:(\-–,/]*([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ .'’-]*?)?[\s:,/]*(\d+(?:[.,]\d+)?)?\s*\)?\s*$/.exec(part);
+    if (!m) continue;
+    const annee = Number(m[1]);
+    if (annee < 1990 || annee > 2100) continue;
+    const poids = m[3] ? Number(m[3].replace(',', '.')) : null;
+    out.push({ annee, type: m[2]?.trim() || null, poids: poids !== null && Number.isFinite(poids) && poids > 0 && poids <= 10 ? poids : null });
+  }
+  return out;
+}
+
 function str(v: unknown): string { return v === null || v === undefined ? '' : String(v).trim(); }
 function isUuid(s: string): boolean { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s); }
 function int(v: unknown, def: number, min: number, max: number, line: number, field: string, issues: ImportIssue[]): number {
@@ -341,7 +416,9 @@ function parseList(v: unknown): string[] {
 export const IMPORT_TEMPLATE_HEADERS = [
   'specialite_id', 'item_id', 'nom_item', 'cours_id', 'importance', 'volume', 'temps_reference', 'transversalite',
   'frequence_annales', 'annees_occurrence', 'recence', 'actif', 'priorite_forcee', 'prerequis_indispensables', 'prerequis_recommandes', 'notes',
+  'domaine', 'ordre', 'difficulte', 'besoin_entrainement', 'pertinence_2026', 'notions_incontournables', 'hard_priority', 'occurrences_detaillees',
 ];
 export const IMPORT_TEMPLATE_EXAMPLE = [
   'col-cardiologie', 'CARD-01', 'Insuffisance cardiaque', '', '5', '4', '', '4', '3', '2021;2023;2025', '', 'oui', '', 'Physiologie cardiaque', 'Électrocardiogramme', '',
+  'Cardiologie', '1', '3', '4', '5', 'Diagnostic clinique;Traitement de fond', 'non', '2021 DP 1;2023 QCM 1;2025 DP 2',
 ];

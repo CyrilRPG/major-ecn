@@ -2,7 +2,6 @@
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import Image from 'next/image';
-import { Source_Sans_3, Source_Serif_4 } from 'next/font/google';
 import {
   BookOpen, CalendarDays, ChartColumnIncreasing, ChevronRight, Clock, Hourglass, Lightbulb, List, Loader2, Settings, Trophy, X, Zap,
 } from 'lucide-react';
@@ -10,7 +9,10 @@ import { cn } from '@/lib/utils';
 import {
   DAY_DONE_CONTINUE, DAY_DONE_STOP, FIRST_PLAN_BUTTON, FIRST_PLAN_TEXT, FIRST_PLAN_TITLE, INSUFFICIENT_EDIT, INSUFFICIENT_KEEP,
 } from '@/lib/plan/types';
-import type { TimeFigures } from '@/lib/plan/figures';
+import { planSerif as serif } from './v4/fonts';
+
+/** Chiffres du message « temps de préparation limité ». */
+export type TimeFigures = { daysLeft: number; avgMinutesPerDay: number; daysPerWeek: number; plannableMinutes: number };
 
 /**
  * Pop-ups du planificateur, reproduits d'après les maquettes validées :
@@ -22,8 +24,6 @@ import type { TimeFigures } from '@/lib/plan/figures';
  * Les photos viennent des maquettes (public/planificateur/).
  */
 
-const serif = Source_Serif_4({ subsets: ['latin'], weight: ['600', '700'], display: 'swap' });
-const sans = Source_Sans_3({ subsets: ['latin'], weight: ['400', '600', '700'], display: 'swap' });
 
 const C = {
   bordeaux: '#6a0a22',
@@ -50,7 +50,7 @@ function Shell({ open, onOpenChange, children, className, label, dismissable = t
             onEscapeKeyDown={(e) => { if (!dismissable) e.preventDefault(); }}
             onPointerDownOutside={(e) => { if (!dismissable) e.preventDefault(); }}
             onInteractOutside={(e) => { if (!dismissable) e.preventDefault(); }}
-            className={cn(sans.className, 'relative max-h-[94dvh] w-full overflow-y-auto overflow-x-hidden rounded-[22px] shadow-[0_30px_80px_-20px_rgba(40,10,20,0.45)] outline-none', className)}
+            className={cn('relative max-h-[94dvh] w-full overflow-y-auto overflow-x-hidden rounded-[22px] shadow-[0_30px_80px_-20px_rgba(40,10,20,0.45)] outline-none', className)}
           >
             {children}
             {dismissable && <DialogPrimitive.Close
