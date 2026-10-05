@@ -96,6 +96,13 @@ async function rendrePdf(
 ): Promise<Uint8Array> {
   const page = await browser.newPage();
   try {
+    // Mesures (tableaux, titre, fiche éclair) à la largeur réelle de la zone
+    // imprimable, comme scripts/render-mg-fiche.mjs.
+    const mmToPx = (mm: number) => Math.round((mm * 96) / 25.4);
+    await page.setViewport({
+      width: mmToPx(210 - MARGIN_MM.left - MARGIN_MM.right),
+      height: mmToPx(297 - MARGIN_MM.top - MARGIN_MM.bottom),
+    });
     await page.setContent(html, { waitUntil: 'load' });
     await page.evaluate(
       () => (document as unknown as { fonts: { ready: Promise<unknown> } }).fonts.ready,
@@ -113,6 +120,56 @@ async function rendrePdf(
         if (h > avail) card.style.zoom = String(Math.max(0.5, avail / h));
       });
     }, [MARGIN_MM.top, MARGIN_MM.bottom]);
+    await page.evaluate(() => {
+      // Tableau plus large que la page : Chrome réduirait TOUTE la fiche à
+      // l'impression (couverture comprise). On le ramène à la largeur disponible.
+      document.querySelectorAll('table').forEach((tableau) => {
+        const parent = tableau.parentElement;
+        if (!parent || tableau.scrollWidth <= parent.clientWidth + 1) return;
+        tableau.style.tableLayout = 'fixed';
+        tableau.style.width = '100%';
+        tableau.style.overflowWrap = 'anywhere';
+        let taille = parseFloat(getComputedStyle(tableau).fontSize);
+        while (tableau.scrollWidth > parent.clientWidth + 1 && taille > 6) {
+          taille -= 0.5;
+          tableau.style.fontSize = `${taille}px`;
+        }
+      });
+      // Titre de couverture : un mot trop long pour sa colonne passerait sous le
+      // logo. On réduit le corps jusqu'à ce qu'il tienne (contrôle du 06/10/2026).
+      document.querySelectorAll('.cover-title').forEach((titre) => {
+        let taille = parseFloat(getComputedStyle(titre).fontSize);
+        while (titre.scrollWidth > titre.clientWidth + 1 && taille > 16) {
+          taille -= 1;
+          titre.style.fontSize = `${taille}px`;
+        }
+      });
+      // Page de garde trop haute (titre long + plan long) : la légende passerait
+      // sous la page. On resserre titre puis plan jusqu'à ce que tout tienne.
+      document.querySelectorAll('.cover-content').forEach((zone) => {
+        const titre = zone.querySelector('.cover-title');
+        const textes = [...zone.querySelectorAll('.cover-plan-text')];
+        const liens = [...zone.querySelectorAll('.cover-plan-link')];
+        // Le bas du dernier bloc (légende) doit rester au-dessus de la marge basse.
+        const deborde = () => {
+          const cadre = zone.getBoundingClientRect();
+          const marge = parseFloat(getComputedStyle(zone).paddingBottom);
+          const dernier = zone.lastElementChild;
+          return !!dernier && dernier.getBoundingClientRect().bottom > cadre.bottom - marge + 1;
+        };
+        for (let tour = 0; tour < 40 && deborde(); tour += 1) {
+          const tailleTitre = titre ? parseFloat(getComputedStyle(titre).fontSize) : 0;
+          if (titre && tailleTitre > 26) {
+            titre.style.fontSize = `${tailleTitre - 2}px`;
+            continue;
+          }
+          const tailleTexte = textes.length ? parseFloat(getComputedStyle(textes[0]).fontSize) : 0;
+          if (tailleTexte <= 11) break;
+          textes.forEach((t) => { t.style.fontSize = `${tailleTexte - 0.5}px`; });
+          liens.forEach((l) => { l.style.paddingTop = '1mm'; l.style.paddingBottom = '1mm'; });
+        }
+      });
+    });
     const out = await page.pdf({
       format: 'A4',
       printBackground: true,

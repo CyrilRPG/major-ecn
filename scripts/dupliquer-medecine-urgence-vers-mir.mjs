@@ -95,6 +95,14 @@ async function supprimer(table, ids, pas = 100) {
   }
 }
 
+// Depuis le 06/10/2026, Médecine d'urgence et Réanimation sont synchronisées
+// par la base (scripts/partager-urgence-reanimation.mjs) : ne plus recopier.
+{
+  const { data, error } = await db.from('cours_partages').select('cours_id').eq('qcm_seulement', true).limit(1);
+  if (error) throw new Error(`cours_partages : ${error.message}`);
+  if (data.length) throw new Error('Urgence et Réanimation sont synchronisées par la base (items partagés) : ce script ne doit plus être rejoué.');
+}
+
 // ── 1. Matières source : la racine + ses éventuels sous-collèges ────────────
 const COLONNES_MATIERE = 'id, nom, semestre_id, icon_key, color_hex, order_index, parent_matiere_id, min_offer, access_type';
 const { data: racineSource, error: eRacine } = await db.from('matieres').select(COLONNES_MATIERE).eq('id', SOURCE_MATIERE).maybeSingle();

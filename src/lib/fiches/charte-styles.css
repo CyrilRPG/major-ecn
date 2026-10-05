@@ -265,6 +265,11 @@ tr {
   right: 8mm;
   bottom: 0;
   padding: 30mm 24mm 24mm 26mm;
+  /* La légende suit le plan (margin-top: auto) au lieu d'être posée en bas de
+     page : un titre long ou un plan de 7 parties et plus ne peut plus passer
+     dessous (chevauchement constaté le 06/10/2026). */
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Identité du cours ── */
@@ -376,12 +381,32 @@ tr {
 
 /* ── Légende des marqueurs ── */
 .cover-legend {
-  position: absolute;
-  left: 26mm;
-  right: 24mm;
-  bottom: 24mm;
+  margin-top: auto;
+  flex-shrink: 0;
   padding-top: 6mm;
   border-top: 0.8pt solid var(--line);
+}
+.cover-plan {
+  margin-bottom: 8mm;
+}
+/* Plans longs : on resserre au lieu de déborder. */
+.cover-content:has(.cover-plan-item:nth-child(7)) .cover-plan {
+  margin-top: 9mm;
+}
+.cover-content:has(.cover-plan-item:nth-child(7)) .cover-plan-link {
+  padding: 2.3mm 1mm;
+}
+.cover-content:has(.cover-plan-item:nth-child(7)) .cover-plan-text {
+  font-size: 12.5pt;
+}
+.cover-content:has(.cover-plan-item:nth-child(9)) .cover-plan-link {
+  padding: 1.5mm 1mm;
+}
+.cover-content:has(.cover-plan-item:nth-child(9)) .cover-plan-num {
+  font-size: 12.5pt;
+}
+.cover-content:has(.cover-plan-item:nth-child(9)) .cover-plan-text {
+  font-size: 11.5pt;
 }
 .cover-legend-items {
   margin-top: 3mm;

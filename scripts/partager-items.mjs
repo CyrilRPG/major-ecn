@@ -38,7 +38,9 @@ const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABA
 });
 
 const NAMESPACE = 'c3f1a2d4-7b8e-4f90-a1b2-3c4d5e6f7a80';
-const URGENCE = { matiere: 'col-mir', couverture: 'Médecine d’urgence' };
+const URGENCE = { matiere: 'col-mir', couverture: 'Médecine d’urgence', qcmSeulement: false };
+/** Vendu en QCM seulement (voie interne imposée) : aucune série QROC répliquée. */
+const REANIMATION = { matiere: 'col-medecine-intensive-reanimation', couverture: 'Médecine Intensive-Réanimation', qcmSeulement: true };
 
 /**
  * [cours source, titre attendu de la source, titre dans le collège d'accueil,
@@ -56,6 +58,25 @@ const PARTAGES = [
   ['7d416042-6902-4d7e-b92c-4d86e78f7bb2', 'Convulsions, crises d’épilepsie, épilepsie', "Convulsions et crises fébriles de l'enfant", 'Pédiatrie', URGENCE],
   ['92450a94-bff9-414f-bcf3-6e6033cbb858', 'Diabète de type 1 et de type 2', "Diabète de l'enfant", 'Pédiatrie', URGENCE],
   ['76c7dbc8-8639-45cc-9053-91e775ae9ec3', 'Diarrhée aiguë', "Gastro-entérite aiguë de l'enfant", 'Pédiatrie', URGENCE],
+  // 06/10/2026 : les mêmes items, et les 7 items nouveaux de Médecine d'urgence,
+  // dans Médecine intensive et réanimation (copie de Médecine d'urgence).
+  ['ad025fd4-31ae-4820-9c51-5a1a82456eba', 'Bronchiolite aiguë du nourrisson', 'Bronchiolite aiguë du nourrisson', 'Pédiatrie', REANIMATION],
+  ['36c879ad-bbc1-4f39-98b9-908bb1cab7aa', 'Asthme', "Asthme de l'enfant", 'Pédiatrie', REANIMATION],
+  ['760d6aba-a8c4-4dd4-94e1-d766b75beb31', 'Mort inattendue du nourrisson', 'Mort inattendue du nourrisson', 'Pédiatrie', REANIMATION],
+  ['f07817fc-d2ff-4b41-a676-87d66f6aeaf2', 'Boiteries et infections ostéoarticulaires', "Boiteries et infections ostéoarticulaires de l'enfant", 'Pédiatrie', REANIMATION],
+  ['e7600508-72ec-4c3f-98ab-f95c0393b605', 'Douleurs abdominopelviennes', "Douleurs abdominales aiguës de l'enfant (invagination, appendicite, adénolymphite)", 'Pédiatrie', REANIMATION],
+  ['c19baab5-8262-4105-8567-e3c250b818f3', 'Éruptions fébriles', "Éruptions fébriles et viroses de l'enfant", 'Pédiatrie', REANIMATION],
+  ['ea56a82e-8508-4cb3-a462-c558ef334ef8', 'Fièvre aiguë', "Fièvre aiguë de l'enfant et du nourrisson", 'Pédiatrie', REANIMATION],
+  ['7d416042-6902-4d7e-b92c-4d86e78f7bb2', 'Convulsions, crises d’épilepsie, épilepsie', "Convulsions et crises fébriles de l'enfant", 'Pédiatrie', REANIMATION],
+  ['92450a94-bff9-414f-bcf3-6e6033cbb858', 'Diabète de type 1 et de type 2', "Diabète de l'enfant", 'Pédiatrie', REANIMATION],
+  ['76c7dbc8-8639-45cc-9053-91e775ae9ec3', 'Diarrhée aiguë', "Gastro-entérite aiguë de l'enfant", 'Pédiatrie', REANIMATION],
+  ['a460a7d8-bcff-5f55-b8f7-aded6a1c3127', "Accouchement inopiné extrahospitalier et menace d'accouchement prématuré", "Accouchement inopiné extrahospitalier et menace d'accouchement prématuré", 'Médecine d’urgence', REANIMATION],
+  ['d0fb3412-30d8-5c86-80c2-46871fb8803a', 'Réanimation du nouveau-né à terme et prématuré', 'Réanimation du nouveau-né à terme et prématuré', 'Médecine d’urgence', REANIMATION],
+  ['a3b45605-1f1b-5ddd-9ec9-6383b62b37ad', "Pathologies gynécologiques aux urgences : endométriose, GEU, torsion d'annexe, rapport non protégé, infections génitales", "Pathologies gynécologiques aux urgences : endométriose, GEU, torsion d'annexe, rapport non protégé, infections génitales", 'Médecine d’urgence', REANIMATION],
+  ['fc8b37ef-b566-545e-bd00-58710ad23c08', 'Drépanocytose : complications aiguës aux urgences', 'Drépanocytose : complications aiguës aux urgences', 'Médecine d’urgence', REANIMATION],
+  ['3f5438a0-8d52-5acc-87da-75e1b6a50083', 'Pathologies abdominales aiguës : appendicite, cholécystite, angiocholite, diverticulite', 'Pathologies abdominales aiguës : appendicite, cholécystite, angiocholite, diverticulite', 'Médecine d’urgence', REANIMATION],
+  ['278397cc-053c-5150-8a4f-db09db7ccd74', 'Ischémie mésentérique aiguë', 'Ischémie mésentérique aiguë', 'Médecine d’urgence', REANIMATION],
+  ['2b41aa7c-378d-53cd-b3c0-47dc5884c7e4', "Régulation médicale et organisation des soins d'urgence", "Régulation médicale et organisation des soins d'urgence", 'Médecine d’urgence', REANIMATION],
 ];
 
 function uuidv5(nom) {
@@ -110,6 +131,7 @@ for (const [sourceId, , titreJumeau, couvertureSource, accueil] of PARTAGES) {
     const n = await ok(db.rpc('partage_lier', {
       p_source: sourceId, p_miroir: jumeauId,
       p_libelle_source: couvertureSource, p_libelle_miroir: accueil.couverture, p_exclure_series: null,
+      p_qcm_seulement: accueil.qcmSeulement,
     }), `liaison ${titreJumeau}`);
     console.log(`    copié : ${JSON.stringify(n)}`);
     await rendreFichesJumeau(jumeauId, titreJumeau);
@@ -126,6 +148,8 @@ async function rendreFichesJumeau(coursId, titre) {
     const pdf = join(dossier, 'fiche.pdf');
     writeFileSync(corps, f.content_html, 'utf8');
     execFileSync('node', ['scripts/render-mg-fiche.mjs', coursId, corps, titre, '--no-publish', '--pdf', pdf], { stdio: 'inherit' });
+    // Contrôle bloquant de la page de garde (chevauchement plan / légende).
+    execFileSync('python', ['scripts/verifier-couverture-fiche.py', pdf], { stdio: 'inherit', env: { ...process.env, PYTHONIOENCODING: 'utf-8' } });
     const octets = readFileSync(pdf);
     const pages = (await PDFDocument.load(octets)).getPageCount();
     const chemin = `${coursId}/fiche-${f.id.slice(0, 8)}.pdf`;
