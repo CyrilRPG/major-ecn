@@ -122,8 +122,9 @@ export function ActiviteChart({ jours: donnees }: { jours: JourActivite[] | null
   useEffect(() => {
     if (actif === null) return;
     // Toucher hors du graphique : l'infobulle se ferme.
+    // composedPath : le point touché peut avoir quitté le DOM entre-temps.
     const fermer = (e: PointerEvent) => {
-      if (!zoneRef.current?.contains(e.target as Node)) setActif(null);
+      if (zoneRef.current && !e.composedPath().includes(zoneRef.current)) setActif(null);
     };
     document.addEventListener('pointerdown', fermer);
     return () => document.removeEventListener('pointerdown', fermer);
@@ -245,9 +246,7 @@ export function ActiviteChart({ jours: donnees }: { jours: JourActivite[] | null
             {n > 1 && (
               <polyline points={ligne} fill="none" stroke={ROUGE} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
             )}
-            {points.map((p, i) => (
-              i === actif ? null : <circle key={i} cx={p.x} cy={p.y} r={rayon} fill={ROUGE} />
-            ))}
+            {points.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r={rayon} fill={ROUGE} />)}
 
             {/* Jour survolé */}
             {pointActif && (
