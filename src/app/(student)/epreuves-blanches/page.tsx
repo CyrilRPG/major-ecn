@@ -6,7 +6,9 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { parseScope } from '@/lib/auth/permissions';
 import { isExamTargeted } from '@/lib/exams/targeting';
 import { examWindow, resultsVisible } from '@/lib/exams/window';
-import { IndexHeader } from '@/components/shell/index-view';
+import { PEDAGO_ENGINE_STUDENT_ENABLED } from '@/lib/modules-flags';
+import { moteurOuvert } from '@/lib/moteur/access';
+import { HeroLinks, HeroStat, StudentHero, StudentPage } from '@/components/student/ui/page-kit';
 
 export const metadata = { title: 'Épreuves blanches' };
 export const dynamic = 'force-dynamic';
@@ -51,18 +53,33 @@ export default async function StudentExamsPage() {
   const { data: colsRaw } = await (admin as any).from('matieres').select('id, nom');
   const collegeName = new Map<string, string>(((colsRaw ?? []) as { id: string; nom: string }[]).map((c) => [c.id, c.nom]));
 
+  const remises = accessible.filter((e) => {
+    const st = subByExam.get(e.id)?.status;
+    return st === 'graded' || st === 'submitted';
+  }).length;
+  // Interconnexion : les copies corrigées alimentent le profil pédagogique (moteur central).
+  const liens = moteurOuvert(profile, PEDAGO_ENGINE_STUDENT_ENABLED) ? [{ href: '/mes-priorites', label: 'Mes priorités' }] : [];
+
   return (
-    <div>
-      <IndexHeader
-        context="Entraînement"
+    <StudentPage>
+      <StudentHero
+        icon={PencilRuler}
+        eyebrow="Conditions réelles"
         title="Épreuves blanches"
-        meta={accessible.length > 0 ? `${accessible.length} disponible${accessible.length > 1 ? 's' : ''}` : undefined}
+        subtitle="Composez en temps limité, comme le jour de l’épreuve : vous mesurez votre niveau et votre gestion du temps."
+        stats={accessible.length > 0 ? (
+          <>
+            <HeroStat icon={PencilRuler} value={accessible.length} label={accessible.length > 1 ? 'disponibles' : 'disponible'} />
+            <HeroStat icon={CheckCircle2} value={remises} label={remises > 1 ? 'copies remises' : 'copie remise'} />
+          </>
+        ) : undefined}
+        links={<HeroLinks links={liens} />}
       />
-      <div className="px-6 py-6 lg:px-10">
+      <div>
         {accessible.length === 0 ? (
           <div className="mx-auto max-w-md rounded-2xl border border-dashed border-(--color-border) bg-(--color-surface) px-6 py-14 text-center">
             <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-(--color-primary-soft) text-(--color-primary)"><PencilRuler className="h-6 w-6" /></span>
-            <p className="mt-4 font-display text-lg font-semibold text-(--color-ink)">Aucune épreuve blanche pour le moment</p>
+            <p className="mt-4 font-(family-name:--font-jakarta) text-lg font-extrabold text-[#14254E]">Aucune épreuve blanche pour le moment</p>
             <p className="mt-2 text-sm text-(--color-ink-soft)">De nouvelles épreuves seront publiées ici par l’équipe pédagogique.</p>
           </div>
         ) : (
@@ -108,6 +125,6 @@ export default async function StudentExamsPage() {
           </ul>
         )}
       </div>
-    </div>
+    </StudentPage>
   );
 }

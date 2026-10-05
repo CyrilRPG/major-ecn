@@ -182,11 +182,11 @@ export function CheckupLauncher({ specialties, formats, defaultSpecialty }: { sp
               <p className="text-sm text-(--color-ink-soft)">dont <strong className="text-(--color-ink)">{showGauge.unseen}</strong> inédite{showGauge.unseen > 1 ? 's' : ''} pour vous</p>
             </div>
             <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-(--color-border)" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} aria-label="Disponibilité de la banque">
-              <div className={cn('h-full rounded-full transition-all', showGauge.ok ? 'bg-emerald-500' : 'bg-amber-500')} style={{ width: `${pct}%` }} />
+              <div className={cn('h-full rounded-full transition-all', showGauge.ok ? 'bg-green-500' : 'bg-amber-500')} style={{ width: `${pct}%` }} />
             </div>
             <p className="mt-1.5 text-xs text-(--color-ink-muted)">Questions déjà vues incluses dans le total ; les questions jamais vues sont tirées en priorité.</p>
             {showGauge.ok ? (
-              <p className="mt-2 flex items-start gap-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300"><CheckCircle2 className="mt-px h-3.5 w-3.5 shrink-0" /> Banque suffisante pour ce Check-up.</p>
+              <p className="mt-2 flex items-start gap-1.5 text-xs font-medium text-green-700 dark:text-green-300"><CheckCircle2 className="mt-px h-3.5 w-3.5 shrink-0" /> Banque suffisante pour ce Check-up.</p>
             ) : (
               <p className="mt-2 flex items-start gap-1.5 text-xs font-medium text-amber-800 dark:text-amber-200" role="alert"><AlertTriangle className="mt-px h-3.5 w-3.5 shrink-0" /> {showGauge.blockedText}</p>
             )}

@@ -29,6 +29,9 @@ export type PlanProfileLite = {
   planner_reactivated_at: string | null;
   low_adherence_choice_at: string | null;
   last_generated_at: string | null;
+  /** Conversion V4.1 du planning (une des « journées de démarrage »). */
+  v41_migrated_at?: string | null;
+  timezone?: string | null;
 };
 
 export type CandidateContext = {
@@ -60,7 +63,7 @@ export async function loadProfileRow(userId: string): Promise<ProfileRow | null>
 
 export async function loadPlanProfile(userId: string): Promise<PlanProfileLite | null> {
   const { data, error } = await moteurDb().from('plan_profiles')
-    .select('user_id, onboarding_done, specialite_id, exam_date, unavailable_days, availability_overrides, planner_status, pause_until, planner_activated_at, planner_paused_at, planner_reactivated_at, low_adherence_choice_at, last_generated_at')
+    .select('user_id, onboarding_done, specialite_id, exam_date, unavailable_days, availability_overrides, planner_status, pause_until, planner_activated_at, planner_paused_at, planner_reactivated_at, low_adherence_choice_at, last_generated_at, v41_migrated_at, timezone')
     .eq('user_id', userId).maybeSingle();
   if (error || !data) return null;
   const r = data as PlanProfileLite;

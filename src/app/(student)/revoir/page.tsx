@@ -1,6 +1,7 @@
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { IndexHeader } from '@/components/shell/index-view';
+import { Star } from 'lucide-react';
+import { HeroStat, StudentHero, StudentPage } from '@/components/student/ui/page-kit';
 import { SavedQuestionsList, type SavedQuestion } from '@/components/student/saved-questions-list';
 
 export const metadata = { title: 'Questions à revoir' };
@@ -62,16 +63,23 @@ export default async function RevoirPage() {
       };
     });
 
+  const colleges = new Set(questions.map((q) => q.college).filter(Boolean)).size;
+
   return (
-    <div>
-      <IndexHeader
-        context="Mes révisions"
+    <StudentPage>
+      <StudentHero
+        icon={Star}
+        eyebrow="Votre sélection"
         title="Questions à revoir"
-        meta={questions.length > 0 ? `${questions.length} question${questions.length > 1 ? 's' : ''}` : undefined}
+        subtitle="Les questions que vous avez mises de côté pendant vos entraînements, classées par collège : retravaillez-les au bon moment."
+        stats={questions.length > 0 ? (
+          <>
+            <HeroStat icon={Star} value={questions.length} label={questions.length > 1 ? 'questions' : 'question'} />
+            {colleges > 0 && <HeroStat value={colleges} label={colleges > 1 ? 'collèges' : 'collège'} />}
+          </>
+        ) : undefined}
       />
-      <div className="px-6 py-6 lg:px-10">
-        <SavedQuestionsList questions={questions} />
-      </div>
-    </div>
+      <SavedQuestionsList questions={questions} />
+    </StudentPage>
   );
 }

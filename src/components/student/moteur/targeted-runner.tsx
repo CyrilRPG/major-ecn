@@ -15,7 +15,7 @@ import { STATUS_LABEL, type MasteryStatus } from '@/lib/moteur/types';
 import { cn } from '@/lib/utils';
 
 const RESULT_UI = {
-  positive: { label: 'Correct', Icon: CheckCircle2, cls: 'text-emerald-700 dark:text-emerald-300' },
+  positive: { label: 'Correct', Icon: CheckCircle2, cls: 'text-green-700 dark:text-green-300' },
   partial: { label: 'Partiel', Icon: MinusCircle, cls: 'text-amber-700 dark:text-amber-300' },
   incorrect: { label: 'À revoir', Icon: XCircle, cls: 'text-red-700 dark:text-red-300' },
 } as const;
@@ -69,7 +69,7 @@ export function TargetedRunner({ token, questions }: { token: string; questions:
     const counts = Object.values(results).reduce((m, r) => ({ ...m, [r]: (m[r] ?? 0) + 1 }), {} as Record<string, number>);
     return (
       <section className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 shadow-(--shadow-soft) sm:p-6">
-        <CheckCircle2 className="h-8 w-8 text-emerald-600" />
+        <CheckCircle2 className="h-8 w-8 text-green-600" />
         <h2 className="mt-3 text-xl font-bold text-(--color-ink)">Révision terminée</h2>
         <p className="mt-1 text-sm text-(--color-ink-soft)">{counts.positive ?? 0} correcte{(counts.positive ?? 0) > 1 ? 's' : ''} · {counts.partial ?? 0} partielle{(counts.partial ?? 0) > 1 ? 's' : ''} · {counts.incorrect ?? 0} à revoir. Votre profil et votre programme sont mis à jour.</p>
         <ul className="mt-4 space-y-2">
@@ -124,8 +124,8 @@ export function TargetedRunner({ token, questions }: { token: string; questions:
             <textarea value={text} onChange={(e) => setText(e.target.value)} readOnly={!!qrocRevealed} rows={4} maxLength={5000} aria-label="Votre réponse"
               className="w-full rounded-xl border border-(--color-border) bg-(--color-surface) p-3 text-sm text-(--color-ink) focus-ring read-only:bg-(--color-surface-soft)" placeholder="Rédigez votre réponse…" />
             {qrocRevealed && (
-              <div className="rounded-xl border border-emerald-600/30 bg-emerald-50/50 p-3 dark:bg-emerald-900/10">
-                <p className="text-[11px] font-bold uppercase text-emerald-700 dark:text-emerald-300">Correction Major ECN</p>
+              <div className="rounded-xl border border-green-600/30 bg-green-50/50 p-3 dark:bg-green-900/10">
+                <p className="text-[11px] font-bold uppercase text-green-700 dark:text-green-300">Correction Major ECN</p>
                 {qrocRevealed.reponseAttendue && <p className="mt-1 text-sm font-semibold text-(--color-ink)">{reponseModele(qrocRevealed.reponseAttendue)}</p>}
                 {qrocRevealed.reponseAttendue && <VariantesAcceptees reponseAttendue={qrocRevealed.reponseAttendue} className="mt-0.5 text-xs text-(--color-ink-muted)" />}
                 {qrocRevealed.correction && <RichTextZoom><div className="mt-2 whitespace-pre-line text-sm text-(--color-ink-soft)"><RichText html={qrocRevealed.correction} /></div></RichTextZoom>}

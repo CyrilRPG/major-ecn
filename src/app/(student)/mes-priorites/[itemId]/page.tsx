@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const RESULT_UI = {
-  positive: { Icon: CheckCircle2, cls: 'text-emerald-700 dark:text-emerald-300', bg: 'bg-emerald-100 dark:bg-emerald-500/20' },
+  positive: { Icon: CheckCircle2, cls: 'text-green-700 dark:text-green-300', bg: 'bg-green-100 dark:bg-green-500/20' },
   partial: { Icon: MinusCircle, cls: 'text-amber-700 dark:text-amber-300', bg: 'bg-amber-100 dark:bg-amber-500/20' },
   incorrect: { Icon: XCircle, cls: 'text-red-700 dark:text-red-300', bg: 'bg-red-100 dark:bg-red-500/20' },
 } as const;

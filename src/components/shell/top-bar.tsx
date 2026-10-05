@@ -27,6 +27,11 @@ function contextLabel(pathname: string): string {
   if (pathname.startsWith('/checkup')) return 'EVC Check-up';
   if (pathname.startsWith('/revisions-transversales/ciblee')) return 'Révision ciblée';
   if (pathname.startsWith('/revisions-transversales')) return 'Révisions transversales';
+  if (pathname.startsWith('/parcours')) return 'Parcours du Major';
+  if (pathname.startsWith('/notes')) return 'Prises de notes';
+  if (pathname.startsWith('/revoir')) return 'Questions à revoir';
+  if (pathname.startsWith('/mes-entrainements')) return 'Mes entraînements';
+  if (pathname.startsWith('/epreuves-blanches')) return 'Épreuves blanches';
   return 'Mon espace';
 }
 

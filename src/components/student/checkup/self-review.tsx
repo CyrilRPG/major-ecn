@@ -24,7 +24,7 @@ export type ReviewItem = {
 };
 
 const GRADES = [
-  { id: 'correct' as const, label: 'Correcte', hint: '1 point', Icon: CheckCircle2, on: 'border-emerald-600 bg-emerald-600 text-white', off: 'border-emerald-600/40 text-emerald-700 dark:text-emerald-300' },
+  { id: 'correct' as const, label: 'Correcte', hint: '1 point', Icon: CheckCircle2, on: 'border-green-600 bg-green-600 text-white', off: 'border-green-600/40 text-green-700 dark:text-green-300' },
   { id: 'partial' as const, label: 'Partielle', hint: '0,5 point', Icon: MinusCircle, on: 'border-amber-500 bg-amber-500 text-white', off: 'border-amber-500/50 text-amber-700 dark:text-amber-300' },
   { id: 'incorrect' as const, label: 'Incorrecte', hint: '0 point', Icon: XCircle, on: 'border-red-600 bg-red-600 text-white', off: 'border-red-600/40 text-red-700 dark:text-red-300' },
 ];
@@ -73,7 +73,7 @@ export function SelfReview({ sessionId, items, emptyCount }: { sessionId: string
           return (
             <li key={it.position} className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
               <p className="flex items-center gap-2 text-xs font-semibold text-(--color-ink-muted)">
-                {g ? <CheckCircle2 className="h-4 w-4 text-emerald-600" /> : <CircleDashed className="h-4 w-4" />} Question {k + 1}{it.dossierLabel ? ` · ${it.dossierLabel}` : ''}
+                {g ? <CheckCircle2 className="h-4 w-4 text-green-600" /> : <CircleDashed className="h-4 w-4" />} Question {k + 1}{it.dossierLabel ? ` · ${it.dossierLabel}` : ''}
               </p>
               {it.vignette && <details className="mt-2 rounded-xl bg-(--color-surface-soft) p-3 text-sm"><summary className="cursor-pointer font-medium text-(--color-ink)">Énoncé du dossier</summary><RichTextZoom><div className="mt-2 whitespace-pre-line text-(--color-ink-soft)"><RichText html={it.vignette} /></div></RichTextZoom></details>}
               <RichTextZoom><p className="mt-2 whitespace-pre-line text-[15px] font-medium text-(--color-ink)"><RichText html={it.enonce} /></p></RichTextZoom>
@@ -83,8 +83,8 @@ export function SelfReview({ sessionId, items, emptyCount }: { sessionId: string
                   <p className="text-[11px] font-bold uppercase tracking-wide text-(--color-ink-muted)">Votre réponse (figée)</p>
                   <p className="mt-1 whitespace-pre-wrap text-sm text-(--color-ink)">{it.answer}</p>
                 </div>
-                <div className="rounded-xl border border-emerald-600/30 bg-emerald-50/50 p-3 dark:bg-emerald-900/10">
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">Correction Major ECN</p>
+                <div className="rounded-xl border border-green-600/30 bg-green-50/50 p-3 dark:bg-green-900/10">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-green-700 dark:text-green-300">Correction Major ECN</p>
                   {it.reponseAttendue && <p className="mt-1 text-sm font-semibold text-(--color-ink)">{reponseModele(it.reponseAttendue)}</p>}
                   {it.reponseAttendue && <VariantesAcceptees reponseAttendue={it.reponseAttendue} className="mt-0.5 text-xs text-(--color-ink-muted)" />}
                   {it.correction && <RichTextZoom><div className="mt-2 whitespace-pre-line text-sm text-(--color-ink-soft)"><RichText html={it.correction} /></div></RichTextZoom>}

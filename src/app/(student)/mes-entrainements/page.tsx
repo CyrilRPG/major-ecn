@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { ArrowRight, ClipboardCheck, Layers3, Sparkles } from 'lucide-react';
+import { ArrowRight, ClipboardCheck, Layers3, PenLine, Sparkles } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
-import { IndexHeader } from '@/components/shell/index-view';
+import { Callout, HeroStat, StudentHero, StudentPage } from '@/components/student/ui/page-kit';
 import { EmptyState } from '@/components/empty-state';
 import { estTableAbsente, MESSAGE_TABLE_ABSENTE, lireExercice } from '@/lib/student-exercises/regles';
 
@@ -40,18 +40,28 @@ export default async function MesEntrainementsPage() {
   }
   const lignes = [...parCours.entries()];
   const total = lignes.reduce((n, [, l]) => n + l.flashcards + l.qcm, 0);
+  const flashcards = lignes.reduce((n, [, l]) => n + l.flashcards, 0);
+  const qcm = lignes.reduce((n, [, l]) => n + l.qcm, 0);
 
   return (
-    <div>
-      <IndexHeader context="Mes révisions" title="Mes entraînements" meta={total > 0 ? `${total} exercice${total > 1 ? 's' : ''} sur ${lignes.length} item${lignes.length > 1 ? 's' : ''}` : undefined} />
-      <div className="px-6 py-6 lg:px-10">
-        <div className="mb-5 flex items-start gap-3 rounded-2xl border border-[#E9D8FD] bg-[#FAF5FF] px-4 py-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EDE9FE] text-[#6D28D9]"><Sparkles className="h-4.5 w-4.5" /></span>
-          <p className="text-sm text-(--color-ink-soft)">
-            Vos flashcards et QCM personnels, visibles de vous seul. Pour en créer, ouvrez un item puis <strong>Flashcards</strong> ou <strong>Dossiers progressifs &amp; QI</strong>.
-            L’équipe pédagogique peut proposer d’ajouter les meilleurs à la base commune.
-          </p>
-        </div>
+    <StudentPage>
+      <StudentHero
+        icon={PenLine}
+        eyebrow="Vos créations"
+        title="Mes entraînements"
+        subtitle="Vos flashcards et QCM personnels, visibles de vous seul. L’équipe pédagogique peut proposer d’ajouter les meilleurs à la base commune."
+        stats={total > 0 ? (
+          <>
+            <HeroStat icon={Layers3} value={flashcards} label={flashcards > 1 ? 'flashcards' : 'flashcard'} />
+            <HeroStat icon={ClipboardCheck} value={qcm} label="QCM" />
+            <HeroStat value={lignes.length} label={lignes.length > 1 ? 'items' : 'item'} />
+          </>
+        ) : undefined}
+      />
+      <div>
+        <Callout icon={Sparkles} title="Créer un entraînement" className="mb-5">
+          Ouvrez un item, puis <strong>Flashcards</strong> ou <strong>Dossiers progressifs &amp; QI</strong> : vos créations apparaissent ici, regroupées par item.
+        </Callout>
 
         {indisponible ? (
           <div className="rounded-2xl border border-(--color-border) bg-(--color-surface)">
@@ -82,6 +92,6 @@ export default async function MesEntrainementsPage() {
           </ul>
         )}
       </div>
-    </div>
+    </StudentPage>
   );
 }

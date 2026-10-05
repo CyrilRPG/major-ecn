@@ -22,7 +22,7 @@ const TONE: Record<AlertView['tone'], { box: string; chip: string; Icon: typeof 
   attention: { box: 'border-amber-300/70 bg-amber-50 dark:border-amber-500/40 dark:bg-amber-900/15', chip: 'bg-amber-200/70 text-amber-950 dark:bg-amber-500/25 dark:text-amber-100', Icon: Info },
   orange: { box: 'border-orange-300 bg-orange-50 dark:border-orange-500/40 dark:bg-orange-900/15', chip: 'bg-orange-200/80 text-orange-950 dark:bg-orange-500/25 dark:text-orange-100', Icon: AlertTriangle },
   important: { box: 'border-red-300 bg-red-50 dark:border-red-500/40 dark:bg-red-900/15', chip: 'bg-red-200/80 text-red-950 dark:bg-red-500/25 dark:text-red-100', Icon: AlertTriangle },
-  reprise: { box: 'border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-900/15', chip: 'bg-emerald-200/80 text-emerald-950 dark:bg-emerald-500/25 dark:text-emerald-100', Icon: CheckCircle2 },
+  reprise: { box: 'border-green-300 bg-green-50 dark:border-green-500/40 dark:bg-green-900/15', chip: 'bg-green-200/80 text-green-950 dark:bg-green-500/25 dark:text-green-100', Icon: CheckCircle2 },
 };
 
 function CtaLink({ href, label, primary = true }: { href: string; label: string; primary?: boolean }) {
@@ -142,7 +142,7 @@ export function PlannerAlert({ alert }: { alert: PlannerAlertView }) {
 
 export function RecoveredBanner({ text }: { text: string }) {
   return (
-    <p role="status" className="flex items-center gap-2 rounded-2xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-950 dark:border-emerald-500/40 dark:bg-emerald-900/15 dark:text-emerald-100">
+    <p role="status" className="flex items-center gap-2 rounded-2xl border border-green-300 bg-green-50 px-4 py-3 text-sm font-semibold text-green-950 dark:border-green-500/40 dark:bg-green-900/15 dark:text-green-100">
       <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden /> {text}
     </p>
   );

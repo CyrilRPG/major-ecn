@@ -29,12 +29,11 @@ export default async function PlanificateurLayout({ children }: { children: Reac
       </main>
     );
   }
-  const initials = `${(profile.first_name ?? '').trim().charAt(0)}${(profile.last_name ?? '').trim().charAt(0)}`.toUpperCase() || 'MA';
   const notices: Notice[] = (await listOpenNotifications(user.id, 6).catch(() => [])).map((n) => ({ id: n.id, title: n.title, body: n.body, href: n.cta_href, cta: n.cta_label }));
   return (
     <div className="plan-v4 min-h-full">
-      <div className="@container/plan mx-auto w-full max-w-[1538px] px-4 pb-12 pt-[14px] sm:px-[36px]">
-        <PlannerHeader initials={initials} notices={notices} />
+      <div className="@container/plan mx-auto w-full max-w-[1538px] px-4 pb-12 pt-5 sm:px-[36px] lg:pt-7">
+        <PlannerHeader notices={notices} />
         {children}
       </div>
     </div>

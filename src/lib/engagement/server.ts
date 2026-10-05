@@ -4,6 +4,8 @@ import { computeAdherence, type AdherenceResult, type AdherenceSession } from '.
 import type { ActivityDay, EngagementConfig } from './types';
 import { getEngagementConfig, moteurDb, notify } from '@/lib/moteur/server/db';
 import type { CandidateContext } from '@/lib/moteur/server/candidate';
+import { workDayOf } from '@/lib/plan/clock';
+import { DEFAULT_PARAMS } from '@/lib/plan/config';
 import { TEXTS } from './types';
 
 /**
@@ -178,6 +180,11 @@ export async function refreshEngagement(ctx: CandidateContext, input: { days: Ac
       else if (pausedFrom) { for (let d = pausedFrom; d <= h.created_at.slice(0, 10); d = addDays(d, 1)) excluded.add(d); pausedFrom = null; }
     }
     if (pausedFrom) for (let d = pausedFrom; d <= today; d = addDays(d, 1)) excluded.add(d);
+    // Journée de démarrage du planning (création, conversion V4.1, reprise ; « Alertes » §48-§49) : jamais
+    // comptée. Le planificateur en annule le non-commencé (START_DAY) à sa clôture de 04:00 ; si ce balayage
+    // passe avant, ses activités encore ouvertes ne doivent pas produire une alerte « journée incomplète ».
+    const debut = [plan.planner_activated_at, plan.planner_reactivated_at, plan.v41_migrated_at].filter((x): x is string => !!x).sort().at(-1);
+    if (debut && DEFAULT_PARAMS.day.start_day_grace) excluded.add(workDayOf(debut, plan.timezone || DEFAULT_PARAMS.day.default_timezone, DEFAULT_PARAMS.day.close_time));
     const { data: lastReconfig } = await db.from('plan_activity').select('created_at').eq('user_id', ctx.userId)
       .in('kind', ['onboarding', 'disponibilites', 'reactivation', 'reprise', 'adaptation', 'reconfiguration', 'indisponibilite']).order('created_at', { ascending: false }).limit(1).maybeSingle();
     const winFrom = addDays(today, -config.planner.low_adherence_days);

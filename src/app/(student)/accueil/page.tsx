@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import {
-  ArrowRight, ClipboardCheck, Clock, FileText, Layers3, Play, RefreshCcw, Target,
+  ArrowRight, ClipboardCheck, Clock, FileText, Home, Layers3, Play, RefreshCcw, Sunrise, Target,
   TrendingUp, Zap,
 } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
@@ -28,6 +28,7 @@ import { moteurOuvert } from '@/lib/moteur/access';
 import { todayFor } from '@/lib/moteur/server/today';
 import { STATUS_LABEL } from '@/lib/moteur/types';
 import { PedagoToday, PedagoTodaySkeleton } from './pedago-today';
+import { StudentHero, StudentPage, heroCta } from '@/components/student/ui/page-kit';
 
 export const metadata = { title: 'Accueil' };
 
@@ -67,63 +68,61 @@ export default async function AccueilPage() {
   // Moteur pédagogique central : programme du jour unique et alertes (hors offre Découverte).
   const engine = moteurOuvert(profile, PEDAGO_ENGINE_STUDENT_ENABLED) && !isDecouverte;
 
+  // Date du jour à Paris (le serveur est en UTC), en tête de l'accueil.
+  const dateDuJour = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Paris' });
+
   // Coque instantanée : l'en-tête + la structure s'affichent immédiatement,
   // le tableau de bord (1 RPC agrégé + arbre EDN) est streamé via <Suspense>.
   return (
-    <div className="mx-auto grid w-full max-w-[1640px] gap-4 px-3 py-4 sm:px-4 lg:px-6 xl:grid-cols-[minmax(0,1fr)_340px]">
-      {/* ============ COLONNE PRINCIPALE ============ */}
-      <div className="flex min-w-0 flex-col gap-4">
-        {/* ---- Bandeau de bienvenue (sans countdown) ---- */}
-        <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-black tracking-tight text-(--color-ink) sm:text-3xl">
-              Bonjour, {firstName} <span aria-hidden>👋</span>
-            </h1>
-            <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-(--color-ink-soft) sm:text-[15px]">
-              <span>Prêt(e) à avancer aujourd&rsquo;hui&nbsp;? Voici votre tableau de bord.</span>
-              {voieLabel && (
-                <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold ${scope.voie === 'interne' ? 'bg-[#DBEAFE] text-[#1E40AF]' : 'bg-[#FEF3C7] text-[#92400E]'}`}>
-                  {voieLabel}
-                </span>
-              )}
-            </p>
-          </div>
+    <StudentPage width="wide" className="gap-4 lg:gap-5">
+      {/* ---- En-tête de bienvenue (sans countdown) ---- */}
+      <StudentHero
+        icon={Home}
+        watermark={<Sunrise strokeWidth={1.2} />}
+        eyebrow={voieLabel ? <>Tableau de bord <span aria-hidden className="text-white/35">·</span> {voieLabel}</> : 'Tableau de bord'}
+        title={<>Bonjour, {firstName}</>}
+        subtitle={<><span className="font-semibold text-white/90">{dateDuJour.charAt(0).toUpperCase() + dateDuJour.slice(1)}</span> · Prêt(e) à avancer aujourd&rsquo;hui&nbsp;? Voici votre tableau de bord.</>}
+        actions={
           <DiscoveryGateLink
             href="/revisions-transversales"
             locked={isDecouverte}
-            className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white shadow-(--shadow-soft) transition-transform hover:scale-[1.02]"
-            style={{ background: 'linear-gradient(90deg,#E4002B 0%,#F97316 100%)' }}
+            className={heroCta}
             ariaLabel="Reprendre l'entraînement — Découverte verrouillé"
           >
-            <Play className="h-4 w-4" /> Reprendre l&rsquo;entraînement
+            <Play className="h-4 w-4" aria-hidden /> Reprendre l&rsquo;entraînement
           </DiscoveryGateLink>
-        </header>
+        }
+      />
 
-        {engine && (
-          <Suspense fallback={<PedagoTodaySkeleton />}>
-            <PedagoToday userId={user.id} />
+      <div className="grid w-full gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
+        {/* ============ COLONNE PRINCIPALE ============ */}
+        <div className="flex min-w-0 flex-col gap-4">
+          {engine && (
+            <Suspense fallback={<PedagoTodaySkeleton />}>
+              <PedagoToday userId={user.id} />
+            </Suspense>
+          )}
+
+          <Suspense fallback={<DashboardSkeleton />}>
+            <Dashboard userId={user.id} scope={scope} isDecouverte={isDecouverte} engine={engine} />
           </Suspense>
-        )}
+        </div>
 
-        <Suspense fallback={<DashboardSkeleton />}>
-          <Dashboard userId={user.id} scope={scope} isDecouverte={isDecouverte} engine={engine} />
-        </Suspense>
+        {/* ============ SIDEBAR DROITE ============ */}
+        <aside className="space-y-3">
+          {/* Planning « Mes 30 prochains jours » : séances en direct ciblées
+              (mêmes règles que /agenda) + évènements personnels. Streamé à part. */}
+          <Suspense fallback={<Planning30JoursSkeleton />}>
+            <Planning30Jours userId={user.id} scope={scope} />
+          </Suspense>
+          <Suspense fallback={<SidebarSkeleton />}>
+            <AnnouncementsWidget scope={scope} />
+          </Suspense>
+          {isDecouverte && <DiscoveryUpgradeCta />}
+          {isDecouverte && <NouveauxContenusBanner />}
+        </aside>
       </div>
-
-      {/* ============ SIDEBAR DROITE ============ */}
-      <aside className="space-y-3">
-        {/* Planning « Mes 30 prochains jours » : séances en direct ciblées
-            (mêmes règles que /agenda) + évènements personnels. Streamé à part. */}
-        <Suspense fallback={<Planning30JoursSkeleton />}>
-          <Planning30Jours userId={user.id} scope={scope} />
-        </Suspense>
-        <Suspense fallback={<SidebarSkeleton />}>
-          <AnnouncementsWidget scope={scope} />
-        </Suspense>
-        {isDecouverte && <DiscoveryUpgradeCta />}
-        {isDecouverte && <NouveauxContenusBanner />}
-      </aside>
-    </div>
+    </StudentPage>
   );
 }
 

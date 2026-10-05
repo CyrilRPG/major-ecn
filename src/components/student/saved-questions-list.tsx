@@ -95,7 +95,7 @@ export function SavedQuestionsList({ questions }: { questions: SavedQuestion[] }
               <Star className="h-7 w-7" />
             </div>
           </div>
-          <h3 className="mt-6 font-display text-xl font-bold text-(--color-ink)">Aucune question à revoir… pour l’instant</h3>
+          <h3 className="mt-6 font-(family-name:--font-jakarta) text-xl font-extrabold text-[#14254E]">Aucune question à revoir… pour l’instant</h3>
           <p className="mt-2.5 max-w-md text-sm leading-relaxed text-(--color-ink-soft)">
             Pendant un dossier, touchez l’<span className="inline-flex translate-y-0.5"><Star className="h-3.5 w-3.5 text-(--color-primary)" /></span> en haut à droite
             d’une question pour l’épingler ici. Vous retrouverez vos questions clés,

@@ -61,7 +61,7 @@ export function SettingsEditor({ module, title, leaves }: { module: SettingsModu
           <Button size="sm" onClick={save} disabled={pending || changed === 0}>{pending ? <Loader2 className="animate-spin" /> : <Save />} Enregistrer{changed > 0 ? ` (${changed})` : ''}</Button>
         </div>
       </div>
-      {msg && <p className={`mt-2 rounded-lg px-3 py-2 text-sm ${msg.ok ? 'bg-emerald-50 text-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-100' : 'bg-amber-50 text-amber-950 dark:bg-amber-900/20 dark:text-amber-100'}`} role="status">{msg.text}</p>}
+      {msg && <p className={`mt-2 rounded-lg px-3 py-2 text-sm ${msg.ok ? 'bg-green-50 text-green-900 dark:bg-green-900/20 dark:text-green-100' : 'bg-amber-50 text-amber-950 dark:bg-amber-900/20 dark:text-amber-100'}`} role="status">{msg.text}</p>}
       <div className="mt-3 space-y-4">
         {groups.map(([g, list]) => (
           <fieldset key={g || 'racine'} className="rounded-xl border border-(--color-border) p-3">

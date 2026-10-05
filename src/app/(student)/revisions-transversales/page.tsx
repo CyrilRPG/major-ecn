@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import {
   AlertTriangle, ArrowRight, BookOpen, Calendar, CheckCircle2, ClipboardList,
-  HelpCircle, History, Lightbulb, RefreshCcw, Sparkles, Target, TrendingUp,
+  History, Lightbulb, RefreshCcw, Sparkles, Target, TrendingUp,
 } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
@@ -12,6 +12,7 @@ import { sessionSizesFor, STATUS_META } from '@/lib/pedago/status';
 import { PEDAGO_ENGINE_STUDENT_ENABLED } from '@/lib/modules-flags';
 import { moteurOuvert } from '@/lib/moteur/access';
 import { PedagoDue } from './pedago-due';
+import { HeroLinks, StudentHero, StudentPage } from '@/components/student/ui/page-kit';
 
 export const metadata = { title: 'Révisions transversales' };
 
@@ -100,218 +101,214 @@ export default async function RevisionsTransversalesPage() {
     .map((sp) => sp.nom);
 
   return (
-    <div className="mx-auto grid w-full max-w-[1640px] gap-6 px-3 py-4 sm:px-4 lg:px-6 xl:grid-cols-[minmax(0,1fr)_320px]">
-      {/* ============ COLONNE PRINCIPALE ============ */}
-      <div className="flex min-w-0 flex-col gap-5">
-        <header className="flex items-start justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-(--color-ink)">Révisions transversales</h1>
-            <p className="mt-1 max-w-3xl text-sm leading-relaxed text-(--color-ink-soft)">
-              Entretenez vos acquis et consolidez durablement les spécialités déjà étudiées.
-              La révision transversale ne modifie pas le statut officiel des spécialités.
-            </p>
-          </div>
-          <Link href={engine ? '/mes-priorites' : '#priorites'} className="hidden shrink-0 items-center gap-1 text-xs font-semibold text-(--color-primary) hover:underline sm:inline-flex">
-            <HelpCircle className="h-3.5 w-3.5" />
-            Mes priorités
-          </Link>
-        </header>
+    <StudentPage width="wide">
+      <StudentHero
+        icon={RefreshCcw}
+        eyebrow="Entretenir vos acquis"
+        title="Révisions transversales"
+        subtitle="Entretenez vos acquis et consolidez durablement les spécialités déjà étudiées. La révision transversale ne modifie pas le statut officiel des spécialités."
+        links={<HeroLinks links={engine ? [{ href: '/mes-priorites', label: 'Mes priorités' }] : []} />}
+      />
 
-        {/* ============ Révisions dues selon le profil pédagogique (moteur central) ============ */}
-        {engine && (
-          <Suspense fallback={null}>
-            <PedagoDue userId={user.id} />
-          </Suspense>
-        )}
+      <div className="grid w-full gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+        {/* ============ COLONNE PRINCIPALE ============ */}
+        <div className="flex min-w-0 flex-col gap-5">
+          {/* ============ Révisions dues selon le profil pédagogique (moteur central) ============ */}
+          {engine && (
+            <Suspense fallback={null}>
+              <PedagoDue userId={user.id} />
+            </Suspense>
+          )}
 
-        {/* ============ KPI — Maintien des acquis (spec section 5) ============ */}
-        <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <KpiCard
-            Icon={Calendar}
-            iconBg="#F1E8FD" iconFg="#6D28D9"
-            label="Révisions transversales"
-            value={`${s.stats.revisions30d} / 30`}
-            hint="derniers jours"
-            bar={Math.min(100, (s.stats.revisions30d / 30) * 100)}
-            barColor={needsReevaluation ? '#A91D2C' : isWeekAlert || isAlert ? '#E8742C' : '#6D28D9'}
-            footer={
-              never ? <span className="text-(--color-ink-muted)">Commencez aujourd&apos;hui</span> :
-              needsReevaluation ? <span className="text-(--color-danger) font-bold">Régularité interrompue</span> :
-              isWeekAlert || isAlert ? <span className="text-[#B45B00] font-bold">À reprendre rapidement</span> :
-                              <span className="text-(--color-success) font-bold">Excellente régularité</span>
-            }
-          />
-          <KpiCard
-            Icon={History}
-            iconBg="#E7F6EC" iconFg="#16793C"
-            label="Dernière révision"
-            value={lastRevisionLabel(s.stats.lastRevision, days)}
-            hint={s.stats.lastRevision ? s.stats.lastRevision.toLocaleDateString('fr-FR') : '—'}
-            footer={
-              never ? <span className="text-(--color-ink-muted)">Votre révision du jour est disponible</span> :
-              needsReevaluation ? <span className="text-(--color-danger) font-bold">Seuil dépassé</span> :
-              isWeekAlert || isAlert ? <span className="text-[#B45B00] font-bold">Une reprise s&apos;impose</span> :
-              isUpToDate    ? <span className="text-(--color-success) font-bold">Parfait, continuez !</span> :
-              isYesterday   ? <span className="text-(--color-ink-soft)">Votre révision du jour est disponible</span> :
-                              <span className="text-(--color-ink-muted)">—</span>
-            }
-          />
-          <KpiCard
-            Icon={RefreshCcw}
-            iconBg="#EAF1FB" iconFg="#1E40AF"
-            label="Régularité en cours"
-            value={`${s.stats.currentStreak} jour${s.stats.currentStreak > 1 ? 's' : ''}`}
-            hint="consécutifs de révision"
-            footer={<span className="text-(--color-ink-muted) font-medium">{s.stats.totalRevisions} révision{s.stats.totalRevisions > 1 ? 's' : ''} au total</span>}
-          />
-          <KpiCard
-            Icon={TrendingUp}
-            iconBg="#F1E8FD" iconFg="#6D28D9"
-            label="Meilleure période"
-            value={`${s.stats.bestStreak} jour${s.stats.bestStreak > 1 ? 's' : ''}`}
-            hint="consécutifs"
-            footer={<span className="text-(--color-ink-muted) font-medium">Votre record</span>}
-          />
-        </section>
-
-        {/* ============ BANDEAU D'ÉTAT — spec section 5 ============ */}
-        {!hasSpecs ? null
-          : isBilanGlobal ? <BannerBilanGlobal days={days!} />
-          : isAbsenceProlongee ? <BannerAbsenceProlongee days={days!} />
-          : isInterrupted ? <BannerInterrupted days={days!} />
-          : isWeekAlert ? <BannerWeekAlert days={days!} hasIntensive={s.sessionSizes.intensive != null} />
-          : isAlert ? <BannerAlert days={days!} />
-          : isYesterday ? <BannerYesterday />
-          : isUpToDate ? <BannerUpToDate />
-          : null}
-
-        {/* ============ CARDS RÉVISION + TABLE SPÉCIALITÉS ============ */}
-        {!hasSpecs ? (
-          <EmptyState unit={s.unit} />
-        ) : needsReevaluation ? (
-          <section className="grid gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
-            <RevisionCard
-              kind={isBilanGlobal ? 'bilan_global' : isAbsenceProlongee ? 'reevaluation_deep' : 'reevaluation'}
-              tint="#FCEAEC" tintFg="#A91D2C"
-              title={isBilanGlobal ? 'Bilan global' : isAbsenceProlongee ? 'Réévaluation approfondie' : 'Réévaluation'}
-              count={isBilanGlobal ? 75 : isAbsenceProlongee ? 50 : 30}
-              estMin={isBilanGlobal ? 60 : isAbsenceProlongee ? 40 : 20}
-              cta={isBilanGlobal ? 'Lancer le bilan global' : isAbsenceProlongee ? 'Lancer la réévaluation approfondie' : 'Lancer la réévaluation'}
-              ctaTone="red"
-              unit={s.unit}
-              hint={isBilanGlobal
-                ? 'Pour faire le point sur votre niveau actuel'
-                : isAbsenceProlongee
-                ? 'Pour évaluer votre niveau après cette interruption'
-                : 'Pour vérifier le maintien de vos acquis'}
-              tags={weakTags}
+          {/* ============ KPI — Maintien des acquis (spec section 5) ============ */}
+          <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <KpiCard
+              Icon={Calendar}
+              iconBg="#F1E8FD" iconFg="#6D28D9"
+              label="Révisions transversales"
+              value={`${s.stats.revisions30d} / 30`}
+              hint="derniers jours"
+              bar={Math.min(100, (s.stats.revisions30d / 30) * 100)}
+              barColor={needsReevaluation ? '#A91D2C' : isWeekAlert || isAlert ? '#E8742C' : '#6D28D9'}
+              footer={
+                never ? <span className="text-(--color-ink-muted)">Commencez aujourd&apos;hui</span> :
+                needsReevaluation ? <span className="text-(--color-danger) font-bold">Régularité interrompue</span> :
+                isWeekAlert || isAlert ? <span className="text-[#B45B00] font-bold">À reprendre rapidement</span> :
+                                <span className="text-(--color-success) font-bold">Excellente régularité</span>
+              }
             />
-            <SpecialtiesPanel specs={s.specs} />
+            <KpiCard
+              Icon={History}
+              iconBg="#E7F6EC" iconFg="#16793C"
+              label="Dernière révision"
+              value={lastRevisionLabel(s.stats.lastRevision, days)}
+              hint={s.stats.lastRevision ? s.stats.lastRevision.toLocaleDateString('fr-FR') : '—'}
+              footer={
+                never ? <span className="text-(--color-ink-muted)">Votre révision du jour est disponible</span> :
+                needsReevaluation ? <span className="text-(--color-danger) font-bold">Seuil dépassé</span> :
+                isWeekAlert || isAlert ? <span className="text-[#B45B00] font-bold">Une reprise s&apos;impose</span> :
+                isUpToDate    ? <span className="text-(--color-success) font-bold">Parfait, continuez !</span> :
+                isYesterday   ? <span className="text-(--color-ink-soft)">Votre révision du jour est disponible</span> :
+                                <span className="text-(--color-ink-muted)">—</span>
+              }
+            />
+            <KpiCard
+              Icon={RefreshCcw}
+              iconBg="#EAF1FB" iconFg="#1E40AF"
+              label="Régularité en cours"
+              value={`${s.stats.currentStreak} jour${s.stats.currentStreak > 1 ? 's' : ''}`}
+              hint="consécutifs de révision"
+              footer={<span className="text-(--color-ink-muted) font-medium">{s.stats.totalRevisions} révision{s.stats.totalRevisions > 1 ? 's' : ''} au total</span>}
+            />
+            <KpiCard
+              Icon={TrendingUp}
+              iconBg="#F1E8FD" iconFg="#6D28D9"
+              label="Meilleure période"
+              value={`${s.stats.bestStreak} jour${s.stats.bestStreak > 1 ? 's' : ''}`}
+              hint="consécutifs"
+              footer={<span className="text-(--color-ink-muted) font-medium">Votre record</span>}
+            />
           </section>
-        ) : (
-          <>
-            <section className="grid gap-4 lg:grid-cols-[1.05fr_1.4fr]">
-              <RevisionCard
-                kind="daily"
-                tint="#F1E8FD" tintFg="#6D28D9"
-                title="Révision du jour"
-                count={s.sessionSizes.daily}
-                estMin={dailyEstMin(s.sessionSizes.daily)}
-                estLabel={dailyEstLabel(s.sessionSizes.daily)}
-                cta="Commencer ma révision du jour"
-                ctaTone="purple"
-                unit={s.unit}
-              />
-              {s.sessionSizes.recommended && (
-                <RevisionCard
-                  kind="recommended"
-                  tint="#FFEAD9" tintFg="#E8742C"
-                  title="Révision recommandée"
-                  count={s.sessionSizes.recommended}
-                  estMin={35}
-                  cta="Faire la révision recommandée"
-                  ctaTone="orange"
-                  unit={s.unit}
-                  hint={recommendedHint(s.specs.length)}
-                  tags={weakTags}
-                />
-              )}
-            </section>
 
-            {s.sessionSizes.intensive && (
+          {/* ============ BANDEAU D'ÉTAT — spec section 5 ============ */}
+          {!hasSpecs ? null
+            : isBilanGlobal ? <BannerBilanGlobal days={days!} />
+            : isAbsenceProlongee ? <BannerAbsenceProlongee days={days!} />
+            : isInterrupted ? <BannerInterrupted days={days!} />
+            : isWeekAlert ? <BannerWeekAlert days={days!} hasIntensive={s.sessionSizes.intensive != null} />
+            : isAlert ? <BannerAlert days={days!} />
+            : isYesterday ? <BannerYesterday />
+            : isUpToDate ? <BannerUpToDate />
+            : null}
+
+          {/* ============ CARDS RÉVISION + TABLE SPÉCIALITÉS ============ */}
+          {!hasSpecs ? (
+            <EmptyState unit={s.unit} />
+          ) : needsReevaluation ? (
+            <section className="grid gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
               <RevisionCard
-                kind="intensive"
+                kind={isBilanGlobal ? 'bilan_global' : isAbsenceProlongee ? 'reevaluation_deep' : 'reevaluation'}
                 tint="#FCEAEC" tintFg="#A91D2C"
-                title="Révision intensive"
-                count={s.sessionSizes.intensive}
-                estMin={Math.round(s.sessionSizes.intensive * 0.6)}
-                cta="Lancer la révision intensive"
+                title={isBilanGlobal ? 'Bilan global' : isAbsenceProlongee ? 'Réévaluation approfondie' : 'Réévaluation'}
+                count={isBilanGlobal ? 75 : isAbsenceProlongee ? 50 : 30}
+                estMin={isBilanGlobal ? 60 : isAbsenceProlongee ? 40 : 20}
+                cta={isBilanGlobal ? 'Lancer le bilan global' : isAbsenceProlongee ? 'Lancer la réévaluation approfondie' : 'Lancer la réévaluation'}
                 ctaTone="red"
                 unit={s.unit}
-                hint="Pour les périodes de révision approfondie ou les week-ends — jamais obligatoire"
+                hint={isBilanGlobal
+                  ? 'Pour faire le point sur votre niveau actuel'
+                  : isAbsenceProlongee
+                  ? 'Pour évaluer votre niveau après cette interruption'
+                  : 'Pour vérifier le maintien de vos acquis'}
+                tags={weakTags}
               />
-            )}
-
-            <SpecialtiesPanel specs={s.specs} />
-          </>
-        )}
-      </div>
-
-      {/* ============ SIDEBAR DROITE ============ */}
-      <aside className="space-y-4">
-        {/* Priorités pédagogiques */}
-        <div id="priorites" className="scroll-mt-20 rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
-          <h3 className="flex items-center gap-2 text-sm font-bold text-(--color-ink)">
-            <Target className="h-4 w-4 text-(--color-primary)" /> Priorités par spécialité
-          </h3>
-          <div className="mt-3">
-            {priorities(s.specs)}
-          </div>
-        </div>
-
-        {/* Conseil du jour */}
-        <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
-          <h3 className="flex items-center gap-2 text-sm font-bold text-(--color-ink)">
-            <Lightbulb className="h-4 w-4 text-[#E8742C]" /> Conseil du jour
-          </h3>
-          <p className="mt-2 text-sm font-semibold text-(--color-ink)">La régularité est la clé !</p>
-          <p className="mt-1.5 text-xs leading-relaxed text-(--color-ink-soft)">
-            {needsReevaluation
-              ? 'Reprenez une révision transversale dès aujourd\'hui pour entretenir durablement vos connaissances.'
-              : isWeekAlert || isAlert
-              ? 'Vous êtes sur la bonne voie. Une révision quotidienne permet de mieux retenir sur le long terme.'
-              : 'Révisez chaque jour un peu pour mieux retenir sur le long terme.'}
-          </p>
-        </div>
-
-        {/* Historique récent */}
-        <div id="history" className="scroll-mt-20 rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
-          <h3 className="flex items-center gap-2 text-sm font-bold text-(--color-ink)">
-            <ClipboardList className="h-4 w-4 text-(--color-primary)" /> Historique récent
-          </h3>
-          {s.recentSessions.length === 0 ? (
-            <p className="mt-3 text-xs text-(--color-ink-muted)">
-              Aucune session terminée pour le moment.
-            </p>
+              <SpecialtiesPanel specs={s.specs} />
+            </section>
           ) : (
-            <ul className="mt-3 space-y-2.5">
-              {s.recentSessions.map((r, i) => (
-                <li key={i} className="flex items-center justify-between text-xs">
-                  <span className="truncate text-(--color-ink)">{kindLabel(r.kind)}</span>
-                  <span className="text-(--color-ink-muted)">{relativeDate(r.completed_at)}</span>
-                  <span
-                    className="ml-2 font-bold tabular-nums"
-                    style={{ color: r.score_pct >= 75 ? '#16793C' : r.score_pct >= 50 ? '#E8742C' : '#A91D2C' }}
-                  >
-                    {r.score_pct}%
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <>
+              <section className="grid gap-4 lg:grid-cols-[1.05fr_1.4fr]">
+                <RevisionCard
+                  kind="daily"
+                  tint="#F1E8FD" tintFg="#6D28D9"
+                  title="Révision du jour"
+                  count={s.sessionSizes.daily}
+                  estMin={dailyEstMin(s.sessionSizes.daily)}
+                  estLabel={dailyEstLabel(s.sessionSizes.daily)}
+                  cta="Commencer ma révision du jour"
+                  ctaTone="purple"
+                  unit={s.unit}
+                />
+                {s.sessionSizes.recommended && (
+                  <RevisionCard
+                    kind="recommended"
+                    tint="#FFEAD9" tintFg="#E8742C"
+                    title="Révision recommandée"
+                    count={s.sessionSizes.recommended}
+                    estMin={35}
+                    cta="Faire la révision recommandée"
+                    ctaTone="orange"
+                    unit={s.unit}
+                    hint={recommendedHint(s.specs.length)}
+                    tags={weakTags}
+                  />
+                )}
+              </section>
+
+              {s.sessionSizes.intensive && (
+                <RevisionCard
+                  kind="intensive"
+                  tint="#FCEAEC" tintFg="#A91D2C"
+                  title="Révision intensive"
+                  count={s.sessionSizes.intensive}
+                  estMin={Math.round(s.sessionSizes.intensive * 0.6)}
+                  cta="Lancer la révision intensive"
+                  ctaTone="red"
+                  unit={s.unit}
+                  hint="Pour les périodes de révision approfondie ou les week-ends — jamais obligatoire"
+                />
+              )}
+
+              <SpecialtiesPanel specs={s.specs} />
+            </>
           )}
         </div>
-      </aside>
-    </div>
+
+        {/* ============ SIDEBAR DROITE ============ */}
+        <aside className="space-y-4">
+          {/* Priorités pédagogiques */}
+          <div id="priorites" className="scroll-mt-20 rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
+            <h3 className="flex items-center gap-2 text-sm font-bold text-(--color-ink)">
+              <Target className="h-4 w-4 text-(--color-primary)" /> Priorités par spécialité
+            </h3>
+            <div className="mt-3">
+              {priorities(s.specs)}
+            </div>
+          </div>
+
+          {/* Conseil du jour */}
+          <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
+            <h3 className="flex items-center gap-2 text-sm font-bold text-(--color-ink)">
+              <Lightbulb className="h-4 w-4 text-[#E8742C]" /> Conseil du jour
+            </h3>
+            <p className="mt-2 text-sm font-semibold text-(--color-ink)">La régularité est la clé !</p>
+            <p className="mt-1.5 text-xs leading-relaxed text-(--color-ink-soft)">
+              {needsReevaluation
+                ? 'Reprenez une révision transversale dès aujourd\'hui pour entretenir durablement vos connaissances.'
+                : isWeekAlert || isAlert
+                ? 'Vous êtes sur la bonne voie. Une révision quotidienne permet de mieux retenir sur le long terme.'
+                : 'Révisez chaque jour un peu pour mieux retenir sur le long terme.'}
+            </p>
+          </div>
+
+          {/* Historique récent */}
+          <div id="history" className="scroll-mt-20 rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
+            <h3 className="flex items-center gap-2 text-sm font-bold text-(--color-ink)">
+              <ClipboardList className="h-4 w-4 text-(--color-primary)" /> Historique récent
+            </h3>
+            {s.recentSessions.length === 0 ? (
+              <p className="mt-3 text-xs text-(--color-ink-muted)">
+                Aucune session terminée pour le moment.
+              </p>
+            ) : (
+              <ul className="mt-3 space-y-2.5">
+                {s.recentSessions.map((r, i) => (
+                  <li key={i} className="flex items-center justify-between text-xs">
+                    <span className="truncate text-(--color-ink)">{kindLabel(r.kind)}</span>
+                    <span className="text-(--color-ink-muted)">{relativeDate(r.completed_at)}</span>
+                    <span
+                      className="ml-2 font-bold tabular-nums"
+                      style={{ color: r.score_pct >= 75 ? '#16793C' : r.score_pct >= 50 ? '#E8742C' : '#A91D2C' }}
+                    >
+                      {r.score_pct}%
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </aside>
+      </div>
+    </StudentPage>
   );
 }
 

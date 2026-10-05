@@ -10,6 +10,7 @@ import {
 import { fetchCompletions, fetchParcoursList } from '@/lib/parcours/source';
 import { hasMedecineGeneraleAccess, parseScope } from '@/lib/auth/permissions';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
+import { HeroProgress, HeroStat, StudentHero, StudentPage } from '@/components/student/ui/page-kit';
 
 export const metadata = { title: 'Parcours du Major' };
 export const dynamic = 'force-dynamic';
@@ -48,7 +49,7 @@ export default async function ParcoursPage() {
   const aJour = ouverts.length > 0 && ouverts.every((p) => states.get(p.id)?.kind === 'completed');
 
   return (
-    <div className="relative mx-auto w-full max-w-3xl px-4 py-8 lg:px-8">
+    <StudentPage width="narrow">
       {/* Halo décoratif doré en fond */}
       <div
         aria-hidden
@@ -56,34 +57,24 @@ export default async function ParcoursPage() {
         style={{ background: 'radial-gradient(60% 100% at 50% 0%, rgba(245,200,75,0.18) 0%, transparent 70%)' }}
       />
 
-      {/* En-tête premium */}
-      <header className="relative mb-8 overflow-hidden rounded-3xl border border-[#E9D8A6] bg-[linear-gradient(135deg,#0E1626_0%,#2A1130_60%,#2D0518_100%)] px-6 py-7 text-white shadow-[0_24px_60px_-24px_rgba(45,5,24,0.55)]">
-        <span aria-hidden className="pointer-events-none absolute -right-8 -top-10 opacity-20">
-          <Crown className="h-44 w-44" style={{ color: '#F5C84B' }} strokeWidth={1.2} />
-        </span>
-        <h1 className="text-3xl font-black tracking-tight">Parcours du Major</h1>
-        <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/70">
-          Votre ascension vers le Major : {total} parcours qui se suivent, deux nouveaux chaque
-          lundi. Terminez le précédent pour débloquer le suivant.
-        </p>
-
-        <div className="mt-5 flex flex-wrap items-center gap-3">
-          <Stat icon={<Check className="h-3.5 w-3.5" />} label="Terminés" value={`${done}/${total}`} />
-          <Stat icon={<Trophy className="h-3.5 w-3.5" />} label="Maîtrisés" value={`${maitrise}`} />
-          <div className="min-w-[160px] flex-1">
-            <div className="mb-1 flex items-center justify-between text-[11px] font-medium text-white/60">
-              <span>Progression</span><span>{pct}%</span>
-            </div>
-            <div className="h-2 overflow-hidden rounded-full bg-white/10">
-              <div className="h-full rounded-full" style={{ width: `${pct}%`, background: 'linear-gradient(90deg,#B8860B,#F5C84B)' }} />
-            </div>
-          </div>
-        </div>
-      </header>
+      <StudentHero
+        icon={Trophy}
+        watermark={<Crown strokeWidth={1.2} />}
+        eyebrow="Méthodologie"
+        title="Parcours du Major"
+        subtitle={<>Votre ascension vers le Major : {total} parcours qui se suivent, deux nouveaux chaque lundi. Terminez le précédent pour débloquer le suivant.</>}
+        stats={
+          <>
+            <HeroStat icon={Check} value={`${done}/${total}`} label="Terminés" />
+            <HeroStat icon={Trophy} value={maitrise} label={maitrise > 1 ? 'Maîtrisés' : 'Maîtrisé'} />
+            <HeroProgress label="Progression" value={pct} />
+          </>
+        }
+      />
 
       {/* Bandeau « à jour → prochaine ouverture » */}
       {aJour && prochaine && (
-        <div className="relative mb-6 flex items-center gap-3 rounded-2xl border border-[#E9D8A6] bg-[#FFFBEB] px-4 py-3.5">
+        <div className="relative flex items-center gap-3 rounded-2xl border border-[#E9D8A6] bg-[#FFFBEB] px-4 py-3.5">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#F5C84B,#B8860B)] text-[#1F1400]">
             <CalendarClock className="h-5 w-5" />
           </span>
@@ -119,19 +110,7 @@ export default async function ParcoursPage() {
           })}
         </ol>
       )}
-    </div>
-  );
-}
-
-function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
-  return (
-    <div className="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2">
-      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10" style={{ color: '#F5C84B' }}>{icon}</span>
-      <span className="text-[13px]">
-        <span className="font-bold">{value}</span>
-        <span className="ml-1 text-white/55">{label}</span>
-      </span>
-    </div>
+    </StudentPage>
   );
 }
 
@@ -262,11 +241,11 @@ function ParcoursNode({
 
       {/* Carte : cliquable si jouable. */}
       {jouable ? (
-        <Link href={`/parcours/${parcours.numero}`} className="flex flex-1 focus-ring rounded-2xl">
+        <Link href={`/parcours/${parcours.numero}`} className="flex min-w-0 flex-1 focus-ring rounded-2xl">
           {card}
         </Link>
       ) : (
-        <div aria-disabled className="flex flex-1 cursor-not-allowed opacity-90">{card}</div>
+        <div aria-disabled className="flex min-w-0 flex-1 cursor-not-allowed opacity-90">{card}</div>
       )}
 
       {/* Icône d'importance décorative pour le tout premier (accroche). */}

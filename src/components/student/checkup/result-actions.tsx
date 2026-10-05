@@ -53,7 +53,7 @@ export function ResultActions({ sessionId, lacuneItemIds, plannerActive }: { ses
           </Button>
         )}
       </div>
-      {msg && <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300" role="status">{msg}</p>}
+      {msg && <p className="text-sm font-medium text-green-700 dark:text-green-300" role="status">{msg}</p>}
       {err && <p className="text-sm text-(--color-danger)" role="alert">{err}</p>}
     </div>
   );

@@ -45,7 +45,7 @@ const KIND_STYLE: Record<ProgramActivity['kind'], { chip: string; Icon: typeof T
   planificateur: { chip: 'bg-violet-100 text-violet-900 dark:bg-violet-500/20 dark:text-violet-100', Icon: CalendarDays },
   revision: { chip: 'bg-red-100 text-red-900 dark:bg-red-500/20 dark:text-red-100', Icon: Target },
   consolidation: { chip: 'bg-amber-100 text-amber-950 dark:bg-amber-500/20 dark:text-amber-100', Icon: RefreshCcw },
-  reactivation: { chip: 'bg-emerald-100 text-emerald-950 dark:bg-emerald-500/20 dark:text-emerald-100', Icon: RefreshCcw },
+  reactivation: { chip: 'bg-green-100 text-green-950 dark:bg-green-500/20 dark:text-green-100', Icon: RefreshCcw },
   controle: { chip: 'bg-orange-100 text-orange-950 dark:bg-orange-500/20 dark:text-orange-100', Icon: ClipboardCheck },
   suggestion: { chip: 'bg-(--color-surface-soft) text-(--color-ink)', Icon: Play },
 };
@@ -80,7 +80,7 @@ function ActivityRow({ a }: { a: ProgramActivity }) {
   return (
     <li className={cn('rounded-xl border border-(--color-border) bg-(--color-surface) transition-colors', !a.done && 'hover:border-(--color-primary)/40')}>
       <div className="flex items-start gap-3 p-3">
-        <span className={cn('mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg', a.done ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200' : st.chip)} aria-hidden>
+        <span className={cn('mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg', a.done ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-200' : st.chip)} aria-hidden>
           {a.done ? <CheckCircle2 className="h-4 w-4" /> : <st.Icon className="h-4 w-4" />}
         </span>
         <div className="min-w-0 flex-1">
@@ -89,7 +89,7 @@ function ActivityRow({ a }: { a: ProgramActivity }) {
             {a.origins.filter((o) => o !== a.label && o !== IMPLIED_ORIGIN[a.kind]).slice(0, 3).map((o) => (
               <span key={o} className="rounded-full border border-(--color-border) px-2 py-0.5 text-[10.5px] font-medium text-(--color-ink-soft)">{o}</span>
             ))}
-            {a.done && <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">Terminée</span>}
+            {a.done && <span className="text-[11px] font-semibold text-green-700 dark:text-green-300">Terminée</span>}
           </p>
           <p className={cn('mt-1 truncate text-sm font-bold text-(--color-ink)', a.done && 'text-(--color-ink-soft) line-through')}>{a.itemName}</p>
           {a.reasons[0] && <p className="mt-0.5 line-clamp-2 text-xs text-(--color-ink-soft)">{a.reasons[0]}</p>}

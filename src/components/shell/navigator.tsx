@@ -20,8 +20,15 @@ const ACTIVE_GRADIENT =
 
 /** Identifiant du collège « Découverte » (mode Espace découverte). */
 const DECOUVERTE_COLLEGE_ID = 'col-decouverte';
-/** Clé localStorage : l'élève a déjà ouvert « Mon planning » (pastille NEW apaisée). */
-const PLANNING_NEW_VU_KEY = 'mecn_planning_new_vu_v1';
+/** Rubriques signalées « NEW » dans le menu, avec la clé localStorage qui
+ *  mémorise (par navigateur) que l'élève les a déjà ouvertes : la pastille
+ *  s'apaise alors. */
+const NOUVEAUTES = {
+  planning: 'mecn_planning_new_vu_v1',
+  priorites: 'mecn_priorites_new_vu_v1',
+  checkup: 'mecn_checkup_new_vu_v1',
+} as const;
+type Nouveaute = keyof typeof NOUVEAUTES;
 
 /** Pastille « NEW » à droite d'une entrée du menu. Dorée tant que l'élève n'a
  *  pas ouvert la rubrique, puis discrète (blanc translucide) : elle reste
@@ -203,29 +210,40 @@ export function Navigator({
   const prioritesActive = pathname.startsWith('/mes-priorites');
   const checkupActive = pathname.startsWith('/checkup');
 
-  /** Pastille « NEW » de « Mon planning » : apaisée dès la première ouverture
-   *  (clic ou arrivée directe sur /planificateur), mémorisée par navigateur. */
-  const [planningVu, setPlanningVu] = useState(false);
-  const marquerPlanningVu = useCallback(() => {
-    setPlanningVu(true);
+  /** Pastilles « NEW » (Mon planning, Mes priorités, EVC Check-up) : apaisées
+   *  dès la première ouverture (clic ou arrivée directe), mémorisées par navigateur. */
+  const [vues, setVues] = useState<Record<Nouveaute, boolean>>({ planning: false, priorites: false, checkup: false });
+  const marquerVu = useCallback((k: Nouveaute) => {
+    setVues((v) => (v[k] ? v : { ...v, [k]: true }));
     try {
-      window.localStorage.setItem(PLANNING_NEW_VU_KEY, '1');
+      window.localStorage.setItem(NOUVEAUTES[k], '1');
     } catch {
       /* localStorage indisponible (mode privé) : l'état reste en mémoire. */
     }
   }, []);
   useEffect(() => {
-    let dejaVu = planActive;
-    try {
-      dejaVu = dejaVu || window.localStorage.getItem(PLANNING_NEW_VU_KEY) === '1';
-    } catch {
-      /* noop */
+    const ouvertes: Record<Nouveaute, boolean> = { planning: planActive, priorites: prioritesActive, checkup: checkupActive };
+    const aMarquer: Nouveaute[] = [];
+    const dejaVues: Nouveaute[] = [];
+    for (const k of Object.keys(NOUVEAUTES) as Nouveaute[]) {
+      if (ouvertes[k]) {
+        aMarquer.push(k);
+        continue;
+      }
+      try {
+        if (window.localStorage.getItem(NOUVEAUTES[k]) === '1') dejaVues.push(k);
+      } catch {
+        /* noop */
+      }
     }
-    if (!dejaVu) return;
+    if (aMarquer.length === 0 && dejaVues.length === 0) return;
     // rAF : pas de setState synchrone dans l'effet (ni d'écart d'hydratation).
-    const raf = requestAnimationFrame(() => (planActive ? marquerPlanningVu() : setPlanningVu(true)));
+    const raf = requestAnimationFrame(() => {
+      aMarquer.forEach(marquerVu);
+      if (dejaVues.length > 0) setVues((v) => (dejaVues.every((k) => v[k]) ? v : { ...v, ...Object.fromEntries(dejaVues.map((k) => [k, true])) }));
+    });
     return () => cancelAnimationFrame(raf);
-  }, [planActive, marquerPlanningVu]);
+  }, [planActive, prioritesActive, checkupActive, marquerVu]);
   const notesActive = pathname.startsWith('/notes');
   const revoirActive = pathname.startsWith('/revoir');
   const mesEntrainementsActive = pathname.startsWith('/mes-entrainements');
@@ -294,24 +312,26 @@ export function Navigator({
           ) : (
             <>
               {canAccessPlan && (
-                <Link href="/planificateur" onClick={marquerPlanningVu} className={topLevelClass(planActive)}>
+                <Link href="/planificateur" onClick={() => marquerVu('planning')} className={topLevelClass(planActive)}>
                   <CalendarRange className="h-[18px] w-[18px] shrink-0" />
                   Mon planning
-                  <NewBadge vu={planningVu} active={planActive} />
+                  <NewBadge vu={vues.planning} active={planActive} />
                 </Link>
               )}
 
               {/* Moteur pédagogique : l'état de chaque item et la mesure du niveau. */}
               {PEDAGO_ENGINE_STUDENT_ENABLED && (
-                <Link href="/mes-priorites" className={topLevelClass(prioritesActive)}>
+                <Link href="/mes-priorites" onClick={() => marquerVu('priorites')} className={topLevelClass(prioritesActive)}>
                   <Gauge className="h-[18px] w-[18px] shrink-0" />
                   Mes priorités
+                  <NewBadge vu={vues.priorites} active={prioritesActive} />
                 </Link>
               )}
               {CHECKUP_STUDENT_ENABLED && (
-                <Link href="/checkup" className={topLevelClass(checkupActive)}>
+                <Link href="/checkup" onClick={() => marquerVu('checkup')} className={topLevelClass(checkupActive)}>
                   <ClipboardCheck className="h-[18px] w-[18px] shrink-0" />
                   EVC Check-up
+                  <NewBadge vu={vues.checkup} active={checkupActive} />
                 </Link>
               )}
 

@@ -26,7 +26,7 @@ function minutes(sec: number | null): string {
 }
 
 const RESULT_UI = {
-  correct: { label: 'Correct', Icon: CheckCircle2, cls: 'text-emerald-700 dark:text-emerald-300' },
+  correct: { label: 'Correct', Icon: CheckCircle2, cls: 'text-green-700 dark:text-green-300' },
   partial: { label: 'À consolider', Icon: MinusCircle, cls: 'text-amber-700 dark:text-amber-300' },
   incorrect: { label: 'À revoir', Icon: XCircle, cls: 'text-red-700 dark:text-red-300' },
 } as const;
@@ -46,7 +46,7 @@ function SubscoreList({ title, rows }: { title: string; rows: Subscore[] }) {
                 <span className="shrink-0 tabular-nums font-semibold text-(--color-ink)">{r.display}</span>
               </div>
               <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-(--color-border)" aria-hidden>
-                <div className={cn('h-full rounded-full', pct >= 70 ? 'bg-emerald-500' : pct >= 50 ? 'bg-amber-500' : 'bg-red-500')} style={{ width: `${pct}%` }} />
+                <div className={cn('h-full rounded-full', pct >= 70 ? 'bg-green-500' : pct >= 50 ? 'bg-amber-500' : 'bg-red-500')} style={{ width: `${pct}%` }} />
               </div>
             </li>
           );
@@ -127,7 +127,7 @@ export default async function CheckupResultPage({ params }: { params: Promise<{ 
             <h2 id="plan-reprise" className="text-base font-bold text-(--color-ink)">Votre plan de reprise</h2>
             <p className="mt-1 text-sm text-(--color-ink-soft)">Les items à revoir et à consolider entrent automatiquement dans vos révisions (J+7, J+14, J+30, J+60) et dans « Mes priorités ».</p>
             <div className="mt-4 grid gap-4 md:grid-cols-3">
-              {([['À revoir en priorité', a.aRevoir, 'border-red-200 dark:border-red-900/40', 'text-red-700 dark:text-red-300'], ['À consolider', a.aConsolider, 'border-amber-200 dark:border-amber-900/40', 'text-amber-700 dark:text-amber-300'], ['Signaux positifs', a.positifs, 'border-emerald-200 dark:border-emerald-900/40', 'text-emerald-700 dark:text-emerald-300']] as const).map(([title, list, border, tone]) => (
+              {([['À revoir en priorité', a.aRevoir, 'border-red-200 dark:border-red-900/40', 'text-red-700 dark:text-red-300'], ['À consolider', a.aConsolider, 'border-amber-200 dark:border-amber-900/40', 'text-amber-700 dark:text-amber-300'], ['Signaux positifs', a.positifs, 'border-green-200 dark:border-green-900/40', 'text-green-700 dark:text-green-300']] as const).map(([title, list, border, tone]) => (
                 <div key={title} className={cn('rounded-xl border p-3', border)}>
                   <h3 className={cn('text-sm font-bold', tone)}>{title} <span className="font-normal text-(--color-ink-muted)">({list.length})</span></h3>
                   {list.length === 0 ? <p className="mt-2 text-xs text-(--color-ink-muted)">Aucun item.</p> : (
@@ -181,18 +181,18 @@ export default async function CheckupResultPage({ params }: { params: Promise<{ 
                     {q.question_type === 'QROC' ? (
                       <div className="grid gap-2 md:grid-cols-2">
                         <div className="rounded-lg border border-(--color-border) p-2.5"><p className="text-[11px] font-bold uppercase text-(--color-ink-muted)">Votre réponse</p><p className="mt-1 whitespace-pre-wrap text-(--color-ink)">{q.answer?.text?.trim() ? q.answer.text : '— (vide : 0 point)'}</p>{q.self_grade && <p className="mt-1 text-xs text-(--color-ink-muted)">Auto-correction : {q.self_grade === 'correct' ? 'correcte' : q.self_grade === 'partial' ? 'partielle' : 'incorrecte'}</p>}</div>
-                        <div className="rounded-lg border border-emerald-600/30 p-2.5"><p className="text-[11px] font-bold uppercase text-emerald-700 dark:text-emerald-300">Correction</p>{q.snapshot.reponse_attendue && <p className="mt-1 font-semibold text-(--color-ink)">{reponseModele(q.snapshot.reponse_attendue)}</p>}{q.snapshot.correction_generale && <RichTextZoom><div className="mt-1 whitespace-pre-line text-(--color-ink-soft)"><RichText html={q.snapshot.correction_generale} /></div></RichTextZoom>}</div>
+                        <div className="rounded-lg border border-green-600/30 p-2.5"><p className="text-[11px] font-bold uppercase text-green-700 dark:text-green-300">Correction</p>{q.snapshot.reponse_attendue && <p className="mt-1 font-semibold text-(--color-ink)">{reponseModele(q.snapshot.reponse_attendue)}</p>}{q.snapshot.correction_generale && <RichTextZoom><div className="mt-1 whitespace-pre-line text-(--color-ink-soft)"><RichText html={q.snapshot.correction_generale} /></div></RichTextZoom>}</div>
                       </div>
                     ) : (
                       <ul className="space-y-1.5">
                         {q.snapshot.items.map((it) => {
                           const picked = sel.has(it.lettre);
                           return (
-                            <li key={it.lettre} className={cn('rounded-lg border px-3 py-2', it.is_correct ? 'border-emerald-600/50 bg-emerald-50/50 dark:bg-emerald-900/10' : picked ? 'border-red-500/50 bg-red-50/50 dark:bg-red-900/10' : 'border-(--color-border)')}>
+                            <li key={it.lettre} className={cn('rounded-lg border px-3 py-2', it.is_correct ? 'border-green-600/50 bg-green-50/50 dark:bg-green-900/10' : picked ? 'border-red-500/50 bg-red-50/50 dark:bg-red-900/10' : 'border-(--color-border)')}>
                               <p className="flex items-start gap-2">
                                 <span className="font-mono text-xs font-bold text-(--color-ink-soft)">{it.lettre}</span>
                                 <span className="flex-1 text-(--color-ink)"><RichText html={it.enonce} /></span>
-                                <span className="shrink-0 text-[11px] font-semibold">{it.is_correct ? <span className="text-emerald-700 dark:text-emerald-300">Vrai</span> : <span className="text-(--color-ink-muted)">Faux</span>}{picked ? <span className="ml-1 text-(--color-ink)">· coché</span> : ''}</span>
+                                <span className="shrink-0 text-[11px] font-semibold">{it.is_correct ? <span className="text-green-700 dark:text-green-300">Vrai</span> : <span className="text-(--color-ink-muted)">Faux</span>}{picked ? <span className="ml-1 text-(--color-ink)">· coché</span> : ''}</span>
                               </p>
                               {it.justification && <RichTextZoom><div className="mt-1 whitespace-pre-line pl-5 text-xs text-(--color-ink-soft)"><RichText html={it.justification} /></div></RichTextZoom>}
                             </li>

@@ -1,51 +1,56 @@
 import Link from 'next/link';
-import { CalendarDays, ChevronDown, ChevronRight } from 'lucide-react';
+import { CalendarDays, CalendarRange, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { BrushTagline, MajorEcnLogo } from './brand';
-import { planSerif } from './fonts';
+import { StudentHero } from '@/components/student/ui/page-kit';
+import { planScript, planSerif } from './fonts';
+import { LaurelMark } from './laurel';
 import { NoticeBell, type Notice } from './notice-bell';
-import { PlanTabsV4 } from './tabs';
+import { PlanBackLink, PlanTabLabel, PlanTabsV4 } from './tabs';
 
 /**
- * Bandeau de l'espace « Mon planning » d'après la maquette : logo, accroche
- * manuscrite, cloche des nouveautés du planificateur, initiales du candidat,
- * puis les onglets.
+ * En-tête de l'espace « Mon planning » : le même en-tête premium que les
+ * autres pages du menu élève, avec l'identité de la maquette (couronne de
+ * laurier, accroche manuscrite), puis la barre d'onglets épinglée au
+ * défilement, qui porte la cloche des nouveautés du planificateur.
  */
-export function PlannerHeader({ initials, notices, tabs = true }: { initials: string; notices: Notice[]; tabs?: boolean }) {
+export function PlannerHeader({ notices, tabs = true }: { notices: Notice[]; tabs?: boolean }) {
+  // Fragment, pas d'enveloppe : la barre d'onglets « sticky » doit avoir pour
+  // parent le conteneur de toute la page, sinon elle cesse de coller dès que
+  // l'en-tête sort de l'écran.
   return (
-    <header>
-      <div className="flex items-center justify-between gap-4 pt-[2px]">
-        <Link href="/planificateur" aria-label="Mon planning — Major ECN" className="rounded-md">
-          <MajorEcnLogo className="origin-left max-sm:scale-[0.82]" />
-        </Link>
-        <div className="flex items-center gap-3 sm:-mr-[10px] sm:gap-[24px]">
-          <BrushTagline className="hidden md:flex" />
-          <NoticeBell notices={notices} />
-          <Link href="/profil" aria-label="Mon profil" className="flex items-center gap-[10px] rounded-full">
-            <span className="grid h-[46px] w-[46px] place-items-center rounded-full bg-(--pl-avatar) text-[17px] font-semibold text-(--pl-bordeaux)">{initials}</span>
-            <ChevronDown className="hidden h-[18px] w-[18px] text-(--pl-tab-text) sm:block" strokeWidth={2} />
-          </Link>
-        </div>
-      </div>
-      {tabs && <PlanTabsV4 />}
-    </header>
+    <>
+      <StudentHero
+        compact
+        titleAs="p"
+        icon={CalendarRange}
+        watermark={<LaurelMark />}
+        eyebrow="Planificateur EVC"
+        title="Mon planning"
+        subtitle={<span className={cn(planScript.className, 'block pt-0.5 text-[23px] leading-none text-[#F5C84B] sm:text-[25px]')}>Discipline aujourd’hui, réussite demain.</span>}
+      />
+      {tabs && <PlanTabsV4 end={<NoticeBell notices={notices} />} />}
+    </>
   );
 }
 
-/** Titre de l'onglet, sous-titre, et rappel « J - n avant les épreuves EVC ». */
-export function PlanPageTitle({ title = 'Mon planning', subtitle, daysLeft, examLabel = 'avant les épreuves EVC' }: { title?: string; subtitle: string; daysLeft: number | null; examLabel?: string }) {
+/**
+ * Titre de la page (par défaut : le nom de l'onglet ouvert), sous-titre, et
+ * rappel « J - n avant les épreuves EVC ».
+ */
+export function PlanPageTitle({ title, subtitle, daysLeft, examLabel = 'avant les épreuves EVC' }: { title?: string; subtitle: string; daysLeft: number | null; examLabel?: string }) {
   return (
-    <div className="mt-[12px] flex flex-wrap items-start justify-between gap-4">
+    <div className="mt-[10px] flex flex-wrap items-start justify-between gap-4">
       <div className="min-w-0 sm:pl-[8px]">
-        <h1 className={cn(planSerif.className, 'text-[34px] font-bold leading-[1.05] tracking-[-0.012em] text-(--pl-bordeaux) sm:text-[46px]')}>{title}</h1>
-        <p className="mt-[5px] text-[16px] leading-snug text-(--pl-text) sm:text-[19px]">{subtitle}</p>
+        <PlanBackLink />
+        <h1 className={cn(planSerif.className, 'text-[30px] font-bold leading-[1.08] tracking-[-0.012em] text-(--pl-bordeaux) sm:text-[38px]')}>{title ?? <PlanTabLabel />}</h1>
+        <p className="mt-[5px] text-[15px] leading-snug text-(--pl-text) sm:text-[17px]">{subtitle}</p>
       </div>
       {daysLeft !== null && (
-        <Link href="/planificateur/vue-ensemble" className="flex h-[74px] min-w-[300px] items-center gap-[19px] rounded-[12px] bg-(--pl-rose-75) pl-[17px] pr-[18px] transition hover:brightness-[0.985] max-sm:w-full">
-          <CalendarDays className="h-[34px] w-[34px] shrink-0 text-(--pl-bordeaux)" strokeWidth={1.9} />
+        <Link href="/planificateur/vue-ensemble" className="flex h-[70px] min-w-[280px] items-center gap-[17px] rounded-[12px] bg-(--pl-rose-75) pl-[17px] pr-[18px] transition hover:brightness-[0.985] max-sm:w-full">
+          <CalendarDays className="h-[32px] w-[32px] shrink-0 text-(--pl-bordeaux)" strokeWidth={1.9} />
           <span className="min-w-0 flex-1 leading-tight">
-            <span className={cn(planSerif.className, 'block text-[29px] font-bold tracking-[-0.01em] text-(--pl-bordeaux)')}>J - {daysLeft}</span>
-            <span className="mt-[2px] block text-[16px] text-(--pl-ink)">{examLabel}</span>
+            <span className={cn(planSerif.className, 'block text-[27px] font-bold tracking-[-0.01em] text-(--pl-bordeaux)')}>J - {daysLeft}</span>
+            <span className="mt-[2px] block text-[15px] text-(--pl-ink)">{examLabel}</span>
           </span>
           <ChevronRight className="h-[20px] w-[20px] text-(--pl-ink)" strokeWidth={2.2} />
         </Link>

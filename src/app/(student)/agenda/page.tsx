@@ -1,3 +1,4 @@
+import { CalendarDays } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
 import { AgendaWeek, type UserEvent, type PlatformEvent } from '@/components/student/agenda-week';
@@ -5,6 +6,7 @@ import { parseScope } from '@/lib/auth/permissions';
 import {
   ajouterJours, evenementVisiblePourEleve, instantParis, natureVisio, type EvenementPlateformeBrut,
 } from '@/lib/agenda/planning';
+import { StudentHero } from '@/components/student/ui/page-kit';
 
 export const metadata = { title: 'Agenda' };
 
@@ -64,14 +66,15 @@ export default async function AgendaPage({
     .filter((id): id is string => !!id);
 
   return (
-    <div className="flex flex-col gap-4 px-4 py-5 lg:h-full lg:overflow-hidden lg:px-8">
-      <header>
-        <h1 className="text-xl font-bold tracking-tight text-(--color-ink)">Mon agenda</h1>
-        <p className="mt-1 text-sm text-(--color-ink-soft)">
-          Les cours prévus cette semaine + tes révisions personnelles. Clique sur
-          « + Ajouter » sous chaque journée pour planifier une session.
-        </p>
-      </header>
+    <div className="flex flex-col gap-4 px-4 py-5 sm:px-6 lg:h-full lg:overflow-hidden lg:px-8">
+      <StudentHero
+        compact
+        className="shrink-0"
+        icon={CalendarDays}
+        eyebrow="Cours en direct & sessions"
+        title="Mon agenda"
+        subtitle="Les cours en direct de la semaine et vos révisions personnelles. Cliquez sur « + Ajouter » sous une journée pour planifier une session."
+      />
       <AgendaWeek
         userEvents={events}
         platformEvents={platformEvents}

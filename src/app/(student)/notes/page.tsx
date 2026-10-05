@@ -1,6 +1,8 @@
 import { requireUser } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { NotebookPen } from 'lucide-react';
 import { NotesGrid } from '@/components/student/notes-grid';
+import { HeroStat, StudentHero, StudentPage } from '@/components/student/ui/page-kit';
 
 export const metadata = { title: 'Prises de notes' };
 export const dynamic = 'force-dynamic';
@@ -35,5 +37,23 @@ export default async function NotesIndexPage() {
       updatedAt: r.updated_at,
     }));
 
-  return <NotesGrid notes={notes} />;
+  const colleges = new Set(notes.map((n) => n.college).filter(Boolean)).size;
+
+  return (
+    <StudentPage>
+      <StudentHero
+        icon={NotebookPen}
+        eyebrow="Vos notes de cours"
+        title="Prises de notes"
+        subtitle="Tout ce que vous avez noté pendant vos cours, au même endroit : retrouvez une note par item, par collège ou par mot-clé."
+        stats={notes.length > 0 ? (
+          <>
+            <HeroStat icon={NotebookPen} value={notes.length} label={notes.length > 1 ? 'items annotés' : 'item annoté'} />
+            {colleges > 0 && <HeroStat value={colleges} label={colleges > 1 ? 'collèges' : 'collège'} />}
+          </>
+        ) : undefined}
+      />
+      <NotesGrid notes={notes} />
+    </StudentPage>
+  );
 }

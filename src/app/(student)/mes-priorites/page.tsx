@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { ArrowRight, BookOpen, CalendarDays, ClipboardCheck, History, RefreshCcw, ShieldCheck, Star, Target } from 'lucide-react';
+import { ArrowRight, BookOpen, CalendarDays, ClipboardCheck, Gauge, History, RefreshCcw, ShieldCheck, Star } from 'lucide-react';
 import { requireUser } from '@/lib/auth/require-role';
 import { PEDAGO_ENGINE_STUDENT_ENABLED } from '@/lib/modules-flags';
 import { moteurOuvert } from '@/lib/moteur/access';
@@ -8,15 +8,16 @@ import { prioritiesView, type PriorityItem } from '@/lib/moteur/server/prioritie
 import { STATUS_EXPLANATION, STATUS_LABEL, SOURCE_LABEL, RESULT_LABEL, type MasteryStatus, type ResultType, type SignalSource } from '@/lib/moteur/types';
 import { fmtDateLong } from '@/lib/suivi/format';
 import { cn } from '@/lib/utils';
+import { HeroStat, StudentHero, StudentPage, SectionTitle, heroGhost } from '@/components/student/ui/page-kit';
 
 export const metadata = { title: 'Mes priorités' };
 export const dynamic = 'force-dynamic';
 
-const SECTIONS: { status: MasteryStatus; title: string; tone: string; dot: string }[] = [
-  { status: 'a_revoir', title: 'À revoir en priorité', tone: 'border-red-300/70 dark:border-red-500/40', dot: 'bg-red-600' },
-  { status: 'a_consolider', title: 'À consolider', tone: 'border-amber-300/70 dark:border-amber-500/40', dot: 'bg-amber-500' },
-  { status: 'en_bonne_voie', title: 'En bonne voie', tone: 'border-sky-300/70 dark:border-sky-500/40', dot: 'bg-sky-600' },
-  { status: 'maitrise_consolidee', title: 'Maîtrise consolidée', tone: 'border-emerald-300/70 dark:border-emerald-500/40', dot: 'bg-emerald-600' },
+const SECTIONS: { status: MasteryStatus; title: string; dot: string; heroDot: string; accent: string }[] = [
+  { status: 'a_revoir', title: 'À revoir en priorité', dot: 'bg-red-600', heroDot: 'bg-red-400', accent: 'border-l-red-500' },
+  { status: 'a_consolider', title: 'À consolider', dot: 'bg-amber-500', heroDot: 'bg-amber-300', accent: 'border-l-amber-400' },
+  { status: 'en_bonne_voie', title: 'En bonne voie', dot: 'bg-sky-600', heroDot: 'bg-sky-300', accent: 'border-l-sky-500' },
+  { status: 'maitrise_consolidee', title: 'Maîtrise consolidée', dot: 'bg-green-600', heroDot: 'bg-green-300', accent: 'border-l-green-500' },
 ];
 
 const fmtDay = (d: string) => new Date(`${d.slice(0, 10)}T12:00:00Z`).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', timeZone: 'Europe/Paris' });
@@ -39,23 +40,21 @@ export default async function MesPrioritesPage({ searchParams }: { searchParams:
   const plannerActive = view.ctx.plannerActive;
 
   return (
-    <main className="mx-auto w-full max-w-5xl space-y-5 px-3 py-5 sm:px-6">
-      <header>
-        <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-(--color-primary)"><Target className="h-3.5 w-3.5" aria-hidden /> Profil pédagogique</p>
-        <h1 className="mt-1 text-2xl font-bold tracking-tight text-(--color-ink) sm:text-3xl">Mes priorités</h1>
-        <p className="mt-1 max-w-3xl text-sm text-(--color-ink-soft)">
-          Un seul état par item, alimenté par vos Check-up, vos révisions, votre planning et, si vous y participez, EVC Arena. Une erreur déclenche toujours du travail ; deux difficultés distinctes signalent une lacune.
-        </p>
-      </header>
-
-      <nav aria-label="Statuts" className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {SECTIONS.map((s) => (
-          <a key={s.status} href={`#${s.status}`} className={cn('rounded-xl border bg-(--color-surface) p-3 hover:bg-(--color-surface-soft) focus-ring', s.tone)}>
-            <span className="flex items-center gap-1.5 text-xs font-semibold text-(--color-ink-soft)"><span className={cn('h-2 w-2 rounded-full', s.dot)} aria-hidden />{s.title}</span>
-            <span className="mt-1 block text-2xl font-black tabular-nums text-(--color-ink)">{visible.filter((i) => i.status === s.status).length}</span>
-          </a>
+    <StudentPage>
+      <StudentHero
+        icon={Gauge}
+        eyebrow="Profil pédagogique"
+        title="Mes priorités"
+        subtitle="Un seul état par item, alimenté par vos Check-up, vos révisions, votre planning et, si vous y participez, EVC Arena. Une erreur déclenche toujours du travail ; deux difficultés distinctes signalent une lacune."
+        actions={
+          <Link href="/checkup" className={heroGhost}>
+            <ClipboardCheck className="h-4 w-4" aria-hidden /> Mesurer mon niveau
+          </Link>
+        }
+        stats={SECTIONS.map((s) => (
+          <HeroStat key={s.status} dot={s.heroDot} value={visible.filter((i) => i.status === s.status).length} label={s.title} href={`#${s.status}`} />
         ))}
-      </nav>
+      />
 
       {view.checkup && (
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-(--color-primary)/30 bg-(--color-primary-soft) p-3 text-sm">
@@ -91,14 +90,15 @@ export default async function MesPrioritesPage({ searchParams }: { searchParams:
           const list = visible.filter((i) => i.status === s.status);
           return (
             <section key={s.status} id={s.status} aria-labelledby={`t-${s.status}`} className="scroll-mt-20">
-              <h2 id={`t-${s.status}`} className="flex items-center gap-2 text-lg font-bold text-(--color-ink)">
-                <span className={cn('h-2.5 w-2.5 rounded-full', s.dot)} aria-hidden />{s.title} <span className="text-sm font-semibold text-(--color-ink-muted)">({list.length})</span>
-              </h2>
-              <p className="mt-0.5 text-xs text-(--color-ink-muted)">{STATUS_EXPLANATION[s.status]}</p>
+              <SectionTitle
+                id={`t-${s.status}`}
+                title={<span className="flex items-center gap-2"><span className={cn('h-2.5 w-2.5 rounded-full', s.dot)} aria-hidden />{s.title} <span className="text-sm font-semibold text-(--color-ink-muted)">({list.length})</span></span>}
+                description={STATUS_EXPLANATION[s.status]}
+              />
               {list.length === 0 ? (
-                <p className="mt-2 rounded-xl border border-dashed border-(--color-border) p-3 text-xs text-(--color-ink-muted)">Aucun item pour le moment.</p>
+                <p className="mt-3 rounded-xl border border-dashed border-(--color-border) p-3 text-xs text-(--color-ink-muted)">Aucun item pour le moment.</p>
               ) : (
-                <ul className="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2">{list.map((i) => <ItemCard key={i.itemId} i={i} plannerActive={plannerActive} />)}</ul>
+                <ul className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">{list.map((i) => <ItemCard key={i.itemId} i={i} accent={s.accent} plannerActive={plannerActive} />)}</ul>
               )}
             </section>
           );
@@ -107,15 +107,15 @@ export default async function MesPrioritesPage({ searchParams }: { searchParams:
       {view.counts.non_evalue > 0 && evaluated > 0 && (
         <p className="text-xs text-(--color-ink-muted)">{view.counts.non_evalue} item{view.counts.non_evalue > 1 ? 's' : ''} travaillé{view.counts.non_evalue > 1 ? 's' : ''} sans résultat évaluatif suffisant : {STATUS_LABEL.non_evalue.toLowerCase()} pour l’instant.</p>
       )}
-    </main>
+    </StudentPage>
   );
 }
 
-function ItemCard({ i, plannerActive }: { i: PriorityItem; plannerActive: boolean }) {
+function ItemCard({ i, accent, plannerActive }: { i: PriorityItem; accent: string; plannerActive: boolean }) {
   const reason = i.needReasons[0] ?? i.reason;
   const action = 'inline-flex min-h-9 items-center gap-1 rounded-(--radius-button) border border-(--color-border) px-2.5 text-xs font-semibold text-(--color-ink) hover:border-(--color-primary) hover:text-(--color-primary) focus-ring';
   return (
-    <li className="flex flex-col rounded-xl border border-(--color-border) bg-(--color-surface) p-3">
+    <li className={cn('flex flex-col rounded-2xl border border-l-4 border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) transition-shadow hover:shadow-(--shadow-lifted)', accent)}>
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <Link href={`/mes-priorites/${i.itemId}`} className="block text-sm font-bold text-(--color-ink) underline-offset-4 hover:underline">{i.name}</Link>
