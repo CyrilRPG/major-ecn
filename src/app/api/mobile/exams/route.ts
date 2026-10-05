@@ -12,6 +12,7 @@ import { examWindow, resultsVisible } from '@/lib/exams/window';
 import { examLevel, gradeExamAnswer, summarizeExam, weakColleges, type BaremeConfig, type GradableQuestion, type PerCollege } from '@/lib/exams/scoring';
 import { phaseCopie, type PhaseCopie } from '@/lib/exams/phase-copie';
 import { finaliserCopie } from '@/lib/exams/finalisation';
+import { clientSigne, MOTIF_AUTO_EVALUATION } from '@/lib/evaluations/trace';
 import { interrogationsComposees, ouverturesInterrogation, type ProfilInterrogation } from '@/lib/pedago/interrogation';
 
 export const runtime = 'nodejs';
@@ -425,7 +426,8 @@ export async function POST(req: Request) {
     const maxScore = (all ?? []).reduce((total: number, row: any) => total + Number(row.max_points ?? 0), 0);
     const percentage = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
     const complete = (all ?? []).filter((row: any) => row.format === 'qroc').every((row: any) => row.self_grade);
-    await ctx.admin.from('mock_exam_submissions').update({ score: Math.round(score * 100) / 100, max_score: Math.round(maxScore * 100) / 100, percentage, status: complete ? 'graded' : 'submitted', graded_at: complete ? new Date().toISOString() : null }).eq('id', detail.completed.id);
+    // Écriture signée : une retouche après correction entre dans le journal des évaluations au nom de l'élève.
+    await clientSigne(ctx.auth.user.id, MOTIF_AUTO_EVALUATION).from('mock_exam_submissions').update({ score: Math.round(score * 100) / 100, max_score: Math.round(maxScore * 100) / 100, percentage, status: complete ? 'graded' : 'submitted', graded_at: complete ? new Date().toISOString() : null }).eq('id', detail.completed.id);
     return NextResponse.json({ ok: true, percentage, complete });
   }
 

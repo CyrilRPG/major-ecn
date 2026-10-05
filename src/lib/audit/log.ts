@@ -45,7 +45,9 @@ export type AuditEntity =
   | 'pedago_settings'
   | 'checkup_session'
   | 'qcm_series_meta'
-  | 'pedago_profile';
+  | 'pedago_profile'
+  // Historique des évaluations : correction d'une note (journal evaluation_corrections).
+  | 'evaluation';
 
 export type AuditPayload = {
   actor: Pick<Profile, 'id' | 'first_name' | 'last_name' | 'email' | 'role'>;

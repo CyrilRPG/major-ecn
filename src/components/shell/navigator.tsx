@@ -27,6 +27,7 @@ const NOUVEAUTES = {
   planning: 'mecn_planning_new_vu_v1',
   priorites: 'mecn_priorites_new_vu_v1',
   checkup: 'mecn_checkup_new_vu_v1',
+  evaluations: 'mecn_evaluations_new_vu_v1',
 } as const;
 type Nouveaute = keyof typeof NOUVEAUTES;
 
@@ -208,10 +209,11 @@ export function Navigator({
   const planActive = active('planning');
   const prioritesActive = active('priorites');
   const checkupActive = active('checkup');
+  const evaluationsActive = active('evaluations');
 
-  /** Pastilles « NEW » (Mon planning, Mes priorités, EVC Check-up) : apaisées
+  /** Pastilles « NEW » (Mon planning, Mes priorités, EVC Check-up, Mes évaluations) : apaisées
    *  dès la première ouverture (clic ou arrivée directe), mémorisées par navigateur. */
-  const [vues, setVues] = useState<Record<Nouveaute, boolean>>({ planning: false, priorites: false, checkup: false });
+  const [vues, setVues] = useState<Record<Nouveaute, boolean>>({ planning: false, priorites: false, checkup: false, evaluations: false });
   const marquerVu = useCallback((k: Nouveaute) => {
     setVues((v) => (v[k] ? v : { ...v, [k]: true }));
     try {
@@ -221,7 +223,7 @@ export function Navigator({
     }
   }, []);
   useEffect(() => {
-    const ouvertes: Record<Nouveaute, boolean> = { planning: planActive, priorites: prioritesActive, checkup: checkupActive };
+    const ouvertes: Record<Nouveaute, boolean> = { planning: planActive, priorites: prioritesActive, checkup: checkupActive, evaluations: evaluationsActive };
     const aMarquer: Nouveaute[] = [];
     const dejaVues: Nouveaute[] = [];
     for (const k of Object.keys(NOUVEAUTES) as Nouveaute[]) {
@@ -242,7 +244,7 @@ export function Navigator({
       if (dejaVues.length > 0) setVues((v) => (dejaVues.every((k) => v[k]) ? v : { ...v, ...Object.fromEntries(dejaVues.map((k) => [k, true])) }));
     });
     return () => cancelAnimationFrame(raf);
-  }, [planActive, prioritesActive, checkupActive, marquerVu]);
+  }, [planActive, prioritesActive, checkupActive, evaluationsActive, marquerVu]);
 
   /** Repère du guide élève : première ouverture de chaque rubrique (une fois par
    *  appareil), pour la carte « Bien démarrer » de l'accueil et la mesure d'usage. */
@@ -283,9 +285,9 @@ export function Navigator({
       default: return true;
     }
   };
-  /** En Découverte, tout est verrouillé sauf l'accueil, le Parcours du Major et le mode d'emploi. */
-  const verrouillee = (cle: RubriqueCle) => isDecouverte && cle !== 'accueil' && cle !== 'parcours' && cle !== 'mode-emploi';
-  const nouveaute = (cle: RubriqueCle): cle is Nouveaute => cle === 'planning' || cle === 'priorites' || cle === 'checkup';
+  /** En Découverte, tout est verrouillé sauf l'accueil, le Parcours du Major, les évaluations (ses notes du Parcours) et le mode d'emploi. */
+  const verrouillee = (cle: RubriqueCle) => isDecouverte && cle !== 'accueil' && cle !== 'parcours' && cle !== 'evaluations' && cle !== 'mode-emploi';
+  const nouveaute = (cle: RubriqueCle): cle is Nouveaute => cle === 'planning' || cle === 'priorites' || cle === 'checkup' || cle === 'evaluations';
 
   /** Une entrée du menu, avec son rôle en infobulle (« à quoi ça sert »). */
   const renderItem = (cle: RubriqueCle) => {

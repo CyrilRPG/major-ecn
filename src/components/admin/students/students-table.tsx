@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Award, CalendarClock, CreditCard, Download, Loader2, Mail, PowerOff, Search } from 'lucide-react';
+import { Award, CalendarClock, CreditCard, Download, LineChart, Loader2, Mail, PowerOff, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
@@ -651,6 +651,15 @@ export function StudentsTable({
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1.5">
+                      {/* Évaluations & progression : courbe, historique, journal, exports. */}
+                      <Link
+                        href={`/admin/resultats/eleve/${s.id}`}
+                        title="Évaluations & progression de cet élève"
+                        className="inline-flex h-8 items-center gap-1 rounded-md border border-(--color-border) bg-(--color-surface) px-2 text-xs font-bold text-(--color-ink-soft) hover:border-[#E4002B] hover:text-[#E4002B]"
+                      >
+                        <LineChart className="h-3.5 w-3.5" />
+                        <span className="hidden lg:inline">Résultats</span>
+                      </Link>
                       <Link
                         href={`/api/admin/certificates/${s.id}`}
                         target="_blank"

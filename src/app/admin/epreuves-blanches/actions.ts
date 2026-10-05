@@ -672,22 +672,23 @@ export async function getExamCopy(submissionId: string): Promise<{ ok: true; sub
 }
 
 /**
- * Supprime TOUS les résultats d'un élève pour une épreuve (copies + réponses),
- * ce qui lui permet de refaire l'épreuve. N'affecte que cet élève.
+ * Réinitialise l'épreuve d'un élève pour qu'il puisse la refaire. N'affecte
+ * que cet élève. La copie n'est plus effacée sans trace : la fonction
+ * `admin_reinitialiser_epreuve_eleve` l'archive (réponses comprises) avec
+ * l'auteur et le motif, et elle reste dans son historique des évaluations.
  */
-export async function deleteExamResultsForUser(examId: string, userId: string): Promise<Ok | Err> {
+export async function deleteExamResultsForUser(examId: string, userId: string, motif?: string): Promise<Ok | Err> {
   const { admin, profile } = await ensureAdmin();
-  const a = admin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
-  const { data: subs, error } = await a.from('mock_exam_submissions').select('id').eq('exam_id', examId).eq('user_id', userId);
+  const a = admin as unknown as { from: (t: string) => any; rpc: (f: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }> }; // eslint-disable-line @typescript-eslint/no-explicit-any
+  // Épreuve de CETTE plateforme (client cloisonné) : jamais la copie d'une autre faculté.
+  const { data: exam } = await a.from('mock_exams').select('id').eq('id', examId).maybeSingle();
+  if (!exam) return { ok: false, error: 'Épreuve introuvable' };
+  const { data: n, error } = await a.rpc('admin_reinitialiser_epreuve_eleve', {
+    p_exam: examId, p_user: userId, p_auteur: profile.id, p_motif: motif?.trim() || null,
+  });
   if (error) return { ok: false, error: error.message };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const ids = ((subs ?? []) as any[]).map((s) => s.id);
-  if (ids.length === 0) return { ok: false, error: 'Aucun résultat à supprimer' };
-  const { error: eAns } = await a.from('mock_exam_answers').delete().in('submission_id', ids);
-  if (eAns) return { ok: false, error: eAns.message };
-  const { error: eSub } = await a.from('mock_exam_submissions').delete().in('id', ids);
-  if (eSub) return { ok: false, error: eSub.message };
-  await logAudit({ actor: profile, action: 'delete', entity: 'mock_exam_submission', entityId: examId, description: `Résultats d'un élève supprimés (refaire l'épreuve autorisé)` });
+  if (!n) return { ok: false, error: 'Aucun résultat à supprimer' };
+  await logAudit({ actor: profile, action: 'delete', entity: 'mock_exam_submission', entityId: examId, description: `Épreuve réinitialisée pour un élève (copie archivée dans son historique, refaire l'épreuve autorisé)` });
   revalidatePath(`/admin/epreuves-blanches/${examId}/resultats`);
   revalidateExams(examId);
   return { ok: true };

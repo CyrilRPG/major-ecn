@@ -1,5 +1,5 @@
 import {
-  CalendarCheck, CalendarDays, CalendarRange, ClipboardCheck, Compass, Gauge, Home, NotebookPen, PencilRuler, PenLine,
+  CalendarCheck, CalendarDays, CalendarRange, ClipboardCheck, Compass, Gauge, Home, LineChart, NotebookPen, PencilRuler, PenLine,
   RefreshCcw, Star, Target, Trophy, type LucideIcon,
 } from 'lucide-react';
 
@@ -12,7 +12,7 @@ import {
  */
 
 export type RubriqueCle =
-  | 'accueil' | 'planning' | 'priorites' | 'checkup'
+  | 'accueil' | 'planning' | 'priorites' | 'checkup' | 'evaluations'
   | 'entrainement' | 'transversales' | 'epreuves' | 'parcours'
   | 'agenda' | 'rendez-vous' | 'notes' | 'revoir' | 'mes-entrainements' | 'mode-emploi';
 
@@ -68,6 +68,13 @@ export const RUBRIQUES: Record<RubriqueCle, Rubrique> = {
     quand: 'Au démarrage, puis chaque fois qu’un nouveau Check-up vous est recommandé.',
     lien: 'Vos lacunes deviennent des priorités et entrent dans votre planning.',
     vers: ['priorites', 'planning'],
+  },
+  evaluations: {
+    cle: 'evaluations', href: '/evaluations', label: 'Mes évaluations', famille: 'piloter', Icon: LineChart,
+    role: 'Toutes vos évaluations notées au même endroit (Check-up, épreuves blanches, interrogations, réévaluations, Parcours du Major) et votre courbe de progression.',
+    quand: 'Après chaque évaluation, pour situer votre résultat et mesurer le chemin parcouru.',
+    lien: 'Chaque résultat s’y ajoute tout seul, sans jamais remplacer le précédent ; il met aussi à jour vos priorités et votre planning.',
+    vers: ['checkup', 'priorites', 'epreuves'],
   },
   entrainement: {
     cle: 'entrainement', href: '/entrainement', label: 'Entraînement ciblé', famille: 'entrainer', Icon: Target,
@@ -143,14 +150,14 @@ export const RUBRIQUES: Record<RubriqueCle, Rubrique> = {
 
 /** Ordre d'affichage dans le menu, par famille. */
 export const ORDRE_MENU: Record<Famille, RubriqueCle[]> = {
-  piloter: ['accueil', 'planning', 'priorites', 'checkup'],
+  piloter: ['accueil', 'planning', 'priorites', 'checkup', 'evaluations'],
   entrainer: ['entrainement', 'transversales', 'epreuves', 'parcours'],
   outils: ['agenda', 'rendez-vous', 'notes', 'revoir', 'mes-entrainements', 'mode-emploi'],
 };
 
 /** Étapes de la boucle pédagogique (aide « ? ») et rubriques qui les portent. */
 export const BOUCLE: { titre: string; rubriques: RubriqueCle[] }[] = [
-  { titre: 'Mesurer', rubriques: ['checkup'] },
+  { titre: 'Mesurer', rubriques: ['checkup', 'evaluations'] },
   { titre: 'Prioriser', rubriques: ['priorites'] },
   { titre: 'Planifier', rubriques: ['planning', 'accueil'] },
   { titre: 'Réviser et s’entraîner', rubriques: ['transversales', 'entrainement', 'epreuves', 'parcours'] },

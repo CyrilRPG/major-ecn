@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AlertTriangle, BarChart3, Gauge, BellRing, BookOpen, CalendarCheck, CalendarClock, CalendarDays, CalendarRange, ChevronDown, Clapperboard, ClipboardList, Cog, Eye, FileSignature, GraduationCap, Library, ListTree, Mail, Megaphone, MessageCircle, MessagesSquare, MonitorPlay, Newspaper, PencilRuler, Receipt, ScrollText, ShieldCheck, Sparkles, Ticket, Timer, Trophy, Upload, UserCog, Users, X } from 'lucide-react';
+import { AlertTriangle, BarChart3, Gauge, LineChart, BellRing, BookOpen, CalendarCheck, CalendarClock, CalendarDays, CalendarRange, ChevronDown, Clapperboard, ClipboardList, Cog, Eye, FileSignature, GraduationCap, Library, ListTree, Mail, Megaphone, MessageCircle, MessagesSquare, MonitorPlay, Newspaper, PencilRuler, Receipt, ScrollText, ShieldCheck, Sparkles, Ticket, Timer, Trophy, Upload, UserCog, Users, X } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
@@ -84,6 +84,8 @@ const GROUPS: Group[] = [
     label: 'Suivi & analyse',
     Icon: BarChart3,
     items: [
+      // Évaluations & progression de tous les candidats (historique, courbes, exports, journal des corrections).
+      { href: '/admin/resultats', label: 'Résultats & évaluations', Icon: LineChart, onglet: 'suivi' },
       { href: '/admin/alertes', label: 'Alertes pédagogiques', Icon: AlertTriangle },
       { href: '/admin/crm', label: 'CRM pédagogique', Icon: UserCog },
       // Module de suivi individuel : visible du personnel doté du module, les droits fins sont contrôlés dans le module.

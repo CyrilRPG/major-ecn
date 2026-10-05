@@ -8,6 +8,7 @@ import { epreuveOuverteAEleve } from '@/lib/exams/acces-eleve';
 import { examWindow, type AccessOverride } from '@/lib/exams/window';
 import { gradeExamAnswer, summarizeExam, type GradableQuestion, type BaremeConfig } from '@/lib/exams/scoring';
 import { finaliserCopie } from '@/lib/exams/finalisation';
+import { clientSigne, MOTIF_AUTO_EVALUATION } from '@/lib/evaluations/trace';
 
 type Err = { ok: false; error: string };
 
@@ -193,7 +194,8 @@ export async function selfGradeAnswer(input: unknown): Promise<{ ok: true; perce
   const maxScore = rows.reduce((s, r) => s + Number(r.max_points), 0);
   const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
   const allSelfDone = rows.filter((r) => r.format === 'qroc').every((r) => r.self_grade);
-  await a.from('mock_exam_submissions').update({
+  // Écriture signée : une retouche après correction entre dans le journal au nom de l'élève.
+  await clientSigne(user.id, MOTIF_AUTO_EVALUATION).from('mock_exam_submissions').update({
     score: Math.round(score * 100) / 100, max_score: Math.round(maxScore * 100) / 100, percentage: pct,
     status: allSelfDone ? 'graded' : 'submitted', graded_at: allSelfDone ? new Date().toISOString() : null,
   }).eq('id', submissionId);

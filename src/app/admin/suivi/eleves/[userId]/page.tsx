@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { AlertTriangle, ArrowLeft, CalendarCheck, History, PhoneCall } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, CalendarCheck, History, LineChart, PhoneCall } from 'lucide-react';
 import { requireSuiviPage } from '@/lib/suivi/roles';
 import { chargerTableauEleves, STATUT_SUIVI_LABEL } from '@/lib/suivi/eleves';
 import { listReports } from '@/lib/suivi/db';
@@ -61,6 +61,9 @@ export default async function FicheEleveSuiviPage({ params }: { params: Promise<
           <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${STATUT_TONE[l.statut]}`}>{STATUT_SUIVI_LABEL[l.statut]}</span>
           <Link href={`/admin/suivi/candidats/${userId}`} className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs font-semibold text-(--color-ink) hover:bg-(--color-sand-100)">
             <CalendarCheck className="h-3.5 w-3.5" /> Rendez-vous &amp; suivi pédagogique
+          </Link>
+          <Link href={`/admin/resultats/eleve/${userId}`} className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs font-semibold text-(--color-ink) hover:bg-(--color-sand-100)">
+            <LineChart className="h-3.5 w-3.5" /> Évaluations &amp; progression
           </Link>
         </div>
       </header>

@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useState, useTransition } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
-  Award, CheckCircle2, ClipboardList, Loader2, PenLine, Plus, Sparkles, Trash2, Wand2,
+  Award, BarChart3, CheckCircle2, ClipboardList, Loader2, PenLine, Plus, Sparkles, Trash2, Wand2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -160,6 +161,10 @@ export function InterrogationsManager({ colleges }: { colleges: CollegeRow[] }) 
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
+                    {/* Copies des élèves (notes, détail, réinitialisation archivée). */}
+                    <Link href={`/admin/epreuves-blanches/${info.id}/resultats`} className="inline-flex h-8 items-center gap-1.5 rounded-md border border-(--color-border) bg-(--color-surface) px-2.5 text-xs font-bold text-(--color-ink-soft) hover:text-(--color-ink)">
+                      <BarChart3 className="h-3.5 w-3.5" /> Résultats
+                    </Link>
                     {info.status === 'published' ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-[#E7F6EC] px-2.5 py-1 text-xs font-bold text-[#16793C]">
                         <CheckCircle2 className="h-3.5 w-3.5" /> Publiée

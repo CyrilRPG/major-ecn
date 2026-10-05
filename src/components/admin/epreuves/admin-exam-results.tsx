@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, Loader2, Trash2, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -74,11 +75,14 @@ export function AdminExamResults({
   };
 
   const remove = (row: ResultRow) => {
-    if (!confirm(`Supprimer les résultats de ${row.name} pour cette épreuve ?\nSa copie sera effacée et il pourra refaire l’épreuve.`)) return;
+    // La copie n'est plus effacée : elle est archivée dans l'historique de l'élève, avec l'auteur et ce motif.
+    const motif = prompt(`Réinitialiser l’épreuve de ${row.name} ?\nSa copie est retirée de cette épreuve mais reste dans son historique des évaluations, et il pourra refaire l’épreuve.\n\nMotif (obligatoire) :`);
+    if (motif === null) return;
+    if (motif.trim().length < 5) { setError('Indiquez le motif de la réinitialisation (5 caractères au moins).'); return; }
     setError(null);
     setDeletingId(row.submissionId);
     startDelete(async () => {
-      const res = await deleteExamResultsForUser(exam.id, row.userId);
+      const res = await deleteExamResultsForUser(exam.id, row.userId, motif);
       setDeletingId(null);
       if (!res.ok) { setError(res.error); return; }
       if (expandedId === row.submissionId) setExpandedId(null);
@@ -108,7 +112,9 @@ export function AdminExamResults({
           <div key={row.submissionId} className="overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) shadow-(--shadow-soft)">
             <div className="flex flex-wrap items-center gap-3 px-4 py-3">
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[15px] font-semibold text-(--color-ink)">{row.name}</p>
+                <p className="truncate text-[15px] font-semibold text-(--color-ink)">
+                  <Link href={`/admin/resultats/eleve/${row.userId}`} className="hover:underline" title="Évaluations & progression de cet élève">{row.name}</Link>
+                </p>
                 <p className="truncate text-xs text-(--color-ink-muted)">
                   {row.email}
                   {row.submittedAt ? ` · remis le ${new Date(row.submittedAt).toLocaleString('fr-FR')}` : ''}
@@ -138,7 +144,7 @@ export function AdminExamResults({
                   onClick={() => remove(row)}
                 >
                   {deletingId === row.submissionId ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
-                  Supprimer
+                  Réinitialiser
                 </Button>
               </div>
             </div>
