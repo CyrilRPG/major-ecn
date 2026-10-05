@@ -363,7 +363,7 @@ export const FEATURED_TESTIMONIES: Featured[] = [
     slug: "dr-imene-deneche",
     name: "Dr Imene DENECHE",
     initials: "ID",
-    spec: "Medecine generale",
+    spec: "Médecine générale",
     role: "Lauréate des EVC 2021 — 2ᵉ en médecine générale",
     photo: "",
     quote: "Classée 2ᵉ en médecine générale grâce à une méthode efficace et à des dossiers proches du jour J.",
@@ -371,7 +371,7 @@ export const FEATURED_TESTIMONIES: Featured[] = [
       "J’ai passé les EVC en 2021 et j’ai été classée 2ᵉ en médecine générale.",
       "J’avais travaillé seule auparavant, mais cette fois j’ai choisi de suivre la formation Major ECN. Franchement, ça m’a énormément aidée. J’ai appris à mieux formuler mes réponses, à aller à l’essentiel.",
       "Les dossiers ressemblaient fortement à ce qu’on a eu le jour J, donc je n’ai pas été surprise. Sans cette préparation, je n’aurais pas visé aussi haut.",
-      "Et je n’ai pas été la seule : mes collègues aussi ont réussi — classés 3ᵉ, 4ᵉ, 6ᵉ.",
+      "Et je n’ai pas été la seule : plusieurs collègues qui avaient également suivi la préparation Major ECN ont obtenu d’excellents classements, notamment 3ᵉ, 4ᵉ et 6ᵉ en médecine générale.",
       "Je suis très reconnaissante.",
     
     ],
