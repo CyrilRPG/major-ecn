@@ -14,6 +14,10 @@
 // traités sont clos avec le statut de l'écran /admin/audit-corriges
 // (cle_inversee, corrige_manuellement, ignore).
 //
+// Appliqué en production le 05/10/2026 : --lot=orthopedie (26 propositions,
+// 5 questions, 78 constats clos), puis --lot=entetes (10 corrections, 1
+// proposition). Relancé, le script ne trouve plus rien à écrire.
+//
 // Usage :
 //   node scripts/corriger-contradictions-cle-correction.mjs --lot=orthopedie            simulation
 //   node scripts/corriger-contradictions-cle-correction.mjs --lot=orthopedie --appliquer
