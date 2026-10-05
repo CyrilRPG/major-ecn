@@ -78,6 +78,60 @@ function wrapWithCharte(bodyHtml: string, origin: string, title: string): string
   );
 }
 
+/** Document HTML complet à imprimer pour un corps de fiche. */
+function documentAImprimer(contentHtml: string, origin: string, nomCours: string): string {
+  return isFullDocument(contentHtml)
+    // Document complet (générateur Python) : styles des marques ajoutés s'il en porte.
+    ? (contientMarques(contentHtml)
+      ? contentHtml.replace(/<\/head>/i, `<style>${CSS_MODIFICATIONS}</style></head>`)
+      : contentHtml)
+    : wrapWithCharte(contentHtml, origin, `${nomCours}`);
+}
+
+async function rendrePdf(
+  browser: Awaited<ReturnType<typeof launchBrowser>>,
+  html: string,
+  nomCours: string,
+  annee: string,
+): Promise<Uint8Array> {
+  const page = await browser.newPage();
+  try {
+    await page.setContent(html, { waitUntil: 'load' });
+    await page.evaluate(
+      () => (document as unknown as { fonts: { ready: Promise<unknown> } }).fonts.ready,
+    );
+    // La fiche éclair doit tenir sur UNE page : on la réduit via `zoom` (qui,
+    // contrairement à `transform`, réduit aussi la hauteur de mise en page).
+    await page.evaluate((margins: number[]) => {
+      const [topMm, bottomMm] = margins;
+      const mmToPx = (mm: number) => (mm * 96) / 25.4;
+      const avail = mmToPx(297 - topMm - bottomMm) - 4;
+      document.querySelectorAll('.eclair-card').forEach((el) => {
+        const card = el as HTMLElement;
+        card.style.zoom = '1';
+        const h = card.getBoundingClientRect().height;
+        if (h > avail) card.style.zoom = String(Math.max(0.5, avail / h));
+      });
+    }, [MARGIN_MM.top, MARGIN_MM.bottom]);
+    const out = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        top: `${MARGIN_MM.top}mm`,
+        right: `${MARGIN_MM.right}mm`,
+        bottom: `${MARGIN_MM.bottom}mm`,
+        left: `${MARGIN_MM.left}mm`,
+      },
+      displayHeaderFooter: true,
+      headerTemplate: headerTemplate(nomCours),
+      footerTemplate: footerTemplate(annee),
+    });
+    return new Uint8Array(out);
+  } finally {
+    await page.close().catch(() => null);
+  }
+}
+
 export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: string }> }) {
   const { cours: coursId } = await ctx.params;
 
@@ -113,49 +167,13 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: str
   const annee = (body.annee ?? '2025-2026').slice(0, 20);
 
   const origin = new URL(req.url).origin;
-  const html = isFullDocument(body.content_html)
-    // Document complet (générateur Python) : styles des marques ajoutés s'il en porte.
-    ? (contientMarques(body.content_html)
-      ? body.content_html.replace(/<\/head>/i, `<style>${CSS_MODIFICATIONS}</style></head>`)
-      : body.content_html)
-    : wrapWithCharte(body.content_html, origin, `${nomCours}`);
+  const html = documentAImprimer(body.content_html, origin, nomCours);
 
   let pdfBytes: Uint8Array;
   let browser;
   try {
     browser = await launchBrowser();
-    const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: 'load' });
-    await page.evaluate(
-      () => (document as unknown as { fonts: { ready: Promise<unknown> } }).fonts.ready,
-    );
-    // La fiche éclair doit tenir sur UNE page : on la réduit via `zoom` (qui,
-    // contrairement à `transform`, réduit aussi la hauteur de mise en page).
-    await page.evaluate((margins: number[]) => {
-      const [topMm, bottomMm] = margins;
-      const mmToPx = (mm: number) => (mm * 96) / 25.4;
-      const avail = mmToPx(297 - topMm - bottomMm) - 4;
-      document.querySelectorAll('.eclair-card').forEach((el) => {
-        const card = el as HTMLElement;
-        card.style.zoom = '1';
-        const h = card.getBoundingClientRect().height;
-        if (h > avail) card.style.zoom = String(Math.max(0.5, avail / h));
-      });
-    }, [MARGIN_MM.top, MARGIN_MM.bottom]);
-    const out = await page.pdf({
-      format: 'A4',
-      printBackground: true,
-      margin: {
-        top: `${MARGIN_MM.top}mm`,
-        right: `${MARGIN_MM.right}mm`,
-        bottom: `${MARGIN_MM.bottom}mm`,
-        left: `${MARGIN_MM.left}mm`,
-      },
-      displayHeaderFooter: true,
-      headerTemplate: headerTemplate(nomCours),
-      footerTemplate: footerTemplate(annee),
-    });
-    pdfBytes = new Uint8Array(out);
+    pdfBytes = await rendrePdf(browser, html, nomCours, annee);
   } catch (e) {
     console.error('[fiches/render-html] chromium error', e);
     return NextResponse.json(
@@ -246,5 +264,58 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ cours: str
     ficheId = cree.id as string;
   }
 
+  // Item partagé entre collèges : les fiches jumelles ont reçu le même HTML
+  // (couverture à leur collège) par déclencheur ; on re-rend leur PDF.
+  try {
+    await rerendreFichesJumelles(a, ficheId, storagePath, origin, annee);
+  } catch (e) {
+    console.error('[fiches/render-html] fiches jumelles', e);
+  }
+
   return NextResponse.json({ ok: true, pages, storagePath, ficheId });
+}
+
+/**
+ * Re-rend le PDF des fiches jumelles d'une fiche d'item partagé
+ * (migration 20261005220000_items_partages). Chaque jumelle garde son propre
+ * fichier : si elle partageait celui qu'on vient d'écraser, elle en reçoit un
+ * nouveau. L'enregistrement passe par `partage_fiche_set_pdf`, qui n'est pas
+ * répercuté aux autres membres.
+ */
+async function rerendreFichesJumelles(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  a: any,
+  ficheId: string,
+  storagePathPublie: string,
+  origin: string,
+  annee: string,
+): Promise<void> {
+  const { data, error } = await a.rpc('partage_fiches_jumelles', { p_fiche_id: ficheId });
+  if (error) throw new Error(error.message);
+  const jumelles = (data ?? []) as {
+    fiche_id: string; cours_id: string; cours_titre: string;
+    storage_path: string | null; content_html: string | null;
+  }[];
+  if (!jumelles.some((j) => j.content_html)) return;
+  const browser = await launchBrowser();
+  try {
+    for (const j of jumelles) {
+      if (!j.content_html) continue;
+      const bytes = await rendrePdf(browser, documentAImprimer(j.content_html, origin, j.cours_titre), j.cours_titre, annee);
+      let pagesJ = 0;
+      try { pagesJ = (await PDFDocument.load(bytes)).getPageCount(); } catch { /* ignore */ }
+      const chemin = j.storage_path && j.storage_path !== storagePathPublie
+        ? j.storage_path
+        : `${j.cours_id}/${crypto.randomUUID()}.pdf`;
+      const { error: upErr } = await a.storage.from('fiches')
+        .upload(chemin, Buffer.from(bytes), { contentType: 'application/pdf', upsert: true });
+      if (upErr) throw new Error(upErr.message);
+      const { error: setErr } = await a.rpc('partage_fiche_set_pdf', {
+        p_fiche_id: j.fiche_id, p_storage_path: chemin, p_pages: pagesJ,
+      });
+      if (setErr) throw new Error(setErr.message);
+    }
+  } finally {
+    await browser.close().catch(() => null);
+  }
 }

@@ -128,10 +128,13 @@ const matieresCible = matieresSource.map((m) => ({
 
 // ── 2. Cours ────────────────────────────────────────────────────────────────
 const matiereIds = matieresSource.map((m) => m.id);
+// Les items partagés avec un autre collège (jumeaux d'items de pédiatrie,
+// migration 20261005220000_items_partages) ne sont pas recopiés : une copie
+// échapperait à leur synchronisation. Leur cours porte `linked_to_cours_id`.
 const coursSource = await lireTout(
   'cours',
   'id, matiere_id, titre, description, order_index, access_type, importance, hidden_blocks',
-  (q) => q.in('matiere_id', matiereIds),
+  (q) => q.in('matiere_id', matiereIds).is('linked_to_cours_id', null),
 );
 const coursCible = coursSource.map((c) => ({
   id: miroirLigne('cours', c.id),

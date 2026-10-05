@@ -117,6 +117,14 @@ async function supprimer(table, ids, pas = 100) {
   }
 }
 
+// Depuis le 06/10/2026, les copies sont synchronisées par la base
+// (scripts/partager-copies-medecine-interne.mjs) : ne plus les recopier.
+{
+  const { data, error } = await db.from('cours_partages').select('cours_id').in('cours_id', SOURCES.map(([id]) => id)).limit(1);
+  if (error) throw new Error(`cours_partages : ${error.message}`);
+  if (data.length) throw new Error('Copies déjà synchronisées par la base (items partagés) : ce script ne doit plus être rejoué.');
+}
+
 // ── 1. Cours source : contrôle des titres ───────────────────────────────────
 const coursIds = SOURCES.map(([id]) => id);
 const coursSource = await lireTout(
