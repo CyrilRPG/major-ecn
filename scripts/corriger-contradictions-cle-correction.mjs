@@ -360,6 +360,11 @@ async function corrigerProposition(entree) {
   const requete = db.from('qcm_items').select('id, question_id, lettre, enonce, is_correct, justification');
   const item = await must(entree.id ? requete.eq('id', entree.id).maybeSingle() : requete.eq('question_id', entree.question).eq('lettre', entree.lettre).maybeSingle(), 'proposition');
   if (!item) { bilan.refus.push(`${entree.id ?? entree.question} : proposition introuvable`); return; }
+  if (Object.entries(entree.apres).every(([champ, valeur]) => egal(item[champ], valeur))) {
+    bilan.ignores.push(`${item.id} (${item.lettre}) déjà corrigée`);
+    await clore(entree.constat?.[0], entree.constat?.[1]);
+    return;
+  }
   const ecarts = Object.entries(entree.avant).filter(([champ, valeur]) => !egal(item[champ], valeur)).map(([champ]) => champ);
   if (ecarts.length) { bilan.refus.push(`${item.id} (${item.lettre}) : ${ecarts.join(', ')} modifié(s) depuis la relecture, rien n'est écrit`); return; }
   const changement = Object.fromEntries(Object.entries(entree.apres).filter(([champ, valeur]) => !egal(item[champ], valeur)));
@@ -376,6 +381,15 @@ async function corrigerProposition(entree) {
 async function corrigerQuestion(entree) {
   const question = await must(db.from('qcm_questions').select('id, enonce, correction_generale').eq('id', entree.id).maybeSingle(), 'question');
   if (!question) { bilan.refus.push(`${entree.id} : question introuvable`); return; }
+  const correction = String(question.correction_generale ?? '');
+  const dejaFaite = entree.remplacements
+    ? entree.remplacements.every(([ancien, nouveau]) => correction.includes(nouveau) && !correction.includes(ancien))
+    : Object.entries(entree.apres).every(([champ, valeur]) => egal(question[champ], valeur));
+  if (dejaFaite) {
+    bilan.ignores.push(`question ${question.id} déjà corrigée`);
+    await clore(entree.constat?.[0], entree.constat?.[1]);
+    return;
+  }
   let apres = { ...(entree.apres ?? {}) };
   if (entree.avant) {
     const ecarts = Object.entries(entree.avant).filter(([champ, valeur]) => !egal(question[champ], valeur)).map(([champ]) => champ);
