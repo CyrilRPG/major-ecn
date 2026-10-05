@@ -8,6 +8,7 @@ import { logAudit } from '@/lib/audit/log';
 import { ExamSettingsSchema, ExamQuestionSchema, EXAM_STATUSES } from '@/lib/schemas/exam';
 import { callClaude, extractJson } from '@/lib/ai/anthropic';
 import { examGenerationPrompt } from '@/lib/ai/prompts';
+import { melangerPropositions } from '@/lib/qcm/melanger-propositions';
 import { usageToUsd, BILLING_EUR, GEN_FEATURE } from '@/lib/ai/cost';
 import { z } from 'zod';
 
@@ -606,13 +607,14 @@ export async function generateExamQuestionsWithAI(
     points: 1,
     college_id: q.college_id ?? null,
     images: [],
+    // Les modèles placent les réponses justes en tête : ordre mélangé à l'insertion.
     items: isQcm
-      ? (Array.isArray(q.items) ? q.items.slice(0, 5).map((it: AiQuestion) => ({
+      ? (Array.isArray(q.items) ? melangerPropositions(q.items.slice(0, 5).map((it: AiQuestion) => ({
           lettre: String(it.lettre ?? '').slice(0, 1).toUpperCase(),
           enonce: String(it.enonce ?? ''),
           is_correct: !!it.is_correct,
           justification: String(it.justification ?? ''),
-        })) : [])
+        })), [q.correction_generale]) : [])
       : [],
     reponse_attendue: isQcm ? null : (q.reponse_attendue ?? null),
     keywords: qrocAi && Array.isArray(q.keywords) ? q.keywords : [],

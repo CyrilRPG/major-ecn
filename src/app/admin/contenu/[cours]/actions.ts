@@ -9,6 +9,7 @@ import { embed, toPgVector } from '@/lib/ai/embeddings';
 import { flashcardsPrompt, qcmPrompt } from '@/lib/ai/prompts';
 import { usageToUsd, PRICE_EUR } from '@/lib/ai/cost';
 import { logAudit } from '@/lib/audit/log';
+import { melangerPropositions } from '@/lib/qcm/melanger-propositions';
 
 export async function addAnnaleAction(input: {
   coursId: string;
@@ -468,7 +469,8 @@ export async function generateQcmAction(coursId: string): Promise<GenResult> {
         .select('id').single();
       if (qErr || !qRow) continue;
 
-      const items = (q.items ?? []).slice(0, 5).map((it) => ({
+      // Les modèles placent les réponses justes en tête : ordre mélangé à l'insertion.
+      const items = melangerPropositions((q.items ?? []).slice(0, 5)).map((it) => ({
         question_id: qRow.id,
         lettre: it.lettre,
         enonce: it.enonce,
