@@ -1,9 +1,13 @@
-import { Allura, Source_Serif_4 } from 'next/font/google';
+import { Allura } from 'next/font/google';
 
 /**
- * Typographies de l'espace « Mon planning » (maquettes validées) : titres en
- * serif, accroches manuscrites ; le texte courant est celui de la plateforme
- * (Manrope), identique à la maquette.
+ * Typographies de l'espace « Mon planning ».
+ *
+ * Les titres suivent désormais la charte commune des pages élève (Plus Jakarta
+ * Sans du site vitrine, déjà chargée par le layout racine) : l'ancien serif de
+ * la maquette rendait la rubrique trop différente du reste de la plateforme,
+ * et c'était une police de plus à télécharger. `planSerif` garde son nom pour
+ * ne pas toucher aux écrans qui l'utilisent. L'accroche manuscrite reste.
  */
-export const planSerif = Source_Serif_4({ subsets: ['latin'], weight: ['600', '700'], display: 'swap', variable: '--font-plan-serif' });
+export const planSerif = { className: 'font-(family-name:--font-jakarta) tracking-[-0.015em]' } as const;
 export const planScript = Allura({ subsets: ['latin'], weight: '400', display: 'swap', variable: '--font-plan-script' });

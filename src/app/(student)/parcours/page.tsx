@@ -58,6 +58,7 @@ export default async function ParcoursPage() {
       />
 
       <StudentHero
+        aide="parcours"
         icon={Trophy}
         watermark={<Crown strokeWidth={1.2} />}
         eyebrow="Méthodologie"

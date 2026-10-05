@@ -79,10 +79,11 @@ async function refreshUnlocked(userId: string, now: Date, opts: { force?: boolea
   // 5. Reprise de signaux restés en attente (échec antérieur).
   await processPending(userId, ingestCtx);
   // 5 bis. Priorités du jour (l'urgence évolue chaque jour) ; date d'épreuve modifiée → réactivations reprogrammées.
+  let examRecalc = false;
   const examChanged = !!state?.exam_date_checked_at && (state.exam_date_used ?? null) !== (ctx.examDate ?? null);
   if (examChanged || state?.reprioritized_on !== ctx.today) {
     const rp = await reprioritizeUnlocked(userId, ctx, { examChanged, nowIso });
-    if (examChanged && ctx.plannerActive) report.plannerRecalcRequested = true;
+    if (examChanged && ctx.plannerActive) { report.plannerRecalcRequested = true; examRecalc = true; }
     report.reprioritized = rp;
   }
 
@@ -100,8 +101,10 @@ async function refreshUnlocked(userId: string, now: Date, opts: { force?: boolea
     ...(state?.backfilled_at ? {} : { backfilled_at: nowIso }),
   });
 
-  // 7. Recalcul du planning seulement après un événement significatif (O§31, I§41).
-  if (report.plannerRecalcRequested && ctx.plannerActive) {
+  // 7. Recalcul du planning seulement après un événement significatif (O§31, I§41). L'ingestion émet
+  // déjà son propre PLANNER_RECALCULATION_REQUIRED (item À revoir, item important raté, activité
+  // terminée) : seule la date d'épreuve modifiée en demande un ici — jamais un doublon.
+  if (examRecalc && ctx.plannerActive) {
     await insertEvents([{ event_key: `recalc-demande:${userId}:${nowIso}`, user_id: userId, event_type: 'PLANNER_RECALCULATION_REQUIRED', detail: { source: 'moteur_central' } }]);
   }
   return report;

@@ -93,6 +93,7 @@ export default async function EntrainementPage() {
   return (
     <StudentPage>
       <StudentHero
+        aide="entrainement"
         icon={Target}
         eyebrow="Cibler vos erreurs"
         title="Travaillez en priorité ce que vous ratez le plus."

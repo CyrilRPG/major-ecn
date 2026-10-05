@@ -47,11 +47,38 @@ export function EngagementAlert({ alert }: { alert: AlertView }) {
   }, [alert.episodeId, alert.popup, alert.level]);
   const tone = TONE[alert.tone];
   const ack = () => start(async () => { const r = await alertAckAction(alert.episodeId); if (r.ok) setAcked(true); });
+  // Encart proportionné au niveau : vigilance / attention / reprise tiennent sur une bande, faits repliables.
+  const leger = alert.tone === 'vigilance' || alert.tone === 'attention' || alert.tone === 'reprise';
 
   return (
     <>
-      <section role="status" aria-live="polite" className={cn('rounded-2xl border p-4 sm:p-5', tone.box)}>
-        {acked && !alert.persistent ? (
+      <section role="status" aria-live="polite" className={cn('rounded-2xl border', leger ? 'px-4 py-3' : 'p-4 sm:p-5', tone.box)}>
+        {leger && !(acked && !alert.persistent) ? (
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <div className="min-w-0 flex-1">
+              <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <span className={cn('inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide', tone.chip)}><tone.Icon className="h-3 w-3" aria-hidden /> {alert.levelLabel}</span>
+                <span className="text-sm font-bold text-(--color-ink)">{alert.title}</span>
+              </p>
+              <p className="mt-0.5 line-clamp-2 text-[13px] text-(--color-ink-soft)">{alert.body}</p>
+              {alert.facts.length > 0 && (
+                <details className="group mt-1 text-xs text-(--color-ink-soft)">
+                  <summary className="inline-flex cursor-pointer list-none items-center gap-1 font-semibold hover:text-(--color-ink) [&::-webkit-details-marker]:hidden">Voir les faits <span aria-hidden className="transition-transform group-open:rotate-180">▾</span></summary>
+                  <ul className="mt-1 space-y-0.5">{alert.facts.map((f) => <li key={f} className="flex gap-1.5"><span aria-hidden>•</span>{f}</li>)}</ul>
+                </details>
+              )}
+            </div>
+            <div className="flex shrink-0 flex-wrap items-center gap-3">
+              <CtaLink href={alert.cta.href} label={alert.cta.label} />
+              {alert.secondary && <CtaLink href={alert.secondary.href} label={alert.secondary.label} primary={false} />}
+              {!acked && alert.tone !== 'reprise' && (
+                <button type="button" onClick={ack} disabled={pending} className="text-xs font-medium text-(--color-ink-soft) underline-offset-4 hover:underline focus-ring">
+                  {pending ? <Loader2 className="inline h-3 w-3 animate-spin" /> : 'J’ai compris'}
+                </button>
+              )}
+            </div>
+          </div>
+        ) : acked && !alert.persistent ? (
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="flex min-w-0 items-center gap-2 text-sm font-semibold text-(--color-ink)">
               <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide', tone.chip)}>{alert.levelLabel}</span>
@@ -119,16 +146,23 @@ export function PlannerAlert({ alert }: { alert: PlannerAlertView }) {
     if (r.ok) setHidden(true); else setError(r.error);
   });
   return (
-    <section role="status" aria-live="polite" className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div className="min-w-0">
-          <p className="inline-flex items-center gap-1 rounded-full bg-(--color-primary-soft) px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-(--color-accent)"><CalendarClock className="h-3.5 w-3.5" aria-hidden /> {alert.levelLabel}</p>
-          <h2 className="mt-2 text-base font-bold text-(--color-ink)">{alert.title}</h2>
-          {alert.body && <p className="mt-1 text-sm text-(--color-ink-soft)">{alert.body}</p>}
-          {alert.facts.length > 0 && <ul className="mt-2 space-y-0.5 text-xs text-(--color-ink-soft)">{alert.facts.map((f) => <li key={f}>• {f}</li>)}</ul>}
-          {error && <p className="mt-2 text-xs text-(--color-danger)" role="alert">{error}</p>}
+    <section role="status" aria-live="polite" className="rounded-2xl border border-(--color-border) bg-(--color-surface) px-4 py-3 shadow-(--shadow-soft)">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <div className="min-w-0 flex-1">
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-(--color-primary-soft) px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide text-(--color-accent)"><CalendarClock className="h-3 w-3" aria-hidden /> {alert.levelLabel}</span>
+            <span className="text-sm font-bold text-(--color-ink)">{alert.title}</span>
+          </p>
+          {alert.body && <p className="mt-0.5 line-clamp-2 text-[13px] text-(--color-ink-soft)">{alert.body}</p>}
+          {alert.facts.length > 0 && (
+            <details className="group mt-1 text-xs text-(--color-ink-soft)">
+              <summary className="inline-flex cursor-pointer list-none items-center gap-1 font-semibold hover:text-(--color-ink) [&::-webkit-details-marker]:hidden">Voir les faits <span aria-hidden className="transition-transform group-open:rotate-180">▾</span></summary>
+              <ul className="mt-1 space-y-0.5">{alert.facts.map((f) => <li key={f}>• {f}</li>)}</ul>
+            </details>
+          )}
+          {error && <p className="mt-1 text-xs text-(--color-danger)" role="alert">{error}</p>}
         </div>
-        <div className="flex shrink-0 flex-wrap gap-2 sm:flex-col sm:items-end">
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
           <CtaLink href={alert.cta.href} label={alert.cta.label} />
           {alert.choices && (
             <Button variant="outline" onClick={keep} disabled={pending}>{pending ? <Loader2 className="animate-spin" /> : null} Conserver</Button>

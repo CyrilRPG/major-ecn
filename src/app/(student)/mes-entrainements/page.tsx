@@ -46,6 +46,7 @@ export default async function MesEntrainementsPage() {
   return (
     <StudentPage>
       <StudentHero
+        aide="mes-entrainements"
         icon={PenLine}
         eyebrow="Vos créations"
         title="Mes entraînements"

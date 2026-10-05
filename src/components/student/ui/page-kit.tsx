@@ -2,6 +2,8 @@ import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+import type { RubriqueCle } from '@/lib/student/rubriques';
+import { AideRubrique } from './aide-rubrique';
 
 /**
  * Charpente commune des pages du menu élève (Accueil, Parcours du Major,
@@ -46,7 +48,7 @@ export const heroGhost =
  * menu (repère visuel), reprise en filigrane doré sauf `watermark` explicite.
  */
 export function StudentHero({
-  icon: Icon, watermark, eyebrow, title, subtitle, actions, stats, links, children, compact = false, titleAs: Title = 'h1', className,
+  icon: Icon, watermark, eyebrow, title, subtitle, actions, stats, links, children, compact = false, titleAs: Title = 'h1', aide, className,
 }: {
   icon: LucideIcon;
   watermark?: ReactNode;
@@ -63,12 +65,16 @@ export function StudentHero({
   /** Variante basse pour les pages plein écran (Agenda). */
   compact?: boolean;
   titleAs?: 'h1' | 'p';
+  /** Rubrique du menu : bouton « À quoi ça sert ? » (guide de la page). */
+  aide?: RubriqueCle;
   className?: string;
 }) {
+  // overflow-clip (et non hidden) : le filigrane dépasse du cadre ; un conteneur
+  // « hidden » reste défilable par programme (scrollIntoView) et se décalait.
   return (
     <header
       className={cn(
-        'relative isolate overflow-hidden rounded-3xl border border-[#E9D8A6]/70 text-white shadow-[0_24px_60px_-30px_rgba(45,5,24,0.65)]',
+        'relative isolate overflow-clip rounded-3xl border border-[#E9D8A6]/70 text-white shadow-[0_24px_60px_-30px_rgba(45,5,24,0.65)]',
         'bg-[linear-gradient(135deg,#0E1626_0%,#1C1434_40%,#2A1130_70%,#2D0518_100%)]',
         compact ? 'px-5 py-4 sm:px-6' : 'px-5 py-6 sm:px-8 sm:py-7',
         className,
@@ -80,13 +86,19 @@ export function StudentHero({
         {watermark ?? <Icon strokeWidth={1.2} />}
       </span>
 
+      {aide && (
+        <div className={cn('absolute z-10', compact ? 'right-3 top-3 sm:right-4' : 'right-4 top-4 sm:right-5 sm:top-5')}>
+          <AideRubrique cle={aide} />
+        </div>
+      )}
+
       <div className={cn('flex flex-wrap justify-between gap-x-6', compact ? 'items-center gap-y-3' : 'items-end gap-y-4')}>
         <div className="min-w-0 max-w-3xl">
-          <p className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[#F5C84B]">
+          <p className={cn('flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[#F5C84B]', aide && 'pr-12 sm:pr-44')}>
             <span className="grid h-6 w-6 shrink-0 place-items-center rounded-lg bg-white/10 ring-1 ring-inset ring-white/15">
               <Icon className="h-3.5 w-3.5" aria-hidden />
             </span>
-            {eyebrow}
+            <span className="min-w-0">{eyebrow}</span>
           </p>
           <Title className={cn(displayFont, 'mt-2 font-extrabold leading-[1.1] tracking-[-0.02em] text-balance', compact ? 'text-[22px] sm:text-[26px]' : 'text-[26px] sm:text-[32px]')}>{title}</Title>
           {subtitle && <div className={cn('max-w-2xl leading-relaxed text-white/70 text-pretty', compact ? 'mt-1 text-[13px] sm:text-sm' : 'mt-2 text-sm sm:text-[15px]')}>{subtitle}</div>}

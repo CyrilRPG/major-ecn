@@ -130,7 +130,7 @@ export function PlanTabsV4({ end }: { end?: ReactNode }) {
                     className={cn(
                       'flex h-10 items-center gap-2 whitespace-nowrap rounded-[10px] px-3.5 text-[14.5px] transition-colors',
                       active
-                        ? 'bg-[linear-gradient(135deg,#7a1222_0%,#a3061b_100%)] font-semibold text-white shadow-[0_8px_18px_-10px_rgba(122,18,34,0.9)] dark:bg-[linear-gradient(135deg,#b3263d,#e04a63)]'
+                        ? 'bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] font-semibold text-white shadow-[0_8px_18px_-10px_rgba(228,0,43,0.85)]'
                         : 'font-medium text-(--pl-tab-text) hover:bg-(--pl-rose-50) hover:text-(--pl-bordeaux)',
                     )}
                   >

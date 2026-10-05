@@ -4,22 +4,23 @@ import { cn } from '@/lib/utils';
 import { StudentHero } from '@/components/student/ui/page-kit';
 import { planScript, planSerif } from './fonts';
 import { LaurelMark } from './laurel';
-import { NoticeBell, type Notice } from './notice-bell';
 import { PlanBackLink, PlanTabLabel, PlanTabsV4 } from './tabs';
 
 /**
  * En-tête de l'espace « Mon planning » : le même en-tête premium que les
  * autres pages du menu élève, avec l'identité de la maquette (couronne de
  * laurier, accroche manuscrite), puis la barre d'onglets épinglée au
- * défilement, qui porte la cloche des nouveautés du planificateur.
+ * défilement, qui porte la cloche des nouveautés du planificateur (`bell`,
+ * diffusée à part par le layout).
  */
-export function PlannerHeader({ notices, tabs = true }: { notices: Notice[]; tabs?: boolean }) {
+export function PlannerHeader({ bell, tabs = true }: { bell: React.ReactNode; tabs?: boolean }) {
   // Fragment, pas d'enveloppe : la barre d'onglets « sticky » doit avoir pour
   // parent le conteneur de toute la page, sinon elle cesse de coller dès que
   // l'en-tête sort de l'écran.
   return (
     <>
       <StudentHero
+        aide="planning"
         compact
         titleAs="p"
         icon={CalendarRange}
@@ -28,7 +29,7 @@ export function PlannerHeader({ notices, tabs = true }: { notices: Notice[]; tab
         title="Mon planning"
         subtitle={<span className={cn(planScript.className, 'block pt-0.5 text-[23px] leading-none text-[#F5C84B] sm:text-[25px]')}>Discipline aujourd’hui, réussite demain.</span>}
       />
-      {tabs && <PlanTabsV4 end={<NoticeBell notices={notices} />} />}
+      {tabs && <PlanTabsV4 end={bell} />}
     </>
   );
 }

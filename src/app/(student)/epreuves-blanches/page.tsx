@@ -63,6 +63,7 @@ export default async function StudentExamsPage() {
   return (
     <StudentPage>
       <StudentHero
+        aide="epreuves"
         icon={PencilRuler}
         eyebrow="Conditions réelles"
         title="Épreuves blanches"

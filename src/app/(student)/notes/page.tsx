@@ -42,6 +42,7 @@ export default async function NotesIndexPage() {
   return (
     <StudentPage>
       <StudentHero
+        aide="notes"
         icon={NotebookPen}
         eyebrow="Vos notes de cours"
         title="Prises de notes"

@@ -68,6 +68,7 @@ export default async function RevoirPage() {
   return (
     <StudentPage>
       <StudentHero
+        aide="revoir"
         icon={Star}
         eyebrow="Votre sélection"
         title="Questions à revoir"

@@ -1,37 +1,39 @@
 /*
- * Espace « Mon planning » — jetons de la maquette validée (Suivi), mesurés sur
- * l'image de référence (1536 px). Le mode sombre de la plateforme (.dark) en
- * dérive des équivalents lisibles.
+ * Espace « Mon planning » — jetons de couleur. Alignés le 05/10/2026 sur la
+ * charte commune des pages élève (fond, cartes, bordeaux et roses du site
+ * vitrine, boutons rouge → orange de l'application) : la rubrique gardait la
+ * palette crème/serif de sa maquette et paraissait sortir d'un autre site.
+ * Le mode sombre de la plateforme (.dark) en dérive des équivalents lisibles.
  */
 .plan-v4 {
-  --pl-page: #fdfbf9;
+  --pl-page: #f6f7f9;
   --pl-card: #ffffff;
-  --pl-card-border: #f3eeec;
-  --pl-card-shadow: 0 1px 2px rgba(60, 20, 30, 0.04), 0 6px 18px -12px rgba(90, 30, 40, 0.12);
-  --pl-ink: #1b2142;
-  --pl-text: #4b5068;
-  --pl-muted: #6b7086;
-  --pl-bordeaux: #7a1222;
-  --pl-bordeaux-strong: #6a0a1a;
-  --pl-crimson: #a3061b;
-  --pl-pill: #850016;
-  --pl-rose-50: #fdf3f2;
-  --pl-rose-75: #fdf0f1;
-  --pl-rose-100: #fbe8e9;
-  --pl-rose-200: #f3d8d2;
-  --pl-rose-300: #e6aaa9;
-  --pl-grid: #f9e7ea;
-  --pl-area-top: rgba(244, 170, 182, 0.38);
-  --pl-area-bottom: rgba(253, 239, 241, 0.25);
-  --pl-off: #f2f4f7;
-  --pl-info: #f4f5fb;
+  --pl-card-border: #eceef1;
+  --pl-card-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px -12px rgba(16, 24, 40, 0.1);
+  --pl-ink: #14254e;
+  --pl-text: #4b5563;
+  --pl-muted: #6b7280;
+  --pl-bordeaux: #8b0e22;
+  --pl-bordeaux-strong: #6f0012;
+  --pl-crimson: #c0112e;
+  --pl-pill: #c0112e;
+  --pl-rose-50: #fdf4f5;
+  --pl-rose-75: #fdf4f5;
+  --pl-rose-100: #fceaec;
+  --pl-rose-200: #f6d9dd;
+  --pl-rose-300: #eaa9b2;
+  --pl-grid: #f3e3e6;
+  --pl-area-top: rgba(228, 0, 43, 0.22);
+  --pl-area-bottom: rgba(253, 244, 245, 0.25);
+  --pl-off: #f2f3f5;
+  --pl-info: #f6f7f9;
   --pl-green-bg: #eef8f1;
-  --pl-green: #1f7a47;
+  --pl-green: #16793c;
   --pl-tab-text: #3f4459;
-  --pl-banner: #f8f2ec;
+  --pl-banner: #fdf4f5;
   --pl-brush: #f5e6dc;
-  --pl-avatar: #f5e6df;
-  --pl-kpi-from: #fdf1f0;
+  --pl-avatar: #fceaec;
+  --pl-kpi-from: #fdf4f5;
   --pl-kpi-to: #ffffff;
   background: var(--pl-page);
   color: var(--pl-text);
@@ -70,14 +72,26 @@
 .plan-v4 .pl-card {
   background: var(--pl-card);
   border: 1px solid var(--pl-card-border);
-  border-radius: 14px;
+  border-radius: 16px;
   box-shadow: var(--pl-card-shadow);
 }
 .plan-v4 .pl-kpi {
   background: linear-gradient(90deg, var(--pl-kpi-from), var(--pl-kpi-to) 85%);
   border: 1px solid var(--pl-card-border);
-  border-radius: 12px;
+  border-radius: 16px;
   box-shadow: var(--pl-card-shadow);
+}
+/* Boutons : mêmes formes et mêmes couleurs que sur les autres pages élève —
+   action principale en dégradé rouge → orange, action secondaire au contour
+   rouge, coins arrondis (et non pilules). */
+.plan-v4 :is(a, button)[class~="bg-(--pl-pill)"][class~="text-white"] {
+  background-color: #e4002b;
+  background-image: linear-gradient(90deg, #e4002b 0%, #f97316 100%);
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 24px -14px rgba(228, 0, 43, 0.9);
+}
+.plan-v4 :is(a, button)[class~="border-(--pl-pill)"] {
+  border-radius: 0.75rem;
 }
 .plan-v4 :focus-visible {
   outline: 2px solid var(--pl-crimson);

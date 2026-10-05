@@ -42,6 +42,7 @@ export default async function MesPrioritesPage({ searchParams }: { searchParams:
   return (
     <StudentPage>
       <StudentHero
+        aide="priorites"
         icon={Gauge}
         eyebrow="Profil pédagogique"
         title="Mes priorités"

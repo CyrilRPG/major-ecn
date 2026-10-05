@@ -68,6 +68,7 @@ export default async function AgendaPage({
   return (
     <div className="flex flex-col gap-4 px-4 py-5 sm:px-6 lg:h-full lg:overflow-hidden lg:px-8">
       <StudentHero
+        aide="agenda"
         compact
         className="shrink-0"
         icon={CalendarDays}

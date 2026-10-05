@@ -40,6 +40,7 @@ export default async function CheckupPage() {
   return (
     <StudentPage>
       <StudentHero
+        aide="checkup"
         icon={ClipboardCheck}
         eyebrow="Mesurer votre niveau"
         title={TEXTS.launchTitle}

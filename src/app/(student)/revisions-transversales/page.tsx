@@ -103,6 +103,7 @@ export default async function RevisionsTransversalesPage() {
   return (
     <StudentPage width="wide">
       <StudentHero
+        aide="transversales"
         icon={RefreshCcw}
         eyebrow="Entretenir vos acquis"
         title="Révisions transversales"

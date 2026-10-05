@@ -2,16 +2,16 @@ import { CHECKUP_STUDENT_ENABLED, PEDAGO_ENGINE_STUDENT_ENABLED, SUIVI_STUDENT_E
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  ArrowRight, CalendarCheck, CalendarDays, CalendarRange, ChevronRight, ClipboardCheck, Gauge, Home, Lock,
-  NotebookPen, PencilRuler, PenLine, RefreshCcw, Star, Target, Trophy,
-} from 'lucide-react';
+import { ArrowRight, ChevronRight, Home, Lock, Star, Trophy } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
 import { cn } from '@/lib/utils';
 import type { NavCollege } from '@/lib/data/navigator';
 import { Link2 } from 'lucide-react';
 import { LIENS_COLLEGES } from '@/lib/data/liens-colleges';
 import { LockedContentModal } from '@/components/espace-decouverte/locked-content-modal';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { FAMILLES, ORDRE_MENU, RUBRIQUES, rubriqueDe, type RubriqueCle } from '@/lib/student/rubriques';
+import { noterRubriqueVueAction } from '@/lib/student/guide-actions';
 
 /** Active pill : dégradé rouge → orange identique sur tous les items
  *  (top-level et sub-items). Reflète la maquette du client. */
@@ -201,14 +201,13 @@ export function Navigator({
     return c?.id ?? null;
   }, [tree]);
 
-  const homeActive = pathname === '/accueil';
-  const trainActive = pathname.startsWith('/entrainement');
-  const transversalActive = pathname.startsWith('/revisions-transversales');
-  const agendaActive = pathname.startsWith('/agenda');
-  const rendezVousActive = pathname.startsWith('/mes-rendez-vous');
-  const planActive = pathname.startsWith('/planificateur');
-  const prioritesActive = pathname.startsWith('/mes-priorites');
-  const checkupActive = pathname.startsWith('/checkup');
+  const active = (cle: RubriqueCle) => {
+    const href = RUBRIQUES[cle].href;
+    return cle === 'accueil' ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
+  };
+  const planActive = active('planning');
+  const prioritesActive = active('priorites');
+  const checkupActive = active('checkup');
 
   /** Pastilles « NEW » (Mon planning, Mes priorités, EVC Check-up) : apaisées
    *  dès la première ouverture (clic ou arrivée directe), mémorisées par navigateur. */
@@ -244,142 +243,121 @@ export function Navigator({
     });
     return () => cancelAnimationFrame(raf);
   }, [planActive, prioritesActive, checkupActive, marquerVu]);
-  const notesActive = pathname.startsWith('/notes');
-  const revoirActive = pathname.startsWith('/revoir');
-  const mesEntrainementsActive = pathname.startsWith('/mes-entrainements');
-  const epreuvesActive = pathname.startsWith('/epreuves-blanches');
-  const parcoursActive = pathname.startsWith('/parcours');
 
-  const topLevelClass = (active: boolean) =>
+  /** Repère du guide élève : première ouverture de chaque rubrique (une fois par
+   *  appareil), pour la carte « Bien démarrer » de l'accueil et la mesure d'usage. */
+  useEffect(() => {
+    if (role !== 'student') return;
+    const cle = rubriqueDe(pathname);
+    if (!cle) return;
+    const cleLocale = `mecn_repere_vu:${cle}`;
+    try {
+      if (window.localStorage.getItem(cleLocale) === '1') return;
+    } catch {
+      /* mode privé : on enregistre quand même (upsert idempotent) */
+    }
+    void noterRubriqueVueAction(cle).then((r) => {
+      if (!r.ok) return;
+      try {
+        window.localStorage.setItem(cleLocale, '1');
+      } catch {
+        /* noop */
+      }
+    });
+  }, [pathname, role]);
+
+  const topLevelClass = (on: boolean) =>
     cn(
       'mb-1 flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left font-medium transition-colors',
-      active ? ACTIVE_GRADIENT : 'text-white/85 hover:bg-white/10 hover:text-white',
+      on ? ACTIVE_GRADIENT : 'text-white/85 hover:bg-white/10 hover:text-white',
     );
 
-  /** Helper : rendu d'un item top-level verrouillé en Découverte.
-   *  Apparence : icône grisée + badge cadenas rouge + clic = popup. */
-  const renderLockedTop = (Icon: typeof Target, label: string) => (
-    <button
-      type="button"
-      onClick={() => setLockedOpen(true)}
-      className="mb-1 flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left font-medium text-white/55 transition-colors hover:bg-white/10 hover:text-white/80"
-    >
-      <Icon className="h-[18px] w-[18px] shrink-0" />
-      <span className="flex-1 truncate">{label}</span>
-      <span
-        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
-        style={{ background: 'rgba(192,17,46,0.20)', color: '#FCA5A5' }}
+  /** Rubriques affichées (registre lib/student/rubriques). */
+  const visible = (cle: RubriqueCle): boolean => {
+    switch (cle) {
+      case 'planning': return isDecouverte ? canAccessPlan || role !== 'student' : canAccessPlan;
+      case 'priorites': return PEDAGO_ENGINE_STUDENT_ENABLED;
+      case 'checkup': return CHECKUP_STUDENT_ENABLED;
+      case 'parcours': return role === 'admin' || canAccessParcoursMajor;
+      case 'rendez-vous': return SUIVI_STUDENT_ENABLED && !isDecouverte;
+      default: return true;
+    }
+  };
+  /** En Découverte, tout est verrouillé sauf l'accueil et le Parcours du Major. */
+  const verrouillee = (cle: RubriqueCle) => isDecouverte && cle !== 'accueil' && cle !== 'parcours';
+  const nouveaute = (cle: RubriqueCle): cle is Nouveaute => cle === 'planning' || cle === 'priorites' || cle === 'checkup';
+
+  /** Une entrée du menu, avec son rôle en infobulle (« à quoi ça sert »). */
+  const renderItem = (cle: RubriqueCle) => {
+    const r = RUBRIQUES[cle];
+    const on = active(cle);
+    const entree = verrouillee(cle) ? (
+      <button
+        type="button"
+        onClick={() => setLockedOpen(true)}
+        className="mb-1 flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left font-medium text-white/55 transition-colors hover:bg-white/10 hover:text-white/80"
       >
-        <Lock className="h-3 w-3" />
-      </span>
-    </button>
-  );
+        <r.Icon className="h-[18px] w-[18px] shrink-0" />
+        <span className="flex-1 truncate">{r.label}</span>
+        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full" style={{ background: 'rgba(192,17,46,0.20)', color: '#FCA5A5' }}>
+          <Lock className="h-3 w-3" />
+        </span>
+      </button>
+    ) : (
+      <Link
+        href={r.href}
+        onClick={nouveaute(cle) ? () => marquerVu(cle) : undefined}
+        aria-current={on ? 'page' : undefined}
+        className={topLevelClass(on)}
+      >
+        <r.Icon className="h-[18px] w-[18px] shrink-0" />
+        {r.label}
+        {nouveaute(cle) && <NewBadge vu={vues[cle]} active={on} />}
+      </Link>
+    );
+    return (
+      <Tooltip key={cle} delayDuration={450}>
+        <TooltipTrigger asChild>{entree}</TooltipTrigger>
+        <TooltipContent side="right" align="start" sideOffset={10} className="hidden max-w-[270px] rounded-xl bg-white px-3.5 py-2.5 text-[12.5px] leading-snug text-[#4B5563] shadow-[0_18px_40px_-12px_rgba(14,22,38,0.45)] ring-1 ring-black/5 lg:block">
+          <span className="block text-[13px] font-bold text-[#14254E]">{r.label}</span>
+          <span className="mt-0.5 block">{r.role}</span>
+        </TooltipContent>
+      </Tooltip>
+    );
+  };
 
   return (
+    // Fournisseur propre au menu (infobulles « à quoi ça sert ») : ne dépend pas
+    // du fournisseur global du layout racine, absent du rendu serveur du menu.
+    <TooltipProvider delayDuration={450} skipDelayDuration={200}>
     <nav aria-label="Navigation" className="space-y-0.5 px-2 pb-8 text-[15px]">
       {/* Encadré Espace découverte — juste au-dessus de Accueil. */}
       {isDecouverte && !isProf && <DiscoverySidebarCta />}
 
-      {/* Accueil : présent pour tous, mais redirige vers la page d'accueil
-          adaptée au rôle (ProfWelcome pour les profs). */}
-      <Link href="/accueil" className={topLevelClass(homeActive)}>
-        <Home className="h-[18px] w-[18px] shrink-0" />
-        Accueil
-      </Link>
-
-      {(role === 'admin' || canAccessParcoursMajor) && (
-        <Link href="/parcours" className={topLevelClass(parcoursActive)}>
-          <Trophy className="h-[18px] w-[18px] shrink-0" />
-          Parcours du Major
-        </Link>
-      )}
-
-      {!isProf && (
+      {isProf ? (
         <>
-          {isDecouverte ? (
-            <>
-              {(canAccessPlan || role !== 'student') && renderLockedTop(CalendarRange, 'Mon planning')}
-              {PEDAGO_ENGINE_STUDENT_ENABLED && renderLockedTop(Gauge, 'Mes priorités')}
-              {CHECKUP_STUDENT_ENABLED && renderLockedTop(ClipboardCheck, 'EVC Check-up')}
-              {renderLockedTop(Target, 'Entraînement ciblé')}
-              {renderLockedTop(RefreshCcw, 'Révisions transversales')}
-              {renderLockedTop(CalendarDays, 'Agenda')}
-              {renderLockedTop(NotebookPen, 'Prises de notes')}
-              {renderLockedTop(Star, 'Questions à revoir')}
-              {renderLockedTop(PenLine, 'Mes entraînements')}
-              {renderLockedTop(PencilRuler, 'Épreuves blanches')}
-            </>
-          ) : (
-            <>
-              {canAccessPlan && (
-                <Link href="/planificateur" onClick={() => marquerVu('planning')} className={topLevelClass(planActive)}>
-                  <CalendarRange className="h-[18px] w-[18px] shrink-0" />
-                  Mon planning
-                  <NewBadge vu={vues.planning} active={planActive} />
-                </Link>
-              )}
-
-              {/* Moteur pédagogique : l'état de chaque item et la mesure du niveau. */}
-              {PEDAGO_ENGINE_STUDENT_ENABLED && (
-                <Link href="/mes-priorites" onClick={() => marquerVu('priorites')} className={topLevelClass(prioritesActive)}>
-                  <Gauge className="h-[18px] w-[18px] shrink-0" />
-                  Mes priorités
-                  <NewBadge vu={vues.priorites} active={prioritesActive} />
-                </Link>
-              )}
-              {CHECKUP_STUDENT_ENABLED && (
-                <Link href="/checkup" onClick={() => marquerVu('checkup')} className={topLevelClass(checkupActive)}>
-                  <ClipboardCheck className="h-[18px] w-[18px] shrink-0" />
-                  EVC Check-up
-                  <NewBadge vu={vues.checkup} active={checkupActive} />
-                </Link>
-              )}
-
-              <Link href="/entrainement" className={topLevelClass(trainActive)}>
-                <Target className="h-[18px] w-[18px] shrink-0" />
-                Entraînement ciblé
-              </Link>
-
-              <Link href="/revisions-transversales" className={topLevelClass(transversalActive)}>
-                <RefreshCcw className="h-[18px] w-[18px] shrink-0" />
-                Révisions transversales
-              </Link>
-
-              <Link href="/agenda" className={topLevelClass(agendaActive)}>
-                <CalendarDays className="h-[18px] w-[18px] shrink-0" />
-                Agenda
-              </Link>
-
-              {/* Suivi individuel : rendez-vous du candidat avec l'équipe pédagogique. */}
-              {SUIVI_STUDENT_ENABLED && (
-                <Link href="/mes-rendez-vous" className={topLevelClass(rendezVousActive)}>
-                  <CalendarCheck className="h-[18px] w-[18px] shrink-0" />
-                  Mes rendez-vous
-                </Link>
-              )}
-
-              <Link href="/notes" className={topLevelClass(notesActive)}>
-                <NotebookPen className="h-[18px] w-[18px] shrink-0" />
-                Prises de notes
-              </Link>
-
-              <Link href="/revoir" className={topLevelClass(revoirActive)}>
-                <Star className="h-[18px] w-[18px] shrink-0" />
-                Questions à revoir
-              </Link>
-
-              <Link href="/mes-entrainements" className={topLevelClass(mesEntrainementsActive)}>
-                <PenLine className="h-[18px] w-[18px] shrink-0" />
-                Mes entraînements
-              </Link>
-
-              <Link href="/epreuves-blanches" className={topLevelClass(epreuvesActive)}>
-                <PencilRuler className="h-[18px] w-[18px] shrink-0" />
-                Épreuves blanches
-              </Link>
-            </>
+          {/* Accueil : redirige vers la page d'accueil enseignant (ProfWelcome). */}
+          <Link href="/accueil" className={topLevelClass(active('accueil'))}>
+            <Home className="h-[18px] w-[18px] shrink-0" />
+            Accueil
+          </Link>
+          {canAccessParcoursMajor && (
+            <Link href="/parcours" className={topLevelClass(active('parcours'))}>
+              <Trophy className="h-[18px] w-[18px] shrink-0" />
+              Parcours du Major
+            </Link>
           )}
         </>
+      ) : (
+        /* Menu élève en trois familles : la méthode se lit dans le menu. */
+        FAMILLES.map((f, i) => (
+          <div key={f.cle} role="group" aria-labelledby={`menu-${f.cle}`}>
+            <p id={`menu-${f.cle}`} className={cn('px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40', i === 0 ? 'pt-1' : 'pt-3')}>
+              {f.titre}
+            </p>
+            {ORDRE_MENU[f.cle].filter(visible).map(renderItem)}
+          </div>
+        ))
       )}
 
       <p className="px-3 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">
@@ -509,5 +487,6 @@ export function Navigator({
           Agenda/Annales EVC dans le menu. */}
       <LockedContentModal open={lockedOpen} onClose={() => setLockedOpen(false)} />
     </nav>
+    </TooltipProvider>
   );
 }
