@@ -123,15 +123,20 @@ export function alertView(ep: AlertEpisodeView | null, facts: AlertFacts, ctx: C
 
 /* ─── Moteur B : adhérence au planificateur (§20 à §31) ─── */
 
-/** Liens d'action du planificateur (convenus avec le module planificateur). */
+/**
+ * Liens d'action du planificateur (convenus avec le module planificateur).
+ * Tous passent par `/planificateur?action=…`, page qui existe dans toutes les
+ * versions du planificateur : c'est elle qui ouvre le bon écran (objectifs,
+ * report, désactivation…). Une action inconnue affiche simplement la page.
+ */
 export const PLANNER_LINKS = {
   reorganiser: '/planificateur?action=reorganiser',
   restantes: '/planificateur?action=restantes',
   repartir: '/planificateur?action=repartir',
-  adapter: '/planificateur/objectifs?action=adapter',
-  desactiver: '/planificateur/objectifs?action=desactiver',
-  pause: '/planificateur/objectifs?action=pause',
-  reactiver: '/planificateur/objectifs?action=reactiver',
+  adapter: '/planificateur?action=adapter',
+  desactiver: '/planificateur?action=desactiver',
+  pause: '/planificateur?action=pause',
+  reactiver: '/planificateur?action=reactiver',
 } as const;
 
 export type PlannerEpisodeView = {
