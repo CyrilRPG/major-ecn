@@ -85,7 +85,8 @@ export async function plannerEnv(userId: string): Promise<PlannerEnv | null> {
   const today = workDay(new Date(), tz, params.day.close_time);
   let ctx: PlannerContext | null = null;
   if (profile.planner_status === 'actif') {
-    try { ctx = await loadPlannerContext(userId, { profile }); } catch (e) { if (!(e instanceof PlannerUnavailable)) throw e; }
+    // Sans le contenu des items : les pages ne s'en servent pas, seul le recalcul compose avec.
+    try { ctx = await loadPlannerContext(userId, { profile, content: false }); } catch (e) { if (!(e instanceof PlannerUnavailable)) throw e; }
   }
   return { userId, profile, ctx, today, tz, status: profile.planner_status ?? 'actif' };
 }

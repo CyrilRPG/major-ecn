@@ -145,8 +145,14 @@ const toLite = (r: ItemStateRow | undefined): CentralStateLite | null => {
 /**
  * Charge le contexte. `PlannerUnavailable` si le planificateur n'est pas
  * configuré pour ce compte (onboarding non fait, préparation fermée, programme vide).
+ *
+ * `content: false` (affichage des pages) : le contenu réel des items (vivier du
+ * Check-up, flashcards, séries faites) ne sert qu'à composer le planning. Le
+ * charger coûtait 2 à 3 s à la première page servie par chaque instance, puis
+ * toutes les 10 min (relevé [plan-perf] du 06/10/2026) ; les items reçoivent
+ * alors un contenu vide.
  */
-export async function loadPlannerContext(userId: string, opts: { now?: Date; profile?: PlanProfile | null; account?: AccountLite | null } = {}): Promise<PlannerContext> {
+export async function loadPlannerContext(userId: string, opts: { now?: Date; profile?: PlanProfile | null; account?: AccountLite | null; content?: boolean } = {}): Promise<PlannerContext> {
   const now = opts.now ?? new Date();
   const [profile, account, paramSet, orchestrator] = await Promise.all([
     opts.profile !== undefined ? Promise.resolve(opts.profile) : getProfile(userId),
@@ -187,7 +193,7 @@ export async function loadPlannerContext(userId: string, opts: { now?: Date; pro
   const coursIds = items.map((i) => i.cours_id).filter((x): x is string => !!x);
   const [prerequisites, content] = await Promise.all([
     cachedPrerequisites(preparation.specialite_id, items.map((i) => i.id)),
-    contentByCours(preparation.specialite_id, account.permission_scope, voie, coursIds, userId),
+    opts.content === false ? Promise.resolve(new Map<string, ItemContent>()) : contentByCours(preparation.specialite_id, account.permission_scope, voie, coursIds, userId),
   ]);
 
   // Moteur central : états, besoins et réactivations, ramenés aux items du programme.
