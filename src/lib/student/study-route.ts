@@ -4,11 +4,21 @@
  * forum, notes, profil…).
  *
  * Le compteur de temps (« Temps de révision ») ne doit tourner QUE sur ces pages :
- * lire une fiche, regarder une vidéo, faire des QCM/flashcards, un entraînement
- * ou des révisions transversales. Ouvrir la liste des cours ou le tableau de bord
+ * lire une fiche, regarder une vidéo, faire des QCM/flashcards, un entraînement,
+ * des révisions transversales, une épreuve blanche ou un niveau du Parcours. Ouvrir la liste des cours ou le tableau de bord
  * ne compte pas comme du temps de révision.
  */
-const STUDY_PREFIXES = ['/cours/', '/entrainement', '/revisions-transversales'];
+const STUDY_PREFIXES = [
+  '/cours/',
+  '/entrainement',
+  '/revisions-transversales',
+  // Une épreuve blanche, un niveau du Parcours du Major, une évaluation du
+  // planificateur : les pages de détail seulement (les listes restent de la
+  // navigation).
+  '/epreuves-blanches/',
+  '/parcours/',
+  '/planificateur/evaluation/',
+];
 
 export function isStudyRoute(pathname: string | null | undefined): boolean {
   if (!pathname) return false;

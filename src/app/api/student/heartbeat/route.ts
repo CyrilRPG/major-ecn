@@ -4,6 +4,7 @@ import { getRequestUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { isStudyRoute } from '@/lib/student/study-route';
 import { startOfUtcIsoWeek, sumTrackedSeconds, type StudyTimeRow } from '@/lib/student/study-time';
+import { MAX_SECONDS_PER_DAY } from '@/lib/schemas/mobile-sync';
 
 export const runtime = 'nodejs';
 /** Ne jamais laisser un heartbeat (appelé toutes les 60s × N élèves) saturer
@@ -59,7 +60,8 @@ export async function POST(req: Request) {
       await sb
         .from('platform_time_tracking')
         .update({
-          total_seconds: existing.total_seconds + increment,
+          // Même plafond journalier que la synchronisation mobile.
+          total_seconds: Math.min(existing.total_seconds + increment, MAX_SECONDS_PER_DAY),
           last_heartbeat: new Date().toISOString(),
         })
         .eq('id', existing.id);

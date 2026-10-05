@@ -21,6 +21,8 @@ import { startOfUtcIsoWeek, sumTrackedSeconds, type StudyTimeRow } from '@/lib/s
 import { getMaintienStats, getStudiedSpecialties } from '@/lib/pedago/maintien';
 import { sessionSizesFor } from '@/lib/pedago/status';
 import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
+import { ActiviteChart } from '@/components/student/activite-chart';
+import type { JourActivite } from '@/lib/student/activite';
 
 export const metadata = { title: 'Accueil' };
 
@@ -143,7 +145,7 @@ async function Dashboard({
   // Appels parallèles : agrégats par-utilisateur, arbre du programme, totaux de
   // contenu partagés, compteur hebdomadaire, et les données des zones 1-3 du
   // cahier des charges (progression par spécialité + maintien des acquis).
-  const [statsRes, ednRes, cachedTotals, timeRes, maintien, studiedSpecs] = await Promise.all([
+  const [statsRes, ednRes, cachedTotals, timeRes, maintien, studiedSpecs, activiteRes] = await Promise.all([
     // RPC hors types générés (database.ts) : cast ciblé, cf. incident schema drift.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any).rpc('get_accueil_stats', { p_faculte_id: EDN_FACULTE_ID }) as Promise<{ data: StatsResp | null }>,
@@ -166,6 +168,10 @@ async function Dashboard({
       .gte('session_date', startOfUtcIsoWeek()) as Promise<{ data: StudyTimeRow[] | null }>,
     getMaintienStats(supabase as never, userId),
     getStudiedSpecialties(supabase as never, userId, scope),
+    // « Votre activité » : un point par jour civil (Paris) sur 90 jours —
+    // le sélecteur 7 / 30 / 90 jours filtre côté client.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any).rpc('get_activite_quotidienne', { p_jours: 90 }) as Promise<{ data: JourActivite[] | null; error: unknown }>,
   ]);
 
   const stats = (statsRes.data as StatsResp | null) ?? {
@@ -310,22 +316,8 @@ async function Dashboard({
     }))
     .sort((a, b) => a.matiereNom.localeCompare(b.matiereNom, 'fr'));
 
-  /* ---- Évolution 30 jours ---- */
-  const days: { dayLabel: string; value: number }[] = [];
-  const idxByKey = new Map<string, number>();
-  for (let i = 29; i >= 0; i--) {
-    const d = new Date(now - i * 86_400_000);
-    idxByKey.set(d.toISOString().slice(0, 10), days.length);
-    days.push({
-      dayLabel: d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }),
-      value: 0,
-    });
-  }
-  for (const row of stats.daily) {
-    const i = idxByKey.get(row.d);
-    if (i !== undefined) days[i].value = row.n;
-  }
-  const maxDay = Math.max(4, ...days.map((d) => d.value));
+  /* ---- Activité quotidienne (graphique universel, avec ou sans planificateur) ---- */
+  const activite = activiteRes.error ? null : (activiteRes.data ?? []);
 
   /* ---- Répartition révisions (QCM vs Flashcards) ---- */
   const reviewsTotal = t.reviews_total;
@@ -598,20 +590,9 @@ async function Dashboard({
           </DiscoveryGateLink>
         </Card>
 
-        {/* Évolution */}
+        {/* Votre activité (temps de travail réel, jour par jour) */}
         <Card>
-          <div className="flex items-start justify-between gap-3">
-            <p className="text-sm font-bold text-(--color-ink)">Évolution de votre performance</p>
-            <span className="rounded-md border border-(--color-border) px-2 py-0.5 text-[11px] text-(--color-ink-soft)">30 jours</span>
-          </div>
-          <Sparkline days={days} max={maxDay} />
-          <div className="mt-3 flex items-start gap-2 rounded-xl bg-[#F5F3FF] p-3">
-            <TrendingUp className="mt-0.5 h-4 w-4 shrink-0 text-[#7C3AED]" />
-            <p className="text-[12px] leading-relaxed text-(--color-ink)">
-              <strong>Vos résultats s&rsquo;améliorent avec la régularité.</strong>{' '}
-              Continuez vos entraînements&nbsp;!
-            </p>
-          </div>
+          <ActiviteChart jours={activite} />
         </Card>
 
         {/* Répartition révisions */}
@@ -900,33 +881,6 @@ function WeekStat({ Icon, value, label, color }: { Icon: typeof Target; value: s
       </span>
       <p className="mt-1.5 text-base font-black tabular-nums" style={{ color }}>{value}</p>
       <p className="text-[10px] leading-tight text-(--color-ink-soft)">{label}</p>
-    </div>
-  );
-}
-
-function Sparkline({ days, max }: { days: { dayLabel: string; value: number }[]; max: number }) {
-  const W = 600, H = 110, P = 6;
-  const points = days.map((d, i) => {
-    const x = P + (i * (W - 2 * P)) / (days.length - 1);
-    const y = H - P - ((d.value / max) * (H - 2 * P));
-    return { x, y };
-  });
-  const poly = points.map((p) => `${p.x},${p.y}`).join(' ');
-  return (
-    <div className="relative mt-2">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-28 w-full">
-        {[0.25, 0.5, 0.75, 1].map((g, i) => (
-          <line key={i} x1={P} y1={H - P - g * (H - 2 * P)} x2={W - P} y2={H - P - g * (H - 2 * P)} stroke="#F1F5F9" strokeWidth="1" />
-        ))}
-        <polyline points={poly} fill="none" stroke="#C0112E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        {points.map((p, i) => (
-          <circle key={i} cx={p.x} cy={p.y} r="2.2" fill="#C0112E" />
-        ))}
-      </svg>
-      {/* Quelques labels d'axe (4) */}
-      <div className="mt-1 grid grid-cols-4 text-[9px] text-(--color-ink-muted)">
-        {[0, 9, 19, 29].map((i) => <span key={i}>{days[i]?.dayLabel}</span>)}
-      </div>
     </div>
   );
 }
