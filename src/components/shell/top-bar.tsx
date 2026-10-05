@@ -23,6 +23,10 @@ function contextLabel(pathname: string): string {
   if (pathname.startsWith('/agenda')) return 'Agenda';
   if (pathname.startsWith('/mes-rendez-vous')) return 'Mes rendez-vous';
   if (pathname.startsWith('/planificateur')) return 'Mon planning';
+  if (pathname.startsWith('/mes-priorites')) return 'Mes priorités';
+  if (pathname.startsWith('/checkup')) return 'EVC Check-up';
+  if (pathname.startsWith('/revisions-transversales/ciblee')) return 'Révision ciblée';
+  if (pathname.startsWith('/revisions-transversales')) return 'Révisions transversales';
   return 'Mon espace';
 }
 

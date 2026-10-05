@@ -23,6 +23,11 @@ import { sessionSizesFor } from '@/lib/pedago/status';
 import { chargerProgressionCours } from '@/lib/progress/course-progress-data';
 import { ActiviteChart } from '@/components/student/activite-chart';
 import type { JourActivite } from '@/lib/student/activite';
+import { PEDAGO_ENGINE_STUDENT_ENABLED } from '@/lib/modules-flags';
+import { moteurOuvert } from '@/lib/moteur/access';
+import { todayFor } from '@/lib/moteur/server/today';
+import { STATUS_LABEL } from '@/lib/moteur/types';
+import { PedagoToday, PedagoTodaySkeleton } from './pedago-today';
 
 export const metadata = { title: 'Accueil' };
 
@@ -59,6 +64,8 @@ export default async function AccueilPage() {
   const isDecouverte = !isPaidFormula && scope.type === 'college' && scope.colleges.includes('col-decouverte');
   const firstName = profile.first_name || 'étudiant';
   const voieLabel = scope.voie === 'interne' ? 'Voie interne' : scope.voie === 'externe' ? 'Voie externe' : null;
+  // Moteur pédagogique central : programme du jour unique et alertes (hors offre Découverte).
+  const engine = moteurOuvert(profile, PEDAGO_ENGINE_STUDENT_ENABLED) && !isDecouverte;
 
   // Coque instantanée : l'en-tête + la structure s'affichent immédiatement,
   // le tableau de bord (1 RPC agrégé + arbre EDN) est streamé via <Suspense>.
@@ -92,8 +99,14 @@ export default async function AccueilPage() {
           </DiscoveryGateLink>
         </header>
 
+        {engine && (
+          <Suspense fallback={<PedagoTodaySkeleton />}>
+            <PedagoToday userId={user.id} />
+          </Suspense>
+        )}
+
         <Suspense fallback={<DashboardSkeleton />}>
-          <Dashboard userId={user.id} scope={scope} isDecouverte={isDecouverte} />
+          <Dashboard userId={user.id} scope={scope} isDecouverte={isDecouverte} engine={engine} />
         </Suspense>
       </div>
 
@@ -134,18 +147,20 @@ type StatsResp = {
 };
 
 async function Dashboard({
-  userId, scope, isDecouverte,
+  userId, scope, isDecouverte, engine,
 }: {
   userId: string;
   scope: ReturnType<typeof parseScope>;
   isDecouverte: boolean;
+  /** Moteur pédagogique actif : priorités et maîtrise viennent de l'état central (un seul état par item). */
+  engine: boolean;
 }) {
   const supabase = await createClient();
 
   // Appels parallèles : agrégats par-utilisateur, arbre du programme, totaux de
   // contenu partagés, compteur hebdomadaire, et les données des zones 1-3 du
   // cahier des charges (progression par spécialité + maintien des acquis).
-  const [statsRes, ednRes, cachedTotals, timeRes, maintien, studiedSpecs, activiteRes] = await Promise.all([
+  const [statsRes, ednRes, cachedTotals, timeRes, maintien, studiedSpecs, activiteRes, pedago] = await Promise.all([
     // RPC hors types générés (database.ts) : cast ciblé, cf. incident schema drift.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any).rpc('get_accueil_stats', { p_faculte_id: EDN_FACULTE_ID }) as Promise<{ data: StatsResp | null }>,
@@ -172,6 +187,8 @@ async function Dashboard({
     // le sélecteur 7 / 30 / 90 jours filtre côté client.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (supabase as any).rpc('get_activite_quotidienne', { p_jours: 90 }) as Promise<{ data: JourActivite[] | null; error: unknown }>,
+    // Même vue que le bloc du jour (dédupliquée par requête) : statuts et priorités du moteur central.
+    engine ? todayFor(userId).catch(() => null) : Promise.resolve(null),
   ]);
 
   const stats = (statsRes.data as StatsResp | null) ?? {
@@ -544,26 +561,44 @@ async function Dashboard({
           </DiscoveryGateLink>
         </KpiCard>
 
-        <KpiCard accent="#7C3AED" Icon={Layers3} label="Items maîtrisés">
-          <p className="text-3xl font-black tabular-nums text-(--color-ink)">
-            {itemsMastered} <span className="text-xl text-(--color-ink-soft)">/ {coursTotalEdn}</span>
-          </p>
-          <p className="text-xs text-(--color-ink-soft)">
-            {coursTotalEdn > 0 ? Math.round((itemsMastered / coursTotalEdn) * 100) : 0}% des cours maîtrisés
-          </p>
-          <DiscoveryGateLink
-            href="/entrainement"
-            locked={isDecouverte}
-            className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#EDE9FE] px-2 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]"
-          >
-            Voir mes lacunes <ArrowRight className="h-3.5 w-3.5" />
-          </DiscoveryGateLink>
-        </KpiCard>
+        {pedago ? (
+          <KpiCard accent="#7C3AED" Icon={Layers3} label="Maîtrise consolidée">
+            <p className="text-3xl font-black tabular-nums text-(--color-ink)">
+              {pedago.counts.maitrise_consolidee} <span className="text-xl text-(--color-ink-soft)">/ {coursTotalEdn}</span>
+            </p>
+            <p className="text-xs text-(--color-ink-soft)">
+              En bonne voie : {pedago.counts.en_bonne_voie} · À consolider : {pedago.counts.a_consolider} · À revoir : {pedago.counts.a_revoir}
+            </p>
+            <Link
+              href="/mes-priorites"
+              className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#EDE9FE] px-2 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]"
+            >
+              Voir mes priorités <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </KpiCard>
+        ) : (
+          <KpiCard accent="#7C3AED" Icon={Layers3} label="Items maîtrisés">
+            <p className="text-3xl font-black tabular-nums text-(--color-ink)">
+              {itemsMastered} <span className="text-xl text-(--color-ink-soft)">/ {coursTotalEdn}</span>
+            </p>
+            <p className="text-xs text-(--color-ink-soft)">
+              {coursTotalEdn > 0 ? Math.round((itemsMastered / coursTotalEdn) * 100) : 0}% des cours maîtrisés
+            </p>
+            <DiscoveryGateLink
+              href="/entrainement"
+              locked={isDecouverte}
+              className="mt-auto inline-flex items-center justify-center gap-1 rounded-md bg-[#EDE9FE] px-2 py-1.5 text-[12px] font-bold text-[#7C3AED] hover:bg-[#DDD3FB]"
+            >
+              Voir mes lacunes <ArrowRight className="h-3.5 w-3.5" />
+            </DiscoveryGateLink>
+          </KpiCard>
+        )}
       </section>
 
       {/* ---- 3 cartes : Aujourd'hui + Évolution + Répartition ---- */}
-      <section className="grid grid-cols-1 gap-4 lg:grid-cols-[0.85fr_1.4fr_0.95fr]">
-        {/* Aujourd'hui */}
+      <section className={`grid grid-cols-1 gap-4 ${pedago ? 'lg:grid-cols-[1.4fr_0.95fr]' : 'lg:grid-cols-[0.85fr_1.4fr_0.95fr]'}`}>
+        {/* Aujourd'hui — sans moteur seulement : avec lui, le programme du jour unique est affiché en tête (I§52). */}
+        {!pedago && (
         <Card>
           <div className="flex items-center gap-2">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#EDE9FE] text-[#7C3AED]">
@@ -589,6 +624,7 @@ async function Dashboard({
             <Play className="h-4 w-4" /> Commencer maintenant
           </DiscoveryGateLink>
         </Card>
+        )}
 
         {/* Votre activité (temps de travail réel, jour par jour) */}
         <Card>
@@ -612,6 +648,49 @@ async function Dashboard({
       </section>
 
       {/* ---- À travailler en priorité ---- */}
+      {pedago && pedago.priorities.length > 0 ? (
+        <Card>
+          <div className="flex items-baseline justify-between gap-3">
+            <div>
+              <p className="text-sm font-bold text-(--color-ink)">À travailler en priorité</p>
+              <p className="mt-0.5 text-[11px] text-(--color-ink-soft)">
+                {pedago.attention} item{pedago.attention > 1 ? 's' : ''} nécessite{pedago.attention > 1 ? 'nt' : ''} actuellement votre attention
+              </p>
+            </div>
+            <Link href="/mes-priorites" className="text-[12px] font-bold text-[#C0112E] hover:underline">
+              Voir mes priorités <ArrowRight className="ml-0.5 inline h-3.5 w-3.5" />
+            </Link>
+          </div>
+          <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {pedago.priorities.map((p, i) => {
+              const pill = p.status === 'a_revoir'
+                ? { bg: '#FCEAEC', fg: '#C0112E' }
+                : p.status === 'a_consolider'
+                ? { bg: '#FEF3C7', fg: '#A16207' }
+                : { bg: '#E0F2FE', fg: '#0369A1' };
+              return (
+                <li key={p.itemId}>
+                  <Link
+                    href={`/mes-priorites/${p.itemId}`}
+                    className="flex items-center gap-2.5 rounded-xl border border-(--color-border) bg-(--color-surface) p-2.5 transition-colors hover:border-[#C0112E]/40 hover:bg-[#FCEAEC]/40"
+                  >
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-(--color-sand-100) text-[12px] font-black text-(--color-ink-soft)">
+                      {i + 1}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-bold text-(--color-ink)">{p.name}</span>
+                      {p.reason && <span className="block truncate text-[11px] text-(--color-ink-soft)">{p.reason}</span>}
+                    </span>
+                    <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: pill.bg, color: pill.fg }}>
+                      {STATUS_LABEL[p.status]}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </Card>
+      ) : (
       <Card>
         <div className="flex items-baseline justify-between gap-3">
           <div>
@@ -656,6 +735,7 @@ async function Dashboard({
           </ul>
         )}
       </Card>
+      )}
 
       {/* ---- Progression par cours ---- */}
       <Card>

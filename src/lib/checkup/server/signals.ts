@@ -44,7 +44,7 @@ export async function emitCheckupSignals(userId: string, s: Pick<SessionRow, 'id
       created_at: at, expires_at: null, origin_activity_id: `checkup:${s.id}`, origin_question_id: q.canonical_question_id, estimated_duration_minutes: null,
       metadata: {
         question_id: q.question_id, type: q.question_type, points: q.points, ...(q.origin === 'vide' || (!q.answer && !isQroc) ? { unanswered: true } : {}),
-        ...(recentlySeen ? { recently_seen: true } : {}), ...(isQroc ? { self_assessed: true } : {}), ...(q.content_source === 'evc_annale' && q.annale_year ? { annale_year: q.annale_year } : {}),
+        ...(recentlySeen ? { recently_seen: true } : {}), ...(isQroc ? { self_assessed: true, source_detail: 'checkup_qroc_self_assessed' } : {}), ...(q.content_source === 'evc_annale' && q.annale_year ? { annale_year: q.annale_year } : {}),
       },
     });
   }

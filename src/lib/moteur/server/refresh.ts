@@ -5,6 +5,7 @@ import { candidateContext, loadProfileRow, type CandidateContext } from './candi
 import { collectArenaSignals, collectAttemptSignals, collectMockSignals } from './collector';
 import { getCollectorState, getEngagementConfig, getOrchestratorConfig, insertEvents, listActiveNeeds, listScheduledReviews, updateCollectorState, withUserLock } from './db';
 import { ingestSignals, processPending, type IngestReport } from './ingest';
+import { reprioritizeUnlocked } from './reprioritize';
 import type { PedagoSignal } from '../types';
 
 /**
@@ -25,6 +26,7 @@ export type RefreshReport = {
   ingest?: Partial<IngestReport>;
   engagementLevel?: string;
   plannerRecalcRequested?: boolean;
+  reprioritized?: { needs: number; reviews: number };
 };
 
 const STALE_MS = 5 * 60_000;
@@ -76,6 +78,13 @@ async function refreshUnlocked(userId: string, now: Date, opts: { force?: boolea
   report.due = await emitDueReviews(userId, ctx, nowIso);
   // 5. Reprise de signaux restés en attente (échec antérieur).
   await processPending(userId, ingestCtx);
+  // 5 bis. Priorités du jour (l'urgence évolue chaque jour) ; date d'épreuve modifiée → réactivations reprogrammées.
+  const examChanged = !!state?.exam_date_checked_at && (state.exam_date_used ?? null) !== (ctx.examDate ?? null);
+  if (examChanged || state?.reprioritized_on !== ctx.today) {
+    const rp = await reprioritizeUnlocked(userId, ctx, { examChanged, nowIso });
+    if (examChanged && ctx.plannerActive) report.plannerRecalcRequested = true;
+    report.reprioritized = rp;
+  }
 
   // 6. Engagement (moteur A) et adhérence au planificateur (moteur B).
   const engConfig = await getEngagementConfig();
@@ -87,6 +96,7 @@ async function refreshUnlocked(userId: string, now: Date, opts: { force?: boolea
 
   await updateCollectorState(userId, {
     attempts_cursor: att.cursor, mock_cursor: mock.cursor, arena_cursor: arena.cursor, last_refresh_at: nowIso, last_engagement_at: nowIso,
+    exam_date_used: ctx.examDate, exam_date_checked_at: nowIso, reprioritized_on: ctx.today,
     ...(state?.backfilled_at ? {} : { backfilled_at: nowIso }),
   });
 
@@ -117,18 +127,23 @@ async function emitDueReviews(userId: string, ctx: CandidateContext, nowIso: str
  * anciennement rafraîchis d'abord, dans un budget de temps ; le passage
  * suivant reprend la suite.
  */
-export async function runPedagoSweep(now: Date = new Date(), opts: { budgetMs?: number } = {}): Promise<{ refreshed: number; remaining: number; errors: string[] }> {
+export async function runPedagoSweep(now: Date = new Date(), opts: { budgetMs?: number; minAgeMs?: number } = {}): Promise<{ refreshed: number; remaining: number; errors: string[] }> {
   const { moteurDb } = await import('./db');
   const { fetchAllRows } = await import('@/lib/supabase/fetch-all');
   const db = moteurDb();
   const started = Date.now();
   const report = { refreshed: 0, remaining: 0, errors: [] as string[] };
   type P = { id: string; access_end: string | null };
-  const students = await fetchAllRows<P>((from, to) => db.from('profiles').select('id, access_end').eq('role', 'student').eq('faculte_id', 'major-ecn').neq('is_active', false).order('id').range(from, to));
+  // `is_active` NULL = actif (un `neq false` PostgREST exclurait aussi les NULL).
+  const students = await fetchAllRows<P>((from, to) => db.from('profiles').select('id, access_end').eq('role', 'student').eq('faculte_id', 'major-ecn').or('is_active.is.null,is_active.eq.true').order('id').range(from, to));
   const live = students.filter((s) => !s.access_end || Date.parse(s.access_end) > now.getTime());
   const states = await fetchAllRows<{ user_id: string; last_refresh_at: string | null }>((from, to) => db.from('pedago_collector_state').select('user_id, last_refresh_at').order('user_id').range(from, to));
   const last = new Map(states.map((s) => [s.user_id, s.last_refresh_at ?? '']));
-  const ordered = live.map((s) => s.id).sort((a, b) => (last.get(a) ?? '').localeCompare(last.get(b) ?? ''));
+  // Les plus anciennement actualisés d'abord ; un candidat actualisé depuis peu (visite récente) est laissé.
+  const minAge = opts.minAgeMs ?? 6 * 3_600_000;
+  const ordered = live.map((s) => s.id)
+    .filter((id) => { const l = last.get(id); return !l || now.getTime() - Date.parse(l) >= minAge; })
+    .sort((a, b) => (last.get(a) ?? '').localeCompare(last.get(b) ?? ''));
   const engConfig = await getEngagementConfig();
   const issue = await trackingIssue(engConfig).catch(() => false);
   const today = new Intl.DateTimeFormat('fr-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);

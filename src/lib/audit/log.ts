@@ -40,7 +40,12 @@ export type AuditEntity =
   | 'decouverte_candidat'
   // Calendrier EVC (dates d'épreuve, inscriptions, postes, réglages de session).
   | 'evc_calendrier'
-  | 'evc_calendrier_sessions';
+  | 'evc_calendrier_sessions'
+  // Moteur pédagogique central (réglages, Check-up, classement de la banque, profils).
+  | 'pedago_settings'
+  | 'checkup_session'
+  | 'qcm_series_meta'
+  | 'pedago_profile';
 
 export type AuditPayload = {
   actor: Pick<Profile, 'id' | 'first_name' | 'last_name' | 'email' | 'role'>;

@@ -1,9 +1,9 @@
-import { SUIVI_STUDENT_ENABLED } from '@/lib/modules-flags';
+import { CHECKUP_STUDENT_ENABLED, PEDAGO_ENGINE_STUDENT_ENABLED, SUIVI_STUDENT_ENABLED } from '@/lib/modules-flags';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  ArrowRight, CalendarCheck, CalendarDays, CalendarRange, ChevronRight, Home, Lock,
+  ArrowRight, CalendarCheck, CalendarDays, CalendarRange, ChevronRight, ClipboardCheck, Gauge, Home, Lock,
   NotebookPen, PencilRuler, PenLine, RefreshCcw, Star, Target, Trophy,
 } from 'lucide-react';
 import { iconFromKey } from '@/lib/icons';
@@ -200,6 +200,8 @@ export function Navigator({
   const agendaActive = pathname.startsWith('/agenda');
   const rendezVousActive = pathname.startsWith('/mes-rendez-vous');
   const planActive = pathname.startsWith('/planificateur');
+  const prioritesActive = pathname.startsWith('/mes-priorites');
+  const checkupActive = pathname.startsWith('/checkup');
 
   /** Pastille « NEW » de « Mon planning » : apaisée dès la première ouverture
    *  (clic ou arrivée directe sur /planificateur), mémorisée par navigateur. */
@@ -279,6 +281,8 @@ export function Navigator({
           {isDecouverte ? (
             <>
               {(canAccessPlan || role !== 'student') && renderLockedTop(CalendarRange, 'Mon planning')}
+              {PEDAGO_ENGINE_STUDENT_ENABLED && renderLockedTop(Gauge, 'Mes priorités')}
+              {CHECKUP_STUDENT_ENABLED && renderLockedTop(ClipboardCheck, 'EVC Check-up')}
               {renderLockedTop(Target, 'Entraînement ciblé')}
               {renderLockedTop(RefreshCcw, 'Révisions transversales')}
               {renderLockedTop(CalendarDays, 'Agenda')}
@@ -294,6 +298,20 @@ export function Navigator({
                   <CalendarRange className="h-[18px] w-[18px] shrink-0" />
                   Mon planning
                   <NewBadge vu={planningVu} active={planActive} />
+                </Link>
+              )}
+
+              {/* Moteur pédagogique : l'état de chaque item et la mesure du niveau. */}
+              {PEDAGO_ENGINE_STUDENT_ENABLED && (
+                <Link href="/mes-priorites" className={topLevelClass(prioritesActive)}>
+                  <Gauge className="h-[18px] w-[18px] shrink-0" />
+                  Mes priorités
+                </Link>
+              )}
+              {CHECKUP_STUDENT_ENABLED && (
+                <Link href="/checkup" className={topLevelClass(checkupActive)}>
+                  <ClipboardCheck className="h-[18px] w-[18px] shrink-0" />
+                  EVC Check-up
                 </Link>
               )}
 

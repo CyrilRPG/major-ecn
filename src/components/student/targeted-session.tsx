@@ -101,6 +101,8 @@ export function TargetedSession({ questions, backHref }: { questions: TQuestion[
           time_spent_seconds: null,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           text_answer: qrocText.trim(),
+          // Origine lue par le moteur pédagogique central (classement de la source).
+          origin: 'entrainement_cible',
         } as any);
       }
     })().catch(() => undefined);
@@ -127,7 +129,10 @@ export function TargetedSession({ questions, backHref }: { questions: TQuestion[
           selected_items: Array.from(sel),
           is_correct: isQuestionCorrect,
           time_spent_seconds: null,
-        });
+          // Origine lue par le moteur pédagogique central (classement de la source).
+          origin: 'entrainement_cible',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any);
       }
     })().catch(() => undefined);
   };

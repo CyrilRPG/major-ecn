@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Reveal } from './reveal';
 import { AccompagnementPlateforme } from './accompagnement-humain';
+import { CheckupShowcase } from './checkup-showcase';
 
 /**
  * Page Plateforme — reprise stricte des maquettes
@@ -1478,6 +1479,8 @@ export function PlateformePageContent() {
       <HowDailySection />
       <CorrectorExampleSection />
       <TransversalRevisionSection />
+      {/* EVC Check-up (CDC Check-up §42) : mesurer → lacunes → plan de reprise. */}
+      <CheckupShowcase />
       <RecordedCoursesSection />
       <TeamSection />
       <PlatformToolsSection />

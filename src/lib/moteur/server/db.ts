@@ -87,6 +87,9 @@ export type CollectorState = {
   last_refresh_at: string | null;
   last_engagement_at: string | null;
   backfilled_at: string | null;
+  exam_date_used: string | null;
+  exam_date_checked_at: string | null;
+  reprioritized_on: string | null;
 };
 export async function getCollectorState(userId: string): Promise<CollectorState | null> {
   const { data } = await moteurDb().from('pedago_collector_state').select('*').eq('user_id', userId).maybeSingle();
@@ -340,20 +343,24 @@ export async function reviewLoadByDay(userId: string, from: string, to: string):
 }
 
 /* ─── Notifications (moteur unique, regroupement) ─── */
-export async function notify(userId: string, n: { kind: string; groupKey: string; title: string; body?: string | null; ctaLabel?: string | null; ctaHref?: string | null; channel?: 'dashboard' | 'popup'; payload?: Record<string, unknown>; increment?: number }): Promise<void> {
+export async function notify(userId: string, n: { kind: string; groupKey: string; title: string; titleFor?: (total: number) => string; body?: string | null; ctaLabel?: string | null; ctaHref?: string | null; channel?: 'dashboard' | 'popup'; payload?: Record<string, unknown>; increment?: number }): Promise<void> {
   const db = moteurDb();
+  const inc = n.increment ?? 1;
   const { data: cur } = await db.from('pedago_notifications').select('id, count, dismissed_at').eq('user_id', userId).eq('group_key', n.groupKey).maybeSingle();
   if (cur) {
+    const c = cur as { id: string; count: number | null; dismissed_at: string | null };
     // Regroupement : on agrège dans la même notification (pas de sur-notification).
+    // Déjà fermée par le candidat : un nouvel épisode repart de zéro et réapparaît.
+    const total = c.dismissed_at ? inc : Number(c.count ?? 1) + inc;
     await db.from('pedago_notifications').update({
-      title: n.title, body: n.body ?? null, cta_label: n.ctaLabel ?? null, cta_href: n.ctaHref ?? null, payload: n.payload ?? {},
-      count: Number((cur as { count: number }).count ?? 1) + (n.increment ?? 1),
-    }).eq('id', (cur as { id: string }).id);
+      title: n.titleFor ? n.titleFor(total) : n.title, body: n.body ?? null, cta_label: n.ctaLabel ?? null, cta_href: n.ctaHref ?? null, payload: n.payload ?? {},
+      count: total, updated_at: new Date().toISOString(), ...(c.dismissed_at ? { dismissed_at: null, displayed_at: null } : {}),
+    }).eq('id', c.id);
     return;
   }
   await db.from('pedago_notifications').insert({
-    user_id: userId, kind: n.kind, group_key: n.groupKey, title: n.title, body: n.body ?? null, cta_label: n.ctaLabel ?? null, cta_href: n.ctaHref ?? null,
-    channel: n.channel ?? 'dashboard', payload: n.payload ?? {}, count: n.increment ?? 1,
+    user_id: userId, kind: n.kind, group_key: n.groupKey, title: n.titleFor ? n.titleFor(inc) : n.title, body: n.body ?? null, cta_label: n.ctaLabel ?? null, cta_href: n.ctaHref ?? null,
+    channel: n.channel ?? 'dashboard', payload: n.payload ?? {}, count: inc,
   });
 }
 export type NotificationRow = { id: string; kind: string; group_key: string; title: string; body: string | null; cta_label: string | null; cta_href: string | null; count: number; created_at: string; updated_at: string; displayed_at: string | null; dismissed_at: string | null; payload: Record<string, unknown> };

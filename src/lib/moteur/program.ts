@@ -48,7 +48,7 @@ export type ProgramActivity = {
   key: string;
   itemId: string | null;
   itemName: string;
-  kind: 'en_cours' | 'planificateur' | 'revision' | 'consolidation' | 'reactivation' | 'controle' | 'suggestion';
+  kind: 'en_cours' | 'concours_blanc' | 'planificateur' | 'revision' | 'consolidation' | 'reactivation' | 'controle' | 'suggestion';
   label: string;
   minutes: number;
   /** Raisons courtes, toutes conservées (O§33, I§35). */
@@ -72,6 +72,8 @@ export type ProgramInput = {
   inProgress: ProgramInProgress[];
   /** Suggestions de repli quand rien n'est dû (révision du jour, Check-up recommandé…). */
   suggestions: { key: string; label: string; minutes: number; href: string; reason: string }[];
+  /** Concours blancs programmés aujourd'hui (O§12, O§25) : activité principale, journée allégée. */
+  exams?: { id: string; label: string; minutes: number; href: string }[];
   config: OrchestratorConfig;
 };
 
@@ -106,7 +108,7 @@ function activityKind(objectives: Set<NeedObjective>, needTypes: Set<string>): P
 }
 
 const KIND_LABEL: Record<ProgramActivity['kind'], string> = {
-  en_cours: 'À terminer', planificateur: 'Planificateur', revision: 'Révision prioritaire', consolidation: 'Consolidation',
+  en_cours: 'À terminer', concours_blanc: 'Concours blanc', planificateur: 'Planificateur', revision: 'Révision prioritaire', consolidation: 'Consolidation',
   reactivation: 'Réactivation', controle: 'Contrôle', suggestion: 'Suggestion',
 };
 
@@ -125,6 +127,17 @@ export function composeProgram(input: ProgramInput): Program {
       minutes: p.kind === 'checkup_correction' ? 10 : 15, reasons: [p.kind === 'checkup_correction' ? 'Vous avez une correction à terminer.' : 'Activité commencée : reprenez là où vous vous êtes arrêté.'],
       origins: [p.kind === 'transversal' ? 'Révisions transversales' : 'EVC Check-up'], needIds: [], plannerSessionId: null, href, done: false, priority: 1000,
     });
+  }
+
+  // 1 bis. Concours blanc programmé : il devient l'activité principale et allège le reste de la journée.
+  let examMinutes = 0;
+  for (const e of input.exams ?? []) {
+    activities.push({
+      key: `concours:${e.id}`, itemId: null, itemName: e.label, kind: 'concours_blanc', label: KIND_LABEL.concours_blanc, minutes: e.minutes,
+      reasons: ['Concours blanc programmé aujourd’hui : c’est votre activité principale, le reste de la journée est allégé.'],
+      origins: ['Épreuves blanches'], needIds: [], plannerSessionId: null, href: e.href, done: false, priority: 900,
+    });
+    examMinutes += e.minutes;
   }
 
   // 2. Besoins centraux regroupés PAR ITEM : une seule action par item, toutes raisons conservées.
@@ -171,7 +184,9 @@ export function composeProgram(input: ProgramInput): Program {
   }
 
   // 4. Besoins restants, par priorité, dans le budget (avec planificateur : temps réservé hors agenda).
-  const extraBudget = input.plannerActive ? Math.round(cfg.program.extra_minutes_with_planner * margin) : budget;
+  //    Un jour de concours blanc, sa durée est retirée du budget (journée allégée).
+  const extraBudget = input.plannerActive ? Math.max(0, Math.round(cfg.program.extra_minutes_with_planner * margin) - examMinutes) : budget;
+  used += input.plannerActive ? 0 : examMinutes;
   let extraUsed = 0;
   let count = activities.filter((a) => !a.done).length;
   let backlog = 0;

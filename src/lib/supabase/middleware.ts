@@ -62,6 +62,10 @@ export async function updateSession(request: NextRequest) {
     path.startsWith('/facultes') ||
     path.startsWith('/matieres') ||
     path.startsWith('/revisions-transversales') ||
+    // Moteur pédagogique : EVC Check-up, priorités, planificateur adaptatif.
+    path.startsWith('/checkup') ||
+    path.startsWith('/mes-priorites') ||
+    path.startsWith('/planificateur') ||
     // `/profil` EXACTEMENT (+ ses sous-routes) : `startsWith('/profil')`
     // capturait aussi `/profil-evc`, page vitrine publique mise en avant dans
     // le menu, le lanceur et le popup. Les visiteurs non connectés — Googlebot

@@ -45,6 +45,14 @@
     {
       "path": "/api/cron/decouverte-sync",
       "schedule": "15 5 * * *"
+    },
+    {
+      "path": "/api/cron/pedago-sweep",
+      "schedule": "15 1-6 * * *"
+    },
+    {
+      "path": "/api/cron/checkup-sweep",
+      "schedule": "*/5 * * * *"
     }
   ]
 }

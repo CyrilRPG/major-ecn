@@ -7,7 +7,7 @@ import { nextStep, scheduleReview } from '../reviews';
 import { isMeasure, sortSignals, validateSignal } from '../signal';
 import { COMPLETION_EVENT, STATUS_LABEL, type OrchestratorConfig, type PedagoSignal } from '../types';
 import {
-  coursCatalog, getItemStates, getOrchestratorConfig, insertEvents, insertReview, insertSignals, lastDoneReviews, listActiveNeeds, listPendingSignals,
+  coursCatalog, getItemStates, getOrchestratorConfig, insertEvents, insertReview, insertSignals, lastDoneReviews, listActiveNeeds, listPendingSignals, moteurDb,
   listScheduledReviews, markSignals, needFromRow, notify, rejectSignal, reviewLoadByDay, rowToState, saveNeed, stateToRow, supersedeReview, upsertItemStates,
   withUserLock, type EventRow, type ItemStateRow, type ReviewRow, type SignalRow,
 } from './db';
@@ -228,8 +228,12 @@ export async function processPending(userId: string, ctx: IngestContext, report?
     events.push({ event_key: `close:${n.objective}:${n.itemId}:${by}`, user_id: userId, item_id: n.itemId, event_type: 'NEED_CLOSED', activity_id: by, detail: { objective: n.objective, reason: why }, created_at: at });
   }
 
-  // Fermeture des besoins par activité (une activité peut fermer plusieurs besoins, O§18).
-  const summaries = summarizeActivity(withItem.filter((s) => isMeasure(s)), (iso) => dayKeyOf(iso));
+  // Fermeture des besoins par activité (une activité peut fermer plusieurs besoins, O§18) :
+  // l'activité est jugée sur TOUS ses résultats déjà reçus, pas seulement sur ce lot
+  // (une révision ciblée envoie ses réponses une à une).
+  const touchedActivities = Array.from(new Set(withItem.filter((s) => isMeasure(s)).map((s) => s.origin_activity_id)));
+  const activitySignals = await loadActivitySignals(userId, touchedActivities);
+  const summaries = summarizeActivity(activitySignals, (iso) => dayKeyOf(iso));
   for (const s of summaries) {
     for (const objective of ['travail', 'reactivation'] as const) {
       const n = needs.get(`${s.itemId}|${objective}`);
@@ -241,7 +245,8 @@ export async function processPending(userId: string, ctx: IngestContext, report?
     // Réactivation réalisée (à l'échéance ou en avance dans la limite de l'équivalence) : on avance d'une étape.
     const review = reviews.get(s.itemId);
     const ratio = (s.positive + 0.5 * s.partial) / Math.max(1, s.positive + s.partial + s.incorrect);
-    if (review && s.source !== 'evc_arena' && review.due_on <= addDaysIso(s.day, config.reviews.early_tolerance_days)) {
+    const n = s.positive + s.partial + s.incorrect;
+    if (review && s.source !== 'evc_arena' && n >= config.need_closure.min_results && review.due_on <= addDaysIso(s.day, config.reviews.early_tolerance_days)) {
       reviewOps.push({ itemId: s.itemId, mode: 'done', result: ratio >= 0.8 ? 'positive' : ratio >= 0.5 ? 'partial' : 'incorrect', signalId: null, day: s.day });
     }
   }
@@ -327,6 +332,7 @@ export async function processPending(userId: string, ctx: IngestContext, report?
     await notify(userId, {
       kind: 'items_ajoutes_revisions', groupKey: `items_ajoutes:${today}`,
       title: `${createdTravail.length} item${createdTravail.length > 1 ? 's' : ''} ajouté${createdTravail.length > 1 ? 's' : ''} à vos révisions`,
+      titleFor: (n) => `${n} item${n > 1 ? 's' : ''} ajouté${n > 1 ? 's' : ''} à vos révisions`,
       body: ctx.activityLabel ? `Suite à votre ${ctx.activityLabel}, les items à retravailler sont programmés dans vos révisions.` : 'Les items à retravailler sont programmés dans vos révisions.',
       ctaLabel: 'Voir mes priorités', ctaHref: '/mes-priorites', increment: createdTravail.length,
     }).catch(() => undefined);
@@ -336,13 +342,29 @@ export async function processPending(userId: string, ctx: IngestContext, report?
     await notify(userId, {
       kind: 'items_consolides', groupKey: `items_consolides:${today}`,
       title: `Maîtrise consolidée : ${names.join(', ')}${masteryConfirmed.length > 3 ? '…' : ''}`,
+      titleFor: (n) => (n > masteryConfirmed.length ? `${n} items en maîtrise consolidée aujourd’hui` : `Maîtrise consolidée : ${names.join(', ')}${masteryConfirmed.length > 3 ? '…' : ''}`),
       body: 'Résultats répétés et espacés dans le temps : ces items sont consolidés. Ils resteront réactivés régulièrement.',
-      ctaLabel: 'Voir mes priorités', ctaHref: '/mes-priorites?section=maitrise_consolidee', increment: masteryConfirmed.length,
+      ctaLabel: 'Voir mes priorités', ctaHref: '/mes-priorites#maitrise_consolidee', increment: masteryConfirmed.length,
     }).catch(() => undefined);
   }
 
   await markSignals(pending.map((p) => p.signal_id), 'processed');
   return pending.length;
+}
+
+/** Résultats de maîtrise déjà reçus pour ces activités (hors signaux rejetés). */
+async function loadActivitySignals(userId: string, activities: string[]): Promise<{ item_id: string | null; origin_activity_id: string; source: PedagoSignal['source']; result_type: string; source_strength: string | null; created_at: string; metadata: Record<string, unknown> }[]> {
+  if (activities.length === 0) return [];
+  const out: { item_id: string | null; origin_activity_id: string; source: PedagoSignal['source']; result_type: string; source_strength: string | null; created_at: string; metadata: Record<string, unknown> }[] = [];
+  for (let i = 0; i < activities.length; i += 100) {
+    const { data, error } = await moteurDb().from('pedago_signals')
+      .select('item_id, origin_activity_id, source, result_type, source_strength, created_at, metadata')
+      .eq('user_id', userId).in('origin_activity_id', activities.slice(i, i + 100)).neq('status', 'rejected')
+      .in('result_type', ['positive', 'partial', 'incorrect']).limit(5000);
+    if (error) throw new Error(error.message);
+    out.push(...((data ?? []) as typeof out));
+  }
+  return out;
 }
 
 function rowToSignal(r: SignalRow): PedagoSignal {

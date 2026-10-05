@@ -30,6 +30,14 @@ export const SUIVI_STUDENT_ENABLED = false;
 export const PLAN_STUDENT_ENABLED = true;
 
 /**
+ * EVC Check-up (évaluation chronométrée, analyse par item, plan de reprise)
+ * et moteur pédagogique central côté élève (« Mes priorités », programme du
+ * jour, alertes d'engagement). `false` : réservé au personnel (recette).
+ */
+export const CHECKUP_STUDENT_ENABLED = true;
+export const PEDAGO_ENGINE_STUDENT_ENABLED = true;
+
+/**
  * Planificateur dans l'app mobile. Distinct du web : l'app installée chez les
  * élèves doit d'abord être mise à jour sur les stores (la version précédente
  * parle l'ancien format de /api/mobile/plan). Passer à `true` une fois la

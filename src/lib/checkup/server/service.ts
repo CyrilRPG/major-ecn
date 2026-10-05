@@ -486,6 +486,8 @@ async function finalizeResults(userId: string, sessionId: string): Promise<void>
   const rq: ResultQuestion[] = qs.map((q) => ({
     position: q.position, block: q.block_index, itemId: q.item_id, itemName: q.snapshot.item_name, categoryId: q.category_id, categoryName: q.snapshot.category_name,
     family: q.content_source, points: Number(q.points ?? 0), result: q.result ?? 'incorrect', origin: q.origin ?? 'auto',
+    // Même règle que les signaux : une question jamais affichée ne produit aucun diagnostic d'item.
+    displayed: !!q.presented_at || !!q.answer || !!q.locked_at,
   }));
   const a = analyze(rq, { externe: s.voie === 'externe' });
   await db().from('checkup_sessions').update({
@@ -566,12 +568,65 @@ export async function checkupRecommendation(userId: string): Promise<{ recommend
   const { data: last } = await db().from('checkup_sessions').select('started_at').eq('user_id', userId).in('status', ['completed', 'expired', 'pending_self_review'])
     .order('started_at', { ascending: false }).limit(1).maybeSingle();
   const since = (last as { started_at: string } | null)?.started_at ?? new Date(Date.now() - 60 * 86_400_000).toISOString();
-  const { data: worked } = await db().from('pedago_signals').select('item_id').eq('user_id', userId).gte('created_at', since).neq('source', 'checkup').not('item_id', 'is', null).limit(5000);
-  const items = new Set(((worked ?? []) as { item_id: string }[]).map((r) => r.item_id));
+  // Items réellement travaillés depuis (une ligne d'état par item : aucun plafond de lignes),
+  // hors items seulement touchés par le Check-up lui-même.
+  const { count } = await db().from('candidate_item_state').select('item_id', { count: 'exact', head: true }).eq('user_id', userId)
+    .gt('last_activity_at', since).or('last_result_source.is.null,last_result_source.neq.checkup');
   return shouldRecommendCheckup({
-    lastCheckupAt: (last as { started_at: string } | null)?.started_at ?? null, newItemsWorkedSince: items.size, now: nowIso(),
+    lastCheckupAt: (last as { started_at: string } | null)?.started_at ?? null, newItemsWorkedSince: count ?? 0, now: nowIso(),
     newItemsThreshold: config.checkup_recommendation.new_items_worked, daysThreshold: config.checkup_recommendation.days_since_last,
   });
+}
+
+/* ─── Prescription : actions du résultat (§23, I§18, I§19) ─── */
+
+async function lacunes(userId: string, sessionId: string): Promise<{ s: SessionRow; items: string[] }> {
+  const s = await ownSession(userId, sessionId);
+  if (s.status !== 'completed' && s.status !== 'expired') throw new CheckupError('Le résultat définitif n’est pas encore disponible.', 'verrouille');
+  const r = (s.recommendations ?? {}) as { a_revoir?: string[]; a_consolider?: string[] };
+  return { s, items: Array.from(new Set([...(r.a_revoir ?? []), ...(r.a_consolider ?? [])])) };
+}
+
+/**
+ * « Ajouter à mes révisions » : les lacunes entrent dans les réactivations
+ * (J+7, intervalles ÷2 dans les 30 derniers jours, jamais après l'EVC). Le
+ * moteur l'a déjà fait à la soumission : l'action le garantit et le confirme.
+ */
+export async function addLacunesToRevisions(userId: string, sessionId: string): Promise<{ count: number; firstDue: string | null }> {
+  const { s, items } = await lacunes(userId, sessionId);
+  if (items.length === 0) return { count: 0, firstDue: null };
+  const [{ listScheduledReviews, insertReview, getOrchestratorConfig: cfg }, { scheduleReview }] = await Promise.all([import('@/lib/moteur/server/db'), import('@/lib/moteur/reviews')]);
+  const config = await cfg();
+  const ctx = await candidateContext(userId);
+  const today = ctx?.today ?? new Date().toISOString().slice(0, 10);
+  const scheduled = new Map((await listScheduledReviews(userId, items)).map((r) => [r.item_id, r.due_on]));
+  for (const itemId of items) {
+    if (scheduled.has(itemId)) continue;
+    const d = scheduleReview({ fromDay: today, step: 0, examDate: ctx?.examDate ?? null, today }, config);
+    if (!d.dueOn) continue;
+    await insertReview({ user_id: userId, item_id: itemId, step: 0, interval_days: d.intervalDays, due_on: d.dueOn, theoretical_due_on: d.theoreticalDueOn, adjusted: d.adjusted, origin: 'checkup_lacune', source_signal_id: null });
+    scheduled.set(itemId, d.dueOn);
+  }
+  const firstDue = Array.from(scheduled.values()).sort()[0] ?? null;
+  await db().from('checkup_sessions').update({ actions: [...(s.actions ?? []), { type: 'ajout_revisions', at: nowIso(), items: items.length }] }).eq('id', sessionId);
+  return { count: items.length, firstDue };
+}
+
+/**
+ * « Ajouter à mon planning » (planificateur actif seulement) : le planificateur
+ * relit les besoins du moteur central et les place sans dépasser la charge
+ * maximale ; rien n'est empilé directement (I§19).
+ */
+export async function addLacunesToPlanning(userId: string, sessionId: string): Promise<{ count: number }> {
+  const { s, items } = await lacunes(userId, sessionId);
+  const ctx = await candidateContext(userId);
+  if (!ctx?.plannerActive) throw new CheckupError('Votre planificateur n’est pas actif.', 'acces');
+  const plan = await import('@/lib/plan/service') as Record<string, unknown>;
+  if (typeof plan.requestPlannerRecalc === 'function') await (plan.requestPlannerRecalc as (u: string, t: string) => Promise<unknown>)(userId, 'checkup');
+  else if (typeof plan.regeneratePlan === 'function') await (plan.regeneratePlan as (u: string, t: string) => Promise<unknown>)(userId, 'checkup');
+  await insertEvents([{ event_key: `checkup-planning:${sessionId}:${Date.now()}`, user_id: userId, event_type: 'PLANNER_RECALCULATION_REQUIRED', source: 'checkup', activity_id: `checkup:${sessionId}`, detail: { items: items.length } }]);
+  await db().from('checkup_sessions').update({ actions: [...(s.actions ?? []), { type: 'ajout_planning', at: nowIso(), items: items.length }] }).eq('id', sessionId);
+  return { count: items.length };
 }
 
 /** Contexte d'ingestion du candidat (date d'EVC, planificateur). */

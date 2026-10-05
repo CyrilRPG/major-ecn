@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
 import { checkAlertsAfterTransversalSession } from '@/lib/pedago/alerts';
 import { TABLE_REPRISE } from '@/lib/pedago/reprise-transversale';
+import { after } from 'next/server';
+import { refreshCandidate } from '@/lib/moteur/server/refresh';
 
 export type TransversalKind =
   | 'daily'
@@ -98,6 +100,10 @@ export async function recordTransversalSession(
   } catch (err) {
     console.error('[TransversalSession] chaîne d\'alertes en échec', err);
   }
+
+  // Moteur pédagogique central : la révision terminée alimente le profil des
+  // items sans attendre (fin de révision : besoins fermés, réactivations).
+  after(() => refreshCandidate(user.id, { force: true, wait: true }).catch((e) => console.error('[moteur] après révision transversale :', e instanceof Error ? e.message : e)));
 
   return { ok: true };
 }

@@ -18,6 +18,8 @@ const STUDY_PREFIXES = [
   '/epreuves-blanches/',
   '/parcours/',
   '/planificateur/evaluation/',
+  // Une passation d'EVC Check-up (et sa correction), pas l'écran de lancement.
+  '/checkup/',
 ];
 
 export function isStudyRoute(pathname: string | null | undefined): boolean {

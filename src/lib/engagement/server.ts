@@ -53,22 +53,26 @@ export async function trackingIssue(config: EngagementConfig): Promise<boolean> 
 }
 
 /** Révisions transversales proposées / réalisées sur 14 jours (§14). */
-async function transversalCounts(userId: string, today: string, days: ActivityDay[], config: EngagementConfig): Promise<{ assigned: number; completed: number }> {
+async function transversalCounts(userId: string, today: string, days: ActivityDay[], config: EngagementConfig, opts: { activationDay: string; frozen: Set<string> }): Promise<{ assigned: number; completed: number }> {
   const from = addDays(today, -13);
   const db = moteurDb();
-  const [{ data: due }, { data: done }] = await Promise.all([
-    db.from('candidate_review_schedule').select('id').eq('user_id', userId).gte('due_on', from).lte('due_on', today).limit(1000),
-    db.from('candidate_review_schedule').select('id').eq('user_id', userId).eq('status', 'done').gte('completed_at', `${from}T00:00:00Z`).limit(1000),
+  const [{ count: due }, { count: done }] = await Promise.all([
+    db.from('candidate_review_schedule').select('id', { count: 'exact', head: true }).eq('user_id', userId).gte('due_on', from).lte('due_on', today),
+    db.from('candidate_review_schedule').select('id', { count: 'exact', head: true }).eq('user_id', userId).eq('status', 'done').gte('completed_at', `${from}T00:00:00Z`),
   ]);
   const sessions = days.filter((d) => d.day >= from).reduce((n, d) => n + d.transversal, 0);
-  const target = Math.round(config.targets.transversal_sessions_14d);
-  return { assigned: target + (due ?? []).length, completed: Math.min(target, sessions) + (done ?? []).length };
+  // Révisions « proposées » : seulement les jours où le candidat était inscrit et disponible
+  // (un nouvel inscrit ou une indisponibilité déclarée ne crée jamais de faux retard, §48, §49).
+  let available = 0;
+  for (let d = from; d <= today; d = addDays(d, 1)) if (d >= opts.activationDay && !opts.frozen.has(d)) available++;
+  const target = Math.round((config.targets.transversal_sessions_14d * available) / 14);
+  return { assigned: target + (due ?? 0), completed: Math.min(target, sessions) + (done ?? 0) };
 }
 
 /** Jours neutralisés : indisponibilités et gardes déclarées dans le planificateur (§27, scénario E). */
 function frozenDaysOf(ctx: CandidateContext): Set<string> {
   const out = new Set<string>();
-  const plan = ctx.plan as (CandidateContext['plan'] & { availability_overrides?: Record<string, number> }) | null;
+  const plan = ctx.plan;
   if (!plan) return out;
   for (const d of plan.unavailable_days ?? []) out.add(String(d).slice(0, 10));
   for (const [d, m] of Object.entries(plan.availability_overrides ?? {})) if (typeof m === 'number' && m < 30) out.add(d);
@@ -83,9 +87,10 @@ export async function refreshEngagement(ctx: CandidateContext, input: { days: Ac
   const db = moteurDb();
   const nowIso = input.now.toISOString();
   const today = ctx.today;
-  const transversal = await transversalCounts(ctx.userId, today, input.days, config);
+  const frozen = frozenDaysOf(ctx);
+  const transversal = await transversalCounts(ctx.userId, today, input.days, config, { activationDay: ctx.activationDay, frozen });
   const e = computeEngagement({
-    today, days: input.days, activationDay: ctx.activationDay, transversal, frozenDays: frozenDaysOf(ctx), examDate: ctx.examDate,
+    today, days: input.days, activationDay: ctx.activationDay, transversal, frozenDays: frozen, examDate: ctx.examDate,
     trackingIssue: input.trackingIssue, config,
   });
 
@@ -158,10 +163,10 @@ export async function refreshEngagement(ctx: CandidateContext, input: { days: Ac
 
   // Moteur B : adhérence au planificateur (seulement s'il est utilisé).
   let adherence: AdherenceResult | null = null;
-  const plan = ctx.plan as (CandidateContext['plan'] & { planner_status?: string; pause_until?: string | null; planner_paused_at?: string | null; low_adherence_choice_at?: string | null; planner_reactivated_at?: string | null }) | null;
-  if (plan?.onboarding_done && (plan.planner_status ?? 'actif') !== 'desactive') {
+  const plan = ctx.plan;
+  if (plan?.onboarding_done && plan.planner_status !== 'desactive') {
     const from = addDays(today, -31);
-    const { data: sess } = await db.from('plan_sessions').select('day, planned_day, status, origin, minutes, actual_minutes').eq('user_id', ctx.userId).gte('day', from).lte('day', today).limit(3000);
+    const sess = await loadAdherenceSessions(ctx.userId, from, today);
     const { data: reports } = await db.from('plan_day_reports').select('day, reason').eq('user_id', ctx.userId).gte('day', addDays(today, -14));
     const { data: hist } = await db.from('plan_status_history').select('new_status, created_at').eq('user_id', ctx.userId).order('created_at', { ascending: false }).limit(50);
     // Jours de pause (historique des statuts) + jours neutralisés : exclus du calcul (§18).
@@ -177,13 +182,13 @@ export async function refreshEngagement(ctx: CandidateContext, input: { days: Ac
       .in('kind', ['onboarding', 'disponibilites', 'reactivation', 'reprise', 'adaptation', 'reconfiguration', 'indisponibilite']).order('created_at', { ascending: false }).limit(1).maybeSingle();
     const winFrom = addDays(today, -config.planner.low_adherence_days);
     adherence = computeAdherence({
-      today, sessions: (sess ?? []) as AdherenceSession[], excludedDays: excluded,
+      today, sessions: sess, excludedDays: excluded,
       recentReasons: (reports ?? []) as { day: string; reason: string | null }[],
       lastReconfigAt: (lastReconfig as { created_at: string } | null)?.created_at ?? null, nowIso,
       engagementLevel: e.level, activeDaysInWindow: input.days.filter((d) => d.day >= winFrom).length,
       lowAdherenceChoiceAt: plan.low_adherence_choice_at ?? null, config,
     });
-    await syncPlannerEpisode(ctx.userId, adherence, open.find((x) => x.kind === 'planner') ?? null, nowIso, (plan.planner_status ?? 'actif') === 'en_pause');
+    await syncPlannerEpisode(ctx.userId, adherence, open.find((x) => x.kind === 'planner') ?? null, nowIso, plan.planner_status === 'en_pause');
   }
 
   const login = input.login;
@@ -202,7 +207,7 @@ export async function refreshEngagement(ctx: CandidateContext, input: { days: Ac
     planner: adherence ? {
       status: plan?.planner_status ?? 'actif', adherence_rate_7d: adherence.rate7, adherence_rate_30d: adherence.rate30, level: adherence.level,
       delay_days: adherence.delayDays, situation: adherence.situation, j1: adherence.yesterday, last7: adherence.last7,
-      planner_activated_at: (plan as { planner_activated_at?: string | null } | null)?.planner_activated_at ?? null,
+      planner_activated_at: plan?.planner_activated_at ?? null,
       planner_paused_at: plan?.planner_paused_at ?? null, planner_reactivated_at: plan?.planner_reactivated_at ?? null,
       planner_recalculated_at: plan?.last_generated_at ?? null,
     } : (plan ? { status: plan.planner_status ?? 'actif' } : {}),
@@ -249,6 +254,33 @@ async function syncPlannerEpisode(userId: string, a: AdherenceResult, open: Epis
   } else {
     await db.from('engagement_alert_episodes').update({ facts }).eq('id', open.id);
   }
+}
+
+/**
+ * Séances du planificateur pour le moteur B, lues directement en base : l'agenda
+ * refondu (`plan_activities`) s'il est en service pour ce candidat, sinon
+ * `plan_sessions`. Correspondance des statuts convenue avec le planificateur.
+ */
+export async function loadAdherenceSessions(userId: string, from: string, to: string): Promise<AdherenceSession[]> {
+  const db = moteurDb();
+  const { data: acts, error } = await db.from('plan_activities').select('scheduled_date, planned_day, status, origin, estimated_duration_minutes, actual_minutes')
+    .eq('user_id', userId).gte('scheduled_date', from).lte('scheduled_date', to).limit(3000);
+  if (!error && acts && (acts as unknown[]).length > 0) {
+    const mapStatus: Record<string, AdherenceSession['status']> = {
+      PLANNED: 'planifiee', DUE: 'planifiee', PENDING: 'planifiee', IN_PROGRESS: 'en_cours', COMPLETED: 'terminee', POSTPONED: 'reportee',
+      OVERDUE: 'sautee', CANCELLED: 'annulee', PARTIALLY_COMPLETED: 'reportee',
+    };
+    const mapOrigin: Record<string, AdherenceSession['origin']> = { PLAN: 'planning', ADVANCE: 'avance', ADDED: 'temps_supplementaire', EXTRA: 'temps_supplementaire', REPLACEMENT: 'temps_supplementaire' };
+    const today = to;
+    return (acts as { scheduled_date: string; planned_day: string | null; status: string; origin: string; estimated_duration_minutes: number; actual_minutes: number | null }[]).map((a) => ({
+      day: a.scheduled_date, planned_day: a.planned_day,
+      // Partiellement réalisée : « en cours » le jour même, puis non réalisée.
+      status: a.status === 'PARTIALLY_COMPLETED' && a.scheduled_date >= today ? 'en_cours' : (mapStatus[a.status] ?? 'planifiee'),
+      origin: mapOrigin[a.origin] ?? 'planning', minutes: a.estimated_duration_minutes, actual_minutes: a.actual_minutes,
+    }));
+  }
+  const { data: sess } = await db.from('plan_sessions').select('day, planned_day, status, origin, minutes, actual_minutes').eq('user_id', userId).gte('day', from).lte('day', to).limit(3000);
+  return (sess ?? []) as AdherenceSession[];
 }
 
 /** Épisodes ouverts d'un candidat (affichage). */

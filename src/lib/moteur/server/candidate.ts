@@ -2,14 +2,35 @@ import 'server-only';
 import { parseScope, canAccessCollege } from '@/lib/auth/permissions';
 import type { PermissionScope } from '@/types/domain';
 import { todayKey } from '@/lib/suivi/format';
-import { getProfile as getPlanProfile } from '@/lib/plan/db';
+import { chargerCalendrierEvc } from '@/lib/evc-calendrier/server';
+import { epreuveParCollege } from '@/lib/evc-calendrier/dates';
 import { coursCatalog, getCandidateProfile, moteurDb, upsertCandidateProfile } from './db';
-import type { PlanProfile } from '@/lib/plan/types';
 
 /**
  * Contexte d'un candidat pour le moteur central : formule, voie, spécialités
  * accessibles, date d'EVC pertinente (§50 du cahier « Alertes »), planificateur.
+ *
+ * Le planificateur est lu directement dans `plan_profiles` (colonnes stables) :
+ * le moteur central ne dépend pas du code du planificateur, qui le consomme.
  */
+
+/** Ce que le moteur lit du profil du planificateur (colonnes stables de `plan_profiles`). */
+export type PlanProfileLite = {
+  user_id: string;
+  onboarding_done: boolean;
+  specialite_id: string | null;
+  exam_date: string | null;
+  unavailable_days: string[];
+  availability_overrides: Record<string, number>;
+  planner_status: 'actif' | 'en_pause' | 'a_reconfigurer' | 'desactive';
+  pause_until: string | null;
+  planner_activated_at: string | null;
+  planner_paused_at: string | null;
+  planner_reactivated_at: string | null;
+  low_adherence_choice_at: string | null;
+  last_generated_at: string | null;
+};
+
 export type CandidateContext = {
   userId: string;
   email: string | null;
@@ -24,8 +45,8 @@ export type CandidateContext = {
   mainSpecialty: string | null;
   examDate: string | null;
   examDateSource: 'calendrier' | 'planificateur' | 'candidat' | null;
-  plan: PlanProfile | null;
-  /** Planificateur réellement utilisé (créé, non désactivé, non en pause). */
+  plan: PlanProfileLite | null;
+  /** Planificateur réellement utilisé (créé, actif : ni en pause ni désactivé). */
   plannerActive: boolean;
   today: string;
 };
@@ -37,6 +58,31 @@ export async function loadProfileRow(userId: string): Promise<ProfileRow | null>
   return (data as ProfileRow | null) ?? null;
 }
 
+export async function loadPlanProfile(userId: string): Promise<PlanProfileLite | null> {
+  const { data, error } = await moteurDb().from('plan_profiles')
+    .select('user_id, onboarding_done, specialite_id, exam_date, unavailable_days, availability_overrides, planner_status, pause_until, planner_activated_at, planner_paused_at, planner_reactivated_at, low_adherence_choice_at, last_generated_at')
+    .eq('user_id', userId).maybeSingle();
+  if (error || !data) return null;
+  const r = data as PlanProfileLite;
+  return {
+    ...r,
+    unavailable_days: Array.isArray(r.unavailable_days) ? r.unavailable_days.map((d) => String(d).slice(0, 10)) : [],
+    availability_overrides: r.availability_overrides && typeof r.availability_overrides === 'object' ? r.availability_overrides : {},
+    planner_status: r.planner_status ?? 'actif',
+  };
+}
+
+/** Date d'épreuve d'une spécialité : calendrier EVC (source unique, /admin/calendrier-evc). */
+export async function examDateFromCalendar(collegeId: string, now: Date = new Date()): Promise<string | null> {
+  try {
+    const cal = await chargerCalendrierEvc();
+    const e = epreuveParCollege(cal, collegeId, now.getTime());
+    return e?.date_epreuve ? e.date_epreuve.slice(0, 10) : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function candidateContext(userId: string, opts: { now?: Date; profile?: ProfileRow | null } = {}): Promise<CandidateContext | null> {
   const profile = opts.profile ?? await loadProfileRow(userId);
   if (!profile) return null;
@@ -46,8 +92,8 @@ export async function candidateContext(userId: string, opts: { now?: Date; profi
   const { parentOf } = await coursCatalog();
   const tops = Array.from(parentOf.entries()).filter(([id, p]) => !p && id !== 'col-decouverte').map(([id]) => id);
   const specialties = tops.filter((id) => canAccessCollege(scope, id));
-  const [cp, plan] = await Promise.all([getCandidateProfile(userId), getPlanProfile(userId).catch(() => null)]);
-  const plannerActive = !!plan && plan.onboarding_done && ((plan as PlanProfile & { planner_status?: string }).planner_status ?? 'actif') === 'actif';
+  const [cp, plan] = await Promise.all([getCandidateProfile(userId), loadPlanProfile(userId)]);
+  const plannerActive = !!plan && plan.onboarding_done && plan.planner_status === 'actif';
   let mainSpecialty = cp?.main_specialite_id ?? (plan?.specialite_id ?? null);
   if (!mainSpecialty || !specialties.includes(mainSpecialty)) mainSpecialty = specialties.length === 1 ? specialties[0] : await mostWorkedSpecialty(userId, specialties);
   let examDate: string | null = null;
@@ -55,9 +101,7 @@ export async function candidateContext(userId: string, opts: { now?: Date; profi
   if (cp?.exam_date && cp.exam_date_source === 'candidat' && cp.exam_date >= today) { examDate = cp.exam_date; examDateSource = 'candidat'; }
   else if (plannerActive && plan?.exam_date) { examDate = plan.exam_date; examDateSource = 'planificateur'; }
   else if (mainSpecialty) {
-    // Import différé : le planificateur importe lui-même le moteur central.
-    const { examDateForCollege } = await import('@/lib/plan/service');
-    const d = await examDateForCollege(mainSpecialty);
+    const d = await examDateFromCalendar(mainSpecialty, now);
     if (d) { examDate = d; examDateSource = 'calendrier'; }
   }
   if (mainSpecialty && mainSpecialty !== cp?.main_specialite_id) {

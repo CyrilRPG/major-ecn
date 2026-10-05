@@ -322,3 +322,18 @@ test('Recommandation de Check-up : 20 nouveaux items travaillés OU 21 jours, ja
   assert.equal(shouldRecommendCheckup({ ...base, lastCheckupAt: '2026-09-10T10:00:00Z', newItemsWorkedSince: 3 }).recommend, true);
   assert.equal(shouldRecommendCheckup({ ...base, lastCheckupAt: '2026-10-01T10:00:00Z', newItemsWorkedSince: 3 }).recommend, false);
 });
+
+test('Fin anticipée : une question jamais affichée vaut 0 point mais ne produit aucun diagnostic d’item', async () => {
+  const { analyze } = await import('../src/lib/checkup/results');
+  const base = { block: 1, categoryId: null, categoryName: null, family: 'structured_item' as const, origin: 'auto' as const };
+  const a = analyze([
+    { ...base, position: 1, itemId: 'i1', itemName: 'Item 1', points: 1, result: 'correct', displayed: true },
+    { ...base, position: 2, itemId: 'i2', itemName: 'Item 2', points: 0, result: 'incorrect', displayed: true },
+    { ...base, position: 3, itemId: 'i3', itemName: 'Item 3', points: 0, result: 'incorrect', displayed: false },
+  ], { externe: false });
+  assert.equal(a.possible, 3);
+  assert.equal(a.obtained, 1);
+  assert.deepEqual(a.aRevoir.map((i) => i.itemId), ['i2']);
+  assert.ok(!a.items.some((i) => i.itemId === 'i3'));
+  assert.equal(a.notDisplayed, 1);
+});

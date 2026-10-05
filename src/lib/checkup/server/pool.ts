@@ -37,6 +37,13 @@ export function familyOf(specialiteId: string, parentOf: Map<string, string | nu
   return [specialiteId, ...Array.from(parentOf.entries()).filter(([, p]) => p === specialiteId).map(([id]) => id)];
 }
 
+/** Classement modifié par l'administration : le vivier est relu au prochain usage (sur cette instance ; les autres sous 10 min). */
+export function invalidateSpecialtyPool(specialiteId?: string): void {
+  if (specialiteId) { cache.delete(specialiteId); loadedAt.delete(specialiteId); return; }
+  cache.clear();
+  loadedAt.clear();
+}
+
 export async function specialtyPool(specialiteId: string): Promise<SpecialtyPool> {
   const t = loadedAt.get(specialiteId);
   if (!t || Date.now() - t > TTL) {

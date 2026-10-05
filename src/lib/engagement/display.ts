@@ -120,3 +120,87 @@ export function alertView(ep: AlertEpisodeView | null, facts: AlertFacts, ctx: C
       };
   }
 }
+
+/* ─── Moteur B : adhérence au planificateur (§20 à §31) ─── */
+
+/** Liens d'action du planificateur (convenus avec le module planificateur). */
+export const PLANNER_LINKS = {
+  reorganiser: '/planificateur?action=reorganiser',
+  restantes: '/planificateur?action=restantes',
+  repartir: '/planificateur?action=repartir',
+  adapter: '/planificateur/objectifs?action=adapter',
+  desactiver: '/planificateur/objectifs?action=desactiver',
+  pause: '/planificateur/objectifs?action=pause',
+  reactiver: '/planificateur/objectifs?action=reactiver',
+} as const;
+
+export type PlannerEpisodeView = {
+  id: string;
+  alert_trigger: string;
+  status: 'open' | 'recovering' | 'resolved';
+  alert_acknowledged_at: string | null;
+  facts: Record<string, unknown>;
+};
+
+export type PlannerAlertView = {
+  episodeId: string;
+  trigger: 'j1_incomplet' | 'retard_cumule' | 'planning_trop_charge' | 'planning_ignore';
+  levelLabel: string;
+  title: string;
+  body: string | null;
+  facts: string[];
+  cta: CtaTarget;
+  secondary: CtaTarget | null;
+  /** §31 : trois choix (Adapter / Conserver / Désactiver) ; « Conserver » est enregistré côté serveur. */
+  choices: boolean;
+  compact: boolean;
+};
+
+type DayFacts = { planned?: number; done?: number; deferred?: number; cancelled?: number };
+const nb = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v : 0);
+
+/** Lecture combinée activité × planning (§30) : un candidat actif mais plus lent n'est pas en décrochage. */
+export function plannerSituationLine(situation: unknown): string | null {
+  if (situation === 'actif_plus_lent') return 'Vous restez actif : votre planning avance simplement moins vite que prévu.';
+  if (situation === 'decrochage_general') return 'Votre activité et votre planning ont tous deux fortement diminué.';
+  return null;
+}
+
+export function plannerAlertView(ep: PlannerEpisodeView | null): PlannerAlertView | null {
+  if (!ep || ep.status === 'resolved') return null;
+  const f = ep.facts ?? {};
+  const y = (f.yesterday ?? {}) as DayFacts;
+  const w = (f.last7 ?? {}) as DayFacts;
+  const compact = !!ep.alert_acknowledged_at;
+  const situation = plannerSituationLine(f.situation);
+  switch (ep.alert_trigger) {
+    case 'j1_incomplet':
+      return {
+        episodeId: ep.id, trigger: 'j1_incomplet', levelLabel: 'Programme d’hier', title: TEXTS.planner.j1Title, body: TEXTS.planner.j1Body,
+        facts: [`${nb(y.done)}/${nb(y.planned)} activités réalisées hier`],
+        cta: { label: TEXTS.planner.j1Cta, href: PLANNER_LINKS.reorganiser }, secondary: { label: TEXTS.planner.j1Secondary, href: PLANNER_LINKS.restantes },
+        choices: false, compact,
+      };
+    case 'retard_cumule':
+      return {
+        episodeId: ep.id, trigger: 'retard_cumule', levelLabel: 'Retard de planning', title: TEXTS.planner.delayTitle, body: situation,
+        facts: [`Sur 7 jours : ${nb(w.planned)} activités prévues, ${nb(w.done)} réalisées${nb(w.deferred) > 0 ? `, ${nb(w.deferred)} reportées` : ''}`],
+        cta: { label: TEXTS.planner.delayCta, href: PLANNER_LINKS.adapter }, secondary: { label: TEXTS.planner.j1Secondary, href: PLANNER_LINKS.restantes },
+        choices: false, compact,
+      };
+    case 'planning_trop_charge':
+      return {
+        episodeId: ep.id, trigger: 'planning_trop_charge', levelLabel: 'Charge du planning', title: TEXTS.planner.overloadTitle,
+        body: 'Un programme réaliste, tenu dans la durée, vaut mieux qu’un programme trop ambitieux.', facts: [],
+        cta: { label: TEXTS.planner.overloadCta, href: PLANNER_LINKS.adapter }, secondary: null, choices: false, compact,
+      };
+    case 'planning_ignore':
+      return {
+        episodeId: ep.id, trigger: 'planning_ignore', levelLabel: 'Planificateur', title: TEXTS.planner.ignoredTitle, body: TEXTS.planner.ignoredBody,
+        facts: typeof f.rate7 === 'number' ? [`Programme suivi à ${f.rate7} % ces derniers jours`] : [],
+        cta: { label: 'Adapter', href: PLANNER_LINKS.adapter }, secondary: { label: 'Désactiver', href: PLANNER_LINKS.desactiver }, choices: true, compact,
+      };
+    default:
+      return null;
+  }
+}

@@ -232,6 +232,8 @@ export function TransversalSession({
           time_spent_seconds: null,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           text_answer: qrocText.trim(),
+          // Origine lue par le moteur pédagogique central (classement de la source).
+          origin: 'transversal',
         } as any);
       }
     })().catch(() => undefined);
@@ -258,7 +260,10 @@ export function TransversalSession({
           selected_items: Array.from(sel),
           is_correct: isQuestionCorrect,
           time_spent_seconds: null,
-        });
+          // Origine lue par le moteur pédagogique central (classement de la source).
+          origin: 'transversal',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any);
       }
     })().catch(() => undefined);
   };

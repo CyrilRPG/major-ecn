@@ -25,6 +25,9 @@ export type ResultQuestion = {
   points: number;
   result: QuestionResult;
   origin: 'auto' | 'auto_evaluee' | 'vide';
+  /** Question réellement affichée au candidat. Une question jamais affichée (fin anticipée,
+   *  temps écoulé) compte 0 point dans le score mais ne dit rien de l'item : aucun diagnostic. */
+  displayed?: boolean;
 };
 
 export type Subscore = { key: string; label: string; obtained: number; possible: number; display: string; percent: number | null };
@@ -54,6 +57,8 @@ export type CheckupAnalysis = {
   positifs: ItemDiagnosis[];
   /** Questions sans item rattaché (comptent dans le score, ne produisent aucun diagnostic d'item, C§19). */
   withoutItem: number;
+  /** Questions jamais affichées (fin anticipée, temps écoulé) : 0 point, aucun diagnostic d'item. */
+  notDisplayed?: number;
 };
 
 const SOURCE_GROUP: Record<BankFamily, { key: string; label: string }> = {
@@ -91,7 +96,7 @@ export function analyze(questions: ResultQuestion[], opts: { externe: boolean })
   }
   const itemMap = new Map<string, ItemDiagnosis>();
   for (const q of questions) {
-    if (!q.itemId) continue;
+    if (!q.itemId || q.displayed === false) continue;
     const d = itemMap.get(q.itemId) ?? { itemId: q.itemId, itemName: q.itemName ?? 'Item', correct: 0, partial: 0, incorrect: 0, verdict: 'positif' as const, selfAssessed: false };
     if (q.result === 'correct') d.correct++; else if (q.result === 'partial') d.partial++; else d.incorrect++;
     if (q.origin === 'auto_evaluee') d.selfAssessed = true;
@@ -115,6 +120,7 @@ export function analyze(questions: ResultQuestion[], opts: { externe: boolean })
     aConsolider: items.filter((i) => i.verdict === 'a_consolider'),
     positifs: items.filter((i) => i.verdict === 'positif'),
     withoutItem: questions.filter((q) => !q.itemId).length,
+    notDisplayed: questions.filter((q) => q.displayed === false).length,
   };
 }
 
@@ -131,7 +137,12 @@ export function synthesis(a: CheckupAnalysis): string {
 /** Un Check-up recommandé (O§32, I§24) : jamais lancé automatiquement. */
 export function shouldRecommendCheckup(input: { lastCheckupAt: string | null; newItemsWorkedSince: number; now: string; newItemsThreshold: number; daysThreshold: number }): { recommend: boolean; reason: string | null } {
   if (input.newItemsWorkedSince >= input.newItemsThreshold) {
-    return { recommend: true, reason: `${input.newItemsWorkedSince} nouveaux items travaillés depuis votre dernier Check-up.` };
+    return {
+      recommend: true,
+      reason: input.lastCheckupAt
+        ? `${input.newItemsWorkedSince} nouveaux items travaillés depuis votre dernier Check-up.`
+        : `${input.newItemsWorkedSince} items travaillés : mesurez votre niveau pour orienter vos révisions.`,
+    };
   }
   if (!input.lastCheckupAt) return { recommend: input.newItemsWorkedSince > 0, reason: input.newItemsWorkedSince > 0 ? 'Mesurez votre niveau pour orienter vos révisions.' : null };
   const days = Math.floor((Date.parse(input.now) - Date.parse(input.lastCheckupAt)) / 86_400_000);

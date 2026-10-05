@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Link from 'next/link';
 import {
   AlertTriangle, ArrowRight, BookOpen, Calendar, CheckCircle2, ClipboardList,
@@ -8,6 +9,9 @@ import { createClient } from '@/lib/supabase/server';
 import { parseScope } from '@/lib/auth/permissions';
 import { getMaintienStats, getStudiedSpecialties, type MaintienStats, type StudiedSpecialty } from '@/lib/pedago/maintien';
 import { sessionSizesFor, STATUS_META } from '@/lib/pedago/status';
+import { PEDAGO_ENGINE_STUDENT_ENABLED } from '@/lib/modules-flags';
+import { moteurOuvert } from '@/lib/moteur/access';
+import { PedagoDue } from './pedago-due';
 
 export const metadata = { title: 'Révisions transversales' };
 
@@ -73,6 +77,7 @@ export default async function RevisionsTransversalesPage() {
   const { user, profile } = await requireUser();
   const firstName = profile.first_name || 'étudiant';
   const s = await buildState(user.id, firstName);
+  const engine = moteurOuvert(profile, PEDAGO_ENGINE_STUDENT_ENABLED);
 
   // États visuels selon les jours d'absence (spec section 5).
   // « Jamais révisé » est un état DISTINCT : pas de bandeau d'absence — l'élève
@@ -106,11 +111,18 @@ export default async function RevisionsTransversalesPage() {
               La révision transversale ne modifie pas le statut officiel des spécialités.
             </p>
           </div>
-          <a href="#priorites" className="hidden shrink-0 items-center gap-1 text-xs font-semibold text-(--color-primary) hover:underline sm:inline-flex">
+          <Link href={engine ? '/mes-priorites' : '#priorites'} className="hidden shrink-0 items-center gap-1 text-xs font-semibold text-(--color-primary) hover:underline sm:inline-flex">
             <HelpCircle className="h-3.5 w-3.5" />
             Mes priorités
-          </a>
+          </Link>
         </header>
+
+        {/* ============ Révisions dues selon le profil pédagogique (moteur central) ============ */}
+        {engine && (
+          <Suspense fallback={null}>
+            <PedagoDue userId={user.id} />
+          </Suspense>
+        )}
 
         {/* ============ KPI — Maintien des acquis (spec section 5) ============ */}
         <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -250,7 +262,7 @@ export default async function RevisionsTransversalesPage() {
         {/* Priorités pédagogiques */}
         <div id="priorites" className="scroll-mt-20 rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
           <h3 className="flex items-center gap-2 text-sm font-bold text-(--color-ink)">
-            <Target className="h-4 w-4 text-(--color-primary)" /> Priorités pédagogiques
+            <Target className="h-4 w-4 text-(--color-primary)" /> Priorités par spécialité
           </h3>
           <div className="mt-3">
             {priorities(s.specs)}
@@ -750,7 +762,7 @@ function priorities(specs: StudiedSpecialty[]): React.ReactNode {
       <div className="flex items-start gap-2.5">
         <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-(--color-success)" />
         <div>
-          <p className="text-sm font-medium text-(--color-ink)">Aucune priorité particulière</p>
+          <p className="text-sm font-medium text-(--color-ink)">Aucune spécialité en difficulté</p>
           <p className="mt-0.5 text-xs text-(--color-ink-soft)">Continuez votre régularité !</p>
         </div>
       </div>
