@@ -83,7 +83,7 @@ export function MaJournee({ data, conseil }: { data: TodayProgramData; conseil: 
   const visibles = tout ? todo : todo.slice(0, VISIBLES);
   const autres = todo.length - VISIBLES;
   return (
-    <section className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5" aria-labelledby="ma-journee">
+    <section className="flex flex-1 flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5" aria-labelledby="ma-journee">
       <EngineRefresher stale={data.stale} />
       <EnTeteBloc
         numero={1} id="ma-journee" icon={CalendarCheck} titre="Ma journée"
@@ -115,9 +115,11 @@ export function MaJournee({ data, conseil }: { data: TodayProgramData; conseil: 
         </div>
       )}
 
+      {/* Colonne à hauteur de la colonne de droite : le bouton reste en pied de carte. */}
+      <div aria-hidden className="min-h-4 flex-1" />
       <Link
         href={data.start?.href ?? '/revisions-transversales'}
-        className="mt-4 flex items-center gap-4 rounded-2xl bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] px-5 py-3.5 text-white shadow-[0_14px_30px_-16px_rgba(228,0,43,0.9)] transition-transform hover:scale-[1.005] focus-ring"
+        className="flex items-center gap-4 rounded-2xl bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] px-5 py-3.5 text-white shadow-[0_14px_30px_-16px_rgba(228,0,43,0.9)] transition-transform hover:scale-[1.005] focus-ring"
       >
         <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-[#E4002B]" aria-hidden><Play className="ml-0.5 h-5 w-5 fill-current" /></span>
         <span className="min-w-0 flex-1">

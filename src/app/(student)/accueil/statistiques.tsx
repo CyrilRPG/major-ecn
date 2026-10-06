@@ -2,65 +2,27 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, BarChart3, Clock, Network, Trophy } from 'lucide-react';
+import { ArrowRight, BarChart3, Network, Trophy } from 'lucide-react';
+import { ActiviteChart } from '@/components/student/activite-chart';
 import type { JourActivite } from '@/lib/student/activite';
 import { getSpecialtyTheme } from '@/lib/data/specialty-icons';
 import { Bloc, Carte, TitreCarte, lienCarte } from './ui';
 
 /**
- * Section 3 de l'accueil — « Mes statistiques » : temps de travail jour par
- * jour (mesuré par le battement des pages d'étude), répartition du travail
- * et maîtrise par spécialité. La période (7, 30 ou 90 jours) s'applique aux
- * deux premières cartes ; la maîtrise est l'état actuel.
+ * Section 3 de l'accueil — « Mes statistiques » : « Votre activité » (temps
+ * de travail jour par jour, mesuré par le battement des pages d'étude, avec
+ * son propre choix de période et le bilan de la semaine), la répartition du
+ * travail (7, 30 ou 90 jours) et la maîtrise par spécialité (état actuel).
  */
 
 const PERIODES = [7, 30, 90] as const;
 type Periode = (typeof PERIODES)[number];
-
-/** Objectif conseillé : 25 h par semaine, soit environ 3 h 34 par jour. */
-const OBJECTIF_JOUR_H = 25 / 7;
 
 const decaler = (jour: string, n: number) => {
   const d = new Date(`${jour}T12:00:00Z`);
   d.setUTCDate(d.getUTCDate() + n);
   return d.toISOString().slice(0, 10);
 };
-const courte = (d: string) => `${d.slice(8, 10)}/${d.slice(5, 7)}`;
-
-function TempsDeTravail({ jours }: { jours: { d: string; h: number }[] }) {
-  const max = Math.max(4, Math.ceil(Math.max(OBJECTIF_JOUR_H, ...jours.map((j) => j.h)) / 2) * 2);
-  const L = 300; const H = 140; const g = 26; const b = 18;
-  const w = (L - g) / Math.max(1, jours.length);
-  const y = (h: number) => H - b - (h / max) * (H - b - 8);
-  const graduations = Array.from({ length: max / 2 + 1 }, (_, i) => i * 2);
-  const reperes = jours.length <= 7 ? jours.map((_, i) => i) : [0, Math.round((jours.length - 1) / 4), Math.round((jours.length - 1) / 2), Math.round(((jours.length - 1) * 3) / 4), jours.length - 1];
-  return (
-    <div>
-      <svg viewBox={`0 0 ${L} ${H}`} className="mt-2 h-auto w-full" role="img" aria-label="Temps de travail par jour">
-        {graduations.map((v) => (
-          <g key={v}>
-            <line x1={g} x2={L} y1={y(v)} y2={y(v)} stroke="currentColor" className="text-(--color-border)" strokeWidth={0.6} />
-            <text x={g - 4} y={y(v) + 3} textAnchor="end" className="fill-(--color-ink-muted) text-[8px]">{v} h</text>
-          </g>
-        ))}
-        {jours.map((j, i) => (
-          <rect key={j.d} x={g + i * w + w * 0.18} y={y(j.h)} width={Math.max(1, w * 0.64)} height={Math.max(0, H - b - y(j.h))} rx={Math.min(2, w * 0.2)} fill="#C0112E">
-            <title>{`${courte(j.d)} : ${Math.floor(j.h)} h ${String(Math.round((j.h % 1) * 60)).padStart(2, '0')}`}</title>
-          </rect>
-        ))}
-        <line x1={g} x2={L} y1={y(OBJECTIF_JOUR_H)} y2={y(OBJECTIF_JOUR_H)} stroke="#14254E" strokeWidth={1} strokeDasharray="4 3" opacity={0.55} />
-        {reperes.map((i) => jours[i] && (
-          <text key={i} x={g + i * w + w / 2} y={H - 4} textAnchor="middle" className="fill-(--color-ink-muted) text-[8px]">{courte(jours[i].d)}</text>
-        ))}
-      </svg>
-      <p className="mt-1 flex items-center justify-center gap-4 text-[11px] text-(--color-ink-soft)">
-        <span className="inline-flex items-center gap-1.5"><span className="h-2 w-3 rounded-sm bg-[#C0112E]" aria-hidden />Temps réalisé</span>
-        <span className="inline-flex items-center gap-1.5"><span className="w-4 border-t border-dashed border-[#14254E]/60" aria-hidden />Objectif</span>
-      </p>
-    </div>
-  );
-}
-
 function Repartition({ parts, total, contenuTotal }: { parts: { label: string; n: number; couleur: string }[]; total: number; contenuTotal: number }) {
   const r = 40; const c = 2 * Math.PI * r;
   let offset = 0;
@@ -125,10 +87,8 @@ export function MesStatistiques({ jours, cours, aujourdhui, specialites, contenu
   qLabel: string;
 }) {
   const [periode, setPeriode] = useState<Periode>(30);
-  const { serie, parts, total } = useMemo(() => {
+  const { parts, total } = useMemo(() => {
     const debut = decaler(aujourdhui, -(periode - 1));
-    const parJour = new Map((jours ?? []).map((j) => [j.d, j]));
-    const serie = Array.from({ length: periode }, (_, i) => { const d = decaler(debut, i); return { d, h: (parJour.get(d)?.s ?? 0) / 3600 }; });
     const dans = (jours ?? []).filter((j) => j.d >= debut && j.d <= aujourdhui);
     const somme = (k: keyof Pick<JourActivite, 'qcm' | 'cas' | 'fc' | 'transv' | 'epreuves'>) => dans.reduce((s, j) => s + (j[k] ?? 0), 0);
     const parts = [
@@ -138,45 +98,44 @@ export function MesStatistiques({ jours, cours, aujourdhui, specialites, contenu
       { label: 'Révisions transversales', n: somme('transv'), couleur: '#7C3AED' },
       { label: 'Épreuves blanches', n: somme('epreuves'), couleur: '#14254E' },
     ];
-    return { serie, parts, total: parts.reduce((s, p) => s + p.n, 0) };
+    return { parts, total: parts.reduce((s, p) => s + p.n, 0) };
   }, [jours, cours, aujourdhui, periode, qLabel]);
 
+  const selecteur = (
+    <label className="inline-flex items-center">
+      <span className="sr-only">Période de la répartition</span>
+      <select
+        value={periode}
+        onChange={(e) => setPeriode(Number(e.target.value) as Periode)}
+        className="h-8 rounded-lg border border-(--color-border) bg-(--color-surface) px-2 text-[12px] font-semibold text-[#14254E] focus-ring dark:text-(--color-ink)"
+      >
+        {PERIODES.map((p) => <option key={p} value={p}>{p} derniers jours</option>)}
+      </select>
+    </label>
+  );
+
   return (
-    <Bloc
-      numero={3} id="mes-statistiques" icon={BarChart3} titre="Mes statistiques"
-      description="Analysez votre travail pour mieux progresser."
-      action={(
-        <label className="inline-flex items-center gap-2">
-          <span className="sr-only">Période</span>
-          <select
-            value={periode}
-            onChange={(e) => setPeriode(Number(e.target.value) as Periode)}
-            className="h-9 rounded-xl border border-(--color-border) bg-(--color-surface) px-3 text-[13px] font-semibold text-[#14254E] focus-ring dark:text-(--color-ink)"
-          >
-            {PERIODES.map((p) => <option key={p} value={p}>{p} derniers jours</option>)}
-          </select>
-        </label>
-      )}
-    >
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
-        <Carte>
-          <TitreCarte icon={Clock}>Mon temps de travail</TitreCarte>
-          {jours ? <TempsDeTravail jours={serie} /> : <p className="mt-4 text-[12.5px] text-(--color-ink-soft)">Temps de travail momentanément indisponible.</p>}
+    <Bloc numero={3} id="mes-statistiques" icon={BarChart3} titre="Mes statistiques" description="Analysez votre travail pour mieux progresser.">
+      <div className="grid grid-cols-1 gap-3 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+        <Carte className="min-h-[300px]">
+          <ActiviteChart jours={jours} />
         </Carte>
-        <Carte>
-          <TitreCarte icon={Network}>Répartition de mon travail</TitreCarte>
-          <Repartition parts={parts} total={total} contenuTotal={contenuTotal} />
-        </Carte>
-        <Carte>
-          <TitreCarte icon={Trophy} action={<Link href="/facultes" className={lienCarte}>Voir toutes <ArrowRight className="h-3.5 w-3.5" aria-hidden /></Link>}>Maîtrise par spécialité</TitreCarte>
-          {specialites.length === 0 ? (
-            <p className="mt-4 text-[12.5px] text-(--color-ink-soft)">Vos spécialités apparaîtront ici dès vos premiers entraînements.</p>
-          ) : (
-            <ul className="mt-3 space-y-2.5">
-              {specialites.slice(0, 5).map((s) => <Specialite key={s.id} nom={s.nom} pct={s.pct} />)}
-            </ul>
-          )}
-        </Carte>
+        <div className="flex min-w-0 flex-col gap-3">
+          <Carte>
+            <TitreCarte icon={Network} action={selecteur}>Répartition de mon travail</TitreCarte>
+            <Repartition parts={parts} total={total} contenuTotal={contenuTotal} />
+          </Carte>
+          <Carte className="flex-1">
+            <TitreCarte icon={Trophy} action={<Link href="/facultes" className={lienCarte}>Voir toutes <ArrowRight className="h-3.5 w-3.5" aria-hidden /></Link>}>Maîtrise par spécialité</TitreCarte>
+            {specialites.length === 0 ? (
+              <p className="mt-4 text-[12.5px] text-(--color-ink-soft)">Vos spécialités apparaîtront ici dès vos premiers entraînements.</p>
+            ) : (
+              <ul className="mt-3 space-y-2.5">
+                {specialites.slice(0, 5).map((sp) => <Specialite key={sp.id} nom={sp.nom} pct={sp.pct} />)}
+              </ul>
+            )}
+          </Carte>
+        </div>
       </div>
     </Bloc>
   );

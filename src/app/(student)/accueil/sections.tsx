@@ -292,12 +292,12 @@ export async function CheckupBloc({ userId, ouvert }: { userId: string; ouvert: 
   const pct = dernier ? Math.round(dernier.pourcentage) : null;
   const ecart = dernier && precedent ? Math.round(dernier.pourcentage - precedent.pourcentage) : null;
   return (
-    <section aria-labelledby="mon-checkup" className={cn(carteBlanche, 'p-4')}>
+    <section aria-labelledby="mon-checkup" className={cn(carteBlanche, 'flex flex-1 flex-col p-4')}>
       <h2 id="mon-checkup" className={cn(displayFont, 'flex items-center gap-2 text-[16px] font-extrabold text-[#14254E] dark:text-(--color-ink)')}>
         <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#FDF4F5] text-[#C0112E] ring-1 ring-[#F6D9DD] dark:bg-white/5 dark:ring-(--color-border)" aria-hidden><Crosshair className="h-4 w-4" /></span>
         Mon EVC Check-up
       </h2>
-      <div className="mt-3 flex items-center gap-4">
+      <div className="flex flex-1 items-center gap-4 py-3">
         <Anneau pct={pct ?? 0} couleur="#7C3AED" taille={96} epaisseur={10}>
           <span className={cn(displayFont, 'block text-[22px] font-extrabold tabular-nums text-[#14254E] dark:text-(--color-ink)')}>{pct !== null ? `${pct} %` : '—'}</span>
           {dernier && <span className="block text-[10.5px] text-(--color-ink-soft)">le {jourMois(dernier.date)}</span>}
@@ -315,7 +315,7 @@ export async function CheckupBloc({ userId, ouvert }: { userId: string; ouvert: 
           </p>
         )}
       </div>
-      <Link href={dernier ? '/evaluations' : '/checkup'} className={cn(boutonCarte, 'mt-4')}>
+      <Link href={dernier ? '/evaluations' : '/checkup'} className={boutonCarte}>
         {dernier ? 'Voir mon évolution' : 'Faire mon Check-up'} <ArrowRight className="h-3.5 w-3.5" aria-hidden />
       </Link>
     </section>
@@ -382,7 +382,8 @@ export async function ConsoliderBloc({ userId, engine, isDecouverte }: { userId:
           <p className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1 text-[11.5px] text-(--color-ink-soft)">
             {DELAIS.map((d) => <span key={d}>J+{d} ({delais.get(d) ?? 0})</span>)}
           </p>
-          <DiscoveryGateLink href="/revisions-transversales" locked={isDecouverte} className={cn(boutonCarte, 'mt-3')}>
+          <div aria-hidden className="min-h-3 flex-1" />
+          <DiscoveryGateLink href="/revisions-transversales" locked={isDecouverte} className={boutonCarte}>
             Commencer mes révisions <ArrowRight className="h-3.5 w-3.5" aria-hidden />
           </DiscoveryGateLink>
         </Carte>
@@ -409,7 +410,8 @@ export async function ConsoliderBloc({ userId, engine, isDecouverte }: { userId:
           ) : (
             <p className="mt-3 text-[12.5px] text-(--color-ink-soft)">Vos priorités apparaîtront ici dès vos premiers entraînements.</p>
           )}
-          <Link href={engine ? '/mes-priorites' : '/entrainement'} className={cn(boutonCarte, 'mt-3')}>
+          <div aria-hidden className="min-h-3 flex-1" />
+          <Link href={engine ? '/mes-priorites' : '/entrainement'} className={boutonCarte}>
             {engine ? 'Voir mes priorités' : 'Commencer un entraînement'} <ArrowRight className="h-3.5 w-3.5" aria-hidden />
           </Link>
         </Carte>

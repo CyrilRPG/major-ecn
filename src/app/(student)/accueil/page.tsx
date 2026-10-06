@@ -93,16 +93,13 @@ export default async function AccueilPage() {
         <BienDemarrerAccueil />
       </Suspense>
 
-      <div className="grid w-full items-start gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="grid w-full gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
         <div className="flex min-w-0 flex-col gap-4">
           <Suspense fallback={null}>
             <AlertesMoteur userId={user.id} engine={engine} />
           </Suspense>
           <Suspense fallback={<BlocSkeleton />}>
             <MaJourneeBloc userId={user.id} engine={engine} conseil={conseilLigne()} />
-          </Suspense>
-          <Suspense fallback={<BlocSkeleton hauteur="h-56" />}>
-            <OuJenSuisBloc userId={user.id} scope={scope} engine={engine} />
           </Suspense>
         </div>
 
@@ -121,6 +118,9 @@ export default async function AccueilPage() {
         </aside>
       </div>
 
+      <Suspense fallback={<BlocSkeleton hauteur="h-56" />}>
+        <OuJenSuisBloc userId={user.id} scope={scope} engine={engine} />
+      </Suspense>
       <Suspense fallback={<BlocSkeleton hauteur="h-72" />}>
         <StatistiquesBloc userId={user.id} scope={scope} />
       </Suspense>
@@ -131,7 +131,7 @@ export default async function AccueilPage() {
         <TravaillerLibrementAccueil userId={user.id} scope={scope} isDecouverte={isDecouverte} />
       </Suspense>
       {/* Annonces (fiches concours, messages de l'administration) : seulement s'il y en a, en grille. */}
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 [&>div]:contents">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,320px),1fr))] gap-4 empty:hidden [&>div]:contents">
         <Suspense fallback={null}>
           <AnnouncementsWidget scope={scope} />
         </Suspense>
