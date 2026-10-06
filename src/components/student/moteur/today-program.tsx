@@ -65,7 +65,7 @@ const fmtMin = (m: number) => (m >= 60 ? `${Math.floor(m / 60)} h ${String(m % 6
 const fmtDay = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', timeZone: 'Europe/Paris' });
 
 /** Actualise le moteur après l'affichage (§57) puis recharge si quelque chose a changé. */
-function EngineRefresher({ stale }: { stale: boolean }) {
+export function EngineRefresher({ stale }: { stale: boolean }) {
   const router = useRouter();
   const done = useRef(false);
   useEffect(() => {
@@ -110,7 +110,7 @@ function ActivityRow({ a, now }: { a: ProgramActivity; now: boolean }) {
   );
 }
 
-function Notifications({ items }: { items: TodayProgramData['notifications'] }) {
+export function Notifications({ items }: { items: TodayProgramData['notifications'] }) {
   const [list, setList] = useState(items);
   const sent = useRef(false);
   useEffect(() => {
@@ -139,7 +139,7 @@ function Notifications({ items }: { items: TodayProgramData['notifications'] }) 
   );
 }
 
-function ExamInvite() {
+export function ExamInvite() {
   const router = useRouter();
   const [date, setDate] = useState('');
   const [pending, start] = useTransition();
