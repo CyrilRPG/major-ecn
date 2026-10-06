@@ -5,7 +5,10 @@
  * vues (`course_progress.video_watched`, lecteur à 80 % ou « Marquer comme
  * terminé ») sans AUCUNE feuille vidéo reçoivent une ligne « émargement dû »
  * dans `course_attendances` : l'élève la signera à sa prochaine connexion
- * (fenêtre EmargementsEnAttente du layout élève), avec la date de ce jour-là.
+ * (fenêtre EmargementsEnAttente du layout élève). Côté admin, la feuille est
+ * datée du visionnage (`watched_at`), pas de la signature : à défaut de trace
+ * du lecteur, la dernière visite de l'item (`course_progress.last_seen_at`),
+ * relevée ici car la signature l'écrase.
  *
  * Élèves seulement. Idempotent (une feuille existante, signée ou non, n'est
  * jamais touchée). Simulation par défaut ; `--apply` pour écrire.
@@ -33,7 +36,7 @@ async function tout(table, select, filtre = (q) => q) {
 const eleves = new Set((await tout('profiles', 'id, role', (q) => q.eq('role', 'student'))).map((p) => p.id));
 const feuilles = new Set((await tout('course_attendances', 'user_id, cours_id, kind', (q) => q.eq('kind', 'video')))
   .map((a) => `${a.user_id}|${a.cours_id}`));
-const vues = (await tout('course_progress', 'user_id, cours_id', (q) => q.eq('video_watched', true)))
+const vues = (await tout('course_progress', 'user_id, cours_id, last_seen_at', (q) => q.eq('video_watched', true)))
   .filter((r) => eleves.has(r.user_id) && !feuilles.has(`${r.user_id}|${r.cours_id}`));
 
 const coursIds = [...new Set(vues.map((r) => r.cours_id))];
@@ -50,7 +53,8 @@ const lignes = vues.filter((r) => cours.has(r.cours_id)).map((r) => ({
   kind: 'video',
   cours_titre: cours.get(r.cours_id).titre,
   matiere_id: cours.get(r.cours_id).matiere_id,
-  user_agent: 'rattrapage 05/10/2026 — vidéo marquée vue sans feuille d’émargement',
+  watched_at: r.last_seen_at,
+  user_agent: 'rattrapage — vidéo marquée vue sans feuille d’émargement',
 }));
 console.log(`${lignes.length} feuille(s) due(s) à créer pour ${new Set(lignes.map((l) => l.user_id)).size} élève(s)`
   + ` (${vues.length - lignes.length} ignorée(s) : cours supprimé)`);

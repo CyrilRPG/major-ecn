@@ -13,6 +13,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Download, FileSignature, Loader2, MonitorPlay, TriangleAlert, Video } from 'lucide-react';
 import { fetchAuthentifie } from '@/lib/auth/fresh-token';
+import { HEURE_NON_ENREGISTREE } from '@/lib/emargement';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -30,8 +31,9 @@ type Row = {
   typeLabel: string;
   college: string | null;
   titre: string;
+  /** Visionnage (vidéo/séance), signature (interrogation), émargement (Zoom). */
   date: string | null;
-  requiredAt: string | null;
+  visionnage: boolean;
   signed: boolean;
   signaturePng: string | null;
   watchedRatio: number | null;
@@ -227,13 +229,17 @@ export function EmargementsDialog({
 
                         {r.source === 'plateforme' ? (
                           <>
+                            {/* Vidéo ou séance : datée du visionnage, pas de la
+                                signature (souvent différée à la connexion suivante). */}
                             <p className="mt-0.5 text-[12px] text-(--color-ink-soft)">
-                              Vu le {fmt(r.requiredAt)}
+                              {r.visionnage
+                                ? (r.date ? <>Vu le <strong>{fmt(r.date)}</strong></> : HEURE_NON_ENREGISTREE)
+                                : <>Signé le <strong>{fmt(r.date)}</strong></>}
                               {r.watchedRatio != null && ` · ${Math.round(r.watchedRatio * 100)} % de la vidéo`}
                             </p>
                             <p className="text-[12px] text-(--color-ink-soft)">
                               {r.signed
-                                ? <>Signé le <strong>{fmt(r.date)}</strong></>
+                                ? (r.visionnage && 'Émargement signé')
                                 : (
                                   <span className="inline-flex items-center gap-1 font-bold" style={{ color: '#B26A00' }}>
                                     <TriangleAlert className="h-3.5 w-3.5" /> Non signé

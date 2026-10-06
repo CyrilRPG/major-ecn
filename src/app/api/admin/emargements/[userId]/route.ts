@@ -14,7 +14,7 @@
  *
  * Réservé aux admins.
  */
-import { titreFeuille } from '@/lib/emargement';
+import { HEURE_NON_ENREGISTREE, titreFeuille } from '@/lib/emargement';
 import { NextResponse } from 'next/server';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -32,10 +32,13 @@ export type Emargement = {
   college: string | null;
   /** Cours (vidéo plateforme) ou intitulé de la session (Zoom). */
   titre: string;
-  /** Date de référence : signature pour la plateforme, émargement pour Zoom. */
+  /** Date enregistrée : VISIONNAGE pour une vidéo ou une séance (jamais la
+   *  signature, parfois donnée des jours plus tard à la connexion suivante),
+   *  signature pour l'interrogation, émargement pour Zoom. NULL pour une vidéo
+   *  = feuille de rattrapage sans trace du visionnage. */
   date: string | null;
-  /** Déclenchement de l'obligation (plateforme uniquement). */
-  requiredAt: string | null;
+  /** Feuille de vidéo ou de séance : `date` est la date du visionnage. */
+  visionnage: boolean;
   signed: boolean;
   signaturePng: string | null;
   watchedRatio: number | null;
@@ -80,7 +83,7 @@ export async function GET(
     await Promise.all([
       db.from('profiles').select('first_name, last_name, email').eq('id', userId).maybeSingle(),
       db.from('course_attendances')
-        .select('id, cours_id, cours_titre, video_titre, matiere_id, kind, required_at, signed_at, signature_png, watched_ratio')
+        .select('id, cours_id, cours_titre, video_titre, matiere_id, kind, required_at, watched_at, signed_at, signature_png, watched_ratio')
         .eq('user_id', userId).order('required_at', { ascending: false }),
       db.from('session_presences')
         .select('id, event_title, event_date, start_time, end_time, college, intervenant, marked_at, signature_png')
@@ -101,7 +104,7 @@ export async function GET(
 
   type ARow = {
     id: string; cours_id: string; cours_titre: string | null; video_titre: string | null; matiere_id: string | null;
-    kind: string; required_at: string; signed_at: string | null;
+    kind: string; required_at: string; watched_at: string | null; signed_at: string | null;
     signature_png: string | null; watched_ratio: number | null;
   };
   type PRow = {
@@ -116,8 +119,8 @@ export async function GET(
     typeLabel: r.kind === 'seance' ? 'Séance approfondie' : 'Vidéo du cours',
     college: r.matiere_id ? (collegeName.get(r.matiere_id) ?? r.matiere_id) : null,
     titre: titreFeuille(r.cours_titre, r.video_titre) ?? r.cours_id,
-    date: r.signed_at,
-    requiredAt: r.required_at,
+    date: r.watched_at,
+    visionnage: true,
     signed: !!r.signed_at,
     signaturePng: r.signature_png,
     watchedRatio: r.watched_ratio,
@@ -131,7 +134,7 @@ export async function GET(
     college: r.college,
     titre: r.event_title ?? 'Session',
     date: r.marked_at,
-    requiredAt: null,
+    visionnage: false,
     // Depuis l'ajout de la signature manuscrite, une session Zoom n'est
     // considérée émargée que si le tracé a bien été enregistré.
     signed: !!r.signature_png,
@@ -156,7 +159,7 @@ export async function GET(
     college: r.cours?.matiere_id ? (collegeName.get(r.cours.matiere_id) ?? r.cours.matiere_id) : null,
     titre: r.cours?.titre ?? r.cours_id,
     date: r.certificate_signed_at,
-    requiredAt: null,
+    visionnage: false,
     signed: true,
     signaturePng: r.signature_data_url,
     watchedRatio: null,
@@ -166,11 +169,8 @@ export async function GET(
       : null,
   }));
 
-  const rows = [...fromPlateforme, ...fromInterrogation, ...fromZoom].sort((a, b) => {
-    const da = a.date ?? a.requiredAt ?? '';
-    const dbb = b.date ?? b.requiredAt ?? '';
-    return dbb.localeCompare(da);
-  });
+  const rows = [...fromPlateforme, ...fromInterrogation, ...fromZoom]
+    .sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''));
 
   const fullName = `${student?.first_name ?? ''} ${student?.last_name ?? ''}`.trim();
   const url = new URL(req.url);
@@ -180,12 +180,12 @@ export async function GET(
     : rows;
 
   if (url.searchParams.get('format') === 'csv') {
-    const header = ['Élève', 'Email', 'Origine', 'Type', 'Collège', 'Intitulé', 'Séance (date et horaire)', 'Vu le', 'Signé le', 'Progression / note', 'Intervenant'];
+    const header = ['Élève', 'Email', 'Origine', 'Type', 'Collège', 'Intitulé', 'Séance (date et horaire)', 'Date (visionnage pour une vidéo)', 'Statut', 'Progression / note', 'Intervenant'];
     const lines = filtered.map((r) => [
       fullName, student?.email ?? '',
       r.source === 'zoom' ? 'Zoom' : 'Plateforme',
       r.typeLabel, r.college ?? '', r.titre, r.seance ?? '',
-      fmt(r.requiredAt), r.signed ? fmt(r.date) : 'NON SIGNÉ',
+      r.date ? fmt(r.date) : HEURE_NON_ENREGISTREE, r.signed ? 'Signé' : 'NON SIGNÉ',
       r.watchedRatio != null ? `${Math.round(r.watchedRatio * 100)}%` : (r.note ?? ''),
       r.intervenant ?? '',
     ].map(csvCell).join(';'));

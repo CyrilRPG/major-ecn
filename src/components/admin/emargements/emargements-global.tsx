@@ -11,6 +11,7 @@ import { Download, FileText, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { EmargementsDialog } from '@/components/admin/students/emargements-dialog';
+import { HEURE_NON_ENREGISTREE } from '@/lib/emargement';
 
 export type TypeFeuille = 'video' | 'seance' | 'interrogation' | 'zoom';
 
@@ -22,7 +23,9 @@ export type FeuilleAdmin = {
   type: TypeFeuille;
   titre: string;
   college: string | null;
-  /** Signature, sinon naissance de l'obligation (feuille non signée). */
+  /** Visionnage (vidéo, séance — jamais la signature, souvent différée),
+   *  signature (interrogation), émargement (Zoom). NULL pour une vidéo =
+   *  feuille de rattrapage sans trace du visionnage. */
   date: string | null;
   signe: boolean;
   /** Part vue, note sur 20 ou horaire de la séance Zoom. */
@@ -39,7 +42,7 @@ const LIBELLE: Record<TypeFeuille, string> = {
 };
 
 function fmt(iso: string | null): string {
-  if (!iso) return '—';
+  if (!iso) return HEURE_NON_ENREGISTREE;
   try {
     return new Date(iso).toLocaleString('fr-FR', {
       day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
@@ -148,7 +151,7 @@ export function EmargementsGlobal({ feuilles }: { feuilles: FeuilleAdmin[] }) {
                 <th className="px-3 py-2 font-semibold">Type</th>
                 <th className="px-3 py-2 font-semibold">Intitulé</th>
                 <th className="px-3 py-2 font-semibold">Détail</th>
-                <th className="px-3 py-2 font-semibold">Signée le</th>
+                <th className="px-3 py-2 font-semibold">Date</th>
                 <th className="px-3 py-2" />
               </tr>
             </thead>
@@ -165,10 +168,13 @@ export function EmargementsGlobal({ feuilles }: { feuilles: FeuilleAdmin[] }) {
                     {f.college && <p className="text-xs text-(--color-ink-muted)">{f.college}</p>}
                   </td>
                   <td className="whitespace-nowrap px-3 py-2 text-xs text-(--color-ink-soft)">{f.detail ?? '—'}</td>
-                  <td className="whitespace-nowrap px-3 py-2 text-xs">
-                    {f.signe
-                      ? <span className="text-(--color-ink-soft)">{fmt(f.date)}</span>
-                      : <span className="rounded-full bg-[#FEF3C7] px-2 py-0.5 font-semibold text-[#B45309]">Non signée</span>}
+                  <td className="px-3 py-2 text-xs">
+                    <p className={f.date ? 'whitespace-nowrap text-(--color-ink-soft)' : 'max-w-48 text-(--color-ink-muted)'}>
+                      {(f.type === 'video' || f.type === 'seance') && f.date ? 'Vu le ' : ''}{fmt(f.date)}
+                    </p>
+                    {!f.signe && (
+                      <span className="mt-1 inline-block rounded-full bg-[#FEF3C7] px-2 py-0.5 font-semibold text-[#B45309]">Non signée</span>
+                    )}
                   </td>
                   <td className="px-3 py-2">
                     <div className="flex items-center justify-end gap-1.5">

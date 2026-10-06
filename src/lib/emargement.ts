@@ -35,7 +35,12 @@ export type EmargementSigneDetail = {
   videoId: string | null;
 };
 
-/** Intitulé d'une feuille : l'item, puis la séance quand la feuille est tenue
+/** Côté admin, une feuille de vidéo ou de séance est datée du VISIONNAGE
+ *  (`course_attendances.watched_at`), jamais de la signature. NULL = feuille
+ *  de rattrapage du 05/10/2026 dont le visionnage n'a laissé aucune trace. */
+export const HEURE_NON_ENREGISTREE = 'Visionnage antérieur au 05/10/2026 — heure non enregistrée';
+
+/** Intitulé d'une feuille :l'item, puis la séance quand la feuille est tenue
  *  par séance (« Replays - Révisions — Séance 3 : cardiologie »). */
 export function titreFeuille(coursTitre: string | null, videoTitre: string | null | undefined): string | null {
   if (!videoTitre) return coursTitre;

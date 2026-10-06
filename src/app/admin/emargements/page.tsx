@@ -38,8 +38,8 @@ export default async function AdminEmargementsPage() {
   let feuilles: FeuilleAdmin[] = [];
   try {
     const [attendances, presences, zoomSansSignature, completions, matieres] = await Promise.all([
-      toutes<{ id: string; user_id: string; cours_id: string; cours_titre: string | null; video_titre: string | null; matiere_id: string | null; kind: string; required_at: string; signed_at: string | null; watched_ratio: number | null }>(
-        db, 'course_attendances', 'id, user_id, cours_id, cours_titre, video_titre, matiere_id, kind, required_at, signed_at, watched_ratio'),
+      toutes<{ id: string; user_id: string; cours_id: string; cours_titre: string | null; video_titre: string | null; matiere_id: string | null; kind: string; watched_at: string | null; signed_at: string | null; watched_ratio: number | null }>(
+        db, 'course_attendances', 'id, user_id, cours_id, cours_titre, video_titre, matiere_id, kind, watched_at, signed_at, watched_ratio'),
       toutes<{ id: string; user_id: string; event_title: string | null; event_date: string | null; start_time: string | null; end_time: string | null; college: string | null; intervenant: string | null; marked_at: string }>(
         db, 'session_presences', 'id, user_id, event_title, event_date, start_time, end_time, college, intervenant, marked_at'),
       // Signatures non lues (PNG lourds) : seules les feuilles Zoom SANS tracé sont repérées.
@@ -70,7 +70,9 @@ export default async function AdminEmargementsPage() {
         type: r.kind === 'seance' ? 'seance' : 'video',
         titre: titreFeuille(r.cours_titre, r.video_titre) ?? 'Cours',
         college: r.matiere_id ? (college.get(r.matiere_id) ?? null) : null,
-        date: r.signed_at ?? r.required_at,
+        // Date du VISIONNAGE, jamais celle de la signature : une feuille due
+        // est souvent signée des jours plus tard, à la connexion suivante.
+        date: r.watched_at,
         signe: !!r.signed_at,
         detail: r.watched_ratio != null ? `${Math.round(r.watched_ratio * 100)} % vu` : null,
         pdf: null,
