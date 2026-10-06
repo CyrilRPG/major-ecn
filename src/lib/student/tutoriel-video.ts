@@ -41,12 +41,12 @@ export function cleTutoriel(e: TutorielEntree): string {
  * Rempli par `tutoriel-video/scripts/publier.mjs` après le rendu.
  */
 export const TUTORIEL_VIDEOS: Readonly<Record<string, string>> = {
-  'approfondi-hors-mg-externe': 'd6a91c09-fb36-42c4-86d7-369a3c1fbba4',
-  'approfondi-hors-mg-interne': 'a9669512-3f29-487e-a0d5-658bbfa77873',
-  'approfondi-mg-externe': 'e9251aaf-42bc-401a-bc10-5ff471dcefc6',
-  'approfondi-mg-interne': '2b521959-a964-489f-b480-bf727a705f35',
-  'approfondi-planning-externe': '18d4b098-f18b-4f91-911f-503ab5a18cc2',
-  'approfondi-planning-interne': '17550edf-6c8c-4775-b0a5-98fdaeabbf98',
+  'approfondi-hors-mg-externe': '0277389a-409a-4fa6-bf35-9ebdad686c10',
+  'approfondi-hors-mg-interne': '6dcb6c23-91ca-4f21-947c-d2fd90d21773',
+  'approfondi-mg-externe': '5c0be5a3-588b-4a7d-8214-d18ef25efab4',
+  'approfondi-mg-interne': '2214a838-45b3-4410-8956-ee03d6a86667',
+  'approfondi-planning-externe': 'c812e1e9-3136-47c4-ac97-ea42f6611c2d',
+  'approfondi-planning-interne': '675d2853-d375-49e6-b44e-3ea54d9ba4bc',
   'decouverte': '00cfb4d9-549c-4713-b0d3-59a5f13606cf',
   'essentiel-hors-mg-externe': '3521581b-2956-42a6-a95e-f7d95883d53c',
   'essentiel-hors-mg-interne': '656ac1d8-69c5-42b3-802a-4666c0b89e60',
@@ -54,12 +54,12 @@ export const TUTORIEL_VIDEOS: Readonly<Record<string, string>> = {
   'essentiel-mg-interne': '77f4e3a0-b530-4eaf-a54d-9fd14d7d0e9e',
   'essentiel-planning-externe': '2a3c1f34-4ced-4a25-9885-dc009b33294c',
   'essentiel-planning-interne': '094eff9e-9e6a-4884-8cc0-94b2691a8423',
-  'intensif-hors-mg-externe': 'a895b76a-a315-4a7e-bb24-6045b2c35f5f',
+  'intensif-hors-mg-externe': 'a4faa0d8-49c1-4243-a668-807c39be532e',
   'intensif-hors-mg-interne': '5422af94-f715-4641-a37c-097367abf6b1',
-  'intensif-mg-externe': 'b065b7c7-f580-4474-af4b-e5976efe4d84',
+  'intensif-mg-externe': '3d14a072-6e55-48cb-92ee-87de5b7bde44',
   'intensif-mg-interne': 'fe5b5512-5add-4b7f-9ea3-4a7753d859b4',
-  'intensif-planning-externe': 'a9fb4aa0-0157-4b0c-97a7-a9f72eeda24d',
-  'intensif-planning-interne': '3a7cd73d-2c4c-44cc-96e2-25e14defb51c',
+  'intensif-planning-externe': '6ca272b8-626d-4895-bb5d-06f9a642e549',
+  'intensif-planning-interne': '688c4681-8775-46ea-a15d-03eae2342af5',
 };
 
 /**
