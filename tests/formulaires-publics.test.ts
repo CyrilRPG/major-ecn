@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { NextRequest } from 'next/server';
 import { estParametreSensible } from '../src/lib/auth/formulaires-auth';
 import {
+  estChampAnnales,
   estChampContact,
   parametresSensiblesDe,
   redirectionSansSaisie,
@@ -83,4 +84,20 @@ test('pages d’authentification : même garde qu’avant', () => {
 test('pages sans formulaire public : rien ne change', () => {
   assert.equal(cible('/tarifs', { method: 'POST', headers: URLENCODED }), null);
   assert.equal(cible('/tarifs?email=jean%40example.test'), null);
+});
+
+test('annales EVC : coordonnées purgées, spécialité et utm gardées', () => {
+  assert.equal(parametresSensiblesDe('/annales-evc'), estChampAnnales);
+  for (const nom of ['company', 'prenom', 'nom', 'email', 'telephone', 'consentement', 'cf-turnstile-response']) {
+    assert.equal(estChampAnnales(nom), true, nom);
+  }
+  for (const nom of ['specialite', 'utm_source', 'gclid', 'lien']) {
+    assert.equal(estChampAnnales(nom), false, nom);
+  }
+  assert.equal(cible('/annales-evc', { method: 'POST', headers: URLENCODED }), `${SITE}/annales-evc`);
+  assert.equal(
+    cible('/annales-evc?specialite=pediatrie&prenom=Jean&email=jean%40example.test&telephone=0612345678&utm_source=google'),
+    `${SITE}/annales-evc?specialite=pediatrie&utm_source=google`,
+  );
+  assert.equal(cible('/annales-evc?specialite=pediatrie'), null);
 });

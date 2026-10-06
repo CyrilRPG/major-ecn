@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useMemo, useTransition } from 'react';
-import { Loader2, Power, BookDown, BarChart3, Search, X, Eye, Swords, MailCheck, CheckCircle2, Clock } from 'lucide-react';
+import { Loader2, Power, BookDown, BarChart3, Search, X, Eye, Swords, MailCheck, CheckCircle2, Clock, FileText } from 'lucide-react';
 import { DiagnosticDetailsDialog } from './diagnostic-details-dialog';
 import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
 import { blockParticipant, resendArenaLink } from '@/app/admin/arena/actions';
 
 export type UnifiedLead = {
   id: string;
-  source: 'methodologie' | 'diagnostic' | 'arena';
+  source: 'methodologie' | 'diagnostic' | 'arena' | 'annales';
   first_name: string;
   last_name: string;
   email: string;
@@ -34,9 +34,12 @@ export type UnifiedLead = {
   arena_last_login_at?: string | null;
   arena_consent_marketing?: boolean;
   arena_acquisition?: string | null;
+  // Spécifiques annales EVC
+  annales_email_sent?: boolean;
+  annales_downloads?: number;
 };
 
-type Filter = 'all' | 'methodologie' | 'diagnostic' | 'arena';
+type Filter = 'all' | 'methodologie' | 'diagnostic' | 'arena' | 'annales';
 
 const PROFILE_COLORS: Record<string, { bg: string; fg: string }> = {
   construire: { bg: '#FDE7E9', fg: '#C0112E' },
@@ -112,6 +115,7 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
     methodologie: leads.filter((l) => l.source === 'methodologie').length,
     diagnostic: leads.filter((l) => l.source === 'diagnostic').length,
     arena: leads.filter((l) => l.source === 'arena').length,
+    annales: leads.filter((l) => l.source === 'annales').length,
   }), [leads]);
 
   const activeCount = filtered.filter((l) => l.active).length;
@@ -123,6 +127,7 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
     { key: 'methodologie', label: 'Méthodologie', count: counts.methodologie },
     { key: 'diagnostic', label: 'Diagnostic', count: counts.diagnostic },
     { key: 'arena', label: 'EVC Arena', count: counts.arena },
+    { key: 'annales', label: 'Annales EVC', count: counts.annales },
   ];
 
   const emails = filtered.map((l) => l.email).filter(Boolean);
@@ -173,6 +178,7 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
             {t.key === 'methodologie' && <BookDown className="h-3.5 w-3.5" />}
             {t.key === 'diagnostic' && <BarChart3 className="h-3.5 w-3.5" />}
             {t.key === 'arena' && <Swords className="h-3.5 w-3.5" />}
+            {t.key === 'annales' && <FileText className="h-3.5 w-3.5" />}
             {t.label}
             <span className={`rounded-full px-1.5 text-xs ${filter === t.key ? 'bg-white/25' : 'bg-(--color-surface-soft)'}`}>{t.count}</span>
           </button>
@@ -247,6 +253,10 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
                         <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: '#FDE7E9', color: '#C0112E' }} title={l.arena_tournament ?? undefined}>
                           <Swords className="h-3 w-3" /> EVC Arena
                         </span>
+                      ) : l.source === 'annales' ? (
+                        <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: '#FFF4D6', color: '#8A5A00' }}>
+                          <FileText className="h-3 w-3" /> Annales EVC
+                        </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: '#E5F1FF', color: '#1E4D8B' }}>
                           <BookDown className="h-3 w-3" /> Méthodologie
@@ -296,6 +306,19 @@ export function UnifiedLeadsTable({ initialLeads }: { initialLeads: UnifiedLead[
                           {res && (
                             <span className={`text-xs font-bold ${res.ok ? 'text-[#16793C]' : 'text-[#C0001F]'}`}>{res.message}</span>
                           )}
+                        </span>
+                      ) : l.source === 'annales' ? (
+                        <span className="inline-flex flex-wrap items-center gap-2 text-xs font-bold">
+                          {l.annales_email_sent ? (
+                            <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5" style={{ background: '#E7F6EC', color: '#16793C' }}>
+                              <MailCheck className="h-3 w-3" /> E-mail envoyé
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5" style={{ background: '#FEF0E4', color: '#B45309' }}>
+                              <Clock className="h-3 w-3" /> E-mail non parti
+                            </span>
+                          )}
+                          <span className="text-(--color-ink-muted)">{l.annales_downloads ?? 0} téléchargement{(l.annales_downloads ?? 0) > 1 ? 's' : ''}</span>
                         </span>
                       ) : (
                         <span className="text-(--color-ink-muted)">—</span>

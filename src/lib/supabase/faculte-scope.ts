@@ -36,6 +36,7 @@ const TABLES_CLOISONNEES = new Set([
   'evc_sessions',
   'diagnostic_leads',
   'guide_leads',
+  'annales_leads',
   'campaign_recipients',
   'ai_generations',
   'medgen_annales',

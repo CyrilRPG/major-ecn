@@ -11,7 +11,7 @@ export default async function LeadsPage() {
   await requireAdmin();
   const admin = createAdminClient();
 
-  const [guideRes, diagRes, arenaRes, tournoisRes] = await Promise.all([
+  const [guideRes, diagRes, arenaRes, tournoisRes, annalesRes] = await Promise.all([
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (admin as any).from('guide_leads').select('*').order('created_at', { ascending: false }),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,6 +28,11 @@ export default async function LeadsPage() {
     ).then((data) => ({ data })),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (admin as any).from('arena_tournaments').select('id, title, edition_label, specialty'),
+    // Demandes de recueils d'annales EVC (/annales-evc), lecture paginée
+    fetchAllRows((from, to) =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (admin as any).from('annales_leads').select('*').order('created_at', { ascending: false }).order('id').range(from, to),
+    ).then((data) => ({ data })),
   ]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -96,7 +101,23 @@ export default async function LeadsPage() {
     };
   });
 
-  const leads = [...guideLeads, ...diagLeads, ...arenaLeads].sort(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const annalesLeads: UnifiedLead[] = (annalesRes.data ?? []).map((l: any) => ({
+    id: l.id,
+    source: 'annales' as const,
+    first_name: l.first_name ?? '',
+    last_name: l.last_name ?? '',
+    email: l.email,
+    phone: l.phone ?? '',
+    specialty: l.specialty ?? null,
+    voie: null,
+    active: l.active ?? true,
+    created_at: l.created_at,
+    annales_email_sent: Boolean(l.email_sent),
+    annales_downloads: l.download_count ?? 0,
+  }));
+
+  const leads = [...guideLeads, ...diagLeads, ...arenaLeads, ...annalesLeads].sort(
     (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
   );
 
@@ -109,7 +130,7 @@ export default async function LeadsPage() {
           Leads
         </h1>
         <p className="mt-0.5 text-sm text-(--color-ink-soft)">
-          Leads Méthodologie (Guide EVC), Diagnostic (Profil EVC) et inscrits EVC Arena réunis.
+          Leads Méthodologie (Guide EVC), Diagnostic (Profil EVC), Annales EVC et inscrits EVC Arena réunis.
           Filtrez par source, désactivez les leads traités, et renvoyez son lien à un inscrit Arena qui ne l’a pas reçu.
         </p>
       </header>

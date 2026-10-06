@@ -20,6 +20,8 @@ export const EVENEMENTS = {
   phoneCall: 'phone_call_click',
   /** Achat confirmé, pour une éventuelle conversion à valeur. */
   purchase: 'purchase',
+  /** Recueil d'annales EVC demandé sur /annales-evc (succès serveur confirmé). */
+  annalesDownload: 'annales_download',
 } as const;
 
 type Donnees = Record<string, unknown>;

@@ -1,0 +1,83 @@
+/**
+ * Recueils d’annales EVC offerts (/annales-evc) — FICHIER GÉNÉRÉ.
+ * Source : annales-evc/pipeline/site_data.py, à partir des PDF livrés (un recueil par spécialité,
+ * sujets officiels classés par session). Ne pas éditer à la main : relancer le script.
+ * Les PDF sont dans le bucket privé Supabase `annales-evc`, chemin `<slug>.pdf`.
+ */
+export type RecueilAnnales = {
+  /** Code de spécialité du CNG (« 36 » = Pédiatrie). */
+  code: string;
+  slug: string;
+  nom: string;
+  pages: number;
+  octets: number;
+  sujets: number;
+  sessions: number;
+  premiere: number;
+  derniere: number;
+  qcm: boolean;
+  fondamentale: boolean;
+  pratique: boolean;
+  /** Annales de la spécialité corrigées sur la plateforme. */
+  corriges: boolean;
+};
+
+export const RECUEILS_ANNALES: readonly RecueilAnnales[] = [
+  { code: "15", slug: "allergologie", nom: "Allergologie", pages: 6, octets: 131963, sujets: 2, sessions: 1, premiere: 2024, derniere: 2024, qcm: false, fondamentale: true, pratique: true, corriges: false },
+  { code: "02", slug: "anatomie-et-cytologie-pathologiques", nom: "Anatomie et cytologie pathologiques", pages: 97, octets: 11759664, sujets: 30, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "03", slug: "anesthesie-reanimation", nom: "Anesthésie-réanimation", pages: 104, octets: 3319759, sujets: 33, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: true },
+  { code: "04", slug: "biologie-medicale-medecin", nom: "Biologie médicale (médecin)", pages: 109, octets: 3405271, sujets: 30, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "05", slug: "biologie-medicale-pharmacien", nom: "Biologie médicale (pharmacien)", pages: 76, octets: 2392526, sujets: 25, sessions: 13, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "08", slug: "chirurgie-generale", nom: "Chirurgie générale", pages: 21, octets: 631536, sujets: 12, sessions: 8, premiere: 2009, derniere: 2016, qcm: false, fondamentale: true, pratique: true, corriges: false },
+  { code: "09", slug: "chirurgie-maxillo-faciale", nom: "Chirurgie maxillo-faciale", pages: 51, octets: 1769621, sujets: 25, sessions: 13, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "73", slug: "chirurgie-orale", nom: "Chirurgie orale", pages: 47, octets: 2033898, sujets: 16, sessions: 11, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "53", slug: "chirurgie-orthopedique-et-traumatologique", nom: "Chirurgie orthopédique et traumatologique", pages: 133, octets: 8812152, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: true },
+  { code: "10", slug: "chirurgie-pediatrique", nom: "Chirurgie pédiatrique", pages: 78, octets: 3088248, sujets: 19, sessions: 10, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "11", slug: "chirurgie-plastique-reconstructrice-et-esthetique", nom: "Chirurgie plastique, reconstructrice et esthétique", pages: 46, octets: 776435, sujets: 20, sessions: 11, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "12", slug: "chirurgie-thoracique-et-cardiovasculaire", nom: "Chirurgie thoracique et cardiovasculaire", pages: 129, octets: 7396627, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "58", slug: "chirurgie-vasculaire", nom: "Chirurgie vasculaire", pages: 76, octets: 2718095, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "60", slug: "chirurgie-viscerale-et-digestive", nom: "Chirurgie viscérale et digestive", pages: 117, octets: 7446390, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "13", slug: "dermatologie-et-venereologie", nom: "Dermatologie et vénéréologie", pages: 144, octets: 5770137, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "16", slug: "endocrinologie-diabetologie-nutrition", nom: "Endocrinologie, diabétologie, nutrition", pages: 114, octets: 4228164, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "40", slug: "genetique-medicale", nom: "Génétique médicale", pages: 46, octets: 1093409, sujets: 18, sessions: 10, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "76", slug: "geriatrie", nom: "Gériatrie", pages: 107, octets: 2796152, sujets: 32, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: true },
+  { code: "17", slug: "gynecologie-medicale", nom: "Gynécologie médicale", pages: 74, octets: 2077282, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: true },
+  { code: "18", slug: "gynecologie-obstetrique", nom: "Gynécologie obstétrique", pages: 89, octets: 3367581, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: true },
+  { code: "21", slug: "hematologie", nom: "Hématologie", pages: 88, octets: 3432687, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "20", slug: "hepato-gastro-enterologie", nom: "Hépato-gastro-entérologie", pages: 86, octets: 3065195, sujets: 29, sessions: 15, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "24", slug: "maladies-infectieuses-et-tropicales", nom: "Maladies infectieuses et tropicales", pages: 49, octets: 2428591, sujets: 9, sessions: 5, premiere: 2020, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "81", slug: "medecine-bucco-dentaire", nom: "Médecine bucco-dentaire", pages: 9, octets: 348228, sujets: 2, sessions: 1, premiere: 2024, derniere: 2024, qcm: false, fondamentale: true, pratique: true, corriges: false },
+  { code: "07", slug: "medecine-cardiovasculaire", nom: "Médecine cardiovasculaire", pages: 102, octets: 9177358, sujets: 32, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: true },
+  { code: "77", slug: "medecine-d-urgence", nom: "Médecine d’urgence", pages: 70, octets: 3636002, sujets: 15, sessions: 7, premiere: 2018, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: true },
+  { code: "23", slug: "medecine-et-sante-au-travail", nom: "Médecine et santé au travail", pages: 96, octets: 4834490, sujets: 33, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "71", slug: "medecine-generale", nom: "Médecine générale", pages: 148, octets: 3819386, sujets: 31, sessions: 15, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: true },
+  { code: "43", slug: "medecine-intensive-reanimation", nom: "Médecine intensive-réanimation", pages: 86, octets: 3515297, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "25", slug: "medecine-interne-et-immunologie-clinique", nom: "Médecine interne et immunologie clinique", pages: 75, octets: 1584867, sujets: 29, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "26", slug: "medecine-legale-et-expertises-medicales", nom: "Médecine légale et expertises médicales", pages: 46, octets: 1713428, sujets: 5, sessions: 3, premiere: 2023, derniere: 2025, qcm: false, fondamentale: true, pratique: true, corriges: false },
+  { code: "27", slug: "medecine-nucleaire", nom: "Médecine nucléaire", pages: 115, octets: 8617138, sujets: 26, sessions: 14, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "44", slug: "medecine-physique-et-de-readaptation", nom: "Médecine physique et de réadaptation", pages: 80, octets: 1891111, sujets: 32, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "22", slug: "medecine-vasculaire", nom: "Médecine vasculaire", pages: 15, octets: 1382799, sujets: 2, sessions: 1, premiere: 2024, derniere: 2024, qcm: false, fondamentale: true, pratique: true, corriges: false },
+  { code: "28", slug: "nephrologie", nom: "Néphrologie", pages: 100, octets: 4284074, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "29", slug: "neurochirurgie", nom: "Neurochirurgie", pages: 119, octets: 9062187, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "30", slug: "neurologie", nom: "Neurologie", pages: 112, octets: 5300510, sujets: 30, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "75", slug: "odontologie", nom: "Odontologie", pages: 52, octets: 2332033, sujets: 25, sessions: 13, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "06", slug: "oncologie", nom: "Oncologie", pages: 105, octets: 3684893, sujets: 33, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "33", slug: "ophtalmologie", nom: "Ophtalmologie", pages: 103, octets: 5289921, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "35", slug: "orl-et-chirurgie-cervico-faciale", nom: "ORL et chirurgie cervico-faciale", pages: 111, octets: 4604701, sujets: 30, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "78", slug: "orthopedie-dento-faciale", nom: "Orthopédie dento-faciale", pages: 36, octets: 492753, sujets: 19, sessions: 10, premiere: 2010, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "36", slug: "pediatrie", nom: "Pédiatrie", pages: 156, octets: 6586963, sujets: 33, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: true },
+  { code: "72", slug: "pharmacie-hospitaliere", nom: "Pharmacie hospitalière", pages: 56, octets: 1067118, sujets: 22, sessions: 12, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "38", slug: "pneumologie", nom: "Pneumologie", pages: 142, octets: 10844682, sujets: 33, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: true },
+  { code: "74", slug: "psychiatrie", nom: "Psychiatrie", pages: 97, octets: 2410712, sujets: 33, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: true },
+  { code: "41", slug: "radiologie-et-imagerie-medicale", nom: "Radiologie et imagerie médicale", pages: 179, octets: 14818129, sujets: 32, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "45", slug: "rhumatologie", nom: "Rhumatologie", pages: 76, octets: 2572581, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "90", slug: "sage-femme", nom: "Sage-femme", pages: 54, octets: 2434180, sujets: 22, sessions: 11, premiere: 2009, derniere: 2024, qcm: false, fondamentale: true, pratique: true, corriges: false },
+  { code: "56", slug: "sante-publique", nom: "Santé publique", pages: 125, octets: 6119424, sujets: 30, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: false },
+  { code: "47", slug: "urologie", nom: "Urologie", pages: 88, octets: 2350944, sujets: 31, sessions: 16, premiere: 2009, derniere: 2025, qcm: true, fondamentale: true, pratique: true, corriges: true },
+];
+
+export const TOTAL_SUJETS_ANNALES = RECUEILS_ANNALES.reduce((s, r) => s + r.sujets, 0);
+
+export function recueilParSlug(s: string): RecueilAnnales | undefined {
+  return RECUEILS_ANNALES.find((r) => r.slug === s);
+}

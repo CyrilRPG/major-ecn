@@ -36,10 +36,24 @@ export function estChampContact(nom: string): boolean {
   return CHAMPS_CONTACT.has(nom.toLowerCase());
 }
 
+/**
+ * Champs personnels du formulaire des annales offertes
+ * (components/marketing/annales-evc/annales-form.tsx). `specialite` passe : ce n'est
+ * pas une donnée personnelle, et /annales-evc?specialite=pediatrie présélectionne le recueil.
+ */
+const CHAMPS_ANNALES: ReadonlySet<string> = new Set([
+  'company', 'prenom', 'nom', 'email', 'telephone', 'consentement', 'cf-turnstile-response',
+]);
+
+export function estChampAnnales(nom: string): boolean {
+  return CHAMPS_ANNALES.has(nom.toLowerCase());
+}
+
 /** Paramètres à retirer de l'URL de cette page ; null : page sans garde. */
 export function parametresSensiblesDe(pathname: string): ((nom: string) => boolean) | null {
   if (PAGES_FORMULAIRE_AUTH.has(pathname)) return estParametreSensible;
   if (pathname === '/contact') return estChampContact;
+  if (pathname === '/annales-evc') return estChampAnnales;
   return null;
 }
 

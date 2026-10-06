@@ -6,12 +6,12 @@ export async function POST(req: Request) {
   const guard = await requireAdminRequest(req);
   if (!guard.ok) return guard.error;
 
-  const body = (await req.json().catch(() => ({}))) as { leadId?: string; active?: boolean; source?: 'methodologie' | 'diagnostic' };
+  const body = (await req.json().catch(() => ({}))) as { leadId?: string; active?: boolean; source?: 'methodologie' | 'diagnostic' | 'annales' };
   if (!body.leadId || typeof body.active !== 'boolean') {
     return NextResponse.json({ error: 'leadId / active manquants' }, { status: 400 });
   }
 
-  const table = body.source === 'diagnostic' ? 'diagnostic_leads' : 'guide_leads';
+  const table = body.source === 'diagnostic' ? 'diagnostic_leads' : body.source === 'annales' ? 'annales_leads' : 'guide_leads';
   const admin = createAdminClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await (admin as any)

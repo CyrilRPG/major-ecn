@@ -26,6 +26,7 @@ const STATIC_ROUTES: {
   // Pages d'acquisition atteignables uniquement depuis un menu déroulant ou un
   // bouton : sans entrée au plan de site, elles n'étaient jamais soumises.
   { path: '/guide-methodologie-evc-2026', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/annales-evc', priority: 0.9, changeFrequency: 'monthly', lastModified: new Date('2026-10-06') },
   { path: '/profil-evc', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/plateforme', priority: 0.9, changeFrequency: 'monthly' },
   // Visite guidée en vidéo de la plateforme (lecteur, sans jeton d'accès).

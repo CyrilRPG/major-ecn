@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BarChart3, BookOpen, Gift, X } from 'lucide-react';
+import { BarChart3, BookOpen, FileText, Gift, X } from 'lucide-react';
 
 /**
  * Lanceur flottant unique « Ressources gratuites ».
  *
  * Remplace les deux boutons flottants empilés (Guide + Profil) par un seul
- * bouton compact façon speed-dial : au clic, il déploie les deux options.
+ * bouton compact façon speed-dial : au clic, il déploie les ressources offertes
+ * (annales EVC, guide, profil).
  * Moins d'encombrement, les deux parcours restent accessibles.
  */
 export function FloatingLauncher() {
@@ -23,6 +24,7 @@ export function FloatingLauncher() {
 
   const openProfil = () => { window.dispatchEvent(new CustomEvent('open-profil-popup')); setOpen(false); };
   const openGuide = () => { window.dispatchEvent(new CustomEvent('open-guide-popup')); setOpen(false); };
+  const openAnnales = () => { setOpen(false); window.location.assign('/annales-evc'); };
 
   return (
     <>
@@ -54,6 +56,14 @@ export function FloatingLauncher() {
       <div className="fixed bottom-5 right-5 z-[9990] hidden flex-col items-end gap-2.5 sm:bottom-6 sm:right-6 lg:flex">
         {/* Options déployées */}
         <div className="flex flex-col items-end gap-2.5">
+          <OptionPill
+            label="Annales EVC de ma spécialité"
+            Icon={FileText}
+            gradient="linear-gradient(135deg, #0F1F4D 0%, #1A2F6B 55%, #8B0E22 100%)"
+            open={open}
+            delay={120}
+            onClick={openAnnales}
+          />
           <OptionPill
             label="Profil EVC gratuit"
             Icon={BarChart3}
@@ -89,7 +99,7 @@ export function FloatingLauncher() {
           </span>
           {!open && (
             <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[10px] font-black" style={{ background: '#FFC107', color: '#3A1D00' }}>
-              2
+              3
             </span>
           )}
         </button>

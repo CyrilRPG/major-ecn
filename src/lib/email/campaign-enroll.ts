@@ -1,7 +1,7 @@
 import 'server-only';
 import { createAdminClient } from '@/lib/supabase/admin';
 
-export type CampaignSource = 'espace_decouverte' | 'guide_lead' | 'explicit';
+export type CampaignSource = 'espace_decouverte' | 'guide_lead' | 'annales_lead' | 'explicit';
 
 export async function enrollInCampaign(
   email: string,

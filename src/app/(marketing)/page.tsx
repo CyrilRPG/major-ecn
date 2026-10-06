@@ -6,6 +6,7 @@ import {
 import { TemoignagesSection } from '@/components/marketing/home/home-social-sections';
 import { HomeSpecialitesSection } from '@/components/marketing/home/home-specialites-section';
 import { HomeRessourcesSection } from '@/components/marketing/home/home-ressources-section';
+import { HomeAnnalesSection } from '@/components/marketing/home/home-annales-section';
 import { CALENDRIER_ARTICLE } from '@/components/marketing/home/evc-calendrier-2026';
 import { FormulesSection } from '@/components/marketing/home/home-formules-section';
 import { HomeFaqSection } from '@/components/marketing/home/home-faq-section';
@@ -51,6 +52,9 @@ export default async function HomePage() {
 
       {/* 1) HERO — Préparation aux EVC 2026 */}
       <HomeHero calendrier={calendrierEvc} rendu={rendu} embedUrl={urlEmbedVisiteGuidee()} />
+
+      {/* Ressource offerte mise en avant : les annales officielles par spécialité */}
+      <HomeAnnalesSection />
 
       {/* 2) Témoignages vidéo — 15 ans d'expérience aux EVC */}
       <TemoignagesSection />

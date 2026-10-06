@@ -2,13 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { BarChart3, BookOpen, ChevronDown, Gift, LogIn, Menu, X } from 'lucide-react';
+import { BarChart3, BookOpen, ChevronDown, FileText, Gift, LogIn, Menu, X } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import { DialogueSpecialite } from './dialogue-specialite';
 
 type NavItem =
-  | { href: string; label: string }
+  | { href: string; label: string; badge?: string }
   | { label: string; children: { href: string; label: string }[] };
 
 const NAV: NavItem[] = [
@@ -20,6 +20,8 @@ const NAV: NavItem[] = [
       { href: '/profil-evc', label: 'Profil EVC gratuit' },
     ],
   },
+  // Ressource offerte mise en avant : les annales officielles par spécialité.
+  { href: '/annales-evc', label: 'Annales EVC', badge: 'Offert' },
   // Entrée de premier niveau : la page hub est une porte d'entrée du site,
   // pas une ressource secondaire du menu « Méthode ».
   { href: '/guide-evc',   label: 'Guide EVC' },
@@ -32,7 +34,7 @@ const NAV: NavItem[] = [
   { href: '/contact',     label: 'Contact' },
 ];
 
-function DesktopDropdown({ item, tight }: { item: Extract<NavItem, { children: any[] }>; tight?: boolean }) {
+function DesktopDropdown({ item, tight }: { item: Extract<NavItem, { children: unknown[] }>; tight?: boolean }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -110,7 +112,7 @@ function OffertsButton() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        aria-label="Offerts — 2 ressources gratuites"
+        aria-label="Offerts — 3 ressources gratuites"
         className="relative flex h-9 items-center gap-1.5 px-3 text-[13px] font-semibold text-white transition-[filter] duration-150 active:brightness-110"
         style={{
           background: 'linear-gradient(100deg, #8B0E22 0%, #C0112E 100%)',
@@ -124,7 +126,7 @@ function OffertsButton() {
           className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full text-[13px] font-bold"
           style={{ background: '#FFC107', color: '#3A2A00' }}
         >
-          2
+          3
         </span>
       </button>
 
@@ -133,10 +135,18 @@ function OffertsButton() {
           className="absolute right-0 top-full z-50 mt-2 w-64 bg-white"
           style={{ borderRadius: 10, boxShadow: '0 8px 20px rgba(0,0,0,0.12)', padding: '12px 16px' }}
         >
+          <Link
+            href="/annales-evc"
+            onClick={() => setOpen(false)}
+            className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left text-[13px] font-semibold text-(--color-ink) hover:bg-(--color-surface-sunken)"
+          >
+            <FileText className="h-4.5 w-4.5 shrink-0" style={{ color: '#0F1F4D' }} />
+            Annales EVC officielles de ma spécialité (PDF)
+          </Link>
           <button
             type="button"
             onClick={() => fire('open-guide-popup')}
-            className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left text-[13px] font-semibold text-(--color-ink) hover:bg-(--color-surface-sunken)"
+            className="mt-2 flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left text-[13px] font-semibold text-(--color-ink) hover:bg-(--color-surface-sunken)"
           >
             <BookOpen className="h-4.5 w-4.5 shrink-0" style={{ color: '#8B1E1E' }} />
             Guide méthodologique EVC (Télécharger)
@@ -172,9 +182,15 @@ function NavItems({ tight }: { tight?: boolean }) {
               // déformait la hauteur de la barre.
               'whitespace-nowrap rounded-lg py-2 text-[13px] font-medium text-(--color-ink-soft) transition-colors hover:bg-(--color-surface-sunken) hover:text-(--color-ink)',
               tight ? 'px-2' : 'px-2.5',
+              n.badge && 'inline-flex items-center gap-1.5 font-bold text-(--color-ink)',
             )}
           >
             {n.label}
+            {n.badge && (
+              <span className="rounded-full px-1.5 py-[2px] text-[9px] font-black uppercase leading-none tracking-wider" style={{ background: '#FFC107', color: '#3A1D00' }}>
+                {n.badge}
+              </span>
+            )}
           </Link>
         );
       })}
@@ -292,9 +308,17 @@ export function MarketingHeader() {
                   key={n.href}
                   href={n.href}
                   onClick={() => setOpen(false)}
-                  className="block rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-ink-soft) hover:bg-(--color-surface-sunken) hover:text-(--color-ink)"
+                  className={cn(
+                    'block rounded-lg px-3 py-2.5 text-sm font-medium text-(--color-ink-soft) hover:bg-(--color-surface-sunken) hover:text-(--color-ink)',
+                    n.badge && 'flex items-center gap-2 font-bold text-(--color-ink)',
+                  )}
                 >
                   {n.label}
+                  {n.badge && (
+                    <span className="rounded-full px-1.5 py-[2px] text-[9px] font-black uppercase leading-none tracking-wider" style={{ background: '#FFC107', color: '#3A1D00' }}>
+                      {n.badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}

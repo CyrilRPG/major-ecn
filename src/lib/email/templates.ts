@@ -1011,6 +1011,94 @@ export function guideDeliveryEmail({ firstName, guideUrl }: { firstName: string;
 }
 
 /* ============================================================
+   Annales EVC offertes (/annales-evc)
+   ============================================================ */
+
+type RecueilEmail = {
+  slug: string;
+  nom: string;
+  pages: number;
+  octets: number;
+  sujets: number;
+  premiere: number;
+  derniere: number;
+  corriges: boolean;
+};
+
+export function annalesDeliveryEmail({ prenom, recueil, lien, joint }: { prenom: string; recueil: RecueilEmail; lien: string; joint: boolean }) {
+  const periode = recueil.premiere === recueil.derniere ? `session ${recueil.premiere}` : `sessions ${recueil.premiere} à ${recueil.derniere}`;
+  const mo = (recueil.octets / 1e6).toLocaleString('fr-FR', { maximumFractionDigits: 1 });
+  const utm = `utm_source=annales-evc&utm_medium=email&utm_campaign=${encodeURIComponent(recueil.slug)}`;
+  const subject = `Vos annales EVC de ${recueil.nom} — Major ECN`;
+  const bodyHtml = [
+    button(lien, 'Télécharger mes annales'),
+    pHtml(`PDF&nbsp;&nbsp;•&nbsp;&nbsp;${recueil.pages} pages&nbsp;&nbsp;•&nbsp;&nbsp;${mo}&nbsp;Mo`, { size: 13, color: MAJOR.muted, align: 'center', margin: '-8px 0 28px' }),
+    divider(),
+    sectionTitle(recueil.corriges ? 'Et les corrigés ?' : 'Pour aller plus loin'),
+    p(
+      recueil.corriges
+        ? `Les annales de ${recueil.nom} sont corrigées question par question sur la plateforme Major ECN : réponse attendue et méthode pour la construire.`
+        : `La préparation Major ECN vous entraîne au format exact de l’épreuve : cours structurés pour l’EVC, QCM ou QROC selon votre voie, cas cliniques, concours blancs et annales corrigées.`,
+      { size: 15 },
+    ),
+    buttonSecondary(`${EMAIL_SITE}/espace-decouverte?${utm}`, 'Essayer l’espace découverte gratuit'),
+    contactCard('Une question sur votre préparation ?', 'Notre équipe est à votre disposition pour vous accompagner et répondre à vos questions.'),
+    signature({ closing: 'Nous vous souhaitons une excellente préparation !' }),
+  ].join('\n');
+  const html = majorEmail({
+    subject,
+    preheader: `${recueil.sujets} sujets officiels, ${periode}, réunis dans un seul PDF.`,
+    eyebrow: 'Annales offertes',
+    title: `Vos annales EVC — ${recueil.nom}`,
+    lead: recueil.premiere === recueil.derniere ? `Sujets officiels · ${recueil.premiere}` : `Sujets officiels · ${recueil.premiere} – ${recueil.derniere}`,
+    intro: greeting(prenom)
+      + pHtml(`Votre recueil est prêt : <strong style="color:${MAJOR.ink};">${recueil.sujets} sujets officiels</strong> des épreuves de vérification des connaissances de ${esc(recueil.nom)}, ${periode}, réunis dans un seul PDF de ${recueil.pages} pages.`)
+      + p(joint
+        ? 'Vous le trouverez en pièce jointe de cet e-mail. Le bouton ci-dessous vous permet aussi de le télécharger à tout moment.'
+        : 'Le bouton ci-dessous vous permet de le télécharger à tout moment.'),
+    bodyHtml,
+    reason: `Vous recevez cet e-mail car vous avez demandé les annales EVC de ${recueil.nom} sur major-ecn.fr.`,
+  });
+  const text = majorText([
+    `Bonjour ${prenom},`,
+    '',
+    `Votre recueil d’annales EVC de ${recueil.nom} (${recueil.sujets} sujets officiels, ${periode}) est prêt.`,
+    joint ? 'Il est joint à cet e-mail.' : null,
+    '',
+    `Télécharger : ${lien}`,
+    '',
+    `Essayer l’espace découverte gratuit : ${EMAIL_SITE}/espace-decouverte?${utm}`,
+    '',
+    'Nous vous souhaitons une excellente préparation !',
+    '',
+    'Major ECN — major-ecn.fr',
+  ]);
+  return { subject, html, text };
+}
+
+export function annalesLeadNotificationEmail({ prenom, nom, email, telephone, specialite, utm }: {
+  prenom: string; nom: string; email: string; telephone: string; specialite: string; utm: Record<string, string>;
+}) {
+  const subject = `📚 Annales EVC téléchargées — ${prenom} ${nom} (${specialite})`;
+  const rows: [string, string][] = [
+    ['Prénom', prenom],
+    ['Nom', nom],
+    ['Email', email],
+    ['Téléphone', telephone],
+    ['Spécialité', specialite],
+    ...(Object.keys(utm).length ? [['Provenance', Object.entries(utm).map(([k, v]) => `${k}=${v}`).join(' · ')] as [string, string]] : []),
+  ];
+  const bodyHtml = [
+    pHtml(`Un visiteur a demandé le recueil d’<strong style="color:${MAJOR.ink};">annales EVC de ${esc(specialite)}</strong>.`),
+    summaryTable(rows.map(([k, v]) => [k, k === 'Email' ? mailto(v) : esc(v)] as [string, string]), { title: 'Nouveau lead' }),
+    note(`Répondez directement à cet email pour contacter ${esc(prenom)} (${esc(email)}).`),
+  ].join('\n');
+  const html = majorEmail({ subject, preheader: `${prenom} ${nom} · ${telephone} · ${specialite}`, eyebrow: 'Leads — Annales EVC', title: 'Nouveau lead — Annales EVC', bodyHtml, audience: 'internal' });
+  const text = majorText(['Nouveau lead — Annales EVC', '', ...rows.map(([k, v]) => `${k} : ${v}`)], { audience: 'internal' });
+  return { subject, html, text };
+}
+
+/* ============================================================
    Envoi groupé libre (admin → élèves)
    ============================================================ */
 /** Message libre saisi par l'administration : texte brut, paragraphes et liens conservés. */

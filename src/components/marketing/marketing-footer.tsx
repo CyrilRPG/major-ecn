@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import {
-  ArrowRight, Award, BookOpen, Calendar, Clock, GraduationCap, HelpCircle,
+  ArrowRight, Award, BookOpen, Calendar, Clock, FileText, GraduationCap, HelpCircle,
   Headphones, LogIn, Mail, MapPin, MessageCircle, Phone, ShieldCheck,
   Sparkles, Stethoscope, Trophy, Users,
 } from 'lucide-react';
@@ -57,6 +57,7 @@ const COLS: { title: string; links: { label: string; href: string; Icon: React.C
   {
     title: "Ressources",
     links: [
+      { label: "Annales EVC gratuites",         href: "/annales-evc", Icon: FileText },
       { label: "Guide complet des EVC",         href: "/guide-evc",   Icon: BookOpen },
       { label: "Spécialités",         href: "/specialites", Icon: Stethoscope },
       { label: "Témoignages",              href: "/temoignages", Icon: MessageCircle },
