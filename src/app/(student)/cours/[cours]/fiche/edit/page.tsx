@@ -1,6 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { requireUser, profPageWriteGuard, canEditCoursContent } from '@/lib/auth/require-role';
 import { createClient } from '@/lib/supabase/server';
+import { charteCssForEditor } from '@/lib/fiches/charte';
 import { FicheWysiwygEditor } from '@/components/fiches/fiche-wysiwyg-editor';
 
 export const dynamic = 'force-dynamic';
@@ -78,6 +79,8 @@ export default async function FicheEditPage({
       nomCours={nomCours}
       annee={annee}
       ficheId={row?.id}
+      // La charte lue par la route PDF, pas une copie embarquée dans le client.
+      charteCss={charteCssForEditor('/fonts/fiches')}
     />
   );
 }

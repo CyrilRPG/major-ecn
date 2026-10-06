@@ -4,10 +4,11 @@
  * Éditeur de fiche WYSIWYG « in-place » — fidélité 100 % avec le PDF.
  *
  * Le rendu éditable vit dans un IFRAME isolé : on y injecte la VRAIE charte CSS
- * (`ficheCss`, identique à celle utilisée par Chromium au rendu PDF) et le corps
- * de la fiche en `contenteditable`. L'isolation garantit que ni le CSS de l'app
- * (Tailwind) ni la charte (sélecteurs globaux `* {}`, `body`, `table`…) ne se
- * polluent — donc « ce que le prof voit = le PDF ».
+ * (`charteCss`, lue par la page serveur dans `charte-styles.css`, le fichier
+ * même que Chromium applique au rendu PDF) et le corps de la fiche en
+ * `contenteditable`. L'isolation garantit que ni le CSS de l'app (Tailwind) ni
+ * la charte (sélecteurs globaux `* {}`, `body`, `table`…) ne se polluent —
+ * donc « ce que le prof voit = le PDF ».
  *
  * - Mise en forme : `execCommand` sur le document de l'iframe (gras, italique,
  *   souligné, couleurs charte, listes, alignement, marqueurs ★ ◆ ⚠).
@@ -26,7 +27,6 @@ import {
 import {
   marquerModifications, contientMarques, compterMarques, CSS_MODIFICATIONS, CLASSE_AJOUT, CLASSE_RETRAIT,
 } from '@/lib/fiches/modifications-visibles';
-import { ficheCss } from '@/lib/fiches/css';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
@@ -38,7 +38,7 @@ const COLORS = [
 ];
 
 export function FicheWysiwygEditor({
-  coursId, initialHtml, nomCours, annee, ficheId,
+  coursId, initialHtml, nomCours, annee, ficheId, charteCss,
 }: {
   coursId: string;
   initialHtml: string;
@@ -47,6 +47,8 @@ export function FicheWysiwygEditor({
   /** Fiche éditée. Absent → fiche principale de l'item (un item peut en
    *  porter plusieurs, toutes affichées dans l'onglet « Fiche de cours »). */
   ficheId?: string;
+  /** CSS de la charte (`charteCssForEditor`), fourni par la page serveur. */
+  charteCss: string;
 }) {
   const frameRef = useRef<HTMLIFrameElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -70,18 +72,21 @@ export function FicheWysiwygEditor({
   // Document de l'iframe (construit une seule fois). La charte + le corps de la
   // fiche, isolés du reste de l'app.
   const srcDoc = useMemo(
-    () => buildSrcDoc(initialHtml),
-    [initialHtml],
+    () => buildSrcDoc(initialHtml, charteCss),
+    [initialHtml, charteCss],
   );
 
   const doc = () => frameRef.current?.contentDocument ?? null;
   const win = () => frameRef.current?.contentWindow ?? null;
 
-  /** Ajuste la hauteur de l'iframe à son contenu (la page externe scrolle). */
+  /** Ajuste la hauteur de l'iframe à son contenu (la page externe scrolle).
+   *  `offsetHeight` de <html>, pas `scrollHeight` : ce dernier vaut au moins la
+   *  hauteur de l'iframe, qui gagnait alors 8 px à chaque appel sans jamais
+   *  pouvoir redescendre. */
   const fitHeight = useCallback(() => {
     const d = doc();
     if (d && frameRef.current) {
-      frameRef.current.style.height = `${d.documentElement.scrollHeight + 8}px`;
+      frameRef.current.style.height = `${d.documentElement.offsetHeight + 8}px`;
     }
   }, []);
 
@@ -123,15 +128,28 @@ export function FicheWysiwygEditor({
     }, 1200);
   }, [coursId, ficheId, contenu]);
 
-  // Branche les écouteurs une fois l'iframe chargée.
+  // Branche les écouteurs une fois l'iframe chargée (une seule fois par document).
+  const boundDoc = useRef<Document | null>(null);
   const onFrameLoad = useCallback(() => {
     const d = doc();
-    if (!d) return;
+    if (!d || boundDoc.current === d) return;
+    boundDoc.current = d;
     d.body.setAttribute('contenteditable', 'true');
     d.body.spellcheck = true;
     d.addEventListener('input', () => { scheduleSave(); fitHeight(); });
     fitHeight();
+    // Les polices de la charte finissent parfois de charger après : la hauteur
+    // mesurée avec les polices de repli serait fausse.
+    void d.fonts.ready.then(fitHeight);
   }, [scheduleSave, fitHeight]);
+
+  // L'iframe arrive rendue par le serveur : son `load` peut survenir avant
+  // l'hydratation, et `onLoad` ne le voit jamais (iframe figée à 150 px, saisie
+  // jamais enregistrée). On rattrape ce cas au montage.
+  useEffect(() => {
+    const d = doc();
+    if (d?.readyState === 'complete' && d.URL === 'about:srcdoc') onFrameLoad();
+  }, [onFrameLoad]);
 
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
 
@@ -393,8 +411,7 @@ export function FicheWysiwygEditor({
 }
 
 /* ─────────────────────────── construction iframe ─────────────────────────── */
-function buildSrcDoc(initialHtml: string): string {
-  const css = ficheCss('/fonts/fiches');
+function buildSrcDoc(initialHtml: string, css: string): string {
   return (
     `<!doctype html><html lang="fr"><head><meta charset="utf-8"/>` +
     `<style>${css}</style><style>${IFRAME_OVERRIDES}</style><style>${CSS_MODIFICATIONS}</style></head>` +
@@ -415,12 +432,15 @@ const ROW_TEMPLATES = {
 
 // Surcharges écran (dans l'iframe uniquement) : on simule les marges de page,
 // on masque la page de garde (auto-générée, non éditable ici) et le filigrane.
+// Le survol d'une cellule est un contour, pas une ombre : la charte peint la
+// barre des lignes-réflexe avec un box-shadow, qu'une ombre de survol
+// remplacerait.
 const IFRAME_OVERRIDES = `
 html, body { background: #fff; }
 body { padding: 16mm 18mm 20mm 18mm; box-sizing: border-box; }
 .cover, .page-watermark, .string-source { display: none !important; }
 .partie-page--first { break-before: auto; }
-td:hover { box-shadow: inset 0 0 0 1px rgba(28,46,73,0.15); }
+td:hover { outline: 1px solid rgba(28,46,73,0.15); outline-offset: -1px; }
 :focus { outline: none; }
 `;
 

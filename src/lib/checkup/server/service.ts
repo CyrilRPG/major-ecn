@@ -5,7 +5,7 @@ import { coursCatalog, getCheckupConfig, getOrchestratorConfig, insertEvents, mo
 import { candidateContext } from '@/lib/moteur/server/candidate';
 import { buildUnits, composeExterne, composeInterne, computeGauge, type ComposedQuestion, type Gauge, type Unit } from '../composition';
 import { aggregate, isBlankText, normalizeSelection, scoreQcm, scoreQroc } from '../scoring';
-import { analyze, shouldRecommendCheckup, synthesis, type CheckupAnalysis, type ResultQuestion } from '../results';
+import { analyseLisible, analyze, shouldRecommendCheckup, synthesis, type CheckupAnalysis, type ResultQuestion } from '../results';
 import {
   FORMAT_VOIE, FORMATS_OF_VOIE, TEXTS, formatSpec,
   type BankFamily, type CheckupConfig, type CheckupFormat, type CheckupMode, type CheckupStatus, type QuestionResult, type QuestionType, type Voie,
@@ -546,7 +546,7 @@ export async function resultView(userId: string, sessionId: string): Promise<Res
   const { names } = await coursCatalog();
   const qs = s.status === 'active' ? [] : await getQuestions(sessionId);
   return {
-    session: s, specialiteName: names.get(s.specialite_id) ?? s.specialite_id, analysis: s.results ?? null,
+    session: s, specialiteName: names.get(s.specialite_id) ?? s.specialite_id, analysis: analyseLisible(s.results),
     questions: qs.map((q) => ({ ...q, correct: (q.snapshot.items ?? []).filter((i) => i.is_correct).map((i) => i.lettre) })),
     pendingQroc: qs.filter((q) => q.question_type === 'QROC' && q.origin !== 'vide' && !q.self_grade).length,
   };

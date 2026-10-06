@@ -1,11 +1,24 @@
-# Corpus Gériatrie MG DP - TERMINÉ (2026-08-23)
+# Corpus Gériatrie MG DP - TERMINÉ (2026-08-23), complété le 2026-09-20
 
 ## Résultat final
 
-- 60/60 cours complétés
-- 960/960 séries insérées en base (480 DP QCM + 480 DP QROC)
-- ~6 720 questions (7 par série)
-- Facturation : +300 € IA brut ajouté dans `facturation-dashboard.tsx`
+- 60/60 cours complétés le 23/08/2026, puis 65/65 le 20/09/2026
+- 1 040 séries insérées en base (520 DP QCM + 520 DP QROC)
+- 7 280 questions (7 par série)
+- Facturation : +300 € IA brut (60 cours) puis +25 € (5 cours) dans `facturation-dashboard.tsx`
+
+## Complément du 2026-09-20 — les 5 cours ajoutés au bonus le 08/09/2026
+
+Un élève Gériatrie a signalé « pas de dossiers progressifs » sur Syndromes coronariens aigus :
+les cours ajoutés au bonus après la production du 23/08 n'avaient jamais reçu leurs DP.
+Rédigés, validés et insérés le 20/09/2026 (80 séries, 560 questions) :
+Syndromes coronariens aigus, Angor d'effort, AOMI, Maladie thrombo-embolique veineuse,
+Infections bronchopulmonaires communautaires de l'adulte (copie MG de la PAC).
+Outillage (dans `tmp/`, non versionné) : `_valider-dp.mjs` (structure stricte d'un fichier),
+`_assembler-dp.mjs <coursId>` (16 fichiers d'un dossier chacun → fichier du corpus), brief
+`dp-geria-brief.md`, sources texte des fiches `dp-geria-sources/`. Vérifié par rejeu RLS avec
+deux comptes QA Gériatrie (interne / externe) : 8 DP visibles par cours, 0 DP générique.
+Règle : tout cours ajouté au bonus (`GERIATRIE_MG_BONUS_COURS_IDS`) doit recevoir ses 16 DP.
 
 ## Étapes restantes
 

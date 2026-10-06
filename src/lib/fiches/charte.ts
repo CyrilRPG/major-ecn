@@ -1,17 +1,21 @@
 import 'server-only';
 import { readFileSync, existsSync } from 'fs';
 import path from 'path';
+import { resolveFontUrls, stripPageAtRules } from './charte-pure';
 
 /**
  * Charge le CSS charte « médicale sobre » utilisé par les fiches.
  *
- * Source unique : `/src/lib/fiches/charte-styles.css`, copie miroir du fichier
- * `assets/templates/styles.css` du générateur Python `major-ecn-fiche`.
+ * Source unique : `/src/lib/fiches/charte-styles.css`. Le rendu PDF (route
+ * `render-html`, scripts de rendu) et l'éditeur WYSIWYG lisent ce même
+ * fichier : ce que le professeur voit dans l'éditeur est ce que Chromium
+ * imprime. Issue du générateur Python `major-ecn-fiche`
+ * (`assets/templates/styles.css`), la charte évolue désormais ici seulement.
  *
- * Le CSS est lu au build (cache module). Les polices web sont servies par
- * Next depuis `/public/fonts/fiches/<file>.ttf` — pour le rendu PDF Chromium,
- * on remplace les `url("fonts/<file>")` du CSS par l'URL absolue HTTP servie
- * par cette instance (origin passée en paramètre).
+ * Le fichier est lu au premier appel puis gardé en cache module. Les polices
+ * web sont servies par Next depuis `/public/fonts/fiches/<file>.ttf` : on
+ * remplace les `url("fonts/<file>")` du CSS par la base passée en paramètre
+ * (URL absolue HTTP pour Chromium, chemin `/fonts/fiches` pour le navigateur).
  */
 
 let _css: string | null = null;
@@ -35,46 +39,11 @@ function readCss(): string {
 
 /** CSS charte avec URLs de polices résolues vers une origine HTTP donnée. */
 export function charteCss(fontBaseUrl: string): string {
-  const base = fontBaseUrl.replace(/\/+$/, '');
-  return readCss().replace(/url\("fonts\/([^"]+)"\)/g, `url("${base}/$1")`);
+  return resolveFontUrls(readCss(), fontBaseUrl);
 }
 
-/** Sous-ensemble du CSS charte adapté à l'éditeur WYSIWYG : on retire les
- *  `@page` (inutiles en édition web) et on neutralise les marges PDF
- *  négatives de la cover (qui s'étendaient sur la pleine page A4). */
+/** CSS charte de l'éditeur WYSIWYG : la charte entière, moins les `@page`
+ *  (appliqués par Chromium à l'impression, jamais par un écran). */
 export function charteCssForEditor(fontBaseUrl: string): string {
-  let css = charteCss(fontBaseUrl);
-  // Retire les @page (gérés par Chromium au rendu PDF, inutiles ici).
-  // Parser à compteur de braces pour gérer les @top-left/@bottom-right imbriqués.
-  css = stripPageAtRules(css);
-  return css;
-}
-
-function stripPageAtRules(css: string): string {
-  const out: string[] = [];
-  let i = 0;
-  const n = css.length;
-  while (i < n) {
-    const idx = css.indexOf('@page', i);
-    if (idx === -1) {
-      out.push(css.slice(i));
-      break;
-    }
-    out.push(css.slice(i, idx));
-    const braceStart = css.indexOf('{', idx);
-    if (braceStart === -1) {
-      i = idx + 5;
-      continue;
-    }
-    let depth = 1;
-    let j = braceStart + 1;
-    while (j < n && depth > 0) {
-      const c = css[j];
-      if (c === '{') depth++;
-      else if (c === '}') depth--;
-      j++;
-    }
-    i = j;
-  }
-  return out.join('');
+  return stripPageAtRules(charteCss(fontBaseUrl));
 }

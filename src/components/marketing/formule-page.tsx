@@ -18,7 +18,7 @@ import {
 } from './premium-ui';
 import type { FormuleId } from '@/lib/stripe';
 import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
-import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty, specialtyByName } from '@/lib/data/enrollable-colleges';
+import { ENROLLABLE_SPECIALTY_NAMES, isContentPendingSpecialty, specialtyByName, voieImposeePourSpecialite } from '@/lib/data/enrollable-colleges';
 import { DrapeauOrigine } from './drapeau-origine';
 import { EtablissementSanteBanner } from './etablissement-sante-banner';
 
@@ -57,11 +57,11 @@ const CONFIGS: Record<Variant, {
     color: '#2E7D32', colorSoft: '#E8F5E9',
     label: 'FORMULE ESSENTIELLE', tagline: 'Préparez les EVC avec une méthode\nstructurée et des ressources conçues\npour les médecins diplômés\nhors Union Européenne.',
     price: '495', hero: '/formules/hero-formule-essentielle.jpg',
-    desc: 'Travaillez en autonomie grace a une plateforme complète regroupant QCM, dossiers cliniques, flashcards, fiches pédagogiques et méthodologie EVC.',
+    desc: 'Travaillez en autonomie sur une plateforme complète : QCM ou QROC selon votre voie, dossiers cliniques, flashcards, fiches pédagogiques et méthodologie EVC.',
     cta: 'Commencer maintenant',
-    features: ['QCM, dossiers, fiches, flashcards', 'Méthodologie EVC (voies interne et externe)', 'Idéal pour les candidats autonomes'],
+    features: ['QCM ou QROC selon votre voie, dossiers, fiches, flashcards', 'Méthodologie EVC propre à votre voie', 'Idéal pour les candidats autonomes'],
     contentItems: [
-      { Icon: ClipboardCheck, t: "QCM d'entraînement", d: 'Séries ciblées pour travailler efficacement' },
+      { Icon: ClipboardCheck, t: 'QCM ou QROC corrigés', d: 'Au format de votre épreuve : QCM en voie interne, QROC en voie externe' },
       { Icon: FileText, t: 'Dossiers cliniques', d: 'Situations inspirées des EVC' },
       { Icon: Layers3, t: 'Fiches pédagogiques', d: 'Informations clés a retenir' },
       { Icon: BookOpen, t: 'Flashcards', d: 'Révisez rapidement les notions essentielles' },
@@ -78,7 +78,7 @@ const CONFIGS: Record<Variant, {
     cta: 'Commencer maintenant',
     features: ['Parcours adapté a votre voie (interne ou externe)', 'Séances de révision thématiques', 'Corrections commentées avec rappels ciblés', 'Idéal dans les derniers mois avant les EVC'],
     contentItems: [
-      { Icon: ClipboardCheck, t: "QCM d'entraînement", d: 'Séries ciblées par spécialité et thématique' },
+      { Icon: ClipboardCheck, t: 'QCM ou QROC corrigés', d: 'Séries ciblées par thématique, au format de votre voie' },
       { Icon: CheckCircle2, t: 'Corrections commentées', d: 'Explications détaillées par des experts' },
       { Icon: BookOpen, t: 'Séances de révision guidées', d: 'Rappels des points clés et astuces' },
       { Icon: FileText, t: 'Fiches & dossiers cliniques', d: 'Cas pratiques et situations inspirées des EVC' },
@@ -280,9 +280,9 @@ export function FormulePageContent({
             <div className="grid gap-6 md:grid-cols-2">
               <div className="rounded-xl border bg-white p-5" style={{ borderColor: BORDER }}>
                 <p className="text-[13px] font-black uppercase" style={{ color: NAVY }}>VOIE EXTERNE</p>
-                <p className="text-[11px]" style={{ color: INK_SOFT }}>(Questions ouvertes)</p>
+                <p className="text-[11px]" style={{ color: INK_SOFT }}>(QROC)</p>
                 <ul className="mt-3 space-y-1.5">
-                  {['Méthodologie de rédaction', "Compréhension des attentes du jury", 'Conseils pratiques', 'Erreurs fréquentes a éviter'].map(v => (
+                  {['Structuration de la réponse', 'Mots-clés attendus et PMZ', 'Compréhension des attentes du jury', 'Erreurs fréquentes à éviter'].map(v => (
                     <li key={v} className="flex items-center gap-2 text-[13px]" style={{ color: INK }}>
                       <Check className="h-3.5 w-3.5" style={{ color: c.color }} /> {v}
                     </li>
@@ -293,7 +293,7 @@ export function FormulePageContent({
                 <p className="text-[13px] font-black uppercase" style={{ color: NAVY }}>VOIE INTERNE</p>
                 <p className="text-[11px]" style={{ color: INK_SOFT }}>(QCM)</p>
                 <ul className="mt-3 space-y-1.5">
-                  {['Méthodologie spécifique', 'Approche du raisonnement clinique', 'Gestion du temps', 'Erreurs fréquentes a éviter'].map(v => (
+                  {['Analyse des propositions et pièges', 'Raisonnement clinique', 'Gestion du temps', 'Erreurs fréquentes à éviter'].map(v => (
                     <li key={v} className="flex items-center gap-2 text-[13px]" style={{ color: INK }}>
                       <Check className="h-3.5 w-3.5" style={{ color: c.color }} /> {v}
                     </li>
@@ -315,7 +315,7 @@ export function FormulePageContent({
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {(variant === 'intensive' ? [
                 { t: 'Consolidation des connaissances', d: 'Revoyez les notions essentielles et renforcez vos acquis grace a des contenus ciblés.' },
-                { t: 'Corrections détaillées', d: 'Chaque QCM et chaque question ouverte est analysé et expliqué par nos experts.' },
+                { t: 'Corrections détaillées', d: 'Chaque QCM ou QROC, selon votre voie, est corrigé et expliqué par nos enseignants.' },
                 { t: 'Rappels ciblés des notions essentielles', d: "Des fiches et séances de révision pour retenir l'essentiel." },
                 { t: 'Préparation idéale juste avant les EVC', d: "Un dernier tour complet pour arriver le jour de l'examen en confiance." },
               ] : [
@@ -689,7 +689,9 @@ function PaymentSection({
                           ? `Accès aux contenus complets de votre spécialité : ${checkoutSpecialty}`
                           : 'Accès aux contenus complets de votre spécialité',
                       ...(variant === 'intensive' ? ['18 h de cours en direct + replays'] : []),
-                      'QCM, fiches, flashcards, méthodologie EVC',
+                      voieImposeePourSpecialite(checkoutSpecialty)
+                        ? 'QCM, fiches, flashcards, méthodologie EVC'
+                        : 'QCM ou QROC selon votre voie, fiches, flashcards, méthodologie EVC',
                       'Annales corrigées des sessions précédentes',
                       'Email de confirmation + activation immédiate',
                       'Paiement en 1, 3 ou 4 fois sans frais',

@@ -64,7 +64,7 @@ type Props = {
 const SPECIALTIES = ENROLLABLE_SPECIALTY_NAMES;
 const VOIES = [
   { value: 'interne', label: 'Voie interne (QCM)' },
-  { value: 'externe', label: 'Voie externe (Questions ouvertes)' },
+  { value: 'externe', label: 'Voie externe (QROC)' },
 ] as const;
 
 export function CheckoutButton({

@@ -855,6 +855,10 @@ thead {
 }
 .ft-detail:has(> .ft-figure--small) > .ft-figure--small img {
   width: 100%;
+  /* Une image plus haute que large atteint max-height (55 mm) avant la largeur
+     imposée : sans contain, elle était étirée en largeur (demi-cercle d'une
+     endoprothèse rendu en ellipse, relecture CV-9 du 24/09/2026). */
+  object-fit: contain;
 }
 
 /* Tableaux, scores et autres images textuelles : ligne autonome située après

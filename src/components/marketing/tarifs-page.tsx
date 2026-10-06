@@ -78,13 +78,14 @@ const FORMULES: Formule[] = [
       // accompagnement quotidien — ce n'est pas ce que l'Essentielle propose.
       'Réponses à vos questions par notre équipe pédagogique',
       'Fiches de synthèse',
-      'QCM et cas cliniques corrigés',
+      'QCM ou QROC corrigés selon votre voie',
+      'Cas cliniques corrigés',
       'Flashcards',
       'Corrections des annales EVC',
       'Capsules vidéo & méthodologie',
       'Suivi de progression',
     ],
-    voies: ['Voie interne : QCM', 'Voie externe : épreuve rédactionnelle'],
+    voies: ['Voie interne : QCM', 'Voie externe : QROC'],
     cta: 'Choisir Essentielle',
     href: '/formules/essentielle',
     pied: 'Idéale si vous maîtrisez déjà le programme et souhaitez préparer les EVC en autonomie.',
@@ -111,12 +112,12 @@ const FORMULES: Formule[] = [
       'Replays accessibles pour revoir les séances',
       '18 h de cours en direct (lives interactifs)',
       'Annales EVC corrigées',
-      'QCM supplémentaires et QROC expliqués',
+      'Séries supplémentaires expliquées, au format de votre voie',
       'Corrections approfondies',
       'Épreuves blanches inspirées des EVC',
       'Suivi de progression',
     ],
-    voies: ['Voie interne : QCM', 'Voie externe : épreuve rédactionnelle'],
+    voies: ['Voie interne : QCM', 'Voie externe : QROC'],
     cta: 'Choisir Intensive',
     href: '/formules/intensive',
     pied: 'Idéale si vous avez déjà travaillé une grande partie du programme et souhaitez intensifier vos révisions.',
@@ -144,11 +145,11 @@ const FORMULES: Formule[] = [
       'Suivi de votre progression',
       'Accompagnement jusqu’aux EVC',
       'De 36 à 100 h de cours en direct selon la spécialité',
-      'QCM massifs + QROC expliqués, corrections ultra-détaillées',
+      'Entraînement intensif au format de votre voie, corrections détaillées',
       'Épreuves blanches inédites dans les conditions EVC',
       'Dossiers cliniques approfondis et inédits',
     ],
-    voies: ['Voie interne : QCM', 'Voie externe : épreuve rédactionnelle'],
+    voies: ['Voie interne : QCM', 'Voie externe : QROC'],
     cta: 'Choisir Approfondie',
     href: '/formules/programme-approfondi',
     pied: 'Idéale si vous souhaitez reprendre en profondeur tout le programme avec le meilleur accompagnement.',
@@ -474,7 +475,8 @@ const COMPARATIF: Groupe[] = [
     titre: 'Plateforme & ressources',
     lignes: [
       { label: 'Fiches de synthèse', e: true, i: true, a: true },
-      { label: 'QCM et cas cliniques corrigés', e: true, i: true, a: true },
+      { label: 'QCM ou QROC corrigés selon votre voie', e: true, i: true, a: true },
+      { label: 'Cas cliniques corrigés', e: true, i: true, a: true },
       { label: 'Flashcards', e: true, i: true, a: true },
       { label: 'Corrections des annales EVC', e: true, i: true, a: true },
       { label: 'Capsules vidéos & méthodologie', e: true, i: true, a: true },
@@ -490,10 +492,10 @@ const COMPARATIF: Groupe[] = [
     ],
   },
   {
-    titre: 'QCM & QROC',
+    titre: 'Entraînement selon votre voie',
     lignes: [
-      { label: 'QCM supplémentaires expliqués', e: false, i: true, a: true },
-      { label: 'QROC expliqués', e: false, i: true, a: true },
+      { label: 'Voie interne : QCM supplémentaires expliqués', e: false, i: true, a: true },
+      { label: 'Voie externe : QROC expliqués', e: false, i: true, a: true },
       { label: 'Corrections approfondies', e: false, i: true, a: true },
     ],
   },
@@ -629,7 +631,9 @@ function ComparatifSection() {
       </Reveal>
 
       <p className="mt-4 text-center text-[13px]" style={{ color: INK_SOFT, fontFamily: FONT_BODY }}>
-        Les formules sont disponibles pour la voie interne (QCM) et la voie externe (épreuve rédactionnelle).
+        Chaque formule se décline selon votre voie de concours : vous vous entraînez au format de votre épreuve,
+        QCM en voie interne, QROC en voie externe. Certaines spécialités ne sont proposées qu’en voie interne ;
+        le formulaire d’inscription l’indique.
       </p>
     </div>
   );
@@ -648,15 +652,15 @@ const FAQ_TARIFS: { q: string; a: string[]; formules?: { fort: string; suite: st
     formules: [
       {
         fort: 'Essentielle – 495 €',
-        suite: 'est destinée aux candidats qui souhaitent travailler principalement en autonomie avec la plateforme Major ECN, les fiches et supports de cours, les QCM et cas cliniques corrigés, les flashcards, les annales corrigées, les capsules méthodologiques et le suivi de progression.',
+        suite: 'est destinée aux candidats qui souhaitent travailler principalement en autonomie avec la plateforme Major ECN, les fiches et supports de cours, les QCM ou QROC corrigés selon votre voie, les cas cliniques, les flashcards, les annales corrigées, les capsules méthodologiques et le suivi de progression.',
       },
       {
         fort: 'Intensive – 995 €',
-        suite: 'ajoute un véritable accompagnement pédagogique avec 18 heures de cours en direct sous forme de lives interactifs, les replays, des QCM supplémentaires expliqués, des QROC expliqués, des corrections approfondies, des épreuves blanches et des échanges avec les enseignants.',
+        suite: 'ajoute un véritable accompagnement pédagogique avec 18 heures de cours en direct sous forme de lives interactifs, les replays, des séries supplémentaires expliquées au format de votre voie (QCM ou QROC), des corrections approfondies, des épreuves blanches et des échanges avec les enseignants.',
       },
       {
         fort: 'Approfondie – à partir de 2 095 €',
-        suite: 'constitue notre niveau d’accompagnement le plus complet. Selon la spécialité, elle comprend 36 à 100 heures d’enseignement, permettant de reprendre beaucoup plus largement le programme avec des médecins spécialistes, de multiplier les entraînements et de travailler en profondeur les dossiers cliniques, QCM, QROC, corrections et épreuves blanches.',
+        suite: 'constitue notre niveau d’accompagnement le plus complet. Selon la spécialité, elle comprend 36 à 100 heures d’enseignement, permettant de reprendre beaucoup plus largement le programme avec des médecins spécialistes, de multiplier les entraînements et de travailler en profondeur les dossiers cliniques, les QCM ou QROC de votre voie, les corrections et les épreuves blanches.',
       },
     ],
   },
@@ -665,7 +669,7 @@ const FAQ_TARIFS: { q: string; a: string[]; formules?: { fort: string; suite: st
     a: [
       'Parce qu’il ne s’agit pas simplement d’ajouter quelques heures de cours à la formule Intensive.',
       'La formule Approfondie correspond à un changement de niveau dans l’accompagnement pédagogique : selon votre spécialité, 36 à 100 heures d’enseignement sont organisées avec des médecins spécialistes.',
-      'Cela permet de reprendre davantage d’items du programme, d’approfondir les notions importantes, de travailler davantage de QCM, QROC et dossiers cliniques, de bénéficier de corrections et d’explications plus poussées, de multiplier les entraînements et les épreuves blanches et de revenir régulièrement sur les difficultés rencontrées.',
+      'Cela permet de reprendre davantage d’items du programme, d’approfondir les notions importantes, de travailler davantage de QCM ou de QROC selon votre voie, ainsi que de dossiers cliniques, de bénéficier de corrections et d’explications plus poussées, de multiplier les entraînements et les épreuves blanches et de revenir régulièrement sur les difficultés rencontrées.',
       'Les enseignants ne se contentent pas de transmettre des connaissances : ils vous aident à déterminer ce qu’il faut réellement maîtriser, jusqu’où approfondir et comment répondre le jour des EVC.',
       'C’est donc une préparation destinée aux candidats qui recherchent un encadrement beaucoup plus important et une reprise approfondie de leur spécialité.',
     ],
@@ -693,10 +697,10 @@ const FAQ_TARIFS: { q: string; a: string[]; formules?: { fort: string; suite: st
     q: 'Les formules Intensive et Approfondie préparent-elles réellement aux QCM et aux QROC ?',
     a: [
       'Oui. La préparation est adaptée au format de l’épreuve et à votre voie.',
-      'En Intensive, vous bénéficiez notamment de QCM supplémentaires expliqués et de QROC expliqués, en complément des cours en direct et des corrections.',
-      'En Approfondie, le volume d’enseignement plus important permet d’aller beaucoup plus loin : davantage de QCM et QROC, davantage de dossiers cliniques, entraînements spécifiques, corrections approfondies et travail méthodologique avec les enseignants.',
-      'Pour les QCM, l’objectif est notamment de développer les bons réflexes, d’identifier les pièges et de gagner en précision.',
-      'Pour les QROC, le travail porte également sur la structuration de la réponse, les mots-clés attendus, les éléments indispensables et les PMZ lorsqu’ils s’appliquent.',
+      'En Intensive, vous bénéficiez de séries supplémentaires expliquées dans le format de votre voie — QCM en voie interne, QROC en voie externe —, en complément des cours en direct et des corrections.',
+      'En Approfondie, le volume d’enseignement plus important permet d’aller beaucoup plus loin : davantage de séries au format de votre voie, davantage de dossiers cliniques, entraînements spécifiques, corrections approfondies et travail méthodologique avec les enseignants.',
+      'En voie interne (QCM), l’objectif est notamment de développer les bons réflexes, d’identifier les pièges et de gagner en précision.',
+      'En voie externe (QROC), le travail porte également sur la structuration de la réponse, les mots-clés attendus, les éléments indispensables et les PMZ lorsqu’ils s’appliquent.',
     ],
   },
   {
@@ -705,7 +709,7 @@ const FAQ_TARIFS: { q: string; a: string[]; formules?: { fort: string; suite: st
       'Parce que l’objectif de l’Approfondie est différent.',
       'L’Intensive permet essentiellement d’intensifier et cibler les révisions avec 18 heures de cours en direct.',
       'L’Approfondie permet de reprendre beaucoup plus largement la spécialité. Avec 36 à 100 heures d’enseignement selon le programme, les enseignants disposent de davantage de temps pour expliquer les différents items, revenir sur les difficultés, approfondir les raisonnements et travailler davantage de situations cliniques.',
-      'Cela se traduit par plus de cours et de lives, plus d’explications, plus d’items travaillés, davantage de dossiers cliniques, de QCM, de QROC, de corrections, d’entraînements et d’épreuves blanches.',
+      'Cela se traduit par plus de cours et de lives, plus d’explications, plus d’items travaillés, davantage de dossiers cliniques, de séries QCM ou QROC selon votre voie, de corrections, d’entraînements et d’épreuves blanches.',
       'C’est précisément ce volume et cette profondeur d’accompagnement qui différencient l’Approfondie.',
     ],
   },
@@ -722,8 +726,8 @@ const FAQ_TARIFS: { q: string; a: string[]; formules?: { fort: string; suite: st
     a: [
       'Le choix dépend principalement de votre niveau actuel, du temps restant avant les épreuves, de votre autonomie et de la profondeur d’accompagnement dont vous avez besoin.',
       'Si vous maîtrisez déjà largement votre programme et souhaitez surtout disposer d’outils pour organiser votre travail, Essentielle peut suffire.',
-      'Si vous avez déjà travaillé une grande partie du programme mais souhaitez intensifier vos révisions avec 18 heures de cours en direct, des QCM/QROC expliqués et des corrections, choisissez plutôt Intensive.',
-      'Si vous souhaitez reprendre votre spécialité beaucoup plus en profondeur, bénéficier de 36 à 100 heures d’enseignement selon la spécialité, travailler davantage avec des médecins spécialistes et multiplier les dossiers, QCM, QROC, corrections et entraînements, Approfondie est la formule que nous recommandons généralement pour bénéficier de l’accompagnement le plus complet.',
+      'Si vous avez déjà travaillé une grande partie du programme mais souhaitez intensifier vos révisions avec 18 heures de cours en direct, des séries QCM ou QROC expliquées selon votre voie et des corrections, choisissez plutôt Intensive.',
+      'Si vous souhaitez reprendre votre spécialité beaucoup plus en profondeur, bénéficier de 36 à 100 heures d’enseignement selon la spécialité, travailler davantage avec des médecins spécialistes et multiplier les dossiers, les séries de votre voie, les corrections et les entraînements, Approfondie est la formule que nous recommandons généralement pour bénéficier de l’accompagnement le plus complet.',
       'Et si vous hésitez, l’équipe Major ECN peut vous aider à choisir en fonction de votre situation, plutôt que de sélectionner une formule uniquement en fonction du prix.',
     ],
   },

@@ -124,6 +124,31 @@ export function analyze(questions: ResultQuestion[], opts: { externe: boolean })
   };
 }
 
+/**
+ * Analyse relue en base (`checkup_sessions.results`), quelle que soit sa forme :
+ * les listes absentes sont reconstruites depuis les items, sinon vides. Une
+ * séance d'un ancien format ou écrite à la main (comptes de recette) faisait
+ * planter la page de résultat — élève comme administration (`a.aRevoir`
+ * indéfini dans `synthesis`).
+ */
+export function analyseLisible(brut: unknown): CheckupAnalysis | null {
+  if (!brut || typeof brut !== 'object') return null;
+  const a = brut as Partial<CheckupAnalysis>;
+  const liste = <T,>(v: T[] | undefined): T[] => (Array.isArray(v) ? v : []);
+  const nombre = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v : Number(v) || 0);
+  const items = liste(a.items);
+  const verdict = (v: ItemDiagnosis['verdict']) => items.filter((i) => i.verdict === v);
+  return {
+    percent: nombre(a.percent), obtained: nombre(a.obtained), possible: nombre(a.possible),
+    byDomain: liste(a.byDomain), byBlock: liste(a.byBlock), bySource: liste(a.bySource), items,
+    aRevoir: Array.isArray(a.aRevoir) ? a.aRevoir : verdict('a_revoir'),
+    aConsolider: Array.isArray(a.aConsolider) ? a.aConsolider : verdict('a_consolider'),
+    positifs: Array.isArray(a.positifs) ? a.positifs : verdict('positif'),
+    withoutItem: nombre(a.withoutItem),
+    notDisplayed: a.notDisplayed === undefined ? undefined : nombre(a.notDisplayed),
+  };
+}
+
 /** Synthèse en une phrase (§35) — jamais « échec », jamais de prédiction. */
 export function synthesis(a: CheckupAnalysis): string {
   const parts: string[] = [];
