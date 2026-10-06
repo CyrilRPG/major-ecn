@@ -4,6 +4,7 @@ import { lireSpecialite } from '@/lib/tunnel-inscription';
 import { APPROFONDI_SPECIALTIES } from '@/lib/stripe/approfondi';
 import { FAQ_PEDIA, reponseTextePedia } from '@/lib/data/faq-pediatrie';
 import { JsonLd, breadcrumbSchema, faqSchema } from '@/components/seo/json-ld';
+import { BandeauAnnalesSpecialite } from '@/components/marketing/annales-evc/bandeau-annales-specialite';
 
 /** L'URL suit le modèle des autres pages spécialité et le slug publié par
     /specialites : le silo reste cohérent et le lien du hub fonctionne. */
@@ -72,6 +73,7 @@ export default async function PediatriePage({
         ]}
       />
       <PediatriePageContent faits={await chargerFaitsSpecialite('pediatrie')} specialite={specialite} paliers={paliers} />
+      <BandeauAnnalesSpecialite slug="pediatrie" />
     </>
   );
 }

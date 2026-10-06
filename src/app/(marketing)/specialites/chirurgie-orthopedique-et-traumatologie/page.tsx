@@ -1,6 +1,7 @@
 import { chargerFaitsSpecialite } from '@/lib/evc-calendrier/server';
 import { OrthopediePageContent } from '@/components/marketing/orthopedie-page';
 import { lireSpecialite } from '@/lib/tunnel-inscription';
+import { BandeauAnnalesSpecialite } from '@/components/marketing/annales-evc/bandeau-annales-specialite';
 
 /** Le layout racine applique le gabarit « %s · Major ECN » : le titre ne doit
     donc pas répéter la marque. Les balises og/twitter sont propres à la
@@ -58,5 +59,10 @@ export default async function ChirurgieOrthopediquePage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const specialite = lireSpecialite(await searchParams);
-  return <OrthopediePageContent faits={await chargerFaitsSpecialite('chirurgie-orthopedique-et-traumatologie')} specialite={specialite} />;
+  return (
+    <>
+      <OrthopediePageContent faits={await chargerFaitsSpecialite('chirurgie-orthopedique-et-traumatologie')} specialite={specialite} />
+      <BandeauAnnalesSpecialite slug="chirurgie-orthopedique-et-traumatologique" />
+    </>
+  );
 }

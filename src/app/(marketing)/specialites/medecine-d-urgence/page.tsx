@@ -3,6 +3,7 @@ import { lireSpecialite } from '@/lib/tunnel-inscription';
 import { APPROFONDI_SPECIALTIES } from '@/lib/stripe/approfondi';
 import { FAQ_URGENCE, reponseTexteUrgence } from '@/lib/data/faq-medecine-urgence';
 import { JsonLd, breadcrumbSchema, faqSchema, organizationSchema } from '@/components/seo/json-ld';
+import { BandeauAnnalesSpecialite } from '@/components/marketing/annales-evc/bandeau-annales-specialite';
 
 /** L'URL suit le modèle des autres pages spécialité et le slug publié par
     /specialites : le silo reste cohérent et le lien du hub fonctionne. */
@@ -72,6 +73,7 @@ export default async function MedecineUrgencePage({
         ]}
       />
       <MedecineUrgencePageContent specialite={specialite} paliers={paliers} />
+      <BandeauAnnalesSpecialite slug="medecine-d-urgence" />
     </>
   );
 }

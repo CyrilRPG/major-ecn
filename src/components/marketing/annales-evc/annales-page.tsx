@@ -4,7 +4,7 @@ import {
   ArrowRight, Award, BookOpenCheck, GraduationCap, MonitorSmartphone, ShieldCheck, Users, UsersRound,
 } from 'lucide-react';
 import { RECUEILS_ANNALES, TOTAL_SUJETS_ANNALES } from '@/lib/data/annales-evc';
-import { JsonLd, faqSchema } from '@/components/seo/json-ld';
+import { JsonLd, breadcrumbSchema, faqSchema } from '@/components/seo/json-ld';
 import {
   Eyebrow, GRAD_BLUE, GRAD_RED, INK_SOFT, JAKARTA, MANROPE, NAVY, RED, RED_DEEP, RED_GRADIENT, Reveal, SectionTitle,
 } from '@/components/marketing/home/home-ui';
@@ -68,7 +68,31 @@ const OFFRE = [
   { titre: 'Des enseignants qui exercent en France', texte: 'PH, CCA et spécialistes, en cours en direct et pour répondre à vos questions.' },
 ];
 
+const SITE = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.major-ecn.fr').replace(/\/$/, '');
+
+/** Les recueils, en liste structurée : chaque spécialité a sa page. */
+const LISTE_RECUEILS = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Annales EVC par spécialité',
+  numberOfItems: NB,
+  itemListElement: RECUEILS_ANNALES.map((r, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: `Annales EVC ${r.nom}`,
+    url: `${SITE}/annales-evc/${r.slug}`,
+  })),
+};
+
 const FAQ: QuestionAnnales[] = [
+  {
+    q: 'Où trouver les annales de l’EVC ?',
+    r: `Sur cette page : les sujets officiels de ${PREMIERE} à ${DERNIERE} sont réunis par spécialité, ${NB} recueils au total. Choisissez la vôtre, le PDF vous est envoyé par e-mail.`,
+  },
+  {
+    q: 'Qu’appelle-t-on les EVC ?',
+    r: 'Les épreuves de vérification des connaissances (EVC) sont le concours de la procédure d’autorisation d’exercice (PAE), organisé par le CNG pour les praticiens diplômés hors Union européenne. Elles comportent une épreuve fondamentale et une épreuve pratique par spécialité.',
+  },
   {
     q: 'Le recueil est-il vraiment gratuit ?',
     r: 'Oui. Le recueil de votre spécialité vous est envoyé par e-mail sans frais et sans inscription à une formation. Le lien de téléchargement reste valable deux ans.',
@@ -98,7 +122,13 @@ const FAQ: QuestionAnnales[] = [
 export function AnnalesEvcPage() {
   return (
     <div style={{ fontFamily: JAKARTA }}>
-      <JsonLd data={faqSchema(FAQ.map((f) => ({ q: f.q, a: f.r })))} />
+      <JsonLd
+        data={[
+          faqSchema(FAQ.map((f) => ({ q: f.q, a: f.r }))),
+          LISTE_RECUEILS,
+          breadcrumbSchema([{ name: 'Accueil', path: '/' }, { name: 'Annales EVC', path: '/annales-evc' }]),
+        ]}
+      />
 
       {/* ============ HÉROS ============ */}
       <section className="relative isolate overflow-hidden bg-white pb-6 pt-8 sm:pt-10 lg:pt-14">

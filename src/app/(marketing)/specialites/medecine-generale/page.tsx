@@ -4,6 +4,7 @@ import { lireSpecialite } from '@/lib/tunnel-inscription';
 import { APPROFONDI_SPECIALTIES } from '@/lib/stripe/approfondi';
 import { FAQ_MG, reponseTexteMg } from '@/lib/data/faq-medecine-generale';
 import { JsonLd, breadcrumbSchema, faqSchema } from '@/components/seo/json-ld';
+import { BandeauAnnalesSpecialite } from '@/components/marketing/annales-evc/bandeau-annales-specialite';
 
 /** L'URL historique de la page est conservée : elle est déjà dans le sitemap,
     reliée depuis /specialites et alignée sur les autres pages spécialité. */
@@ -90,6 +91,7 @@ export default async function MedecineGeneralePage({
         specialite={specialite}
         paliersApprofondie={paliersApprofondiMedecineGenerale()}
       />
+      <BandeauAnnalesSpecialite slug="medecine-generale" />
     </>
   );
 }

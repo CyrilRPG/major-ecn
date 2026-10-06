@@ -2,6 +2,7 @@ import { OdontologiePageContent, type PalierApprofondi } from '@/components/mark
 import { APPROFONDI_SPECIALTIES } from '@/lib/stripe/approfondi';
 import { FAQ_ODO, reponseTexteOdo } from '@/lib/data/faq-odontologie';
 import { JsonLd, breadcrumbSchema, faqSchema, organizationSchema } from '@/components/seo/json-ld';
+import { BandeauAnnalesSpecialite } from '@/components/marketing/annales-evc/bandeau-annales-specialite';
 
 /** URL du cahier des charges, dans le silo des pages spécialité. */
 const URL = '/specialites/odontologie-chirurgie-dentaire';
@@ -65,6 +66,7 @@ export default async function OdontologiePage() {
         ]}
       />
       <OdontologiePageContent paliers={paliers} />
+      <BandeauAnnalesSpecialite slug="odontologie" />
     </>
   );
 }

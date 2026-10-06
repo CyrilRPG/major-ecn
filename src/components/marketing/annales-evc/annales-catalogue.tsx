@@ -49,9 +49,15 @@ export function AnnalesCatalogue() {
         {liste.map((r, i) => (
           // Téléphone : les 9 premiers, le reste derrière « Afficher les 51 spécialités » (la recherche montre tout)
           <li key={r.slug} className={!tout && !needle && i >= 9 ? 'hidden sm:block' : undefined}>
-            <button
-              type="button"
-              onClick={() => choisir(r.slug)}
+            {/* Vrai lien (indexé, ouvrable dans un onglet) ; un clic simple présélectionne le formulaire de la page */}
+            <a
+              href={`/annales-evc/${r.slug}`}
+              title={`Annales EVC ${r.nom}`}
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+                e.preventDefault();
+                choisir(r.slug);
+              }}
               className="group flex w-full items-center gap-4 rounded-2xl border bg-white p-3 pr-4 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-[#C0112E]/35 hover:shadow-[0_24px_50px_-34px_rgba(139,14,34,0.55)]"
               style={{ borderColor: BORDER }}
             >
@@ -59,7 +65,9 @@ export function AnnalesCatalogue() {
                 <Image src={`/annales-evc/couvertures/${r.slug}.webp`} alt="" width={420} height={594} sizes="52px" className="h-auto w-full" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-[14.5px] font-black leading-tight tracking-tight" style={{ color: NAVY }}>{r.nom}</span>
+                <span className="block text-[14.5px] font-black leading-tight tracking-tight" style={{ color: NAVY }}>
+                  <span className="sr-only">Annales EVC </span>{r.nom}
+                </span>
                 <span className="mt-1 block text-[12.5px]" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
                   {r.sujets} sujet{r.sujets > 1 ? 's' : ''} · {r.premiere === r.derniere ? `session ${r.premiere}` : `${r.premiere} – ${r.derniere}`}
                 </span>
@@ -70,7 +78,7 @@ export function AnnalesCatalogue() {
                 )}
               </span>
               <ArrowRight className="h-4.5 w-4.5 shrink-0 transition-transform group-hover:translate-x-1" style={{ color: RED }} />
-            </button>
+            </a>
           </li>
         ))}
       </ul>

@@ -4,6 +4,7 @@ import { lireSpecialite } from '@/lib/tunnel-inscription';
 import { APPROFONDI_MIN_EUROS_FR } from '@/lib/stripe/approfondi';
 import { FAQ_CARDIO, reponseTexteCardio } from '@/lib/data/faq-cardiologie';
 import { JsonLd, breadcrumbSchema, faqSchema } from '@/components/seo/json-ld';
+import { BandeauAnnalesSpecialite } from '@/components/marketing/annales-evc/bandeau-annales-specialite';
 
 /** L'URL suit le modèle des autres pages spécialité et le slug publié par
     /specialites : le silo reste cohérent et le lien du hub fonctionne. */
@@ -67,6 +68,7 @@ export default async function CardiologiePage({
         ]}
       />
       <CardiologiePageContent faits={await chargerFaitsSpecialite('cardiologie-et-maladies-vasculaires')} specialite={specialite} prixApprofondie={prixApprofondie} />
+      <BandeauAnnalesSpecialite slug="medecine-cardiovasculaire" />
     </>
   );
 }

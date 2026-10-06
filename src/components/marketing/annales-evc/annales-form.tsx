@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, Download, Loader2, Lock, Mail, Phone, User } from 'lucide-react';
 import { TurnstileWidget } from '@/components/marketing/turnstile-widget';
+import { ChoixSpecialite } from './choix-specialite';
 import { useHydrate } from '@/lib/use-hydrate';
 import { pousserEvenement, EVENEMENTS } from '@/lib/analytics/evenements';
 import { RECUEILS_ANNALES, type RecueilAnnales } from '@/lib/data/annales-evc';
@@ -71,11 +72,11 @@ function EnteteRecueil({ recueil }: { recueil?: RecueilAnnales }) {
 }
 
 /** Formulaire de demande d'un recueil d'annales EVC : spécialité, coordonnées, envoi par e-mail. */
-export function AnnalesForm() {
+export function AnnalesForm({ defaut = '' }: { /** Spécialité présélectionnée (pages /annales-evc/[spécialité]). */ defaut?: string } = {}) {
   const hydrate = useHydrate();
   const slugUrl = useSyncExternalStore(sansAbonnement, slugDeLUrl, () => '');
   const [choix, setSlug] = useState<string | null>(null);
-  const slug = choix ?? slugUrl;
+  const slug = choix ?? (slugUrl || defaut);
   const [status, setStatus] = useState<Status>('idle');
   const [erreur, setErreur] = useState('');
   const [lien, setLien] = useState('');
@@ -212,20 +213,7 @@ export function AnnalesForm() {
         <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden className="absolute left-[-9999px] h-0 w-0 opacity-0" />
 
         <label htmlFor="an-spe" className={labelCls} style={{ color: NAVY }}>Votre spécialité</label>
-        <select
-          id="an-spe"
-          name="specialite"
-          required
-          value={slug}
-          onChange={(e) => setSlug(e.target.value)}
-          className={`${inputCls} mt-1.5 appearance-none bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23C0112E%22 stroke-width=%222.5%22><path d=%22m6 9 6 6 6-6%22/></svg>')] bg-[length:14px] bg-[right_14px_center] bg-no-repeat pr-10`}
-          style={inputStyle}
-        >
-          <option value="" disabled>Choisir dans les {RECUEILS_ANNALES.length} spécialités</option>
-          {RECUEILS_ANNALES.map((r) => (
-            <option key={r.slug} value={r.slug}>{r.nom}</option>
-          ))}
-        </select>
+        <ChoixSpecialite value={slug} onChange={setSlug} />
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <div>

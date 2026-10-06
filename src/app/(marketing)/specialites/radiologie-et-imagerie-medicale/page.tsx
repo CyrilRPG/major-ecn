@@ -4,6 +4,7 @@ import { valeurPostes } from "@/lib/evc-calendrier/faits";
 import { PsychiatrieRadiologiePage } from "@/components/marketing/psychiatrie-radiologie-page";
 import { JsonLd, breadcrumbSchema, faqSchema } from "@/components/seo/json-ld";
 import faqRadiologie from "@/lib/data/faq-radiologie.json";
+import { BandeauAnnalesSpecialite } from '@/components/marketing/annales-evc/bandeau-annales-specialite';
 
 const METADATA: Metadata = {
   title: "Préparation EVC Radiologie et Imagerie médicale 2026",
@@ -59,6 +60,7 @@ export default async function RadiologiePage() {
         ]}
       />
       <PsychiatrieRadiologiePage kind="radiologie" faits={faits} />
+      <BandeauAnnalesSpecialite slug="radiologie-et-imagerie-medicale" />
     </>
   );
 }

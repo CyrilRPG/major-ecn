@@ -7,6 +7,7 @@ import faqPsychiatrie from "@/lib/data/faq-psychiatrie.json";
 import { getPublishedArticles } from "@/lib/data/blog-articles";
 import { getDbPublishedArticles } from "@/lib/data/blog-db";
 import { PSY_ARTICLES_CLUSTER, PSY_FORMULES, PSY_PROGRAMME } from "@/lib/data/psychiatrie-radiologie";
+import { BandeauAnnalesSpecialite } from '@/components/marketing/annales-evc/bandeau-annales-specialite';
 
 const METADATA: Metadata = {
   title: "Préparation EVC Psychiatrie 2026",
@@ -90,6 +91,7 @@ export default async function PsychiatriePage() {
         ]}
       />
       <PsychiatrieRadiologiePage kind="psychiatrie" faits={faits} guides={guides} />
+      <BandeauAnnalesSpecialite slug="psychiatrie" />
     </>
   );
 }

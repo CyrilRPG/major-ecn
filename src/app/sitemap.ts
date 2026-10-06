@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { getPublishedArticles } from '@/lib/data/blog-articles';
 import { getDbPublishedArticles } from '@/lib/data/blog-db';
 import { FEATURED_TESTIMONIES } from '@/lib/data/featured-testimonies';
+import { RECUEILS_ANNALES } from '@/lib/data/annales-evc';
 
 // Le plan de site inclut les articles créés depuis /admin/blog : sans cette
 // régénération périodique, un article publié depuis l'administration (ou importé
@@ -26,7 +27,7 @@ const STATIC_ROUTES: {
   // Pages d'acquisition atteignables uniquement depuis un menu déroulant ou un
   // bouton : sans entrée au plan de site, elles n'étaient jamais soumises.
   { path: '/guide-methodologie-evc-2026', priority: 0.8, changeFrequency: 'monthly' },
-  { path: '/annales-evc', priority: 0.9, changeFrequency: 'monthly', lastModified: new Date('2026-10-06') },
+  { path: '/annales-evc', priority: 0.95, changeFrequency: 'monthly', lastModified: new Date('2026-10-06') },
   { path: '/profil-evc', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/plateforme', priority: 0.9, changeFrequency: 'monthly' },
   // Visite guidée en vidéo de la plateforme (lecteur, sans jeton d'accès).
@@ -100,5 +101,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  return [...staticEntries, ...blogEntries, ...temoignageEntries];
+  // Une page par recueil d'annales EVC (« annales EVC <spécialité> »).
+  const annalesEntries: MetadataRoute.Sitemap = RECUEILS_ANNALES.map((r) => ({
+    url: `${SITE_URL}/annales-evc/${r.slug}`,
+    lastModified: new Date('2026-10-06'),
+    changeFrequency: 'monthly',
+    priority: 0.8,
+  }));
+
+  return [...staticEntries, ...annalesEntries, ...blogEntries, ...temoignageEntries];
 }
