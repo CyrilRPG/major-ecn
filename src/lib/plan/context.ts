@@ -1,6 +1,5 @@
 import 'server-only';
 import { deriveFamily } from '@/lib/checkup/composition';
-import { poolForCandidate, specialtyPool } from '@/lib/checkup/server/pool';
 import { computePriority, daysUntil, effectivePriority } from '@/lib/moteur/priority';
 import {
   coursCatalog, getOrchestratorConfig, listActiveNeeds, listItemStates, listScheduledReviews,
@@ -17,6 +16,7 @@ import {
   collegeFamily, flashcardCounts, getParameterSet, getProfile, listPlannerItemStates, parcoursCompletions, planDb,
   type CoachingFull, type CollegeLite, type PlannerItemStateRow,
 } from './db';
+import { contenuSpecialite, seriesLisibles, type ContenuSpecialite } from './contenu';
 import { itemView, type CentralStateLite, type PlanItemView } from './items';
 import { learnReferenceMinutes, priorityLevel, structuralScore, EMPTY_CONTENT, type EngineItem, type ItemContent } from './matrix';
 import type { CurriculumStructure } from './model';
@@ -91,36 +91,37 @@ export function isStaffRole(role: string | null | undefined): boolean {
   return !!role && role !== 'student';
 }
 
-/** Contenu réel de chaque cours pour ce candidat (droits de voie et de formule appliqués). */
+/**
+ * Contenu réel de chaque cours pour ce candidat (droits de voie et de formule appliqués), à partir du
+ * résumé partagé du vivier (contenu.ts) : mêmes comptes que question par question, sans les 6,7 Mo.
+ */
 async function contentByCours(specialiteId: string, permissionScope: unknown, voie: Voie | null, coursIds: string[], userId: string): Promise<Map<string, ItemContent>> {
   const out = new Map<string, ItemContent>();
-  let pool: Awaited<ReturnType<typeof specialtyPool>> | null = null;
-  try { pool = await specialtyPool(specialiteId); } catch (e) { console.error('[plan] vivier indisponible :', e instanceof Error ? e.message : e); }
+  let contenu: ContenuSpecialite | null = null;
+  try { contenu = await contenuSpecialite(specialiteId); } catch (e) { console.error('[plan] vivier indisponible :', e instanceof Error ? e.message : e); }
+  // Cartes mémoire : comptées avec le résumé ; un cours hors de la spécialité est compté à part.
+  const horsResume = coursIds.filter((id) => !contenu || !Object.hasOwn(contenu.flashcards, id));
   const [cards, { data: sessions }] = await Promise.all([
-    flashcardCounts(coursIds),
+    horsResume.length > 0 ? flashcardCounts(horsResume) : Promise.resolve(new Map<string, number>()),
     planDb().from('qcm_sessions').select('serie_id').eq('user_id', userId).not('finished_at', 'is', null).limit(5000),
   ]);
   const doneSeries = new Set(((sessions ?? []) as { serie_id: string }[]).map((s) => s.serie_id));
   const wanted = new Set(coursIds);
-  for (const id of coursIds) out.set(id, { ...EMPTY_CONTENT, flashcards: cards.get(id) ?? 0, practice: [] });
-  if (!pool) return out;
-  const { questions, series } = poolForCandidate(pool, permissionScope, voie);
+  for (const id of coursIds) out.set(id, { ...EMPTY_CONTENT, flashcards: (contenu && Object.hasOwn(contenu.flashcards, id) ? contenu.flashcards[id] : cards.get(id)) ?? 0, practice: [] });
+  if (!contenu) return out;
+  const titres = new Map(contenu.cours.map((c) => [c.id, c.titre]));
   const qroc = new Map<string, number>();
-  for (const q of questions) {
-    const s = series.get(q.serieId);
-    if (!s || !s.readable || !wanted.has(s.coursId) || q.meta.excluded) continue;
-    if (q.format !== 'qroc' && q.nItems < 2) continue;
+  for (const s of seriesLisibles(contenu, permissionScope, voie)) {
+    if (!wanted.has(s.coursId)) continue;
     const c = out.get(s.coursId)!;
-    c.questions += 1;
-    if (q.format === 'qroc') qroc.set(s.coursId, (qroc.get(s.coursId) ?? 0) + 1);
-  }
-  for (const s of series.values()) {
-    if (!s.readable || !wanted.has(s.coursId) || s.meta.excluded || s.nQuestions === 0) continue;
-    const cours = pool.cours.get(s.coursId);
-    const family = s.meta.source ?? (cours ? deriveFamily({ label: s.label }, { titre: cours.titre }) : 'structured_item');
-    const kind: 'dp' | 'annale' | 'serie' | null = s.kind === 'dp' || /^\s*(dp|dossier)/i.test(s.label ?? '') ? 'dp' : family === 'evc_annale' ? 'annale' : s.hasVignette ? 'serie' : null;
+    c.questions += s.utilisables;
+    if (s.qroc > 0) qroc.set(s.coursId, (qroc.get(s.coursId) ?? 0) + s.qroc);
+    if (s.exclue || s.nq === 0) continue;
+    const titre = titres.get(s.coursId);
+    const family = s.source ?? (titre !== undefined ? deriveFamily({ label: s.label }, { titre }) : 'structured_item');
+    const kind: 'dp' | 'annale' | 'serie' | null = s.kind === 'dp' || /^\s*(dp|dossier)/i.test(s.label ?? '') ? 'dp' : family === 'evc_annale' ? 'annale' : s.vignette ? 'serie' : null;
     if (!kind) continue;
-    out.get(s.coursId)!.practice.push({ id: s.id, label: s.label ?? 'Série', questions: s.nQuestions, kind, done: doneSeries.has(s.id) });
+    c.practice.push({ id: s.id, label: s.label ?? 'Série', questions: s.nq, kind, done: doneSeries.has(s.id) });
   }
   for (const [id, c] of out) {
     c.qrocShare = c.questions > 0 ? (qroc.get(id) ?? 0) / c.questions : 0;
