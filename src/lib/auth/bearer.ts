@@ -1,7 +1,7 @@
 import 'server-only';
 import { cookies } from 'next/headers';
 import { createClient as createSupabaseClient, type SupabaseClient } from '@supabase/supabase-js';
-import { createClient as createCookieClient } from '@/lib/supabase/server';
+import { cloisonnerParFaculte } from '@/lib/supabase/faculte-scope';
 import { extractAccessTokenFromCookies } from './access-token-cookie';
 import { getVerifiedUser, type VerifiedUser } from './verified-user';
 import type { Database } from '@/types/database';
@@ -56,11 +56,22 @@ export async function getRequestUser(req: Request): Promise<RequestAuth | null> 
   try {
     const cookieStore = await cookies();
     const token = extractAccessTokenFromCookies(cookieStore.getAll());
-    if (token) {
-      const cookieClient = await createCookieClient();
-      const user = await getVerifiedUser(cookieClient, token);
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (token && url && anonKey) {
+      // Client du SEUL jeton vérifié, sans session : une route API ne renouvelle
+      // jamais la session. Le client cookie (`createClient`) relit la session et,
+      // jeton proche de l'expiration, tentait un renouvellement à chaque appel
+      // (heartbeat toutes les 60 s) : en course avec le navigateur, ou sur une
+      // session supprimée, « Refresh Token Not Found » en boucle. Le navigateur
+      // renouvelle lui-même ; le middleware le fait pour les pages.
+      const tokenClient = cloisonnerParFaculte(createSupabaseClient<Database>(url, anonKey, {
+        global: { headers: { Authorization: `Bearer ${token}` } },
+        auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+      }));
+      const user = await getVerifiedUser(tokenClient, token);
       if (user) {
-        return { user, supabase: cookieClient, accessToken: token, via: 'cookie' };
+        return { user, supabase: tokenClient, accessToken: token, via: 'cookie' };
       }
     }
   } catch {

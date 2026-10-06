@@ -25,12 +25,15 @@ export function LoginForm() {
   const next = params.get('next') || '/app';
   const disabled = params.get('disabled') === '1';
   const otherDevice = params.get('reason') === 'autre-appareil';
+  const sessionExpiree = params.get('reason') === 'session-expiree';
   const [authError, setAuthError] = useState<string | null>(
     disabled
       ? 'Ce compte a été désactivé par l’administrateur. Contactez-nous pour le réactiver.'
       : otherDevice
         ? 'Vous avez été déconnecté : ce compte vient d’être utilisé sur un autre appareil. Un seul appareil peut être connecté à la fois.'
-        : null,
+        : sessionExpiree
+          ? 'Votre session n’est plus valide (connexion sur un autre appareil ou déconnexion) : reconnectez-vous.'
+          : null,
   );
   const [showPassword, setShowPassword] = useState(false);
   const hydrate = useHydrate();

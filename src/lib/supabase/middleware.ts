@@ -40,6 +40,18 @@ function withBudget<T>(promise: Promise<T>, fallback: T, ms = MIDDLEWARE_BUDGET_
   });
 }
 
+/**
+ * Échec DÉFINITIF du renouvellement : la session n'existe plus côté Auth.
+ * Un délai dépassé, une erreur réseau ou un 5xx restent transitoires (fail-open).
+ */
+const CODES_SESSION_MORTE = new Set(['refresh_token_not_found', 'session_not_found', 'user_banned', 'user_not_found']);
+function sessionMorte(e: unknown): boolean {
+  const err = e as { code?: unknown; message?: unknown; status?: unknown } | null;
+  if (!err) return false;
+  if (typeof err.code === 'string' && CODES_SESSION_MORTE.has(err.code)) return true;
+  return err.status === 400 && typeof err.message === 'string' && /refresh token not found|user banned/i.test(err.message);
+}
+
 export async function updateSession(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isAuthRoute = path === '/login' || path === '/signup';
@@ -135,21 +147,39 @@ export async function updateSession(request: NextRequest) {
   // session est encore valide — symptôme élève : « This page couldn't load »
   // sur toutes les fiches (WebView / navigation cassée après redirect).
   if (cookieSession.accessExpired && cookieSession.refreshToken) {
-    const refreshed = await withBudget(
+    const refreshed = await withBudget<string | 'definitif' | null>(
       (async () => {
         try {
           const { data, error } = await supabase.auth.refreshSession({
             refresh_token: cookieSession.refreshToken!,
           });
-          if (error || !data.session?.access_token) return null;
-          return data.session.access_token;
-        } catch {
-          return null;
+          if (error) return sessionMorte(error) ? 'definitif' : null;
+          return data.session?.access_token ?? null;
+        } catch (e) {
+          return sessionMorte(e) ? 'definitif' : null;
         }
       })(),
       null,
       REFRESH_BUDGET_MS,
     );
+    if (refreshed === 'definitif') {
+      // Session supprimée côté Auth (connexion sur un autre appareil, mot de
+      // passe changé, compte banni) : la garder ferait échouer chaque requête
+      // suivante sur le même jeton mort (« Refresh Token Not Found » en boucle,
+      // 535 fois en 24 h le 06/10/2026). Cookies de session effacés, une fois.
+      const url = request.nextUrl.clone();
+      url.pathname = '/login';
+      url.search = '';
+      if (isProtectedRoute) {
+        url.searchParams.set('next', path);
+        url.searchParams.set('reason', 'session-expiree');
+      }
+      const res = isProtectedRoute ? NextResponse.redirect(url) : NextResponse.next({ request });
+      for (const c of request.cookies.getAll()) {
+        if (c.name.startsWith('sb-') || c.name === 'mecn_device_ok') res.cookies.set(c.name, '', { path: '/', maxAge: 0 });
+      }
+      return res;
+    }
     if (refreshed) {
       accessToken = refreshed;
     } else if (isProtectedRoute) {
