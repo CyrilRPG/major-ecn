@@ -3,20 +3,18 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Download, FileText, Loader2, Lock, Mail, Phone, User } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Download, Loader2, Lock, Mail, Phone, User } from 'lucide-react';
 import { TurnstileWidget } from '@/components/marketing/turnstile-widget';
 import { useHydrate } from '@/lib/use-hydrate';
 import { pousserEvenement, EVENEMENTS } from '@/lib/analytics/evenements';
 import { RECUEILS_ANNALES, type RecueilAnnales } from '@/lib/data/annales-evc';
+import { INK_MUTED, INK_SOFT, JAKARTA, MANROPE, NAVY, RED, RED_DEEP, RED_GRADIENT } from '@/components/marketing/home/home-ui';
 
 const TURNSTILE_ENABLED = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-const RED = '#C0112E';
-const RED_DEEP = '#8B0E22';
-const NAVY = '#0F1F4D';
-const INK_SOFT = '#52607A';
-const INK_MUTED = '#7A8499';
-const BORDER = '#E5E9F0';
-const GREEN = '#0F8A6A';
+const BORDER = '#E6E4DF';
+const GREEN = '#15803D';
+/** Couvertures montrées tant qu'aucune spécialité n'est choisie. */
+const COUVERTURES_DEFAUT = ['medecine-generale', 'pediatrie', 'anesthesie-reanimation'];
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -29,6 +27,47 @@ function slugDeLUrl(): string {
 
 function periode(r: RecueilAnnales): string {
   return r.premiere === r.derniere ? `session ${r.premiere}` : `${r.premiere} – ${r.derniere}`;
+}
+
+/** En-tête sombre de la carte : la couverture réelle du recueil choisi. */
+function EnteteRecueil({ recueil }: { recueil?: RecueilAnnales }) {
+  return (
+    <div
+      className="relative overflow-hidden px-6 pb-6 pt-6 text-white sm:px-7"
+      style={{ background: 'radial-gradient(120% 140% at 100% 0%, rgba(192,17,46,0.55) 0%, rgba(192,17,46,0) 55%), linear-gradient(150deg, #1B2D5E 0%, #14254E 55%, #0C1733 100%)' }}
+    >
+      <div className="relative z-10 max-w-[58%]">
+        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#FFC107]" style={{ fontFamily: MANROPE }}>Recueil offert</p>
+        <p className="mt-2 text-[21px] font-black leading-[1.15] tracking-tight sm:text-[23px]" style={{ fontFamily: JAKARTA }}>
+          {recueil ? recueil.nom : 'Vos annales EVC, par e-mail'}
+        </p>
+        <p className="mt-2 text-[12.5px] leading-snug text-white/75" style={{ fontFamily: MANROPE }}>
+          {recueil
+            ? `${recueil.sujets} sujets officiels · ${periode(recueil)} · ${recueil.pages} pages`
+            : 'Choisissez votre spécialité, le PDF vous est envoyé immédiatement.'}
+        </p>
+      </div>
+
+      {/* Couverture(s) réelle(s), inclinée(s) sur la droite */}
+      <div aria-hidden className="pointer-events-none absolute -bottom-6 right-4 h-[150px] w-[150px] sm:right-6">
+        {recueil ? (
+          <div className="absolute bottom-0 right-2 w-[104px] rotate-[7deg] overflow-hidden rounded-md shadow-[0_22px_40px_-12px_rgba(0,0,0,0.65)] ring-1 ring-white/20">
+            <Image src={`/annales-evc/couvertures/${recueil.slug}.webp`} alt="" width={420} height={594} className="h-auto w-full" />
+          </div>
+        ) : (
+          COUVERTURES_DEFAUT.map((s, i) => (
+            <div
+              key={s}
+              className="absolute bottom-0 w-[88px] overflow-hidden rounded-md shadow-[0_18px_34px_-10px_rgba(0,0,0,0.6)] ring-1 ring-white/15"
+              style={{ right: `${i * 26}px`, transform: `rotate(${(1 - i) * 8}deg)`, zIndex: 3 - i }}
+            >
+              <Image src={`/annales-evc/couvertures/${s}.webp`} alt="" width={420} height={594} className="h-auto w-full" />
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
 }
 
 /** Formulaire de demande d'un recueil d'annales EVC : spécialité, coordonnées, envoi par e-mail. */
@@ -114,146 +153,142 @@ export function AnnalesForm() {
     }
   };
 
+  const carte = 'overflow-hidden rounded-3xl border bg-white shadow-[0_40px_100px_-40px_rgba(15,27,61,0.45)]';
+
   if (status === 'success' && recueil) {
     return (
-      <div className="rounded-3xl border bg-white p-7 text-center shadow-[0_30px_80px_-30px_rgba(15,27,61,0.28)] sm:p-9" style={{ borderColor: BORDER }}>
-        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full" style={{ background: '#E7F6EC', color: GREEN }}>
-          <CheckCircle2 className="h-8 w-8" />
-        </span>
-        <h2 className="mt-5 text-2xl font-extrabold" style={{ color: NAVY }}>Vos annales sont en route</h2>
-        <p className="mx-auto mt-2 max-w-sm text-[14.5px] leading-relaxed" style={{ color: INK_SOFT }}>
-          Le recueil <strong style={{ color: NAVY }}>{recueil.nom}</strong> vient d’être envoyé à <strong style={{ color: NAVY }}>{email}</strong>.
-          Pensez à regarder dans les courriers indésirables.
-        </p>
-        {lien && (
-          <a
-            href={lien}
-            className="mt-6 inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-[15px] font-extrabold text-white shadow-[0_14px_36px_-12px_rgba(192,17,46,0.5)] transition-transform hover:scale-[1.02]"
-            style={{ background: `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)` }}
-          >
-            <Download className="h-5 w-5" /> Télécharger maintenant
-          </a>
-        )}
-        <div className="mt-7 rounded-2xl p-5 text-left" style={{ background: '#F6F7FB' }}>
-          <p className="text-[12px] font-extrabold uppercase tracking-[0.16em]" style={{ color: RED }}>{recueil.corriges ? 'Les corrigés' : 'Aller plus loin'}</p>
-          <p className="mt-1.5 text-[14px] leading-relaxed" style={{ color: NAVY }}>
-            {recueil.corriges
-              ? `Les annales de ${recueil.nom} sont corrigées question par question sur la plateforme Major ECN.`
-              : 'Cours, QCM ou QROC selon votre voie, cas cliniques et concours blancs : la préparation complète à l’EVC.'}
+      <div id="formulaire-annales" className={carte} style={{ borderColor: BORDER, fontFamily: JAKARTA }}>
+        <EnteteRecueil recueil={recueil} />
+        <div className="p-6 sm:p-7">
+          <p className="flex items-center gap-2 text-[17px] font-black tracking-tight" style={{ color: NAVY }}>
+            <CheckCircle2 className="h-5 w-5 shrink-0" style={{ color: GREEN }} />
+            Votre recueil est envoyé
           </p>
-          <Link href="/espace-decouverte" className="mt-3 inline-flex items-center gap-1.5 text-[14px] font-bold hover:underline" style={{ color: RED }}>
-            Essayer l’espace découverte gratuit <ArrowRight className="h-4 w-4" />
-          </Link>
+          <p className="mt-2 text-[14px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
+            Il arrive à <strong style={{ color: NAVY }}>{email}</strong>. S’il n’apparaît pas d’ici quelques minutes, regardez
+            dans les courriers indésirables.
+          </p>
+          {lien && (
+            <a
+              href={lien}
+              className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-xl px-6 py-4 text-[15px] font-black tracking-tight text-white shadow-[0_16px_40px_-14px_rgba(192,17,46,0.65)] transition-transform hover:scale-[1.01]"
+              style={{ background: RED_GRADIENT }}
+            >
+              <Download className="h-5 w-5" /> Télécharger le PDF maintenant
+            </a>
+          )}
+
+          <div className="mt-6 rounded-2xl px-5 py-4" style={{ background: '#FDF1F3' }}>
+            <p className="text-[14px] font-black leading-snug tracking-tight" style={{ color: RED_DEEP }}>
+              {recueil.corriges ? 'Les corrigés de ces annales sont sur Major ECN.' : 'Les sujets sont posés. Reste à s’y préparer.'}
+            </p>
+            <p className="mt-1 text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
+              {recueil.corriges
+                ? `Les annales de ${recueil.nom} y sont corrigées question par question, avec la réponse attendue et la méthode pour la construire.`
+                : 'Cours structurés pour l’EVC, QCM ou QROC selon votre voie, cas cliniques et concours blancs, avec des enseignants qui exercent en France.'}
+            </p>
+            <Link href="/espace-decouverte" className="group mt-3 inline-flex items-center gap-1.5 text-[13.5px] font-black" style={{ color: RED }}>
+              Accéder à l’espace découverte gratuit
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
-  const inputCls = 'w-full rounded-xl border bg-white px-3.5 py-3 text-[14px] outline-none transition-colors placeholder:font-normal focus:border-[#C0112E] focus:ring-2 focus:ring-[#C0112E]/15';
-  const inputStyle = { borderColor: BORDER, color: NAVY } as const;
+  const inputCls =
+    'h-12 w-full rounded-xl border bg-white px-3.5 text-[14px] font-semibold outline-none transition-colors placeholder:font-medium placeholder:text-[#9AA1B2] focus:border-[#C0112E] focus:ring-2 focus:ring-[#C0112E]/15';
+  const inputStyle = { borderColor: BORDER, color: NAVY, fontFamily: MANROPE } as const;
+  const labelCls = 'block text-[12.5px] font-black tracking-tight';
 
   return (
     // Soumission native avant hydratation : en POST, jamais de coordonnées dans l'URL
     // (le middleware renvoie la page en GET, cf. lib/formulaires-publics.ts).
-    <form
-      id="formulaire-annales"
-      method="post"
-      onSubmit={onSubmit}
-      className="relative rounded-3xl border bg-white p-6 shadow-[0_30px_80px_-30px_rgba(15,27,61,0.28)] sm:p-7"
-      style={{ borderColor: BORDER }}
-    >
-      <p className="text-[11px] font-extrabold uppercase tracking-[0.18em]" style={{ color: RED }}>Recevoir mes annales</p>
-      <p className="mt-1 text-[19px] font-extrabold leading-tight" style={{ color: NAVY }}>Votre spécialité, votre recueil</p>
+    <form id="formulaire-annales" method="post" onSubmit={onSubmit} className={`relative scroll-mt-28 ${carte}`} style={{ borderColor: BORDER, fontFamily: JAKARTA }}>
+      <EnteteRecueil recueil={recueil} />
 
-      <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden className="absolute left-[-9999px] h-0 w-0 opacity-0" />
+      <div className="p-6 sm:p-7">
+        <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden className="absolute left-[-9999px] h-0 w-0 opacity-0" />
 
-      <label htmlFor="an-spe" className="mt-5 block text-[12.5px] font-bold" style={{ color: NAVY }}>Spécialité</label>
-      <select
-        id="an-spe"
-        name="specialite"
-        required
-        value={slug}
-        onChange={(e) => setSlug(e.target.value)}
-        className={`${inputCls} mt-1.5 appearance-none bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%230F1F4D%22 stroke-width=%222.5%22><path d=%22m6 9 6 6 6-6%22/></svg>')] bg-[length:14px] bg-[right_14px_center] bg-no-repeat pr-10 font-semibold`}
-        style={inputStyle}
-      >
-        <option value="" disabled>Choisissez votre spécialité</option>
-        {RECUEILS_ANNALES.map((r) => (
-          <option key={r.slug} value={r.slug}>{r.nom}</option>
-        ))}
-      </select>
+        <label htmlFor="an-spe" className={labelCls} style={{ color: NAVY }}>Votre spécialité</label>
+        <select
+          id="an-spe"
+          name="specialite"
+          required
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
+          className={`${inputCls} mt-1.5 appearance-none bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23C0112E%22 stroke-width=%222.5%22><path d=%22m6 9 6 6 6-6%22/></svg>')] bg-[length:14px] bg-[right_14px_center] bg-no-repeat pr-10`}
+          style={inputStyle}
+        >
+          <option value="" disabled>Choisir dans les {RECUEILS_ANNALES.length} spécialités</option>
+          {RECUEILS_ANNALES.map((r) => (
+            <option key={r.slug} value={r.slug}>{r.nom}</option>
+          ))}
+        </select>
 
-      {recueil && (
-        <div className="mt-3 flex items-center gap-3.5 rounded-2xl p-3" style={{ background: '#F6F7FB' }}>
-          <Image src={`/annales-evc/couvertures/${recueil.slug}.webp`} alt="" width={70} height={99} className="h-[86px] w-auto rounded-md shadow-md" />
-          <div className="min-w-0 text-[13px] leading-snug" style={{ color: INK_SOFT }}>
-            <p className="font-extrabold" style={{ color: NAVY }}>{recueil.sujets} sujets officiels</p>
-            <p>{recueil.sessions} session{recueil.sessions > 1 ? 's' : ''} · {periode(recueil)}</p>
-            <p>{recueil.pages} pages · PDF</p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div>
+            <label htmlFor="an-prenom" className={labelCls} style={{ color: NAVY }}>Prénom</label>
+            <div className="relative mt-1.5">
+              <User className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: INK_MUTED }} />
+              <input id="an-prenom" name="prenom" required maxLength={80} autoComplete="given-name" placeholder="Prénom" className={`${inputCls} pl-10`} style={inputStyle} />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="an-nom" className={labelCls} style={{ color: NAVY }}>Nom</label>
+            <div className="relative mt-1.5">
+              <User className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: INK_MUTED }} />
+              <input id="an-nom" name="nom" required maxLength={80} autoComplete="family-name" placeholder="Nom" className={`${inputCls} pl-10`} style={inputStyle} />
+            </div>
           </div>
         </div>
-      )}
+        <label htmlFor="an-email" className={`mt-4 ${labelCls}`} style={{ color: NAVY }}>E-mail</label>
+        <div className="relative mt-1.5">
+          <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: INK_MUTED }} />
+          <input id="an-email" name="email" type="email" required maxLength={160} autoComplete="email" placeholder="vous@exemple.com" className={`${inputCls} pl-10`} style={inputStyle} />
+        </div>
+        <label htmlFor="an-tel" className={`mt-4 ${labelCls}`} style={{ color: NAVY }}>Téléphone</label>
+        <div className="relative mt-1.5">
+          <Phone className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: INK_MUTED }} />
+          <input id="an-tel" name="telephone" type="tel" required maxLength={40} autoComplete="tel" placeholder="+33 6 12 34 56 78" className={`${inputCls} pl-10`} style={inputStyle} />
+        </div>
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <div>
-          <label htmlFor="an-prenom" className="block text-[12.5px] font-bold" style={{ color: NAVY }}>Prénom</label>
-          <div className="relative mt-1.5">
-            <User className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: INK_MUTED }} />
-            <input id="an-prenom" name="prenom" required maxLength={80} autoComplete="given-name" placeholder="Prénom" className={`${inputCls} pl-9`} style={inputStyle} />
+        <label className="mt-4 flex cursor-pointer items-start gap-2.5 text-[12px] leading-snug" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
+          <input type="checkbox" name="consentement" required className="mt-0.5 h-4 w-4 shrink-0 accent-[#C0112E]" />
+          <span>
+            J’accepte que Major ECN utilise mes coordonnées pour m’envoyer ces annales et des informations liées à ma
+            préparation. <Link href="/confidentialite" className="underline">Confidentialité</Link>
+          </span>
+        </label>
+
+        {TURNSTILE_ENABLED && (
+          <div className="mt-4">
+            <TurnstileWidget key={captchaNonce} onVerify={setCaptchaToken} />
           </div>
-        </div>
-        <div>
-          <label htmlFor="an-nom" className="block text-[12.5px] font-bold" style={{ color: NAVY }}>Nom</label>
-          <div className="relative mt-1.5">
-            <User className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: INK_MUTED }} />
-            <input id="an-nom" name="nom" required maxLength={80} autoComplete="family-name" placeholder="Nom" className={`${inputCls} pl-9`} style={inputStyle} />
-          </div>
-        </div>
+        )}
+
+        {status === 'error' && erreur && (
+          <p role="alert" className="mt-4 rounded-xl px-3.5 py-2.5 text-[13px] font-bold" style={{ background: '#FCEAEC', color: RED_DEEP, fontFamily: MANROPE }}>{erreur}</p>
+        )}
+
+        <button
+          type="submit"
+          disabled={!hydrate || status === 'submitting'}
+          className="group mt-5 flex w-full items-center justify-center gap-3 rounded-xl px-6 py-4 text-[15px] font-black tracking-tight text-white shadow-[0_16px_40px_-14px_rgba(192,17,46,0.65)] transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70"
+          style={{ background: RED_GRADIENT }}
+        >
+          {status === 'submitting' ? <Loader2 className="h-5 w-5 animate-spin" /> : null}
+          {status === 'submitting' ? 'Envoi en cours…' : 'Recevoir mon recueil'}
+          {status !== 'submitting' && <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />}
+        </button>
+        <noscript>
+          <p className="mt-3 text-[12.5px]" style={{ color: INK_SOFT }}>Activez JavaScript pour recevoir vos annales, ou écrivez-nous à contact@major-ecn.fr.</p>
+        </noscript>
+        <p className="mt-3.5 flex items-center justify-center gap-1.5 text-[11.5px] font-semibold" style={{ color: INK_MUTED, fontFamily: MANROPE }}>
+          <Lock className="h-3.5 w-3.5" /> Gratuit · PDF envoyé immédiatement · Lien valable deux ans
+        </p>
       </div>
-      <label htmlFor="an-email" className="mt-3 block text-[12.5px] font-bold" style={{ color: NAVY }}>E-mail</label>
-      <div className="relative mt-1.5">
-        <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: INK_MUTED }} />
-        <input id="an-email" name="email" type="email" required maxLength={160} autoComplete="email" placeholder="vous@exemple.com" className={`${inputCls} pl-9`} style={inputStyle} />
-      </div>
-      <label htmlFor="an-tel" className="mt-3 block text-[12.5px] font-bold" style={{ color: NAVY }}>Téléphone</label>
-      <div className="relative mt-1.5">
-        <Phone className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: INK_MUTED }} />
-        <input id="an-tel" name="telephone" type="tel" required maxLength={40} autoComplete="tel" placeholder="+33 6 12 34 56 78" className={`${inputCls} pl-9`} style={inputStyle} />
-      </div>
-
-      <label className="mt-4 flex cursor-pointer items-start gap-2.5 text-[12.5px] leading-snug" style={{ color: INK_SOFT }}>
-        <input type="checkbox" name="consentement" required className="mt-0.5 h-4 w-4 shrink-0 accent-[#C0112E]" />
-        <span>
-          J’accepte que Major ECN utilise mes coordonnées pour m’envoyer ces annales et des informations liées à ma préparation.{' '}
-          <Link href="/confidentialite" className="underline">Confidentialité</Link>
-        </span>
-      </label>
-
-      {TURNSTILE_ENABLED && (
-        <div className="mt-4">
-          <TurnstileWidget key={captchaNonce} onVerify={setCaptchaToken} />
-        </div>
-      )}
-
-      {status === 'error' && erreur && (
-        <p role="alert" className="mt-4 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold" style={{ background: '#FCEAEC', color: RED_DEEP }}>{erreur}</p>
-      )}
-
-      <button
-        type="submit"
-        disabled={!hydrate || status === 'submitting'}
-        className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-[15.5px] font-extrabold text-white shadow-[0_14px_36px_-12px_rgba(192,17,46,0.55)] transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70"
-        style={{ background: `linear-gradient(90deg, ${RED_DEEP} 0%, ${RED} 100%)` }}
-      >
-        {status === 'submitting' ? <Loader2 className="h-5 w-5 animate-spin" /> : <FileText className="h-5 w-5" />}
-        {status === 'submitting' ? 'Envoi en cours…' : 'Recevoir mes annales par e-mail'}
-      </button>
-      <noscript>
-        <p className="mt-3 text-[12.5px]" style={{ color: INK_SOFT }}>Activez JavaScript pour recevoir vos annales, ou écrivez-nous à contact@major-ecn.fr.</p>
-      </noscript>
-      <p className="mt-3 flex items-center justify-center gap-1.5 text-[11.5px]" style={{ color: INK_MUTED }}>
-        <Lock className="h-3.5 w-3.5" /> Gratuit · Envoi immédiat par e-mail
-      </p>
     </form>
   );
 }

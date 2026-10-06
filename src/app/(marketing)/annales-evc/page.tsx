@@ -5,7 +5,7 @@ import { RECUEILS_ANNALES, TOTAL_SUJETS_ANNALES } from '@/lib/data/annales-evc';
 const DESCRIPTION = `Téléchargez gratuitement les annales officielles de l’EVC de votre spécialité : ${TOTAL_SUJETS_ANNALES.toLocaleString('fr-FR')} sujets des épreuves fondamentales et pratiques, ${RECUEILS_ANNALES.length} spécialités, classés par session dans un PDF.`;
 
 export const metadata: Metadata = {
-  title: 'Annales EVC gratuites par spécialité (PDF) — Major ECN',
+  title: 'Annales EVC gratuites par spécialité (PDF)',
   description: DESCRIPTION,
   alternates: { canonical: '/annales-evc' },
   openGraph: {
