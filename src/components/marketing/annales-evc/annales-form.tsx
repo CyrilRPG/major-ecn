@@ -181,12 +181,10 @@ export function AnnalesForm({ defaut = '' }: { /** Spécialité présélectionn�
 
           <div className="mt-6 rounded-2xl px-5 py-4" style={{ background: '#FDF1F3' }}>
             <p className="text-[14px] font-black leading-snug tracking-tight" style={{ color: RED_DEEP }}>
-              {recueil.corriges ? 'Les corrigés de ces annales sont sur Major ECN.' : 'Les sujets sont posés. Reste à s’y préparer.'}
+              Les corrections de ces annales sont disponibles sur Major ECN.
             </p>
             <p className="mt-1 text-[13px] leading-relaxed" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
-              {recueil.corriges
-                ? `Les annales de ${recueil.nom} y sont corrigées question par question, avec la réponse attendue et la méthode pour la construire.`
-                : 'Cours structurés pour l’EVC, QCM ou QROC selon votre voie, cas cliniques et concours blancs, avec des enseignants qui exercent en France.'}
+              Avec les cours structurés pour l’EVC, l’entraînement au format de votre voie et des enseignants qui exercent en France.
             </p>
             <Link href="/espace-decouverte" className="group mt-3 inline-flex items-center gap-1.5 text-[13.5px] font-black" style={{ color: RED }}>
               Accéder à l’espace découverte gratuit

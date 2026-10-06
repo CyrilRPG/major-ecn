@@ -25,7 +25,6 @@ const PREMIERE = Math.min(...RECUEILS_ANNALES.map((r) => r.premiere));
 const DERNIERE = Math.max(...RECUEILS_ANNALES.map((r) => r.derniere));
 const NB = RECUEILS_ANNALES.length;
 const SUJETS = TOTAL_SUJETS_ANNALES.toLocaleString('fr-FR');
-const CORRIGES = RECUEILS_ANNALES.filter((r) => r.corriges);
 
 const ETAPES = [
   { n: '01', titre: 'Choisissez', texte: `votre spécialité parmi les ${NB} recueils.` },
@@ -103,7 +102,7 @@ const FAQ: QuestionAnnales[] = [
   },
   {
     q: 'Les corrigés sont-ils inclus ?',
-    r: `Non, le recueil contient les sujets seuls. Les annales corrigées et commentées sont sur la plateforme Major ECN, aujourd’hui pour ${CORRIGES.length} spécialités.`,
+    r: 'Le recueil contient les sujets officiels seuls, sans commentaire. Les corrections sont disponibles sur la plateforme Major ECN.',
   },
   {
     q: 'Voie interne ou voie externe : quel recueil choisir ?',
@@ -171,7 +170,7 @@ export function AnnalesEvcPage() {
               </p>
               <p className="mt-1 text-[13.5px] leading-relaxed sm:text-[14px]" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
                 Chaque sujet publié par le CNG, épreuve fondamentale et épreuve pratique, avec ses clichés, ECG et
-                tableaux. Les corrigés, eux, sont sur la plateforme.
+                tableaux. Les corrections sont disponibles sur la plateforme.
               </p>
             </div>
 
@@ -346,21 +345,6 @@ export function AnnalesEvcPage() {
             </div>
           </div>
 
-          {/* Spécialités dont les annales sont déjà corrigées */}
-          <Reveal delay={0.1} className="mt-12">
-            <div className="rounded-3xl border px-6 py-6 sm:px-8" style={{ background: '#FDF6F7', borderColor: 'rgba(192,17,46,0.12)' }}>
-              <p className="text-[15px] font-black tracking-tight" style={{ color: RED_DEEP }}>
-                Annales déjà corrigées et commentées sur la plateforme
-              </p>
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {CORRIGES.map((r) => (
-                  <li key={r.slug} className="rounded-full border bg-white px-3.5 py-1.5 text-[12.5px] font-bold" style={{ borderColor: 'rgba(192,17,46,0.18)', color: NAVY, fontFamily: MANROPE }}>
-                    {r.nom}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
         </div>
       </section>
 

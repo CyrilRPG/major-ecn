@@ -71,11 +71,6 @@ export function AnnalesCatalogue() {
                 <span className="mt-1 block text-[12.5px]" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
                   {r.sujets} sujet{r.sujets > 1 ? 's' : ''} · {r.premiere === r.derniere ? `session ${r.premiere}` : `${r.premiere} – ${r.derniere}`}
                 </span>
-                {r.corriges && (
-                  <span className="mt-1.5 inline-block rounded-md px-1.5 py-0.5 text-[10.5px] font-black tracking-wide" style={{ background: '#FDF1F3', color: RED_DEEP }}>
-                    Corrigés sur la plateforme
-                  </span>
-                )}
               </span>
               <ArrowRight className="h-4.5 w-4.5 shrink-0 transition-transform group-hover:translate-x-1" style={{ color: RED }} />
             </a>

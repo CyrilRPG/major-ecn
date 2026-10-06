@@ -1022,7 +1022,6 @@ type RecueilEmail = {
   sujets: number;
   premiere: number;
   derniere: number;
-  corriges: boolean;
 };
 
 export function annalesDeliveryEmail({ prenom, recueil, lien, joint }: { prenom: string; recueil: RecueilEmail; lien: string; joint: boolean }) {
@@ -1034,11 +1033,9 @@ export function annalesDeliveryEmail({ prenom, recueil, lien, joint }: { prenom:
     button(lien, 'Télécharger mes annales'),
     pHtml(`PDF&nbsp;&nbsp;•&nbsp;&nbsp;${recueil.pages} pages&nbsp;&nbsp;•&nbsp;&nbsp;${mo}&nbsp;Mo`, { size: 13, color: MAJOR.muted, align: 'center', margin: '-8px 0 28px' }),
     divider(),
-    sectionTitle(recueil.corriges ? 'Et les corrigés ?' : 'Pour aller plus loin'),
+    sectionTitle('Les corrections'),
     p(
-      recueil.corriges
-        ? `Les annales de ${recueil.nom} sont corrigées question par question sur la plateforme Major ECN : réponse attendue et méthode pour la construire.`
-        : `La préparation Major ECN vous entraîne au format exact de l’épreuve : cours structurés pour l’EVC, QCM ou QROC selon votre voie, cas cliniques, concours blancs et annales corrigées.`,
+      `Les corrections de ces annales sont disponibles sur la plateforme Major ECN, avec les cours structurés pour l’EVC, l’entraînement au format de votre voie et des enseignants qui exercent en France.`,
       { size: 15 },
     ),
     buttonSecondary(`${EMAIL_SITE}/espace-decouverte?${utm}`, 'Essayer l’espace découverte gratuit'),

@@ -35,9 +35,7 @@ function questions(r: RecueilAnnales): QuestionAnnales[] {
     },
     {
       q: `Où trouver les corrigés des annales EVC ${r.nom} ?`,
-      r: r.corriges
-        ? `Les annales de ${r.nom} sont corrigées et commentées question par question sur la plateforme Major ECN.`
-        : `Le recueil contient les sujets seuls. La préparation Major ECN propose cours, entraînements au format de votre voie et annales corrigées.`,
+      r: `Le recueil contient les sujets officiels seuls. Les corrections des annales EVC ${r.nom} sont disponibles sur la plateforme Major ECN.`,
     },
   ];
 }
@@ -107,7 +105,7 @@ export function AnnalesSpecialitePage({ recueil: r }: { recueil: RecueilAnnales 
                   <Image src={`/annales-evc/couvertures/${r.slug}.webp`} alt={`Couverture du recueil d’annales EVC ${r.nom}`} width={420} height={594} sizes="180px" className="h-auto w-full" priority />
                 </div>
                 <ul className="space-y-2 pb-2 text-[13.5px]" style={{ color: INK_SOFT, fontFamily: MANROPE }}>
-                  {[r.qcm && EPREUVE_LIBELLE.QCM, r.fondamentale && 'Épreuves fondamentales', r.pratique && 'Épreuves pratiques', 'Sans corrigés, texte d’origine']
+                  {[r.qcm && EPREUVE_LIBELLE.QCM, r.fondamentale && 'Épreuves fondamentales', r.pratique && 'Épreuves pratiques', 'Texte d’origine des sujets']
                     .filter(Boolean)
                     .map((t) => (
                       <li key={String(t)} className="flex items-center gap-2">
@@ -158,17 +156,13 @@ export function AnnalesSpecialitePage({ recueil: r }: { recueil: RecueilAnnales 
           >
             <div>
               <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#FFC107]" style={{ fontFamily: MANROPE }}>
-                {r.corriges ? 'Corrigés disponibles' : 'Préparer l’épreuve'}
+                Corrections disponibles
               </p>
               <h2 className="mt-3 text-[1.6rem] font-black leading-[1.12] tracking-tight sm:text-[2.1rem]" style={{ letterSpacing: '-0.02em' }}>
-                {r.corriges
-                  ? `Les annales de ${r.nom} sont corrigées sur Major ECN.`
-                  : `Préparez l’EVC de ${r.nom} avec Major ECN.`}
+                {`Les corrections des annales ${r.nom} sont disponibles sur Major ECN.`}
               </h2>
               <p className="mt-3 max-w-xl text-[14.5px] leading-relaxed text-white/80" style={{ fontFamily: MANROPE }}>
-                {r.corriges
-                  ? 'La réponse attendue et la méthode pour la construire, question par question, avec des enseignants qui exercent en France.'
-                  : 'Cours structurés pour l’EVC, entraînements au format de votre voie, cas cliniques et concours blancs. Depuis 2011, plus de 9 000 médecins accompagnés.'}
+                Cours structurés pour l’EVC, entraînements au format de votre voie, cas cliniques et concours blancs. Depuis 2011, plus de 9 000 médecins accompagnés.
               </p>
             </div>
             <div className="flex flex-col gap-3 lg:items-end">
