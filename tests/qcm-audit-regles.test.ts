@@ -24,6 +24,11 @@ test('texteBrut retire le HTML, décode les entités et borne la longueur', () =
   assert.equal(texteBrut('<p>Un BNP &gt; 100&nbsp;pg/mL<br>est en faveur</p>', 100), 'Un BNP > 100 pg/mL est en faveur');
   assert.equal(texteBrut('a'.repeat(50), 10).length, 10);
   assert.ok(texteBrut('a'.repeat(50), 10).endsWith('…'));
+  // Un « < » de comparaison n'ouvre pas de balise (plateau tibial, 06/10/2026).
+  assert.equal(
+    texteBrut('<p>Enfoncement > 3-4 mm mais < 50 % de la glène ; abord classique si > 50 %.</p>', 200),
+    'Enfoncement > 3-4 mm mais < 50 % de la glène ; abord classique si > 50 %.',
+  );
 });
 
 test('les questions sont regroupées par requête, avec identifiants et clés lisibles', () => {

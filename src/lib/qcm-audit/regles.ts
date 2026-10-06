@@ -41,7 +41,10 @@ export type Constat = {
 export function texteBrut(html: string | null | undefined, max: number): string {
   const t = String(html ?? '')
     .replace(/<br\s*\/?>/gi, ' ')
-    .replace(/<[^>]+>/g, ' ')
+    // Seulement les vraies balises : « enfoncement > 3-4 mm mais < 50 % … > 50 % »
+    // disparaissait entre « < » et le « > » suivant, et le relecteur voyait
+    // une justification tronquée.
+    .replace(/<\/?[a-zA-Z][^>]*>/g, ' ')
     .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
     .replace(/\s+/g, ' ')
     .trim();
@@ -278,7 +281,7 @@ export function lireJustifications(texte: string): Proposition[] {
   const out: Proposition[] = [];
   for (const p of liste as Array<Record<string, unknown>>) {
     const id = String(p.item_id ?? '').trim().toLowerCase();
-    const j = String(p.justification ?? '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+    const j = String(p.justification ?? '').replace(/<\/?[a-zA-Z][^>]*>/g, '').replace(/\s+/g, ' ').trim();
     if (!UUID.test(id) || vus.has(id) || j.length < 20) continue;
     vus.add(id);
     out.push({ item_id: id, justification: j.slice(0, 2000) });

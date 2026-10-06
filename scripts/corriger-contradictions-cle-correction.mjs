@@ -5,7 +5,12 @@
 //   - orthopédie : les 92 constats « incohérent » ouverts de l'audit des
 //     corrigés (qcm_audit_findings), relus un par un ;
 //   - autres collèges : les 10 corrections dont l'en-tête « Réponses : … »
-//     contredit la clé (relevées par l'audit de la position des réponses).
+//     contredit la clé (relevées par l'audit de la position des réponses) ;
+//   - orthopédie, 06/10/2026 : les 40 constats « douteux » encore ouverts hors
+//     « Maladie de Dupuytren » (les 32 de ce cours, dont toute la banque était
+//     fabriquée, sont clos par sa régénération ; les 90 des trois cours
+//     régénérés le 05/10 l'avaient été avec eux), relus contre le chapitre
+//     source quand la clé ou la justification posait question.
 //
 // Chaque décision est écrite ci-dessous avec son motif. Rien n'est appliqué
 // si le contenu actuel ne correspond plus à celui qui a été relu (« avant ») :
@@ -22,6 +27,7 @@
 //   node scripts/corriger-contradictions-cle-correction.mjs --lot=orthopedie            simulation
 //   node scripts/corriger-contradictions-cle-correction.mjs --lot=orthopedie --appliquer
 //   node scripts/corriger-contradictions-cle-correction.mjs --lot=entetes [--appliquer]
+//   node scripts/corriger-contradictions-cle-correction.mjs --lot=douteux-orthopedie [--appliquer]
 import { join, resolve } from 'node:path';
 import { config } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
@@ -29,8 +35,8 @@ import { createClient } from '@supabase/supabase-js';
 const ROOT = resolve(import.meta.dirname, '..');
 const lotDemande = process.argv.find((value) => value.startsWith('--lot='))?.split('=')[1];
 const appliquer = process.argv.includes('--appliquer');
-if (!['orthopedie', 'entetes'].includes(lotDemande)) {
-  console.error('Usage : node scripts/corriger-contradictions-cle-correction.mjs --lot=orthopedie|entetes [--appliquer]');
+if (!['orthopedie', 'entetes', 'douteux-orthopedie'].includes(lotDemande)) {
+  console.error('Usage : node scripts/corriger-contradictions-cle-correction.mjs --lot=orthopedie|entetes|douteux-orthopedie [--appliquer]');
   process.exit(1);
 }
 
@@ -321,6 +327,219 @@ const PROPOSITIONS_ENTETES = [
   },
 ];
 
+// ─── Orthopédie, constats « douteux » (06/10/2026) ───────────────────────────
+// Clés justes : justifications trop elliptiques ou mal ajustées, réécrites
+// d'après la correction générale ou le chapitre source.
+const FERMETURE_FASCIA = 'Vrai : le fascia de l’avant-bras est refermé de manière très incomplète, afin d’éviter le développement d’un syndrome des loges.';
+const FERMETURE_ETANCHE = 'Faux : une fermeture étanche du fascia expose au syndrome des loges ; il est refermé de manière très incomplète.';
+const PROPOSITIONS_DOUTEUX = [
+  {
+    id: '21560c40-2744-4420-a711-08e349c5fce2', constat: ['2b0ea223-6cd3-4df0-8184-c679469107d1', 'corrige_manuellement'],
+    motif: 'Stimulation ostéochondrale : la justification ne reprenait que la seconde moitié de la correction.',
+    avant: { justification: 'Concentration en protéoglycan inférieure.' },
+    apres: { justification: 'Vrai : ce fibrocartilage est fait de collagène de type II fragile, avec une concentration en protéoglycanes inférieure à celle du cartilage normal.' },
+  },
+  {
+    id: '02b9adfa-6546-4a6b-8072-5b56ca77cfc7', constat: ['abff70ff-8101-408a-84ea-d4dae07d2810', 'corrige_manuellement'],
+    motif: 'Amputation transfémorale : la justification ne confirmait pas le tracé.',
+    avant: { justification: 'Au tiers moyen ou proximal.' },
+    apres: { justification: 'Vrai : au tiers moyen ou proximal, l’incision est en « gueule de requin », avec deux valves frontales sensiblement identiques.' },
+  },
+  {
+    id: '7694e758-cb44-4a1a-92f8-d4456dac2e2a', constat: ['ed805893-3cc0-4ff3-b61c-7349cadfe38f', 'corrige_manuellement'],
+    motif: 'Amputation transfémorale : la justification omettait les 2 cm.',
+    avant: { justification: 'À mi-largeur sur les faces médiale et latérale.' },
+    apres: { justification: 'Vrai : les deux points, figurés 2 cm plus distalement que le niveau de section osseuse, à mi-largeur sur les faces médiale et latérale, définissent la base des lambeaux.' },
+  },
+  {
+    id: 'd7d363c4-a4b6-41be-bb83-974443caf3c3', constat: ['f487a5c0-4b77-422c-b9dd-b9f3d93ff7f7', 'corrige_manuellement'],
+    motif: 'Instrumentation antérieure : la justification ne disait pas que les espaces sont comblés.',
+    avant: { justification: 'Cela limite le saignement pendant l\'instrumentation.' },
+    apres: { justification: 'Vrai : après l’excision discale, les espaces intersomatiques avivés sont comblés par des compresses hémostatiques.' },
+  },
+  {
+    id: '3b4b2b5a-4da9-461b-9e90-60c76d38337e', constat: ['68ba110b-351d-46cd-a242-5c70e97af8e0', 'corrige_manuellement'],
+    motif: 'Lavage articulaire : la justification décrivait mal le mécanisme.',
+    avant: { justification: 'Mécanisme évoqué : ablation des enzymes permettant aux chondrocytes de réguler leurs activités.' },
+    apres: { justification: 'Vrai : le lavage retirerait mécaniquement les cytokines (IL1, TNF-a), les métalloprotéases et les débris cartilagineux.' },
+  },
+  {
+    id: 'db994d66-196d-4d07-8509-233a86572a55', constat: ['f0e145c8-6d00-46d2-acdc-edc09af6e44a', 'corrige_manuellement'],
+    motif: 'Prothèse totale du coude : méta-analyse non nommée.',
+    avant: { justification: 'C\'est le résultat rapporté par la méta-analyse.' },
+    apres: { justification: 'Vrai : dans la méta-analyse de Little et al., le taux de descellement des prothèses à charnière semi-contraintes était inférieur à celui des prothèses sans charnière.' },
+  },
+  {
+    id: '414020c2-6781-4f79-af2e-a8c786182abd', constat: ['c2f02650-109f-4ced-a32e-33b29641d6f3', 'corrige_manuellement'],
+    motif: 'Prothèse totale du coude : le rang de complication la plus fréquente n’était pas justifié.',
+    avant: { justification: 'Ils représentaient 9 % dans la méta-analyse de Little et al.' },
+    apres: { justification: 'Vrai : le coude étant une articulation superficielle, sous-cutanée, les problèmes de cicatrisation sont les complications les plus fréquentes (9 % dans la méta-analyse de Little et al.).' },
+  },
+  {
+    id: 'e0426f80-f45f-4e51-aa3f-39edfd575e0c', constat: ['e76f125f-1979-435f-868d-e5e0458c8076', 'corrige_manuellement'],
+    motif: 'Prothèse totale du coude : justification indirecte.',
+    avant: { justification: 'C\'est un facteur reconnu de difficulté de cicatrisation dans la polyarthrite rhumatoïde.' },
+    apres: { justification: 'Vrai : les patients rhumatoïdes sous immunosuppresseurs présentent une fragilité cutanée particulière, qui complique la cicatrisation.' },
+  },
+  {
+    id: 'f86728df-5e34-4dc0-893c-01a1ba58ba4e', constat: ['037f4090-6781-45bd-a1ce-5111886f56f5', 'corrige_manuellement'],
+    motif: 'Voies d’abord de l’avant-bras : justification générique ; le chapitre confirme la fermeture très incomplète du fascia.',
+    avant: { justification: 'Cette réponse est conforme aux principes décrits pour l’avant-bras.' },
+    apres: { justification: FERMETURE_FASCIA },
+  },
+  {
+    id: '1442ea9b-a1c3-4477-bc3a-1a31b1157092',
+    motif: 'Voies d’abord de l’avant-bras : justification vide du distracteur principal.',
+    avant: { justification: null }, apres: { justification: FERMETURE_ETANCHE },
+  },
+  {
+    id: '41789fab-4573-4c7d-9e7a-dabc4c921d65', constat: ['53dbdcad-4cf8-48ee-8734-40603f1e4ce9', 'corrige_manuellement'],
+    motif: 'Voies d’abord de l’avant-bras (même question, autre série) : justification générique.',
+    avant: { justification: 'Cette réponse est conforme aux principes décrits pour l’avant-bras.' },
+    apres: { justification: FERMETURE_FASCIA },
+  },
+  {
+    id: '66fcb4ba-8068-44d7-b877-51a611c51963',
+    motif: 'Voies d’abord de l’avant-bras : justification vide du distracteur principal.',
+    avant: { justification: null }, apres: { justification: FERMETURE_ETANCHE },
+  },
+  {
+    id: 'd5a2d649-743d-40f0-b897-e1ecac12a70e', constat: ['2376502d-d282-487c-9f19-ad81e3cc65dc', 'corrige_manuellement'],
+    motif: 'Biopsie vertébrale : justification vide (le chapitre insiste sur la biopsie profonde).',
+    avant: { justification: null },
+    apres: { justification: 'Vrai : le patient est surveillé en milieu hospitalier pendant 24 heures, surtout en cas de biopsie profonde.' },
+  },
+  {
+    id: 'b1df43c9-7f6f-4f3a-ad73-a9c4fa6de6a3', constat: ['dea06c9a-fce6-4df2-ac99-8ce148c408ca', 'corrige_manuellement'],
+    motif: 'Ténodèse de l’EDC : proposition ambiguë ; le chapitre dit que la pesanteur suffit à fléchir le poignet.',
+    avant: { is_correct: false, enonce: 'L\'effet est d\'autant plus important qu\'il existe un fléchisseur actif du poignet pour agir contre la pesanteur' },
+    apres: {
+      enonce: 'La ténodèse de l’EDC n’est efficace qu’en présence d’un fléchisseur actif du poignet',
+      justification: 'Faux : la flexion du poignet, sous l’effet de la pesanteur ou d’un fléchisseur actif, entraîne automatiquement l’extension MP des doigts ; en tétraplégie C6, la pesanteur suffit.',
+    },
+  },
+  {
+    id: 'c2aafb93-ce59-4e09-868f-e6902c3eaf10', constat: ['da43ad80-56bb-4c96-ba92-a4c8778d750f', 'corrige_manuellement'],
+    motif: 'Arthrodèse MTP : justification elliptique.',
+    avant: { justification: 'La réduction du volume de la tête y contribue.' },
+    apres: { justification: 'Vrai : comme dans la chirurgie conservatrice, on tend si possible vers un canon carré de l’avant-pied, en réduisant le volume et l’épaisseur de la tête métatarsienne.' },
+  },
+  {
+    id: '280480f2-c7b3-4f6a-a9ec-4942904c5637', constat: ['e7d5f670-09bf-44a0-967c-4a5484507c80', 'corrige_manuellement'],
+    motif: 'Tétraplégie, temps d’ouverture : justification confuse.',
+    avant: { justification: 'Les deux temps (fermeture et ouverture) sont séparés ; si l\'ouverture est passive (ténodèse), elle peut techniquement être combinée avec la correction des intrinsèques dans le même temps, mais pas avec le temps de fermeture.' },
+    apres: { justification: 'Faux : ouverture passive (ténodèse) et ouverture active sont deux options, choisies selon les muscles disponibles ; le temps d’ouverture est réalisé au moins 2 mois après le temps de fermeture.' },
+  },
+  {
+    id: '327df00e-481e-46a0-8005-1e1317aa216c', constat: ['6007aa6d-92b6-43b9-b703-3fc3380a06d5', 'corrige_manuellement'],
+    motif: 'ECMES de l’avant-bras : « une seule broche par os » est vrai à l’avant-bras et faux pour les autres os ; proposition rendue univoque, clé inchangée.',
+    avant: { is_correct: false, enonce: 'L\'ECMES utilise une seule broche par os' },
+    apres: {
+      enonce: 'À l’avant-bras, chaque os est stabilisé par deux broches en arcs opposés',
+      justification: 'Faux : dans les fractures des deux os de l’avant-bras, chaque os ne reçoit qu’une broche, de diamètre plus élevé ; les deux broches en arcs opposés sont la règle des autres os longs.',
+    },
+  },
+  {
+    id: '62b4537c-3b74-438e-90d9-43ce5ef599cd', constat: ['c5705e1d-098c-49ab-842e-7a3718fce3d5', 'corrige_manuellement'],
+    motif: 'Synostose tibiofibulaire : justification sans contenu.',
+    avant: { justification: 'C\'est une précaution impérative.' },
+    apres: { justification: 'Vrai : la synthèse est effectuée cheville maintenue en talus, précaution impérative pour ne pas fermer la mortaise tibiofibulaire.' },
+  },
+  {
+    id: 'd7e75b77-efbb-4584-9fa3-c753a1a606d9', constat: ['447b1824-8d7a-4c33-bcfa-5290bb39a777', 'corrige_manuellement'],
+    motif: 'Ultrasons pulsés : la justification renvoyait au « texte ».',
+    avant: { justification: 'Le texte précise qu\'on n\'en dispose pas encore.' },
+    apres: { justification: 'Faux : on ne dispose pas encore d’études cliniques comparant les ultrasons pulsés au traitement conventionnel par autogreffes.' },
+  },
+  {
+    id: 'dc0e4113-950c-4dd7-9e05-695311003d94', constat: ['a20ea316-d3a1-4396-8cdf-e6b9a27097a0', 'corrige_manuellement'],
+    motif: 'Butée de hanche : justification elliptique.',
+    avant: { justification: 'Pour ne pas sectionner d\'emblée la branche fessière.' },
+    apres: { justification: 'Vrai : l’aponévrose du tenseur du fascia lata n’est incisée que sur 4 à 5 cm, pour ne pas sectionner d’emblée la branche fessière du nerf fémorocutané.' },
+  },
+  {
+    id: '8cd61326-1cfd-4579-ba8c-49bd412b9543', constat: ['00c21ab5-8498-43c4-a3e3-a6ef5f268fef', 'corrige_manuellement'],
+    motif: 'Biopsie cervicale : justification vague.',
+    avant: { justification: 'Localisation habituelle de l\'anesthésie locale.' },
+    apres: { justification: 'Vrai : l’anesthésie locale à la Xylocaïne 1 % est faite au point de ponction et sur le trajet de l’aiguille.' },
+  },
+  {
+    id: '9ab4ab4e-15af-4c5a-9b80-2ad66838ec9a', constat: ['8fcca935-df07-4993-b378-cc6475689b76', 'corrige_manuellement'],
+    motif: 'Prothèse myoélectrique : justification nominale.',
+    avant: { justification: 'Contraction dissociée de muscles antagonistes sur le moignon.' },
+    apres: { justification: 'Vrai : les capteurs de l’emboîture recueillent sur le moignon le potentiel d’action de la contraction dissociée de muscles antagonistes.' },
+  },
+  // PTG, DP 6 « Cimentation » : deux questions dont la réponse juste ne répondait
+  // pas à l'énoncé, entourées de distracteurs absurdes (« La couleur du ciment »).
+  // Réécrites avec les données du chapitre sur le scellement ; clé à la même place.
+  ...[
+    ['79adfa17-5220-42c3-9446-1976605b68d5', 'Choisir l’implant au hasard', 'Le ciment est appliqué sur l’os, jamais à la face profonde des implants', 'Faux : le ciment est appliqué à la face profonde des implants, dont les poches à ciment permettent de le mettre sous pression.'],
+    ['27aae3d0-96bf-483d-bffa-9b1f50b7f869', 'Éviter toute imagerie', 'Le ciment orthopédique est un phosphate de calcium sans antibiotique', 'Faux : c’est un polyméthylméthacrylate (PMMA), additionné d’antibiotique depuis la conférence de consensus.'],
+    ['07bedc49-caf5-413b-a79a-6adfbdfed7db', 'Préparer l’os par rinçage et séchage', 'Le ciment est un polyméthylméthacrylate additionné d’antibiotique', 'Vrai : le ciment orthopédique est un PMMA, additionné d’antibiotique depuis la conférence de consensus.', ['0d436b45-fd6f-4ba8-b0b1-24b7a360aca4', 'corrige_manuellement']],
+    ['f8435f2f-5887-4a65-898c-596a93841857', 'Programmer sans planification', 'L’excédent de ciment est laissé en place pour renforcer la fixation', 'Faux : après impaction de l’implant, l’excédent de ciment est soigneusement ôté.'],
+    ['c37d5640-65ee-4390-85da-0d15a804a1ba', 'Ignorer le bilan ligamentaire', 'Seul un ciment de haute viscosité peut être utilisé', 'Faux : la viscosité du ciment peut être haute (ciment pâteux) ou basse (ciment plus liquide).'],
+    ['a329d265-0091-4b50-9d1b-24f7d5d75b26', 'La durée d’hospitalisation', 'Le bouton patellaire est impacté sans maintien de la pression', 'Faux : la pression est maintenue par un davier jusqu’à la polymérisation complète du ciment.'],
+    ['b6e3ffb1-7096-45e6-969b-71ad9119ba81', 'Le seul aspect cutané', 'Le davier est retiré dès l’application du ciment', 'Faux : le davier maintient la pression jusqu’à la polymérisation complète du ciment.'],
+    ['eba6cca4-aade-44d7-8a1d-bff37ad07162', 'Le dossier administratif', 'Le bouton patellaire est fixé sans ciment, par simple press-fit', 'Faux : le bouton patellaire est cimenté.'],
+    ['4cfd0417-37b7-4803-8437-16f610f538b6', 'Cimenter la patella sous pression si retenue', 'La pression sur le bouton patellaire est maintenue par un davier jusqu’à la polymérisation complète du ciment', 'Vrai : le bouton patellaire est cimenté avec maintien de la pression par un davier jusqu’à polymérisation complète.', ['ad6e007c-a487-4d8b-bfb9-479c376dba1c', 'corrige_manuellement']],
+    ['5d99600d-5103-4498-b1bf-b280b3c3d112', 'La couleur du ciment', 'L’excédent de ciment est conservé autour du bouton patellaire', 'Faux : après impaction, l’excédent de ciment est soigneusement ôté.'],
+  ].map(([id, ancien, enonce, justification, constat]) => ({
+    id, constat, motif: 'PTG, cimentation : question réécrite avec les données du chapitre sur le scellement.',
+    avant: { enonce: ancien }, apres: { enonce, justification },
+  })),
+];
+const QUESTIONS_DOUTEUX = [
+  {
+    id: '1459fc9c-6372-4bb7-b4a3-154695d813d5', motif: 'Voies d’abord de l’avant-bras : correction générique.',
+    avant: { correction_generale: 'Correction basée sur les repères anatomiques et les voies décrites.' },
+    apres: { correction_generale: 'Le fascia entourant l’avant-bras est refermé de manière très incomplète, afin d’éviter le développement d’un syndrome des loges.' },
+  },
+  {
+    id: '8e63a66f-0159-4721-9a4d-e4f6dfe22548', motif: 'Voies d’abord de l’avant-bras : correction générique.',
+    avant: { correction_generale: 'Correction basée sur les repères anatomiques et les voies décrites.' },
+    apres: { correction_generale: 'Le fascia entourant l’avant-bras est refermé de manière très incomplète, afin d’éviter le développement d’un syndrome des loges.' },
+  },
+  {
+    id: '866f5f15-63a2-4f72-b15f-d87d14e07db7', motif: 'PTG, cimentation : énoncé et correction sans rapport avec la réponse.',
+    avant: { enonce: 'À l’évaluation initiale, quelle est la priorité initiale pour ce dossier ?', correction_generale: 'La stratégie part du bilan clinique et radiographique.' },
+    apres: {
+      enonce: 'Les implants définitifs vont être scellés. Concernant le ciment, quelle proposition est exacte ?',
+      correction_generale: 'Le ciment est un polyméthylméthacrylate additionné d’antibiotique, de viscosité haute ou basse. Il est appliqué à la face profonde des implants, dont les poches à ciment permettent la mise sous pression, et l’excédent est soigneusement ôté après impaction.',
+    },
+  },
+  {
+    id: 'b1c42227-8e50-4731-93cf-cfd61c8d535f', motif: 'PTG, cimentation : énoncé et correction sans rapport avec la réponse.',
+    avant: { enonce: 'Après le geste, les implants d’essai sont en place. Quel contrôle est essentiel ?', correction_generale: 'Le contrôle vise la cinématique et la stabilité.' },
+    apres: {
+      enonce: 'Le bouton patellaire est cimenté. Quelle précaution de scellement est exacte ?',
+      correction_generale: 'Le bouton patellaire est cimenté avec maintien de la pression par un davier jusqu’à la polymérisation complète du ciment ; après impaction, l’excédent de ciment est soigneusement ôté.',
+    },
+  },
+  {
+    id: '996519ae-d065-4df4-ad50-2051c7df1698', motif: 'ECMES de l’avant-bras : la correction donnait la règle des deux broches sans l’exception de l’avant-bras.',
+    remplacements: [['L\'ECMES consiste à introduire deux broches par voie métaphysaire dans chaque os.', 'L\'ECMES consiste à introduire deux broches par voie métaphysaire dans chaque os, sauf à l’avant-bras, où chaque os ne reçoit qu’une broche, de diamètre plus élevé.']],
+  },
+  {
+    id: '9d5efb91-6e34-48c7-87a1-ad54894a5790', constat: ['5fb6ce23-26c6-4294-b7db-8416132a7c67', 'corrige_manuellement'],
+    motif: 'Reprise de LCA : la réponse C (ligaments artificiels) est juste mais ne porte pas sur le positionnement fémoral visé par l’énoncé.',
+    avant: { enonce: 'Au premier contrôle postopératoire, la chirurgie est complète. Aux suites opératoires, la patiente est soulagée de son ressaut. Quelle technique de reconstruction du LCA est à proscrire lors d\'une reprise pour éviter de refaire la même erreur de positionnement fémoral ?' },
+    apres: { enonce: 'Au premier contrôle postopératoire, la chirurgie est complète. Aux suites opératoires, la patiente est soulagée de son ressaut. Quelle(s) option(s) est (sont) à proscrire lors d\'une reprise de LCA ?' },
+  },
+];
+const FAUX_POSITIFS_DOUTEUX = [
+  // Clé et justification concordent, ou la justification suit fidèlement la
+  // source (Henning, plateau tibial « < 50 % » coupé par l'outil d'audit).
+  '4fbf335f-6138-4cd6-b835-713cd1c50067', '11680244-5119-4197-8993-216031dfcb84', 'f1f65014-c359-4b6e-ad23-0076fc459cc0',
+  '66e03048-6bdd-430d-8b42-97553f74652b', 'fc93b109-8051-48e9-aaad-c1d23fbe2c03', 'f35938a7-9937-4db9-a843-51967f2c7a40',
+  '94310614-d37b-4f82-9d0d-f089443058c1', 'd1e7676e-b13a-44e1-8fa2-0ecf68db5103', 'c77e4f19-f21a-4944-9add-bd58f9398c58',
+  '2e009d02-db32-433e-bbaa-6f1993da4330', '6574b6d9-1a74-4e45-b159-b95a705a1447', '276ac77d-5df7-496a-8f73-47f41bd79658',
+  '1306b851-64f9-4457-b7fa-126b658e1b9d', '7d7105ce-61ae-4af9-91ab-28a666486c2d',
+];
+// Déjà corrigés (clé passée à faux ou question réécrite le 05/10), constat resté ouvert.
+const DEJA_CORRIGES_DOUTEUX = [
+  'd6e54a6e-14df-4b66-8982-07ff9aee183c', 'd7e67f99-ec8d-4b94-87cf-6bda7d33a757', 'a63feaf0-6f8f-4777-9eaa-c346f074dec6',
+];
+
 // ─── Moteur ──────────────────────────────────────────────────────────────────
 config({ path: join(ROOT, '.env.local') });
 const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
@@ -420,9 +639,14 @@ if (lotDemande === 'orthopedie') {
   for (const entree of QUESTIONS_ORTHOPEDIE) await corrigerQuestion(entree);
   for (const constat of FAUX_POSITIFS_ORTHOPEDIE) await clore(constat, 'ignore');
   for (const constat of DEJA_CORRIGES_ORTHOPEDIE) await clore(constat, 'corrige_manuellement');
-} else {
+} else if (lotDemande === 'entetes') {
   for (const entree of QUESTIONS_ENTETES) await corrigerQuestion(entree);
   for (const entree of PROPOSITIONS_ENTETES) await corrigerProposition(entree);
+} else {
+  for (const entree of PROPOSITIONS_DOUTEUX) await corrigerProposition(entree);
+  for (const entree of QUESTIONS_DOUTEUX) await corrigerQuestion(entree);
+  for (const constat of FAUX_POSITIFS_DOUTEUX) await clore(constat, 'ignore');
+  for (const constat of DEJA_CORRIGES_DOUTEUX) await clore(constat, 'corrige_manuellement');
 }
 console.log(bilan);
 if (!appliquer) console.log('Simulation : rien n’a été écrit. Relancer avec --appliquer.');
