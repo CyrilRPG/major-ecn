@@ -10,6 +10,7 @@ import { QcmItem, type QcmItemView } from './qcm-item';
 import { RichText } from './rich-text';
 import { ZoomableImage } from './image-zoom';
 import { gradeQuestion, type ItemOutcome } from '@/lib/qcm/grade';
+import { QuestionProfQcm } from '@/components/student/question-prof-qcm';
 
 type Question = {
   id: string;
@@ -100,7 +101,10 @@ export function QcmReviewer({
         transition={{ duration: 0.2 }}
         className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)"
       >
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">Énoncé</p>
+        <div className="flex items-start justify-between gap-2">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">Énoncé</p>
+          <QuestionProfQcm questionId={q.id} enonce={q.enonce} lettres={[...selected]} className="shrink-0" />
+        </div>
         <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty">
           <RichText html={q.enonce} />
         </h2>

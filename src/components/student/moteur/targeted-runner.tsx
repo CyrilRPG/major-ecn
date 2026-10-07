@@ -13,6 +13,7 @@ import { answerTargetedAction, finishTargetedAction } from '@/app/(student)/revi
 import type { TargetedQuestion, TargetedCorrection } from '@/lib/moteur/server/targeted';
 import { STATUS_LABEL, type MasteryStatus } from '@/lib/moteur/types';
 import { cn } from '@/lib/utils';
+import { QuestionProfQcm } from '@/components/student/question-prof-qcm';
 
 const RESULT_UI = {
   positive: { label: 'Correct', Icon: CheckCircle2, cls: 'text-green-700 dark:text-green-300' },
@@ -104,6 +105,16 @@ export function TargetedRunner({ token, questions }: { token: string; questions:
         </div>
       )}
       <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
+        <div className="mb-2 flex justify-end">
+          <QuestionProfQcm
+            questionId={q.id}
+            enonce={q.enonce}
+            numero={q.dossier?.position ?? null}
+            format={q.format === 'qroc' ? 'qroc' : 'qcm'}
+            lettres={q.format === 'qcm' && revealed ? selected : null}
+            texte={q.format === 'qroc' && (revealed || !!qrocRevealed) ? text : null}
+          />
+        </div>
         <RichTextZoom><p className="whitespace-pre-line text-[15px] font-medium leading-relaxed text-(--color-ink)"><RichText html={q.enonce} /></p></RichTextZoom>
         {q.images.length > 0 && <div className="mt-3 flex flex-wrap gap-2">{q.images.map((src) => <ZoomableImage key={src} src={src} className="h-40 w-40" sizes="160px" />)}</div>}
         {q.format === 'qcm' ? (

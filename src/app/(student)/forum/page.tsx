@@ -5,6 +5,7 @@ import { parseScope, canAccessCollege, canAccessCours } from '@/lib/auth/permiss
 import { porteeQuestions, questionsDansPortee, type PorteeQuestions } from '@/lib/forum/routage';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { ForumView, type ForumQuestionRow, type ForumCollege } from '@/components/forum/forum-view';
+import { lireQcmJoint } from '@/lib/forum/qcm-joint';
 
 export const metadata = { title: 'Forum questions / réponses' };
 
@@ -75,7 +76,7 @@ export default async function ForumPage({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let query: any = (supabase as any)
     .from('forum_questions')
-    .select('id, body, ai_context, created_at, student_id, student_pseudo, cours_id, cours_titre, matiere_nom, matiere_id, is_public, status, forum_answers(id, body, created_at, professor_id, professor_name), forum_replies(id, body, created_at, author_id, author_role, author_name)')
+    .select('id, body, ai_context, qcm_contexte, created_at, student_id, student_pseudo, cours_id, cours_titre, matiere_nom, matiere_id, is_public, status, forum_answers(id, body, created_at, professor_id, professor_name), forum_replies(id, body, created_at, author_id, author_role, author_name)')
     .order('created_at', { ascending: false })
     .limit(500);
 
@@ -111,6 +112,18 @@ export default async function ForumPage({
 
   const { data } = await query;
   let rows = (data ?? []) as ForumQuestionRow[];
+
+  // Question jointe d'un AUTRE élève (question rendue publique) : ni corrigé ni
+  // réponse de son auteur dans la page — une question d'épreuve blanche ne
+  // doit pas livrer ses réponses à qui ne l'a pas encore passée.
+  if (role === 'student') {
+    rows = rows.map((r) => {
+      const joint = r.student_id !== user.id ? lireQcmJoint(r.qcm_contexte) : null;
+      return joint
+        ? { ...r, qcm_contexte: { ...joint, items: joint.items.map((it) => ({ ...it, correct: false })), reponseAttendue: null, reponseEleve: null } }
+        : r;
+    });
+  }
 
   // Référent restreint : une question hors collège n'est gardée que si elle
   // relève de la spécialité de l'élève (`questionsDansPortee`).

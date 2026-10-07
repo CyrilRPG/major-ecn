@@ -20,6 +20,7 @@ import { getVerifiedUser } from '@/lib/auth/verified-user';
 import { cn, formatDuration } from '@/lib/utils';
 import { QcmQuestionEditor, type QcmQuestionDraft } from '@/components/admin/content/qcm-question-editor';
 import { VignetteEditorDialog } from '@/components/admin/content/vignette-editor-dialog';
+import { QuestionProfQcm } from '@/components/student/question-prof-qcm';
 
 /**
  * Enregistre une tentative EN ARRIÈRE-PLAN, sans jamais bloquer l'écran.
@@ -519,6 +520,18 @@ export function QcmSession({
           >
             <Star className={cn('h-4 w-4', saved.has(q.id) && 'fill-current')} />
           </button>
+          {/* Élève : question au professeur, ce QCM joint (et sa réponse une
+              fois validée). Le professeur en mode édition n'en a pas besoin. */}
+          {!editable && (
+            <QuestionProfQcm
+              questionId={q.id}
+              enonce={q.enonce}
+              numero={index + 1}
+              format={isQroc ? 'qroc' : 'qcm'}
+              lettres={!isQroc && isValidated ? [...sel] : null}
+              texte={isQroc && (isValidated || isRevealed) ? (qrocAnswers[q.id] ?? null) : null}
+            />
+          )}
           {editable && (
             <button
               type="button"

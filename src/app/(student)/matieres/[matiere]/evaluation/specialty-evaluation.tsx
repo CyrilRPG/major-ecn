@@ -15,6 +15,7 @@ import { gradeQuestion, type ItemOutcome, reponseModele } from '@/lib/qcm/grade'
 import { VariantesAcceptees } from '@/components/qcm/variantes-acceptees';
 import { cn } from '@/lib/utils';
 import { saveSpecialtyEvaluation } from './actions';
+import { QuestionProfQcm } from '@/components/student/question-prof-qcm';
 
 /** Question d'interrogation officielle : QCM ou question ouverte (QROC). */
 export type InterrogationQuestion = {
@@ -345,9 +346,25 @@ export function SpecialtyEvaluation({
       )}
 
       <div className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
-          {isQroc ? 'Question ouverte' : 'Énoncé'}
-        </p>
+        <div className="flex items-start justify-between gap-2">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
+            {isQroc ? 'Question ouverte' : 'Énoncé'}
+          </p>
+          {/* Interrogation : la question au professeur s'ouvre une fois la
+              question corrigée, jamais pendant qu'elle est à faire. */}
+          {(isQroc ? revealed : isValidated) && (
+            <QuestionProfQcm
+              source="examen"
+              questionId={q.id}
+              enonce={q.enonce}
+              numero={index + 1}
+              format={q.format}
+              lettres={isQroc ? null : [...sel]}
+              texte={isQroc ? qrocText : null}
+              className="shrink-0"
+            />
+          )}
+        </div>
         <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty">
           <RichTextZoom><RichText html={q.enonce} /></RichTextZoom>
         </h2>

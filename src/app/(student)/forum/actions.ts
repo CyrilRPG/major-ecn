@@ -11,6 +11,8 @@ import { ELEVE_SANS_NOM, identityContext, identityFromProfile } from '@/lib/admi
 import { logAudit } from '@/lib/audit/log';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { questionPourMembre } from '@/lib/forum/routage';
+import { chargerQcmJoint } from '@/lib/forum/qcm-joint-server';
+import { apercuEnonce, intituleQuestionJointe, type QcmJoint, type QcmJointEnvoi } from '@/lib/forum/qcm-joint';
 
 type Result = { ok: true; id: string } | { error: string };
 
@@ -39,6 +41,11 @@ export async function askQuestionAction(input: {
    */
   matiereId?: string | null;
   aiContext?: string | null;
+  /**
+   * Question QCM / QROC jointe depuis un lecteur : elle fixe l'item (donc les
+   * référents qui reçoivent la question) et le professeur la voit en entier.
+   */
+  qcm?: QcmJointEnvoi | null;
 }): Promise<Result> {
   const body = input.body?.trim();
   if (!body || body.length < 8) return { error: 'Formulez une question d’au moins 8 caractères.' };
@@ -54,15 +61,22 @@ export async function askQuestionAction(input: {
     profile.pseudo ??
     generatePseudo(profile.first_name ?? '', profile.last_name ?? '');
 
+  let qcmJoint: QcmJoint | null = null;
+  if (input.qcm) {
+    qcmJoint = await chargerQcmJoint(supabase, input.qcm, user.id);
+    if (!qcmJoint) return { error: 'Question introuvable : impossible de la joindre.' };
+  }
+  const coursId = qcmJoint?.coursId ?? input.coursId ?? null;
+
   // Look up cours/matiere context if provided.
   let coursTitre: string | null = null;
   let matiereId: string | null = null;
   let matiereNom: string | null = null;
-  if (input.coursId) {
+  if (coursId) {
     const { data: c } = await supabase
       .from('cours')
       .select('id, titre, matiere_id, matieres(id, nom)')
-      .eq('id', input.coursId)
+      .eq('id', coursId)
       .maybeSingle();
     if (c) {
       coursTitre = c.titre;
@@ -70,6 +84,12 @@ export async function askQuestionAction(input: {
       const m = (c as { matieres?: { nom?: string } }).matieres;
       matiereNom = m?.nom ?? null;
     }
+  } else if (qcmJoint?.matiereId) {
+    // Question d'épreuve (sans item) : le collège de la question, déjà
+    // contrôlé par chargerQcmJoint, désigne les référents.
+    const { data: m } = await supabase.from('matieres').select('id, nom').eq('id', qcmJoint.matiereId).maybeSingle();
+    matiereId = qcmJoint.matiereId;
+    matiereNom = m?.nom ?? null;
   } else if (input.matiereId) {
     // Question sans item précis : le collège choisi (en médecine générale, le
     // sous-collège) suffit à la router vers ses référents — à condition que
@@ -89,12 +109,14 @@ export async function askQuestionAction(input: {
     .insert({
       student_id: user.id,
       student_pseudo: pseudo,
-      cours_id: input.coursId ?? null,
+      cours_id: coursId,
       matiere_id: matiereId,
       cours_titre: coursTitre,
       matiere_nom: matiereNom,
       body,
       ai_context: input.aiContext ?? null,
+      qcm_question_id: qcmJoint?.questionId ?? null,
+      qcm_contexte: qcmJoint,
     })
     .select('id')
     .single();
@@ -120,9 +142,13 @@ export async function askQuestionAction(input: {
     coursTitre,
     matiereNom,
     body,
+    questionJointe: qcmJoint
+      ? `${intituleQuestionJointe(qcmJoint)} : ${apercuEnonce(qcmJoint.enonce, 140)}`
+      : null,
   }).catch(() => { /* best-effort, ne bloque jamais la création */ });
 
   revalidatePath('/admin/qa');
+  revalidatePath('/forum');
   return { ok: true, id: data.id };
 }
 

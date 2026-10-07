@@ -7,6 +7,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { identitePourLecteur, loadStudentIdentities, type LecteurIdentite } from '@/lib/admin/student-identity';
 import { QaRow, type QaQuestionView } from '@/components/admin/qa/qa-row';
 import { AiQuestionsTable, type AiQuestionRow } from '@/components/admin/qa/ai-questions-table';
+import { lireQcmJoint } from '@/lib/forum/qcm-joint';
 
 export const metadata = { title: 'Questions / Réponses' };
 
@@ -54,13 +55,13 @@ export default async function AdminQaPage({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let query = (supabase as any)
       .from('forum_questions')
-      .select('id, body, ai_context, created_at, student_id, student_pseudo, matiere_id, cours_titre, matiere_nom, status, is_public, forum_answers(id, body, created_at, professor_id, professor_name)')
+      .select('id, body, ai_context, qcm_contexte, created_at, student_id, student_pseudo, matiere_id, cours_titre, matiere_nom, status, is_public, forum_answers(id, body, created_at, professor_id, professor_name)')
       .order('created_at', { ascending: false });
     if (forumStatus !== 'all') query = query.eq('status', forumStatus);
     query = filtreSql(query);
     const { data: brut } = await query;
     type LigneForum = {
-      id: string; body: string; ai_context: string | null; created_at: string;
+      id: string; body: string; ai_context: string | null; qcm_contexte: unknown; created_at: string;
       student_id: string | null; student_pseudo: string; matiere_id: string | null; cours_titre: string | null; matiere_nom: string | null;
       status: 'pending' | 'answered' | 'archived'; is_public: boolean;
       forum_answers: Array<{ id: string; body: string; created_at: string; professor_id: string | null; professor_name: string }>;
@@ -76,6 +77,7 @@ export default async function AdminQaPage({
       id: r.id,
       body: r.body,
       ai_context: r.ai_context,
+      qcm: lireQcmJoint(r.qcm_contexte),
       created_at: r.created_at,
       student_pseudo: r.student_pseudo,
       student: r.student_id && identites.get(r.student_id) ? identitePourLecteur(identites.get(r.student_id)!, lecteur) : null,

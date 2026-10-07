@@ -32,6 +32,8 @@ export async function notifyProfessorsOfNewQuestion(args: {
   coursTitre: string | null;
   matiereNom: string | null;
   body: string;
+  /** Question QCM jointe : « Série 2 — Question 4 : énoncé… ». */
+  questionJointe?: string | null;
 }) {
   const admin = createAdminClient();
   const { data: profs } = await admin
@@ -58,6 +60,7 @@ export async function notifyProfessorsOfNewQuestion(args: {
         coursTitre: args.coursTitre,
         matiereNom: args.matiereNom,
         questionBody: args.body,
+        questionJointe: args.questionJointe ?? null,
         qaUrl,
       });
       await sendEmail({ to: p.email!, subject, html, text }).catch(() => null);

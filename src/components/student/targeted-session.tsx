@@ -14,6 +14,7 @@ import { sanitizeBlockHtml } from '@/lib/flashcards/rich-text';
 import { createClient } from '@/lib/supabase/client';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
 import { cn } from '@/lib/utils';
+import { QuestionProfQcm } from '@/components/student/question-prof-qcm';
 
 export type TQuestion = {
   id: string;
@@ -190,9 +191,20 @@ export function TargetedSession({ questions, backHref }: { questions: TQuestion[
       )}
 
       <div className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
-          {isQroc ? 'QROC' : 'Énoncé'}
-        </p>
+        <div className="flex items-start justify-between gap-2">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
+            {isQroc ? 'QROC' : 'Énoncé'}
+          </p>
+          <QuestionProfQcm
+            questionId={q.id}
+            enonce={q.enonce}
+            numero={q.dossier?.position ?? null}
+            format={isQroc ? 'qroc' : 'qcm'}
+            lettres={!isQroc && isValidated ? [...sel] : null}
+            texte={isQroc && revealed ? qrocText : null}
+            className="shrink-0"
+          />
+        </div>
         <RichTextZoom>
           <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty whitespace-pre-line [&_img]:my-2 [&_img]:max-h-80 [&_img]:rounded-lg">
             <RichText html={q.enonce} />

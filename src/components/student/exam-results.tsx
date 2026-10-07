@@ -9,6 +9,7 @@ import { ArrowLeft, CheckCircle2, Loader2, Sparkles, XCircle } from 'lucide-reac
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { sanitizeFlashcardHtml } from '@/lib/flashcards/rich-text';
+import { QuestionProfQcm } from '@/components/student/question-prof-qcm';
 import { examLevel, weakColleges, type PerCollege } from '@/lib/exams/scoring';
 import { selfGradeAnswer, finalizeExamCorrection } from '@/app/(student)/epreuves-blanches/actions';
 
@@ -172,8 +173,23 @@ export function ExamResults({
             <div key={q.id} className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft)">
               <div className="mb-1.5 flex items-center justify-between">
                 <span className="text-xs font-bold text-(--color-ink-muted)">Q{i + 1} · {q.format === 'qroc' ? 'QROC' : 'QCM'}</span>
-                <span className={cn('rounded-full px-2 py-0.5 text-[11px] font-bold', ans?.is_correct ? 'bg-[#E7F6EC] text-[#16793C]' : 'bg-[#FCEAEC] text-[#C0112E]')}>
-                  {Math.round((ans?.points_awarded ?? 0) * 100) / 100} / {Math.round((ans?.max_points ?? 0) * 100) / 100} pt
+                <span className="flex items-center gap-1.5">
+                  {/* Copie de l'élève (pas la consultation par l'équipe) : question
+                      au professeur, cette question d'épreuve jointe. */}
+                  {!readOnly && (
+                    <QuestionProfQcm
+                      source="examen"
+                      questionId={q.id}
+                      enonce={String(q.enonce ?? '')}
+                      numero={i + 1}
+                      format={q.format === 'qroc' ? 'qroc' : 'qcm'}
+                      lettres={q.format === 'qroc' ? null : [...selected]}
+                      texte={q.format === 'qroc' ? (ans?.text_answer ?? null) : null}
+                    />
+                  )}
+                  <span className={cn('rounded-full px-2 py-0.5 text-[11px] font-bold', ans?.is_correct ? 'bg-[#E7F6EC] text-[#16793C]' : 'bg-[#FCEAEC] text-[#C0112E]')}>
+                    {Math.round((ans?.points_awarded ?? 0) * 100) / 100} / {Math.round((ans?.max_points ?? 0) * 100) / 100} pt
+                  </span>
                 </span>
               </div>
               <p className="text-sm font-semibold text-(--color-ink)" dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(q.enonce) }} />

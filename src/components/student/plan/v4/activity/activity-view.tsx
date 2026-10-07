@@ -10,6 +10,7 @@ import { RichTextZoom, ZoomableImage } from '@/components/qcm/image-zoom';
 import { VariantesAcceptees } from '@/components/qcm/variantes-acceptees';
 import { reponseModele } from '@/lib/qcm/grade';
 import { cn } from '@/lib/utils';
+import { QuestionProfQcm } from '@/components/student/question-prof-qcm';
 import type { ActivityCard } from '@/lib/plan/pages';
 import type { RunnerCorrection, RunnerSession } from '@/lib/plan/runner';
 import {
@@ -226,6 +227,16 @@ function Runner({ session, onDone }: { session: RunnerSession; onDone: () => voi
         </div>
       )}
       <div className="pl-card p-4 sm:p-5">
+        <div className="mb-2 flex justify-end">
+          <QuestionProfQcm
+            questionId={q.id}
+            enonce={q.enonce}
+            numero={q.dossier?.position ?? null}
+            format={q.format === 'qroc' ? 'qroc' : 'qcm'}
+            lettres={q.format === 'qcm' && revealed ? selected : null}
+            texte={q.format === 'qroc' && (revealed || !!qroc) ? text : null}
+          />
+        </div>
         <RichTextZoom><p className="whitespace-pre-line text-[15px] font-medium leading-relaxed text-(--pl-ink)"><RichText html={q.enonce} /></p></RichTextZoom>
         {q.images.length > 0 && <div className="mt-3 flex flex-wrap gap-2">{q.images.map((src) => <ZoomableImage key={src} src={src} className="h-40 w-40" sizes="160px" />)}</div>}
         {q.format === 'qcm' ? (

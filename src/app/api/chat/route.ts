@@ -4,6 +4,8 @@ import { assertAccessActive } from '@/lib/auth/access';
 import { getRequestUser } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { callClaude, FAST_MODEL } from '@/lib/ai/anthropic';
+import { chargerQcmJoint } from '@/lib/forum/qcm-joint-server';
+import { intituleQuestionJointe, questionJointeEnTexte, type QcmJoint, type QcmJointEnvoi } from '@/lib/forum/qcm-joint';
 
 /**
  * Assistant Q&R borné au cours.
@@ -82,7 +84,7 @@ Règles de style
    réponses.`;
 
 async function logUsage(args: {
-  coursId: string;
+  coursId: string | null;
   feature: 'assistant_chat';
   inputTokens: number;
   outputTokens: number;
@@ -171,6 +173,35 @@ function trim(text: string, max: number): string {
   return (lastPeriod > max * 0.7 ? cut.slice(0, lastPeriod + 1) : cut) + '\n[…]';
 }
 
+/** Relances : au plus les 6 derniers échanges, chacun tronqué. */
+function historiqueBorne(raw: unknown): { role: 'user' | 'assistant'; content: string }[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((m): m is { role: 'user' | 'assistant'; content: string } =>
+      !!m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
+    .slice(-6)
+    .map((m) => ({ role: m.role, content: m.content.slice(0, 3000) }));
+}
+
+/**
+ * La question sur laquelle l'élève interroge l'assistant. Tant qu'il n'y a
+ * pas répondu, le corrigé ne part pas : l'assistant aide à raisonner sans
+ * donner la réponse.
+ */
+function blocQuestionJointe(j: QcmJoint): string {
+  const repondu = j.reponseEleve !== null;
+  return (
+    `L'élève t'interroge sur cette question ${j.format === 'qroc' ? 'QROC' : 'de QCM'} :\n\n` +
+    questionJointeEnTexte(j, { avecCorrige: repondu }) +
+    (repondu
+      ? `\n\nAppuie ta réponse sur cette question et son corrigé : explique pourquoi chaque ` +
+        `proposition concernée est vraie ou fausse, et où l'élève s'est trompé le cas échéant.`
+      : `\n\nL'élève n'a PAS encore répondu à cette question. Ne donne ni la ou les bonnes ` +
+        `réponses, ni le verdict d'une proposition : aide-le à raisonner (notions à mobiliser, ` +
+        `pièges, démarche), sans trancher à sa place.`)
+  );
+}
+
 export async function POST(req: Request) {
   // Auth duale : cookie (web) ou Bearer (app mobile, avec contrôle d'appareil).
   const auth = await getRequestUser(req);
@@ -200,24 +231,44 @@ export async function POST(req: Request) {
     );
   }
 
-  const { coursId, message } = (await req.json().catch(() => ({}))) as {
+  const { coursId: coursIdDemande, message, qcm, historique } = (await req.json().catch(() => ({}))) as {
     coursId?: string; message?: string;
+    /** Question du lecteur jointe à la demande. */
+    qcm?: QcmJointEnvoi | null;
+    /** Échanges précédents de la même conversation (relance). */
+    historique?: unknown;
   };
-  if (!coursId || !message?.trim()) {
+  if ((!coursIdDemande && !qcm) || !message?.trim()) {
     return NextResponse.json({ error: 'Requête invalide' }, { status: 400 });
   }
   if (message.length > 2000) {
     return NextResponse.json({ error: 'Question trop longue (max 2000 caractères).' }, { status: 400 });
   }
 
-  const { data: cours } = await supabase
-    .from('cours')
-    .select('id, titre')
-    .eq('id', coursId)
-    .maybeSingle();
-  if (!cours) {
-    return NextResponse.json({ error: 'Cours introuvable.' }, { status: 404 });
+  // Question QCM / QROC jointe depuis un lecteur : relue en base (RLS de
+  // l'élève pour la banque, épreuve rendue pour un examen), jamais prise du
+  // navigateur. Elle fixe l'item dont on charge le contenu.
+  let joint: QcmJoint | null = null;
+  if (qcm) {
+    joint = await chargerQcmJoint(supabase, qcm, user.id);
+    if (!joint) return NextResponse.json({ error: 'Question introuvable.' }, { status: 404 });
   }
+  const coursId = joint ? joint.coursId : coursIdDemande ?? null;
+
+  let cours: { id: string; titre: string } | null = null;
+  if (coursId) {
+    const { data } = await supabase
+      .from('cours')
+      .select('id, titre')
+      .eq('id', coursId)
+      .maybeSingle();
+    cours = data;
+    if (!cours && !joint) {
+      return NextResponse.json({ error: 'Cours introuvable.' }, { status: 404 });
+    }
+  }
+  const coursTitre = cours?.titre ?? (joint ? intituleQuestionJointe(joint) : null);
+  const echanges = historiqueBorne(historique);
 
   // Pas de clé Claude côté serveur (variable d'environnement Vercel
   // ANTHROPIC_API_KEY manquante) → message explicite pour l'admin, pas
@@ -233,18 +284,19 @@ export async function POST(req: Request) {
     });
   }
 
-  // 1) Récupère tout le contenu pédagogique du cours
+  // 1) Récupère tout le contenu pédagogique du cours (aucun pour une
+  //    question d'épreuve sans item : la question jointe suffit).
   const [
     { data: fiche },
     { data: flashcards },
     { data: qcmItems },
-  ] = await Promise.all([
+  ] = !cours ? [{ data: null }, { data: [] }, { data: [] }] as const : await Promise.all([
     // Un item peut porter plusieurs fiches : on prend la principale
     // (order_index le plus bas). `maybeSingle()` échouerait dès la deuxième.
     supabase
       .from('fiches')
       .select('extracted_text')
-      .eq('cours_id', coursId)
+      .eq('cours_id', cours.id)
       .order('order_index', { ascending: true })
       .order('created_at', { ascending: true })
       .limit(1)
@@ -252,9 +304,9 @@ export async function POST(req: Request) {
     supabase
       .from('flashcards')
       .select('recto, verso')
-      .eq('cours_id', coursId)
+      .eq('cours_id', cours.id)
       .limit(150),
-    itemsQcmDuCours(supabase, coursId, 400),
+    itemsQcmDuCours(supabase, cours.id, 400),
   ]);
 
   // 2) Construit le bloc contexte. La fiche passe EN PREMIER avec un
@@ -288,13 +340,13 @@ export async function POST(req: Request) {
 
   // Aucun contenu pédagogique → on prévient l'utilisateur (cas rare :
   // cours créé sans fiche/QCM/flashcards).
-  if (contextBlock.length < 50) {
+  if (contextBlock.length < 50 && !joint) {
     await logUsage({
       coursId, feature: 'assistant_chat',
       inputTokens: 0, outputTokens: 0, costUsd: 0, model: FAST_MODEL,
       status: 'abstention',
       userId: user.id, userPseudo, userOffer,
-      userQuestion: message.trim(), coursTitre: cours.titre,
+      userQuestion: message.trim(), coursTitre: coursTitre ?? undefined,
     });
     return NextResponse.json({
       reply:
@@ -316,10 +368,18 @@ export async function POST(req: Request) {
         cacheSystem: true,
         system: SYSTEM_PROMPT,
         user:
-          `Cours en cours de révision : « ${cours.titre} ».\n\n` +
-          `Voici le contenu pédagogique de référence pour ce cours :\n\n` +
-          contextBlock +
-          `\n\n---\n\n` +
+          (cours
+            ? `Cours en cours de révision : « ${cours.titre} ».\n\n` +
+              (contextBlock.length >= 50
+                ? `Voici le contenu pédagogique de référence pour ce cours :\n\n${contextBlock}\n\n---\n\n`
+                : '')
+            : '') +
+          (joint ? blocQuestionJointe(joint) + `\n\n---\n\n` : '') +
+          (echanges.length
+            ? `Échanges précédents avec l'élève :\n\n` +
+              echanges.map((e) => `${e.role === 'user' ? 'Élève' : 'Toi'} : ${e.content}`).join('\n\n') +
+              `\n\n---\n\n`
+            : '') +
           `Question de l'élève : ${message.trim()}\n\n` +
           `Réponds-lui directement, comme un prof. ` +
           `Appuie-toi sur la fiche quand c'est pertinent, et complète ` +
@@ -335,7 +395,7 @@ export async function POST(req: Request) {
       inputTokens: 0, outputTokens: 0, costUsd: 0, model: FAST_MODEL,
       status: 'failed',
       userId: user.id, userPseudo, userOffer,
-      userQuestion: message.trim(), coursTitre: cours.titre,
+      userQuestion: message.trim(), coursTitre: coursTitre ?? undefined,
     });
     return NextResponse.json(
       { error: 'Réponse impossible pour le moment. Réessaie dans un instant.' },
@@ -354,7 +414,7 @@ export async function POST(req: Request) {
     model: result.model,
     status: 'success',
     userId: user.id, userPseudo, userOffer,
-    userQuestion: message.trim(), aiAnswer: answer, coursTitre: cours.titre,
+    userQuestion: message.trim(), aiAnswer: answer, coursTitre: coursTitre ?? undefined,
   });
 
   return NextResponse.json({

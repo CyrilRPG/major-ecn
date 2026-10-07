@@ -240,9 +240,11 @@ type ForumQuestionArgs = {
   coursTitre: string | null;
   matiereNom: string | null;
   questionBody: string;
+  /** Question QCM jointe depuis un lecteur : « Série 2 — Question 4 : énoncé… ». */
+  questionJointe?: string | null;
   qaUrl: string;
 };
-export function forumNewQuestionEmail({ professorFirstName, studentPseudo, studentName, studentEmail, studentContext, coursTitre, matiereNom, questionBody, qaUrl }: ForumQuestionArgs) {
+export function forumNewQuestionEmail({ professorFirstName, studentPseudo, studentName, studentEmail, studentContext, coursTitre, matiereNom, questionBody, questionJointe = null, qaUrl }: ForumQuestionArgs) {
   const subject = '✉️ Nouvelle question d’élève — Major ECN';
   const ctx = [matiereNom, coursTitre].filter(Boolean).join(' · ');
   const preview = questionBody.length > 240 ? questionBody.slice(0, 240) + '…' : questionBody;
@@ -256,6 +258,7 @@ export function forumNewQuestionEmail({ professorFirstName, studentPseudo, stude
       studentEmail ? ['E-mail', mailto(studentEmail)] : null,
       studentContext ? ['Profil', esc(studentContext)] : null,
       ctx ? ['Cours', esc(ctx)] : null,
+      questionJointe ? ['Question jointe', esc(questionJointe)] : null,
     ]),
     quote(preview, { label: 'Question' }),
     button(qaUrl, 'Répondre à la question'),
@@ -279,6 +282,7 @@ export function forumNewQuestionEmail({ professorFirstName, studentPseudo, stude
     '',
     preview,
     '',
+    ...(questionJointe ? [`Question jointe : ${questionJointe}`, ''] : []),
     `Répondre : ${qaUrl}`,
     '— Major ECN',
   ]);

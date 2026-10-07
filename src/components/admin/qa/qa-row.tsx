@@ -12,6 +12,8 @@ import {
 import { Markdown } from '@/components/ui/markdown';
 import { StudentIdentityBadge } from '@/components/admin/qa/student-identity-badge';
 import type { StudentIdentity } from '@/lib/admin/student-identity-pure';
+import { QcmJointCard } from '@/components/forum/qcm-joint-card';
+import type { QcmJoint } from '@/lib/forum/qcm-joint';
 
 export type QaAnswerView = {
   id: string;
@@ -43,6 +45,8 @@ export type QaQuestionView = {
   id: string;
   body: string;
   ai_context: string | null;
+  /** Question QCM / QROC jointe par l'élève depuis un lecteur. */
+  qcm?: QcmJoint | null;
   created_at: string;
   student_pseudo: string;
   /** Identité réelle de l'élève (null si le profil a disparu). */
@@ -116,6 +120,7 @@ export function QaRow({ q, currentUserId = null }: { q: QaQuestionView; currentU
             )}
           </div>
           <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-(--color-ink)">{q.body}</p>
+          {q.qcm && <QcmJointCard joint={q.qcm} mode="equipe" />}
           {q.ai_context && (
             <button
               type="button"

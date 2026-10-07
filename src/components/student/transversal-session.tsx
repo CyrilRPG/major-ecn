@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { QuestionProfQcm } from '@/components/student/question-prof-qcm';
 import Link from 'next/link';
 import { AlertCircle, ArrowLeft, ArrowRight, CalendarPlus, CheckCircle2, AlertTriangle, XCircle, MessageCircle, RefreshCcw, RotateCcw, Eye, Shield, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -341,9 +342,20 @@ export function TransversalSession({
       )}
 
       <div className="mb-3 rounded-xl border border-(--color-border) bg-(--color-surface) p-3.5 shadow-(--shadow-soft)">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
-          {isQroc ? 'QROC' : 'Énoncé'}
-        </p>
+        <div className="flex items-start justify-between gap-2">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-(--color-accent-deep)">
+            {isQroc ? 'QROC' : 'Énoncé'}
+          </p>
+          <QuestionProfQcm
+            questionId={q.id}
+            enonce={q.enonce}
+            numero={q.dossier?.position ?? null}
+            format={isQroc ? 'qroc' : 'qcm'}
+            lettres={!isQroc && isValidated ? [...sel] : null}
+            texte={isQroc && revealed ? qrocText : null}
+            className="shrink-0"
+          />
+        </div>
         <h2 className="mt-1 text-base font-semibold leading-snug tracking-tight text-(--color-ink) text-pretty">
           <RichTextZoom><RichText html={q.enonce} /></RichTextZoom>
         </h2>

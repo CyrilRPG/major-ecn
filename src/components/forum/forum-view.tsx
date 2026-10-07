@@ -11,6 +11,8 @@ import {
 import { Markdown } from '@/components/ui/markdown';
 import { DrawnAvatar } from '@/components/avatar/drawn-avatar';
 import { ForumQuestionForm } from '@/components/student/forum-question-form';
+import { QcmJointCard } from '@/components/forum/qcm-joint-card';
+import { lireQcmJoint } from '@/lib/forum/qcm-joint';
 import {
   addReplyAction, postProfessorAnswerAction, toggleQuestionPublicAction,
 } from '@/app/(student)/forum/actions';
@@ -38,6 +40,8 @@ export type ForumQuestionRow = {
   id: string;
   body: string;
   ai_context?: string | null;
+  /** Question QCM / QROC jointe depuis un lecteur (lib/forum/qcm-joint). */
+  qcm_contexte?: unknown;
   created_at: string;
   student_id: string;
   student_pseudo: string;
@@ -617,6 +621,10 @@ function QuestionCard({
           {/* Question complète (si tronquée) */}
           <div className="border-t border-(--color-border) px-5 pb-2 pt-4 text-sm leading-relaxed text-(--color-ink) sm:px-6">
             <p className="whitespace-pre-wrap">{q.body}</p>
+            {(() => {
+              const joint = lireQcmJoint(q.qcm_contexte);
+              return joint && <QcmJointCard joint={joint} mode={isStaff ? 'equipe' : isOwn ? 'eleve' : 'public'} />;
+            })()}
           </div>
 
           {/* Thread : réponses prof + replies, chronologique */}
