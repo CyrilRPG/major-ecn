@@ -5,7 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { CreerCollaborateurSchema, ModifierCollaborateurSchema } from '@/lib/auth/equipe-schema';
 import { composerScope, resumeModules } from '@/lib/auth/collaborateurs';
-import { appliquerScope, coursHeritesAjustes } from '@/lib/equipe/server';
+import { appliquerScope, coursHeritesAjustes, perimetreAvecItems } from '@/lib/equipe/server';
 import { logAudit } from '@/lib/audit/log';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { invitationEquipeEmail } from '@/lib/email/templates';
@@ -60,8 +60,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
   }
   const p = parsed.data;
+  // Spécialités limitées à certains items : liste `cours` dérivée.
+  const avecItems = await perimetreAvecItems(p.perimetre);
+  const perimetre = avecItems?.perimetre ?? p.perimetre;
+  const cours = avecItems?.cours;
   const scope = composerScope({
-    fonction: p.fonction ?? null, modele: p.modele ?? null, modules: p.modules, perimetre: p.perimetre, mfa_obligatoire: !!p.mfa_obligatoire, referent: p.referent !== false,
+    fonction: p.fonction ?? null, modele: p.modele ?? null, modules: p.modules, perimetre, cours, mfa_obligatoire: !!p.mfa_obligatoire, referent: p.referent !== false,
   });
 
   const admin = createAdminClient();
@@ -98,7 +102,7 @@ export async function POST(req: Request) {
   // Miroir du module de suivi (suivi_staff_roles). Le scope enregistré (périmètre
   // déployé sur les sous-collèges) est celui que décrit l'invitation.
   const scopeEnregistre = await appliquerScope(created.user.id, {
-    fonction: p.fonction ?? null, modele: p.modele ?? null, modules: p.modules, perimetre: p.perimetre, mfa_obligatoire: !!p.mfa_obligatoire, referent: p.referent !== false,
+    fonction: p.fonction ?? null, modele: p.modele ?? null, modules: p.modules, perimetre, cours, mfa_obligatoire: !!p.mfa_obligatoire, referent: p.referent !== false,
   });
 
   // Invitation : lien de création de mot de passe (Resend, repli Supabase).
@@ -160,12 +164,14 @@ async function modifier(adminId: string, body: unknown) {
   if (!cible) return NextResponse.json({ error: 'Compte introuvable.' }, { status: 404 });
   if (cible.role !== 'professor') return NextResponse.json({ error: 'Seul un membre du personnel non administrateur se gère ici.' }, { status: 400 });
 
-  // La restriction historique à certains items suit le nouveau périmètre
-  // (cf. ajusterCoursHerites) : recopiée telle quelle, elle fermait tout.
-  const coursHerites = await coursHeritesAjustes(a, cible.permission_scope, p.perimetre);
+  // Spécialités limitées à certains items (dialogue web) : liste `cours`
+  // dérivée du périmètre. Sinon, la restriction historique suit le nouveau
+  // périmètre (cf. ajusterCoursHerites) : recopiée telle quelle, elle fermait tout.
+  const avecItems = await perimetreAvecItems(p.perimetre);
+  const cours = avecItems ? avecItems.cours : await coursHeritesAjustes(a, cible.permission_scope, p.perimetre);
   const scope = await appliquerScope(p.userId, {
-    fonction: p.fonction ?? null, modele: p.modele ?? null, modules: p.modules, perimetre: p.perimetre,
-    cours: coursHerites, mfa_obligatoire: !!p.mfa_obligatoire, referent: p.referent !== false,
+    fonction: p.fonction ?? null, modele: p.modele ?? null, modules: p.modules, perimetre: avecItems?.perimetre ?? p.perimetre,
+    cours, mfa_obligatoire: !!p.mfa_obligatoire, referent: p.referent !== false,
   });
   const patch: Record<string, unknown> = {};
   if (p.access_end !== undefined) patch.access_end = finDeJournee(p.access_end);

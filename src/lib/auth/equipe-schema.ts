@@ -39,6 +39,8 @@ export const PerimetreSchema = z.object({
   specialites: z.union([z.literal('toutes'), z.array(z.string().min(1))]),
   // Clé '*' = défaut, sinon un identifiant de collège.
   formules: z.record(z.string(), z.array(FORMULE)),
+  // Spécialité limitée à certains items : identifiant du collège → items.
+  items: z.record(z.string(), z.array(z.string().uuid()).max(3000)).optional(),
 });
 
 export const RoleModeleSchema = z.enum(['commercial', 'gestionnaire_video', 'redacteur_blog', 'enseignant_relecteur', 'responsable_complet']);

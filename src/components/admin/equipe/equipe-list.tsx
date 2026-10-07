@@ -23,7 +23,10 @@ function resumeCourt(per: Perimetre, nomCollege: (id: string) => string): string
     return `Toutes les spécialités · ${f.length === FORMULES.length ? 'toutes formules' : f.join(', ') || 'aucune formule'}`;
   }
   if (per.specialites.length === 0) return 'Aucune spécialité';
-  return per.specialites.slice(0, 3).map((c) => `${nomCollege(c)} (${formulesPour(per, c).length}/3)`).join(', ')
+  return per.specialites.slice(0, 3).map((c) => {
+    const items = per.items?.[c];
+    return `${nomCollege(c)}${items ? ` · ${items.length} item${items.length > 1 ? 's' : ''}` : ''} (${formulesPour(per, c).length}/3)`;
+  }).join(', ')
     + (per.specialites.length > 3 ? ` +${per.specialites.length - 3}` : '');
 }
 

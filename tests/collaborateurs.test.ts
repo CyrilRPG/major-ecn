@@ -16,6 +16,9 @@ import {
   type Modules,
   deployerPerimetre,
   ajusterCoursHerites,
+  coursDuPerimetre,
+  itemsDepuisCours,
+  normaliserPerimetre,
   replierPerimetre,
   accesOnglets,
   pagesDuScope,
@@ -278,4 +281,56 @@ test('ajusterCoursHerites : la restriction historique suit le périmètre enregi
 
   assert.equal(ajusterCoursHerites({ cours: ['g1'], collegeDe, itemsDe, anciensColleges: [], nouveauxColleges: 'toutes' }), undefined);
   assert.equal(ajusterCoursHerites({ cours: undefined, collegeDe, itemsDe, anciensColleges: [], nouveauxColleges: ['x'] }), undefined);
+});
+
+test('coursDuPerimetre : collège entier + items choisis d’un autre collège', () => {
+  const enfantsDe = { 'col-mg': ['col-mg-pedia', 'col-mg-cardio'] };
+  const perimetre = deployerPerimetre(normaliserPerimetre({
+    specialites: ['col-cardio', 'col-mg'],
+    formules: {},
+    items: { 'col-mg': ['i-pedia-1', 'i-cardio-mg-2', 'i-hors'] },
+  }), enfantsDe);
+  const { perimetre: enregistre, cours } = coursDuPerimetre({
+    perimetre,
+    enfantsDe,
+    // i-hors appartient à un collège non limité : ignoré.
+    collegeDe: { 'i-pedia-1': 'col-mg-pedia', 'i-cardio-mg-2': 'col-mg-cardio', 'i-hors': 'col-cardio' },
+    itemsDe: { 'col-cardio': ['c1', 'c2'], 'col-mg-pedia': ['i-pedia-1', 'i-pedia-9'] },
+  });
+  assert.deepEqual(new Set(cours), new Set(['i-pedia-1', 'i-cardio-mg-2', 'c1', 'c2']));
+  assert.deepEqual(enregistre.items, { 'col-mg': ['i-pedia-1', 'i-cardio-mg-2'] });
+
+  // La liste dérivée ouvre bien cardio en entier et seulement les items MG choisis.
+  const scope = composerScope({ modules: modulesVides(), perimetre: enregistre, cours });
+  assert.equal(profCanAccessCours(scope, 'col-cardio', 'c2'), true);
+  assert.equal(profCanAccessCours(scope, 'col-mg-pedia', 'i-pedia-1'), true);
+  assert.equal(profCanAccessCours(scope, 'col-mg-pedia', 'i-pedia-9'), false);
+});
+
+test('coursDuPerimetre : une spécialité limitée sans item sort du périmètre, sans restriction résiduelle', () => {
+  const enfantsDe = {};
+  const { perimetre, cours } = coursDuPerimetre({
+    perimetre: normaliserPerimetre({ specialites: ['col-a', 'col-b'], formules: {}, items: { 'col-b': [] } }),
+    enfantsDe,
+    collegeDe: {},
+    itemsDe: { 'col-a': ['a1'] },
+  });
+  assert.deepEqual(perimetre.specialites, ['col-a']);
+  assert.equal(cours, undefined);
+  // Plus aucune spécialité limitée : pas de liste.
+  const ouvert = coursDuPerimetre({
+    perimetre: normaliserPerimetre({ specialites: ['col-a'], formules: {}, items: {} }),
+    enfantsDe, collegeDe: {}, itemsDe: { 'col-a': ['a1'] },
+  });
+  assert.equal(ouvert.cours, undefined);
+});
+
+test('itemsDepuisCours : une ancienne liste se range sous la spécialité affichée', () => {
+  const parentDe = { 'col-mg-pedia': 'col-mg', 'col-mg-cardio': 'col-mg' };
+  const perimetre = normaliserPerimetre({ specialites: ['col-mg', 'col-mg-pedia', 'col-mg-cardio', 'col-endo'], formules: {} });
+  const range = itemsDepuisCours({
+    perimetre, cours: ['p1', 'k1'], collegeDe: { p1: 'col-mg-pedia', k1: 'col-mg-cardio' }, parentDe,
+  });
+  // Endocrinologie n'avait aucun item de la liste : fermée en pratique, affichée à zéro.
+  assert.deepEqual(range.items, { 'col-mg': ['p1', 'k1'], 'col-endo': [] });
 });

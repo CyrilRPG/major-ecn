@@ -3,8 +3,9 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import {
-  ajusterCoursHerites, composerScope, deployerPerimetre, lireScopeEquipe, normaliserPerimetre, roleSuiviDeScope,
-  type EnfantsDe, type ParentDe,
+  ajusterCoursHerites, collegesLimites, composerScope, coursDuPerimetre, deployerPerimetre, itemsDepuisCours,
+  lireScopeEquipe, normaliserPerimetre, roleSuiviDeScope,
+  type EnfantsDe, type ParentDe, type Perimetre,
   type EntreeScope, type ScopeEquipe,
 } from '@/lib/auth/collaborateurs';
 
@@ -54,6 +55,19 @@ export async function listerEquipe(): Promise<MembreEquipe[]> {
   for (const r of ((rolesSuivi ?? []) as { user_id: string; role: string }[])) {
     if (r.role === 'responsable' || r.role === 'intervenant' || r.role === 'lecture') herite.set(r.user_id, r.role);
   }
+  // Comptes limités à des items avant l'option « items choisis » : leurs items
+  // sont rangés par spécialité pour que le dialogue les montre.
+  const scopes = new Map(lignes.map((l) => [
+    l.id, l.role === 'professor' ? lireScopeEquipe(l.permission_scope, herite.get(l.id) ?? null) : null,
+  ]));
+  const aRanger = [...scopes.values()].filter((s): s is ScopeEquipe => !!s && !s.perimetre.items && !!s.cours?.length);
+  if (aRanger.length > 0) {
+    const [collegeDe, { parentDe }] = await Promise.all([
+      collegesDesItems(Array.from(new Set(aRanger.flatMap((s) => s.cours ?? [])))),
+      hierarchieColleges(),
+    ]);
+    for (const s of aRanger) s.perimetre = itemsDepuisCours({ perimetre: s.perimetre, cours: s.cours, collegeDe, parentDe });
+  }
   return lignes.map((l) => ({
     id: l.id,
     role: l.role === 'admin' ? 'admin' : 'professor',
@@ -65,7 +79,7 @@ export async function listerEquipe(): Promise<MembreEquipe[]> {
     access_end: l.access_end,
     created_at: l.created_at,
     last_sign_in: derniereConnexion.get(l.id) ?? null,
-    scope: l.role === 'professor' ? lireScopeEquipe(l.permission_scope, herite.get(l.id) ?? null) : null,
+    scope: scopes.get(l.id) ?? null,
     mfa_facteurs: facteurs.get(l.id) ?? 0,
   }));
 }
@@ -134,6 +148,46 @@ export async function hierarchieColleges(): Promise<HierarchieColleges> {
   return { arbre, parentDe, enfantsDe, noms };
 }
 
+/** Collège (matiere_id) de chaque item, lu par tranches (taille d'URL). */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function collegesDesItems(ids: string[], a: any = createAdminClient()): Promise<Record<string, string>> {
+  const collegeDe: Record<string, string> = {};
+  for (let i = 0; i < ids.length; i += 150) {
+    const { data, error } = await a.from('cours').select('id, matiere_id').in('id', ids.slice(i, i + 150));
+    if (error) throw new Error(error.message);
+    for (const r of (data ?? []) as { id: string; matiere_id: string }[]) collegeDe[r.id] = r.matiere_id;
+  }
+  return collegeDe;
+}
+
+/**
+ * Périmètre saisi avec des spécialités limitées à certains items : périmètre
+ * déployé à enregistrer et liste `cours` qui en découle (`coursDuPerimetre`).
+ * `null` quand le périmètre n'a pas l'option (saisie antérieure, app mobile) :
+ * la liste historique suit alors `coursHeritesAjustes`.
+ */
+export async function perimetreAvecItems(
+  perimetre: unknown,
+): Promise<{ perimetre: Perimetre; cours: string[] | undefined } | null> {
+  const norm = normaliserPerimetre(perimetre);
+  if (!norm.items || norm.specialites === 'toutes') return null;
+  const { enfantsDe } = await hierarchieColleges();
+  const deploye = deployerPerimetre(norm, enfantsDe);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const a = createAdminClient() as any;
+  const collegeDe = await collegesDesItems(Array.from(new Set(Object.values(norm.items).flat())), a);
+  const limites = collegesLimites(deploye, enfantsDe);
+  const entiers = (deploye.specialites as string[]).filter((c) => !limites.has(c));
+  const itemsDe: Record<string, string[]> = {};
+  if (entiers.length > 0) {
+    // Toute la médecine générale dépasse les 1 000 lignes d'une réponse PostgREST.
+    const lignes = await fetchAllRows<{ id: string; matiere_id: string }>((from, to) => a
+      .from('cours').select('id, matiere_id').in('matiere_id', entiers).order('id').range(from, to));
+    for (const r of lignes) (itemsDe[r.matiere_id] ??= []).push(r.id);
+  }
+  return coursDuPerimetre({ perimetre: deploye, enfantsDe, collegeDe, itemsDe });
+}
+
 /**
  * Restriction historique à certains items d'un collaborateur, ajustée au
  * périmètre qu'on s'apprête à enregistrer (cf. `ajusterCoursHerites`).
@@ -155,13 +209,7 @@ export async function coursHeritesAjustes(
   const nouveauxColleges = deployerPerimetre(normaliserPerimetre(perimetre), enfantsDe).specialites;
   if (nouveauxColleges === 'toutes') return undefined;
 
-  // Tranches : une longue liste d'ids dans in() dépasse la taille d'URL admise.
-  const collegeDe: Record<string, string> = {};
-  for (let i = 0; i < cours.length; i += 150) {
-    const { data, error } = await a.from('cours').select('id, matiere_id').in('id', cours.slice(i, i + 150));
-    if (error) throw new Error(error.message);
-    for (const r of (data ?? []) as { id: string; matiere_id: string }[]) collegeDe[r.id] = r.matiere_id;
-  }
+  const collegeDe = await collegesDesItems(cours, a);
   const ajoutes = nouveauxColleges.filter((c) => !anciensColleges.includes(c));
   const itemsDe: Record<string, string[]> = {};
   if (ajoutes.length > 0) {

@@ -9,6 +9,7 @@ import {
   normaliserRecherche, sousCollegesCouverts, type CollegeChoix,
 } from '@/lib/equipe/selection-colleges';
 import { Pastille } from './controles';
+import { AccesItems } from './acces-items';
 
 /**
  * Périmètre d'un collaborateur : « certaines spécialités » (recherche,
@@ -192,6 +193,9 @@ export function SelecteurSpecialites({
               })}
             </ul>
           </div>
+
+          {/* Collège entier ou items choisis */}
+          <AccesItems selection={selection} nom={(id) => libelle(noms.get(id), id)} perimetre={perimetre} onChange={onChange} />
         </div>
       )}
 

@@ -155,13 +155,16 @@ export function CollaborateurDialog({
   // Validation par onglet : la pastille de l'onglet signale ce qui manque.
   const manqueProfil = mode === 'creer' && (!firstName.trim() || !lastName.trim() || !emailValide(email));
   const manqueSpecialites = !toutesSpecialites && specialitesChoisies.length === 0;
-  const aCompleter: Record<Onglet, boolean> = { profil: manqueProfil, droits: false, specialites: manqueSpecialites };
+  // Spécialité limitée à des items sans aucun item coché : elle ne serait pas ouverte.
+  const itemsManquants = toutesSpecialites ? [] : specialitesChoisies.filter((c) => perimetre.items?.[c]?.length === 0);
+  const aCompleter: Record<Onglet, boolean> = { profil: manqueProfil, droits: false, specialites: manqueSpecialites || itemsManquants.length > 0 };
 
   const indexOnglet = ONGLETS.findIndex((o) => o.cle === onglet);
   const enregistrer = () => {
     setError(null); setInfo(null);
     if (manqueProfil) { setOnglet('profil'); setError('Renseignez le prénom, le nom et une adresse e-mail valide.'); return; }
     if (manqueSpecialites) { setOnglet('specialites'); setError('Choisissez au moins une spécialité, ou « Toutes les spécialités ».'); return; }
+    if (itemsManquants.length > 0) { setOnglet('specialites'); setError('Cochez au moins un item dans chaque spécialité limitée à des items, ou rouvrez-la en entier.'); return; }
     start(async () => {
       const commun = {
         fonction: fonction || null, modele: modele || null, modules, perimetre,

@@ -82,6 +82,16 @@ export type Modules = { suivi: ModuleSuivi; contenus: ModuleContenus; blog: Modu
 export type Perimetre = {
   specialites: 'toutes' | string[];
   formules: Record<string, Formule[]>;
+  /**
+   * Accès limité à certains items (demande de Cyril, 07/10/2026) : une clé =
+   * une spécialité retenue dont seuls les items listés sont ouverts (ceux du
+   * collège et de ses sous-collèges) ; une spécialité sans clé est ouverte
+   * en entier. Absent = périmètre saisi avant cette option (la liste
+   * historique `cours` est alors ajustée par `ajusterCoursHerites`).
+   * Les gardes ne lisent jamais ce champ : `coursDuPerimetre` en dérive la
+   * liste `cours` du scope.
+   */
+  items?: Record<string, string[]>;
 };
 
 export type RoleModele =
@@ -255,7 +265,7 @@ export function normaliserPerimetre(raw: unknown): Perimetre {
   // Fermé par défaut : un périmètre absent ou mal formé n'ouvre AUCUNE
   // spécialité. Seul `specialites: 'toutes'` écrit en toutes lettres ouvre tout.
   if (!raw || typeof raw !== 'object') return perimetreVide();
-  const r = raw as { specialites?: unknown; formules?: unknown };
+  const r = raw as { specialites?: unknown; formules?: unknown; items?: unknown };
   const specialites: 'toutes' | string[] = r.specialites === 'toutes'
     ? 'toutes'
     : Array.isArray(r.specialites)
@@ -269,7 +279,13 @@ export function normaliserPerimetre(raw: unknown): Perimetre {
     }
   }
   if (!out['*']) out['*'] = [...FORMULES];
-  return { specialites, formules: out };
+  if (!r.items || typeof r.items !== 'object' || specialites === 'toutes') return { specialites, formules: out };
+  const items: Record<string, string[]> = {};
+  for (const [k, v] of Object.entries(r.items as Record<string, unknown>)) {
+    if (!specialites.includes(k) || !Array.isArray(v)) continue;
+    items[k] = Array.from(new Set(v.filter((x): x is string => typeof x === 'string' && x.length > 0)));
+  }
+  return { specialites, formules: out, items };
 }
 
 /* ─────────────────────────────── lecture ─────────────────────────────── */
@@ -819,7 +835,11 @@ export function resumePerimetre(perimetre: Perimetre, nomCollege: (id: string) =
   } else if (perimetre.specialites.length === 0) {
     out.push('Aucune spécialité (périmètre vide)');
   } else {
-    for (const c of perimetre.specialites) out.push(`${nomCollege(c)} — ${libelleFormules(formulesPour(perimetre, c))}`);
+    for (const c of perimetre.specialites) {
+      const items = perimetre.items?.[c];
+      const portee = items ? ` (${items.length} item${items.length > 1 ? 's' : ''} choisi${items.length > 1 ? 's' : ''})` : '';
+      out.push(`${nomCollege(c)}${portee} — ${libelleFormules(formulesPour(perimetre, c))}`);
+    }
   }
   return out;
 }
@@ -847,7 +867,7 @@ export function deployerPerimetre(perimetre: Perimetre, enfantsDe: EnfantsDe): P
       else delete formules[enfant];
     }
   }
-  return { specialites, formules };
+  return { specialites, formules, ...(perimetre.items ? { items: perimetre.items } : {}) };
 }
 
 /**
@@ -895,7 +915,99 @@ export function replierPerimetre(perimetre: Perimetre, parentDe: ParentDe): Peri
   const specialites = perimetre.specialites.filter((c) => { const p = parentDe[c]; return !(p && presents.has(p)); });
   const formules: Perimetre['formules'] = {};
   for (const [k, v] of Object.entries(perimetre.formules)) if (k === '*' || specialites.includes(k)) formules[k] = v;
-  return { specialites, formules };
+  if (!perimetre.items) return { specialites, formules };
+  const items: Record<string, string[]> = {};
+  for (const [k, v] of Object.entries(perimetre.items)) if (specialites.includes(k)) items[k] = v;
+  return { specialites, formules, items };
+}
+
+/**
+ * Liste `cours` d'un périmètre DÉPLOYÉ qui limite des spécialités à certains
+ * items. La RLS (`accessible_cours_ids`) et les gardes n'ont qu'une liste
+ * d'items, valable pour TOUS les collèges dès qu'elle existe : elle porte donc
+ * les items choisis ET tous les items des spécialités ouvertes en entier.
+ *
+ *  - `collegeDe` : collège de chaque item choisi (items supprimés absents) ;
+ *  - `itemsDe` : items de chaque collège ouvert en entier.
+ *
+ * Renvoie le périmètre à enregistrer (une spécialité limitée à zéro item n'est
+ * plus ouverte du tout : une liste vide ouvrirait tout) et la liste, ou
+ * `undefined` quand aucune spécialité n'est limitée.
+ */
+export function coursDuPerimetre(p: {
+  perimetre: Perimetre;
+  enfantsDe: EnfantsDe;
+  collegeDe: Record<string, string>;
+  itemsDe: Record<string, string[]>;
+}): { perimetre: Perimetre; cours: string[] | undefined } {
+  const { perimetre } = p;
+  if (perimetre.specialites === 'toutes' || !perimetre.items) return { perimetre, cours: undefined };
+  const limites = collegesLimites(perimetre, p.enfantsDe);
+  const retenus = new Set<string>();
+  const items: Record<string, string[]> = {};
+  for (const [cle, ids] of Object.entries(perimetre.items)) {
+    const couverts = new Set([cle, ...(p.enfantsDe[cle] ?? [])]);
+    const valides = ids.filter((id) => couverts.has(p.collegeDe[id] ?? ''));
+    if (valides.length === 0) continue;
+    items[cle] = valides;
+    for (const id of valides) retenus.add(id);
+  }
+  // Une spécialité limitée sans item valide sort du périmètre (avec ses
+  // sous-collèges) : une liste vide n'ouvrirait rien… ou tout.
+  const fermes = new Set<string>();
+  for (const cle of Object.keys(perimetre.items)) {
+    if (items[cle]) continue;
+    fermes.add(cle);
+    for (const e of p.enfantsDe[cle] ?? []) fermes.add(e);
+  }
+  const specialites = perimetre.specialites.filter((c) => !fermes.has(c));
+  const formules: Perimetre['formules'] = {};
+  for (const [k, v] of Object.entries(perimetre.formules)) if (k === '*' || specialites.includes(k)) formules[k] = v;
+  const enregistre: Perimetre = { specialites, formules, items };
+  if (retenus.size === 0) return { perimetre: enregistre, cours: undefined };
+  for (const c of specialites) {
+    if (limites.has(c)) continue;
+    for (const id of p.itemsDe[c] ?? []) retenus.add(id);
+  }
+  return { perimetre: enregistre, cours: Array.from(retenus) };
+}
+
+/** Collèges (sous-collèges compris) dont l'accès est limité à certains items. */
+export function collegesLimites(perimetre: Perimetre, enfantsDe: EnfantsDe): Set<string> {
+  const out = new Set<string>();
+  for (const cle of Object.keys(perimetre.items ?? {})) {
+    out.add(cle);
+    for (const e of enfantsDe[cle] ?? []) out.add(e);
+  }
+  return out;
+}
+
+/**
+ * Lecture d'un compte dont la liste `cours` précède l'option « items
+ * choisis » : les items sont rangés sous la spécialité affichée (repliée) qui
+ * les contient. Une spécialité sans aucun item de la liste est aujourd'hui
+ * fermée en pratique (la liste l'emporte) : elle apparaît limitée à zéro item,
+ * pour que l'administrateur le voie et tranche.
+ */
+export function itemsDepuisCours(p: {
+  perimetre: Perimetre;
+  cours: string[] | undefined;
+  collegeDe: Record<string, string>;
+  parentDe: ParentDe;
+}): Perimetre {
+  const { perimetre } = p;
+  if (perimetre.items || perimetre.specialites === 'toutes' || !p.cours?.length) return perimetre;
+  // Clés = spécialités telles que le dialogue les affiche (un parent coché
+  // couvre ses sous-collèges).
+  const items: Record<string, string[]> = {};
+  for (const c of replierPerimetre(perimetre, p.parentDe).specialites as string[]) items[c] = [];
+  for (const id of p.cours) {
+    const college = p.collegeDe[id];
+    if (!college) continue;
+    if (items[college]) items[college].push(id);
+    else if (p.parentDe[college] && items[p.parentDe[college]]) items[p.parentDe[college]].push(id);
+  }
+  return { ...perimetre, items };
 }
 
 /** Zones toujours interdites au personnel non administrateur (cahier §7). */
