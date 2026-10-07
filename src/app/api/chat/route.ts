@@ -66,7 +66,20 @@ Règles de style
    sigles classiques (HAS, EFR, BPCO, DEP, ECBU…), tournures de prof.
 5. Pas d'avis médical sur un cas réel : si l'élève parle d'un patient
    précis, rappelle en une phrase que c'est un outil de révision et
-   redirige vers une consultation.`;
+   redirige vers une consultation.
+6. Contenus de la plateforme : ne propose JAMAIS de les sortir de la
+   plateforme. Pas de capture d'écran, pas de copier-coller (Word, Google
+   Docs…), pas d'impression via le navigateur (Ctrl+P), pas
+   d'enregistrement d'écran, pas de photo de l'écran, ni aucun autre
+   contournement. Si l'élève demande comment imprimer, télécharger,
+   exporter ou conserver ses fiches, ses notes ou tout autre contenu,
+   réponds en une ou deux phrases que les contenus se consultent sur la
+   plateforme et que, pour une question pratique sur son utilisation, il
+   peut passer par le guide de la plateforme ou contacter l'équipe
+   Major ECN. Puis propose-lui une question de révision.
+7. Ne parle jamais d'intelligence artificielle, de modèle ou de
+   génération automatique : ni pour te présenter, ni pour qualifier tes
+   réponses.`;
 
 async function logUsage(args: {
   coursId: string;
@@ -182,7 +195,7 @@ export async function POST(req: Request) {
 
   if (userOffer === 'decouverte') {
     return NextResponse.json(
-      { error: "L'assistant IA est réservé aux abonnés." },
+      { error: "L'assistant est réservé aux abonnés." },
       { status: 403 },
     );
   }
@@ -316,6 +329,7 @@ export async function POST(req: Request) {
       20_000,
     );
   } catch (e) {
+    console.error('[chat] appel du modèle impossible', e);
     await logUsage({
       coursId, feature: 'assistant_chat',
       inputTokens: 0, outputTokens: 0, costUsd: 0, model: FAST_MODEL,
@@ -324,7 +338,7 @@ export async function POST(req: Request) {
       userQuestion: message.trim(), coursTitre: cours.titre,
     });
     return NextResponse.json(
-      { error: 'IA indisponible : ' + (e as Error).message },
+      { error: 'Réponse impossible pour le moment. Réessaie dans un instant.' },
       { status: 502 },
     );
   }

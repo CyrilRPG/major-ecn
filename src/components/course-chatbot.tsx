@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { ArrowUp, Bot, Loader2, ShieldCheck, Sparkles, X } from 'lucide-react';
+import { ArrowUp, Loader2, MessagesSquare, ShieldCheck, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AskTeacherButton } from '@/components/student/ask-teacher-button';
 import { Markdown } from '@/components/ui/markdown';
@@ -61,7 +61,7 @@ export function CourseChatbot({
       <header className="px-5 py-4 border-b border-(--color-border)">
         <div className="flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#E4002B_0%,#F97316_100%)] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]">
-            <Bot className="h-4.5 w-4.5" />
+            <MessagesSquare className="h-4.5 w-4.5" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-(--color-ink) text-sm leading-tight">Assistant du cours</p>
@@ -98,7 +98,7 @@ export function CourseChatbot({
           const isLastAssistant = isAssistant && i === lastAssistantIdx;
           const conversationContext = messages
             .slice(0, i + 1)
-            .map((mm) => `${mm.role === 'user' ? 'Étudiant' : 'IA'} : ${mm.content}`)
+            .map((mm) => `${mm.role === 'user' ? 'Étudiant' : 'Assistant'} : ${mm.content}`)
             .join('\n\n');
           return (
             <div key={i} className={cn('flex flex-col', m.role === 'user' ? 'items-end' : 'items-start')}>
@@ -154,8 +154,7 @@ export function CourseChatbot({
             <ArrowUp className="h-4 w-4" />
           </button>
         </div>
-        <p className="mt-2 text-[10px] text-(--color-ink-muted) flex items-center gap-1">
-          <Sparkles className="h-3 w-3" />
+        <p className="mt-2 text-[10px] text-(--color-ink-muted)">
           Entrée pour envoyer, Maj+Entrée pour un retour à la ligne.
         </p>
       </div>

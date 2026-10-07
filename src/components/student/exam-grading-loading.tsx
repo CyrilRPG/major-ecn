@@ -47,7 +47,7 @@ export function ExamGradingLoading({ submissionId }: { submissionId: string }) {
       ) : (
         <>
           <h1 className="mt-5 font-display text-xl font-bold text-(--color-ink)">Votre copie est en cours de correction…</h1>
-          <p className="mt-2 text-sm text-(--color-ink-soft)">L’intelligence artificielle analyse vos réponses. Cela prend quelques secondes — ne fermez pas cette page.</p>
+          <p className="mt-2 text-sm text-(--color-ink-soft)">Vos réponses sont en cours d’analyse. Cela prend quelques secondes — ne fermez pas cette page.</p>
         </>
       )}
     </div>

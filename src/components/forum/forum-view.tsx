@@ -476,7 +476,7 @@ function EmptyState({ role, activeTab }: { role: Role; activeTab: Tab }) {
       </p>
       <p className="mt-1 text-xs text-(--color-ink-muted)">
         {role === 'student' && activeTab === 'private'
-          ? 'Posez votre première question depuis un cours — cliquez sur « Appeler un professeur » après une réponse de l’IA.'
+          ? 'Posez votre première question depuis un cours — cliquez sur « Appeler un professeur » après une réponse de l’assistant.'
           : 'Les nouvelles questions des élèves apparaîtront ici.'}
       </p>
     </div>
