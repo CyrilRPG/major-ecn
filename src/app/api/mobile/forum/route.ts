@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- `forum_*` et les colonnes récentes de
    `profiles` sont absentes de l'instantané curaté de `types/database.ts`. */
 import { NextResponse } from 'next/server';
+import { chargerQcmJoint } from '@/lib/forum/qcm-joint-server';
+import { apercuEnonce, intituleQuestionJointe, type QcmJoint } from '@/lib/forum/qcm-joint';
 import { z } from 'zod';
 import { getBearerUser, type RequestAuth } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
@@ -170,8 +172,21 @@ export async function GET(req: Request) {
   return NextResponse.json({ role: profile.role, questions, colleges }, { headers: { 'Cache-Control': 'private, no-store' } });
 }
 
+/** Question QCM / QROC jointe depuis un lecteur de l'app (même contrat que le web). */
+const QcmJointSchema = z.object({
+  source: z.enum(['qcm', 'examen']).optional(),
+  questionId: z.string().uuid(),
+  lettres: z.array(z.string().max(4)).max(26).nullish(),
+  texte: z.string().max(2000).nullish(),
+});
+
 const PostSchema = z.discriminatedUnion('action', [
-  z.object({ action: z.literal('ask'), body: z.string(), cours_id: z.string().max(120).nullish(), matiere_id: z.string().max(120).nullish() }),
+  z.object({
+    action: z.literal('ask'), body: z.string(), cours_id: z.string().max(120).nullish(), matiere_id: z.string().max(120).nullish(),
+    qcm: QcmJointSchema.nullish(), ai_context: z.string().max(20000).nullish(),
+    /** Question jointe affichée au professeur (défaut oui) ; sinon routage seul. */
+    joindre_qcm: z.boolean().nullish(),
+  }),
   z.object({ action: z.literal('reply'), question_id: z.string().uuid(), body: z.string() }),
   z.object({
     action: z.literal('report'),
@@ -182,7 +197,10 @@ const PostSchema = z.discriminatedUnion('action', [
   }),
 ]);
 
-async function poser(auth: RequestAuth, profile: Profil, texte: string, coursId: string | null, collegeChoisi: string | null) {
+async function poser(
+  auth: RequestAuth, profile: Profil, texte: string, coursDemande: string | null, collegeChoisi: string | null,
+  qcm: z.infer<typeof QcmJointSchema> | null = null, aiContext: string | null = null, joindre = true,
+) {
   const body = texte.trim();
   if (body.length < 8) return NextResponse.json({ error: 'Formulez une question d’au moins 8 caractères.' }, { status: 400 });
   if (body.length > 4000) return NextResponse.json({ error: 'Question trop longue (4000 caractères max).' }, { status: 400 });
@@ -190,6 +208,16 @@ async function poser(auth: RequestAuth, profile: Profil, texte: string, coursId:
     return NextResponse.json({ error: 'Les professeurs ne posent pas de questions sur le forum — ils y répondent.' }, { status: 403 });
   }
   const db = auth.supabase as any;
+
+  // Question du lecteur jointe : relue en base (RLS de l'élève), elle fixe
+  // l'item — donc les référents qui reçoivent la question.
+  let qcmJoint: QcmJoint | null = null;
+  if (qcm) {
+    qcmJoint = await chargerQcmJoint(db, { ...qcm, lettres: qcm.lettres ?? null, texte: qcm.texte ?? null }, auth.user.id);
+    if (!qcmJoint) return NextResponse.json({ error: 'Question introuvable : impossible de la joindre.' }, { status: 400 });
+  }
+  const coursId = qcmJoint ? qcmJoint.coursId : coursDemande;
+  if (!coursId && qcmJoint?.matiereId) collegeChoisi = qcmJoint.matiereId;
 
   let coursTitre: string | null = null;
   let matiereId: string | null = null;
@@ -227,7 +255,9 @@ async function poser(auth: RequestAuth, profile: Profil, texte: string, coursId:
       cours_titre: coursTitre,
       matiere_nom: matiereNom,
       body,
-      ai_context: null,
+      ai_context: aiContext?.slice(0, 20000) || null,
+      qcm_question_id: joindre ? qcmJoint?.questionId ?? null : null,
+      qcm_contexte: joindre ? qcmJoint : null,
     })
     .select('id')
     .single();
@@ -253,6 +283,9 @@ async function poser(auth: RequestAuth, profile: Profil, texte: string, coursId:
     coursTitre,
     matiereNom,
     body,
+    questionJointe: joindre && qcmJoint
+      ? `${intituleQuestionJointe(qcmJoint)} : ${apercuEnonce(qcmJoint.enonce, 140)}`
+      : null,
   }).catch(() => { /* best-effort, ne bloque jamais la création */ });
 
   return NextResponse.json({ ok: true, id: data.id });
@@ -268,7 +301,9 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: 'Données invalides.' }, { status: 400 });
   const input = parsed.data;
 
-  if (input.action === 'ask') return poser(auth, profile, input.body, input.cours_id ?? null, input.matiere_id ?? null);
+  if (input.action === 'ask') {
+    return poser(auth, profile, input.body, input.cours_id ?? null, input.matiere_id ?? null, input.qcm ?? null, input.ai_context ?? null, input.joindre_qcm !== false);
+  }
 
   const db = auth.supabase as any;
   // La question doit être lisible par l'élève (RLS : publique ou la sienne).

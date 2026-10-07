@@ -46,6 +46,12 @@ export async function askQuestionAction(input: {
    * référents qui reçoivent la question) et le professeur la voit en entier.
    */
   qcm?: QcmJointEnvoi | null;
+  /**
+   * Question jointe affichée au professeur (défaut oui). Depuis l'assistant,
+   * l'élève choisit de la joindre (case décochée par défaut) : sans elle, la
+   * question sert seulement à router vers les référents de l'item.
+   */
+  joindreQcm?: boolean;
 }): Promise<Result> {
   const body = input.body?.trim();
   if (!body || body.length < 8) return { error: 'Formulez une question d’au moins 8 caractères.' };
@@ -67,6 +73,7 @@ export async function askQuestionAction(input: {
     if (!qcmJoint) return { error: 'Question introuvable : impossible de la joindre.' };
   }
   const coursId = qcmJoint?.coursId ?? input.coursId ?? null;
+  const joindre = input.joindreQcm !== false;
 
   // Look up cours/matiere context if provided.
   let coursTitre: string | null = null;
@@ -115,8 +122,8 @@ export async function askQuestionAction(input: {
       matiere_nom: matiereNom,
       body,
       ai_context: input.aiContext ?? null,
-      qcm_question_id: qcmJoint?.questionId ?? null,
-      qcm_contexte: qcmJoint,
+      qcm_question_id: joindre ? qcmJoint?.questionId ?? null : null,
+      qcm_contexte: joindre ? qcmJoint : null,
     })
     .select('id')
     .single();
@@ -142,7 +149,7 @@ export async function askQuestionAction(input: {
     coursTitre,
     matiereNom,
     body,
-    questionJointe: qcmJoint
+    questionJointe: joindre && qcmJoint
       ? `${intituleQuestionJointe(qcmJoint)} : ${apercuEnonce(qcmJoint.enonce, 140)}`
       : null,
   }).catch(() => { /* best-effort, ne bloque jamais la création */ });

@@ -81,6 +81,8 @@ function QuestionSurQcm({
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [pending, start] = useTransition();
+  // Depuis l'assistant : l'exercice ne part au professeur que si l'élève coche.
+  const [joindre, setJoindre] = useState(false);
 
   const envoi: QcmJointEnvoi = {
     source,
@@ -137,6 +139,8 @@ function QuestionSurQcm({
         body,
         qcm: envoi,
         aiContext: conversation || null,
+        // Sans échange avec l'assistant, la question est toujours jointe.
+        joindreQcm: conversation ? joindre : true,
       });
       if ('error' in res) setError(res.error);
       else setDone(true);
@@ -297,9 +301,20 @@ function QuestionSurQcm({
           ) : (
             <form onSubmit={envoyerProf} className="space-y-3">
               {conversation && (
-                <p className="text-xs text-(--color-ink-soft)">
-                  Votre échange avec l’assistant sera joint lui aussi.
-                </p>
+                <>
+                  <p className="text-xs text-(--color-ink-soft)">
+                    Votre échange avec l’assistant sera joint lui aussi.
+                  </p>
+                  <label className="flex cursor-pointer items-center gap-2 text-sm text-(--color-ink)">
+                    <input
+                      type="checkbox"
+                      checked={joindre}
+                      onChange={(e) => setJoindre(e.target.checked)}
+                      className="h-4 w-4 cursor-pointer rounded border-(--color-border) accent-(--color-primary)"
+                    />
+                    Joindre l’exercice ci-joint
+                  </label>
+                </>
               )}
               <textarea
                 value={body}
