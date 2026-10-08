@@ -328,9 +328,10 @@ export function EquipeList({ rows, colleges }: { rows: LigneEquipe[]; colleges: 
                         <Button asChild size="sm" variant="outline" className="gap-1.5">
                           <Link href={`/admin/equipe/${r.id}`}><Eye className="h-3.5 w-3.5" /> Voir ses permissions</Link>
                         </Button>
-                        {!r.last_sign_in && (
-                          <ResendActivationButton userId={r.id} displayName={nom(r)} cible="la personne" />
-                        )}
+                        {/* Toujours disponible, comme pour les élèves : invitation
+                            adaptée au poste si le compte n'est pas activé, sinon
+                            lien de réinitialisation du mot de passe. */}
+                        <ResendActivationButton userId={r.id} displayName={nom(r)} cible="la personne" libelle="Lien mot de passe" />
                         <ImpersonateEquipe userId={r.id} nom={nom(r)} />
                         <ToggleActiveButton userId={r.id} displayName={nom(r)} isActive={r.is_active} />
                       </div>

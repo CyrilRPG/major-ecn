@@ -10,6 +10,7 @@ import {
   ZONES_RESERVEES_ADMIN, accesEquipeExpire, eleveDansPerimetre, lireScopeEquipe, pagesDuScope, replierPerimetre, resumeModules, resumePerimetre,
 } from '@/lib/auth/collaborateurs';
 import { hierarchieColleges } from '@/lib/equipe/server';
+import { ResendActivationButton } from '@/components/admin/resend-activation-button';
 
 export const dynamic = 'force-dynamic';
 
@@ -61,6 +62,9 @@ export default async function ApercuPermissionsPage({ params }: { params: Promis
           {p.access_end ? ` · fin d’accès le ${new Date(p.access_end).toLocaleDateString('fr-FR')}` : ''}
           {scope.mfa_obligatoire ? ' · 2FA obligatoire' : ''}
         </p>
+        <div className="mt-3">
+          <ResendActivationButton userId={p.id} displayName={nom} cible="la personne" libelle="Envoyer le lien pour choisir son mot de passe" />
+        </div>
       </header>
 
       <div className="grid gap-4 md:grid-cols-2">

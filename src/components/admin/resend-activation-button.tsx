@@ -20,11 +20,13 @@ type Reponse = {
  * plus l'erreur technique brute : on donne le LIEN D'ACTIVATION à copier, pour
  * que l'équipe puisse débloquer l'élève par un autre moyen.
  */
-export function ResendActivationButton({ userId, displayName, cible = 'l’élève' }: {
+export function ResendActivationButton({ userId, displayName, cible = 'l’élève', libelle }: {
   userId: string;
   displayName: string;
   /** Destinataire dans les messages (« l’élève », « la personne »…). */
   cible?: string;
+  /** Bouton avec texte (équipe) plutôt qu'une simple icône. */
+  libelle?: string;
 }) {
   const [pending, start] = useTransition();
   const [done, setDone] = useState<null | 'ok' | 'error'>(null);
@@ -68,10 +70,11 @@ export function ResendActivationButton({ userId, displayName, cible = 'l’élè
       <div className="inline-flex items-center gap-2">
         <Button
           type="button"
-          variant="ghost"
-          size="icon"
-          title={`Renvoyer l'email d'activation à ${displayName}`}
-          aria-label="Renvoyer l'email d'activation"
+          variant={libelle ? 'outline' : 'ghost'}
+          size={libelle ? 'sm' : 'icon'}
+          className={libelle ? 'gap-1.5' : undefined}
+          title={`Envoyer à ${displayName} le lien pour choisir son mot de passe`}
+          aria-label={libelle ?? 'Renvoyer l’email d’activation'}
           onClick={onClick}
           disabled={pending}
         >
@@ -80,6 +83,7 @@ export function ResendActivationButton({ userId, displayName, cible = 'l’élè
             : done === 'ok'
             ? <CheckCircle2 className="h-4 w-4 text-(--color-success)" />
             : <MailWarning className="h-4 w-4 text-[#B26A00]" />}
+          {libelle}
         </Button>
         {msg && (
           <span className={`max-w-[22rem] text-[10.5px] font-semibold ${done === 'ok' ? 'text-(--color-success)' : 'text-(--color-danger)'}`}>
