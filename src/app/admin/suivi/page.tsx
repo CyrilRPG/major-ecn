@@ -97,7 +97,40 @@ export default async function SuiviDashboardPage({ searchParams }: { searchParam
         </div>
       </form>
 
+      {/* Module jamais démarré : sans campagne, chaque indicateur vaut zéro et
+          l'écran paraissait vide (constaté le 08/10/2026 : 923 élèves dans le
+          périmètre, aucune campagne, aucun créneau, aucun rendez-vous). */}
+      {bundle.campaigns.length === 0 && bundle.appointments.length === 0 && (
+        <section className="mb-6 rounded-(--radius-card) border border-(--color-primary)/30 bg-(--color-primary-soft)/40 p-5">
+          <h2 className="text-base font-semibold text-(--color-ink)">Le suivi individuel n’a pas encore démarré</h2>
+          <p className="mt-1 text-sm text-(--color-ink-soft)">
+            Les indicateurs ci-dessous se remplissent avec les campagnes d’entretiens : pour l’instant, aucune
+            campagne, aucun créneau et aucun rendez-vous n’ont été créés.{' '}
+            <strong className="text-(--color-ink)">{bundle.candidates.length} élève{bundle.candidates.length > 1 ? 's' : ''}</strong>{' '}
+            {bundle.candidates.length > 1 ? 'sont' : 'est'} déjà dans votre périmètre.
+          </p>
+          <ol className="mt-4 grid gap-3 md:grid-cols-3">
+            {[
+              { n: 1, titre: 'Ouvrir des créneaux', texte: 'Les plages où les entretiens peuvent avoir lieu.', href: '/admin/suivi/creneaux' },
+              { n: 2, titre: 'Créer une campagne', texte: 'Choisir les élèves ciblés (spécialité, formule, voie) et envoyer les invitations.', href: '/admin/suivi/campagnes' },
+              { n: 3, titre: 'Suivre les élèves', texte: 'Fiches candidats, comptes rendus, actions et alertes.', href: '/admin/suivi/candidats' },
+            ].map((e) => (
+              <li key={e.n}>
+                <Link href={e.href} className="flex h-full gap-3 rounded-lg border border-(--color-border) bg-(--color-surface) p-3 text-sm transition-colors hover:border-(--color-primary)/50">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-(--color-primary) text-xs font-bold text-(--color-primary-fg)">{e.n}</span>
+                  <span>
+                    <span className="block font-semibold text-(--color-ink)">{e.titre}</span>
+                    <span className="block text-xs text-(--color-ink-soft)">{e.texte}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
+        <Kpi label="Élèves dans le périmètre" value={bundle.candidates.length} />
         <Kpi label="Candidats ciblés" value={stats.targeted} />
         <Kpi label="Invitations envoyées" value={stats.invited} />
         <Kpi label="Rendez-vous réservés" value={stats.booked} />
