@@ -63,7 +63,7 @@ const GROUPS: Group[] = [
       { href: '/admin/sessions', label: 'Sessions EVC', Icon: CalendarClock, adminOnly: true },
       // Source unique des dates d'épreuve, inscriptions et postes (accueil, pages spécialités, fiches élèves).
       { href: '/admin/calendrier-evc', label: 'Calendrier EVC', Icon: CalendarRange, adminOnly: true },
-      { href: '/admin/agenda', label: 'Agenda', Icon: CalendarDays },
+      { href: '/admin/agenda', label: 'Agenda', Icon: CalendarDays, onglet: 'agenda' },
       { href: '/admin/emargements', label: 'Feuilles d’émargement', Icon: FileSignature, adminOnly: true },
     ],
   },

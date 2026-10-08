@@ -1,29 +1,29 @@
-import { requireAdmin } from '@/lib/auth/require-role';
-import { createClient } from '@/lib/supabase/server';
+import { requireOnglet } from '@/lib/auth/require-role';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { AdminAgenda, type PlatformEventRow } from '@/components/admin/agenda/admin-agenda';
 import { EDN_FACULTE_ID } from '@/lib/data/navigator';
-import { ajouterJours, instantParis } from '@/lib/agenda/planning';
+import { instantParis } from '@/lib/agenda/planning';
 
 export const metadata = { title: 'Agenda' };
 
 export default async function AdminAgendaPage() {
-  await requireAdmin();
-  const supabase = await createClient();
+  // Administrateurs et Gestionnaire de l'agenda (module « Agenda »).
+  await requireOnglet('agenda');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const admin = createAdminClient() as any;
 
-  // Fenêtre large, en heure de PARIS (le serveur est en UTC) : 4 mois passés,
-  // un an à venir. Les séances sont rares (quelques dizaines par an) ; une
-  // fenêtre trop courte montrait des semaines vides où l'on recréait des
-  // séances existantes.
+  // Tous les évènements : quelques centaines au plus. Les vues « Liste » et
+  // « Plusieurs mois » couvrent n'importe quelle plage, passée comme à venir.
   const aujourdHui = instantParis().date;
 
-  const [{ data: events }, { data: fac }] = await Promise.all([
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (supabase as any).from('platform_events')
+  const [events, { data: fac }] = await Promise.all([
+    fetchAllRows<PlatformEventRow>((from, to) => admin.from('platform_events')
       .select('id, title, date, start_time, end_time, college, intervenant, zoom_url, notes, required_offers, scope_type, scope_colleges, voies')
-      .gte('date', ajouterJours(aujourdHui, -120))
-      .lte('date', ajouterJours(aujourdHui, 365))
-      .order('date').order('start_time'),
-    supabase.from('facultes')
+      .eq('faculte_id', EDN_FACULTE_ID)
+      .order('date').order('start_time').order('id')
+      .range(from, to)),
+    admin.from('facultes')
       .select('semestres(matieres(id, nom, order_index, parent_matiere_id))')
       .eq('id', EDN_FACULTE_ID).maybeSingle(),
   ]);
@@ -32,7 +32,7 @@ export default async function AdminAgendaPage() {
   // niveau (parent NULL) + spécialités de Médecine générale (col-mg-*), en
   // excluant l'espace Découverte. Même modèle que le sélecteur d'accès élève.
   const colleges = (
-    ((fac as unknown as { semestres?: { matieres?: { id: string; nom: string; order_index: number | null; parent_matiere_id: string | null }[] }[] } | null)
+    ((fac as { semestres?: { matieres?: { id: string; nom: string; order_index: number | null; parent_matiere_id: string | null }[] }[] } | null)
       ?.semestres ?? [])
   )
     .flatMap((s) => s.matieres ?? [])
@@ -41,8 +41,8 @@ export default async function AdminAgendaPage() {
     .map((m) => ({ id: m.id, nom: m.nom, parentId: m.parent_matiere_id }));
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
-      <header className="mb-6">
+    <main className="mx-auto w-full max-w-[96rem] px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
+      <header className="mb-5">
         <p className="text-xs font-medium text-(--color-ink-muted)">Administration</p>
         <h1 className="mt-1 text-xl font-semibold tracking-tight text-(--color-ink)">Agenda plateforme</h1>
         <p className="mt-0.5 text-sm text-(--color-ink-soft)">
@@ -51,11 +51,7 @@ export default async function AdminAgendaPage() {
           Seuls les étudiants ciblés voient l’évènement dans leur agenda.
         </p>
       </header>
-      <AdminAgenda
-        events={(events ?? []) as PlatformEventRow[]}
-        colleges={colleges}
-        aujourdHui={aujourdHui}
-      />
+      <AdminAgenda events={events} colleges={colleges} aujourdHui={aujourdHui} />
     </main>
   );
 }

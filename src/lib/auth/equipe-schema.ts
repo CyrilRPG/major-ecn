@@ -33,6 +33,8 @@ export const ModulesSchema = z.object({
     depublier: z.boolean(),
     supprimer: z.boolean(),
   }),
+  // Facultatif : l'app mobile ne l'envoie pas (le serveur conserve alors l'existant).
+  agenda: z.object({ actif: z.boolean() }).optional(),
 });
 
 export const PerimetreSchema = z.object({
@@ -43,7 +45,7 @@ export const PerimetreSchema = z.object({
   items: z.record(z.string(), z.array(z.string().uuid()).max(3000)).optional(),
 });
 
-export const RoleModeleSchema = z.enum(['commercial', 'gestionnaire_video', 'redacteur_blog', 'enseignant_relecteur', 'responsable_complet']);
+export const RoleModeleSchema = z.enum(['commercial', 'gestionnaire_video', 'redacteur_blog', 'enseignant_relecteur', 'gestionnaire_agenda', 'responsable_complet']);
 
 /** Champs communs à la création et à la modification. */
 const Droits = z.object({

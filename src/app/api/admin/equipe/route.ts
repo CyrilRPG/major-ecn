@@ -4,7 +4,7 @@ import { desactiverCompte, reactiverCompte } from '@/lib/admin/compte-actif';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { CreerCollaborateurSchema, ModifierCollaborateurSchema } from '@/lib/auth/equipe-schema';
-import { composerScope, resumeModules } from '@/lib/auth/collaborateurs';
+import { composerScope, lireScopeEquipe, resumeModules } from '@/lib/auth/collaborateurs';
 import { appliquerScope, coursHeritesAjustes, perimetreAvecItems } from '@/lib/equipe/server';
 import { logAudit } from '@/lib/audit/log';
 import { sendEmail, siteUrl } from '@/lib/email/send';
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Données invalides' }, { status: 400 });
   }
-  const p = parsed.data;
+  const p = { ...parsed.data, modules: { ...parsed.data.modules, agenda: parsed.data.modules.agenda ?? { actif: false } } };
   // Spécialités limitées à certains items : liste `cours` dérivée.
   const avecItems = await perimetreAvecItems(p.perimetre);
   const perimetre = avecItems?.perimetre ?? p.perimetre;
@@ -163,6 +163,12 @@ async function modifier(adminId: string, body: unknown) {
   const { data: cible } = await a.from('profiles').select('id, role, first_name, last_name, permission_scope, is_active').eq('id', p.userId).maybeSingle();
   if (!cible) return NextResponse.json({ error: 'Compte introuvable.' }, { status: 404 });
   if (cible.role !== 'professor') return NextResponse.json({ error: 'Seul un membre du personnel non administrateur se gère ici.' }, { status: 400 });
+  // Module Agenda absent de la saisie (app mobile, qui ne le connaît pas
+  // encore) : on garde celui du compte plutôt que de le retirer en silence.
+  const modules = {
+    ...p.modules,
+    agenda: p.modules.agenda ?? lireScopeEquipe(cible.permission_scope)?.modules.agenda ?? { actif: false },
+  };
 
   // Spécialités limitées à certains items (dialogue web) : liste `cours`
   // dérivée du périmètre. Sinon, la restriction historique suit le nouveau
@@ -170,7 +176,7 @@ async function modifier(adminId: string, body: unknown) {
   const avecItems = await perimetreAvecItems(p.perimetre);
   const cours = avecItems ? avecItems.cours : await coursHeritesAjustes(a, cible.permission_scope, p.perimetre);
   const scope = await appliquerScope(p.userId, {
-    fonction: p.fonction ?? null, modele: p.modele ?? null, modules: p.modules, perimetre: avecItems?.perimetre ?? p.perimetre,
+    fonction: p.fonction ?? null, modele: p.modele ?? null, modules, perimetre: avecItems?.perimetre ?? p.perimetre,
     cours, mfa_obligatoire: !!p.mfa_obligatoire, referent: p.referent !== false,
   });
   const patch: Record<string, unknown> = {};

@@ -2,15 +2,26 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { requireAdmin } from '@/lib/auth/require-role';
-import { createClient } from '@/lib/supabase/server';
+import { requireStaff } from '@/lib/auth/require-role';
+import { ongletsDe } from '@/lib/auth/onglets-equipe';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 /**
  * CRUD admin pour les évènements plateforme (cours en visio, ECOS, concours blancs…).
  * Chaque évènement porte un scope de permissions (offres + collèges) qui
  * détermine côté étudiant si l'évènement est affiché dans l'agenda.
+ *
+ * Ouvert aux administrateurs et au personnel doté du module « Agenda »
+ * (Gestionnaire de l'agenda, 08/10/2026). La RLS de `platform_events`
+ * n'autorise l'écriture qu'aux administrateurs : le droit est vérifié ici,
+ * puis l'écriture passe par le client service-role.
  */
+
+async function gardeAgenda() {
+  const r = await requireStaff();
+  if (!r.isAdmin && !(await ongletsDe(r.profile)).agenda) return null;
+  return r;
+}
 
 const eventSchema = z.object({
   id: z.string().uuid().optional(),
@@ -59,11 +70,12 @@ function parseForm(form: FormData): unknown {
 }
 
 export async function upsertPlatformEvent(form: FormData) {
-  const { user } = await requireAdmin();
+  const garde = await gardeAgenda();
+  if (!garde) return { error: 'Accès réservé à la gestion de l’agenda.' };
+  const { user } = garde;
   const parsed = eventSchema.safeParse(parseForm(form));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? 'Données invalides.' };
   const d = parsed.data;
-  const supabase = await createClient();
   const payload = {
     title: d.title,
     date: d.date,
@@ -80,13 +92,13 @@ export async function upsertPlatformEvent(form: FormData) {
     created_by: user.id,
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const db = supabase as any;
+  const db = createAdminClient() as any;
   if (d.id) {
     const { error } = await db.from('platform_events').update(payload).eq('id', d.id);
     if (error) return { error: error.message };
     // Les émargements gardent un instantané de la séance : une séance déplacée
     // ou renommée doit l'être aussi sur les feuilles déjà signées.
-    const { error: snapErr } = await (createAdminClient() as never as typeof db)
+    const { error: snapErr } = await db
       .from('session_presences')
       .update({
         event_title: payload.title,
@@ -109,10 +121,10 @@ export async function upsertPlatformEvent(form: FormData) {
 }
 
 export async function deletePlatformEvent(id: string) {
-  await requireAdmin();
-  const supabase = await createClient();
+  if (!(await gardeAgenda())) return { error: 'Accès réservé à la gestion de l’agenda.' };
+  if (!z.string().uuid().safeParse(id).success) return { error: 'Évènement introuvable.' };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const db = supabase as any;
+  const db = createAdminClient() as any;
   const { error } = await db.from('platform_events').delete().eq('id', id);
   if (error) return { error: error.message };
   revalidatePath('/admin/agenda');

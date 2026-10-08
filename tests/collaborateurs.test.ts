@@ -167,16 +167,16 @@ test('hiérarchie : un parent coché déploie ses sous-collèges avec ses formul
 
 test('onglets : un monteur vidéo n’ouvre ni Contenu, ni Q&R, ni Entraînements, ni Suivi', () => {
   const monteur = composerScope({ modele: 'gestionnaire_video', modules: ROLES_MODELES.gestionnaire_video.modules, perimetre: { specialites: 'toutes', formules: {} } });
-  assert.deepEqual(accesOnglets(monteur), { contenu: false, videos: true, qa: false, entrainements: false, suivi: false, blog: false });
+  assert.deepEqual(accesOnglets(monteur), { contenu: false, videos: true, qa: false, entrainements: false, suivi: false, blog: false, agenda: false });
   assert.equal(premierePage(monteur), '/admin/videos');
   assert.deepEqual(pagesDuScope(monteur).map((p) => p.href), ['/admin/videos', '/admin/securite']);
   assert.equal(questionDansPerimetre(monteur, 'col-mir'), false);
 
   const commercial = composerScope({ modules: ROLES_MODELES.commercial.modules, perimetre: { specialites: 'toutes', formules: {} } });
-  assert.deepEqual(accesOnglets(commercial), { contenu: false, videos: false, qa: false, entrainements: false, suivi: true, blog: false });
+  assert.deepEqual(accesOnglets(commercial), { contenu: false, videos: false, qa: false, entrainements: false, suivi: true, blog: false, agenda: false });
 
   const enseignant = composerScope({ modules: ROLES_MODELES.enseignant_relecteur.modules, perimetre: { specialites: ['col-mir'], formules: {} } });
-  assert.deepEqual(accesOnglets(enseignant), { contenu: true, videos: true, qa: true, entrainements: true, suivi: false, blog: false });
+  assert.deepEqual(accesOnglets(enseignant), { contenu: true, videos: true, qa: true, entrainements: true, suivi: false, blog: false, agenda: false });
   assert.equal(premierePage(enseignant), '/admin/contenu');
   // Q&R bornées au périmètre ; une question hors cours ne revient qu'aux « toutes spécialités ».
   assert.equal(questionDansPerimetre(enseignant, 'col-mir'), true);
@@ -194,12 +194,12 @@ test('onglets : un monteur vidéo n’ouvre ni Contenu, ni Q&R, ni Entraînement
 
   // Compte historique : content_permissions → mêmes onglets qu'un compte récent.
   const legacyVideo = lireScopeEquipe({ role: 'professor', type: 'all', colleges: [], content_permissions: { video: 'rw', qcm: 'none' } });
-  assert.deepEqual(accesOnglets(legacyVideo), { contenu: false, videos: true, qa: false, entrainements: false, suivi: false, blog: false });
+  assert.deepEqual(accesOnglets(legacyVideo), { contenu: false, videos: true, qa: false, entrainements: false, suivi: false, blog: false, agenda: false });
   // Enseignant historique sans clé `referent` : référent par défaut (05/10/2026),
   // donc onglet Vidéos ouvert même sans le type « vidéo ».
   const legacyProf = lireScopeEquipe({ role: 'professor', type: 'college', colleges: ['col-geriatrie'], content_permissions: { qcm: 'rw', fiche: 'read' } }, 'lecture');
-  assert.deepEqual(accesOnglets(legacyProf), { contenu: true, videos: true, qa: true, entrainements: true, suivi: true, blog: false });
-  assert.deepEqual(accesOnglets(null), { contenu: false, videos: false, qa: false, entrainements: false, suivi: false, blog: false });
+  assert.deepEqual(accesOnglets(legacyProf), { contenu: true, videos: true, qa: true, entrainements: true, suivi: true, blog: false, agenda: false });
+  assert.deepEqual(accesOnglets(null), { contenu: false, videos: false, qa: false, entrainements: false, suivi: false, blog: false, agenda: false });
 });
 
 test('poste : le modèle fait foi, sinon il se déduit des modules', () => {
@@ -333,4 +333,14 @@ test('itemsDepuisCours : une ancienne liste se range sous la spécialité affich
   });
   // Endocrinologie n'avait aucun item de la liste : fermée en pratique, affichée à zéro.
   assert.deepEqual(range.items, { 'col-mg': ['p1', 'k1'], 'col-endo': [] });
+});
+
+test('gestionnaire de l’agenda : onglet Agenda seul, poste reconnu, atterrissage sur /admin/agenda', () => {
+  const scope = composerScope({ modules: ROLES_MODELES.gestionnaire_agenda.modules, perimetre: { specialites: [], formules: {} } });
+  assert.deepEqual(accesOnglets(scope), { contenu: false, videos: false, qa: false, entrainements: false, suivi: false, blog: false, agenda: true });
+  assert.equal(posteDuScope({ ...scope, modele: null }), 'gestionnaire_agenda');
+  assert.equal(premierePage(scope), '/admin/agenda');
+  // Un ancien scope sans module agenda reste fermé à l'agenda.
+  const ancien = lireScopeEquipe({ role: 'professor', type: 'college', colleges: [], modules: { suivi: { actif: true, rediger: true } } });
+  assert.equal(accesOnglets(ancien).agenda, false);
 });

@@ -72,7 +72,14 @@ export type ModuleBlog = {
   supprimer: boolean;
 };
 
-export type Modules = { suivi: ModuleSuivi; contenus: ModuleContenus; blog: ModuleBlog };
+/**
+ * Agenda des cours en direct (demande de Cyril, 08/10/2026) : créer, modifier
+ * et supprimer les évènements de /admin/agenda, y déposer les liens de visio
+ * et les informations pour les élèves. Aucun autre accès.
+ */
+export type ModuleAgenda = { actif: boolean };
+
+export type Modules = { suivi: ModuleSuivi; contenus: ModuleContenus; blog: ModuleBlog; agenda: ModuleAgenda };
 
 /**
  * Périmètre : spécialités autorisées (identifiants de collèges, ou toutes),
@@ -99,6 +106,7 @@ export type RoleModele =
   | 'gestionnaire_video'
   | 'redacteur_blog'
   | 'enseignant_relecteur'
+  | 'gestionnaire_agenda'
   | 'responsable_complet';
 
 /** Forme complète stockée dans `profiles.permission_scope` pour le personnel. */
@@ -130,6 +138,7 @@ export const MODULE_LABEL: Record<keyof Modules, string> = {
   suivi: 'Suivi élèves / Commercial',
   contenus: 'Vidéos & contenus pédagogiques',
   blog: 'Blog',
+  agenda: 'Agenda des cours en direct',
 };
 
 export const DROIT_CONTENU_LABEL: Record<DroitContenu, string> = {
@@ -153,6 +162,7 @@ export function modulesVides(): Modules {
     suivi: { actif: false, rediger: false, gerer: false, population: 'tous' },
     contenus: { actif: false, creer: false, modifier: false, publier: false, supprimer: false, types: [] },
     blog: { actif: false, creer: false, modifier_siens: false, modifier_tous: false, publier: false, depublier: false, supprimer: false },
+    agenda: { actif: false },
   };
 }
 
@@ -208,13 +218,19 @@ export const ROLES_MODELES: Record<RoleModele, { label: string; description: str
       contenus: { actif: true, creer: true, modifier: true, publier: true, supprimer: false, types: [...CONTENT_TYPES] },
     },
   },
+  gestionnaire_agenda: {
+    label: 'Gestionnaire de l’agenda',
+    description: 'Tient l’agenda des cours en direct : crée et modifie les séances, ajoute les liens de visio et les informations pour les élèves, choisit formules, voies et spécialités. Aucun autre accès.',
+    modules: { ...modulesVides(), agenda: { actif: true } },
+  },
   responsable_complet: {
     label: 'Responsable complet',
-    description: 'Les trois modules avec tous leurs droits, sur tout le périmètre — sans jamais devenir administrateur (paiements, facturation, configuration, comptes restent fermés).',
+    description: 'Tous les modules avec tous leurs droits, sur tout le périmètre — sans jamais devenir administrateur (paiements, facturation, configuration, comptes restent fermés).',
     modules: {
       suivi: { actif: true, rediger: true, gerer: true, population: 'tous' },
       contenus: { actif: true, creer: true, modifier: true, publier: true, supprimer: true, types: [...CONTENT_TYPES] },
       blog: { actif: true, creer: true, modifier_siens: true, modifier_tous: true, publier: true, depublier: true, supprimer: true },
+      agenda: { actif: true },
     },
   },
 };
@@ -242,6 +258,7 @@ export function normaliserModules(raw: unknown): Modules {
   const s = r.suivi ?? {};
   const c = r.contenus ?? {};
   const b = r.blog ?? {};
+  const ag = r.agenda ?? {};
   const population = s.population === 'alertes' || s.population === 'affectes' ? s.population : 'tous';
   const modules: Modules = {
     suivi: { actif: bool(s.actif), rediger: bool(s.rediger), gerer: bool(s.gerer), population },
@@ -253,6 +270,7 @@ export function normaliserModules(raw: unknown): Modules {
       actif: bool(b.actif), creer: bool(b.creer), modifier_siens: bool(b.modifier_siens), modifier_tous: bool(b.modifier_tous),
       publier: bool(b.publier), depublier: bool(b.depublier), supprimer: bool(b.supprimer),
     },
+    agenda: { actif: bool(ag.actif) },
   };
   // Un module inactif n'a aucun droit ; un droit sans module n'existe pas.
   if (!modules.suivi.actif) modules.suivi = { ...modules.suivi, rediger: false, gerer: false };
@@ -455,7 +473,7 @@ export function roleSuiviDeScope(scope: ScopeEquipe | null): 'responsable' | 'in
 }
 
 export function aAuMoinsUnModule(scope: ScopeEquipe | null): boolean {
-  return !!scope && (scope.modules.suivi.actif || scope.modules.contenus.actif || scope.modules.blog.actif);
+  return !!scope && (scope.modules.suivi.actif || scope.modules.contenus.actif || scope.modules.blog.actif || scope.modules.agenda.actif);
 }
 
 /* ─────────────────────────────── périmètre ─────────────────────────────── */
@@ -544,11 +562,13 @@ export type AccesOnglets = {
   /** « Suivi individuel » / suivi élèves. */
   suivi: boolean;
   blog: boolean;
+  /** « Agenda » : séances en direct, liens de visio. */
+  agenda: boolean;
 };
 
 /** Un administrateur voit tout. */
 export const ACCES_ADMIN: Readonly<AccesOnglets> = {
-  contenu: true, videos: true, qa: true, entrainements: true, suivi: true, blog: true,
+  contenu: true, videos: true, qa: true, entrainements: true, suivi: true, blog: true, agenda: true,
 };
 
 /**
@@ -569,6 +589,7 @@ export function accesOnglets(scope: ScopeEquipe | null): AccesOnglets {
     entrainements: types.some((t) => TYPES_ENTRAINEMENT.includes(t)),
     suivi: !!scope?.modules.suivi.actif,
     blog: !!scope?.modules.blog.actif,
+    agenda: !!scope?.modules.agenda.actif,
   };
 }
 
@@ -708,6 +729,7 @@ export function pagesDuScope(scope: ScopeEquipe | null): PageEquipe[] {
   if (acces.entrainements) pages.push({ href: '/admin/entrainements-eleves', label: 'Entraînements d’élèves', module: 'contenus' });
   if (acces.qa) pages.push({ href: '/admin/qa', label: 'Questions / Réponses des élèves', module: 'contenus' });
   if (acces.blog) pages.push({ href: '/admin/blog', label: 'Blog', module: 'blog' });
+  if (acces.agenda) pages.push({ href: '/admin/agenda', label: 'Agenda des cours en direct', module: 'agenda' });
   pages.push({ href: PAGE_SECURITE, label: 'Sécurité du compte (2FA)', module: 'commun' });
   return pages;
 }
@@ -727,6 +749,7 @@ export const POSTE_LABEL: Record<PosteEquipe, string> = {
   gestionnaire_video: ROLES_MODELES.gestionnaire_video.label,
   redacteur_blog: ROLES_MODELES.redacteur_blog.label,
   enseignant_relecteur: ROLES_MODELES.enseignant_relecteur.label,
+  gestionnaire_agenda: ROLES_MODELES.gestionnaire_agenda.label,
   responsable_complet: ROLES_MODELES.responsable_complet.label,
   personnalise: 'Personnalisé',
 };
@@ -740,9 +763,10 @@ export const POSTE_LABEL: Record<PosteEquipe, string> = {
 export function posteDuScope(scope: ScopeEquipe | null): PosteEquipe {
   if (!scope) return 'personnalise';
   if (scope.modele) return scope.modele;
-  const { suivi, contenus, blog } = scope.modules;
+  const { suivi, contenus, blog, agenda } = scope.modules;
   const acces = accesOnglets(scope);
   if (suivi.actif && contenus.actif && blog.actif) return 'responsable_complet';
+  if (agenda.actif && !suivi.actif && !contenus.actif && !blog.actif) return 'gestionnaire_agenda';
   if (suivi.actif && !contenus.actif && !blog.actif) return 'commercial';
   if (blog.actif && !contenus.actif && !suivi.actif) return 'redacteur_blog';
   if (contenus.actif && !suivi.actif && !blog.actif) {
@@ -784,8 +808,11 @@ export function presentationPoste(scope: ScopeEquipe | null): {
         ? 'enrichir et relire les contenus pédagogiques de votre spécialité (fiches, QCM, flashcards…), répondre aux questions des élèves en tant que professeur référent et déposer vidéos et supports de cours.'
         : 'enrichir et relire les contenus pédagogiques de votre spécialité (fiches, QCM, flashcards…).';
       break;
+    case 'gestionnaire_agenda':
+      mission = 'tenir l’agenda des cours en direct : créer et modifier les séances, y ajouter les liens de visio et les informations pour les élèves.';
+      break;
     case 'responsable_complet':
-      mission = 'piloter le suivi des élèves, les contenus pédagogiques et le blog, sur tout votre périmètre.';
+      mission = 'piloter le suivi des élèves, les contenus pédagogiques, le blog et l’agenda, sur tout votre périmètre.';
       break;
     default:
       mission = 'utiliser les outils d’administration qui vous ont été ouverts.';
@@ -803,7 +830,7 @@ export function presentationPoste(scope: ScopeEquipe | null): {
 
 export function resumeModules(scope: ScopeEquipe): string[] {
   const out: string[] = [];
-  const { suivi, contenus, blog } = scope.modules;
+  const { suivi, contenus, blog, agenda } = scope.modules;
   if (suivi.actif) {
     const droits = [suivi.rediger ? 'rédiger' : 'consulter', suivi.gerer ? 'gérer' : null].filter(Boolean).join(' + ');
     out.push(`Suivi élèves : ${droits} — ${POPULATION_LABEL[suivi.population].toLowerCase()}`);
@@ -817,6 +844,7 @@ export function resumeModules(scope: ScopeEquipe): string[] {
       .filter((d) => blog[d]).map((d) => DROIT_BLOG_LABEL[d].toLowerCase());
     out.push(`Blog : ${droits.join(' / ') || 'consultation seule'}`);
   }
+  if (agenda.actif) out.push('Agenda : créer, modifier et supprimer les séances, liens de visio');
   if (estEnseignant(scope)) {
     out.push(scope.referent
       ? 'Professeur référent : questions des élèves et vidéos de ses spécialités'

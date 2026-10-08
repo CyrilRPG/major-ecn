@@ -3,7 +3,7 @@
 import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  AlertTriangle, ArrowLeft, ArrowRight, BookOpen, Briefcase, CalendarClock, Check, Crown, Eye, Film, GraduationCap,
+  AlertTriangle, ArrowLeft, ArrowRight, BookOpen, Briefcase, CalendarClock, CalendarDays, Check, Crown, Eye, Film, GraduationCap,
   KeyRound, Loader2, Map as IconeCarte, MessagesSquare, Newspaper, PenLine, Pencil, Plus, ShieldCheck, SlidersHorizontal, UserRound, Users, Video, X,
 } from 'lucide-react';
 import { fetchAvecJetonFrais } from '@/lib/auth/fresh-token';
@@ -50,6 +50,7 @@ const ROLES: { cle: RoleModele; Icone: typeof UserRound }[] = [
   { cle: 'gestionnaire_video', Icone: Film },
   { cle: 'commercial', Icone: Briefcase },
   { cle: 'redacteur_blog', Icone: PenLine },
+  { cle: 'gestionnaire_agenda', Icone: CalendarDays },
   { cle: 'responsable_complet', Icone: Crown },
 ];
 
@@ -356,6 +357,18 @@ export function CollaborateurDialog({
                         ))}
                       </div>
                       <p className="text-[11px] text-(--color-ink-muted)">Sans « Publier », les articles rejoignent la file « En attente de validation ».</p>
+                    </CarteModule>
+
+                    <CarteModule
+                      Icone={CalendarDays}
+                      titre={MODULE_LABEL.agenda}
+                      resume={modules.agenda.actif ? 'Séances, liens de visio, informations élèves' : 'Fermé'}
+                      actif={modules.agenda.actif}
+                      onActif={(v) => setModules((m) => ({ ...m, agenda: { actif: v } }))}
+                    >
+                      <p className="text-[11px] text-(--color-ink-muted)">
+                        Crée, modifie et supprime les évènements de l’agenda (cours en visio, ECOS…), y ajoute les liens Zoom et les informations pour les élèves, choisit formules, voies et spécialités.
+                      </p>
                     </CarteModule>
                   </Section>
                 </div>

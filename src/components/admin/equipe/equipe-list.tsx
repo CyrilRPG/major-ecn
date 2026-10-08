@@ -59,6 +59,7 @@ const FILTRES_ROLE: { key: FiltreRole; label: string }[] = [
   { key: 'commercial', label: 'Commerciaux' },
   { key: 'gestionnaire_video', label: 'Gestionnaires vidéo' },
   { key: 'redacteur_blog', label: 'Rédacteurs blog' },
+  { key: 'gestionnaire_agenda', label: 'Gestion de l’agenda' },
   { key: 'responsable_complet', label: 'Responsables complets' },
   { key: 'personnalise', label: 'Personnalisés' },
 ];
@@ -164,7 +165,7 @@ export function EquipeList({ rows, colleges }: { rows: LigneEquipe[]; colleges: 
   const compteurs = useMemo(() => {
     const c: Record<FiltreRole, number> = {
       tous: avantRole.length, admin: 0, referents: 0, enseignant_relecteur: 0, commercial: 0, gestionnaire_video: 0,
-      redacteur_blog: 0, responsable_complet: 0, personnalise: 0,
+      redacteur_blog: 0, gestionnaire_agenda: 0, responsable_complet: 0, personnalise: 0,
     };
     for (const r of avantRole) {
       c[roleDe(r)] += 1;
@@ -301,7 +302,8 @@ export function EquipeList({ rows, colleges }: { rows: LigneEquipe[]; colleges: 
                         {s.modules.contenus.actif && <Badge tone="primary">Contenus · {(['creer', 'modifier', 'publier', 'supprimer'] as const).filter((d) => s.modules.contenus[d]).map((d) => d.slice(0, 4)).join('/') || 'lecture'}</Badge>}
                         {estEnseignant(s) && !s.referent && <Badge>Non référent</Badge>}
                         {s.modules.blog.actif && <Badge tone="primary">Blog{s.modules.blog.publier ? ' · publie' : ' · à valider'}</Badge>}
-                        {!s.modules.suivi.actif && !s.modules.contenus.actif && !s.modules.blog.actif && <Badge>Aucun module</Badge>}
+                        {s.modules.agenda.actif && <Badge tone="primary">Agenda</Badge>}
+                        {!s.modules.suivi.actif && !s.modules.contenus.actif && !s.modules.blog.actif && !s.modules.agenda.actif && <Badge>Aucun module</Badge>}
                         {s.modele && <Badge>modèle : {POSTE_LABEL[s.modele].toLowerCase()}</Badge>}
                       </div>
                     ) : <Badge>—</Badge>}
