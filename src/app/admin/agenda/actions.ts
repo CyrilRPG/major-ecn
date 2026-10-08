@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { requireStaff } from '@/lib/auth/require-role';
 import { ongletsDe } from '@/lib/auth/onglets-equipe';
+import { notifierSeance } from '@/lib/notifications/eleves';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 /**
@@ -69,6 +70,9 @@ function parseForm(form: FormData): unknown {
   };
 }
 
+/** Cases « notifier » du formulaire (hors schéma : elles ne sont pas stockées). */
+const coche = (form: FormData, nom: string) => form.get(nom)?.toString() === 'on';
+
 export async function upsertPlatformEvent(form: FormData) {
   const garde = await gardeAgenda();
   if (!garde) return { error: 'Accès réservé à la gestion de l’agenda.' };
@@ -110,14 +114,27 @@ export async function upsertPlatformEvent(form: FormData) {
       })
       .eq('event_id', d.id);
     if (snapErr) console.error('[agenda] instantané des émargements non mis à jour', snapErr.message);
-  } else {
-    const { error } = await db.from('platform_events').insert(payload);
+  }
+  let id = d.id;
+  if (!id) {
+    const { data, error } = await db.from('platform_events').insert(payload).select('id').single();
     if (error) return { error: error.message };
+    id = (data as { id: string }).id;
   }
   revalidatePath('/admin/agenda');
   revalidatePath('/agenda');
   revalidatePath('/accueil');
-  return { ok: true };
+
+  // Notifications de l'espace élève, sur demande seulement.
+  const evenement = { id: id!, ...payload, scope_type: payload.scope_type as 'all' | 'college' };
+  let notifies = 0;
+  try {
+    if (coche(form, 'notifier_lien') && payload.zoom_url) notifies = Math.max(notifies, await notifierSeance(evenement, 'lien'));
+    if (coche(form, 'notifier')) notifies = Math.max(notifies, await notifierSeance(evenement, 'seance', { nouvelle: !d.id }));
+  } catch (e) {
+    return { ok: true, avertissement: `Évènement enregistré, mais ${e instanceof Error ? e.message : 'les notifications ont échoué'}.` };
+  }
+  return { ok: true, notifies };
 }
 
 export async function deletePlatformEvent(id: string) {

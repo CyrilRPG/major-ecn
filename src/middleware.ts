@@ -22,6 +22,8 @@ const CORS_PREFIXES = [
   // Émargement des cours en direct depuis l'app (28/09/2026) : sans CORS, l'appel
   // échouait sans bruit sur l'appareil.
   '/api/presences',
+  // Cloche de notifications de l'espace élève (08/10/2026).
+  '/api/notifications',
 ];
 
 const CORS_HEADERS: Record<string, string> = {

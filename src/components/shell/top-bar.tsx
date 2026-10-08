@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { Command as CmdIcon, Lightbulb, Menu, PanelLeft, Search } from 'lucide-react';
 import { UserMenu } from '@/components/user-menu';
+import { ClocheNotifications } from '@/components/student/cloche-notifications';
 import { PlatformTimer } from '@/components/student/platform-timer';
 import { BoutonTutoriel } from '@/components/student/tutoriel-video';
 import type { Profile } from '@/lib/auth/get-profile';
@@ -105,6 +106,8 @@ export function TopBar({
           </span>
         </button>
       )}
+
+      {profile.role === 'student' && <ClocheNotifications />}
 
       <UserMenu profile={profile} />
     </header>

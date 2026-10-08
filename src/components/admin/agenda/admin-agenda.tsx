@@ -2,13 +2,16 @@
 
 import { useMemo, useRef, useState, useTransition } from 'react';
 import {
-  AlertTriangle, CalendarDays, ChevronLeft, ChevronRight, Clock, Edit, Link2, Plus, Search, Star, Trash2, X,
+  AlertTriangle, CalendarDays, ChevronLeft, ChevronRight, Edit, Layers, Link2, Plus, Printer, Search, Trash2, X,
 } from 'lucide-react';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { upsertPlatformEvent, deletePlatformEvent } from '@/app/admin/agenda/actions';
+import {
+  DUREE_PAR_DEFAUT, TEINTE_TOUTES, disposer, minutes, palettesSpecialites, type Place, type Teinte,
+} from '@/lib/agenda/admin-vue';
 
 export type PlatformEventRow = {
   id: string;
@@ -34,20 +37,8 @@ const FORMULE_LABEL: Record<Formule, string> = { essentiel: 'Essentiel', intensi
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 const DAYS_COURTS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-
-const COLLEGE_PALETTE: Record<string, { bg: string; fg: string; tag: string }> = {
-  'Cardiologie':           { bg: '#FFF1E6', fg: '#B35900', tag: '#FCD9A8' },
-  'Pneumologie':           { bg: '#E5F1FF', fg: '#1E4D8B', tag: '#BBD7F7' },
-  'Maladies infectieuses': { bg: '#E7F6EC', fg: '#16793C', tag: '#BFE2C9' },
-  'ECOS':                  { bg: '#FFF7DC', fg: '#8A6300', tag: '#F3E0A0' },
-  'Néphrologie':           { bg: '#FDE7E9', fg: '#C0001F', tag: '#FACBD0' },
-  'Transversal':           { bg: '#FFEED5', fg: '#A65500', tag: '#F4D2A1' },
-};
-const DEFAULT_PALETTE = { bg: '#FDE7E9', fg: '#C0001F', tag: '#FACBD0' };
-const paletteFor = (college: string | null) => {
-  if (!college) return DEFAULT_PALETTE;
-  return COLLEGE_PALETTE[college] ?? DEFAULT_PALETTE;
-};
+/** Hauteur d'une heure dans la grille horaire (px). */
+const H_HEURE = 52;
 
 // Dates du jour AFFICHÉ, en heure locale. Surtout pas `toISOString()` : à
 // Paris (UTC+1/+2), minuit local est encore la veille en UTC, et chaque
@@ -69,9 +60,18 @@ const fmt = (cle: string, o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFor
 const horaire = (e: PlatformEventRow) =>
   e.start_time ? `${e.start_time.slice(0, 5)}${e.end_time ? ` – ${e.end_time.slice(0, 5)}` : ''}` : 'Journée';
 const normaliser = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const debutMin = (e: PlatformEventRow) => (e.start_time ? minutes(e.start_time) : 0);
+const finMin = (e: PlatformEventRow) => {
+  const d = debutMin(e);
+  const f = e.end_time ? minutes(e.end_time) : d + DUREE_PAR_DEFAUT;
+  return f > d ? f : d + DUREE_PAR_DEFAUT;
+};
 
 type Vue = 'jour' | 'semaine' | 'mois' | 'liste';
 type PresetListe = '3' | '6' | '12' | 'perso';
+
+/** Couleurs d'un évènement : une par spécialité ciblée (bleu nuit si toutes). */
+type Couleurs = (e: PlatformEventRow) => Teinte[];
 
 /* ════════════════════════════════════════════════════════════════════════ */
 export function AdminAgenda({
@@ -97,9 +97,19 @@ export function AdminAgenda({
 
   const [creatingFor, setCreatingFor] = useState<string | null>(null);
   const [editing, setEditing] = useState<PlatformEventRow | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   const nomDe = useMemo(() => new Map(colleges.map((c) => [c.id, c.nom])), [colleges]);
   const parentDe = useMemo(() => new Map(colleges.filter((c) => c.parentId).map((c) => [c.id, c.parentId!])), [colleges]);
+  const teintes = useMemo(() => palettesSpecialites(colleges.map((c) => c.id)), [colleges]);
+  const couleurs: Couleurs = useMemo(() => (e) => {
+    if (e.scope_type !== 'college' || !(e.scope_colleges ?? []).length) return [TEINTE_TOUTES];
+    return (e.scope_colleges ?? []).map((id) => teintes.get(id) ?? TEINTE_TOUTES);
+  }, [teintes]);
+  const libelleNom = (id: string) => {
+    const p = parentDe.get(id);
+    return p === MG_COLLEGE_ID ? `MG · ${nomDe.get(id) ?? id}` : (nomDe.get(id) ?? id);
+  };
 
   const filtres = useMemo(() => {
     const q = normaliser(recherche.trim());
@@ -156,6 +166,17 @@ export function AdminAgenda({
   );
   const sansLien = dansPlage.filter((e) => !e.zoom_url).length;
 
+  // Légende : spécialités présentes sur la période (ordre de la plateforme).
+  const legende = useMemo(() => {
+    const presentes = new Set<string>();
+    let toutes = false;
+    for (const e of dansPlage) {
+      if (e.scope_type !== 'college' || !(e.scope_colleges ?? []).length) toutes = true;
+      else for (const id of e.scope_colleges ?? []) presentes.add(id);
+    }
+    return { ids: colleges.map((c) => c.id).filter((id) => presentes.has(id)), toutes };
+  }, [dansPlage, colleges]);
+
   const naviguer = (sens: -1 | 1) => {
     if (vue === 'jour') setAncre((a) => plusJours(a, sens));
     else if (vue === 'semaine') setAncre((a) => plusJours(a, 7 * sens));
@@ -182,12 +203,27 @@ export function AdminAgenda({
   const creer = (cle: string) => { setEditing(null); setCreatingFor(cle); };
   const libelleSpecialites = (e: PlatformEventRow) => libelleScope(e, nomDe);
 
+  // Impression : seule la zone de l'agenda sort (en paysage, couleurs comprises).
+  const imprimer = () => {
+    document.body.classList.add('impression-agenda');
+    const fin = () => { document.body.classList.remove('impression-agenda'); window.removeEventListener('afterprint', fin); };
+    window.addEventListener('afterprint', fin);
+    window.print();
+  };
+
   const enAvant = vue !== 'liste' && !(today >= plage.debut && today <= plage.fin);
+  const resumeFiltres = [
+    specialite ? libelleNom(specialite) : 'Toutes les spécialités',
+    formules.length === FORMULES.length ? 'toutes formules' : formules.map((f) => FORMULE_LABEL[f]).join(', '),
+    recherche.trim() ? `« ${recherche.trim()} »` : null,
+  ].filter(Boolean).join(' · ');
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
+      <style>{CSS_IMPRESSION}</style>
+
       {/* ── Barre de vue ── */}
-      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-(--color-border) bg-(--color-surface) px-3 py-2 shadow-(--shadow-soft)">
+      <div className="no-print flex flex-wrap items-center gap-2 rounded-2xl border border-(--color-border) bg-(--color-surface) px-3 py-2 shadow-(--shadow-soft)">
         <div className="inline-flex rounded-xl bg-(--color-surface-soft) p-0.5" role="tablist" aria-label="Vue">
           {([['jour', 'Jour'], ['semaine', 'Semaine'], ['mois', 'Mois'], ['liste', 'Plage / plusieurs mois']] as const).map(([v, l]) => (
             <button
@@ -246,11 +282,18 @@ export function AdminAgenda({
               Aujourd’hui
             </button>
           )}
+          <button
+            type="button"
+            onClick={imprimer}
+            className="ml-1 inline-flex h-8 items-center gap-1.5 rounded-lg border border-(--color-border) px-2.5 text-xs font-semibold text-(--color-ink-soft) hover:border-(--color-primary)/50 hover:text-(--color-ink)"
+          >
+            <Printer className="h-3.5 w-3.5" /> Imprimer
+          </button>
         </div>
       </div>
 
       {/* ── Filtres ── */}
-      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-(--color-border) bg-(--color-surface) px-3 py-2.5">
+      <div className="no-print flex flex-wrap items-center gap-2 rounded-2xl border border-(--color-border) bg-(--color-surface) px-3 py-2.5">
         <ChoixSpecialite colleges={colleges} valeur={specialite} onChange={setSpecialite} />
         {specialite && (
           <label className="flex cursor-pointer items-center gap-1.5 text-[11px] text-(--color-ink-soft)">
@@ -294,38 +337,60 @@ export function AdminAgenda({
         </p>
       </div>
 
-      {/* ── Vues ── */}
-      {vue === 'semaine' && (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-7">
-          {Array.from({ length: 7 }, (_, i) => plusJours(plage.debut, i)).map((cle, i) => (
-            <ColonneJour
-              key={cle} cle={cle} titre={DAYS[i]} today={today}
-              events={parJour.get(cle) ?? []} specialites={libelleSpecialites}
-              onOpen={ouvrir} onCreate={creer}
-            />
-          ))}
+      {message && (
+        <p className="no-print flex items-start justify-between gap-3 rounded-xl border border-[#16793C]/30 bg-[#E7F6EC] px-3 py-2 text-xs font-semibold text-[#16793C]">
+          {message}
+          <button type="button" onClick={() => setMessage(null)} aria-label="Fermer" className="rounded p-0.5 hover:bg-white/60"><X className="h-3.5 w-3.5" /></button>
+        </p>
+      )}
+
+      {/* ── Zone imprimable ── */}
+      <div className="zone-impression flex flex-col gap-3">
+        <div className="print-only mb-1 items-baseline justify-between border-b-2 border-[#1C2E49] pb-2">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#B5934A]">Major ECN · Agenda des cours en direct</p>
+            <p className="text-lg font-bold text-[#1C2E49] first-letter:uppercase">{plage.libelle}</p>
+          </div>
+          <p className="text-right text-[10px] text-[#55606E]">{resumeFiltres}<br />{dansPlage.length} évènement{dansPlage.length > 1 ? 's' : ''}</p>
         </div>
-      )}
 
-      {vue === 'jour' && (
-        <ColonneJour
-          cle={ancre} titre={fmt(ancre, { weekday: 'long' })} today={today} detail
-          events={parJour.get(ancre) ?? []} specialites={libelleSpecialites}
-          onOpen={ouvrir} onCreate={creer}
-        />
-      )}
+        {/* Légende des couleurs : clic = filtre sur la spécialité */}
+        {(legende.ids.length > 0 || legende.toutes) && (
+          <div className="flex flex-wrap items-center gap-1.5 rounded-2xl border border-(--color-border) bg-(--color-surface) px-3 py-2">
+            <span className="mr-1 text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">Légende</span>
+            {legende.toutes && <PastilleLegende teinte={TEINTE_TOUTES} libelle="Toutes spécialités" />}
+            {legende.ids.map((id) => (
+              <PastilleLegende
+                key={id}
+                teinte={teintes.get(id) ?? TEINTE_TOUTES}
+                libelle={libelleNom(id)}
+                actif={specialite === id}
+                onClick={() => setSpecialite((s) => (s === id ? null : id))}
+              />
+            ))}
+          </div>
+        )}
 
-      {vue === 'mois' && (
-        <GrilleMois
-          debut={plage.debut} fin={plage.fin} today={today} parJour={parJour}
-          onOpen={ouvrir} onCreate={creer}
-          onJour={(cle) => { setAncre(cle); setVue('jour'); }}
-        />
-      )}
+        {(vue === 'semaine' || vue === 'jour') && (
+          <GrilleHoraire
+            jours={vue === 'jour' ? [plage.debut] : Array.from({ length: 7 }, (_, i) => plusJours(plage.debut, i))}
+            today={today} parJour={parJour} couleurs={couleurs} specialites={libelleSpecialites}
+            detail={vue === 'jour'} onOpen={ouvrir} onCreate={creer}
+          />
+        )}
 
-      {vue === 'liste' && (
-        <ListeEvenements events={dansPlage} specialites={libelleSpecialites} today={today} onOpen={ouvrir} />
-      )}
+        {vue === 'mois' && (
+          <GrilleMois
+            debut={plage.debut} fin={plage.fin} today={today} parJour={parJour} couleurs={couleurs}
+            onOpen={ouvrir} onCreate={creer}
+            onJour={(cle) => { setAncre(cle); setVue('jour'); }}
+          />
+        )}
+
+        {vue === 'liste' && (
+          <ListeEvenements events={dansPlage} specialites={libelleSpecialites} couleurs={couleurs} today={today} onOpen={ouvrir} />
+        )}
+      </div>
 
       {/* Monté à l'ouverture seulement, et remonté pour chaque évènement : les
           états du formulaire partent toujours de l'évènement ouvert. */}
@@ -338,9 +403,49 @@ export function AdminAgenda({
           colleges={colleges}
           passe={creatingFor < today}
           onClose={() => { setCreatingFor(null); setEditing(null); }}
+          onSaved={(m) => setMessage(m)}
         />
       )}
     </div>
+  );
+}
+
+/**
+ * Impression : `window.print()` pose `impression-agenda` sur <body> ; seule la
+ * zone de l'agenda reste visible, en A4 paysage, avec ses couleurs.
+ */
+const CSS_IMPRESSION = `
+.print-only { display: none; }
+@media print {
+  @page { size: A4 landscape; margin: 10mm; }
+  body.impression-agenda * { visibility: hidden !important; }
+  body.impression-agenda .zone-impression, body.impression-agenda .zone-impression * { visibility: visible !important; }
+  body.impression-agenda .zone-impression { position: absolute; left: 0; top: 0; width: 100%; }
+  body.impression-agenda .zone-impression .print-only { display: flex; }
+  body.impression-agenda .zone-impression .no-print { display: none !important; }
+  body.impression-agenda .zone-impression * { -webkit-print-color-adjust: exact; print-color-adjust: exact; box-shadow: none !important; }
+  body.impression-agenda .zone-impression .grille-scroll { overflow: visible !important; max-height: none !important; }
+  body.impression-agenda .zone-impression section, body.impression-agenda .zone-impression tr { break-inside: avoid; }
+}
+`;
+
+function PastilleLegende({ teinte, libelle, actif = false, onClick }: { teinte: Teinte; libelle: string; actif?: boolean; onClick?: () => void }) {
+  const corps = (
+    <>
+      <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: teinte.vive }} />
+      {libelle}
+    </>
+  );
+  const classe = 'inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-semibold';
+  if (!onClick) return <span className={classe} style={{ background: teinte.fond, color: teinte.encre, borderColor: teinte.bord }}>{corps}</span>;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={actif}
+      className={cn(classe, 'transition-shadow hover:shadow-sm', actif && 'ring-2 ring-offset-1')}
+      style={{ background: teinte.fond, color: teinte.encre, borderColor: teinte.bord, ['--tw-ring-color' as string]: teinte.vive }}
+    >{corps}</button>
   );
 }
 
@@ -352,106 +457,188 @@ function libelleScope(e: PlatformEventRow, nomDe: Map<string, string>): string {
   return noms.length <= 2 ? noms.join(', ') : `${noms.slice(0, 2).join(', ')} +${noms.length - 2}`;
 }
 
-/* ──────────────────────── Carte d'évènement ──────────────────────── */
-function CarteEvenement({
-  e, specialites, onOpen, detail = false,
-}: {
-  e: PlatformEventRow;
-  specialites: (e: PlatformEventRow) => string;
-  onOpen: (e: PlatformEventRow) => void;
-  detail?: boolean;
-}) {
-  const pal = paletteFor(e.college);
-  const scope = specialites(e);
-  return (
-    <button
-      type="button"
-      onClick={() => onOpen(e)}
-      className="group flex flex-col rounded-xl border border-transparent p-3 text-left transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-soft) focus-ring"
-      style={{ background: pal.bg }}
-    >
-      <span className="flex items-center gap-1.5 text-xs font-semibold" style={{ color: pal.fg }}>
-        <Clock className="h-3.5 w-3.5" /> {horaire(e)}
-        {!e.zoom_url && (
-          <span className="ml-auto inline-flex items-center gap-0.5 rounded bg-white/80 px-1 py-0.5 text-[10px] text-[#B45309]" title="Aucun lien de visio">
-            <Link2 className="h-3 w-3" /> lien ?
-          </span>
-        )}
-      </span>
-      <span className="mt-1.5 block text-sm font-semibold leading-snug text-(--color-ink)">{e.title}</span>
-      {e.college && (
-        <span className="mt-1.5 inline-flex w-fit items-center rounded-full px-2 py-0.5 text-[11px] font-medium" style={{ background: pal.tag, color: pal.fg }}>
-          {e.college}
-        </span>
-      )}
-      <span className="mt-1.5 flex flex-wrap gap-1 text-[10px]">
-        {(e.required_offers ?? []).map((o) => (
-          <span key={o} className="rounded bg-white/70 px-1.5 py-0.5 font-semibold uppercase tracking-wide" style={{ color: pal.fg }}>{o}</span>
-        ))}
-        <span className="rounded bg-white/70 px-1.5 py-0.5 font-semibold" style={{ color: pal.fg }} title={scope}>{scope}</span>
-        {(e.voies ?? []).length === 1 && (
-          <span className="rounded bg-white/70 px-1.5 py-0.5 font-semibold uppercase tracking-wide" style={{ color: pal.fg }}>
-            {e.voies![0] === 'interne' ? 'Interne' : 'Externe'}
-          </span>
-        )}
-      </span>
-      {detail && (
-        <span className="mt-2 space-y-0.5 text-xs text-(--color-ink-soft)">
-          {e.intervenant && <span className="block">Intervenant : {e.intervenant}</span>}
-          {e.zoom_url && <span className="block truncate">Visio : {e.zoom_url}</span>}
-          {e.notes && <span className="block whitespace-pre-line">{e.notes}</span>}
-        </span>
-      )}
-    </button>
-  );
-}
+/** Bande colorée verticale : une couleur par spécialité ciblée. */
+const bande = (ts: Teinte[]) => (ts.length === 1
+  ? ts[0].vive
+  : `linear-gradient(180deg, ${ts.map((t, i) => `${t.vive} ${(i / ts.length) * 100}% ${((i + 1) / ts.length) * 100}%`).join(', ')})`);
 
-/* ──────────────────────── Jour / semaine ──────────────────────── */
-function ColonneJour({
-  cle, titre, today, events, specialites, onOpen, onCreate, detail = false,
+/* ──────────────────────── Jour / semaine : grille horaire ──────────────────────── */
+function GrilleHoraire({
+  jours, today, parJour, couleurs, specialites, detail, onOpen, onCreate,
 }: {
-  cle: string; titre: string; today: string; events: PlatformEventRow[];
-  specialites: (e: PlatformEventRow) => string;
-  onOpen: (e: PlatformEventRow) => void; onCreate: (cle: string) => void; detail?: boolean;
+  jours: string[]; today: string; parJour: Map<string, PlatformEventRow[]>;
+  couleurs: Couleurs; specialites: (e: PlatformEventRow) => string; detail: boolean;
+  onOpen: (e: PlatformEventRow) => void; onCreate: (cle: string) => void;
 }) {
-  const isToday = cle === today;
+  const evsDe = (cle: string) => parJour.get(cle) ?? [];
+  const horaires = jours.flatMap((j) => evsDe(j).filter((e) => e.start_time));
+  // Fenêtre horaire : 8 h → 22 h au minimum, élargie aux séances affichées.
+  const hDebut = Math.min(8, ...horaires.map((e) => Math.floor(debutMin(e) / 60)));
+  const hFin = Math.max(22, ...horaires.map((e) => Math.ceil(finMin(e) / 60)));
+  const heures = Array.from({ length: Math.max(1, hFin - hDebut) }, (_, i) => hDebut + i);
+  const hauteur = heures.length * H_HEURE;
+  const sansHeure = jours.some((j) => evsDe(j).some((e) => !e.start_time));
+  // Un jour chargé de cours simultanés s'élargit d'autant : chaque cours garde
+  // une largeur lisible au lieu d'être écrasé dans une colonne standard.
+  const placesDe = new Map(jours.map((j) => {
+    const evs = evsDe(j).filter((e) => e.start_time);
+    return [j, disposer(evs.map((e) => ({ id: e.id, debut: debutMin(e), fin: finMin(e) })))];
+  }));
+  const voiesDe = (j: string) => Math.max(1, ...[...(placesDe.get(j)?.values() ?? [])].map((p) => p.voies));
+  const colonnes = detail
+    ? `3.25rem repeat(${jours.length}, minmax(0, 1fr))`
+    : `3.25rem ${jours.map((j) => { const v = voiesDe(j); return `minmax(${8.5 * Math.min(v, 3)}rem, ${v}fr)`; }).join(' ')}`;
+  const largeurMin = detail ? undefined : `${3.25 + jours.reduce((t, j) => t + 8.5 * Math.min(voiesDe(j), 3), 0)}rem`;
+
   return (
-    <div className={cn(
-      'flex flex-col overflow-hidden rounded-2xl border bg-(--color-surface) shadow-(--shadow-soft)',
-      isToday ? 'border-(--color-primary) ring-2 ring-(--color-primary)/40' : 'border-(--color-border)',
-    )}>
-      <div className={cn('flex items-baseline justify-between px-4 py-3', isToday ? 'bg-(--color-primary) text-white' : 'bg-(--color-surface-soft)')}>
-        <span className={cn('flex items-center gap-1.5 text-sm font-semibold first-letter:uppercase', isToday ? 'text-white' : 'text-(--color-ink)')}>
-          {titre}{isToday && <Star className="h-3.5 w-3.5 fill-current" />}
-        </span>
-        <span className={cn('text-xs tabular-nums', isToday ? 'text-white/80' : 'text-(--color-ink-muted)')}>
-          {fmt(cle, { day: '2-digit', month: '2-digit' })}
-        </span>
-      </div>
-      <div className={cn('flex flex-1 flex-col gap-2.5 p-3', detail && 'sm:grid sm:grid-cols-2 lg:grid-cols-3')}>
-        {events.length === 0 && (
-          <div className="flex flex-1 items-center justify-center py-6">
-            <span className="text-xs text-(--color-ink-muted)">Aucun évènement</span>
+    <div className="grille-scroll overflow-x-auto rounded-2xl border border-(--color-border) bg-(--color-surface) shadow-(--shadow-soft)">
+      <div style={{ minWidth: largeurMin }}>
+        {/* En-têtes de jours */}
+        <div className="grid border-b border-(--color-border)" style={{ gridTemplateColumns: colonnes }}>
+          <span />
+          {jours.map((cle) => {
+            const isToday = cle === today;
+            const n = evsDe(cle).length;
+            const d = depuisCle(cle);
+            return (
+              <div key={cle} className={cn('flex items-center justify-between gap-1 border-l border-(--color-border) px-2.5 py-2', isToday && 'bg-(--color-primary-soft)/60')}>
+                <span className="flex items-baseline gap-1.5">
+                  <span className={cn('text-xs font-semibold uppercase tracking-wide', isToday ? 'text-(--color-primary-deep)' : 'text-(--color-ink-muted)')}>
+                    {detail ? fmt(cle, { weekday: 'long' }) : DAYS[(d.getDay() + 6) % 7].slice(0, 3)}
+                  </span>
+                  <span className={cn(
+                    'flex h-7 min-w-7 items-center justify-center rounded-full px-1 text-sm font-bold tabular-nums',
+                    isToday ? 'bg-(--color-primary) text-white' : 'text-(--color-ink)',
+                  )}>{d.getDate()}</span>
+                  {n > 0 && <span className="text-[11px] text-(--color-ink-muted)">{n} évt</span>}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => onCreate(cle)}
+                  aria-label={`Ajouter un évènement le ${fmt(cle, { day: 'numeric', month: 'long' })}`}
+                  className="no-print rounded-md p-1 text-(--color-ink-muted) hover:bg-(--color-primary-soft) hover:text-(--color-primary)"
+                ><Plus className="h-3.5 w-3.5" /></button>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Journée entière (sans horaire) */}
+        {sansHeure && (
+          <div className="grid border-b border-(--color-border) bg-(--color-surface-soft)/50" style={{ gridTemplateColumns: colonnes }}>
+            <span className="px-1.5 py-1.5 text-right text-[10px] text-(--color-ink-muted)">Journée</span>
+            {jours.map((cle) => (
+              <div key={cle} className="space-y-1 border-l border-(--color-border) p-1">
+                {evsDe(cle).filter((e) => !e.start_time).map((e) => {
+                  const ts = couleurs(e);
+                  return (
+                    <button key={e.id} type="button" onClick={() => onOpen(e)}
+                      className="block w-full truncate rounded-md px-2 py-1 text-left text-[11px] font-semibold"
+                      style={{ background: ts[0].fond, color: ts[0].encre, boxShadow: `inset 3px 0 0 ${ts[0].vive}` }}>
+                      {e.title}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
           </div>
         )}
-        {events.map((e) => <CarteEvenement key={e.id} e={e} specialites={specialites} onOpen={onOpen} detail={detail} />)}
-        <button
-          type="button"
-          onClick={() => onCreate(cle)}
-          className="mt-auto flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-(--color-border) py-2 text-xs font-medium text-(--color-ink-muted) transition-colors hover:border-(--color-primary)/60 hover:bg-(--color-primary-soft)/40 hover:text-(--color-primary)"
-        >
-          <Plus className="h-3.5 w-3.5" /> Ajouter
-        </button>
+
+        {/* Grille horaire */}
+        <div className="grid" style={{ gridTemplateColumns: colonnes }}>
+          <div className="relative" style={{ height: hauteur }}>
+            {heures.map((h, i) => (
+              <span key={h} className="absolute right-1.5 -translate-y-1/2 text-[10px] tabular-nums text-(--color-ink-muted)" style={{ top: i * H_HEURE }}>
+                {i === 0 ? '' : `${String(h).padStart(2, '0')}:00`}
+              </span>
+            ))}
+          </div>
+          {jours.map((cle) => {
+            const evs = evsDe(cle).filter((e) => e.start_time);
+            const places = placesDe.get(cle)!;
+            return (
+              <div
+                key={cle}
+                className={cn('relative border-l border-(--color-border)', cle === today && 'bg-(--color-primary-soft)/25')}
+                style={{ height: hauteur }}
+                onDoubleClick={() => onCreate(cle)}
+                title="Double-clic pour ajouter un évènement"
+              >
+                {heures.map((h, i) => (
+                  <span key={h} className="pointer-events-none absolute inset-x-0 border-t border-dashed border-(--color-border)/70" style={{ top: i * H_HEURE }} />
+                ))}
+                {evs.map((e) => (
+                  <BlocHoraire
+                    key={e.id} e={e} place={places.get(e.id)!} hDebut={hDebut}
+                    teintes={couleurs(e)} scope={specialites(e)} detail={detail} onOpen={onOpen}
+                  />
+                ))}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 }
 
+function BlocHoraire({
+  e, place, hDebut, teintes, scope, detail, onOpen,
+}: {
+  e: PlatformEventRow; place: Place; hDebut: number; teintes: Teinte[]; scope: string; detail: boolean;
+  onOpen: (e: PlatformEventRow) => void;
+}) {
+  const top = ((debutMin(e) - hDebut * 60) / 60) * H_HEURE;
+  const height = Math.max(((finMin(e) - debutMin(e)) / 60) * H_HEURE - 3, 30);
+  const largeur = 100 / place.voies;
+  const t = teintes[0];
+  const parallele = place.simultanes > 1;
+  return (
+    <button
+      type="button"
+      onClick={(ev) => { ev.stopPropagation(); onOpen(e); }}
+      onDoubleClick={(ev) => ev.stopPropagation()}
+      className="absolute overflow-hidden rounded-lg border text-left transition-shadow hover:z-10 hover:shadow-lg focus-ring"
+      style={{
+        top: top + 1.5, height, left: `calc(${place.voie * largeur}% + 3px)`, width: `calc(${largeur}% - 6px)`,
+        background: t.fond, borderColor: parallele ? t.vive : t.bord, color: t.encre,
+      }}
+      title={`${horaire(e)} · ${e.title} · ${scope}`}
+    >
+      <span className="absolute inset-y-0 left-0 w-1.5" style={{ background: bande(teintes) }} />
+      <span className="block py-1 pl-3 pr-1.5">
+        <span className="flex items-center gap-1 text-[10px] font-bold tabular-nums">
+          {horaire(e)}
+          {parallele && (
+            <span className="ml-auto inline-flex items-center gap-0.5 rounded px-1 text-[9px] font-bold text-white" style={{ background: t.vive }}>
+              <Layers className="h-2.5 w-2.5" /> {place.simultanes}
+            </span>
+          )}
+        </span>
+        <span className="block text-xs font-bold leading-tight text-(--color-ink)">{e.title}</span>
+        <span className="mt-0.5 block truncate text-[10px] font-semibold">{scope}</span>
+        {(height > 70 || detail) && (
+          <span className="mt-0.5 block truncate text-[10px] opacity-80">
+            {(e.required_offers ?? []).map((o) => FORMULE_LABEL[o as Formule] ?? o).join(' · ')}
+            {(e.voies ?? []).length === 1 ? ` · ${e.voies![0] === 'interne' ? 'Interne' : 'Externe'}` : ''}
+          </span>
+        )}
+        {detail && e.intervenant && <span className="block truncate text-[10px] opacity-80">{e.intervenant}</span>}
+        {!e.zoom_url && (
+          <span className="no-print mt-0.5 inline-flex items-center gap-0.5 rounded bg-white/80 px-1 text-[9px] font-bold text-[#B45309]">
+            <Link2 className="h-2.5 w-2.5" /> lien manquant
+          </span>
+        )}
+      </span>
+    </button>
+  );
+}
+
 /* ──────────────────────── Mois ──────────────────────── */
 function GrilleMois({
-  debut, fin, today, parJour, onOpen, onCreate, onJour,
+  debut, fin, today, parJour, couleurs, onOpen, onCreate, onJour,
 }: {
-  debut: string; fin: string; today: string; parJour: Map<string, PlatformEventRow[]>;
+  debut: string; fin: string; today: string; parJour: Map<string, PlatformEventRow[]>; couleurs: Couleurs;
   onOpen: (e: PlatformEventRow) => void; onCreate: (cle: string) => void; onJour: (cle: string) => void;
 }) {
   const premier = lundiDe(debut);
@@ -460,23 +647,26 @@ function GrilleMois({
   const mois = debut.slice(0, 7);
   return (
     <div className="overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) shadow-(--shadow-soft)">
-      <div className="grid grid-cols-7 border-b border-(--color-border) bg-(--color-surface-soft)">
-        {DAYS_COURTS.map((d) => <span key={d} className="px-2 py-2 text-center text-[11px] font-semibold uppercase tracking-wide text-(--color-ink-muted)">{d}</span>)}
+      <div className="grid grid-cols-7 border-b border-(--color-border) bg-[#1C2E49]">
+        {DAYS_COURTS.map((d) => <span key={d} className="px-2 py-2 text-center text-[11px] font-semibold uppercase tracking-wide text-white/90">{d}</span>)}
       </div>
       <div className="grid grid-cols-7">
         {cases.map((cle) => {
           const evs = parJour.get(cle) ?? [];
           const horsMois = cle.slice(0, 7) !== mois;
           const isToday = cle === today;
+          const avecHeure = evs.filter((e) => e.start_time);
+          const places = disposer(avecHeure.map((e) => ({ id: e.id, debut: debutMin(e), fin: finMin(e) })));
+          const simultanes = Math.max(0, ...[...places.values()].map((p) => p.simultanes));
           return (
             <div
               key={cle}
               className={cn(
-                'group relative min-h-[6.5rem] border-b border-r border-(--color-border) p-1.5 [&:nth-child(7n)]:border-r-0',
-                horsMois && 'bg-(--color-surface-soft)/60',
+                'group relative min-h-[7.5rem] border-b border-r border-(--color-border) p-1.5 [&:nth-child(7n)]:border-r-0',
+                horsMois && 'bg-(--color-surface-soft)/70',
               )}
             >
-              <div className="mb-1 flex items-center justify-between">
+              <div className="mb-1 flex items-center gap-1">
                 <button
                   type="button"
                   onClick={() => onJour(cle)}
@@ -486,34 +676,42 @@ function GrilleMois({
                   )}
                   aria-label={`Voir le ${fmt(cle, { day: 'numeric', month: 'long' })}`}
                 >{Number(cle.slice(8))}</button>
+                {simultanes > 1 && (
+                  <span className="inline-flex shrink-0 items-center gap-0.5 whitespace-nowrap rounded-full bg-[#1C2E49] px-1.5 py-0.5 text-[10px] font-bold text-white" title={`${simultanes} cours en même temps`}>
+                    <Layers className="h-2.5 w-2.5" /> ×{simultanes}
+                  </span>
+                )}
                 <button
                   type="button"
                   onClick={() => onCreate(cle)}
                   aria-label={`Ajouter un évènement le ${fmt(cle, { day: 'numeric', month: 'long' })}`}
-                  className="rounded p-0.5 text-(--color-ink-muted) opacity-0 transition-opacity hover:text-(--color-primary) focus:opacity-100 group-hover:opacity-100"
+                  className="no-print ml-auto rounded p-0.5 text-(--color-ink-muted) opacity-0 transition-opacity hover:text-(--color-primary) focus:opacity-100 group-hover:opacity-100"
                 >
                   <Plus className="h-3.5 w-3.5" />
                 </button>
               </div>
               <div className="space-y-1">
-                {evs.slice(0, 3).map((e) => {
-                  const pal = paletteFor(e.college);
+                {evs.slice(0, 4).map((e) => {
+                  const ts = couleurs(e);
+                  const parallele = (places.get(e.id)?.simultanes ?? 1) > 1;
                   return (
                     <button
                       key={e.id}
                       type="button"
                       onClick={() => onOpen(e)}
                       title={`${horaire(e)} · ${e.title}`}
-                      className="block w-full truncate rounded px-1.5 py-0.5 text-left text-[11px] font-medium"
-                      style={{ background: pal.bg, color: pal.fg }}
+                      className="relative block w-full truncate rounded-md py-0.5 pl-2.5 pr-1 text-left text-[11px] font-semibold"
+                      style={{ background: ts[0].fond, color: ts[0].encre, outline: parallele ? `1.5px solid ${ts[0].vive}` : undefined }}
                     >
-                      {e.start_time ? `${e.start_time.slice(0, 5)} ` : ''}<span className="text-(--color-ink)">{e.title}</span>
+                      <span className="absolute inset-y-0 left-0 w-1 rounded-l-md" style={{ background: bande(ts) }} />
+                      {e.start_time ? <span className="tabular-nums">{e.start_time.slice(0, 5)} </span> : null}
+                      <span className="text-(--color-ink)">{e.title}</span>
                     </button>
                   );
                 })}
-                {evs.length > 3 && (
+                {evs.length > 4 && (
                   <button type="button" onClick={() => onJour(cle)} className="px-1.5 text-[11px] font-semibold text-(--color-primary-deep) hover:underline">
-                    +{evs.length - 3} autre{evs.length - 3 > 1 ? 's' : ''}
+                    +{evs.length - 4} autre{evs.length - 4 > 1 ? 's' : ''}
                   </button>
                 )}
               </div>
@@ -527,10 +725,11 @@ function GrilleMois({
 
 /* ──────────────────────── Liste (plage) ──────────────────────── */
 function ListeEvenements({
-  events, specialites, today, onOpen,
+  events, specialites, couleurs, today, onOpen,
 }: {
   events: PlatformEventRow[];
   specialites: (e: PlatformEventRow) => string;
+  couleurs: Couleurs;
   today: string;
   onOpen: (e: PlatformEventRow) => void;
 }) {
@@ -541,6 +740,16 @@ function ListeEvenements({
       (m.get(mois) ?? m.set(mois, []).get(mois)!).push(e);
     }
     return [...m.entries()];
+  }, [events]);
+  // Séances simultanées (même jour, horaires qui se recouvrent).
+  const enParallele = useMemo(() => {
+    const out = new Set<string>();
+    const parJour = new Map<string, PlatformEventRow[]>();
+    for (const e of events) if (e.start_time) (parJour.get(e.date) ?? parJour.set(e.date, []).get(e.date)!).push(e);
+    for (const evs of parJour.values()) {
+      for (const [id, p] of disposer(evs.map((e) => ({ id: e.id, debut: debutMin(e), fin: finMin(e) })))) if (p.simultanes > 1) out.add(id);
+    }
+    return out;
   }, [events]);
 
   if (events.length === 0) {
@@ -554,9 +763,9 @@ function ListeEvenements({
     <div className="space-y-4">
       {groupes.map(([mois, evs]) => (
         <section key={mois} className="overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) shadow-(--shadow-soft)">
-          <h2 className="flex items-center justify-between border-b border-(--color-border) bg-(--color-surface-soft) px-4 py-2 text-sm font-semibold text-(--color-ink) first-letter:uppercase">
+          <h2 className="flex items-center justify-between bg-[#1C2E49] px-4 py-2 text-sm font-semibold text-white first-letter:uppercase">
             {fmt(`${mois}-01`, { month: 'long', year: 'numeric' })}
-            <span className="text-xs font-normal text-(--color-ink-muted)">{evs.length} évènement{evs.length > 1 ? 's' : ''}</span>
+            <span className="text-xs font-normal text-white/75">{evs.length} évènement{evs.length > 1 ? 's' : ''}</span>
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[760px] table-fixed text-left text-xs">
@@ -572,28 +781,44 @@ function ListeEvenements({
                 </tr>
               </thead>
               <tbody className="divide-y divide-(--color-border)">
-                {evs.map((e) => (
-                  <tr
-                    key={e.id}
-                    onClick={() => onOpen(e)}
-                    className={cn('cursor-pointer hover:bg-(--color-surface-soft)', e.date < today && 'text-(--color-ink-muted)')}
-                  >
-                    <td className="whitespace-nowrap px-4 py-2 font-semibold text-(--color-ink) first-letter:uppercase">{fmt(e.date, { weekday: 'short', day: 'numeric', month: 'short' })}</td>
-                    <td className="whitespace-nowrap px-2 py-2 tabular-nums">{horaire(e)}</td>
-                    <td className="px-2 py-2">
-                      <span className="font-semibold text-(--color-ink)">{e.title}</span>
-                      {e.intervenant && <span className="block text-(--color-ink-muted)">{e.intervenant}</span>}
-                    </td>
-                    <td className="px-2 py-2">{specialites(e)}</td>
-                    <td className="px-2 py-2">{(e.required_offers ?? []).map((o) => FORMULE_LABEL[o as Formule] ?? o).join(', ')}</td>
-                    <td className="px-2 py-2">{(e.voies ?? []).length === 1 ? (e.voies![0] === 'interne' ? 'Interne' : 'Externe') : 'Les deux'}</td>
-                    <td className="px-4 py-2">
-                      {e.zoom_url
-                        ? <span className="inline-flex items-center gap-1 font-semibold text-[#16793C]"><Link2 className="h-3.5 w-3.5" /> Lien</span>
-                        : <span className="inline-flex items-center gap-1 font-semibold text-[#B45309]"><AlertTriangle className="h-3.5 w-3.5" /> Manquant</span>}
-                    </td>
-                  </tr>
-                ))}
+                {evs.map((e) => {
+                  const ts = couleurs(e);
+                  return (
+                    <tr
+                      key={e.id}
+                      onClick={() => onOpen(e)}
+                      className={cn('cursor-pointer hover:bg-(--color-surface-soft)', e.date < today && 'opacity-60')}
+                      style={{ boxShadow: `inset 4px 0 0 ${ts[0].vive}` }}
+                    >
+                      <td className="whitespace-nowrap px-4 py-2 font-semibold text-(--color-ink) first-letter:uppercase">{fmt(e.date, { weekday: 'short', day: 'numeric', month: 'short' })}</td>
+                      <td className="whitespace-nowrap px-2 py-2 tabular-nums">
+                        {horaire(e)}
+                        {enParallele.has(e.id) && (
+                          <span className="ml-1 inline-flex items-center gap-0.5 rounded bg-[#1C2E49] px-1 text-[9px] font-bold text-white" title="Autre cours au même moment">
+                            <Layers className="h-2.5 w-2.5" /> parallèle
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-2 py-2">
+                        <span className="font-semibold text-(--color-ink)">{e.title}</span>
+                        {e.intervenant && <span className="block text-(--color-ink-muted)">{e.intervenant}</span>}
+                      </td>
+                      <td className="px-2 py-2">
+                        <span className="inline-flex flex-wrap items-center gap-1">
+                          {ts.slice(0, 4).map((t, i) => <span key={i} className="h-2 w-2 rounded-full" style={{ background: t.vive }} />)}
+                          <span className="font-semibold" style={{ color: ts[0].encre }}>{specialites(e)}</span>
+                        </span>
+                      </td>
+                      <td className="px-2 py-2">{(e.required_offers ?? []).map((o) => FORMULE_LABEL[o as Formule] ?? o).join(', ')}</td>
+                      <td className="px-2 py-2">{(e.voies ?? []).length === 1 ? (e.voies![0] === 'interne' ? 'Interne' : 'Externe') : 'Les deux'}</td>
+                      <td className="px-4 py-2">
+                        {e.zoom_url
+                          ? <span className="inline-flex items-center gap-1 font-semibold text-[#16793C]"><Link2 className="h-3.5 w-3.5" /> Lien</span>
+                          : <span className="inline-flex items-center gap-1 font-semibold text-[#B45309]"><AlertTriangle className="h-3.5 w-3.5" /> Manquant</span>}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -679,7 +904,7 @@ function ChoixSpecialite({
 
 /* ──────────────────────── Dialog formulaire ──────────────────────── */
 function EventFormDialog({
-  open, date, initial, colleges, passe = false, onClose,
+  open, date, initial, colleges, passe = false, onClose, onSaved,
 }: {
   open: boolean;
   date: Date | null;
@@ -688,8 +913,15 @@ function EventFormDialog({
   /** Jour déjà passé : on prévient (création a posteriori). */
   passe?: boolean;
   onClose: () => void;
+  /** Message de confirmation affiché au-dessus de l'agenda (notifications). */
+  onSaved?: (message: string | null) => void;
 }) {
   const [pending, startTransition] = useTransition();
+  const [zoom, setZoom] = useState(initial?.zoom_url ?? '');
+  const [notifier, setNotifier] = useState(false);
+  const [notifierLien, setNotifierLien] = useState(false);
+  // Lien de visio ajouté ou changé : on propose d'en prévenir les élèves.
+  const lienNouveau = zoom.trim() !== '' && zoom.trim() !== (initial?.zoom_url ?? '');
   const [err, setErr] = useState<string | null>(null);
   const [scopeType, setScopeType] = useState<'all' | 'college'>(initial?.scope_type ?? 'all');
   const [scopeColleges, setScopeColleges] = useState<string[]>(initial?.scope_colleges ?? []);
@@ -723,13 +955,23 @@ function EventFormDialog({
     }
     formData.delete('voies');
     voies.forEach((v) => formData.append('voies', v));
+    if (notifier) formData.set('notifier', 'on'); else formData.delete('notifier');
+    if (notifierLien && lienNouveau) formData.set('notifier_lien', 'on'); else formData.delete('notifier_lien');
     setErr(null);
     enVol.current = true;
     startTransition(async () => {
       try {
-        const res = await upsertPlatformEvent(formData);
+        const res = await upsertPlatformEvent(formData) as { error?: string; notifies?: number; avertissement?: string };
         if (res.error) setErr(res.error);
-        else onClose();
+        else {
+          if (res.avertissement) onSaved?.(res.avertissement);
+          else if (notifier || (notifierLien && lienNouveau)) {
+            onSaved?.(res.notifies
+              ? `Notification envoyée à ${res.notifies} élève${res.notifies > 1 ? 's' : ''} concerné${res.notifies > 1 ? 's' : ''}.`
+              : 'Évènement enregistré : aucun élève concerné à notifier.');
+          }
+          onClose();
+        }
       } catch {
         setErr('Enregistrement impossible (connexion ?). Réessayez.');
       } finally {
@@ -829,7 +1071,7 @@ function EventFormDialog({
           </div>
 
           <Field label="Lien Zoom">
-            <input name="zoom_url" type="url" defaultValue={initial?.zoom_url ?? ''}
+            <input name="zoom_url" type="url" value={zoom} onChange={(e) => setZoom(e.target.value)}
               placeholder="https://zoom.us/j/…"
               className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm focus-ring" />
           </Field>
@@ -944,6 +1186,29 @@ function EventFormDialog({
                   )}
                 </div>
               </div>
+            )}
+          </fieldset>
+
+          {/* ────── Notifications de l'espace élève ────── */}
+          <fieldset className="space-y-2 rounded-xl border border-(--color-border) p-3.5">
+            <legend className="px-1 text-xs font-bold uppercase tracking-wide text-(--color-ink-soft)">Notifier les élèves</legend>
+            <label className="flex cursor-pointer items-start gap-2 text-sm text-(--color-ink)">
+              <input type="checkbox" checked={notifier} onChange={(e) => setNotifier(e.target.checked)} className="mt-0.5 h-4 w-4" />
+              <span>
+                Envoyer une notification aux élèves concernés
+                <span className="block text-[11px] text-(--color-ink-muted)">
+                  {initial ? '« Séance mise à jour »' : '« Nouvelle séance »'} dans leur espace (cloche), pour les élèves qui voient cet évènement.
+                </span>
+              </span>
+            </label>
+            {lienNouveau && (
+              <label className="flex cursor-pointer items-start gap-2 text-sm text-(--color-ink)">
+                <input type="checkbox" checked={notifierLien} onChange={(e) => setNotifierLien(e.target.checked)} className="mt-0.5 h-4 w-4" />
+                <span>
+                  Prévenir que le lien de la visio est disponible
+                  <span className="block text-[11px] text-(--color-ink-muted)">Notification « Lien de la visio disponible » : l’élève l’obtient en émargeant.</span>
+                </span>
+              </label>
             )}
           </fieldset>
 
