@@ -311,11 +311,11 @@ export async function provisionStudentAccount(
   const prevCollegesRaw: string[] = Array.isArray(prevScope.colleges)
     ? prevScope.colleges.filter((x: unknown): x is string => typeof x === 'string')
     : [];
-  // Le collège Découverte est gratuit : une mise à niveau Découverte → payant
-  // ne doit pas le faire disparaître, même quand le cumul ne s'applique pas.
+  // Un élève qui passe à une formule payante n'a plus d'accès Découverte
+  // (demande de Cyril, 08/10/2026 : jusque-là le collège était conservé).
   const prevColleges = cumulate
-    ? prevCollegesRaw
-    : prevCollegesRaw.filter((c) => c === 'col-decouverte');
+    ? prevCollegesRaw.filter((c) => c !== 'col-decouverte')
+    : [];
   const mergedColleges = Array.from(new Set<string>([...prevColleges, ...colleges]));
 
   // Un achat Gériatrie doit recevoir le même bonus MG que les comptes créés
@@ -356,6 +356,9 @@ export async function provisionStudentAccount(
     // On conserve la voie existante si le nouvel achat n'en précise pas.
     paid_voie: normalizeVoie(voie) ?? (typeof prevScope.paid_voie === 'string' ? prevScope.paid_voie : null),
     paid_at: new Date().toISOString(),
+    // Plus rien de la Découverte (undefined retire la clé).
+    espace_decouverte: undefined,
+    decouverte_cours: undefined,
   };
   log('scope-merged', {
     priorPaid, purchased: offerForFormule, unionOffers, mergedOffer,

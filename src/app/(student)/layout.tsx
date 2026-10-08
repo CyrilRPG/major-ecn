@@ -32,7 +32,12 @@ export default async function StudentLayout({ children }: { children: React.Reac
   // l'administrateur si la session cible n'a pas été installée ou a expiré.
   // C'était trompeur (bandeau cible + « Bonjour, Cyril ») et surtout fail-open.
   if (isImpersonating && profile.role === 'admin') redirect('/admin/eleves');
-  const treePromise = getNavigatorTree(profile);
+  // Élève à formule payante : plus aucun accès à l'espace Découverte (demande
+  // de Cyril, 08/10/2026), même en accès intégral.
+  const payant = profile.role === 'student'
+    && ['essentiel', 'intensif', 'approfondi'].includes(parseScope(profile.permission_scope).offer);
+  const treePromise = getNavigatorTree(profile)
+    .then((t) => (payant ? t.filter((c) => c.id !== 'col-decouverte') : t));
   // Détection mode Découverte : utilisé pour verrouiller Entraînement,
   // Révisions, Agenda et Annales EVC dans le menu sidebar + afficher
   // l'encadré Découverte au-dessus d'Accueil.

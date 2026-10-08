@@ -63,7 +63,8 @@ export async function PATCH(req: Request) {
   // ré-enregistrement du dialog admin (le formulaire ne renvoie pas les
   // sous-collèges MG ni les 60 items bonus, qui étaient donc écrasés).
   // Pour retirer l'accès MG, l'admin retire Gériatrie.
-  const nextColleges = colleges ?? [];
+  // Formule payante : jamais d'accès Découverte (08/10/2026).
+  const nextColleges = (colleges ?? []).filter((c) => !isPaidOffer || c !== DECOUVERTE_COLLEGE_ID);
   const { colleges: collegesAvecBonus, cours: coursAvecBonus } =
     permission_type === 'college'
       ? await applyGeriatrieMgBonus(admin, nextColleges, cours)
@@ -91,7 +92,7 @@ export async function PATCH(req: Request) {
   // admin ne le fasse pas disparaître (le scope est reconstruit ci-dessous) et
   // qu'il suive la spécialité. Ne restreint que le collège Découverte.
   const decouverteCours = coursDecouvertePourSpecialite(specialiteDecouverteDuScope(prev));
-  const decouverteField = decouverteCours
+  const decouverteField = decouverteCours && !isPaidOffer
     && (permission_type === 'all' || collegesAvecBonus.includes(DECOUVERTE_COLLEGE_ID))
     ? { decouverte_cours: decouverteCours } : {};
 
