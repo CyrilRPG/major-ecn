@@ -19,7 +19,7 @@ import { EmargementsDialog } from './emargements-dialog';
 import { SignatureInscriptionDialog } from './signature-inscription-dialog';
 import { BulkEmailDialog } from './bulk-email-dialog';
 import { effectiveSeed } from '@/lib/avatar';
-import { parseScope, offerLabel } from '@/lib/auth/permissions';
+import { parseScope, offerLabel, scopeOffers } from '@/lib/auth/permissions';
 import type { Offer } from '@/types/domain';
 import { DeleteAccountButton } from '@/components/admin/delete-account-button';
 import { ToggleActiveButton } from '@/components/admin/toggle-active-button';
@@ -144,6 +144,20 @@ function voieKeyOf(s: Student): 'interne' | 'externe' | '' {
 }
 function offerOf(s: Student): Offer {
   return parseScope(s.permission_scope).offer;
+}
+const RANG_OFFRE: Record<string, number> = { decouverte: 0, essentiel: 1, intensif: 2, approfondi: 3 };
+/** TOUTES les formules détenues (élèves invités sur plusieurs formules), de la plus basse à la plus haute. */
+function offresOf(s: Student): Offer[] {
+  return [...scopeOffers(parseScope(s.permission_scope))].sort((a, b) => (RANG_OFFRE[a] ?? 0) - (RANG_OFFRE[b] ?? 0));
+}
+function BadgesFormules({ s }: { s: Student }) {
+  return (
+    <>
+      {offresOf(s).map((o) => (
+        <Badge key={o} variant={o === 'essentiel' || o === 'decouverte' ? 'outline' : 'primary'}>{offerLabel(o)}</Badge>
+      ))}
+    </>
+  );
 }
 function isPaid(s: Student): boolean {
   const r = rawScope(s);
@@ -274,7 +288,8 @@ export function StudentsTable({
   /** Compte par catégorie d'abonnement (sur l'ensemble). */
   const offerCounts = useMemo(() => {
     const m: Record<string, number> = {};
-    for (const s of students) { const o = offerOf(s); m[o] = (m[o] ?? 0) + 1; }
+    // Un élève inscrit à plusieurs formules compte dans chacune.
+    for (const s of students) for (const o of offresOf(s)) m[o] = (m[o] ?? 0) + 1;
     return m;
   }, [students]);
 
@@ -285,7 +300,7 @@ export function StudentsTable({
       if (q && !full.includes(q.toLowerCase())) return false;
       if (specialty !== 'all' && sp !== (specialty === 'none' ? '' : specialty)) return false;
       if (voie !== 'all' && voieKeyOf(s) !== (voie === 'none' ? '' : voie)) return false;
-      if (offer !== 'all' && offerOf(s) !== offer) return false;
+      if (offer !== 'all' && !offresOf(s).includes(offer)) return false;
       if (payment === 'paid' && !isPaid(s)) return false;
       if (payment === 'free' && isPaid(s)) return false;
       // Dates d'accès seulement : actif / inactif relève du sélecteur « Statut du compte ».
@@ -350,7 +365,7 @@ export function StudentsTable({
       'Prénom': s.first_name ?? '',
       'Spécialité': spOf(s) || '—',
       'Voie': voieOf(s),
-      'Abonnement': offerLabel(offerOf(s)),
+      'Abonnement': offresOf(s).map(offerLabel).join(' + '),
       'Paiement': isPaid(s) ? 'Payé' : 'Gratuit (Découverte)',
       'Accès': !isActive(s) ? 'Inactif' : isAccessExpired(s, sessionsById) ? 'Expiré' : 'Actif',
       'Motif désactivation': isActive(s) ? '' : libelleMotif(s.deactivation_reason) + (s.deactivation_note ? ` — ${s.deactivation_note}` : ''),
@@ -582,7 +597,6 @@ export function StudentsTable({
             </TableRow>
           ) : (
             filtered.map((s) => {
-              const scope = parseScope(s.permission_scope);
               const sp = spOf(s);
               const voieLabel = voieOf(s);
               const accessEnd = effectiveAccessEnd(s, sessionsById);
@@ -621,7 +635,7 @@ export function StudentsTable({
                           {accessExpired && (
                             <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700">Expiré</span>
                           )}
-                          <Badge variant={scope.offer === 'essentiel' ? 'outline' : 'primary'}>{offerLabel(scope.offer)}</Badge>
+                          <BadgesFormules s={s} />
                         </div>
                       </div>
                     </div>
@@ -633,7 +647,7 @@ export function StudentsTable({
                   <TableCell className="hidden text-(--color-ink-soft) lg:table-cell">{s.phone ?? 'Non renseigné'}</TableCell>
                   <TableCell className="hidden md:table-cell">
                     <div className="flex flex-wrap items-center gap-1">
-                      <Badge variant={scope.offer === 'essentiel' ? 'outline' : 'primary'}>{offerLabel(scope.offer)}</Badge>
+                      <BadgesFormules s={s} />
                       {isPaid(s) ? <Badge variant="muted">Payé</Badge> : <Badge variant="muted">Gratuit</Badge>}
                       {!isActive(s) && <InactifBadge s={s} />}
                       {accessExpired && (
