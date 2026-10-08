@@ -1,18 +1,23 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Maximize2, Minimize2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
 import { VIDEO_PAUSE_EVENT, VIDEO_PROGRESS_EVENT, type VideoProgressDetail } from '@/lib/emargement';
+import { poserFiligrane } from '@/lib/video/filigrane';
 
 /**
  * Lecteur vidéo Bunny Stream (iframe embed). Suit la progression via le
  * protocole player.js (implémenté par le lecteur Bunny) pour marquer le cours
  * comme « vu » à 80 %, avec un bouton manuel de secours.
  *
- * `watermarkText` — si fourni, un filigrane semi-transparent se superpose à la
- * vidéo (pointer-events: none) pour décourager les captures d'écran.
+ * `watermarkText` — si fourni, un filigrane nominatif se superpose à la vidéo
+ * en PERMANENCE (lib/video/filigrane : recréé s'il est supprimé ou masqué,
+ * vidéo mise en pause). Le plein écran est celui du CADRE (vidéo + filigrane) :
+ * le plein écran natif de l'iframe Bunny faisait disparaître le filigrane.
+ * Aucun arrondi ni `overflow: hidden` sur l'ancêtre de l'iframe : Chrome perdait
+ * alors le glisser de la barre de lecture hors plein écran (08/10/2026).
  */
 export function BunnyVideoPlayer({
   embedUrl,
@@ -27,7 +32,48 @@ export function BunnyVideoPlayer({
   watermarkText?: string;
 }) {
   const frameRef = useRef<HTMLIFrameElement>(null);
+  const cadreRef = useRef<HTMLDivElement>(null);
   const [done, setDone] = useState(false);
+  // Plein écran : natif sur le cadre si possible, sinon (iPhone) cadre fixé
+  // sur tout l'écran.
+  const [pleinEcran, setPleinEcran] = useState(false);
+  const [simule, setSimule] = useState(false);
+
+  const pauser = () => frameRef.current?.contentWindow?.postMessage(
+    JSON.stringify({ context: 'player.js', version: '0.0.1', method: 'pause' }), '*',
+  );
+
+  useEffect(() => {
+    const cadre = cadreRef.current;
+    if (!cadre || !watermarkText) return;
+    return poserFiligrane(cadre, watermarkText, pauser);
+  }, [watermarkText]);
+
+  useEffect(() => {
+    const onChange = () => setPleinEcran(document.fullscreenElement === cadreRef.current);
+    document.addEventListener('fullscreenchange', onChange);
+    return () => document.removeEventListener('fullscreenchange', onChange);
+  }, []);
+  useEffect(() => {
+    if (!simule) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setSimule(false); };
+    document.addEventListener('keydown', onKey);
+    const ancien = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ancien; };
+  }, [simule]);
+
+  const basculerPleinEcran = async () => {
+    const cadre = cadreRef.current;
+    if (!cadre) return;
+    if (document.fullscreenElement) { await document.exitFullscreen().catch(() => undefined); return; }
+    if (simule) { setSimule(false); return; }
+    if (cadre.requestFullscreen && document.fullscreenEnabled) {
+      try { await cadre.requestFullscreen(); return; } catch { /* repli ci-dessous */ }
+    }
+    setSimule(true);
+  };
+  const agrandi = pleinEcran || simule;
   const markedRef = useRef(false);
 
   async function markWatched() {
@@ -97,53 +143,41 @@ export function BunnyVideoPlayer({
 
   return (
     <div>
-      <div className="relative w-full overflow-hidden rounded-2xl bg-black shadow-(--shadow-lifted)" style={{ aspectRatio: '16 / 9' }}>
+      <div
+        ref={cadreRef}
+        className={simule
+          ? 'fixed inset-0 z-[1000] bg-black'
+          : 'relative w-full bg-black shadow-(--shadow-lifted)'}
+        style={simule || pleinEcran ? undefined : { aspectRatio: '16 / 9' }}
+      >
+        {/* Pas de « fullscreen » pour l'iframe : seul le cadre (vidéo + filigrane)
+            passe en plein écran. */}
         <iframe
           ref={frameRef}
           src={embedUrl}
           title="Vidéo du cours"
           loading="lazy"
-          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
-          allowFullScreen
+          allow="accelerometer; gyroscope; autoplay; encrypted-media"
           className="absolute inset-0 h-full w-full border-0"
         />
-        {watermarkText && (
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 z-10 overflow-hidden pointer-events-none select-none"
+        {agrandi && (
+          <button
+            type="button"
+            onClick={() => void basculerPleinEcran()}
+            className="absolute right-3 top-3 z-30 inline-flex items-center gap-1.5 rounded-lg bg-black/60 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur hover:bg-black/80"
           >
-            {/* Quatre bandes horizontales, à 1/5, 2/5, 3/5 et 4/5 de la hauteur.
-                Chacune occupe toute la largeur et est centrée : le texte reste
-                entier, jamais coupé par le bord de l'image. On alterne sombre et
-                clair pour qu'au moins une bande reste lisible quel que soit le
-                fond, et le halo de contraste garantit la lisibilité même sur une
-                zone de la même teinte. */}
-            {[
-              { top: '20%', dark: true },
-              { top: '40%', dark: false },
-              { top: '60%', dark: true },
-              { top: '80%', dark: false },
-            ].map((pos, i) => (
-              <span
-                key={i}
-                className="absolute inset-x-0 whitespace-nowrap text-center text-[13px] font-semibold tracking-wide sm:text-[17px] lg:text-[20px]"
-                style={{
-                  top: pos.top,
-                  transform: 'translateY(-50%)',
-                  opacity: 0.3,
-                  color: pos.dark ? '#111111' : '#ffffff',
-                  textShadow: pos.dark
-                    ? '0 0 6px rgba(255,255,255,0.95), 0 1px 2px rgba(255,255,255,0.85)'
-                    : '0 0 6px rgba(0,0,0,0.95), 0 1px 2px rgba(0,0,0,0.85)',
-                }}
-              >
-                {watermarkText}
-              </span>
-            ))}
-          </div>
+            <Minimize2 className="h-4 w-4" /> Quitter le plein écran
+          </button>
         )}
       </div>
-      <div className="mt-2 flex items-center justify-end">
+      <div className="mt-2 flex items-center justify-between gap-3">
+        <button
+          type="button"
+          onClick={() => void basculerPleinEcran()}
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-(--color-ink-soft) hover:text-(--color-primary)"
+        >
+          <Maximize2 className="h-3.5 w-3.5" /> Plein écran
+        </button>
         {done ? (
           <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#16A34A]">
             <CheckCircle2 className="h-4 w-4" /> Marqué comme vu
