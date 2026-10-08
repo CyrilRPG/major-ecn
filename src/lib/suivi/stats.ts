@@ -9,6 +9,8 @@ import {
   type ActionRow, type AlertRow, type AppointmentRow, type CampaignRow, type CandidateFilterKey,
   type MemberRow, type ReportRow,
 } from './types';
+import { aLaFormule } from './types';
+import { studentOffers } from './students';
 
 export type StudentForStats = {
   id: string;
@@ -27,6 +29,8 @@ export type CandidateState = {
   email: string | null;
   specialty: string;
   offer: string;
+  /** Toutes les formules détenues (élèves inscrits à plusieurs). */
+  offers: string[];
   voie: string | null;
   lastSignIn: string | null;
   /** Dernier suivi réalisé (compte rendu ou rendez-vous réalisé). */
@@ -110,6 +114,7 @@ export function deriveCandidateStates(input: CandidateInputs): CandidateState[] 
       email: s.email,
       specialty: studentSpecialty(s.permission_scope),
       offer: studentOffer(s.permission_scope),
+      offers: studentOffers(s.permission_scope),
       voie: studentVoie(s.permission_scope),
       lastSignIn: input.lastSignIns?.get(s.id) ?? null,
       lastFollowUp,
@@ -178,7 +183,7 @@ export function filterCandidates(rows: CandidateState[], f: CandidateFilters, ap
     if (f.key && !matchesCandidateFilter(c, f.key)) return false;
     if (q && !`${c.name} ${c.email ?? ''}`.toLowerCase().includes(q)) return false;
     if (f.specialty && c.specialty !== f.specialty) return false;
-    if (f.offer && c.offer !== f.offer) return false;
+    if (f.offer && !aLaFormule(c, f.offer)) return false;
     if (f.voie && c.voie !== f.voie) return false;
     if (f.campaignId && !c.campaignIds.includes(f.campaignId)) return false;
     if (f.from || f.to) {
@@ -289,7 +294,7 @@ export function computeDashboard(input: {
     const c = candById.get(userId);
     if (!c) return false;
     if (f.specialty && c.specialty !== f.specialty) return false;
-    if (f.offer && c.offer !== f.offer) return false;
+    if (f.offer && !aLaFormule(c, f.offer)) return false;
     if (f.voie && c.voie !== f.voie) return false;
     return true;
   };

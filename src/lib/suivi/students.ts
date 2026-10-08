@@ -5,7 +5,7 @@
  * avec le MÊME vocabulaire que le reste de la plateforme (liste des élèves,
  * CRM) : `paid_specialty` → `signup.specialty` → `specialty_wish` → collèges.
  */
-import { parseScope } from '@/lib/auth/permissions';
+import { parseScope, scopeOffers } from '@/lib/auth/permissions';
 import type { Offer } from '@/types/domain';
 import type { CampaignRow } from './types';
 
@@ -66,6 +66,11 @@ export function studentSpecialty(scope: unknown): string {
 
 export function studentOffer(scope: unknown): Offer {
   return parseScope(scope).offer;
+}
+
+/** Toutes les formules détenues (élèves inscrits à plusieurs). */
+export function studentOffers(scope: unknown): Offer[] {
+  return scopeOffers(parseScope(scope));
 }
 
 export function studentVoie(scope: unknown): 'interne' | 'externe' | null {

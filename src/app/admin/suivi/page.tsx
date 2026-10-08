@@ -8,6 +8,7 @@ import { fmtDateMedium, fmtDateTime, fmtMinutes, isValidDayKey, addDays, todayKe
 import { OFFER_KEYS, OFFER_SHORT_LABEL, VOIE_LABEL, isOccupying } from '@/lib/suivi/types';
 import { Kpi, SectionCard } from '@/components/admin/suivi/ui';
 import { AppointmentStatusBadge } from '@/components/admin/suivi/ui';
+import { aLaFormule } from '@/lib/suivi/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,7 +44,7 @@ export default async function SuiviDashboardPage({ searchParams }: { searchParam
       const c = candById.get(a.user_id);
       if (!c) return false;
       if (filters.specialty && c.specialty !== filters.specialty) return false;
-      if (filters.offer && c.offer !== filters.offer) return false;
+      if (filters.offer && !aLaFormule(c, filters.offer)) return false;
       if (filters.voie && c.voie !== filters.voie) return false;
       if (filters.campaignId && a.campaign_id !== filters.campaignId) return false;
       return true;

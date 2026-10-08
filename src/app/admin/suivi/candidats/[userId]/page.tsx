@@ -59,7 +59,7 @@ export default async function FicheCandidatPage({ params }: { params: Promise<{ 
           </p>
           <div className="mt-2 flex flex-wrap gap-1.5">
             <Badge>{fiche.specialty || 'Spécialité non renseignée'}</Badge>
-            <Badge variant="outline">{OFFER_SHORT_LABEL[fiche.offer] ?? fiche.offer}</Badge>
+            {(fiche.offers.length ? fiche.offers : [fiche.offer]).map((o) => <Badge key={o} variant="outline">{OFFER_SHORT_LABEL[o] ?? o}</Badge>)}
             {fiche.voie && <Badge variant="outline">{VOIE_LABEL[fiche.voie]}</Badge>}
             {fiche.student.is_active === false && <Badge variant="danger">Compte désactivé</Badge>}
             {memberCampaigns.map((n) => <Badge key={n} variant="muted">{n}</Badge>)}

@@ -26,6 +26,8 @@ export type LigneEleve = {
   phone: string | null;
   specialite: string;
   offer: string;
+  /** Toutes les formules détenues (élèves inscrits à plusieurs). */
+  offers: string[];
   voie: 'interne' | 'externe' | null;
   inscritLe: string;
   derniereConnexion: string | null;

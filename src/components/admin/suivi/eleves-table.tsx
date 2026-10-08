@@ -7,6 +7,7 @@ import { AlertTriangle, ArrowUpDown, Loader2, Search } from 'lucide-react';
 import { affecterEleveAction, majSuiviEleveAction } from '@/app/admin/suivi/eleves/actions';
 import { ALERTE_LABEL } from '@/lib/suivi/alertes-auto';
 import { STATUTS_SUIVI, STATUT_SUIVI_LABEL, type Collaborateur, type LigneEleve, type StatutSuivi } from '@/lib/suivi/eleves-pure';
+import { aLaFormule, libelleFormules } from '@/lib/suivi/types';
 
 /** En-tête de colonne triable. */
 function Th({ t, tri, onTrier, children }: { t: Tri; tri: Tri; onTrier: (t: Tri) => void; children: React.ReactNode }) {
@@ -65,7 +66,7 @@ export function ElevesTable({
     const f = lignes.filter((l) =>
       (!n || l.nom.toLowerCase().includes(n) || (l.email ?? '').toLowerCase().includes(n))
       && (!specialite || l.specialite === specialite)
-      && (!offer || l.offer === offer)
+      && (!offer || aLaFormule(l, offer))
       && (!voie || l.voie === voie)
       && (!statut || l.statut === statut)
       && (!alerte || (alerte === 'oui' ? l.alertes.length > 0 : alerte === 'non' ? l.alertes.length === 0 : l.alertes.some((a) => a.type === alerte)))
@@ -143,7 +144,7 @@ export function ElevesTable({
                   <p className="text-[11px] text-(--color-ink-muted)">{l.email}</p>
                 </td>
                 <td className="px-3 py-2 text-xs text-(--color-ink-soft)">
-                  {l.specialite}<br />{l.voie ? `voie ${l.voie}` : 'voie —'} · {OFFER_LABEL[l.offer] ?? l.offer}
+                  {l.specialite}<br />{l.voie ? `voie ${l.voie}` : 'voie —'} · {libelleFormules(l, OFFER_LABEL)}
                 </td>
                 <td className="px-3 py-2"><span className={`rounded-full px-2 py-0.5 text-[11px] font-bold capitalize ${ACTIVITE_TONE[l.activite]}`}>{l.activite}</span></td>
                 <td className="px-3 py-2 text-xs">{fmtDate(l.derniereConnexion)}</td>

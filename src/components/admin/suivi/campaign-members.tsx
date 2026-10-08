@@ -13,7 +13,8 @@ import { InlineStatus, MemberStatusBadge, NativeSelect } from './ui';
 import { announcePlanning, inviteMembers, markNoShow, remindMembers, removeMember, setMemberStatus } from '@/app/admin/suivi/campagnes/actions';
 import { fmtDateShort, fmtDateTime } from '@/lib/suivi/format';
 import { matchesCandidateFilter, type CandidateState } from '@/lib/suivi/stats';
-import { CANDIDATE_FILTER_KEYS, CANDIDATE_FILTER_LABEL, MEMBER_STATUS_LABEL, OFFER_SHORT_LABEL, type CandidateFilterKey, type MemberStatus } from '@/lib/suivi/types';
+import { CANDIDATE_FILTER_KEYS, CANDIDATE_FILTER_LABEL, MEMBER_STATUS_LABEL, type CandidateFilterKey, type MemberStatus } from '@/lib/suivi/types';
+import { libelleFormules } from '@/lib/suivi/types';
 
 export type MemberView = {
   memberId: string;
@@ -142,7 +143,7 @@ export function CampaignMembers({ campaignId, rows, templates, canManage }: { ca
                 <TableCell><Checkbox checked={selected.has(c.id)} onCheckedChange={() => setSelected((p) => { const n = new Set(p); if (n.has(c.id)) n.delete(c.id); else n.add(c.id); return n; })} /></TableCell>
                 <TableCell>
                   <Link href={`/admin/suivi/candidats/${c.id}`} className="font-medium text-(--color-ink) underline-offset-4 hover:underline">{c.name}</Link>
-                  <p className="text-xs text-(--color-ink-muted)">{c.email} · {OFFER_SHORT_LABEL[c.offer] ?? c.offer}{c.voie ? ` · ${c.voie}` : ''}</p>
+                  <p className="text-xs text-(--color-ink-muted)">{c.email} · {libelleFormules(c)}{c.voie ? ` · ${c.voie}` : ''}</p>
                 </TableCell>
                 <TableCell className="text-(--color-ink-soft)">{c.specialty || '—'}</TableCell>
                 <TableCell><MemberStatusBadge status={r.memberStatus} /></TableCell>

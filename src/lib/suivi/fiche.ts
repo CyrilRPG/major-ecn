@@ -7,6 +7,7 @@ import {
 import { studentName, studentOffer, studentSpecialty, studentVoie } from './students';
 import { loadPlatformSnapshot, type PlatformSnapshot } from './platform';
 import { isOccupying, isOpenAction, type ActionRow, type AppointmentRow, type CampaignRow, type DifficultyRow, type HistoryRow, type MemberRow, type ReportRow } from './types';
+import { studentOffers } from './students';
 
 /**
  * Dossier complet d'un candidat (§11, §13) : identité, activité, rendez-vous,
@@ -20,6 +21,8 @@ export type Fiche = {
   name: string;
   specialty: string;
   offer: string;
+  /** Toutes les formules détenues (élèves inscrits à plusieurs). */
+  offers: string[];
   voie: string | null;
   lastSignIn: string | null;
   activity: ActivityRow | null;
@@ -78,6 +81,7 @@ export async function loadFiche(userId: string, opts: { internalNotes: boolean; 
     name: studentName(student),
     specialty: studentSpecialty(student.permission_scope),
     offer: studentOffer(student.permission_scope),
+    offers: studentOffers(student.permission_scope),
     voie: studentVoie(student.permission_scope),
     lastSignIn: signIns.get(userId) ?? activity.get(userId)?.last_sign_in ?? null,
     activity: activity.get(userId) ?? null,

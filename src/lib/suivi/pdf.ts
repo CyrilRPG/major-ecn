@@ -4,7 +4,7 @@ import { fmtDateLong, fmtDateShort, fmtDateTime, fmtTime } from './format';
 import type { Fiche } from './fiche';
 import {
   ACTION_LABEL, ACTION_STATUS_LABEL, APPOINTMENT_STATUS_LABEL, CONTACT_TYPE_LABEL, DIFFICULTY_LABEL,
-  OFFER_SHORT_LABEL, VOIE_LABEL,
+  VOIE_LABEL, libelleFormules,
 } from './types';
 
 /**
@@ -55,7 +55,7 @@ export function ficheSectionHtml(f: Fiche): string {
       <div class="brand">Major ECN · Suivi individuel</div>
       <h1>${e(f.name)}</h1>
       <p class="meta">${e(f.student.email ?? '')}${f.student.phone ? ` · ${e(f.student.phone)}` : ''}</p>
-      <p class="meta">${e(f.specialty || 'Spécialité non renseignée')} · ${e(OFFER_SHORT_LABEL[f.offer] ?? f.offer)}${f.voie ? ` · ${e(VOIE_LABEL[f.voie] ?? f.voie)}` : ''}</p>
+      <p class="meta">${e(f.specialty || 'Spécialité non renseignée')} · ${e(libelleFormules(f))}${f.voie ? ` · ${e(VOIE_LABEL[f.voie] ?? f.voie)}` : ''}</p>
       <p class="meta">Dernière connexion : ${e(fmtDateTime(f.lastSignIn))}${f.activity ? ` · Vidéos ${f.activity.videos_watched} · Fiches ${f.activity.fiches_read} · QCM ${f.activity.qcm_done} · Flashcards ${f.activity.flashcards_done}` : ''}</p>
     </header>
     <h2>Rendez-vous (${appts.length})</h2>

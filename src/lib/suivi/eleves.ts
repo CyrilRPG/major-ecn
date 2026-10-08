@@ -152,6 +152,7 @@ export async function chargerTableauEleves(actor: SuiviActor): Promise<TableauEl
       phone: s.phone,
       specialite: studentSpecialty(s.permission_scope) || '—',
       offer: ps.offer,
+      offers: scopeOffers(ps),
       voie: studentVoie(s.permission_scope),
       inscritLe: s.created_at,
       derniereConnexion: signaux.derniereConnexion,

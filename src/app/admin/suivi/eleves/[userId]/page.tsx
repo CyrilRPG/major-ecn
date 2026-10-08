@@ -9,6 +9,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { CompteRenduForm, MOYENS_CONTACT } from '@/components/admin/suivi/compte-rendu-form';
 import { SuiviControls } from '@/components/admin/suivi/suivi-controls';
 import { STATUT_TONE } from '@/components/admin/suivi/eleves-table';
+import { libelleFormules } from '@/lib/suivi/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,7 +54,7 @@ export default async function FicheEleveSuiviPage({ params }: { params: Promise<
 
       <header className="mb-5 flex flex-wrap items-start justify-between gap-3 border-b border-(--color-border) pb-5">
         <div>
-          <p className="text-xs font-medium text-(--color-ink-muted)">{l.specialite} · {l.voie ? `voie ${l.voie}` : 'voie —'} · {OFFER_LABEL[l.offer] ?? l.offer}</p>
+          <p className="text-xs font-medium text-(--color-ink-muted)">{l.specialite} · {l.voie ? `voie ${l.voie}` : 'voie —'} · {libelleFormules(l, OFFER_LABEL)}</p>
           <h1 className="mt-1 text-xl font-semibold tracking-tight text-(--color-ink)">{l.nom}</h1>
           <p className="mt-0.5 text-sm text-(--color-ink-soft)">{l.email}{l.phone ? ` · ${l.phone}` : ''} · inscrit le {fmtJour(l.inscritLe)}</p>
         </div>

@@ -404,4 +404,15 @@ export const OFFER_SHORT_LABEL: Record<string, string> = {
 };
 export const OFFER_KEYS = ['decouverte', 'essentiel', 'intensif', 'approfondi'] as const;
 
+/** Un élève peut détenir plusieurs formules (élèves invités) : filtre « a cette formule ». */
+export function aLaFormule(c: { offer: string; offers?: string[] }, offre: string): boolean {
+  return (c.offers && c.offers.length > 0 ? c.offers : [c.offer]).includes(offre);
+}
+/** « Intensive + Approfondie » (de la plus basse à la plus haute). */
+export function libelleFormules(c: { offer: string; offers?: string[] }, libelles: Record<string, string> = OFFER_SHORT_LABEL): string {
+  const offres = c.offers && c.offers.length > 0 ? c.offers : [c.offer];
+  return [...offres].sort((a, b) => OFFER_KEYS.indexOf(a as never) - OFFER_KEYS.indexOf(b as never))
+    .map((o) => libelles[o] ?? o).join(' + ');
+}
+
 export const VOIE_LABEL: Record<string, string> = { interne: 'Voie interne', externe: 'Voie externe' };

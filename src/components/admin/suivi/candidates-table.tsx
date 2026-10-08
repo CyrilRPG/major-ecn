@@ -11,6 +11,7 @@ import { candidateFiltersToQuery } from '@/lib/suivi/export-filters';
 import { CANDIDATE_STATUS_LABEL, filterCandidates, type CandidateFilters, type CandidateState } from '@/lib/suivi/stats';
 import { fmtDateShort, fmtDateTime } from '@/lib/suivi/format';
 import { CANDIDATE_FILTER_KEYS, CANDIDATE_FILTER_LABEL, OFFER_KEYS, OFFER_SHORT_LABEL, VOIE_LABEL, type AppointmentRow, type CandidateFilterKey } from '@/lib/suivi/types';
+import { libelleFormules } from '@/lib/suivi/types';
 
 const STATUS_VARIANT: Record<CandidateState['status'], 'primary' | 'success' | 'danger' | 'warning' | 'muted' | 'outline'> = {
   never_contacted: 'muted', invited: 'outline', scheduled: 'primary', done: 'success', no_show: 'danger', to_recall: 'warning', cancelled: 'muted',
@@ -115,7 +116,7 @@ export function CandidatesTable({ candidates, appointments, campaigns, specialti
               <TableCell><Checkbox checked={selected.has(c.id)} onCheckedChange={() => setSelected((p) => { const n = new Set(p); if (n.has(c.id)) n.delete(c.id); else n.add(c.id); return n; })} /></TableCell>
               <TableCell>
                 <Link href={`/admin/suivi/candidats/${c.id}`} className="font-medium text-(--color-ink) underline-offset-4 hover:underline">{c.name}</Link>
-                <p className="text-xs text-(--color-ink-muted)">{c.email} · {OFFER_SHORT_LABEL[c.offer] ?? c.offer}{c.voie ? ` · ${c.voie}` : ''}{c.campaignIds.length > 0 ? ` · ${c.campaignIds.map((id) => campaignName.get(id)).filter(Boolean).join(', ')}` : ''}</p>
+                <p className="text-xs text-(--color-ink-muted)">{c.email} · {libelleFormules(c)}{c.voie ? ` · ${c.voie}` : ''}{c.campaignIds.length > 0 ? ` · ${c.campaignIds.map((id) => campaignName.get(id)).filter(Boolean).join(', ')}` : ''}</p>
               </TableCell>
               <TableCell className="text-(--color-ink-soft)">{c.specialty || '—'}</TableCell>
               <TableCell className="text-xs text-(--color-ink-soft)">{c.lastFollowUp ? fmtDateShort(c.lastFollowUp) : 'Jamais'}</TableCell>
