@@ -6,6 +6,9 @@ import { EDN_FACULTE_ID } from '@/lib/data/navigator';
 import { instantParis } from '@/lib/agenda/planning';
 
 export const metadata = { title: 'Agenda' };
+// Import IA de l'agenda (server actions de cette page) : un tour du modèle
+// prend quelques secondes à une minute.
+export const maxDuration = 120;
 
 export default async function AdminAgendaPage() {
   // Administrateurs et Gestionnaire de l'agenda (module « Agenda »).

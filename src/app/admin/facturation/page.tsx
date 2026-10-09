@@ -3,7 +3,7 @@ import { requireAdmin } from '@/lib/auth/require-role';
 import { createAdminClient, createAdminClientToutesFacultes } from '@/lib/supabase/admin';
 import { BILLING_EUR, GEN_FEATURE, IMAGERIE_COLLEGE_ID, ODONTOLOGIE_COLLEGE_ID, billingLinePrices } from '@/lib/ai/cost';
 import { fetchAllRows } from '@/lib/supabase/fetch-all-pure';
-import { FacturationDashboard, type ArticleBillingLine, type CourseLine, type ExerciseImportBillingLine } from '@/components/admin/facturation-dashboard';
+import { FacturationDashboard, type AgendaImportBillingLine, type ArticleBillingLine, type CourseLine, type ExerciseImportBillingLine } from '@/components/admin/facturation-dashboard';
 
 export const metadata = { title: 'Facturation IA' };
 export const dynamic = 'force-dynamic';
@@ -26,7 +26,7 @@ export default async function AdminFacturationPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const toutes = createAdminClientToutesFacultes() as any;
 
-  const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes, articlesRes, odontoRes, genArenaRes, imagerieRes] = await Promise.all([
+  const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes, articlesRes, odontoRes, genArenaRes, imagerieRes, agendaRes] = await Promise.all([
     // Par tranches : PostgREST tronque en silence à 1 000 lignes, et la RPC en renvoie
     // davantage (1 067 au 23/09/2026 — 61 items facturables manquaient à la facture).
     fetchAllRows((de: number, a2: number) => a.rpc('admin_facturation_lines', { p_faculte_id: EDN_FACULTE_ID }).order('line_id').range(de, a2))
@@ -51,6 +51,8 @@ export default async function AdminFacturationPage() {
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.arenaCorrections).eq('status', 'success'),
     // Collège Imagerie médicale et ses sous-collèges : DP et questions isolées à 7 € l'item.
     a.from('matieres').select('id, nom').or(`id.eq.${IMAGERIE_COLLEGE_ID},parent_matiere_id.eq.${IMAGERIE_COLLEGE_ID}`),
+    // Import IA de l'agenda : une ligne par import, montant cumulé de ses échanges avec l'IA.
+    a.from('ai_generations').select('id, cours_titre, items_count, price_eur, created_at').eq('feature', GEN_FEATURE.agendaImport).eq('status', 'success').gt('price_eur', 0).order('created_at', { ascending: false }),
   ]);
   const examsCount = examCountRes.count ?? 0;
   const qrocCount = qrocCountRes.count ?? 0;
@@ -105,6 +107,9 @@ export default async function AdminFacturationPage() {
   const articles: ArticleBillingLine[] = ((articlesRes.data ?? []) as Array<{ id: string; cours_titre: string | null; items_count: number | null; created_at: string; faculte_id: string | null }>)
     .map((row) => ({ id: row.id, title: marqueOdonto(row.faculte_id, row.cours_titre ?? 'Article sans titre'), blocks: row.items_count ?? 0, createdAt: row.created_at }));
 
+  const agendaImports: AgendaImportBillingLine[] = ((agendaRes.data ?? []) as Array<{ id: string; cours_titre: string | null; items_count: number | null; price_eur: number | string; created_at: string }>)
+    .map((row) => ({ id: row.id, title: row.cours_titre ?? 'Import agenda', seances: row.items_count ?? 0, eur: Math.round(Number(row.price_eur) * 100) / 100, createdAt: row.created_at }));
+
   return (
     <FacturationDashboard
       lines={lines}
@@ -113,6 +118,7 @@ export default async function AdminFacturationPage() {
       generations={generations}
       exerciseImports={exerciseImports}
       articles={articles}
+      agendaImports={agendaImports}
       tarifs={{
         fiche: BILLING_EUR.fiche,
         qcm: BILLING_EUR.qcm_per_course,

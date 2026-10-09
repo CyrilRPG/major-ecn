@@ -1,9 +1,12 @@
 import type { AnthropicUsage } from './anthropic';
 
 /** Tarifs Anthropic (USD/M tokens). Sonnet 5 : 2 $ / 10 $ ; Opus 5 : 5 $ / 25 $ ;
- *  Fable 5.1 : 10 $ / 50 $ ; Haiku 4.5 : 1 $ / 5 $. Modèle inconnu → Sonnet 4.5. */
+ *  Opus 5.5 : 4 $ / 20 $ ; Fable 5.1 : 10 $ / 50 $ ; Haiku 4.5 : 1 $ / 5 $.
+ *  Modèle inconnu → Sonnet 4.5. */
 const RATES: Record<string, { in: number; out: number }> = {
+  'claude-sonnet-5-5':       { in: 2,  out: 10 },
   'claude-sonnet-5':         { in: 2,  out: 10 },
+  'claude-opus-5-5':         { in: 4,  out: 20 },
   'claude-opus-5':           { in: 5,  out: 25 },
   'claude-opus-4-8':         { in: 5,  out: 25 },
   'claude-fable-5-1':        { in: 10, out: 50 },
@@ -86,6 +89,8 @@ export const GEN_FEATURE = {
   epreuve: 'exam_generation',
   article: 'blog_article_generation',
   arenaCorrections: 'arena_corrections_generation',
+  /** Import IA de l'agenda : une ligne par import, montant cumulé dans `price_eur`. */
+  agendaImport: 'agenda_import_ia',
 } as const;
 
 /**

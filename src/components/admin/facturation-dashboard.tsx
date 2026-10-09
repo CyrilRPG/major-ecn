@@ -6,7 +6,7 @@ import {
   Tooltip, XAxis, YAxis,
 } from 'recharts';
 import {
-  BadgePercent, ClipboardList, FileText, Layers3, type LucideIcon,
+  BadgePercent, CalendarPlus, ClipboardList, FileText, Layers3, type LucideIcon,
   MessageSquare, Newspaper, PencilRuler, Receipt, Sparkles, TrendingDown, UploadCloud, Wallet,
 } from 'lucide-react';
 
@@ -25,10 +25,12 @@ export type CourseLine = {
 };
 
 type Tarifs = { fiche: number; qcm: number; flash: number; ia: number };
-type CatKey = 'fiche' | 'qcm' | 'flash' | 'ia' | 'epreuves' | 'generations' | 'imports' | 'articles';
+type CatKey = 'fiche' | 'qcm' | 'flash' | 'ia' | 'epreuves' | 'generations' | 'imports' | 'articles' | 'agenda';
 export type ExerciseImportBillingLine = { id: string; title: string; cents: number; questions: number; createdAt: string };
 /** Article de blog importé par IA (mise en page + SEO), facturé au forfait. */
 export type ArticleBillingLine = { id: string; title: string; blocks: number; createdAt: string };
+/** Import IA de l'agenda : montant cumulé de l'import (tous ses échanges avec l'IA). */
+export type AgendaImportBillingLine = { id: string; title: string; seances: number; eur: number; createdAt: string };
 
 // Tarifs Épreuves blanches : 1 centime fixe / épreuve + 0,5 centime / QROC.
 const EPREUVE_FIXED_EUR = 0.01;
@@ -52,9 +54,10 @@ const CAT: Record<CatKey, { label: string; short: string; color: string; soft: s
   generations: { label: 'Générations IA', short: 'Générations', color: '#7C3AED', soft: 'rgba(124,58,237,0.14)', Icon: Sparkles },
   imports: { label: 'Import d’exercices', short: 'Imports', color: '#0284C7', soft: 'rgba(2,132,199,0.14)', Icon: UploadCloud },
   articles: { label: 'Articles', short: 'Article', color: '#DB2777', soft: 'rgba(219,39,119,0.14)', Icon: Newspaper },
+  agenda: { label: 'Import agenda', short: 'Agenda', color: '#65A30D', soft: 'rgba(101,163,13,0.14)', Icon: CalendarPlus },
 };
 
-const CAT_KEYS: CatKey[] = ['fiche', 'qcm', 'flash', 'ia', 'epreuves', 'generations', 'imports', 'articles'];
+const CAT_KEYS: CatKey[] = ['fiche', 'qcm', 'flash', 'ia', 'epreuves', 'generations', 'imports', 'articles', 'agenda'];
 
 // Lignes manuelles ajoutées au brut DP/QI (catégorie « QCM + DP »).
 const MANUAL_QCM_LINES = [
@@ -125,6 +128,7 @@ export function FacturationDashboard({
   generations = { interrogations: 0, epreuves: 0, arena: 0 },
   exerciseImports = [],
   articles = [],
+  agendaImports = [],
 }: {
   lines: CourseLine[]; aiResponses: number; tarifs: Tarifs;
   epreuves?: { exams: number; qroc: number };
@@ -133,6 +137,8 @@ export function FacturationDashboard({
   exerciseImports?: ExerciseImportBillingLine[];
   /** Articles de blog importés par IA, facturés 2,50 € pièce. */
   articles?: ArticleBillingLine[];
+  /** Imports IA de l'agenda, au montant de chaque import. */
+  agendaImports?: AgendaImportBillingLine[];
 }) {
   const [sel, setSel] = useState<CatKey | null>(null);
 
@@ -149,6 +155,7 @@ export function FacturationDashboard({
       generations: generations.interrogations + generations.epreuves + (generations.arena ?? 0),
       imports: exerciseImports.length,
       articles: articles.length,
+      agenda: agendaImports.length,
     };
     const totals = {
       fiche: lines.reduce((s, l) => s + l.fichePrice, 0),
@@ -160,8 +167,9 @@ export function FacturationDashboard({
       generations: generationsTotal,
       imports: exerciseImports.reduce((sum, row) => sum + row.cents / 100, 0),
       articles: articles.length * ARTICLE_EUR,
+      agenda: agendaImports.reduce((sum, row) => sum + row.eur, 0),
     };
-    const grand = totals.fiche + totals.qcm + totals.flash + totals.ia + totals.epreuves + totals.generations + totals.imports + totals.articles;
+    const grand = totals.fiche + totals.qcm + totals.flash + totals.ia + totals.epreuves + totals.generations + totals.imports + totals.articles + totals.agenda;
 
     // Coût par collège (pour analyse).
     const byCollege = new Map<string, number>();
@@ -175,9 +183,10 @@ export function FacturationDashboard({
     if (totals.generations > 0) byCollege.set('Générations IA', (byCollege.get('Générations IA') ?? 0) + totals.generations);
     if (totals.imports > 0) byCollege.set('Import d’exercices', (byCollege.get('Import d’exercices') ?? 0) + totals.imports);
     if (totals.articles > 0) byCollege.set('Articles', (byCollege.get('Articles') ?? 0) + totals.articles);
+    if (totals.agenda > 0) byCollege.set('Import agenda', (byCollege.get('Import agenda') ?? 0) + totals.agenda);
 
     return { counts, totals, grand, byCollege };
-  }, [lines, aiResponses, tarifs, epreuves, generations, exerciseImports, articles]);
+  }, [lines, aiResponses, tarifs, epreuves, generations, exerciseImports, articles, agendaImports]);
 
   const pct = remisePct(data.grand);
   const remiseEur = (data.grand * pct) / 100;
@@ -185,7 +194,7 @@ export function FacturationDashboard({
   const regle = REGLE_TOTAL;
   const reste = Math.max(0, net - regle);
   const partReglee = net > 0 ? Math.min(100, (regle / net) * 100) : 0;
-  const tarifOf: Record<CatKey, number> = { fiche: tarifs.fiche, qcm: tarifs.qcm, flash: tarifs.flash, ia: tarifs.ia, epreuves: EPREUVE_FIXED_EUR, generations: GEN_EPREUVE_EUR, imports: 0, articles: ARTICLE_EUR };
+  const tarifOf: Record<CatKey, number> = { fiche: tarifs.fiche, qcm: tarifs.qcm, flash: tarifs.flash, ia: tarifs.ia, epreuves: EPREUVE_FIXED_EUR, generations: GEN_EPREUVE_EUR, imports: 0, articles: ARTICLE_EUR, agenda: 0 };
 
   const pieData = CAT_KEYS
     .map((k) => ({ key: k, name: CAT[k].label, value: data.totals[k], color: CAT[k].color }))
@@ -198,7 +207,7 @@ export function FacturationDashboard({
 
   // Courses du tableau selon la catégorie sélectionnée.
   const rows = useMemo(() => {
-    if (sel === 'ia' || sel === 'epreuves' || sel === 'generations' || sel === 'imports' || sel === 'articles') return [];
+    if (sel === 'ia' || sel === 'epreuves' || sel === 'generations' || sel === 'imports' || sel === 'articles' || sel === 'agenda') return [];
     const keep = (l: CourseLine) =>
       sel === null ? l.fichePrice > 0 || l.qcmPrice > 0 || l.flashPrice > 0
         : sel === 'fiche' ? l.fichePrice > 0 : sel === 'qcm' ? l.qcmPrice > 0 : l.flashPrice > 0;
@@ -324,6 +333,7 @@ export function FacturationDashboard({
             : k === 'generations' ? `${data.counts[k]} génération${data.counts[k] > 1 ? 's' : ''} · 0,30 € / 1,30 €`
             : k === 'imports' ? `${data.counts[k]} import${data.counts[k] > 1 ? 's' : ''}`
             : k === 'articles' ? `${data.counts[k]} article${data.counts[k] > 1 ? 's' : ''} · 2,50 €`
+            : k === 'agenda' ? `${data.counts[k]} import${data.counts[k] > 1 ? 's' : ''}`
             : `${data.counts[k]} cours · ${tarifOf[k] % 1 === 0 ? tarifOf[k] : tarifOf[k].toFixed(2)} €`;
           return (
             <button
@@ -471,7 +481,7 @@ export function FacturationDashboard({
       <div className="rounded-2xl border border-(--color-border) bg-(--color-surface)">
         <div className="flex items-center justify-between border-b border-(--color-border) px-5 py-3">
           <h3 className="text-sm font-semibold text-(--color-ink)">
-            {sel === null ? 'Détail par cours' : sel === 'ia' ? 'Réponses de l’assistant IA' : sel === 'epreuves' ? 'Épreuves blanches' : sel === 'generations' ? 'Générations IA' : sel === 'imports' ? 'Import d’exercices' : sel === 'articles' ? 'Articles importés par IA' : `Cours facturés — ${CAT[sel].label}`}
+            {sel === null ? 'Détail par cours' : sel === 'ia' ? 'Réponses de l’assistant IA' : sel === 'epreuves' ? 'Épreuves blanches' : sel === 'generations' ? 'Générations IA' : sel === 'imports' ? 'Import d’exercices' : sel === 'articles' ? 'Articles importés par IA' : sel === 'agenda' ? 'Imports IA de l’agenda' : `Cours facturés — ${CAT[sel].label}`}
           </h3>
           <span className="text-xs text-(--color-ink-soft)">
             {sel === 'ia' ? `${aiResponses} réponse${aiResponses > 1 ? 's' : ''}`
@@ -479,6 +489,7 @@ export function FacturationDashboard({
               : sel === 'generations' ? `${data.counts.generations} génération${data.counts.generations > 1 ? 's' : ''}`
               : sel === 'imports' ? `${exerciseImports.length} import${exerciseImports.length > 1 ? 's' : ''}`
               : sel === 'articles' ? `${articles.length} article${articles.length > 1 ? 's' : ''}`
+              : sel === 'agenda' ? `${agendaImports.length} import${agendaImports.length > 1 ? 's' : ''}`
               : `${rows.length} cours`}
           </span>
         </div>
@@ -543,6 +554,25 @@ export function FacturationDashboard({
                     </p>
                   </div>
                   <span className="font-semibold tabular-nums text-(--color-ink)">{eur(ARTICLE_EUR)}</span>
+                </div>
+              ))
+            )}
+          </div>
+        ) : sel === 'agenda' ? (
+          <div className="divide-y divide-(--color-border)">
+            {agendaImports.length === 0 ? (
+              <p className="px-5 py-10 text-center text-sm text-(--color-ink-soft)">Aucun import IA de l’agenda.</p>
+            ) : (
+              agendaImports.map((item) => (
+                <div key={item.id} className="flex items-center justify-between gap-4 px-5 py-3 text-sm">
+                  <div className="min-w-0">
+                    <p className="truncate font-medium text-(--color-ink)">{item.title}</p>
+                    <p className="text-xs text-(--color-ink-muted)">
+                      {item.seances > 0 ? `${item.seances} séance${item.seances > 1 ? 's' : ''} créée${item.seances > 1 ? 's' : ''}` : 'Non validé'} ·{' '}
+                      {new Date(item.createdAt).toLocaleDateString('fr-FR')}
+                    </p>
+                  </div>
+                  <span className="font-semibold tabular-nums text-(--color-ink)">{eur(item.eur)}</span>
                 </div>
               ))
             )}

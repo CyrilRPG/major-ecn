@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState, useTransition } from 'react';
 import {
-  AlertTriangle, CalendarDays, ChevronLeft, ChevronRight, Edit, Layers, Link2, Plus, Printer, Search, Trash2, X,
+  AlertTriangle, CalendarDays, ChevronLeft, ChevronRight, Edit, Layers, Link2, Plus, Printer, Search, Sparkles, Trash2, X,
 } from 'lucide-react';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
@@ -12,6 +12,7 @@ import { upsertPlatformEvent, deletePlatformEvent } from '@/app/admin/agenda/act
 import {
   DUREE_PAR_DEFAUT, TEINTE_TOUTES, disposer, minutes, palettesSpecialites, type Place, type Teinte,
 } from '@/lib/agenda/admin-vue';
+import { ImportIaDialog } from './import-ia-dialog';
 
 export type PlatformEventRow = {
   id: string;
@@ -98,6 +99,7 @@ export function AdminAgenda({
   const [creatingFor, setCreatingFor] = useState<string | null>(null);
   const [editing, setEditing] = useState<PlatformEventRow | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [importIa, setImportIa] = useState(false);
 
   const nomDe = useMemo(() => new Map(colleges.map((c) => [c.id, c.nom])), [colleges]);
   const parentDe = useMemo(() => new Map(colleges.filter((c) => c.parentId).map((c) => [c.id, c.parentId!])), [colleges]);
@@ -284,6 +286,13 @@ export function AdminAgenda({
           )}
           <button
             type="button"
+            onClick={() => setImportIa(true)}
+            className="ml-1 inline-flex h-8 items-center gap-1.5 rounded-lg bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] px-2.5 text-xs font-semibold text-white shadow-(--shadow-soft) hover:opacity-90"
+          >
+            <Sparkles className="h-3.5 w-3.5" /> Import IA
+          </button>
+          <button
+            type="button"
             onClick={imprimer}
             className="ml-1 inline-flex h-8 items-center gap-1.5 rounded-lg border border-(--color-border) px-2.5 text-xs font-semibold text-(--color-ink-soft) hover:border-(--color-primary)/50 hover:text-(--color-ink)"
           >
@@ -391,6 +400,10 @@ export function AdminAgenda({
           <ListeEvenements events={dansPlage} specialites={libelleSpecialites} couleurs={couleurs} today={today} onOpen={ouvrir} />
         )}
       </div>
+
+      {importIa && (
+        <ImportIaDialog colleges={colleges} onClose={() => setImportIa(false)} onSaved={(m) => setMessage(m)} />
+      )}
 
       {/* Monté à l'ouverture seulement, et remonté pour chaque évènement : les
           états du formulaire partent toujours de l'évènement ouvert. */}
