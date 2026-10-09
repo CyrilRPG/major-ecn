@@ -149,11 +149,13 @@ export function PromoCodesManager({
   const [formules, setFormules] = useState<string[]>([]);
   const [specialties, setSpecialties] = useState<string[]>([]);
   const [tiers, setTiers] = useState<string[]>([]);
-  /** Inclure les formules qu'un produit Stripe unique empêche de rattacher à
-   *  une spécialité (Essentielle, Intensive…). Vrai par défaut : « toutes les
-   *  formules, spécialité X » est la demande courante, et l'écran dit alors
-   *  exactement ce que le code couvrira en plus. */
-  const [inclureNonDistinguables, setInclureNonDistinguables] = useState(true);
+  /** Inclure les offres qu'un produit Stripe unique empêche de rattacher à
+   *  une spécialité ou à un niveau (Essentielle, Intensive, Programme
+   *  Approfondi « toutes spécialités »…). FAUX par défaut depuis le 09/10/2026 :
+   *  un code « Approfondi · Gériatrie » s'appliquait aussi au Programme
+   *  Approfondi toutes spécialités. Le périmètre est désormais strictement
+   *  celui choisi ; l'élargissement est un choix explicite. */
+  const [inclureNonDistinguables, setInclureNonDistinguables] = useState(false);
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -265,7 +267,7 @@ export function PromoCodesManager({
     setFormules([]);
     setSpecialties([]);
     setTiers([]);
-    setInclureNonDistinguables(true);
+    setInclureNonDistinguables(false);
     setActive(true);
     setAlsoCovered(null);
   }
@@ -459,13 +461,14 @@ export function PromoCodesManager({
                 />
                 <span>
                   <strong>
-                    Inclure {nonDistinguables.map((o) => o.label).join(', ')}
+                    Inclure aussi {nonDistinguables.map((o) => o.label).join(', ')}
                   </strong>
                   {' — '}
                   {nonDistinguables.length > 1 ? 'ces formules sont vendues' : 'cette formule est vendue'}
                   {' '}au même prix pour toutes les spécialités : {nonDistinguables.length > 1 ? 'elles ne forment' : 'elle ne forme'}
                   {' '}qu’une fiche produit Stripe, sur laquelle la spécialité n’existe pas. Le code y sera
                   donc valable <strong>quelle que soit la spécialité</strong> achetée.
+                  {!inclureNonDistinguables && ' Case décochée : le code ne s’y applique pas.'}
                 </span>
               </label>
             </div>
