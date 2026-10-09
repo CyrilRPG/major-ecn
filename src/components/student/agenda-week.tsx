@@ -10,6 +10,8 @@ import {
 import { upsertAgendaEvent, deleteAgendaEvent } from '@/app/(student)/agenda/actions';
 import { etatEmargement, instantParis, libelleJourLong } from '@/lib/agenda/planning';
 import { cesure } from '@/lib/cesure';
+import type { SujetAgenda } from '@/lib/agenda/sujets';
+import { BlocSujets, CarteSujet, DialogueSujet, PastilleSujet } from '@/components/student/agenda-sujets';
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /*  Évènements « plateforme » (créés par admin, déjà filtrés côté serveur     */
@@ -111,7 +113,7 @@ function ecartSemaines(aujourdHui: string, cible: string): number {
 
 /* ════════════════════════════════════════════════════════════════════════ */
 export function AgendaWeek({
-  userEvents, platformEvents = [], signedEventIds = [], aujourdHui, seanceInitiale = null,
+  userEvents, platformEvents = [], signedEventIds = [], aujourdHui, seanceInitiale = null, sujets = [],
 }: {
   userEvents: UserEvent[];
   platformEvents?: PlatformEvent[];
@@ -121,6 +123,8 @@ export function AgendaWeek({
   aujourdHui?: string;
   /** Séance à ouvrir d'emblée (lien « Émarger et accéder » du planning). */
   seanceInitiale?: string | null;
+  /** Séances datées de la bibliothèque (sujet à préparer, replay), cf. lib/agenda/sujets. */
+  sujets?: SujetAgenda[];
 }) {
   const initiale = seanceInitiale ? platformEvents.find((e) => e.id === seanceInitiale) ?? null : null;
   // Décalage en semaines par rapport à la semaine courante (0 = cette
@@ -133,6 +137,7 @@ export function AgendaWeek({
   const [selectedPersonal, setSelectedPersonal] = useState<UserEvent | null>(null);
   const [creatingFor, setCreatingFor] = useState<Date | null>(null);
   const [editing, setEditing] = useState<UserEvent | null>(null);
+  const [sujetOuvert, setSujetOuvert] = useState<SujetAgenda | null>(null);
 
   // Libellé de la semaine en cours (ex. « 27 mai → 2 juin 2026 »).
   const weekLabel = (() => {
@@ -193,6 +198,8 @@ export function AgendaWeek({
           const dayUserEvs = userEvents
             .filter((e) => e.date === dateKey(date))
             .sort((a, b) => (a.start_time ?? '').localeCompare(b.start_time ?? ''));
+          // Sujets sans séance correspondante dans l'agenda : carte à part.
+          const daySujets = sujets.filter((s) => s.date === dateKey(date) && !s.evenementId);
           const isToday = date.toDateString() === todayKey;
           return (
             <div
@@ -215,7 +222,7 @@ export function AgendaWeek({
                 </span>
               </div>
               <div className="flex flex-1 flex-col gap-2.5 overflow-y-auto p-3">
-                {platformEvs.length === 0 && dayUserEvs.length === 0 && (
+                {platformEvs.length === 0 && dayUserEvs.length === 0 && daySujets.length === 0 && (
                   <div className="flex flex-1 items-center justify-center py-6">
                     <span className="text-xs text-(--color-ink-muted)">Aucun cours</span>
                   </div>
@@ -253,9 +260,15 @@ export function AgendaWeek({
                           Cours en visio
                         </span>
                       )}
+                      <PastilleSujet sujets={sujets.filter((s) => s.evenementId === e.id)} />
                     </button>
                   );
                 })}
+
+                {/* Sujets à préparer sans séance correspondante */}
+                {daySujets.map((s) => (
+                  <CarteSujet key={`sj-${s.id}`} sujet={s} onOpen={() => setSujetOuvert(s)} />
+                ))}
 
                 {/* Évènements personnels (dashed-border pour distinguer) */}
                 {dayUserEvs.map((e) => {
@@ -344,11 +357,15 @@ export function AgendaWeek({
                     alreadySigned={signedEventIds.includes(selectedPlatform.id)}
                   />
                 )}
+                <BlocSujets sujets={sujets.filter((s) => s.evenementId === selectedPlatform.id)} />
               </div>
             </>
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Dialog : sujet sans séance correspondante dans l'agenda */}
+      <DialogueSujet sujet={sujetOuvert} onClose={() => setSujetOuvert(null)} />
 
       {/* Dialog : détail d'un évènement personnel (édition + suppression) */}
       <PersonalEventDialog

@@ -7,6 +7,8 @@ import {
   ajouterJours, evenementVisiblePourEleve, instantParis, natureVisio, type EvenementPlateformeBrut,
 } from '@/lib/agenda/planning';
 import { StudentHero } from '@/components/student/ui/page-kit';
+import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
+import { chargerSujetsAgenda } from '@/lib/agenda/sujets-server';
 
 export const metadata = { title: 'Agenda' };
 
@@ -55,6 +57,17 @@ export default async function AgendaPage({
 
   const events = (userData ?? []) as UserEvent[];
 
+  // Séances à venir de la bibliothèque (dossiers à préparer) datées : « Sujet
+  // disponible » sur la séance correspondante de l'agenda. Mêmes gardes que la
+  // page de la séance, qui seule ouvre les documents (filigrane).
+  const isAdmin = profile.role === 'admin';
+  const sujets = await chargerSujetsAgenda(
+    supabase,
+    { userId: user.id, scope, access: isAdmin ? undefined : await fetchContentAccessForScope(scope), isAdmin },
+    { debut: startStr, fin: endStr },
+    ((platformData ?? []) as EvenementPlateformeBrut[]).filter((e) => evenementVisiblePourEleve(e, scope)),
+  ).catch((e) => { console.error('[agenda] sujets', e); return []; });
+
   // Sessions déjà émargées : on ne redemande pas la signature à l'étudiant.
   const { data: signedRows } = await db
     .from('session_presences')
@@ -82,6 +95,7 @@ export default async function AgendaPage({
         signedEventIds={signedEventIds}
         aujourdHui={aujourdHui}
         seanceInitiale={seance && platformEvents.some((e) => e.id === seance) ? seance : null}
+        sujets={sujets}
       />
     </div>
   );
