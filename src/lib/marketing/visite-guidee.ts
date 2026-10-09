@@ -9,7 +9,7 @@
 
 export const VISITE_GUIDEE = {
   /** GUID Bunny Stream (bibliothèque 691475). `null` tant que la vidéo n'est pas en ligne. */
-  bunnyGuid: '5f60e3e5-bc03-440c-850a-00e636b9402a' as string | null,
+  bunnyGuid: '85f19ddf-c393-45f2-8e48-51c9020c9dd1' as string | null,
   /** Durée réelle du fichier publié, en secondes. */
   dureeSecondes: 230,
 } as const;
