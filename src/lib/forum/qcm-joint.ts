@@ -22,9 +22,14 @@ export type QcmJointEnvoi = {
   lettres?: string[] | null;
   /** QROC : réponse saisie. */
   texte?: string | null;
+  /** Flashcard : l'élève a déjà retourné la carte (vu le verso). */
+  retournee?: boolean | null;
 };
 
 export type SourceQuestionJointe = 'qcm' | 'examen' | 'exercice';
+/** 'flashcard' : flashcard personnelle de « Mes entraînements » — `enonce` =
+ *  recto, `reponseAttendue` = verso, aucune proposition. */
+export type FormatQuestionJointe = 'qcm' | 'qroc' | 'flashcard';
 
 export type QcmJoint = {
   source: SourceQuestionJointe;
@@ -39,7 +44,9 @@ export type QcmJoint = {
   coursTitre: string | null;
   /** Rang de la question dans sa série (1 = première). */
   numero: number | null;
-  format: 'qcm' | 'qroc';
+  format: FormatQuestionJointe;
+  /** Flashcard : verso déjà vu par l'élève au moment de la question. */
+  carteRetournee?: boolean;
   /** HTML de l'énoncé. */
   enonce: string;
   items: { lettre: string; enonce: string; correct: boolean }[];
@@ -73,7 +80,8 @@ export function lienEditionQuestionJointe(j: QcmJoint): string | null {
 
 /** Intitulé court : « Série 3 — Question 4 ». */
 export function intituleQuestionJointe(j: Pick<QcmJoint, 'serieLabel' | 'numero' | 'format'>): string {
-  const q = `${j.format === 'qroc' ? 'QROC' : 'Question'}${j.numero ? ` ${j.numero}` : ''}`;
+  const nom = j.format === 'qroc' ? 'QROC' : j.format === 'flashcard' ? 'Flashcard' : 'Question';
+  const q = `${nom}${j.numero ? ` ${j.numero}` : ''}`;
   return j.serieLabel ? `${j.serieLabel} — ${q}` : q;
 }
 
@@ -97,19 +105,24 @@ export function reponseEleveTexte(j: Pick<QcmJoint, 'reponseEleve'>): string | n
  * encore répondu ne doit pas obtenir le corrigé par ce biais.
  */
 export function questionJointeEnTexte(j: QcmJoint, { avecCorrige }: { avecCorrige: boolean }): string {
+  const carte = j.format === 'flashcard';
   const lignes = [
     `${intituleQuestionJointe(j)}${j.coursTitre ? ` (item « ${j.coursTitre} »)` : ''}`,
-    `Énoncé : ${flashcardPlainText(j.enonce).replace(/\s+/g, ' ').trim()}`,
+    `${carte ? 'Recto' : 'Énoncé'} : ${flashcardPlainText(j.enonce).replace(/\s+/g, ' ').trim()}`,
   ];
   for (const it of j.items) {
     const verdict = avecCorrige ? (it.correct ? ' — VRAI' : ' — FAUX') : '';
     lignes.push(`${it.lettre}. ${flashcardPlainText(it.enonce).replace(/\s+/g, ' ').trim()}${verdict}`);
   }
   if (avecCorrige && j.reponseAttendue) {
-    lignes.push(`Réponse attendue : ${flashcardPlainText(j.reponseAttendue).replace(/\s+/g, ' ').trim()}`);
+    lignes.push(`${carte ? 'Verso' : 'Réponse attendue'} : ${flashcardPlainText(j.reponseAttendue).replace(/\s+/g, ' ').trim()}`);
   }
-  const rep = reponseEleveTexte(j);
-  lignes.push(`Réponse de l'élève : ${rep ?? 'pas encore répondu'}`);
+  if (carte) {
+    lignes.push(`L'élève ${j.carteRetournee ? 'a déjà retourné' : 'n’a pas encore retourné'} la carte.`);
+  } else {
+    const rep = reponseEleveTexte(j);
+    lignes.push(`Réponse de l'élève : ${rep ?? 'pas encore répondu'}`);
+  }
   return lignes.join('\n');
 }
 
@@ -128,7 +141,8 @@ export function lireQcmJoint(raw: unknown): QcmJoint | null {
     coursId: j.coursId ?? null,
     coursTitre: j.coursTitre ?? null,
     numero: typeof j.numero === 'number' ? j.numero : null,
-    format: j.format === 'qroc' ? 'qroc' : 'qcm',
+    format: j.format === 'qroc' || j.format === 'flashcard' ? j.format : 'qcm',
+    carteRetournee: j.carteRetournee === true,
     enonce: j.enonce,
     items: Array.isArray(j.items) ? j.items : [],
     reponseAttendue: j.reponseAttendue ?? null,

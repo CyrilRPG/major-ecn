@@ -27,8 +27,8 @@ function reponseDe(envoi: QcmJointEnvoi, format: 'qcm' | 'qroc', items: Item[]):
  *    d'épreuve) : épreuve publiée, et soit interrogation de spécialité (corrigé
  *    affiché question par question), soit copie déjà rendue — jamais pendant
  *    une épreuve blanche en cours, l'instantané contient le corrigé ;
- *  - exercice (`student_exercises`, QCM de « Mes entraînements ») : client de
- *    l'élève ET propriétaire — un élève ne joint que ses propres exercices.
+ *  - exercice (`student_exercises`, QCM ou flashcard de « Mes entraînements »)
+ *    : client de l'élève ET propriétaire — il ne joint que ses propres exercices.
  */
 export async function chargerQcmJoint(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -139,22 +139,23 @@ async function chargerQuestionExamen(envoi: QcmJointEnvoi, userId: string): Prom
 async function chargerExerciceEleve(supabase: any, envoi: QcmJointEnvoi, userId: string): Promise<QcmJoint | null> {
   const { data: e } = await supabase
     .from('student_exercises')
-    .select('id, cours_id, kind, enonce, items, cours(titre, matiere_id)')
+    .select('id, cours_id, kind, recto, verso, enonce, items, cours(titre, matiere_id)')
     .eq('id', envoi.questionId)
     .eq('user_id', userId)
-    .eq('kind', 'qcm')
+    .in('kind', ['qcm', 'flashcard'])
     .maybeSingle();
   if (!e) return null;
+  const carte = e.kind === 'flashcard';
 
   // Rang : même ordre que l'espace d'entraînement (created_at croissant).
   const { data: ordre } = await supabase
     .from('student_exercises').select('id')
-    .eq('user_id', userId).eq('cours_id', e.cours_id).eq('kind', 'qcm')
+    .eq('user_id', userId).eq('cours_id', e.cours_id).eq('kind', e.kind)
     .order('created_at', { ascending: true });
   const i = ((ordre ?? []) as { id: string }[]).findIndex((r) => r.id === e.id);
 
   const cours = (e.cours ?? null) as { titre: string | null; matiere_id: string | null } | null;
-  const items: Item[] = ((Array.isArray(e.items) ? e.items : []) as { lettre: string; enonce: string; is_correct?: boolean }[])
+  const items: Item[] = ((!carte && Array.isArray(e.items) ? e.items : []) as { lettre: string; enonce: string; is_correct?: boolean }[])
     .map((it) => ({ lettre: it.lettre, enonce: it.enonce, correct: !!it.is_correct }))
     .sort((a, b) => a.lettre.localeCompare(b.lettre));
   return {
@@ -167,10 +168,11 @@ async function chargerExerciceEleve(supabase: any, envoi: QcmJointEnvoi, userId:
     coursId: e.cours_id ?? null,
     coursTitre: cours?.titre ?? null,
     numero: i >= 0 ? i + 1 : null,
-    format: 'qcm',
-    enonce: e.enonce ?? '',
+    format: carte ? 'flashcard' : 'qcm',
+    carteRetournee: carte ? envoi.retournee === true : undefined,
+    enonce: (carte ? e.recto : e.enonce) ?? '',
     items,
-    reponseAttendue: null,
-    reponseEleve: reponseDe(envoi, 'qcm', items),
+    reponseAttendue: carte ? (e.verso ?? null) : null,
+    reponseEleve: carte ? null : reponseDe(envoi, 'qcm', items),
   };
 }

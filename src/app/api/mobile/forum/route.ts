@@ -178,6 +178,7 @@ const QcmJointSchema = z.object({
   questionId: z.string().uuid(),
   lettres: z.array(z.string().max(4)).max(26).nullish(),
   texte: z.string().max(2000).nullish(),
+  retournee: z.boolean().nullish(),
 });
 
 const PostSchema = z.discriminatedUnion('action', [

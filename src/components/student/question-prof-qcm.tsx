@@ -21,7 +21,7 @@ import {
   MessagesSquare, Paperclip, Send,
 } from 'lucide-react';
 import { askQuestionAction } from '@/app/(student)/forum/actions';
-import { apercuEnonce, type QcmJointEnvoi, type SourceQuestionJointe } from '@/lib/forum/qcm-joint';
+import { apercuEnonce, type FormatQuestionJointe, type QcmJointEnvoi, type SourceQuestionJointe } from '@/lib/forum/qcm-joint';
 import { Markdown } from '@/components/ui/markdown';
 import { cn } from '@/lib/utils';
 import {
@@ -49,6 +49,7 @@ function QuestionSurQcm({
   enonce,
   numero = null,
   format = 'qcm',
+  retournee = false,
   lettres = null,
   texte = null,
   className,
@@ -61,7 +62,9 @@ function QuestionSurQcm({
   enonce: string;
   /** Rang affiché dans le lecteur (« Question 4 »). */
   numero?: number | null;
-  format?: 'qcm' | 'qroc';
+  format?: FormatQuestionJointe;
+  /** Flashcard : verso déjà vu par l'élève (l'assistant peut alors s'en servir). */
+  retournee?: boolean;
   /** QCM : lettres cochées par l'élève (null = pas encore répondu). */
   lettres?: string[] | null;
   /** QROC : réponse saisie. */
@@ -90,11 +93,13 @@ function QuestionSurQcm({
     questionId,
     lettres: format === 'qcm' ? lettres : null,
     texte: format === 'qroc' ? texte : null,
+    retournee: format === 'flashcard' ? retournee : null,
   };
   const reponse = format === 'qroc'
     ? ((texte ?? '').trim() || null)
     : lettres ? (lettres.length ? [...lettres].sort().join(', ') : null) : null;
-  const nature = format === 'qroc' ? 'QROC' : 'QCM';
+  const nature = format === 'qroc' ? 'QROC' : format === 'flashcard' ? 'flashcard' : 'QCM';
+  const ce = format === 'flashcard' ? 'cette' : 'ce';
   const conversation = messages
     .map((m) => `${m.role === 'user' ? 'Étudiant' : 'Assistant'} : ${m.content}`)
     .join('\n\n');
@@ -161,11 +166,13 @@ function QuestionSurQcm({
     <div className="rounded-xl border border-(--color-border) bg-(--color-surface-soft) p-3">
       <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-(--color-ink-muted)">
         <Paperclip className="h-3 w-3" />
-        {nature} joint{numero ? ` — question ${numero}` : ''}
+        {format === 'flashcard' ? `Flashcard jointe${numero ? ` — carte ${numero}` : ''}` : `${nature} joint${numero ? ` — question ${numero}` : ''}`}
       </p>
       <p className="mt-1 text-sm leading-snug text-(--color-ink)">{apercuEnonce(enonce, 220)}</p>
       <p className="mt-1.5 text-xs text-(--color-ink-soft)">
-        Votre réponse : <strong>{reponse ?? 'pas encore répondu'}</strong>
+        {format === 'flashcard'
+          ? <>Verso : <strong>{retournee ? 'déjà retourné' : 'pas encore retourné'}</strong></>
+          : <>Votre réponse : <strong>{reponse ?? 'pas encore répondu'}</strong></>}
       </p>
     </div>
   );
@@ -190,11 +197,11 @@ function QuestionSurQcm({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <MessageCircleQuestion className="h-5 w-5 text-(--color-primary)" />
-              Une question sur ce {nature} ?
+              Une question sur {ce} {nature} ?
             </DialogTitle>
             <DialogDescription>
               La question ci-dessous est jointe automatiquement : l’assistant comme le professeur
-              savent exactement de quel {nature} vous parlez.
+              savent exactement de {format === 'flashcard' ? 'quelle flashcard' : `quel ${nature}`} vous parlez.
             </DialogDescription>
           </DialogHeader>
 

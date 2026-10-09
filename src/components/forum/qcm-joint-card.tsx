@@ -37,7 +37,7 @@ export function QcmJointCard({ joint, mode }: { joint: QcmJoint; mode: 'equipe' 
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="flex min-w-0 items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-(--color-primary)">
           <Paperclip className="h-3.5 w-3.5 shrink-0" />
-          <span className="truncate">{joint.format === 'qroc' ? 'QROC joint' : 'QCM joint'} — {contexte}</span>
+          <span className="truncate">{joint.format === 'qroc' ? 'QROC joint' : joint.format === 'flashcard' ? 'Flashcard jointe' : 'QCM joint'} — {contexte}</span>
         </p>
         <div className="flex items-center gap-2">
           {lien && (
@@ -109,7 +109,14 @@ export function QcmJointCard({ joint, mode }: { joint: QcmJoint; mode: 'equipe' 
             </p>
           )}
 
-          {mode !== 'public' && (
+          {mode === 'equipe' && joint.format === 'flashcard' && joint.reponseAttendue && (
+            <div className="rounded-lg border border-(--color-border) bg-(--color-surface) px-2.5 py-1.5 text-[13px]">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-(--color-ink-muted)">Verso</p>
+              <div className="mt-0.5 text-(--color-ink)" dangerouslySetInnerHTML={{ __html: sanitizeFlashcardHtml(joint.reponseAttendue) }} />
+            </div>
+          )}
+
+          {mode !== 'public' && joint.format !== 'flashcard' && (
             <p className="text-[13px] text-(--color-ink-soft)">
               {mode === 'equipe' ? 'Réponse de l’élève' : 'Votre réponse'} :{' '}
               <strong className="text-(--color-ink)">{reponse ?? 'pas encore répondu'}</strong>

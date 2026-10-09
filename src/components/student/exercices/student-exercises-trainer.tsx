@@ -116,12 +116,29 @@ function Vide({ texte, action, libelle }: { texte: string; action: () => void; l
 function RevisionFlashcards({ cartes }: { cartes: StudentExercise[] }) {
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  // Cartes dont l'élève a vu le verso : l'assistant peut alors s'en servir.
+  const [vues, setVues] = useState<Set<string>>(new Set());
   const carte = cartes[Math.min(index, cartes.length - 1)];
+  const retourner = () => {
+    setFlipped((f) => !f);
+    setVues((v) => (v.has(carte.id) ? v : new Set(v).add(carte.id)));
+  };
   const suivante = (delta: number) => { setFlipped(false); setIndex((i) => (i + delta + cartes.length) % cartes.length); };
   return (
     <section className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft)">
+      <div className="mb-3 flex justify-end">
+        {/* Question à l'assistant ou à un professeur, cette flashcard jointe. */}
+        <QuestionProfQcm
+          source="exercice"
+          format="flashcard"
+          questionId={carte.id}
+          enonce={carte.recto ?? ''}
+          numero={index + 1}
+          retournee={vues.has(carte.id)}
+        />
+      </div>
       <div className="relative mx-auto h-72 max-w-xl">
-        <Flashcard recto={carte.recto ?? ''} verso={carte.verso ?? ''} flipped={flipped} onFlip={() => setFlipped((f) => !f)} index={index} total={cartes.length} />
+        <Flashcard recto={carte.recto ?? ''} verso={carte.verso ?? ''} flipped={flipped} onFlip={retourner} index={index} total={cartes.length} />
       </div>
       <div className="mt-4 flex items-center justify-between">
         <Button variant="outline" size="sm" onClick={() => suivante(-1)} disabled={cartes.length < 2}><ArrowLeft /> Précédente</Button>

@@ -189,9 +189,10 @@ function historiqueBorne(raw: unknown): { role: 'user' | 'assistant'; content: s
  * donner la réponse.
  */
 function blocQuestionJointe(j: QcmJoint): string {
-  const repondu = j.reponseEleve !== null;
+  // Flashcard : « répondu » = carte retournée (l'élève a vu le verso).
+  const repondu = j.format === 'flashcard' ? j.carteRetournee === true : j.reponseEleve !== null;
   return (
-    `L'élève t'interroge sur cette question ${j.format === 'qroc' ? 'QROC' : 'de QCM'} :\n\n` +
+    `L'élève t'interroge sur ${j.format === 'flashcard' ? 'cette flashcard' : `cette question ${j.format === 'qroc' ? 'QROC' : 'de QCM'}`} :\n\n` +
     questionJointeEnTexte(j, { avecCorrige: repondu }) +
     (repondu
       ? `\n\nAppuie ta réponse sur cette question et son corrigé : explique pourquoi chaque ` +
