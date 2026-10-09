@@ -14,8 +14,9 @@ import { flashcardPlainText } from '@/lib/flashcards/rich-text';
  *  (l'énoncé et le corrigé sont relus en base). */
 export type QcmJointEnvoi = {
   /** 'qcm' = banque (qcm_questions) ; 'examen' = épreuve blanche ou
-   *  interrogation de spécialité (mock_exam_questions). */
-  source?: 'qcm' | 'examen';
+   *  interrogation de spécialité (mock_exam_questions) ; 'exercice' = QCM
+   *  créé par l'élève dans « Mes entraînements » (student_exercises). */
+  source?: SourceQuestionJointe;
   questionId: string;
   /** QCM : lettres cochées. */
   lettres?: string[] | null;
@@ -23,8 +24,10 @@ export type QcmJointEnvoi = {
   texte?: string | null;
 };
 
+export type SourceQuestionJointe = 'qcm' | 'examen' | 'exercice';
+
 export type QcmJoint = {
-  source: 'qcm' | 'examen';
+  source: SourceQuestionJointe;
   questionId: string;
   /** Épreuve blanche / interrogation : l'examen (mock_exams). */
   examenId: string | null;
@@ -46,16 +49,25 @@ export type QcmJoint = {
 };
 
 /** Lien vers la question dans le lecteur (le lecteur sait s'ouvrir sur `?q=`).
- *  Une question d'examen n'a pas de lecteur : null. */
+ *  Une question d'examen n'a pas de lecteur : null ; un exercice personnel
+ *  renvoie à l'espace « Mes entraînements » de son item. */
 export function lienQuestionJointe(j: Pick<QcmJoint, 'source' | 'questionId' | 'coursId' | 'serieId'>): string | null {
+  if (j.source === 'exercice') return j.coursId ? `/mes-entrainements/${j.coursId}?onglet=qcm` : null;
   if (j.source === 'examen' || !j.coursId || !j.serieId) return null;
   return `/cours/${j.coursId}/qcm/${j.serieId}?q=${j.questionId}`;
+}
+
+/** `forum_questions.qcm_question_id` référence `qcm_questions` : seule une
+ *  question de la banque y a sa place (examen et exercice → instantané seul). */
+export function idQuestionBanque(j: Pick<QcmJoint, 'source' | 'questionId'> | null): string | null {
+  return j?.source === 'qcm' ? j.questionId : null;
 }
 
 /** Équipe : où corriger la question (éditeur de l'épreuve, ou lecteur en mode
  *  édition pour la banque). */
 export function lienEditionQuestionJointe(j: QcmJoint): string | null {
   if (j.source === 'examen') return j.examenId ? `/admin/epreuves-blanches/${j.examenId}` : null;
+  if (j.source === 'exercice') return '/admin/entrainements-eleves?statut=all';
   return lienQuestionJointe(j);
 }
 
@@ -107,7 +119,7 @@ export function lireQcmJoint(raw: unknown): QcmJoint | null {
   const j = raw as Partial<QcmJoint>;
   if (typeof j.questionId !== 'string' || typeof j.enonce !== 'string') return null;
   return {
-    source: j.source === 'examen' ? 'examen' : 'qcm',
+    source: j.source === 'examen' || j.source === 'exercice' ? j.source : 'qcm',
     questionId: j.questionId,
     examenId: j.examenId ?? null,
     matiereId: j.matiereId ?? null,

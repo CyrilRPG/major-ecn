@@ -47,7 +47,9 @@ export function QcmJointCard({ joint, mode }: { joint: QcmJoint; mode: 'equipe' 
               className="inline-flex items-center gap-1 text-[11px] font-bold text-(--color-primary) hover:underline"
             >
               <ExternalLink className="h-3 w-3" />
-              {mode === 'equipe' ? (joint.source === 'examen' ? 'Ouvrir l’épreuve' : 'Ouvrir / corriger') : 'Revoir la question'}
+              {mode === 'equipe'
+                ? (joint.source === 'examen' ? 'Ouvrir l’épreuve' : joint.source === 'exercice' ? 'Entraînements d’élèves' : 'Ouvrir / corriger')
+                : 'Revoir la question'}
             </Link>
           )}
           <button

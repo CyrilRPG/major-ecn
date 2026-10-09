@@ -26,7 +26,9 @@ function reponseDe(envoi: QcmJointEnvoi, format: 'qcm' | 'qroc', items: Item[]):
  *  - examen (`mock_exam_questions`, lu en service-role comme les pages
  *    d'épreuve) : épreuve publiée, et soit interrogation de spécialité (corrigé
  *    affiché question par question), soit copie déjà rendue — jamais pendant
- *    une épreuve blanche en cours, l'instantané contient le corrigé.
+ *    une épreuve blanche en cours, l'instantané contient le corrigé ;
+ *  - exercice (`student_exercises`, QCM de « Mes entraînements ») : client de
+ *    l'élève ET propriétaire — un élève ne joint que ses propres exercices.
  */
 export async function chargerQcmJoint(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -35,9 +37,9 @@ export async function chargerQcmJoint(
   userId: string,
 ): Promise<QcmJoint | null> {
   if (!UUID.test(envoi.questionId ?? '')) return null;
-  return envoi.source === 'examen'
-    ? chargerQuestionExamen(envoi, userId)
-    : chargerQuestionBanque(supabase, envoi);
+  if (envoi.source === 'examen') return chargerQuestionExamen(envoi, userId);
+  if (envoi.source === 'exercice') return chargerExerciceEleve(supabase, envoi, userId);
+  return chargerQuestionBanque(supabase, envoi);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -130,5 +132,45 @@ async function chargerQuestionExamen(envoi: QcmJointEnvoi, userId: string): Prom
     items,
     reponseAttendue: q.reponse_attendue ?? null,
     reponseEleve: reponseDe(envoi, format, items),
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function chargerExerciceEleve(supabase: any, envoi: QcmJointEnvoi, userId: string): Promise<QcmJoint | null> {
+  const { data: e } = await supabase
+    .from('student_exercises')
+    .select('id, cours_id, kind, enonce, items, cours(titre, matiere_id)')
+    .eq('id', envoi.questionId)
+    .eq('user_id', userId)
+    .eq('kind', 'qcm')
+    .maybeSingle();
+  if (!e) return null;
+
+  // Rang : même ordre que l'espace d'entraînement (created_at croissant).
+  const { data: ordre } = await supabase
+    .from('student_exercises').select('id')
+    .eq('user_id', userId).eq('cours_id', e.cours_id).eq('kind', 'qcm')
+    .order('created_at', { ascending: true });
+  const i = ((ordre ?? []) as { id: string }[]).findIndex((r) => r.id === e.id);
+
+  const cours = (e.cours ?? null) as { titre: string | null; matiere_id: string | null } | null;
+  const items: Item[] = ((Array.isArray(e.items) ? e.items : []) as { lettre: string; enonce: string; is_correct?: boolean }[])
+    .map((it) => ({ lettre: it.lettre, enonce: it.enonce, correct: !!it.is_correct }))
+    .sort((a, b) => a.lettre.localeCompare(b.lettre));
+  return {
+    source: 'exercice',
+    questionId: e.id,
+    examenId: null,
+    matiereId: cours?.matiere_id ?? null,
+    serieId: null,
+    serieLabel: 'Mes entraînements',
+    coursId: e.cours_id ?? null,
+    coursTitre: cours?.titre ?? null,
+    numero: i >= 0 ? i + 1 : null,
+    format: 'qcm',
+    enonce: e.enonce ?? '',
+    items,
+    reponseAttendue: null,
+    reponseEleve: reponseDe(envoi, 'qcm', items),
   };
 }

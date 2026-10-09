@@ -2,7 +2,7 @@
    `profiles` sont absentes de l'instantané curaté de `types/database.ts`. */
 import { NextResponse } from 'next/server';
 import { chargerQcmJoint } from '@/lib/forum/qcm-joint-server';
-import { apercuEnonce, intituleQuestionJointe, type QcmJoint } from '@/lib/forum/qcm-joint';
+import { apercuEnonce, idQuestionBanque, intituleQuestionJointe, type QcmJoint } from '@/lib/forum/qcm-joint';
 import { z } from 'zod';
 import { getBearerUser, type RequestAuth } from '@/lib/auth/bearer';
 import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
@@ -174,7 +174,7 @@ export async function GET(req: Request) {
 
 /** Question QCM / QROC jointe depuis un lecteur de l'app (même contrat que le web). */
 const QcmJointSchema = z.object({
-  source: z.enum(['qcm', 'examen']).optional(),
+  source: z.enum(['qcm', 'examen', 'exercice']).optional(),
   questionId: z.string().uuid(),
   lettres: z.array(z.string().max(4)).max(26).nullish(),
   texte: z.string().max(2000).nullish(),
@@ -256,7 +256,7 @@ async function poser(
       matiere_nom: matiereNom,
       body,
       ai_context: aiContext?.slice(0, 20000) || null,
-      qcm_question_id: joindre ? qcmJoint?.questionId ?? null : null,
+      qcm_question_id: joindre ? idQuestionBanque(qcmJoint) : null,
       qcm_contexte: joindre ? qcmJoint : null,
     })
     .select('id')

@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils';
 import { supprimerExerciceEleveAction } from '@/app/(student)/mes-entrainements/actions';
 import { htmlVersTexte, type StudentExercise } from '@/lib/student-exercises/regles';
 import { StudentExerciseDialog, type ExerciceEnEdition } from './student-exercise-dialog';
+import { QuestionProfQcm } from '@/components/student/question-prof-qcm';
 
 const STATUT: Record<StudentExercise['status'], { label: string; className: string }> = {
   private: { label: 'Personnel', className: 'bg-slate-100 text-slate-700' },
@@ -169,7 +170,16 @@ function EntrainementQcm({ questions }: { questions: StudentExercise[] }) {
     <section className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 shadow-(--shadow-soft) sm:p-5">
       <div className="mb-3 flex items-center justify-between text-xs text-(--color-ink-muted)">
         <span>Question {index + 1} / {questions.length}</span>
-        <span className="inline-flex items-center gap-2">
+        <span className="inline-flex flex-wrap items-center justify-end gap-2">
+          {/* Question à l'assistant ou à un professeur, ce QCM personnel joint
+              (relu en base : seul son auteur peut le joindre). */}
+          <QuestionProfQcm
+            source="exercice"
+            questionId={q.id}
+            enonce={q.enonce ?? ''}
+            numero={index + 1}
+            lettres={outcome ? [...sel] : null}
+          />
           {score.n > 0 && <span className="rounded-full bg-[#E7F6EC] px-2 py-0.5 font-semibold text-[#16793C]">{score.ok}/{score.n} justes</span>}
           <button type="button" onClick={recommencer} className="inline-flex items-center gap-1 hover:text-(--color-ink)"><RotateCcw className="h-3.5 w-3.5" /> Recommencer</button>
         </span>

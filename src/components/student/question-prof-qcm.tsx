@@ -21,7 +21,7 @@ import {
   MessagesSquare, Paperclip, Send,
 } from 'lucide-react';
 import { askQuestionAction } from '@/app/(student)/forum/actions';
-import { apercuEnonce, type QcmJointEnvoi } from '@/lib/forum/qcm-joint';
+import { apercuEnonce, type QcmJointEnvoi, type SourceQuestionJointe } from '@/lib/forum/qcm-joint';
 import { Markdown } from '@/components/ui/markdown';
 import { cn } from '@/lib/utils';
 import {
@@ -53,8 +53,9 @@ function QuestionSurQcm({
   texte = null,
   className,
 }: {
-  /** 'examen' = épreuve blanche ou interrogation (mock_exam_questions). */
-  source?: 'qcm' | 'examen';
+  /** 'examen' = épreuve blanche ou interrogation (mock_exam_questions) ;
+   *  'exercice' = QCM personnel de « Mes entraînements » (student_exercises). */
+  source?: SourceQuestionJointe;
   questionId: string;
   /** Énoncé (HTML) : aperçu de la question jointe. */
   enonce: string;

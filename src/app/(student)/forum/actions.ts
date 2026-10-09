@@ -12,7 +12,7 @@ import { logAudit } from '@/lib/audit/log';
 import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { questionPourMembre } from '@/lib/forum/routage';
 import { chargerQcmJoint } from '@/lib/forum/qcm-joint-server';
-import { apercuEnonce, intituleQuestionJointe, type QcmJoint, type QcmJointEnvoi } from '@/lib/forum/qcm-joint';
+import { apercuEnonce, idQuestionBanque, intituleQuestionJointe, type QcmJoint, type QcmJointEnvoi } from '@/lib/forum/qcm-joint';
 
 type Result = { ok: true; id: string } | { error: string };
 
@@ -122,7 +122,9 @@ export async function askQuestionAction(input: {
       matiere_nom: matiereNom,
       body,
       ai_context: input.aiContext ?? null,
-      qcm_question_id: joindre ? qcmJoint?.questionId ?? null : null,
+      // Banque seulement (clé étrangère vers qcm_questions) : une question
+      // d'épreuve ou un exercice d'élève ne vit que dans l'instantané.
+      qcm_question_id: joindre ? idQuestionBanque(qcmJoint) : null,
       qcm_contexte: joindre ? qcmJoint : null,
     })
     .select('id')
