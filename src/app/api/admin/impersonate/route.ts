@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { requireAdminRequest } from '@/lib/auth/api-guard';
 import { extractSessionFromCookies } from '@/lib/auth/access-token-cookie';
+import { signerMarqueur } from '@/lib/auth/impersonation-marqueur';
 
 export async function POST(req: Request) {
   // Identité vérifiée LOCALEMENT (cookie ou Bearer frais) — plus d'appel réseau
@@ -34,21 +35,27 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: e instanceof Error ? e.message : 'Service role indisponible' }, { status: 500 });
   }
 
-  // Fetch the target's email
-  const { data: target } = await admin.from('profiles').select('email').eq('id', user_id).maybeSingle();
-  if (!target?.email) return NextResponse.json({ error: 'Élève introuvable' }, { status: 404 });
+  // E-mail du compte d'AUTHENTIFICATION (et non `profiles.email`, qui peut être
+  // périmé) : un lien magique émis pour une autre adresse ouvrirait — voire
+  // créerait — un autre compte que celui demandé.
+  const { data: target } = await admin.from('profiles').select('id').eq('id', user_id).maybeSingle();
+  const { data: authCible } = target ? await admin.auth.admin.getUserById(user_id) : { data: null };
+  const emailAuth = authCible?.user?.email;
+  if (!emailAuth) return NextResponse.json({ error: 'Élève introuvable' }, { status: 404 });
 
   // Generate magic link
   const { data, error } = await admin.auth.admin.generateLink({
     type: 'magiclink',
-    email: target.email,
+    email: emailAuth,
   });
   if (error || !data?.properties?.hashed_token) {
     return NextResponse.json({ error: error?.message ?? 'Impossible de générer le lien' }, { status: 500 });
   }
 
   // Store admin's refresh token so we can return later
-  cookieStore.set('impersonator_id', auth.user.id, { path: '/', httpOnly: true, sameSite: 'lax' });
+  // Marqueur SIGNÉ et lié à l'élève ouvert (cf. lib/auth/impersonation-marqueur.ts) :
+  // un cookie posé à la main par un élève n'a plus aucun effet.
+  cookieStore.set('impersonator_id', await signerMarqueur(auth.user.id, user_id), { path: '/', httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production' });
   cookieStore.set('impersonator_refresh', cookieSession.refreshToken, { path: '/', httpOnly: true, sameSite: 'lax' });
   if (name) cookieStore.set('impersonator_target_name', name, { path: '/', httpOnly: false, sameSite: 'lax' });
 

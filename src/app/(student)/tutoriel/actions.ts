@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { getCurrentUserAndProfile } from '@/lib/auth/get-profile';
+import { enImpersonation } from '@/lib/auth/impersonation-marqueur';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 /**
@@ -14,7 +15,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 export async function marquerTutorielVu(): Promise<void> {
   const { user, profile } = await getCurrentUserAndProfile();
   if (!user || profile?.role !== 'student') return;
-  if ((await cookies()).has('impersonator_id')) return;
+  if (await enImpersonation(await cookies(), user.id)) return;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const admin = createAdminClient() as any;
   await admin.from('profiles').update({ tutoriel_video_vu_at: new Date().toISOString() }).eq('id', user.id).is('tutoriel_video_vu_at', null);

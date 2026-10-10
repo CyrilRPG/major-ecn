@@ -1,6 +1,7 @@
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-role';
+import { enImpersonation } from '@/lib/auth/impersonation-marqueur';
 import { createClient } from '@/lib/supabase/server';
 import { ImpersonationBanner } from '@/components/impersonation-banner';
 import { AppShell } from '@/components/shell/app-shell';
@@ -13,6 +14,7 @@ import { ProfileCompletionGate } from '@/components/student/profile-completion-g
 import { EmargementsEnAttente, type FeuilleEnAttente } from '@/components/student/emargements-en-attente';
 import { GardeEnquetes } from '@/components/qualite/garde-enquetes';
 import { chargerGardeEnquetes } from '@/lib/qualite/serveur/garde';
+import { ChargeurPostits } from '@/components/postits/chargeur';
 import { getNavigatorTree } from '@/lib/data/navigator';
 import { hasMedecineGeneraleAccess, parseScope } from '@/lib/auth/permissions';
 import { PLAN_STUDENT_ENABLED } from '@/lib/modules-flags';
@@ -24,12 +26,14 @@ import {
   resolveWelcomeConfig, WELCOME_PAR_DEFAUT,
   type WelcomePopupRow, type WelcomeSpecialite,
 } from '@/lib/student/welcome';
-import { ChargeurPostits } from '@/components/postits/chargeur';
 
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
   const { user, profile } = await requireUser();
   const cookieStore = await cookies();
-  const isImpersonating = cookieStore.has('impersonator_id');
+  // Marqueur SIGNÉ et lié à ce compte (lib/auth/impersonation-marqueur.ts) : un
+  // cookie posé à la main par l'élève ne lui fait plus sauter formulaires
+  // obligatoires ni questionnaires bloquants.
+  const isImpersonating = await enImpersonation(cookieStore, user.id);
   const impersonatedName = cookieStore.get('impersonator_target_name')?.value;
   // Ne jamais afficher une vue élève « impersonnée » avec les droits de
   // l'administrateur si la session cible n'a pas été installée ou a expiré.

@@ -1,4 +1,5 @@
 import { cookies, headers } from 'next/headers';
+import { enImpersonation } from '@/lib/auth/impersonation-marqueur';
 import { redirect } from 'next/navigation';
 import { requireStaff } from '@/lib/auth/require-role';
 import { exigenceMfa } from '@/lib/auth/mfa';
@@ -34,7 +35,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // « Se connecter en tant que » un membre de l'équipe : le bandeau de retour
   // doit exister aussi dans l'administration, pas seulement en vue élève.
   const cookieStore = await cookies();
-  const impersonating = cookieStore.has('impersonator_id');
+  const impersonating = await enImpersonation(cookieStore, profile.id);
   const impersonatedName = cookieStore.get('impersonator_target_name')?.value;
 
   // Cockpit (CDC 08/10/2026) : pastilles du menu, membres de l'équipe pour

@@ -3,6 +3,7 @@ import { createServerClient } from '@supabase/ssr';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { accesEquipeExpire } from '@/lib/auth/collaborateurs';
 import { COOKIE_ONGLET, MARQUEURS_MAX_AGE_S, SESSION_ONGLET_MAX_MS, empreinteTicket, jetonBienForme } from '@/lib/auth/impersonation-onglet';
+import { signerMarqueur } from '@/lib/auth/impersonation-marqueur';
 import type { Database } from '@/types/database';
 
 export const dynamic = 'force-dynamic';
@@ -96,10 +97,13 @@ export async function GET(req: NextRequest) {
   // Mêmes marqueurs que l'impersonation historique (bandeau, contrôle
   // d'appareil unique ignoré, temps d'étude non comptabilisé…) — SANS
   // `impersonator_refresh` : aucune session admin n'est à restaurer ici.
-  response.cookies.set('impersonator_id', ticket.admin_id, { ...base, httpOnly: true });
+  const echeance = Date.now() + SESSION_ONGLET_MAX_MS;
+  // Marqueur SIGNÉ, lié à l'élève et borné à la même échéance que l'onglet
+  // (cf. lib/auth/impersonation-marqueur.ts) : c'est lui que le middleware vérifie.
+  response.cookies.set('impersonator_id', await signerMarqueur(ticket.admin_id, ticket.target_id, echeance), { ...base, httpOnly: true });
   const nom = [cible.first_name, cible.last_name].filter(Boolean).join(' ').trim() || emailAuth;
   response.cookies.set('impersonator_target_name', nom, { ...base, httpOnly: false });
-  response.cookies.set(COOKIE_ONGLET, String(Date.now() + SESSION_ONGLET_MAX_MS), { ...base, httpOnly: false });
+  response.cookies.set(COOKIE_ONGLET, String(echeance), { ...base, httpOnly: false });
   response.cookies.set('impersonator_refresh', '', { ...base, httpOnly: true, maxAge: 0 });
   response.headers.set('Cache-Control', 'no-store');
   response.headers.set('Referrer-Policy', 'no-referrer');

@@ -5,6 +5,7 @@ import { assertDeviceSlot, DEVICE_HEADER } from '@/lib/auth/device';
 import { isStudyRoute } from '@/lib/student/study-route';
 import { startOfUtcIsoWeek, sumTrackedSeconds, type StudyTimeRow } from '@/lib/student/study-time';
 import { MAX_SECONDS_PER_DAY } from '@/lib/schemas/mobile-sync';
+import { lireMarqueur } from '@/lib/auth/impersonation-marqueur';
 
 export const runtime = 'nodejs';
 /** Ne jamais laisser un heartbeat (appelé toutes les 60s × N élèves) saturer
@@ -36,7 +37,8 @@ export async function POST(req: Request) {
     }
     // Administrateur « connecté en tant que » l'élève : son temps de
     // consultation n'est pas du temps d'étude de l'élève.
-    if (auth.via !== 'bearer' && /(?:^|;\s*)impersonator_id=/.test(req.headers.get('cookie') ?? '')) {
+    const marqueur = /(?:^|;\s*)impersonator_id=([^;]+)/.exec(req.headers.get('cookie') ?? '')?.[1];
+    if (auth.via !== 'bearer' && marqueur && (await lireMarqueur(marqueur, user.id)).etat === 'valide') {
       return NextResponse.json({ ok: true, ignored: true });
     }
 

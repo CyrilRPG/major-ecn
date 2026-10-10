@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { extractSessionFromCookies } from '@/lib/auth/access-token-cookie';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
+import { COOKIE_MARQUEUR, lireMarqueur } from '@/lib/auth/impersonation-marqueur';
 import type { Database } from '@/types/database';
 
 /**
@@ -145,23 +146,6 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  // Session « en tant que » ouverte dans un onglet séparé (cf.
-  // lib/auth/impersonation-onglet.ts) : durée bornée CÔTÉ SERVEUR. Échéance
-  // dépassée → session élève révoquée (portée locale : celle de cet onglet
-  // seulement) et cookies effacés, même si le bandeau n'a jamais tourné.
-  const echeanceOnglet = request.cookies.get('impersonation_onglet')?.value;
-  if (echeanceOnglet !== undefined && !(Number(echeanceOnglet) > Date.now())) {
-    await withBudget(supabase.auth.signOut({ scope: 'local' }).then(() => undefined), undefined);
-    const url = request.nextUrl.clone();
-    url.pathname = '/login';
-    url.search = '';
-    const res = NextResponse.redirect(url);
-    for (const c of request.cookies.getAll()) {
-      if (c.name.startsWith('sb-') || c.name.startsWith('impersonat')) res.cookies.set(c.name, '', { path: '/', maxAge: 0 });
-    }
-    return res;
-  }
-
   // JWT expiré mais refresh_token présent : UNE tentative de renouvellement
   // budgétée. Sans ça, getClaims(jwt) échoue → redirect /login alors que la
   // session est encore valide — symptôme élève : « This page couldn't load »
@@ -226,14 +210,46 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // « Se connecter en tant que » : le marqueur `impersonator_id` est SIGNÉ et
+  // lié à l'élève ouvert (lib/auth/impersonation-marqueur.ts). Sa seule
+  // présence ne vaut plus rien — un élève qui le créait lui-même échappait au
+  // contrôle d'appareil unique ci-dessous.
+  //  - authentique et en cours : session « en tant que » ;
+  //  - authentique mais échu (12 h) : session révoquée (portée locale, celle
+  //    de ce navigateur seulement) et cookies effacés ;
+  //  - absent de signature / falsifié / porté par un autre compte : ignoré et
+  //    effacé, la session de l'utilisateur continue normalement.
+  let enTantQue = false;
+  const marqueursPresents = request.cookies.getAll().some((c) => c.name.startsWith('impersonat'));
+  if (user && marqueursPresents) {
+    const m = await lireMarqueur(request.cookies.get(COOKIE_MARQUEUR)?.value, user.id);
+    if (m.etat === 'valide') {
+      enTantQue = true;
+    } else if (m.etat === 'expire') {
+      await withBudget(supabase.auth.signOut({ scope: 'local' }).then(() => undefined), undefined);
+      const url = request.nextUrl.clone();
+      url.pathname = '/login';
+      url.search = '';
+      const res = NextResponse.redirect(url);
+      for (const c of request.cookies.getAll()) {
+        if (c.name.startsWith('sb-') || c.name.startsWith('impersonat')) res.cookies.set(c.name, '', { path: '/', maxAge: 0 });
+      }
+      return res;
+    } else {
+      for (const c of request.cookies.getAll()) {
+        if (c.name.startsWith('impersonat')) response.cookies.set(c.name, '', { path: '/', maxAge: 0 });
+      }
+    }
+  }
+
   // Session unique : compare le cookie device au cache (mecn_device_ok).
   // IMPORTANT : sans cookie `mecn_device` on FAIL-OPEN (on ne kick PAS).
   // Auparavant `device === null` vs `active_session_id` était traité comme
   // « autre appareil » → redirect /login en boucle dès que le cookie n'était
   // pas posé (fetch register-device raté, navigateur strict, WebView…).
-  // L'admin en impersonation passe aussi (cookie impersonator_id) — d'où le
-  // symptôme « ça marche en impersonation, pas chez l'élève ».
-  if (user && isProtectedRoute && !request.cookies.get('impersonator_id')) {
+  // L'admin en impersonation passe aussi (marqueur signé vérifié ci-dessus) —
+  // d'où le symptôme « ça marche en impersonation, pas chez l'élève ».
+  if (user && isProtectedRoute && !enTantQue) {
     const device = request.cookies.get('mecn_device')?.value ?? null;
     const cachedOk = request.cookies.get('mecn_device_ok')?.value;
 
