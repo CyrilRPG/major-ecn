@@ -6,7 +6,7 @@ import { Hourglass, MessagesSquare } from 'lucide-react';
 import type { AttenteReponse, DernierMessage } from '@/lib/cockpit/server/donnees';
 import { depuis } from '@/lib/cockpit/regles';
 import { cn } from '@/lib/utils';
-import { Avatar, Carte, EnteteCarte, Vide } from '../ui';
+import { Avatar, Carte, EnteteCarte, Vide, ACTIF } from '../ui';
 
 const TYPE_LABEL: Record<string, string> = { enseignant: 'Enseignant', eleve: 'Élève', client: 'Client', administration: 'Administration' };
 
@@ -22,7 +22,7 @@ export function BlocAttente({ attente }: { attente: AttenteReponse[] }) {
         {([['tous', 'Tous'], ['enseignants', 'Enseignants'], ['clients', 'Clients']] as const).map(([v, l]) => (
           <button key={v} type="button" role="tab" aria-selected={filtre === v} onClick={() => setFiltre(v)}
             className={cn('inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12.5px] font-medium',
-              filtre === v ? 'bg-(--color-primary) text-white' : 'bg-(--color-surface-soft) text-(--color-ink-soft) hover:bg-(--color-surface-soft)')}>
+              filtre === v ? ACTIF : 'bg-(--color-surface-soft) text-(--color-ink-soft) hover:bg-(--color-surface-soft)')}>
             {l}<span className={cn('rounded-full px-1.5 text-[11px]', filtre === v ? 'bg-white/25' : 'bg-white text-(--color-ink-soft)')}>{n[v]}</span>
           </button>
         ))}
@@ -52,7 +52,7 @@ export function BlocAttente({ attente }: { attente: AttenteReponse[] }) {
 export function BlocMessages({ messages, className }: { messages: DernierMessage[]; className?: string }) {
   return (
     <Carte className={cn('flex flex-col', className)}>
-      <EnteteCarte icone={MessagesSquare} titre="Derniers messages" lien="/admin/cockpit/messagerie" lienLabel="Voir toute la messagerie" />
+      <EnteteCarte icone={MessagesSquare} titre="Derniers messages" lien="/admin/cockpit/messagerie" lienLabel="Messagerie" />
       <ul className="max-h-[300px] flex-1 divide-y divide-(--color-border) overflow-y-auto px-4 pb-3 sm:px-5">
         {messages.length === 0 && <Vide>Aucun message reçu pour l’instant.</Vide>}
         {messages.map((m) => (

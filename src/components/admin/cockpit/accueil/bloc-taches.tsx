@@ -9,7 +9,7 @@ import { basculerTerminee } from '@/app/admin/cockpit/actions-taches';
 import { ajouterJoursIso, comparerTaches, estOuverte, libelleEcheance, lundiDe, peut } from '@/lib/cockpit/regles';
 import { cn } from '@/lib/utils';
 import { MenuTache } from '../menu-tache';
-import { Carte, EnteteCarte, PastillePriorite, Vide } from '../ui';
+import { Carte, EnteteCarte, PastillePriorite, Vide, ACTIF } from '../ui';
 
 type Filtre = 'toutes' | 'a_faire' | 'en_cours' | 'terminees';
 
@@ -72,7 +72,7 @@ export function BlocTachesSemaine({
         {([['toutes', 'Toutes'], ['a_faire', 'À faire'], ['en_cours', 'En cours'], ['terminees', 'Terminées']] as const).map(([v, l]) => (
           <button key={v} type="button" role="tab" aria-selected={filtre === v} onClick={() => setFiltre(v)}
             className={cn('inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12.5px] font-medium',
-              filtre === v ? 'bg-(--color-primary) text-white' : 'bg-(--color-surface-soft) text-(--color-ink-soft) hover:bg-(--color-surface-soft)')}>
+              filtre === v ? ACTIF : 'bg-(--color-surface-soft) text-(--color-ink-soft) hover:bg-(--color-surface-soft)')}>
             {l}
             <span className={cn('rounded-full px-1.5 text-[11px]', filtre === v ? 'bg-white/25' : 'bg-white text-(--color-ink-soft)')}>{compte[v]}</span>
           </button>

@@ -28,7 +28,7 @@ export function BlocReclamations({ reclamations, ouvertes, aRecontacter }: { rec
         {reclamations.length === 0 ? <Vide>Aucune réclamation enregistrée.</Vide> : (
           <table className="w-full table-fixed text-left text-[12px]">
             <thead className="text-[11.5px] text-(--color-ink-soft)">
-              <tr><th className="w-[30%] py-1.5 font-medium">Client</th><th className="w-[28%] font-medium">Sujet</th><th className="hidden w-[16%] font-medium 2xl:table-cell">Catégorie</th><th className="w-[22%] font-medium">Statut</th><th className="w-[20%] text-right font-medium 2xl:w-[14%]">Date</th></tr>
+              <tr><th className="w-[30%] py-1.5 font-medium">Client</th><th className="w-[28%] font-medium">Sujet</th><th className="hidden w-[16%] font-medium min-[1800px]:table-cell">Catégorie</th><th className="w-[22%] font-medium">Statut</th><th className="w-[20%] text-right font-medium min-[1800px]:w-[14%]">Date</th></tr>
             </thead>
             <tbody className="divide-y divide-(--color-border)">
               {reclamations.slice(0, 5).map((r) => (
@@ -40,7 +40,7 @@ export function BlocReclamations({ reclamations, ouvertes, aRecontacter }: { rec
                     </Link>
                   </td>
                   <td className="truncate pr-2 text-(--color-ink)">{r.sujet}</td>
-                  <td className="hidden truncate pr-2 text-(--color-ink-soft) 2xl:table-cell">{CATEGORIE_RECLAMATION_LABEL[r.categorie] ?? r.categorie}</td>
+                  <td className="hidden truncate pr-2 text-(--color-ink-soft) min-[1800px]:table-cell">{CATEGORIE_RECLAMATION_LABEL[r.categorie] ?? r.categorie}</td>
                   <td className="pr-2"><PastilleStatut statut={r.statut} /></td>
                   <td className="text-right text-(--color-ink-soft)">{dateCourte(r.created_at)}</td>
                 </tr>
@@ -64,7 +64,7 @@ export function BlocAmeliorations({ ameliorations, total, aValider }: { ameliora
         {tri.length === 0 ? <Vide>Aucune amélioration en cours.</Vide> : (
           <table className="w-full table-fixed text-left text-[12px]">
             <thead className="text-[11.5px] text-(--color-ink-soft)">
-              <tr><th className="w-[38%] py-1.5 font-medium">Titre</th><th className="w-[14%] text-center font-medium">Candidats</th><th className="hidden w-[18%] font-medium 2xl:table-cell">Priorité</th><th className="w-[26%] font-medium">Statut</th><th className="w-[22%] text-right font-medium 2xl:w-[14%]">Échéance</th></tr>
+              <tr><th className="w-[34%] py-1.5 font-medium">Titre</th><th className="w-[20%] text-center font-medium">Candidats</th><th className="hidden w-[18%] font-medium min-[1800px]:table-cell">Priorité</th><th className="w-[26%] font-medium">Statut</th><th className="w-[22%] text-right font-medium min-[1800px]:w-[14%]">Échéance</th></tr>
             </thead>
             <tbody className="divide-y divide-(--color-border)">
               {tri.slice(0, 5).map((a) => (
@@ -73,7 +73,7 @@ export function BlocAmeliorations({ ameliorations, total, aValider }: { ameliora
                     <Link href={`/admin/cockpit/reclamations?vue=ameliorations&a=${a.id}`} className="block truncate text-(--color-ink) hover:text-(--color-primary)">{a.titre}</Link>
                   </td>
                   <td className="text-center font-semibold text-(--color-ink)">{a.candidats}</td>
-                  <td className="hidden pr-2 2xl:table-cell"><PastillePriorite priorite={a.priorite} /></td>
+                  <td className="hidden pr-2 min-[1800px]:table-cell"><PastillePriorite priorite={a.priorite} /></td>
                   <td className="pr-2"><PastilleStatut statut={a.statut} /></td>
                   <td className="text-right text-(--color-ink-soft)">{a.echeance ? new Date(`${a.echeance}T12:00:00`).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : '—'}</td>
                 </tr>

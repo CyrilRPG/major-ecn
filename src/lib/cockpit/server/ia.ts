@@ -1,5 +1,7 @@
 import 'server-only';
-import { callClaude, DEFAULT_MODEL } from '@/lib/ai/anthropic';
+import { callClaude, DEFAULT_MODEL, type AnthropicResult } from '@/lib/ai/anthropic';
+import { BILLING_EUR, GEN_FEATURE, usageToUsd } from '@/lib/ai/cost';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { TON_LABEL, type ActionIa, type Ton } from '../regles';
 
 /**
@@ -9,6 +11,40 @@ import { TON_LABEL, type ActionIa, type Ton } from '../regles';
  * destinataire, mission, échéance, extraits des échanges professionnels du
  * fil — jamais d'adresse e-mail, de téléphone ni de donnée financière.
  */
+
+/**
+ * Facturation IA (/admin/facturation) : chaque question RÉUSSIE à l'assistant
+ * du cockpit est enregistrée dans `ai_generations` et facturée 0,10 €
+ * (`BILLING_EUR.ai_response`). Le coût fournisseur reste en base, jamais
+ * affiché. Un échec d'enregistrement ne bloque jamais la réponse.
+ */
+async function facturer(adminId: string, libelle: string, r: AnthropicResult): Promise<void> {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (createAdminClient() as any).from('ai_generations').insert({
+      admin_id: adminId,
+      cours_id: null,
+      cours_titre: libelle.slice(0, 200),
+      kind: 'cockpit_assistant',
+      feature: GEN_FEATURE.cockpitAssistant,
+      items_count: 1,
+      input_tokens: r.usage.input_tokens + (r.usage.cache_read_input_tokens ?? 0) + (r.usage.cache_creation_input_tokens ?? 0),
+      output_tokens: r.usage.output_tokens,
+      cost_usd: usageToUsd(r.usage, r.model),
+      price_eur: BILLING_EUR.ai_response,
+      model: r.model,
+      status: 'success',
+    });
+    if (error) throw new Error(error.message);
+  } catch (e) {
+    console.error('[cockpit] facturation IA non enregistrée', e instanceof Error ? e.message : e);
+  }
+}
+
+const LIBELLE_ACTION: Record<ActionIa, string> = {
+  rediger: 'Rédaction d’un message', corriger: 'Correction d’un message', reformuler: 'Reformulation d’un message',
+  raccourcir: 'Message raccourci', developper: 'Message développé', objet: 'Proposition d’objet',
+};
 
 export type ContexteIa = {
   prenom?: string | null;
@@ -61,6 +97,8 @@ export async function brouillonIa(o: {
   consigne?: string | null;
   texte?: string | null;
   contexte: ContexteIa;
+  /** Compte facturé (la personne à l'origine de la question). */
+  facturerA: string;
 }): Promise<{ ok: true; texte: string } | { ok: false; erreur: string }> {
   const user = [
     `Tâche : ${CONSIGNE_ACTION[o.action]}`,
@@ -72,6 +110,7 @@ export async function brouillonIa(o: {
   ].filter(Boolean).join('\n\n');
   try {
     const r = await callClaude({ system: SYSTEME, user, model: DEFAULT_MODEL, maxTokens: 1500, temperature: 0.4 });
+    await facturer(o.facturerA, `Assistant IA cockpit — ${LIBELLE_ACTION[o.action]}`, r);
     const brut = r.text.trim();
     const texte = o.action === 'objet' ? brut.replace(/^objet\s*:\s*/i, '').split('\n')[0].trim() : brut;
     if (!texte) return { ok: false, erreur: 'L’assistant n’a rien proposé. Vous pouvez rédiger le message vous-même.' };
@@ -83,7 +122,7 @@ export async function brouillonIa(o: {
 }
 
 /** Assistant libre du cockpit (rédiger une relance, synthétiser ou analyser une réclamation, planifier une amélioration). */
-export async function assistantCockpit(consigne: string, dossier: string | null): Promise<{ ok: true; texte: string } | { ok: false; erreur: string }> {
+export async function assistantCockpit(consigne: string, dossier: string | null, facturerA: string): Promise<{ ok: true; texte: string } | { ok: false; erreur: string }> {
   const user = [
     `Demande de l’administrateur : ${consigne.slice(0, 2000)}`,
     dossier ? `Éléments du dossier (seule source de faits) :\n${dossier.slice(0, 4000)}` : 'Aucun dossier sélectionné : reste générique et laisse des [champs à compléter].',
@@ -91,6 +130,7 @@ export async function assistantCockpit(consigne: string, dossier: string | null)
   ].join('\n\n');
   try {
     const r = await callClaude({ system: SYSTEME, user, model: DEFAULT_MODEL, maxTokens: 1500, temperature: 0.4 });
+    await facturer(facturerA, `Assistant IA cockpit — ${dossier ? 'Analyse d’un dossier' : 'Question libre'}`, r);
     const texte = r.text.trim();
     return texte ? { ok: true, texte } : { ok: false, erreur: 'L’assistant n’a rien proposé.' };
   } catch (err) {
@@ -103,7 +143,7 @@ export async function assistantCockpit(consigne: string, dossier: string | null)
  * Suggestion facultative (§9) après une réponse : l'IA repère une date
  * annoncée. La modification de l'échéance exige TOUJOURS une confirmation.
  */
-export async function suggestionApresReponse(reponse: string, echeance: string | null, aujourdHui: string): Promise<{ texte: string; date: string | null } | null> {
+export async function suggestionApresReponse(reponse: string, echeance: string | null, aujourdHui: string, facturerA: string): Promise<{ texte: string; date: string | null } | null> {
   const user = [
     `Aujourd’hui : ${aujourdHui}. Échéance actuelle de la tâche : ${echeance ?? 'aucune'}.`,
     `Réponse reçue :\n${reponse.slice(0, 4000)}`,
@@ -112,6 +152,7 @@ export async function suggestionApresReponse(reponse: string, echeance: string |
   ].join('\n\n');
   try {
     const r = await callClaude({ system: SYSTEME, user, model: DEFAULT_MODEL, maxTokens: 200, temperature: 0 });
+    await facturer(facturerA, 'Assistant IA cockpit — Suggestion après une réponse', r);
     const t = r.text.trim();
     const m = /^DATE=(\d{4}-\d{2}-\d{2})\s*\|\s*([\s\S]+)$/.exec(t);
     if (!m) return null;

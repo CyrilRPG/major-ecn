@@ -8,7 +8,7 @@ import type { ElementAgenda, GenreAgenda } from '@/lib/cockpit/server/donnees';
 import { ajouterJoursIso, lundiDe } from '@/lib/cockpit/regles';
 import { cn } from '@/lib/utils';
 import { useActionsCockpit } from '../actions-globales';
-import { Bouton, Carte, EnteteCarte, Vide } from '../ui';
+import { Bouton, Carte, EnteteCarte, Vide, ACTIF } from '../ui';
 
 /** Couleurs de la légende de la maquette : Cours, Réunions, Échéances, Autre. */
 export const COULEUR_GENRE: Record<GenreAgenda, string> = {
@@ -54,7 +54,7 @@ export function BlocAgenda({
       <div className="mx-4 mb-2 grid grid-cols-3 gap-1 rounded-xl bg-(--color-surface-soft) p-1 sm:mx-5" role="tablist">
         {([['jour', jour === aujourdHui ? 'Aujourd’hui' : libelleJour(jour, aujourdHui)], ['semaine', 'Semaine'], ['mois', 'Mois']] as const).map(([v, l]) => (
           <button key={v} type="button" role="tab" aria-selected={vue === v} onClick={() => { setVue(v); if (v === 'jour' && vue === 'jour') onJour(aujourdHui); }}
-            className={cn('truncate rounded-lg py-1.5 text-[13px] font-medium capitalize transition-colors', vue === v ? 'bg-(--color-primary) text-white shadow-sm' : 'text-(--color-ink-soft) hover:bg-white')}>
+            className={cn('truncate rounded-lg py-1.5 text-[13px] font-medium capitalize transition-colors', vue === v ? ACTIF : 'text-(--color-ink-soft) hover:bg-white')}>
             {l}
           </button>
         ))}
@@ -173,7 +173,7 @@ export function BlocCalendrier({
                 <span className={cn(
                   'grid h-8 w-8 place-items-center rounded-full text-[13px] tabular-nums',
                   horsMois ? 'text-(--color-ink-muted)' : 'text-(--color-ink)',
-                  estAujourdhui && 'bg-(--color-primary) font-semibold text-white',
+                  estAujourdhui && 'bg-[linear-gradient(135deg,#E4002B_0%,#F97316_100%)] font-semibold text-white shadow-[0_6px_16px_-6px_rgba(228,0,43,0.7)]',
                   selectionne && 'ring-2 ring-(--color-primary)',
                 )}>
                   {Number(j.slice(8))}

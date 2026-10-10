@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   BarChart3, CalendarDays, Check, ChevronRight, Cloud, CloudFog, CloudLightning, CloudRain, CloudSnow, CloudSun, Lightbulb,
-  ListChecks, Mail, MessageSquareWarning, Pencil, Sun, Target,
+  ListChecks, Mail, MessageSquareWarning, Pencil, Sparkles, Sun, Target,
 } from 'lucide-react';
 import type { Cockpit } from '@/lib/cockpit/server/donnees';
 import { enregistrerObjectif, basculerObjectif } from '@/app/admin/cockpit/actions-divers';
 import { cn } from '@/lib/utils';
-import { Carte, PageCockpit, Toast, useEtatSuivi, useMessage } from '../ui';
+import { DEGRADE, NUIT, PageCockpit, Toast, useEtatSuivi, useMessage } from '../ui';
 import { BlocPriorites } from './bloc-priorites';
 import { BlocAgenda, BlocCalendrier } from './bloc-agenda';
 import { BlocTachesSemaine } from './bloc-taches';
@@ -51,39 +51,52 @@ export function CockpitAccueil({
 
   return (
     <PageCockpit className="lg:px-6">
-      <div className="mx-auto max-w-[1680px] space-y-4">
-        {/* ─────────── En-tête : salutation, citation, date & météo, bandeau ─────────── */}
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,0.8fr)]">
-          <div className="min-w-0">
-            <h1 className="text-2xl font-semibold tracking-tight text-(--color-ink) sm:text-3xl">
-              Bonjour {prenom} !
-            </h1>
-            <p className="mt-1 text-[15px] text-(--color-ink)">
-              {c.urgentes === 0
-                ? 'Tout est sous contrôle. Avançons ensemble pour la réussite de nos étudiants.'
-                : `${c.urgentes} urgence${c.urgentes > 1 ? 's' : ''} à traiter aujourd’hui. Avançons ensemble pour la réussite de nos étudiants.`}
-            </p>
-            <ObjectifDuJour aujourdHui={donnees.aujourdHui} objectif={donnees.objectifJour} onMessage={setMessage} />
-          </div>
-          <blockquote className="hidden flex-col justify-center border-l border-(--color-border) px-5 xl:flex">
-            <p className="text-[15px] italic leading-relaxed text-(--color-ink-soft)">« {citation} »</p>
-            <footer className="mt-2 text-[12px] text-(--color-ink-soft)">Major ECN</footer>
-          </blockquote>
-          <div className="flex items-center gap-4 rounded-2xl border border-(--color-border) bg-(--color-surface) px-4 py-3 xl:flex-col xl:items-start xl:justify-center xl:gap-2">
-            <p className="flex items-center gap-2 text-[14px] font-medium capitalize text-(--color-ink)">
-              <CalendarDays className="h-5 w-5 text-(--color-primary)" /> {dateLongue}
-            </p>
-            {meteo && (
-              <p className="flex items-center gap-2 text-[15px] text-(--color-ink)">
-                <IconeMeteo code={meteo.code} className="h-6 w-6 text-[#E9A23B]" />
-                <span className="font-semibold">{meteo.temperature}°</span> Paris
-              </p>
-            )}
-          </div>
-        </div>
+      <div className="mx-auto max-w-[1680px] space-y-5">
+        {/* ─────────── Bandeau : salutation, objectif, citation, date & météo, indicateurs ───────────
+            Même vocabulaire que les grandes cartes de l'administration (Facturation IA) :
+            fond nuit, verre dépoli, chiffres en police d'affichage, dégradé signature. */}
+        <section className={cn('relative overflow-hidden rounded-[2rem] p-5 text-white shadow-(--shadow-lifted) sm:p-7', NUIT)}>
+          <span aria-hidden className="pointer-events-none absolute -right-24 -top-32 h-80 w-80 rounded-full bg-[#E4002B]/30 blur-3xl" />
+          <span aria-hidden className="pointer-events-none absolute -bottom-40 left-1/3 h-80 w-80 rounded-full bg-[#F97316]/20 blur-3xl" />
+          <span aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.07)_1px,transparent_0)] [background-size:22px_22px]" />
 
-        {/* ─────────── Indicateurs ─────────── */}
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+          <div className="relative grid gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[12px] font-medium capitalize text-white/85 ring-1 ring-white/10">
+                  <CalendarDays className="h-3.5 w-3.5" /> {dateLongue}
+                </span>
+                {meteo && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[12px] font-medium text-white/85 ring-1 ring-white/10">
+                    <IconeMeteo code={meteo.code} className="h-3.5 w-3.5 text-[#FCD34D]" /> {meteo.temperature}° · Paris
+                  </span>
+                )}
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70 ring-1 ring-white/10">
+                  <Sparkles className="h-3.5 w-3.5" /> Mon cockpit
+                </span>
+              </div>
+              <h1 className="mt-4 font-display text-[34px] font-semibold leading-[1.05] tracking-tight sm:text-[44px]">
+                Bonjour{' '}
+                <span className="bg-[linear-gradient(90deg,#FF5A6E_0%,#F97316_100%)] bg-clip-text text-transparent">{prenom}</span> !
+              </h1>
+              <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-white/70">
+                {c.urgentes === 0
+                  ? 'Tout est sous contrôle. Avançons ensemble pour la réussite de nos étudiants.'
+                  : `${c.urgentes} urgence${c.urgentes > 1 ? 's' : ''} à traiter aujourd’hui. Avançons ensemble pour la réussite de nos étudiants.`}
+              </p>
+              <ObjectifDuJour aujourdHui={donnees.aujourdHui} objectif={donnees.objectifJour} onMessage={setMessage} />
+            </div>
+            <blockquote className="relative hidden flex-col justify-center rounded-3xl bg-white/[0.06] p-6 ring-1 ring-white/10 xl:flex">
+              <span aria-hidden className="absolute left-4 top-1 font-display text-[88px] leading-none text-white/10">“</span>
+              <p className="relative font-display text-[19px] italic leading-snug text-white/90">{citation}</p>
+              <footer className="relative mt-3 flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.14em] text-white/55">
+                <span className={cn('h-px w-6', DEGRADE)} /> Major ECN
+              </footer>
+            </blockquote>
+          </div>
+
+          {/* Indicateurs */}
+          <div className="relative mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
           <Indicateur href="/admin/cockpit/taches" Icone={ListChecks} valeur={c.aFaire} libelle="Tâches à faire"
             detail={c.urgentes > 0 ? `${c.urgentes} urgente${c.urgentes > 1 ? 's' : ''}` : 'Aucune urgence'} ton={c.urgentes > 0 ? 'rouge' : 'gris'} />
           <Indicateur href="/admin/cockpit/agenda" Icone={CalendarDays} valeur={c.rdvAujourdhui} libelle="Rendez-vous aujourd’hui"
@@ -96,7 +109,8 @@ export function CockpitAccueil({
             detail={`${c.ameliorations.enCours} en cours`} ton="vert" />
           <Indicateur href="/admin/cockpit/messagerie" Icone={BarChart3} valeur={c.tauxReponse === null ? '—' : `${c.tauxReponse} %`} libelle="Taux de réponse"
             detail={delta === null ? 'Sur 30 jours' : `(${delta >= 0 ? '+' : ''}${delta} % ce mois-ci)`} ton={delta !== null && delta < 0 ? 'rouge' : 'vert'} />
-        </div>
+          </div>
+        </section>
 
         {/* ─────────── Priorités · Agenda · Calendrier ─────────── */}
         <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-12">
@@ -138,38 +152,42 @@ function ObjectifDuJour({ aujourdHui, objectif, onMessage }: { aujourdHui: strin
     router.refresh();
   });
   return (
-    <div className="mt-3 flex min-w-0 items-center gap-2 rounded-xl border border-(--color-primary-soft) bg-(--color-primary-soft) px-3 py-2">
-      <Target className="h-4 w-4 shrink-0 text-(--color-primary)" />
-      <span className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.14em] text-(--color-primary)">Ma priorité du jour</span>
-      {edition ? (
-        <form className="flex min-w-0 flex-1 items-center gap-2" onSubmit={(e) => { e.preventDefault(); enregistrer(); }}>
-          <input autoFocus value={texte} onChange={(e) => setTexte(e.target.value)} maxLength={500}
-            placeholder="Ex. Finaliser les dossiers prioritaires et relancer les intervenants en attente"
-            className="min-w-0 flex-1 rounded-md border border-(--color-border) bg-white px-2 py-1 text-sm focus:border-(--color-primary) focus:outline-none" />
-          <button type="submit" disabled={enCours} className="rounded-md bg-(--color-primary) px-2.5 py-1 text-[12px] font-medium text-white">OK</button>
-        </form>
-      ) : (
-        <>
-          {objectif ? (
-            <button type="button" onClick={() => start(async () => { await basculerObjectif('jour', aujourdHui); router.refresh(); })}
-              className={cn('min-w-0 flex-1 truncate text-left text-sm font-medium text-(--color-ink)', objectif.atteint && 'text-(--color-ink-soft) line-through')}
-              title={objectif.atteint ? 'Objectif atteint — cliquer pour rouvrir' : 'Cliquer quand l’objectif est atteint'}>
-              {objectif.atteint && <Check className="mr-1 inline h-4 w-4 text-[#1F7A3E]" />}
-              {objectif.texte}
-            </button>
-          ) : (
-            <button type="button" onClick={() => setEdition(true)} className="min-w-0 flex-1 truncate text-left text-sm text-(--color-ink-muted)">Fixer l’objectif principal de la journée…</button>
-          )}
-          <button type="button" aria-label="Modifier l’objectif du jour" onClick={() => setEdition(true)} className="grid h-6 w-6 shrink-0 place-items-center rounded text-(--color-primary) hover:bg-white">
-            <Pencil className="h-3.5 w-3.5" />
+    <div className="mt-5 flex min-w-0 items-center gap-3 rounded-2xl bg-white/[0.07] px-4 py-3 ring-1 ring-white/12 backdrop-blur-sm">
+      <span className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-xl text-white shadow-[0_8px_18px_-8px_rgba(228,0,43,0.8)]', DEGRADE)}>
+        <Target className="h-[18px] w-[18px]" />
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-white/55">Ma priorité du jour</p>
+        {edition ? (
+          <form className="mt-1 flex min-w-0 items-center gap-2" onSubmit={(e) => { e.preventDefault(); enregistrer(); }}>
+            <input autoFocus value={texte} onChange={(e) => setTexte(e.target.value)} maxLength={500}
+              placeholder="Ex. Finaliser les dossiers prioritaires et relancer les intervenants en attente"
+              className="min-w-0 flex-1 rounded-lg border border-white/20 bg-white/10 px-2.5 py-1.5 text-sm text-white placeholder:text-white/40 focus:border-white/50 focus:outline-none" />
+            <button type="submit" disabled={enCours} className={cn('rounded-lg px-3 py-1.5 text-[12.5px] font-semibold text-white', DEGRADE)}>Enregistrer</button>
+          </form>
+        ) : objectif ? (
+          <button type="button" onClick={() => start(async () => { await basculerObjectif('jour', aujourdHui); router.refresh(); })}
+            className={cn('mt-0.5 block w-full truncate text-left text-[15px] font-medium text-white', objectif.atteint && 'text-white/50 line-through')}
+            title={objectif.atteint ? 'Objectif atteint — cliquer pour rouvrir' : 'Cliquer quand l’objectif est atteint'}>
+            {objectif.atteint && <Check className="mr-1 inline h-4 w-4 text-[#86EFAC]" />}
+            {objectif.texte}
           </button>
-        </>
+        ) : (
+          <button type="button" onClick={() => setEdition(true)} className="mt-0.5 block w-full truncate text-left text-[15px] text-white/50 hover:text-white/80">
+            Fixer l’objectif principal de la journée…
+          </button>
+        )}
+      </div>
+      {!edition && (
+        <button type="button" aria-label="Modifier l’objectif du jour" onClick={() => setEdition(true)} className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-white/70 hover:bg-white/10 hover:text-white">
+          <Pencil className="h-4 w-4" />
+        </button>
       )}
     </div>
   );
 }
 
-const TONS_DETAIL = { rouge: 'text-[#C0262D]', vert: 'text-[#1F7A3E]', gris: 'text-(--color-ink-soft)' } as const;
+const TONS_DETAIL = { rouge: 'text-[#FCA5A5]', vert: 'text-[#86EFAC]', gris: 'text-white/55' } as const;
 
 function Indicateur({
   href, Icone, valeur, libelle, detail, ton,
@@ -182,26 +200,29 @@ function Indicateur({
   ton: keyof typeof TONS_DETAIL;
 }) {
   return (
-    <Link href={href} className="group focus-ring rounded-2xl">
-      <Carte className="flex h-full items-center gap-2.5 px-3 py-3 transition-shadow group-hover:shadow-md">
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-(--color-primary-soft) text-(--color-primary)">
+    <Link
+      href={href}
+      className="group relative flex min-w-0 flex-col gap-3 overflow-hidden rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.1] hover:ring-white/20 focus-ring"
+    >
+      <span className="flex items-center justify-between">
+        <span className={cn('grid h-10 w-10 place-items-center rounded-xl text-white shadow-[0_8px_18px_-8px_rgba(228,0,43,0.85)]', DEGRADE)}>
           <Icone className="h-5 w-5" />
         </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-2xl font-semibold leading-none text-(--color-primary)">{valeur}</span>
-          <span className="mt-1 block text-[12.5px] leading-tight text-(--color-ink)">{libelle}</span>
-          <span className={cn('mt-0.5 block truncate text-[12px] font-medium', TONS_DETAIL[ton])}>{detail}</span>
-        </span>
-        <ChevronRight className="hidden h-4 w-4 shrink-0 text-(--color-ink-muted) transition-transform group-hover:translate-x-0.5 2xl:block" />
-      </Carte>
+        <ChevronRight className="h-4 w-4 text-white/35 transition-all group-hover:translate-x-0.5 group-hover:text-white/80" />
+      </span>
+      <span className="min-w-0">
+        <span className="block font-display text-[30px] font-bold leading-none tabular-nums tracking-tight">{valeur}</span>
+        <span className="mt-1.5 block text-[13px] font-medium leading-tight text-white/85">{libelle}</span>
+        <span className={cn('mt-1 block truncate text-[12px] font-medium', TONS_DETAIL[ton])}>{detail}</span>
+      </span>
     </Link>
   );
 }
 
 function PiedCockpit() {
   return (
-    <footer className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-(--color-border) pb-2 pt-4 text-[12.5px] text-(--color-ink-soft)">
-      <span className="font-semibold text-(--color-ink)">Major ECN</span>
+    <footer className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl border border-(--color-border) bg-(--color-surface) px-5 py-3.5 text-[12.5px] text-(--color-ink-soft) shadow-(--shadow-soft)">
+      <span className="font-display text-[15px] font-semibold text-(--color-ink)">Major ECN</span>
       <span>15 ans d’expertise</span>
       <span aria-hidden>•</span>
       <span>Plus de 9 000 candidats accompagnés</span>

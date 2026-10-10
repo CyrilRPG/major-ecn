@@ -9,7 +9,7 @@ import { definirPriorites } from '@/app/admin/cockpit/actions-taches';
 import { deplacer, libelleCategorie, libelleEcheance } from '@/lib/cockpit/regles';
 import { cn } from '@/lib/utils';
 import { useActionsCockpit } from '../actions-globales';
-import { Bouton, Carte, EnteteCarte, Etiquette, useEtatSuivi } from '../ui';
+import { Bouton, Carte, EnteteCarte, Etiquette, useEtatSuivi, DEGRADE } from '../ui';
 
 type Priorite = TacheVisible & { suggeree: boolean };
 
@@ -63,8 +63,9 @@ export function BlocPriorites({
           </li>
         )}
         {liste.map((t, i) => (
-          <li key={t.id} className="group flex items-center gap-3 rounded-xl bg-(--color-surface-soft) px-3 py-3 ring-1 ring-(--color-border)">
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-(--color-primary) text-sm font-semibold text-white">{i + 1}</span>
+          <li key={t.id} className="group relative flex items-center gap-3 overflow-hidden rounded-2xl bg-(--color-surface) px-3.5 py-3.5 ring-1 ring-(--color-border) transition-all duration-300 hover:-translate-y-0.5 hover:shadow-(--shadow-lifted) hover:ring-(--color-primary)/25">
+            <span aria-hidden className={cn('absolute inset-y-0 left-0 w-1', DEGRADE)} />
+            <span className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-full font-display text-[15px] font-bold text-white shadow-[0_8px_18px_-8px_rgba(228,0,43,0.7)]', DEGRADE)}>{i + 1}</span>
             <div className="min-w-0 flex-1">
               <Link href={`/admin/cockpit/taches?t=${t.id}`} className="block truncate text-[14.5px] font-medium text-(--color-ink) hover:text-(--color-primary)">{t.titre}</Link>
               <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px] text-(--color-ink-soft)">

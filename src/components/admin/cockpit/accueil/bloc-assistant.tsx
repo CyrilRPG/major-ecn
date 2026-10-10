@@ -7,7 +7,7 @@ import { demanderAssistant } from '@/app/admin/cockpit/actions-messagerie';
 import type { AmeliorationResume, ReclamationResume } from '@/lib/cockpit/server/donnees';
 import { cn } from '@/lib/utils';
 import { useActionsCockpit } from '../actions-globales';
-import { Bouton, Carte, champ } from '../ui';
+import { Bouton, Carte, champ, DEGRADE, NUIT } from '../ui';
 
 type Dossier = { type: 'reclamation' | 'amelioration'; id: string } | null;
 
@@ -43,20 +43,23 @@ export function BlocAssistant({ reclamations, ameliorations, className }: { recl
   };
 
   return (
-    <Carte className={cn('flex flex-col', className)}>
-      <header className="flex items-start gap-3 px-4 pt-4 sm:px-5">
-        <Sparkles className="mt-0.5 h-7 w-7 shrink-0 text-(--color-primary)" />
+    <Carte className={cn('relative flex flex-col overflow-hidden border-transparent text-white', NUIT, className)}>
+      <span aria-hidden className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[#E4002B]/30 blur-3xl" />
+      <header className="relative flex items-start gap-3 px-5 pt-5 sm:px-6">
+        <span className={cn('grid h-11 w-11 shrink-0 place-items-center rounded-2xl text-white shadow-[0_10px_24px_-10px_rgba(228,0,43,0.9)]', DEGRADE)}>
+          <Sparkles className="h-5 w-5" />
+        </span>
         <div>
-          <h2 className="text-[19px] font-semibold text-(--color-primary)">Assistant IA Major ECN</h2>
-          <p className="text-[13px] text-(--color-ink-soft)">Rédigez, reformulez, organisez, analysez… Votre assistant vous fait gagner du temps.</p>
+          <h2 className="font-display text-[20px] font-semibold tracking-tight">Assistant IA Major ECN</h2>
+          <p className="text-[13px] leading-snug text-white/65">Rédigez, reformulez, organisez, analysez… Votre assistant vous fait gagner du temps.</p>
         </div>
       </header>
-      <form className="mx-4 mt-3 flex gap-2 sm:mx-5" onSubmit={(e) => { e.preventDefault(); if (consigne.trim()) lancer(); }}>
-        <input className={champ} value={consigne} onChange={(e) => setConsigne(e.target.value)} placeholder="Ex. : rédiger une relance pour un enseignant…" aria-label="Demande à l’assistant IA" />
+      <form className="relative mx-5 mt-4 flex gap-2 rounded-2xl bg-white/[0.07] p-1.5 ring-1 ring-white/12 sm:mx-6" onSubmit={(e) => { e.preventDefault(); if (consigne.trim()) lancer(); }}>
+        <input className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none" value={consigne} onChange={(e) => setConsigne(e.target.value)} placeholder="Ex. : rédiger une relance pour un enseignant…" aria-label="Demande à l’assistant IA" />
         <Bouton type="submit" enCours={enCours} aria-label="Envoyer à l’assistant" className="w-11 shrink-0 px-0"><ArrowRight /></Bouton>
       </form>
       {typeDossier && (
-        <div className="mx-4 mt-2 sm:mx-5">
+        <div className="relative mx-5 mt-2 sm:mx-6">
           <select className={champ} value={dossierId} onChange={(e) => setDossierId(e.target.value)} aria-label="Dossier à analyser">
             <option value="">{typeDossier === 'reclamation' ? 'Choisir une réclamation…' : 'Choisir une amélioration…'}</option>
             {(typeDossier === 'reclamation' ? reclamations.map((r) => ({ id: r.id, l: `${r.candidat_label} — ${r.sujet}` })) : ameliorations.map((a) => ({ id: a.id, l: `n° ${String(a.numero).padStart(3, '0')} — ${a.titre}` })))
@@ -64,12 +67,12 @@ export function BlocAssistant({ reclamations, ameliorations, className }: { recl
           </select>
         </div>
       )}
-      {erreur && <p className="mx-4 mt-2 text-[12.5px] text-[#B42318] sm:mx-5">{erreur}</p>}
-      <div className="grid grid-cols-1 gap-2 px-4 pb-4 pt-3 sm:grid-cols-2 sm:px-5">
+      {erreur && <p className="relative mx-5 mt-2 text-[12.5px] text-[#FCA5A5] sm:mx-6">{erreur}</p>}
+      <div className="relative grid grid-cols-1 gap-2 px-5 pb-5 pt-3 sm:grid-cols-2 sm:px-6">
         {RACCOURCIS.map((r) => (
           <button key={r.cle} type="button"
             onClick={() => { setConsigne(r.consigne); setTypeDossier(r.dossier); setDossierId(''); }}
-            className="flex items-center gap-2 rounded-lg border border-(--color-border) bg-white px-3 py-2 text-left text-[12.5px] font-medium text-(--color-primary) hover:bg-(--color-primary-soft)">
+            className="flex items-center gap-2 rounded-xl bg-white/[0.06] px-3 py-2.5 text-left text-[12.5px] font-medium text-white/85 ring-1 ring-white/10 transition-colors hover:bg-white/[0.12] hover:text-white">
             <r.Icone className="h-4 w-4 shrink-0" /> {r.label}
           </button>
         ))}

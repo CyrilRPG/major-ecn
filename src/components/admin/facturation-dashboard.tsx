@@ -124,13 +124,16 @@ function remisePct(montant: number): number {
 }
 
 export function FacturationDashboard({
-  lines, aiResponses, tarifs, epreuves = { exams: 0, qroc: 0 },
+  lines, aiResponses, aiCockpit = 0, tarifs, epreuves = { exams: 0, qroc: 0 },
   generations = { interrogations: 0, epreuves: 0, arena: 0 },
   exerciseImports = [],
   articles = [],
   agendaImports = [],
 }: {
-  lines: CourseLine[]; aiResponses: number; tarifs: Tarifs;
+  lines: CourseLine[]; aiResponses: number;
+  /** Dont questions à l'Assistant IA Major ECN du cockpit administrateur. */
+  aiCockpit?: number;
+  tarifs: Tarifs;
   epreuves?: { exams: number; qroc: number };
   /** Générations IA réussies, facturées au forfait. */
   generations?: { interrogations: number; epreuves: number; /** Corrigés EVC Arena rédigés par IA (1 € pièce). */ arena?: number };
@@ -499,6 +502,9 @@ export function FacturationDashboard({
             <MessageSquare className="mx-auto mb-2 h-6 w-6 text-(--color-ink-muted)" />
             {aiResponses} réponse{aiResponses > 1 ? 's' : ''} de l’assistant IA facturée{aiResponses > 1 ? 's' : ''} à 0,10 € —
             soit <span className="font-semibold text-(--color-ink)">{eur(data.totals.ia)}</span>.
+            <span className="mt-1 block text-xs">
+              Dont {aiResponses - aiCockpit} réponse{aiResponses - aiCockpit > 1 ? 's' : ''} aux élèves et {aiCockpit} question{aiCockpit > 1 ? 's' : ''} à l’Assistant IA Major ECN du cockpit administrateur.
+            </span>
           </div>
         ) : sel === 'epreuves' ? (
           <div className="px-5 py-10 text-center text-sm text-(--color-ink-soft)">

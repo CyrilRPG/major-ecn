@@ -91,6 +91,10 @@ export const GEN_FEATURE = {
   arenaCorrections: 'arena_corrections_generation',
   /** Import IA de l'agenda : une ligne par import, montant cumulé dans `price_eur`. */
   agendaImport: 'agenda_import_ia',
+  /** Assistant IA Major ECN du cockpit administrateur (question libre, rédaction
+   *  d'un message, suggestion de suite) : 0,10 € la question réussie, comme
+   *  l'assistant des élèves (`BILLING_EUR.ai_response`). */
+  cockpitAssistant: 'cockpit_assistant',
 } as const;
 
 /**

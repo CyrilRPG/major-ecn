@@ -30,10 +30,20 @@ export const C = {
   pale: 'var(--color-ink-muted)',
 } as const;
 
+/** Dégradé signature de la plateforme (état actif du menu, boutons d'action des élèves). */
+export const DEGRADE = 'bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)]';
+/** Onglet / segment actif : même rendu que l'entrée active du menu de l'administration. */
+export const ACTIF = `${DEGRADE} text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]`;
+/** Fond sombre des grandes cartes de l'administration (Facturation IA, menu). */
+export const NUIT = 'bg-[linear-gradient(135deg,#1A0F2E_0%,#241046_45%,#3A0A1E_100%)]';
+
 export function Carte({ className, children, ...props }: React.HTMLAttributes<HTMLElement>) {
   return (
     <section
-      className={cn('surface-card-bare min-w-0', className)}
+      className={cn(
+        'min-w-0 rounded-[1.6rem] border border-(--color-border) bg-(--color-surface) shadow-(--shadow-soft) transition-shadow duration-300 hover:shadow-(--shadow-lifted)',
+        className,
+      )}
       {...props}
     >
       {children}
@@ -54,20 +64,25 @@ export function EnteteCarte({
   className?: string;
 }) {
   return (
-    <header className={cn('flex flex-wrap items-center gap-x-3 gap-y-1 px-4 pt-4 pb-2 sm:px-5', className)}>
-      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-(--color-primary-soft) text-(--color-primary)">
-        <Icone className="h-4 w-4" />
+    <header className={cn('flex items-center gap-x-3 gap-y-1.5 px-4 pb-3 pt-5 sm:px-6', className)}>
+      <span className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-xl text-white shadow-[0_8px_18px_-8px_rgba(228,0,43,0.65)]', DEGRADE)}>
+        <Icone className="h-[18px] w-[18px]" />
       </span>
-      <h2 className="text-[17px] font-semibold tracking-tight text-(--color-ink)">
-        {titre}
-        {typeof compteur === 'number' && <span className="ml-1 text-(--color-primary)">({compteur})</span>}
-      </h2>
+      <h2 className="min-w-0 font-display text-[18px] font-semibold leading-tight tracking-tight text-(--color-ink)">{titre}</h2>
+      {typeof compteur === 'number' && (
+        <span className="rounded-full bg-(--color-surface-sunken) px-2.5 py-0.5 text-[12px] font-semibold tabular-nums text-(--color-ink-soft)">{compteur}</span>
+      )}
       {badge}
-      <div className="ml-auto flex items-center gap-2">
+      <div className="ml-auto flex shrink-0 items-center gap-2">
         {actions}
         {lien && (
-          <Link href={lien} className="inline-flex items-center gap-1.5 rounded-md text-[13px] font-medium text-(--color-primary) hover:underline focus-ring">
-            {lienLabel} <ArrowRight className="h-3.5 w-3.5" />
+          <Link
+            href={lien}
+            title={lienLabel}
+            aria-label={lienLabel}
+            className="group/lien grid h-8 w-8 place-items-center rounded-full bg-(--color-surface-sunken) text-(--color-ink-soft) transition-all hover:bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] hover:text-white hover:shadow-[0_6px_16px_-6px_rgba(228,0,43,0.7)] focus-ring"
+          >
+            <ArrowRight className="h-4 w-4 transition-transform group-hover/lien:translate-x-0.5" />
           </Link>
         )}
       </div>
@@ -158,7 +173,7 @@ export const Bouton = React.forwardRef<HTMLButtonElement, BoutonProps>(function 
         taille === 'xs' && 'h-7 px-2.5 text-[12px]',
         taille === 'sm' && 'h-8 px-3 text-[13px]',
         taille === 'md' && 'h-10 px-4 text-sm',
-        variante === 'plein' && 'bg-(--color-primary) text-white shadow-sm hover:bg-(--color-primary-deep)',
+        variante === 'plein' && `${DEGRADE} text-white shadow-[0_8px_20px_-10px_rgba(228,0,43,0.7)] hover:brightness-105 hover:shadow-[0_10px_24px_-10px_rgba(228,0,43,0.8)]`,
         variante === 'contour' && 'border border-(--color-border) bg-white text-(--color-primary) hover:bg-(--color-primary-soft)',
         variante === 'doux' && 'bg-(--color-primary-soft) text-(--color-primary) hover:bg-(--color-primary-soft)',
         variante === 'fantome' && 'text-(--color-ink-soft) hover:bg-(--color-surface-soft) hover:text-(--color-ink)',

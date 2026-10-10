@@ -26,12 +26,14 @@ export default async function AdminFacturationPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const toutes = createAdminClientToutesFacultes() as any;
 
-  const [coursRes, aiRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes, articlesRes, odontoRes, genArenaRes, imagerieRes, agendaRes] = await Promise.all([
+  const [coursRes, aiRes, aiCockpitRes, examCountRes, qrocCountRes, genExamRes, genInterroRes, importsRes, articlesRes, odontoRes, genArenaRes, imagerieRes, agendaRes] = await Promise.all([
     // Par tranches : PostgREST tronque en silence à 1 000 lignes, et la RPC en renvoie
     // davantage (1 067 au 23/09/2026 — 61 items facturables manquaient à la facture).
     fetchAllRows((de: number, a2: number) => a.rpc('admin_facturation_lines', { p_faculte_id: EDN_FACULTE_ID }).order('line_id').range(de, a2))
       .then((rows) => ({ data: rows })),
     a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', 'assistant_chat').eq('status', 'success'),
+    // Assistant IA Major ECN du cockpit administrateur : 0,10 € la question réussie, comme l'assistant élève.
+    a.from('ai_generations').select('id', { count: 'exact', head: true }).eq('feature', GEN_FEATURE.cockpitAssistant).eq('status', 'success'),
     // Épreuves blanches : facturées 1 c / épreuve + 0,5 c / QROC.
     a.from('mock_exams').select('id', { count: 'exact', head: true }).neq('status', 'archived').is('cours_id', null),
     a.from('mock_exam_questions').select('id', { count: 'exact', head: true }).eq('format', 'qroc'),
@@ -95,7 +97,8 @@ export default async function AdminFacturationPage() {
     },
   );
 
-  const aiResponses = aiRes.count ?? 0;
+  const aiCockpit = aiCockpitRes.count ?? 0;
+  const aiResponses = (aiRes.count ?? 0) + aiCockpit;
   /** Ligne produite sur l'autre plateforme : le libellé le dit, pour qu'une
    *  facture reste lisible une fois imprimée. */
   const marqueOdonto = (faculteId: string | null | undefined, titre: string) =>
@@ -114,6 +117,7 @@ export default async function AdminFacturationPage() {
     <FacturationDashboard
       lines={lines}
       aiResponses={aiResponses}
+      aiCockpit={aiCockpit}
       epreuves={{ exams: examsCount, qroc: qrocCount }}
       generations={generations}
       exerciseImports={exerciseImports}

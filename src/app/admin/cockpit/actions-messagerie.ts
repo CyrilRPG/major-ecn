@@ -299,7 +299,7 @@ export async function redigerAvecIa(input: {
   }
   if (input.destinataire && !contexte.prenom) contexte.prenom = input.destinataire.split(/\s+/)[0];
 
-  const r = await brouillonIa({ action: input.action, ton: input.ton, consigne: input.consigne, texte: input.texte, contexte });
+  const r = await brouillonIa({ action: input.action, ton: input.ton, consigne: input.consigne, texte: input.texte, contexte, facturerA: moi.id });
   if (!r.ok) return r;
   await journaliser(d, { objet_type: 'ia', objet_id: input.conversationId ?? input.tacheId ?? input.demandeId ?? input.reclamationId ?? 'libre', acteur_id: moi.id, action: `ia_${input.action}`, audit: true });
   return { ok: true, data: { texte: r.texte } };
@@ -325,7 +325,7 @@ export async function demanderAssistant(consigne: string, dossier?: { type: 'rec
       texteDossier += `\nRéclamations rattachées : ${JSON.stringify(recl ?? [])}`;
     }
   }
-  const r = await assistantCockpit(c, texteDossier);
+  const r = await assistantCockpit(c, texteDossier, moi.id);
   if (r.ok) await journaliser(d, { objet_type: 'ia', objet_id: dossier?.id ?? 'libre', acteur_id: moi.id, action: 'ia_assistant', audit: true });
   return r.ok ? { ok: true, data: { texte: r.texte } } : r;
 }
@@ -342,7 +342,7 @@ export async function suggererSuite(messageId: string): Promise<R<{ texte: strin
     const t = await chargerTache(d, acces.conv.tache_id, moi.id);
     echeance = t?.tache.echeance ?? null;
   }
-  const s = await suggestionApresReponse((m as Message).corps, echeance, instantParis().date);
+  const s = await suggestionApresReponse((m as Message).corps, echeance, instantParis().date, moi.id);
   if (!s) return { ok: true, data: { texte: 'Aucune date annoncée dans cette réponse.', date: null, tacheId: acces.conv.tache_id } };
   return { ok: true, data: { ...s, tacheId: acces.conv.tache_id } };
 }
