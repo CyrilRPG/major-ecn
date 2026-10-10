@@ -22,7 +22,16 @@ export function UserMenu({ profile }: { profile: Profile }) {
   const router = useRouter();
   const handleSignOut = async () => {
     const supabase = createClient();
-    await supabase.auth.signOut();
+    // Administrateur « connecté en tant que » : ne fermer QUE cette session.
+    // La déconnexion globale révoquait toutes les sessions de l'élève, qui se
+    // retrouvait déconnecté sur ses propres appareils.
+    const enTantQue = /(?:^|;\s*)(impersonator_target_name|impersonation_onglet)=/.test(document.cookie);
+    if (enTantQue) {
+      // Ferme la session élève ET efface les marqueurs (httpOnly) côté serveur :
+      // sans cela, un bandeau fantôme survivait à la déconnexion.
+      await fetch('/api/admin/stop-impersonation', { method: 'POST' }).catch(() => undefined);
+    }
+    await supabase.auth.signOut(enTantQue ? { scope: 'local' } : undefined);
     router.push('/login');
     router.refresh();
   };

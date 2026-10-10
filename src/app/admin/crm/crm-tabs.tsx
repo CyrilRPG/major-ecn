@@ -5,8 +5,9 @@ import { cn } from '@/lib/utils';
 import { CrmGeneral, type GeneralStudent, type GeneralStats, type College } from './crm-general';
 import { CrmPanel } from './crm-panel';
 import { CrmContacter, type ContactCandidate } from './crm-contacter';
+import { CrmClassement } from './crm-classement';
 
-type Tab = 'general' | 'transversal' | 'contacter';
+type Tab = 'general' | 'classement' | 'transversal' | 'contacter';
 
 type CrmPanelProps = Parameters<typeof CrmPanel>[0];
 
@@ -30,9 +31,10 @@ export function CrmTabs({
   return (
     <>
       <div className="mx-auto w-full max-w-7xl px-4 pt-6 sm:px-6 lg:px-10">
-        <div className="flex gap-1 rounded-xl bg-gray-100 p-1">
+        <div className="grid grid-cols-2 gap-1 rounded-xl bg-gray-100 p-1 sm:flex">
           {([
             { key: 'general' as const, label: 'Général' },
+            { key: 'classement' as const, label: 'Classement' },
             { key: 'transversal' as const, label: 'Révisions transversales' },
             { key: 'contacter' as const, label: `Candidats à contacter${contactCandidates.length > 0 ? ` (${contactCandidates.length})` : ''}` },
           ]).map((t) => (
@@ -54,6 +56,8 @@ export function CrmTabs({
 
       {tab === 'general' ? (
         <CrmGeneral students={generalStudents} stats={generalStats} colleges={colleges} />
+      ) : tab === 'classement' ? (
+        <CrmClassement />
       ) : tab === 'transversal' ? (
         <CrmPanel students={transversalStudents} stats={transversalStats} />
       ) : (

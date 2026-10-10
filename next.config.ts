@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Développement uniquement : « se connecter en tant que » ouvre l'élève sur
+  // l'AUTRE hôte local (localhost ⇄ 127.0.0.1, cookies distincts — cf.
+  // lib/auth/impersonation-onglet.ts). Sans cette entrée, `next dev` refuse
+  // ses ressources à 127.0.0.1 et la page n'est jamais hydratée.
+  allowedDevOrigins: ["127.0.0.1", "localhost"],
   experimental: {
     serverActions: { bodySizeLimit: '30mb' },
     optimizePackageImports: ["lucide-react", "framer-motion", "recharts"],

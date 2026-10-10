@@ -143,6 +143,23 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
+  // Session « en tant que » ouverte dans un onglet séparé (cf.
+  // lib/auth/impersonation-onglet.ts) : durée bornée CÔTÉ SERVEUR. Échéance
+  // dépassée → session élève révoquée (portée locale : celle de cet onglet
+  // seulement) et cookies effacés, même si le bandeau n'a jamais tourné.
+  const echeanceOnglet = request.cookies.get('impersonation_onglet')?.value;
+  if (echeanceOnglet !== undefined && !(Number(echeanceOnglet) > Date.now())) {
+    await withBudget(supabase.auth.signOut({ scope: 'local' }).then(() => undefined), undefined);
+    const url = request.nextUrl.clone();
+    url.pathname = '/login';
+    url.search = '';
+    const res = NextResponse.redirect(url);
+    for (const c of request.cookies.getAll()) {
+      if (c.name.startsWith('sb-') || c.name.startsWith('impersonat')) res.cookies.set(c.name, '', { path: '/', maxAge: 0 });
+    }
+    return res;
+  }
+
   // JWT expiré mais refresh_token présent : UNE tentative de renouvellement
   // budgétée. Sans ça, getClaims(jwt) échoue → redirect /login alors que la
   // session est encore valide — symptôme élève : « This page couldn't load »

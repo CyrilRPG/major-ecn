@@ -34,6 +34,11 @@ export async function POST(req: Request) {
     if (!isStudyRoute(body.path)) {
       return NextResponse.json({ ok: true, ignored: true });
     }
+    // Administrateur « connecté en tant que » l'élève : son temps de
+    // consultation n'est pas du temps d'étude de l'élève.
+    if (auth.via !== 'bearer' && /(?:^|;\s*)impersonator_id=/.test(req.headers.get('cookie') ?? '')) {
+      return NextResponse.json({ ok: true, ignored: true });
+    }
 
     // Accès expiré (session EVC) → no-op silencieux, pas de temps comptabilisé.
     if ((await fetchAccessInfoFor(supabase, user.id)).expired) {

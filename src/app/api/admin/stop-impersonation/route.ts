@@ -16,6 +16,7 @@ export async function POST() {
       cookieStore.delete('impersonator_id');
       cookieStore.delete('impersonator_refresh');
       cookieStore.delete('impersonator_target_name');
+      cookieStore.delete('impersonation_onglet');
       return NextResponse.json({ error: 'Session admin expirée — reconnecte-toi.' }, { status: 401 });
     }
   }
@@ -23,6 +24,9 @@ export async function POST() {
   cookieStore.delete('impersonator_id');
   cookieStore.delete('impersonator_refresh');
   cookieStore.delete('impersonator_target_name');
+  // Onglet « en tant que » détaché (lib/auth/impersonation-onglet.ts) : pas de
+  // session admin à restaurer, la session élève est simplement fermée.
+  cookieStore.delete('impersonation_onglet');
 
   return NextResponse.json({ ok: true });
 }

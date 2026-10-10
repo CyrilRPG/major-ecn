@@ -13,6 +13,7 @@ import { FicheAppointments } from '@/components/admin/suivi/fiche-appointments';
 import { ReportForm } from '@/components/admin/suivi/report-form';
 import { ActionLine, FicheTimeline } from '@/components/admin/suivi/fiche-timeline';
 import { AfterMeetingEmailButton, ContactAttemptForm, QuickActionDialog } from '@/components/admin/suivi/fiche-controls';
+import { ImpersonateTabButton } from '@/components/admin/suivi/impersonate-tab-button';
 
 export const dynamic = 'force-dynamic';
 
@@ -81,6 +82,8 @@ export default async function FicheCandidatPage({ params }: { params: Promise<{ 
           <DownloadButton href={`/api/admin/suivi/fiche/${fiche.student.id}/pdf`} filename={`fiche-suivi-${fiche.name}.pdf`} label="Exporter en PDF" />
           {can.report && <ContactAttemptForm userId={fiche.student.id} />}
           {can.report && <AfterMeetingEmailButton userId={fiche.student.id} appointmentId={lastDoneAppt?.id ?? null} template={tpl.after_meeting} />}
+          {/* Administrateurs uniquement (la route le revérifie, et n'accepte que des comptes élèves). */}
+          {profile.role === 'admin' && <ImpersonateTabButton studentId={fiche.student.id} />}
           <Link href={`/admin/crm?q=${encodeURIComponent(fiche.student.email ?? '')}`} className="inline-flex h-9 items-center rounded-(--radius-button) border border-(--color-border) px-3 text-sm text-(--color-ink-soft) hover:text-(--color-ink)">CRM</Link>
         </div>
       </header>
