@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { Command as CmdIcon, Lightbulb, Menu, PanelLeft, Search } from 'lucide-react';
 import { UserMenu } from '@/components/user-menu';
 import { ClocheNotifications } from '@/components/student/cloche-notifications';
+import { BoutonEchanges } from '@/components/echanges/raccourcis';
 import { PlatformTimer } from '@/components/student/platform-timer';
 import { BoutonTutoriel } from '@/components/student/tutoriel-video';
 import type { Profile } from '@/lib/auth/get-profile';
@@ -35,6 +36,8 @@ function contextLabel(pathname: string): string {
   if (pathname.startsWith('/epreuves-blanches')) return 'Épreuves blanches';
   if (pathname.startsWith('/mode-emploi')) return 'Mode d’emploi';
   if (pathname.startsWith('/evaluations')) return 'Mes évaluations';
+  if (pathname.startsWith('/echanges')) return 'Échanges';
+  if (pathname.startsWith('/profil/notifications')) return 'Mes notifications';
   return 'Mon espace';
 }
 
@@ -106,6 +109,8 @@ export function TopBar({
           </span>
         </button>
       )}
+
+      <BoutonEchanges />
 
       {profile.role === 'student' && <ClocheNotifications />}
 

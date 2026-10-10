@@ -1,5 +1,6 @@
 import 'server-only';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { notifier } from './centre';
 import { fetchAllRows } from '@/lib/supabase/fetch-all';
 import { EDN_FACULTE_ID } from '@/lib/data/faculte';
 import { getAccessInfo } from '@/lib/auth/access';
@@ -66,27 +67,21 @@ export async function notifierSeance(e: EvenementNotifiable, genre: GenreNotifAg
   const ids = await elevesConcernes(e);
   if (ids.length === 0) return 0;
   const t = texteNotif(e, genre, !!opts.nouvelle);
-  const maintenant = new Date().toISOString();
-  const lignes = ids.map((userId) => ({
-    user_id: userId,
+  // Centre de notifications : préférences de chaque élève (application /
+  // e-mail immédiat ou récapitulatif), catégories « Modifications de
+  // l'agenda » et « Nouveaux liens Zoom ».
+  const horodatage = Date.now().toString(36);
+  await notifier(ids.map((userId) => ({
+    userId,
+    categorie: genre === 'lien' ? 'zoom' as const : 'schedule' as const,
     kind: genre === 'lien' ? 'agenda_lien' : 'agenda_seance',
-    group_key: `agenda:${e.id}:${genre}`,
-    title: t.title,
-    body: t.body,
-    cta_label: t.cta_label,
-    cta_href: `/agenda?seance=${e.id}`,
-    channel: 'dashboard',
+    groupKey: `agenda:${e.id}:${genre}`,
+    titre: t.title,
+    corps: t.body,
+    ctaLabel: t.cta_label,
+    ctaHref: `/agenda?seance=${e.id}`,
     payload: { event_id: e.id, date: e.date },
-    count: 1,
-    updated_at: maintenant,
-    displayed_at: null,
-    dismissed_at: null,
-  }));
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const a = createAdminClient() as any;
-  for (let i = 0; i < lignes.length; i += 500) {
-    const { error } = await a.from('pedago_notifications').upsert(lignes.slice(i, i + 500), { onConflict: 'user_id,group_key' });
-    if (error) throw new Error(`Notifications non envoyées : ${error.message}`);
-  }
+    cleEmail: `agenda:${e.id}:${genre}:${userId}:${horodatage}`,
+  })));
   return ids.length;
 }

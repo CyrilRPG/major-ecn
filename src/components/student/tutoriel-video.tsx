@@ -210,7 +210,8 @@ export function BoutonTutoriel() {
       aria-label="Revoir le tutoriel vidéo"
     >
       <PlayCircle className="h-4 w-4" />
-      <span>Tutoriel</span>
+      {/* Téléphone : icône seule, la barre du haut garde la place des Échanges et du compte. */}
+      <span className="hidden min-[400px]:inline">Tutoriel</span>
     </button>
   );
 }

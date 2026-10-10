@@ -1,6 +1,6 @@
 'use client';
 
-import { GraduationCap, LogOut, Shield, UserRound } from 'lucide-react';
+import { Bell, GraduationCap, LogOut, Shield, UserRound } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -74,6 +74,12 @@ export function UserMenu({ profile }: { profile: Profile }) {
           <Link href="/profil">
             <UserRound />
             Mon profil
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/profil/notifications">
+            <Bell />
+            Mes notifications
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleReplayTutorial}>

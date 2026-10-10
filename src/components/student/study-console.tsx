@@ -1,5 +1,6 @@
 'use client';
 
+import { BoutonPoserQuestion } from '@/components/echanges/raccourcis';
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -158,6 +159,7 @@ export function StudyConsole({
             <h1 className="truncate text-sm font-semibold tracking-tight text-(--color-ink) sm:text-lg">{titre}</h1>
           </div>
           <SplitViewToggle />
+          {!isDecouverte && <BoutonPoserQuestion type="item" id={coursId} />}
           <button
             type="button"
             data-tour="assistant"

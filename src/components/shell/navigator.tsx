@@ -12,6 +12,7 @@ import { LockedContentModal } from '@/components/espace-decouverte/locked-conten
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { FAMILLES, ORDRE_MENU, RUBRIQUES, rubriqueDe, type RubriqueCle } from '@/lib/student/rubriques';
 import { noterRubriqueVueAction } from '@/lib/student/guide-actions';
+import { EntreeMenuEchanges } from '@/components/echanges/raccourcis';
 
 /** Active pill : dégradé rouge → orange identique sur tous les items
  *  (top-level et sub-items). Reflète la maquette du client. */
@@ -349,17 +350,23 @@ export function Navigator({
               Parcours du Major
             </Link>
           )}
+          {/* Échanges : groupes où l'enseignant est affecté, questions qui lui sont adressées. */}
+          <EntreeMenuEchanges actif={pathname.startsWith('/echanges')} classe={topLevelClass(pathname.startsWith('/echanges'))} />
         </>
       ) : (
         /* Menu élève en trois familles : la méthode se lit dans le menu. */
-        FAMILLES.map((f, i) => (
+        <>
+        {/* 💬 Échanges : accès principal à la messagerie de la promotion (CDC §2), affiché seulement si un groupe est ouvert. */}
+        {!isDecouverte && <div className="pt-1"><EntreeMenuEchanges actif={pathname.startsWith('/echanges')} classe={topLevelClass(pathname.startsWith('/echanges'))} /></div>}
+        {FAMILLES.map((f, i) => (
           <div key={f.cle} role="group" aria-labelledby={`menu-${f.cle}`}>
             <p id={`menu-${f.cle}`} className={cn('px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40', i === 0 ? 'pt-1' : 'pt-3')}>
               {f.titre}
             </p>
             {ORDRE_MENU[f.cle].filter(visible).map(renderItem)}
           </div>
-        ))
+        ))}
+        </>
       )}
 
       <p className="px-3 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/40">

@@ -1,3 +1,4 @@
+import { CarteEchanges } from '@/components/echanges/raccourcis';
 import { Suspense, cache } from 'react';
 import { redirect } from 'next/navigation';
 import { Home, Sunrise } from 'lucide-react';
@@ -104,6 +105,8 @@ export default async function AccueilPage() {
         </div>
 
         <aside className="flex min-w-0 flex-col gap-4">
+          {/* Échanges : nouveaux messages, réponses de l'enseignant (CDC §3) — rien si aucun groupe n'est ouvert. */}
+          {!isDecouverte && <CarteEchanges />}
           <Suspense fallback={<BlocSkeleton hauteur="h-64" />}>
             <CoursEnDirectBloc userId={user.id} scope={scope} />
           </Suspense>

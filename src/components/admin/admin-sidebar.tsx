@@ -17,7 +17,7 @@ import { useResumeRelances } from '@/components/admin/relances-decouverte/use-re
  * ouverte à tout le personnel (sécurité du compte). Sans marqueur :
  * administrateur seulement.
  */
-type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean; adminOnly?: boolean; onglet?: keyof AccesOnglets };
+type Item = { href: string; label: string; Icon: typeof Users; staff?: boolean; adminOnly?: boolean; onglet?: keyof AccesOnglets; echanges?: boolean };
 type Group = { key: string; label: string; Icon: typeof Users; items: Item[] };
 
 const GROUPS: Group[] = [
@@ -75,6 +75,8 @@ const GROUPS: Group[] = [
       { href: '/admin/annonces', label: 'Annonces', Icon: Megaphone },
       { href: '/admin/blog', label: 'Blog', Icon: Newspaper, onglet: 'blog' },
       { href: '/admin/popups', label: 'Popups', Icon: MonitorPlay, adminOnly: true },
+      // Messagerie collective des promotions : administrateurs et équipe de modération (echanges_staff).
+      { href: '/admin/echanges', label: 'Échanges des promotions', Icon: MessagesSquare, echanges: true },
       { href: '/admin/emails', label: 'Envoi d’emails', Icon: Mail },
       { href: '/admin/formulaires', label: 'Formulaires', Icon: ClipboardList },
     ],
@@ -135,12 +137,12 @@ const STUDENT_VIEW: Item = { href: '/accueil', label: 'Vue étudiant', Icon: Eye
 
 const BG = 'linear-gradient(180deg, #0E1626 0%, #161336 40%, #2A1130 75%, #2D0518 100%)';
 
-function filterItems(items: Item[], isProf: boolean, onglets: AccesOnglets): Item[] {
+function filterItems(items: Item[], isProf: boolean, onglets: AccesOnglets, echanges = false): Item[] {
   if (!isProf) return items;
-  return items.filter((i) => i.staff || (i.onglet && onglets[i.onglet]));
+  return items.filter((i) => i.staff || (i.onglet && onglets[i.onglet]) || (i.echanges && echanges));
 }
 
-export function AdminSidebar({ profile, onglets, pastilles }: { profile: Profile; onglets: AccesOnglets; pastilles?: PastillesMenu }) {
+export function AdminSidebar({ profile, onglets, pastilles, accesEchanges = false }: { profile: Profile; onglets: AccesOnglets; pastilles?: PastillesMenu; accesEchanges?: boolean }) {
   const path = usePathname();
   const isActive = (href: string) => path === href || path.startsWith(href + '/');
   // « Demandes clients » et « Suivi comptable » partagent la même page : la requête départage.
@@ -161,9 +163,9 @@ export function AdminSidebar({ profile, onglets, pastilles }: { profile: Profile
   // Groupes visibles (au moins un item accessible après filtrage) + item Vue étudiant.
   const visibleGroups = useMemo(
     () =>
-      GROUPS.map((g) => ({ ...g, items: filterItems(g.items, isProf, onglets) }))
+      GROUPS.map((g) => ({ ...g, items: filterItems(g.items, isProf, onglets, accesEchanges) }))
         .filter((g) => g.items.length > 0),
-    [isProf, onglets],
+    [isProf, onglets, accesEchanges],
   );
   const showStudentView = !isProf; // adminOnly
   const pilotage = useMemo(() => filterItems(PILOTAGE, isProf, onglets) as ItemPilotage[], [isProf, onglets]);

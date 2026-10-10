@@ -64,6 +64,14 @@
       "schedule": "*/5 * * * *"
     },
     {
+      "path": "/api/cron/echanges",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/notifications",
+      "schedule": "*/5 * * * *"
+    },
+    {
       "path": "/api/cron/qualite",
       "schedule": "*/15 * * * *"
     }

@@ -13,6 +13,7 @@ import { EnteteAdmin } from '@/components/admin/cockpit/entete-admin';
 import { contexteCockpit, membresEquipe } from '@/lib/cockpit/server/base';
 import { pastillesMenu } from '@/lib/cockpit/server/donnees';
 import { nomComplet } from '@/lib/cockpit/regles';
+import { aAccesBackOffice } from '@/lib/echanges/serveur/admin';
 
 export const metadata = { title: 'Administration' };
 
@@ -42,16 +43,17 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // « + Nouvelle action » (affectations). Une panne ici ne doit jamais
   // fermer l'administration : valeurs neutres en repli.
   const { moi, db } = await contexteCockpit();
-  const [pastilles, membres] = await Promise.all([
+  const [pastilles, membres, accesEchanges] = await Promise.all([
     pastillesMenu(db, moi).catch(() => ({ taches: 0, messages: 0, reclamations: 0, demandes: 0, notifications: 0 })),
     membresEquipe(db).then((l) => l.map((m) => ({ id: m.id, nom: nomComplet(m) || m.email || 'Membre' }))).catch(() => []),
+    aAccesBackOffice(moi.id, moi.role).catch(() => false),
   ]);
 
   return (
     <div className="flex min-h-screen flex-col">
       {impersonating && <ImpersonationBanner targetName={impersonatedName} />}
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <AdminSidebar profile={profile} onglets={onglets} pastilles={pastilles} />
+        <AdminSidebar profile={profile} onglets={onglets} pastilles={pastilles} accesEchanges={accesEchanges} />
         <ActionsCockpit membres={membres} estAdmin={moi.estAdmin}>
           <div className="flex min-w-0 flex-1 flex-col bg-(--color-surface-soft)">
             <EnteteAdmin estAdmin={moi.estAdmin} nonLues={pastilles.notifications} menuCompte={<UserMenu profile={profile} />} />

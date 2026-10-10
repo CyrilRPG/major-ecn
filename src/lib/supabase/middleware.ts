@@ -89,6 +89,8 @@ export async function updateSession(request: NextRequest) {
     path.startsWith('/epreuves-blanches') ||
     path.startsWith('/formulaires') ||
     path.startsWith('/forum') ||
+    // Messagerie collective « Échanges » (liens directs des e-mails enseignants compris).
+    path.startsWith('/echanges') ||
     path.startsWith('/notes') ||
     path.startsWith('/parcours') ||
     path.startsWith('/presences') ||

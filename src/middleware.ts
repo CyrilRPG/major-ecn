@@ -22,8 +22,10 @@ const CORS_PREFIXES = [
   // Émargement des cours en direct depuis l'app (28/09/2026) : sans CORS, l'appel
   // échouait sans bruit sur l'appareil.
   '/api/presences',
-  // Cloche de notifications de l'espace élève (08/10/2026).
+  // Cloche de notifications de l'espace élève (08/10/2026) et préférences.
   '/api/notifications',
+  // Messagerie collective « Échanges » (09/10/2026).
+  '/api/echanges/',
   // Questionnaires qualité et visionnage des replays (10/10/2026).
   '/api/enquetes',
   '/api/qualite/visionnage',

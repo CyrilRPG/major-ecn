@@ -24,6 +24,7 @@ import { askQuestionAction } from '@/app/(student)/forum/actions';
 import { apercuEnonce, type FormatQuestionJointe, type QcmJointEnvoi, type SourceQuestionJointe } from '@/lib/forum/qcm-joint';
 import { Markdown } from '@/components/ui/markdown';
 import { cn } from '@/lib/utils';
+import { useResumeEchanges } from '@/components/echanges/raccourcis';
 import {
   Dialog,
   DialogContent,
@@ -73,6 +74,7 @@ function QuestionSurQcm({
 }) {
   const [open, setOpen] = useState(false);
   const [onglet, setOnglet] = useState<Onglet>('assistant');
+  const echanges = useResumeEchanges();
 
   // Assistant
   const [messages, setMessages] = useState<Message[]>([]);
@@ -230,6 +232,14 @@ function QuestionSurQcm({
           </div>
 
           {piece}
+
+          {/* Échanges (CDC §64) : la même question, posée à la promotion ou à un enseignant tagué. */}
+          {source === 'qcm' && echanges && (echanges.groupes > 0) && (
+            <Link href={`/echanges/nouveau?type=correction&id=${questionId}`} className="flex items-center gap-2 rounded-xl border border-[#102C5F]/20 bg-[#102C5F]/5 px-3 py-2 text-xs font-semibold text-[#102C5F] hover:bg-[#102C5F]/10 dark:text-white">
+              <MessagesSquare className="h-3.5 w-3.5" />
+              Poser la question dans les Échanges de ma promotion
+            </Link>
+          )}
 
           {onglet === 'assistant' ? (
             <div className="space-y-3">
