@@ -12,6 +12,10 @@ import { etatEmargement, instantParis, libelleJourLong } from '@/lib/agenda/plan
 import { cesure } from '@/lib/cesure';
 import type { SujetAgenda } from '@/lib/agenda/sujets';
 import { BlocSujets, CarteSujet, DialogueSujet, PastilleSujet } from '@/components/student/agenda-sujets';
+import type { TacheAgenda } from '@/lib/postits/agenda';
+import {
+  BarreFiltresAgenda, CarteTachePostit, DialogueTachePostit, ordreHoraire, useFiltresAgenda,
+} from '@/components/postits/agenda-taches';
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /*  Évènements « plateforme » (créés par admin, déjà filtrés côté serveur     */
@@ -113,7 +117,7 @@ function ecartSemaines(aujourdHui: string, cible: string): number {
 
 /* ════════════════════════════════════════════════════════════════════════ */
 export function AgendaWeek({
-  userEvents, platformEvents = [], signedEventIds = [], aujourdHui, seanceInitiale = null, sujets = [],
+  userEvents, platformEvents = [], signedEventIds = [], aujourdHui, seanceInitiale = null, sujets = [], tachesPostit = [],
 }: {
   userEvents: UserEvent[];
   platformEvents?: PlatformEvent[];
@@ -125,6 +129,8 @@ export function AgendaWeek({
   seanceInitiale?: string | null;
   /** Séances datées de la bibliothèque (sujet à préparer, replay), cf. lib/agenda/sujets. */
   sujets?: SujetAgenda[];
+  /** Tâches datées des Post-it (lues dans les Post-it, jamais copiées). */
+  tachesPostit?: TacheAgenda[];
 }) {
   const initiale = seanceInitiale ? platformEvents.find((e) => e.id === seanceInitiale) ?? null : null;
   // Décalage en semaines par rapport à la semaine courante (0 = cette
@@ -138,6 +144,9 @@ export function AgendaWeek({
   const [creatingFor, setCreatingFor] = useState<Date | null>(null);
   const [editing, setEditing] = useState<UserEvent | null>(null);
   const [sujetOuvert, setSujetOuvert] = useState<SujetAgenda | null>(null);
+  // Natures d'activité affichées (cours en direct, personnelles, tâches Post-it).
+  const [filtres, setFiltres] = useFiltresAgenda();
+  const [tacheOuverte, setTacheOuverte] = useState<string | null>(null);
 
   // Libellé de la semaine en cours (ex. « 27 mai → 2 juin 2026 »).
   const weekLabel = (() => {
@@ -188,16 +197,19 @@ export function AgendaWeek({
         </button>
       </div>
 
+      <BarreFiltresAgenda filtres={filtres} onChange={setFiltres} nbTaches={tachesPostit.filter((t) => !t.fait).length} />
+
       <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:min-h-0 lg:grid-cols-7">
         {dates.map((date, i) => {
           // Évènements plateforme du jour (déjà filtrés par permissions
           // côté serveur).
           const platformEvs = platformEvents
-            .filter((e) => e.date === dateKey(date))
+            .filter((e) => filtres.direct && e.date === dateKey(date))
             .sort((a, b) => (a.start_time ?? '').localeCompare(b.start_time ?? ''));
           const dayUserEvs = userEvents
-            .filter((e) => e.date === dateKey(date))
+            .filter((e) => filtres.perso && e.date === dateKey(date))
             .sort((a, b) => (a.start_time ?? '').localeCompare(b.start_time ?? ''));
+          const dayTaches = filtres.postit ? tachesPostit.filter((t) => t.date === dateKey(date)) : [];
           // Sujets sans séance correspondante dans l'agenda : carte à part.
           const daySujets = sujets.filter((s) => s.date === dateKey(date) && !s.evenementId);
           const isToday = date.toDateString() === todayKey;
@@ -222,7 +234,7 @@ export function AgendaWeek({
                 </span>
               </div>
               <div className="flex flex-1 flex-col gap-2.5 overflow-y-auto p-3">
-                {platformEvs.length === 0 && dayUserEvs.length === 0 && daySujets.length === 0 && (
+                {platformEvs.length === 0 && dayUserEvs.length === 0 && daySujets.length === 0 && dayTaches.length === 0 && (
                   <div className="flex flex-1 items-center justify-center py-6">
                     <span className="text-xs text-(--color-ink-muted)">Aucun cours</span>
                   </div>
@@ -237,7 +249,7 @@ export function AgendaWeek({
                       type="button"
                       onClick={() => setSelectedPlatform(e)}
                       className="group flex min-w-0 flex-col rounded-xl border border-transparent p-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-soft) focus-ring"
-                      style={{ background: pal.bg }}
+                      style={{ background: pal.bg, order: ordreHoraire(e.start_time) }}
                     >
                       <span className="flex items-center gap-1.5 text-xs font-semibold" style={{ color: pal.fg }}>
                         <Clock className="h-3.5 w-3.5" />
@@ -279,7 +291,7 @@ export function AgendaWeek({
                       type="button"
                       onClick={() => setSelectedPersonal(e)}
                       className="group flex min-w-0 flex-col rounded-xl border border-dashed p-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-soft) focus-ring"
-                      style={{ background: c.bg, borderColor: c.fg + '55' }}
+                      style={{ background: c.bg, borderColor: c.fg + '55', order: ordreHoraire(e.start_time) }}
                     >
                       <span className="flex items-center gap-1.5 text-xs font-semibold" style={{ color: c.fg }}>
                         <Clock className="h-3.5 w-3.5" />
@@ -300,11 +312,16 @@ export function AgendaWeek({
                   );
                 })}
 
+                {/* Tâches Post-it : à leur heure, ou en tête de journée (ordre CSS). */}
+                {dayTaches.map((t) => (
+                  <CarteTachePostit key={`pi-${t.id}`} tache={t} onOpen={() => setTacheOuverte(t.id)} />
+                ))}
+
                 {/* Bouton « + Ajouter » discret en pied de colonne */}
                 <button
                   type="button"
                   onClick={() => { setEditing(null); setCreatingFor(date); }}
-                  className="mt-auto flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-(--color-border) py-2 text-xs font-medium text-(--color-ink-muted) transition-colors hover:border-(--color-primary)/60 hover:bg-(--color-primary-soft)/40 hover:text-(--color-primary)"
+                  className="order-last mt-auto flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-(--color-border) py-2 text-xs font-medium text-(--color-ink-muted) transition-colors hover:border-(--color-primary)/60 hover:bg-(--color-primary-soft)/40 hover:text-(--color-primary)"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   Ajouter
@@ -372,6 +389,14 @@ export function AgendaWeek({
         event={selectedPersonal}
         onClose={() => setSelectedPersonal(null)}
         onEdit={(e) => { setSelectedPersonal(null); setEditing(e); setCreatingFor(new Date(e.date + 'T00:00:00')); }}
+      />
+
+      {/* Dialog : tâche d'un Post-it (même ligne que dans le Post-it) */}
+      <DialogueTachePostit
+        key={tacheOuverte ?? 'aucune'}
+        tache={tachesPostit.find((t) => t.id === tacheOuverte) ?? null}
+        onClose={() => setTacheOuverte(null)}
+        aujourdHui={aujourdHui ?? dateKey(new Date())}
       />
 
       {/* Dialog : création / édition d'un évènement personnel */}

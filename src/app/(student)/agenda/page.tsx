@@ -9,6 +9,7 @@ import {
 import { StudentHero } from '@/components/student/ui/page-kit';
 import { fetchContentAccessForScope } from '@/lib/auth/formula-permissions';
 import { chargerSujetsAgenda } from '@/lib/agenda/sujets-server';
+import { tachesAgenda, type Db } from '@/lib/postits/depot';
 
 export const metadata = { title: 'Agenda' };
 
@@ -67,6 +68,8 @@ export default async function AgendaPage({
     { debut: startStr, fin: endStr },
     ((platformData ?? []) as EvenementPlateformeBrut[]).filter((e) => evenementVisiblePourEleve(e, scope)),
   ).catch((e) => { console.error('[agenda] sujets', e); return []; });
+  // Tâches datées des Post-it : lues à la source (aucune copie, §40 / R13).
+  const tachesPostit = await tachesAgenda(supabase as unknown as Db, user.id, startStr, endStr).catch(() => []);
 
   // Sessions déjà émargées : on ne redemande pas la signature à l'étudiant.
   const { data: signedRows } = await db
@@ -96,6 +99,7 @@ export default async function AgendaPage({
         aujourdHui={aujourdHui}
         seanceInitiale={seance && platformEvents.some((e) => e.id === seance) ? seance : null}
         sujets={sujets}
+        tachesPostit={tachesPostit}
       />
     </div>
   );

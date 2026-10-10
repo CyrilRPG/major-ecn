@@ -93,6 +93,7 @@ export async function updateSession(request: NextRequest) {
     path.startsWith('/presences') ||
     path.startsWith('/revoir') ||
     path.startsWith('/mes-entrainements') ||
+    path.startsWith('/mes-post-it') ||
     // Mode d'emploi de la plateforme (élève) — pas « /guide », qui capterait /guide-evc (public).
     path.startsWith('/mode-emploi') ||
     path.startsWith('/evaluations');

@@ -44,6 +44,10 @@
       "schedule": "*/15 * * * *"
     },
     {
+      "path": "/api/cron/postits",
+      "schedule": "*/5 * * * *"
+    },
+    {
       "path": "/api/cron/plan-sweep",
       "schedule": "5 * * * *"
     },

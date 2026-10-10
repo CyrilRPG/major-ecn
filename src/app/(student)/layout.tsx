@@ -22,6 +22,7 @@ import {
   resolveWelcomeConfig, WELCOME_PAR_DEFAUT,
   type WelcomePopupRow, type WelcomeSpecialite,
 } from '@/lib/student/welcome';
+import { ChargeurPostits } from '@/components/postits/chargeur';
 
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
   const { user, profile } = await requireUser();
@@ -407,6 +408,8 @@ export default async function StudentLayout({ children }: { children: React.Reac
         <EmargementsEnAttente feuilles={feuillesDues} studentName={studentName} />
       )}
       {profile.role === 'student' && <ConseilsCenter welcome={welcome} />}
+      {/* Mes Post-it : accueil, spécialités, items (chargés après la page, jamais sur une épreuve). */}
+      {profile.role === 'student' && <ChargeurPostits userId={user.id} />}
       {/* Accueil = UNE fenêtre : le tutoriel vidéo du profil, avec sous la vidéo
           le texte d'accueil de l'administration. Le personnel la voit aussi,
           mais seulement sur demande (bouton « Tutoriel »), pour contrôler ce

@@ -1,6 +1,6 @@
 import {
   CalendarCheck, CalendarDays, CalendarRange, ClipboardCheck, Compass, Gauge, Home, LineChart, NotebookPen, PencilRuler, PenLine,
-  RefreshCcw, Star, Target, Trophy, type LucideIcon,
+  RefreshCcw, Star, StickyNote, Target, Trophy, type LucideIcon,
 } from 'lucide-react';
 
 /**
@@ -14,7 +14,7 @@ import {
 export type RubriqueCle =
   | 'accueil' | 'planning' | 'priorites' | 'checkup' | 'evaluations'
   | 'entrainement' | 'transversales' | 'epreuves' | 'parcours'
-  | 'agenda' | 'rendez-vous' | 'notes' | 'revoir' | 'mes-entrainements' | 'mode-emploi';
+  | 'agenda' | 'rendez-vous' | 'notes' | 'post-it' | 'revoir' | 'mes-entrainements' | 'mode-emploi';
 
 export type Famille = 'piloter' | 'entrainer' | 'outils';
 
@@ -125,6 +125,13 @@ export const RUBRIQUES: Record<RubriqueCle, Rubrique> = {
     lien: 'Vos notes se prennent depuis l’onglet « Prise de notes » de chaque item.',
     vers: [],
   },
+  'post-it': {
+    cle: 'post-it', href: '/mes-post-it', label: 'Mes Post-it', famille: 'outils', Icon: StickyNote,
+    role: 'Vos Post-it : des notes et listes de tâches posées sur l’accueil ou sur vos items, retrouvables ici par mot-clé, spécialité ou date.',
+    quand: 'Pour noter une idée en révisant, ou planifier une tâche : datée, elle rejoint votre agenda.',
+    lien: 'Indépendants du planificateur : cocher une tâche ne change ni vos priorités ni vos statistiques.',
+    vers: ['agenda'],
+  },
   revoir: {
     cle: 'revoir', href: '/revoir', label: 'Questions à revoir', famille: 'outils', Icon: Star,
     role: 'Les questions que vous avez mises de côté pendant vos entraînements, classées par collège.',
@@ -152,7 +159,7 @@ export const RUBRIQUES: Record<RubriqueCle, Rubrique> = {
 export const ORDRE_MENU: Record<Famille, RubriqueCle[]> = {
   piloter: ['accueil', 'planning', 'priorites', 'checkup', 'evaluations'],
   entrainer: ['entrainement', 'transversales', 'epreuves', 'parcours'],
-  outils: ['agenda', 'rendez-vous', 'notes', 'revoir', 'mes-entrainements', 'mode-emploi'],
+  outils: ['agenda', 'rendez-vous', 'notes', 'post-it', 'revoir', 'mes-entrainements', 'mode-emploi'],
 };
 
 /** Étapes de la boucle pédagogique (aide « ? ») et rubriques qui les portent. */
