@@ -96,6 +96,8 @@ export async function updateSession(request: NextRequest) {
     path.startsWith('/mes-post-it') ||
     // Mode d'emploi de la plateforme (élève) — pas « /guide », qui capterait /guide-evc (public).
     path.startsWith('/mode-emploi') ||
+    // Questionnaires qualité du candidat (enquêtes de satisfaction, bilans).
+    path.startsWith('/enquetes') ||
     path.startsWith('/evaluations');
 
   // Pages PUBLIQUES (vitrine, blog, guide, APIs…) : aucun appel Supabase.

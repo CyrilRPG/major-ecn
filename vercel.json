@@ -62,6 +62,10 @@
     {
       "path": "/api/cron/checkup-sweep",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/qualite",
+      "schedule": "*/15 * * * *"
     }
   ]
 }

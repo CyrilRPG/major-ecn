@@ -11,6 +11,8 @@ import { videoTutoriel } from '@/lib/student/tutoriel-video';
 import { bunnyEmbedUrl } from '@/lib/bunny';
 import { ProfileCompletionGate } from '@/components/student/profile-completion-gate';
 import { EmargementsEnAttente, type FeuilleEnAttente } from '@/components/student/emargements-en-attente';
+import { GardeEnquetes } from '@/components/qualite/garde-enquetes';
+import { chargerGardeEnquetes } from '@/lib/qualite/serveur/garde';
 import { getNavigatorTree } from '@/lib/data/navigator';
 import { hasMedecineGeneraleAccess, parseScope } from '@/lib/auth/permissions';
 import { PLAN_STUDENT_ENABLED } from '@/lib/modules-flags';
@@ -111,6 +113,11 @@ export default async function StudentLayout({ children }: { children: React.Reac
       })
     : Promise.resolve(null);
   interrogationPromise.catch?.(() => null);
+  // Questionnaires qualité (enquêtes de satisfaction, bilans) : garde lancée ici,
+  // attendue au rendu. Jamais bloquante en cas d'erreur.
+  const gardeEnquetesPromise = profile.role === 'student'
+    ? chargerGardeEnquetes(user.id)
+    : Promise.resolve({ bloquant: null, enAttente: null });
 
   // Émargements dus : toute vidéo visionnée (seuil franchi) sans feuille signée.
   // Une signature par vidéo est exigée à l'ouverture de la plateforme, quelle
@@ -350,6 +357,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
   const tutorielEmbed = tutoriel ? bunnyEmbedUrl(tutoriel.videoId) : null;
 
   const feuillesDues = await feuillesDuesPromise.catch(() => [] as FeuilleEnAttente[]);
+  const gardeEnquetes = await gardeEnquetesPromise;
   const studentName = `${(profile as { first_name?: string | null }).first_name ?? ''} ${(profile as { last_name?: string | null }).last_name ?? ''}`.trim()
     || (user.email ?? '');
 
@@ -408,6 +416,11 @@ export default async function StudentLayout({ children }: { children: React.Reac
         <EmargementsEnAttente feuilles={feuillesDues} studentName={studentName} />
       )}
       {profile.role === 'student' && <ConseilsCenter welcome={welcome} />}
+      {/* Questionnaires qualité : fenêtre bloquante selon le périmètre, sinon simple rappel ;
+          les émargements dus passent avant. */}
+      {profile.role === 'student' && feuillesDues.length === 0 && (
+        <GardeEnquetes bloquant={gardeEnquetes.bloquant} enAttente={gardeEnquetes.enAttente} lectureSeule={isImpersonating} />
+      )}
       {/* Mes Post-it : accueil, spécialités, items (chargés après la page, jamais sur une épreuve). */}
       {profile.role === 'student' && <ChargeurPostits userId={user.id} />}
       {/* Accueil = UNE fenêtre : le tutoriel vidéo du profil, avec sous la vidéo

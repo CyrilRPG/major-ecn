@@ -24,6 +24,9 @@ const CORS_PREFIXES = [
   '/api/presences',
   // Cloche de notifications de l'espace élève (08/10/2026).
   '/api/notifications',
+  // Questionnaires qualité et visionnage des replays (10/10/2026).
+  '/api/enquetes',
+  '/api/qualite/visionnage',
 ];
 
 const CORS_HEADERS: Record<string, string> = {
