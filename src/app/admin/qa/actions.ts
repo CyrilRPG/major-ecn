@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { forumNewAnswerEmail } from '@/lib/email/templates';
+import { notifierEleve } from '@/lib/notifications/plateforme';
 
 type Result = { ok: true } | { error: string };
 
@@ -95,6 +96,15 @@ async function notifyStudentOfAnswer(args: { questionId: string; professorName: 
     .eq('id', args.questionId)
     .maybeSingle();
   const profile = (q as unknown as { profiles?: { first_name: string | null; email: string | null } } | null)?.profiles;
+  // Cloche de l'élève (refonte des notifications, 09/10/2026), en plus de l'e-mail.
+  await notifierEleve((q as { student_id?: string | null } | null)?.student_id, {
+    kind: 'forum_reponse_enseignant',
+    titre: `${args.professorName} a répondu à votre question`,
+    corps: args.body.slice(0, 200),
+    lien: '/forum',
+    libelleLien: 'Lire la réponse',
+    cle: `forum-reponse:${args.questionId}`,
+  });
   if (!profile?.email) return;
   const { subject, html, text } = forumNewAnswerEmail({
     studentFirstName: profile.first_name ?? '',

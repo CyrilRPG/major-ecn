@@ -21,6 +21,7 @@ import { provisionStudentAccount, formatStripeAddress } from '@/lib/stripe/provi
 import { ensureInstallmentPlanEnds } from '@/lib/stripe/installments';
 import type { FormuleId } from '@/lib/stripe';
 import { origineSession, sessionEstEtrangere } from '@/lib/stripe/origine-session';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 export const dynamic = 'force-dynamic';
 // Le webhook reçoit du raw body — il NE FAUT PAS le parser via JSON.
@@ -113,6 +114,12 @@ export async function POST(req: Request) {
     case 'checkout.session.async_payment_failed':
     case 'payment_intent.payment_failed': {
       console.warn('[stripe/webhook] payment failed', event.type, event.id);
+      // Un paiement échoué n'était signalé nulle part : cloche des administrateurs.
+      await notifierEquipe({
+        a: 'admins', genre: 'paiement', titre: 'Paiement échoué sur Stripe',
+        corps: `Évènement ${event.type} — à vérifier dans le tableau de bord Stripe.`,
+        lien: '/admin/eleves', cle: `paiement-echoue:${new Date().toISOString().slice(0, 10)}`,
+      });
       break;
     }
     default:

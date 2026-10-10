@@ -11,6 +11,7 @@ import { examGenerationPrompt } from '@/lib/ai/prompts';
 import { melangerPropositions } from '@/lib/qcm/melanger-propositions';
 import { usageToUsd, BILLING_EUR, GEN_FEATURE } from '@/lib/ai/cost';
 import { z } from 'zod';
+import { notifierEleve } from '@/lib/notifications/plateforme';
 
 type Ok<T = object> = { ok: true } & T;
 type Err = { ok: false; error: string };
@@ -210,6 +211,13 @@ export async function grantExamAccess(input: unknown): Promise<Ok | Err> {
     created_by: profile.id,
   }, { onConflict: 'exam_id,user_id' });
   if (error) return { ok: false, error: error.message };
+  // Cloche de l'élève (refonte des notifications, 09/10/2026).
+  const { data: exam } = await a.from('mock_exams').select('title').eq('id', parsed.data.examId).maybeSingle();
+  await notifierEleve(prof.id as string, {
+    kind: 'examen_acces', titre: `Accès ouvert : ${exam?.title ?? 'épreuve blanche'}`,
+    corps: parsed.data.open_at ? `À partir du ${new Date(parsed.data.open_at).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/Paris' })}` : null,
+    lien: '/epreuves-blanches', libelleLien: 'Mes épreuves', cle: `examen-acces:${parsed.data.examId}`,
+  });
   revalidateExams(parsed.data.examId);
   return { ok: true };
 }

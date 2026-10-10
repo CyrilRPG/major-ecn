@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { AlertTriangle, BarChart3, Gauge, LineChart, BellRing, BookOpen, CalendarCheck, CalendarClock, CalendarDays, CalendarRange, ChevronDown, Clapperboard, ClipboardList, Cog, Eye, FileSignature, GraduationCap, Library, ListTree, Mail, Megaphone, MessageCircle, MessagesSquare, MonitorPlay, Newspaper, PencilRuler, Receipt, ScrollText, ShieldCheck, Sparkles, Ticket, Timer, Trophy, Upload, UserCog, Users, X } from 'lucide-react';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { AlertTriangle, BarChart3, Gauge, LineChart, BellRing, BookOpen, CalendarCheck, CalendarClock, CalendarDays, CalendarRange, ChevronDown, Clapperboard, ClipboardList, Cog, Eye, FileSignature, GraduationCap, Home, Inbox, Library, ListChecks, ListTree, Mail, Megaphone, MessageCircle, MessagesSquare, MonitorPlay, Newspaper, PencilRuler, Receipt, ScrollText, Settings, ShieldCheck, Sparkles, Ticket, Timer, Trophy, Upload, UserCog, Users, Wallet, X } from 'lucide-react';
 import { BrandLogo } from '@/components/brand/brand-logo';
 import { cn } from '@/lib/utils';
 import type { Profile } from '@/lib/auth/get-profile';
@@ -90,6 +90,8 @@ const GROUPS: Group[] = [
       { href: '/admin/crm', label: 'CRM pédagogique', Icon: UserCog },
       // Module de suivi individuel : visible du personnel doté du module, les droits fins sont contrôlés dans le module.
       { href: '/admin/suivi', label: 'Suivi individuel', Icon: CalendarCheck, onglet: 'suivi' },
+      // Enquêtes de satisfaction, alertes, réclamations, actions correctives, preuves Qualiopi.
+      { href: '/admin/qualite', label: 'Qualité & Suivi des candidats', Icon: ShieldCheck, adminOnly: true },
       { href: '/admin/stats', label: 'Stats', Icon: BarChart3 },
       { href: '/admin/facturation', label: 'Facturation IA', Icon: Receipt },
       { href: '/admin/logs', label: 'Logs', Icon: ScrollText, adminOnly: true },
@@ -107,6 +109,27 @@ const GROUPS: Group[] = [
   },
 ];
 
+/**
+ * « Mon cockpit » (CDC du 08/10/2026) : espace de pilotage personnel, en tête
+ * du menu. `pastille` désigne le compteur affiché à droite. Les rubriques de
+ * la plateforme restent dans leurs groupes, en dessous.
+ */
+type ItemPilotage = Item & { pastille?: 'taches' | 'messages' | 'reclamations' | 'demandes'; exact?: boolean; requete?: string };
+const PILOTAGE: ItemPilotage[] = [
+  { href: '/admin/cockpit', label: 'Mon cockpit', Icon: Home, staff: true, exact: true },
+  { href: '/admin/cockpit/agenda', label: 'Mon agenda', Icon: CalendarDays, staff: true },
+  { href: '/admin/cockpit/taches', label: 'Mes tâches', Icon: ListChecks, staff: true, pastille: 'taches' },
+  { href: '/admin/cockpit/messagerie', label: 'Messagerie', Icon: Mail, staff: true, pastille: 'messages' },
+  { href: '/admin/cockpit/enseignants', label: 'Enseignants', Icon: GraduationCap },
+  { href: '/admin/cockpit/reclamations', label: 'Réclamations & Améliorations', Icon: ClipboardList, staff: true, pastille: 'reclamations' },
+  { href: '/admin/cockpit/demandes', label: 'Demandes clients', Icon: Inbox, staff: true, pastille: 'demandes', requete: '' },
+  { href: '/admin/cockpit/demandes', label: 'Suivi comptable', Icon: Wallet, requete: 'nature=comptable' },
+  { href: '/admin/cockpit/assistant', label: 'Outils IA', Icon: Sparkles, staff: true },
+  { href: '/admin/cockpit/parametres', label: 'Paramètres du cockpit', Icon: Settings, staff: true },
+];
+
+export type PastillesMenu = { taches: number; messages: number; reclamations: number; demandes: number };
+
 // Item spécial affiché à part (bascule de vue, hors catégories).
 const STUDENT_VIEW: Item = { href: '/accueil', label: 'Vue étudiant', Icon: Eye, adminOnly: true };
 
@@ -117,9 +140,18 @@ function filterItems(items: Item[], isProf: boolean, onglets: AccesOnglets): Ite
   return items.filter((i) => i.staff || (i.onglet && onglets[i.onglet]));
 }
 
-export function AdminSidebar({ profile, onglets }: { profile: Profile; onglets: AccesOnglets }) {
+export function AdminSidebar({ profile, onglets, pastilles }: { profile: Profile; onglets: AccesOnglets; pastilles?: PastillesMenu }) {
   const path = usePathname();
   const isActive = (href: string) => path === href || path.startsWith(href + '/');
+  // « Demandes clients » et « Suivi comptable » partagent la même page : la requête départage.
+  const requete = useSearchParams()?.toString() ?? '';
+  const pilotageActif = (it: ItemPilotage) => {
+    if (it.exact) return path === it.href;
+    if (!isActive(it.href)) return false;
+    if (it.requete === undefined) return true;
+    const comptable = requete.includes('nature=comptable');
+    return it.requete ? comptable : !comptable;
+  };
 
   const isProf = profile.role === 'professor';
   // Pastille « à relancer » (relances échues + anciens accès) : visible de qui voit l'entrée.
@@ -134,6 +166,7 @@ export function AdminSidebar({ profile, onglets }: { profile: Profile; onglets: 
     [isProf, onglets],
   );
   const showStudentView = !isProf; // adminOnly
+  const pilotage = useMemo(() => filterItems(PILOTAGE, isProf, onglets) as ItemPilotage[], [isProf, onglets]);
 
   // Groupes ouverts : la persistance se fait par utilisateur (localStorage).
   // Par défaut tout est replié ; la catégorie contenant la page active s'ouvre
@@ -175,6 +208,32 @@ export function AdminSidebar({ profile, onglets }: { profile: Profile; onglets: 
 
   const groupsList = (variant: 'desktop' | 'mobile') => (
     <nav className="space-y-1 px-2 pb-4">
+      <div className="space-y-1 pb-2">
+        {pilotage.map((it) => {
+          const n = it.pastille && pastilles ? pastilles[it.pastille] : 0;
+          const href = it.requete ? `${it.href}?${it.requete}` : it.href;
+          return (
+            <Link
+              key={href}
+              href={href}
+              onClick={() => variant === 'mobile' && setMobileOpen(false)}
+              aria-current={pilotageActif(it) ? 'page' : undefined}
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2 text-[14px] font-medium transition-colors focus-ring',
+                pilotageActif(it)
+                  ? 'bg-[linear-gradient(90deg,#E4002B_0%,#F97316_100%)] text-white shadow-[0_6px_20px_-8px_rgba(228,0,43,0.6)]'
+                  : 'text-white/75 hover:bg-white/10 hover:text-white',
+              )}
+            >
+              <it.Icon className="h-[18px] w-[18px]" />
+              <span className="flex-1">{it.label}</span>
+              {n > 0 && (
+                <span className="rounded-full bg-[#E4002B] px-1.5 text-[11px] font-bold tabular-nums text-white" aria-label={`${n} en attente`}>{n > 99 ? '99+' : n}</span>
+              )}
+            </Link>
+          );
+        })}
+      </div>
       {visibleGroups.map((g) => {
         const isOpen = open[g.key] ?? g.key === activeGroupKey;
         const groupHasActive = g.key === activeGroupKey;

@@ -18,6 +18,7 @@ import { z } from 'zod';
 import { sendEmail } from '@/lib/email/send';
 import { callbackRequestEmail } from '@/lib/email/templates';
 import { verifyTurnstile, clientIp } from '@/lib/turnstile';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 const CONTACT_EMAIL = 'contact@major-ecn.fr';
 
@@ -70,5 +71,7 @@ export async function POST(req: Request) {
     );
   }
 
+  // Cloche de l'administration (refonte des notifications, 09/10/2026) : regroupée par jour.
+  await notifierEquipe({ a: 'admins', genre: 'prospect', titre: 'Demande de rappel téléphonique', corps: 'Détails envoyés par e-mail à contact@major-ecn.fr.', lien: '/admin/leads', cle: `prospect:rappel:${new Date().toISOString().slice(0, 10)}` });
   return NextResponse.json({ ok: true });
 }

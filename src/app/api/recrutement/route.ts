@@ -4,6 +4,7 @@ import { ContactAttachmentSchema } from '@/lib/schemas/contact';
 import { sendEmail } from '@/lib/email/send';
 import { recrutementEmail } from '@/lib/email/templates';
 import { verifyTurnstile, clientIp } from '@/lib/turnstile';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 /** Adresse de réception des candidatures (recrutement) Major ECN. */
 const RECRUIT_EMAIL = 'contact@major-ecn.fr';
@@ -75,5 +76,7 @@ export async function POST(req: Request) {
     );
   }
 
+  // Cloche de l'administration (refonte des notifications, 09/10/2026) : regroupée par jour.
+  await notifierEquipe({ a: 'admins', genre: 'prospect', titre: 'Nouvelle candidature (recrutement)', corps: 'Détails envoyés par e-mail à contact@major-ecn.fr.', lien: '/admin/leads', cle: `prospect:recrutement:${new Date().toISOString().slice(0, 10)}` });
   return NextResponse.json({ ok: true });
 }

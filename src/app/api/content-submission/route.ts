@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getVerifiedUser } from '@/lib/auth/verified-user';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 export async function POST(req: Request) {
   const supabase = await createClient();
@@ -40,6 +41,12 @@ export async function POST(req: Request) {
   if (dbErr) {
     return NextResponse.json({ error: dbErr.message }, { status: 500 });
   }
+
+  // Cloche de l'administration (refonte des notifications, 09/10/2026).
+  await notifierEquipe({
+    a: 'admins', genre: 'contenu', titre: `Contenu proposé par ${firstName} ${lastName}`, corps: 'PDF déposé sur un item, à examiner.',
+    lien: `/admin/contenu/${coursId}`, cle: `proposition-contenu:${new Date().toISOString().slice(0, 10)}`,
+  });
 
   return NextResponse.json({ ok: true });
 }

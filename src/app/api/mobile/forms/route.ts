@@ -6,6 +6,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { satisfactionSubmittedEmail } from '@/lib/email/templates';
 import { isUserTargeted, type FormField } from '@/lib/schemas/satisfaction';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -178,6 +179,11 @@ export async function POST(req: Request) {
       ]);
       if (!admins?.length) return;
       const studentName = `${student?.first_name ?? ''} ${student?.last_name ?? ''}`.trim() || 'Étudiant';
+      // Cloche de l'administration (refonte des notifications, 09/10/2026), comme le web.
+      await notifierEquipe({
+        a: 'admins', genre: 'formulaire', titre: `Formulaire « ${form.title} » : nouvelle réponse`, corps: studentName,
+        lien: `/admin/formulaires/${form_id}`, cle: `formulaire:${form_id}`,
+      });
       const { subject, html, text } = satisfactionSubmittedEmail({
         formTitle: form.title,
         studentName,

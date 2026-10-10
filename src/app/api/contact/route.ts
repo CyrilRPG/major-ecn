@@ -3,6 +3,7 @@ import { ContactSchema } from '@/lib/schemas/contact';
 import { sendEmail } from '@/lib/email/send';
 import { contactMessageEmail } from '@/lib/email/templates';
 import { verifyTurnstile, clientIp } from '@/lib/turnstile';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 /** Adresse de réception des messages de contact Major ECN. */
 const CONTACT_EMAIL = 'contact@major-ecn.fr';
@@ -61,5 +62,7 @@ export async function POST(req: Request) {
     );
   }
 
+  // Cloche de l'administration (refonte des notifications, 09/10/2026) : regroupée par jour.
+  await notifierEquipe({ a: 'admins', genre: 'prospect', titre: 'Nouveau message via le formulaire de contact', corps: 'Détails envoyés par e-mail à contact@major-ecn.fr.', lien: '/admin/leads', cle: `prospect:contact:${new Date().toISOString().slice(0, 10)}` });
   return NextResponse.json({ ok: true });
 }

@@ -4,6 +4,7 @@ import { sendEmail } from '@/lib/email/send';
 import { guideDeliveryEmail, guideLeadNotificationEmail } from '@/lib/email/templates';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { enrollInCampaign } from '@/lib/email/campaign-enroll';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 const CONTACT_EMAIL = 'contact@major-ecn.fr';
 
@@ -69,5 +70,7 @@ export async function POST(req: Request) {
   if (!userResult.ok) console.error('[guide-download] email utilisateur échoué :', userResult.error);
 
   // Toujours OK : le téléchargement doit fonctionner même si Resend est indisponible.
+  // Cloche de l'administration (refonte des notifications, 09/10/2026) : regroupée par jour.
+  await notifierEquipe({ a: 'admins', genre: 'prospect', titre: 'Nouveau téléchargement du guide', corps: 'Détails envoyés par e-mail à contact@major-ecn.fr.', lien: '/admin/leads', cle: `prospect:guide:${new Date().toISOString().slice(0, 10)}` });
   return NextResponse.json({ ok: true, emailSent: userResult.ok });
 }

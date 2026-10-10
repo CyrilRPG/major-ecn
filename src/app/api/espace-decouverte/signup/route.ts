@@ -42,6 +42,7 @@ import {
   coursDecouvertePourSpecialite,
   voieDemandeeALInscription,
 } from '@/lib/decouverte/items-specialite';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 const Schema = z.object({
   firstName: z.string().trim().min(1, 'Prénom requis').max(100),
@@ -285,6 +286,14 @@ export async function POST(req: Request) {
       replyTo: email,
     });
     log('internal-notify', { ok: n.ok, error: n.ok ? null : n.error });
+    // Cloche de l'administration (refonte des notifications, 09/10/2026).
+    await notifierEquipe({
+      a: 'admins', genre: 'inscription',
+      titre: `Inscription Espace Découverte : ${[firstName, lastName].filter(Boolean).join(' ')}`,
+      corps: specialty ? `Spécialité : ${specialty}` : null,
+      lien: '/admin/relances-decouverte',
+      cle: `decouverte:${new Date().toISOString().slice(0, 10)}`,
+    });
   } catch (e) {
     log('internal-notify-throw', { error: e instanceof Error ? e.message : 'unknown' });
   }

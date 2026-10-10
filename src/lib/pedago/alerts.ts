@@ -33,6 +33,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
 import { majorEmail, note as emailNote, sectionTitle as emailSectionTitle, small as emailSmall } from '@/lib/email/layout';
 import { normalizeSpecialtyStatus } from '@/lib/pedago/status';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyClient = SupabaseClient<any, any, any>;
@@ -91,6 +92,13 @@ export async function raiseAdminAlert(input: AlertInput): Promise<boolean> {
     console.error('[AdminAlert] insertion impossible', error.message);
     return false;
   }
+  // Cloche des administrateurs (refonte des notifications, 09/10/2026) :
+  // les alertes regroupées par jour et par priorité, l'e-mail quotidien reste.
+  await notifierEquipe({
+    a: 'admins', genre: 'alerte',
+    titre: `Alerte pédagogique ${input.priority} : ${input.motif}`.slice(0, 200),
+    lien: '/admin/alertes', cle: `alerte-${input.priority}:${new Date().toISOString().slice(0, 10)}`,
+  });
   return true;
 }
 

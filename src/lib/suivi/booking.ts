@@ -4,6 +4,7 @@ import {
 } from './db';
 import { sendBookingConfirmation } from './emails';
 import { bookingLinkFor } from './tokens';
+import { notifierEleve, notifierEquipe, quandParis } from '@/lib/notifications/plateforme';
 import type { AvailableSlot } from './slots';
 import { isOccupying, type AppointmentRow, type AppointmentStatus, type SlotRow } from './types';
 
@@ -114,7 +115,48 @@ export async function bookAppointment(input: BookInput): Promise<BookingResult<{
   });
   if (campaignId) await syncMemberStatus(campaignId, input.userId);
   if (input.notify !== false) await notifyConfirmation(appointment, false, input.actorId);
+  await annoncerDansLaPlateforme(appointment, 'reserve', input.actorId, input.bookedBy === 'student');
   return { ok: true, appointment };
+}
+
+/**
+ * Notifications dans la plateforme (refonte du 09/10/2026) : chaque prise,
+ * déplacement ou annulation de rendez-vous prévient l'intervenant et la
+ * personne qui a ouvert le créneau ou la campagne — à défaut, les
+ * administrateurs — dans la cloche de l'administration ; l'élève reçoit la
+ * confirmation dans sa cloche. Jamais l'auteur de l'action lui-même.
+ */
+async function annoncerDansLaPlateforme(appointment: AppointmentRow, evenement: 'reserve' | 'deplace' | 'annule', actorId: string | null, parEleve: boolean) {
+  try {
+    const [student, slot] = await Promise.all([getStudent(appointment.user_id), appointment.slot_id ? getSlot(appointment.slot_id) : Promise.resolve(null)]);
+    let createurCampagne: string | null = null;
+    if (appointment.campaign_id) {
+      const { data } = await suiviDb().from('suivi_campaigns').select('created_by').eq('id', appointment.campaign_id).maybeSingle();
+      createurCampagne = (data as { created_by: string | null } | null)?.created_by ?? null;
+    }
+    const nom = [student?.first_name, student?.last_name].filter(Boolean).join(' ') || 'Un candidat';
+    const quand = quandParis(appointment.starts_at);
+    const verbe = evenement === 'reserve' ? 'a réservé un rendez-vous' : evenement === 'deplace' ? 'a déplacé son rendez-vous' : 'rendez-vous annulé';
+    await notifierEquipe({
+      a: { comptes: [appointment.staff_user_id, (slot as { created_by?: string | null } | null)?.created_by, createurCampagne], sinonAdmins: true },
+      genre: 'rendez_vous',
+      titre: evenement === 'annule' ? `${nom} — ${verbe} (${quand})` : `${nom} ${verbe} : ${quand}`,
+      corps: parEleve ? 'Depuis son espace Major ECN' : null,
+      lien: `/admin/suivi/candidats/${appointment.user_id}`,
+      cle: `rdv:${appointment.id}:${evenement}`,
+      sauf: actorId,
+    });
+    await notifierEleve(appointment.user_id, {
+      kind: 'suivi_rendez_vous',
+      titre: evenement === 'reserve' ? `Rendez-vous confirmé : ${quand}` : evenement === 'deplace' ? `Rendez-vous déplacé : ${quand}` : `Rendez-vous annulé (${quand})`,
+      corps: evenement === 'annule' ? 'L’équipe Major ECN vous recontactera pour un nouveau créneau.' : 'Entretien de suivi pédagogique Major ECN.',
+      lien: '/mes-rendez-vous',
+      libelleLien: 'Mes rendez-vous',
+      cle: `suivi-rdv:${appointment.id}`,
+    });
+  } catch (err) {
+    console.error('[suivi] notification', err instanceof Error ? err.message : err);
+  }
 }
 
 async function notifyConfirmation(appointment: AppointmentRow, moved: boolean, actorId: string | null) {
@@ -174,6 +216,7 @@ export async function moveAppointment(input: MoveInput): Promise<BookingResult<{
   });
   if (appointment.campaign_id) await syncMemberStatus(appointment.campaign_id, old.user_id);
   if (input.notify !== false) await notifyConfirmation(appointment, true, input.actorId);
+  await annoncerDansLaPlateforme(appointment, 'deplace', input.actorId, input.actorKind === 'student');
   return { ok: true, appointment };
 }
 
@@ -188,6 +231,7 @@ export async function cancelAppointment(input: { appointmentId: string; actorId:
     payload: { starts_at: appt.starts_at, reason: input.reason ?? null },
   });
   if (appt.campaign_id) await syncMemberStatus(appt.campaign_id, appt.user_id);
+  await annoncerDansLaPlateforme(appt, 'annule', input.actorId, false);
   return { ok: true };
 }
 

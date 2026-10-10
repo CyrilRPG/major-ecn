@@ -7,6 +7,11 @@ import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { UserMenu } from '@/components/user-menu';
 import { ImpersonationBanner } from '@/components/impersonation-banner';
 import { BanniereRelancesDecouverte } from '@/components/admin/relances-decouverte/banniere';
+import { ActionsCockpit } from '@/components/admin/cockpit/actions-globales';
+import { EnteteAdmin } from '@/components/admin/cockpit/entete-admin';
+import { contexteCockpit, membresEquipe } from '@/lib/cockpit/server/base';
+import { pastillesMenu } from '@/lib/cockpit/server/donnees';
+import { nomComplet } from '@/lib/cockpit/regles';
 
 export const metadata = { title: 'Administration' };
 
@@ -32,19 +37,28 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const impersonating = cookieStore.has('impersonator_id');
   const impersonatedName = cookieStore.get('impersonator_target_name')?.value;
 
+  // Cockpit (CDC 08/10/2026) : pastilles du menu, membres de l'équipe pour
+  // « + Nouvelle action » (affectations). Une panne ici ne doit jamais
+  // fermer l'administration : valeurs neutres en repli.
+  const { moi, db } = await contexteCockpit();
+  const [pastilles, membres] = await Promise.all([
+    pastillesMenu(db, moi).catch(() => ({ taches: 0, messages: 0, reclamations: 0, demandes: 0, notifications: 0 })),
+    membresEquipe(db).then((l) => l.map((m) => ({ id: m.id, nom: nomComplet(m) || m.email || 'Membre' }))).catch(() => []),
+  ]);
+
   return (
     <div className="flex min-h-screen flex-col">
       {impersonating && <ImpersonationBanner targetName={impersonatedName} />}
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <AdminSidebar profile={profile} onglets={onglets} />
-        <div className="flex min-w-0 flex-1 flex-col bg-(--color-surface-soft)">
-          <header className="flex h-16 shrink-0 items-center justify-end gap-3 border-b border-(--color-border) bg-(--color-surface) px-4">
-            <UserMenu profile={profile} />
-          </header>
-          {/* Notification « candidats Offre Découverte à relancer » (pages d'atterrissage). */}
-          <BanniereRelancesDecouverte visible={onglets.suivi} />
-          <div className="min-w-0 flex-1">{children}</div>
-        </div>
+        <AdminSidebar profile={profile} onglets={onglets} pastilles={pastilles} />
+        <ActionsCockpit membres={membres} estAdmin={moi.estAdmin}>
+          <div className="flex min-w-0 flex-1 flex-col bg-(--color-surface-soft)">
+            <EnteteAdmin estAdmin={moi.estAdmin} nonLues={pastilles.notifications} menuCompte={<UserMenu profile={profile} />} />
+            {/* Notification « candidats Offre Découverte à relancer » (pages d'atterrissage). */}
+            <BanniereRelancesDecouverte visible={onglets.suivi} />
+            <div className="min-w-0 flex-1">{children}</div>
+          </div>
+        </ActionsCockpit>
       </div>
     </div>
   );

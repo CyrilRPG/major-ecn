@@ -29,6 +29,7 @@ import { fetchContentAccessForScopeWith } from '@/lib/auth/formula-permissions';
 import type { PermissionScope } from '@/types/domain';
 import { sendEmailBatch, siteUrl, type BatchEmail } from '@/lib/email/send';
 import { nouveauxContenusEmail } from '@/lib/email/templates';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 /**
  * Bibliothèque vidéo de l'administration (onglet « Vidéos ») : navigation
@@ -549,6 +550,13 @@ async function insertVideo(
   });
 
   refresh(coursId);
+  // Vidéo déposée « à valider » : cloche des administrateurs (refonte des notifications, 09/10/2026).
+  if (!publie) {
+    await notifierEquipe({
+      a: 'admins', genre: 'contenu', titre: `Vidéo à valider : ${titre}`, corps: `Déposée par ${[ctx.profile.first_name, ctx.profile.last_name].filter(Boolean).join(' ') || 'un membre de l’équipe'}`,
+      lien: '/admin/videos', cle: `video-a-valider:${created.id as string}`, sauf: ctx.profile.id,
+    });
+  }
   return { ok: true, videoId: created.id as string, coursId, status: publie ? 'publie' : 'a_valider' };
 }
 

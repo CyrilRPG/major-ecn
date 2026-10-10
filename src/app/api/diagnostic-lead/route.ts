@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { sendEmail, INTERNAL_NOTIFY_EMAILS } from '@/lib/email/send';
 import { diagnosticLeadEmail } from '@/lib/email/templates';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 const Schema = z.object({
   firstName: z.string().trim().min(1).max(120),
@@ -57,5 +58,7 @@ export async function POST(req: Request) {
   const r = await sendEmail({ to: INTERNAL_NOTIFY_EMAILS, subject, html, text, replyTo: d.email });
   if (!r.ok) console.error('[diagnostic-lead] notification échouée :', r.error);
 
+  // Cloche de l'administration (refonte des notifications, 09/10/2026) : regroupée par jour.
+  await notifierEquipe({ a: 'admins', genre: 'prospect', titre: 'Nouvelle demande de diagnostic gratuit', corps: 'Détails envoyés par e-mail à contact@major-ecn.fr.', lien: '/admin/leads', cle: `prospect:diagnostic:${new Date().toISOString().slice(0, 10)}` });
   return NextResponse.json({ ok: true });
 }

@@ -5,6 +5,7 @@ import { forumNewQuestionEmail } from '@/lib/email/templates';
 import { CONTACT_EMAIL, button, esc, majorEmail, majorText, pHtml, quote, summaryTable } from '@/lib/email/layout';
 import { lireScopeEquipe, recoitQuestionEleve } from '@/lib/auth/collaborateurs';
 import { contexteRoutage } from '@/lib/forum/routage';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 /**
  * Notifications du forum — partagées par l'action web `askQuestionAction`
@@ -45,6 +46,18 @@ export async function notifyProfessorsOfNewQuestion(args: {
 
   const ctx = await contexteRoutage(profs.map((p) => lireScopeEquipe(p.permission_scope)));
   const targets = profs.filter((p) => recoitQuestionEleve(p, args.matiereId, args.eleveScope, ctx));
+
+  // Cloche de l'administration (refonte du 09/10/2026) : les référents
+  // destinataires, à défaut les administrateurs — une question ne reste
+  // jamais sans destinataire dans la plateforme.
+  await notifierEquipe({
+    a: { comptes: targets.map((p) => p.id), sinonAdmins: true },
+    genre: 'question',
+    titre: `Nouvelle question${args.matiereNom ? ` en ${args.matiereNom}` : ''} (${args.studentPseudo})`,
+    corps: args.body.slice(0, 200),
+    lien: '/admin/qa',
+    cle: `question:${args.questionId}`,
+  });
 
   if (targets.length === 0) return;
 
@@ -115,6 +128,10 @@ export async function notifyTeamOfForumReport(args: {
     '',
     `Modérer : ${qaUrl}`,
   ], { audience: 'internal' });
+  await notifierEquipe({
+    a: 'admins', genre: 'signalement', titre: `${cible} signalée sur le forum`, corps: `${args.motif || 'Motif non précisé'} — ${preview.slice(0, 160)}`,
+    lien: '/admin/qa', cle: `signalement:${args.questionId}:${args.cible}`,
+  });
   const res = await sendEmail({ to: CONTACT_EMAIL, subject, html, text }).catch(() => null);
   return !!res && res.ok;
 }

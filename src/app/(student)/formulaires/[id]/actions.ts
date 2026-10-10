@@ -7,6 +7,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail, siteUrl } from '@/lib/email/send';
 import { satisfactionSubmittedEmail } from '@/lib/email/templates';
 import type { FormField } from '@/lib/schemas/satisfaction';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 export async function submitSatisfactionAction(
   formId: string,
@@ -65,6 +66,11 @@ async function notifyAdminsOfSubmission(args: { formId: string; formTitle: strin
   ]);
   if (!admins?.length) return;
   const studentName = `${student?.first_name ?? ''} ${student?.last_name ?? ''}`.trim() || 'Étudiant';
+  // Cloche de l'administration (refonte des notifications, 09/10/2026), regroupée par formulaire.
+  await notifierEquipe({
+    a: 'admins', genre: 'formulaire', titre: `Formulaire « ${args.formTitle} » : nouvelle réponse`, corps: studentName,
+    lien: `/admin/formulaires/${args.formId}`, cle: `formulaire:${args.formId}`,
+  });
   const responsesUrl = `${siteUrl()}/admin/formulaires/${args.formId}`;
   const { subject, html, text } = satisfactionSubmittedEmail({
     formTitle: args.formTitle,

@@ -12,6 +12,7 @@ import { fmtDateLong, fmtTime, isValidDayKey } from '@/lib/suivi/format';
 import { studentSpecialty } from '@/lib/suivi/students';
 import { ACTION_CATEGORIES, ACTION_STATUSES, APPOINTMENT_STATUSES, DIFFICULTY_CATEGORIES, roleCan, type ActionStatus, type AppointmentStatus } from '@/lib/suivi/types';
 import type { AvailableSlot } from '@/lib/suivi/slots';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 type Ok<T = object> = { ok: true } & T;
 type Err = { ok: false; error: string };
@@ -270,6 +271,15 @@ export async function setAppointmentStaff(appointmentId: string, staffUserId: st
     if (!appt) return { ok: false, error: 'Rendez-vous introuvable' };
     const { error } = await suiviDb().from('suivi_appointments').update({ staff_user_id: staffUserId }).eq('id', appointmentId);
     if (error) return { ok: false, error: error.message };
+    if (staffUserId && staffUserId !== appt.staff_user_id) {
+      const s = await getStudent(appt.user_id);
+      await notifierEquipe({
+        a: [staffUserId], genre: 'rendez_vous',
+        titre: `Un rendez-vous vous a été attribué : ${[s?.first_name, s?.last_name].filter(Boolean).join(' ') || 'candidat'}`,
+        corps: new Date(appt.starts_at).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/Paris' }),
+        lien: `/admin/suivi/candidats/${appt.user_id}`, cle: `rdv-attribue:${appointmentId}`,
+      });
+    }
     revalidate(appt.user_id);
     return { ok: true };
   } catch (e) { return fail(e); }

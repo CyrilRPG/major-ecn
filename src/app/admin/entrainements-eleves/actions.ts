@@ -25,6 +25,7 @@ import {
   lireExercice, lettresJustes, estTableAbsente, MESSAGE_TABLE_ABSENTE, SERIE_PROPOSITIONS_ELEVES,
   type StudentExercise,
 } from '@/lib/student-exercises/regles';
+import { notifierEleve } from '@/lib/notifications/plateforme';
 
 export type ActionStaff = { ok: true } | { ok: false; error: string };
 
@@ -127,6 +128,11 @@ export async function publierExerciceEleveAction(idBrut: string): Promise<Action
     coursId: cours.id, coursTitre: cours.titre, matiereNom: cours.matieres?.nom ?? null,
     description: publie.description, diff: { student_exercise_id: exercice.id },
   });
+  // Cloche de l'élève (refonte des notifications, 09/10/2026).
+  await notifierEleve(exercice.user_id, {
+    kind: 'entrainement_publie', titre: `Votre ${exercice.kind === 'flashcard' ? 'flashcard' : 'QCM'} a rejoint la base commune — ${cours.titre}`,
+    corps: 'Merci pour votre contribution : elle profite désormais à tous les candidats.', lien: '/mes-entrainements', cle: `entrainement:${exercice.id}`,
+  });
   revalider(cours.id);
   return { ok: true };
 }
@@ -146,6 +152,10 @@ export async function refuserExerciceEleveAction(input: { id: string; note?: str
     status: 'rejected', reviewed_by: profile.id, reviewed_at: new Date().toISOString(), review_note: parsed.data.note || null,
   }).eq('id', parsed.data.id);
   if (error) return { ok: false, error: error.message };
+  await notifierEleve(charge.exercice.user_id, {
+    kind: 'entrainement_ecarte', titre: `Proposition non retenue — ${charge.cours.titre}`,
+    corps: parsed.data.note || 'Elle reste disponible dans votre espace personnel.', lien: '/mes-entrainements', cle: `entrainement:${parsed.data.id}`,
+  });
   revalider(charge.cours.id);
   return { ok: true };
 }

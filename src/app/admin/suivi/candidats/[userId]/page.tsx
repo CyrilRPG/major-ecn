@@ -8,6 +8,7 @@ import { fmtDateShort, fmtDateTime, todayKey } from '@/lib/suivi/format';
 import { DIFFICULTY_LABEL, OFFER_SHORT_LABEL, VOIE_LABEL, roleCan } from '@/lib/suivi/types';
 import { Badge } from '@/components/ui/badge';
 import { DownloadButton, SectionCard } from '@/components/admin/suivi/ui';
+import { DossiersCandidat } from '@/components/admin/cockpit/dossiers-candidat';
 import { FicheAppointments } from '@/components/admin/suivi/fiche-appointments';
 import { ReportForm } from '@/components/admin/suivi/report-form';
 import { ActionLine, FicheTimeline } from '@/components/admin/suivi/fiche-timeline';
@@ -134,6 +135,11 @@ export default async function FicheCandidatPage({ params }: { params: Promise<{ 
           <FicheAppointments userId={fiche.student.id} appointments={fiche.appointments} staff={staff} campaignNames={campaignNames}
             absenceTemplate={tpl.absence} can={can} defaultReminderHours={settings.reminder_hours} selfId={profile.id} />
         </SectionCard>
+      </div>
+
+      {/* Cockpit : réclamations et demandes du candidat, reliées à la fiche (rubrique « Réclamations & Améliorations »). */}
+      <div className="mt-6">
+        <DossiersCandidat userId={fiche.student.id} />
       </div>
 
       {fiche.platform && fiche.platform.results.length > 0 && (

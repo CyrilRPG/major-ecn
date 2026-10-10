@@ -13,6 +13,7 @@ import {
   jetonTelechargementAnnales,
   nomFichierAnnales,
 } from '@/lib/annales-evc/lien';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 /**
  * Demande d'un recueil d'annales EVC (/annales-evc).
@@ -124,5 +125,7 @@ export async function POST(req: Request) {
     .update({ email_sent: envoi.ok, email_error: envoi.ok ? null : String(envoi.error ?? '').slice(0, 500) })
     .eq('id', lead.id);
 
+  // Cloche de l'administration (refonte des notifications, 09/10/2026) : regroupée par jour.
+  await notifierEquipe({ a: 'admins', genre: 'prospect', titre: 'Nouvelle demande d’annales EVC', corps: 'Détails envoyés par e-mail à contact@major-ecn.fr.', lien: '/admin/leads', cle: `prospect:annales:${new Date().toISOString().slice(0, 10)}` });
   return NextResponse.json({ ok: true, emailSent: envoi.ok, lien: lienTelechargement });
 }

@@ -9,6 +9,7 @@ import { findDuplicateArticle } from '@/lib/data/blog-duplicates';
 import type { Block } from '@/lib/data/blog-content/types';
 import type { BlogCategory } from '@/lib/data/blog-articles';
 import type { Database, Json } from '@/types/database';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 /** Transforme un titre en slug URL (sans accents, tirets). */
 export async function slugify(input: string): Promise<string> {
@@ -135,9 +136,16 @@ export async function savePost(input: BlogPostInput): Promise<SaveResult> {
     ...(statut === 'published' && existant?.status !== 'published' ? { published_by: user.id } : {}),
   };
 
+  // Article soumis à validation : cloche des administrateurs (refonte des notifications, 09/10/2026).
+  const annoncerSoumission = async (id: string) => {
+    if (statut !== 'pending' || existant?.status === 'pending') return;
+    await notifierEquipe({ a: 'admins', genre: 'contenu', titre: `Article à valider : ${title}`, lien: '/admin/blog', cle: `blog-a-valider:${id}`, sauf: user.id });
+  };
+
   if (input.id) {
     const { error } = await supabase.from('blog_posts').update(row).eq('id', input.id);
     if (error) return { ok: false, error: mapError(error) };
+    await annoncerSoumission(input.id);
     revalidateBlog(slug);
     return { ok: true, id: input.id, slug, status: statut };
   }
@@ -148,6 +156,7 @@ export async function savePost(input: BlogPostInput): Promise<SaveResult> {
     .select('id')
     .single();
   if (error || !data) return { ok: false, error: mapError(error) };
+  await annoncerSoumission(data.id);
   revalidateBlog(slug);
   return { ok: true, id: data.id, slug, status: statut };
 }
@@ -190,6 +199,9 @@ export async function setPostStatus(id: string, statut: 'draft' | 'pending' | 'p
   const { error } = await supabase.from('blog_posts').update(patch).eq('id', id);
   if (error) return { ok: false, error: error.message };
   const libelle = statut === 'published' ? 'publié' : statut === 'pending' ? 'soumis à validation' : 'remis en brouillon';
+  if (statut === 'pending' && post.status !== 'pending') {
+    await notifierEquipe({ a: 'admins', genre: 'contenu', titre: `Article à valider : ${post.title}`, lien: '/admin/blog', cle: `blog-a-valider:${id}`, sauf: user.id });
+  }
   await logAudit({
     actor: acteur.profile, action: 'update', entity: 'blog_post', entityId: id,
     description: `Article « ${post.title} » ${libelle}`, diff: { from: post.status, to: statut },

@@ -13,6 +13,7 @@ import { canAccessCollege, parseScope } from '@/lib/auth/permissions';
 import { questionPourMembre } from '@/lib/forum/routage';
 import { chargerQcmJoint } from '@/lib/forum/qcm-joint-server';
 import { apercuEnonce, idQuestionBanque, intituleQuestionJointe, type QcmJoint, type QcmJointEnvoi } from '@/lib/forum/qcm-joint';
+import { notifierEleve } from '@/lib/notifications/plateforme';
 
 type Result = { ok: true; id: string } | { error: string };
 
@@ -258,6 +259,16 @@ export async function postProfessorAnswerAction(input: z.infer<typeof AnswerSche
   if (parsed.data.makePublic) update.is_public = true;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await (admin as any).from('forum_questions').update(update).eq('id', parsed.data.questionId);
+
+  // Cloche de l'élève (refonte des notifications, 09/10/2026).
+  await notifierEleve(q.student_id as string | null, {
+    kind: 'forum_reponse_enseignant',
+    titre: `${profName} a répondu à votre question`,
+    corps: parsed.data.body.slice(0, 200),
+    lien: '/forum',
+    libelleLien: 'Lire la réponse',
+    cle: `forum-reponse:${parsed.data.questionId}`,
+  });
 
   await logAudit({
     actor: profile,

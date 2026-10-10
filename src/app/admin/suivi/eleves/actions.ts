@@ -8,6 +8,7 @@ import { logAudit } from '@/lib/audit/log';
 import { requireSuiviAction } from '@/lib/suivi/roles';
 import { eleveAccessible, listerCollaborateursSuivi, scopeDeActeur, STATUTS_SUIVI, STATUT_SUIVI_LABEL, type StatutSuivi } from '@/lib/suivi/eleves';
 import { studentName } from '@/lib/suivi/students';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 /**
  * Actions du tableau de travail « Suivi élèves » (cahier des charges
@@ -102,6 +103,12 @@ export async function affecterEleveAction(input: unknown): Promise<Ok | Err> {
       description: nomCollab ? `${acces.ligne.nom} affecté à ${nomCollab}` : `${acces.ligne.nom} : affectation retirée`,
       diff: { assigned_to: p.collaborateurId },
     });
+    if (p.collaborateurId) {
+      await notifierEquipe({
+        a: [p.collaborateurId], genre: 'affectation', titre: `${acces.ligne.nom} vous a été confié(e) en suivi`,
+        lien: `/admin/suivi/eleves/${p.userId}`, cle: `suivi-affectation:${p.userId}`, sauf: actor.profile.id,
+      });
+    }
     revalider(p.userId);
     return { ok: true };
   } catch (e) { return fail(e); }

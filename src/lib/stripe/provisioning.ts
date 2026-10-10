@@ -31,6 +31,7 @@ import { applyGeriatrieMgBonus } from '@/lib/auth/geriatrie-mg-bonus';
 import { trouverCompteAuthParEmail } from '@/lib/auth/admin-users';
 import { buildContractAttachments } from '@/lib/legal/contract-pdf';
 import { downloadSignature } from '@/lib/signatures/inscription';
+import { notifierEquipe } from '@/lib/notifications/plateforme';
 
 export type ProvisioningInput = {
   email: string;
@@ -500,6 +501,15 @@ export async function provisionStudentAccount(
       replyTo: input.email,
     });
     log('internal-notify', { ok: n.ok, error: n.ok ? null : n.error });
+    // Cloche de l'administration (refonte des notifications, 09/10/2026) — même
+    // déduplication que le récapitulatif interne ci-dessus.
+    await notifierEquipe({
+      a: 'admins', genre: 'inscription',
+      titre: `Nouvelle inscription : ${[firstName, lastName].filter(Boolean).join(' ') || input.email} — ${formuleForNotif.name}`,
+      corps: `${amountEurosTotal} €${(input.installments ?? 1) > 1 ? ` en ${input.installments} fois` : ''} · ${input.specialty ?? 'Médecine générale'}`,
+      lien: '/admin/eleves',
+      cle: `inscription:${new Date().toISOString().slice(0, 10)}`,
+    });
   } catch (e) {
     log('internal-notify-throw', { error: e instanceof Error ? e.message : 'unknown' });
   }
